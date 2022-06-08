@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+pod_specialty_display,pod_specialty_display,model_pod_specialty,pod_administration_practitioner_specialty.group_pod_specialty_display,1,0,0,0
+pod_specialty_manager,pod_specialty_manager,model_pod_specialty,pod_administration_practitioner_specialty.group_pod_specialty_manager,0,1,1,0

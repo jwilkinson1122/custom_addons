@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" name="action_view_request" class="oe_stat_button" icon="fa-object-group" groups="pod_clinical_request_group.group_pod_request_group_list" attrs="{'readonly':[('is_editable', '=', False)]}" context="{'model_name': 'pod.request.group'}">
+                    <field name="request_group_count" widget="statinfo" string="REQ Groups" />
+                    <field name='request_group_ids' invisible="1" />
+                </button>
+            </xpath>
+            <group name="inheritance" position="inside">
+                <field name="request_group_id" readonly="1" attrs="{'invisible': [('request_group_id', '=', False)]}" />
+            </group>
+            <notebook position="attributes">
+                <attributes name="invisible">0</attributes>
+            </notebook>
+        </field>
+    </record>
+    <record id="pod_request_form_request_group" model="ir.ui.view">
+        <field name="name">pod.request.view.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
+        <field name="groups_id" eval="[(4, ref('group_pod_request_group_list'))]" />
+        <field name="arch" type="xml">
+            <field name="request_group_id" position="attributes">
+                <attribute name="options">{'no_open': False, 'no_create': True}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

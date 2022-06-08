@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="pod_base.pod_root_terminologies" model="ir.ui.menu">
+        <field name="active" eval="True" />
+    </record>
+</odoo>

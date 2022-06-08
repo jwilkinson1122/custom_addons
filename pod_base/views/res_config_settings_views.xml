@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pod</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Podiatry" data-key="pod_base" groups="pod_base.group_pod_configurator">
+                    <h2>
+                        <i class="fa fa-user-md" aria-hidden="true" />
+ Administration</h2>
+                    <div class="row mt16 o_settings_container" id="pod_administration">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_administration" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Administration" for="module_pod_administration" />
+                                <div class="text-muted">
+                                    Activates Administration capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-stethoscope" aria-hidden="true" />
+ Clinical</h2>
+                    <div class="row mt16 o_settings_container" id="pod_clinical">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_clinical" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Clinical" for="module_pod_clinical" />
+                                <div class="text-muted">
+                                    Activates Clinical capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-sitemap" aria-hidden="true" />
+ Workflow</h2>
+                    <div class="row mt16 o_settings_container" id="pod_workflow">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_workflow" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Workflow" for="module_pod_workflow" />
+                                <div class="text-muted">
+                                    Activates Workflow capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-usd" aria-hidden="true" />
+ Financial</h2>
+                    <div class="row mt16 o_settings_container" id="pod_financial">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_financial" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Financial" for="module_pod_financial" />
+                                <div class="text-muted">
+                                    Activates Financial capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-heartbeat" aria-hidden="true" />
+ Diagnostics</h2>
+                    <div class="row mt16 o_settings_container" id="pod_diagnostics">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_diagnostics" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Diagnostics" for="module_pod_diagnostics" />
+                                <div class="text-muted">
+                                    Activates Diagnostics capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-flask" aria-hidden="true" />
+ Prescription</h2>
+                    <div class="row mt16 o_settings_container" id="pod_prescription">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_prescription" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Prescription" for="module_pod_prescription" />
+                                <div class="text-muted">
+                                    Activates Prescription capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>
+                        <i class="fa fa-book" aria-hidden="true" />
+ Terminologies</h2>
+                    <div class="row mt16 o_settings_container" id="pod_terminology">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_terminology" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Terminology" for="module_pod_terminology" />
+                                <div class="text-muted">
+                                    Activates Terminologies capabilities
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_pod_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'pod_base'}</field>
+    </record>
+    <menuitem id="menu_pod_config" name="Settings" parent="pod_root_configuration" sequence="0" action="action_pod_config" groups="base.group_system" />
+</odoo>

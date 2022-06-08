@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+pod_role_display,pod_role_display,model_pod_role,pod_administration_practitioner.group_pod_role_display,1,0,0,0
+pod_role_manager,pod_role_manager,model_pod_role,pod_administration_practitioner.group_pod_role_manager,0,1,1,0

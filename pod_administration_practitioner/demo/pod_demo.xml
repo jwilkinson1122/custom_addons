@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="practitioner_01_partner" model="res.partner">
+        <field name="name">Dr Who</field>
+        <field name="is_practitioner" eval="True" />
+        <field name="is_pod" eval="True" />
+    </record>
+</odoo>

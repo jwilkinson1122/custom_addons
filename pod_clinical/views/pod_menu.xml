@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="pod_base.pod_root_clinical" model="ir.ui.menu">
+        <field name="active" eval="True" />
+    </record>
+    <menuitem id="pod_clinical_request" name="Rx Request" parent="pod_base.pod_root_clinical" sequence="10" />
+    <menuitem id="pod_clinical_event" name="Events" parent="pod_base.pod_root_clinical" sequence="20" />
+</odoo>

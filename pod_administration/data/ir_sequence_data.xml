@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="seq_pod_patient" model="ir.sequence">
+        <field name="name">Patient sequence</field>
+        <field name="code">pod.patient</field>
+        <field name="prefix">PID</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

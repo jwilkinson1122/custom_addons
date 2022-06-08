@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="pod.location.relationship" id="parent">
+        <field name="name">Parent</field>
+        <field name="description">Parent Location</field>
+    </record>
+    <record model="pod.location.relationship" id="child">
+        <field name="name">Child</field>
+        <field name="description">Child Location</field>
+    </record>
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <menuitem id="menu_pod_coverage_root" name="Coverage" sequence="40" parent="pod_base.pod_root_financial" groups="pod_financial_coverage.group_pod_coverage_list" action="pod_coverage_action" />
+    <menuitem id="menu_pod_coverage_template_root" name="Coverage Template" sequence="20" parent="pod_base.pod_root_financial" groups="pod_financial_coverage.group_pod_coverage_template_list" action="pod_coverage_template_action" />
+    <menuitem id="menu_pod_payor_root" name="Payors" sequence="10" parent="pod_base.pod_root_financial" groups="pod_financial_coverage.group_pod_payor_list" action="pod_payor_action" />
+</odoo>
