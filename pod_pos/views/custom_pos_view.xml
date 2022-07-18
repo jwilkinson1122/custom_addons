@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add custom js for pos_product_operations -->
+        <template id="assets_for_pos_product_operations" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/pod_pos/static/src/css/modifier.css" />
+                <script type="text/javascript" src="/pod_pos/static/src/js/PodProductScreen.js"/>
+                <script type="text/javascript" src="/pod_pos/static/src/js/ProductTemplateListWidget.js"/>
+                <script type="text/javascript" src="/pod_pos/static/src/js/ProductTemplatePopupWidget.js"/>
+                <script type="text/javascript" src="/pod_pos/static/src/js/screens.js"/>
+                <script type="text/javascript" src="/pod_pos/static/src/js/PodProductList.js"/>
+                <script type="text/javascript" src="/pod_pos/static/src/js/models.js"/>
+
+                <!-- popups -->
+                <script type="text/javascript" src="/pod_pos/static/src/js/Popups/ModifierProductPopup.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
