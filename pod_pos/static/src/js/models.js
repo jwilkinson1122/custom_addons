@@ -49,7 +49,7 @@ odoo.define('pod_pos.models', function (require) {
 
         set_unit_price: function(price){
             this.order.assert_editable();
-            if(this.product.orthotic_pieces)
+            if(this.product.laterality_options)
             {
                 this.is_pieces = true;
                 var total = price;   
@@ -92,7 +92,7 @@ odoo.define('pod_pos.models', function (require) {
         },
 
         get_modifier: function(){
-            if(this.product.orthotic_pieces)
+            if(this.product.laterality_options)
             {
                 this.is_pieces = true;
             }

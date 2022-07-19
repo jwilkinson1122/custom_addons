@@ -34,7 +34,7 @@ odoo.define('pod_pos.ProductProduct', function(require) {
                 });
             }
             self.modifier_attribute_list = [];
-            if (product.orthotic_pieces){
+            if (product.laterality_options){
                 let modifier = self.env.pos.modifier_attribute;
                 if(product.modifier_attribute_product_id.length >0){
                     product.modifier_attribute_product_id.forEach(function(attr) {

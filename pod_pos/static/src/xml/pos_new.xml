@@ -6,7 +6,7 @@
 	<t t-name="ProductTemplatePopupWidget" owl="1">
 		<div class="modal-dialog">
 			<div class="popup popup-confirm" style="height: 450px;">
-				<p class="title" style="background-color: #7f82ac; color: #fff;">Products Variants</p>
+				<p class="title" style="background-color: #474eb5; color: #fff;">Products Variants</p>
 				<p style="color: #0075AC;">Select Your Variants</p>
 				<div class="body" style="height: 300px; overflow  : auto">
 					<div t-if="props.variant_ids.length != 0" class="product-list">
@@ -15,7 +15,7 @@
 						</t>
 					</div>
 				</div>
-				<div class="footer" style="background-color: #7f82ac; color: #fff; bottom:-43px;">
+				<div class="footer" style="background-color: #474eb5; color: #fff; bottom:-43px;">
 					<div id="cancel" class="button cancel" style="color: #131212; background: white;" t-on-click="go_back_screen">
 						Cancel 
 					</div>
@@ -105,7 +105,7 @@
 								</span>
 							</t>
 
-							<t t-if="line.portion_type == 'quater'">
+							<!-- <t t-if="line.portion_type == 'quater'">
 								<span style="font-weight: bold;">
 									<t t-esc="line.display_name" />
 								</span>
@@ -116,7 +116,7 @@
 )
 									<br/>
 								</span>
-							</t>
+							</t> -->
 
 							<t t-if="line.is_sub">
 								<span style="font-weight: bold;">
@@ -194,7 +194,7 @@
 									<label id="for_right_half" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="right_half">Right Side</label>
 								</div>
 
-								<div id="quater_size_orthotic" style="float: right;clear: none;margin-right:-145px;margin-top:12px;display:none;">
+								<!-- <div id="quater_size_orthotic" style="float: right;clear: none;margin-right:-145px;margin-top:12px;display:none;">
 									<input checked="checked" style="width: 30px;float: left;" type="radio" class="radio" name="quater" value="1st quater" id="1_quater"/>
 									<label id="for_1_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="1_quater">1st Quater</label>
 
@@ -206,7 +206,7 @@
 
 									<input style="width: 30px;float: left;" type="radio" class="radio" name="quater" value="4th quater" id="4_quater"/>
 									<label id="for_4_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="4_quater">4th Quater</label>
-								</div>
+								</div> -->
 
 								<br/>
 								<br/>
@@ -326,7 +326,7 @@
 										</span>
 									</t>
 
-									<t t-if="modifier.portion_type == 'quater'">
+									<!-- <t t-if="modifier.portion_type == 'quater'">
 										<span>
 											<t t-esc="modifier.display_name" />
 										</span>
@@ -337,7 +337,7 @@
 )
 											<br/>
 										</span>
-									</t>
+									</t> -->
 
 									<t t-if="modifier.is_sub">
 										<span>
@@ -387,7 +387,7 @@
 										</span>
 									</t>
 
-									<t t-if="modifier.portion_type == 'quater'">
+									<!-- <t t-if="modifier.portion_type == 'quater'">
 										<span>
 											<t t-esc="modifier.display_name" />
 										</span>
@@ -398,7 +398,7 @@
 )
 											<br/>
 										</span>
-									</t>
+									</t> -->
 
 									<t t-if="modifier.is_sub">
 										<span>

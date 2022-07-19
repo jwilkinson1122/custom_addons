@@ -40,7 +40,7 @@ odoo.define("pod_pos.screens", function(require){
 		},
 	});
 
-	models.load_fields('product.product', ['modifier_attribute_product_id','orthotic_pieces','sub_products_ids']);
+	models.load_fields('product.product', ['modifier_attribute_product_id','laterality_options','sub_products_ids']);
 
 	PosDB.include({
 		init: function(options){
