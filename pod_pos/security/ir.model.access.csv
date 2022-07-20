@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
 access_modifier_product,access_modifier_product,model_modifier_product,,1,1,1,1
 access_modifier_attribute,access_modifier_attribute,model_modifier_attribute,,1,1,1,1
 access_bom_product,access_bom_product,model_bom_product,,1,1,1,1

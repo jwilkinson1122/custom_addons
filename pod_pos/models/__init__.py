@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from . import custom
 from . import modifier_product
 from . import modifier_attribute
