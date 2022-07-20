@@ -13,8 +13,8 @@
 						<label for="modifier_ok"/>
 					</div>
 					<div>
-						<field name="orthotic_pieces"/>
-						<label for="orthotic_pieces"/>
+						<field name="orthotic_options"/>
+						<label for="orthotic_options"/>
 					</div>
 					<div>
 						<field name="bom_product"/>
@@ -23,10 +23,10 @@
 				</div>
 
 				<xpath expr="//page[@name='inventory']" position="after">
-					<page string='Modifier' attrs="{'invisible': [('orthotic_pieces', '=', False)]}">
+					<page string='Modifier' attrs="{'invisible': [('orthotic_options', '=', False)]}">
 						<group>
 							<group>
-								<field name="modifier_groups_ids" widget="many2many_tags" attrs="{'required': [('orthotic_pieces', '=', True)]}"/>
+								<field name="modifier_groups_ids" widget="many2many_tags" attrs="{'required': [('orthotic_options', '=', True)]}"/>
 							</group>
 							<group>
 								<button name="get_modifiers" type="object" string="Get Modifier" class="oe_highlight"/>
@@ -46,7 +46,7 @@
 							</field>
 						</group>
 					</page>
-					<page string='Sub Product' attrs="{'invisible': [('orthotic_pieces', '=', False)]}">
+					<page string='Sub Product' attrs="{'invisible': [('orthotic_options', '=', False)]}">
 						<group>
 							<group>
 								<field name="sub_products_ids" widget="many2many_tags"/>

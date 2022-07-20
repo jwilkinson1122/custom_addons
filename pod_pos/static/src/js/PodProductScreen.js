@@ -62,9 +62,8 @@ odoo.define('pod_pos.PodProductScreen', function (require) {
 							if (OrthoticRadio) {
 								OrthoticRadio.checked = false;
 								$('.modifiers-product-list').hide();
-								$('#full_orthotic').hide();
-								$('#half_orthotic').hide();
-								$('#quater_orthotic').hide();
+								$('#pair_orthotic').hide();
+								$('#single_orthotic').hide();
 								$('#ask').show();
 							}
 						}

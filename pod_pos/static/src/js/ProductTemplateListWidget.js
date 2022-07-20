@@ -1,4 +1,4 @@
-odoo.define('pod_pos.ProductProduct', function(require) {
+odoo.define('pod_pos.ProductProduct', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
@@ -17,15 +17,15 @@ odoo.define('pod_pos.ProductProduct', function(require) {
             super(...arguments);
             useListener('click-product-template', this.add_product);
         }
-        
 
-        add_product(){
+
+        add_product() {
             let self = this;
             this.env.pos.get_order().add_product(this.props.product);
             let product = self.props.product;
             self.side_prod_list = [];
-            
-            if (product.sub_products_ids.length > 0){
+
+            if (product.sub_products_ids.length > 0) {
                 product.sub_products_ids.forEach(function (sub_prod) {
                     var side_product = self.env.pos.db.get_product_by_id(sub_prod);
 
@@ -34,22 +34,22 @@ odoo.define('pod_pos.ProductProduct', function(require) {
                 });
             }
             self.modifier_attribute_list = [];
-            if (product.orthotic_pieces){
+            if (product.orthotic_options) {
                 let modifier = self.env.pos.modifier_attribute;
-                if(product.modifier_attribute_product_id.length >0){
-                    product.modifier_attribute_product_id.forEach(function(attr) {
+                if (product.modifier_attribute_product_id.length > 0) {
+                    product.modifier_attribute_product_id.forEach(function (attr) {
                         var data = self.env.pos.db.modifier_attribute_by_id[attr]
                         self.modifier_attribute_list.push(data)
                     });
                 }
                 self.env.pos.modifier_attribute = self.modifier_attribute_list;
-                self.env.pos.side_prod_list = self.side_prod_list;   
+                self.env.pos.side_prod_list = self.side_prod_list;
                 $('.product-list').hide();
                 $('.products-widget-control').hide();
                 $('#modifier-product-name').text(product.display_name);
                 $('.modifiers-list').show()
             }
-            this.trigger('close-popup');            
+            this.trigger('close-popup');
         }
         get imageUrl() {
             const product = this.props.product;
@@ -68,27 +68,26 @@ odoo.define('pod_pos.ProductProduct', function(require) {
                 'Product Price'
             );
             if (this.props.product.to_weight) {
-                return `${formattedUnitPrice}/${
-                    this.env.pos.units_by_id[this.props.product.uom_id[0]].name
-                }`;
+                return `${formattedUnitPrice}/${this.env.pos.units_by_id[this.props.product.uom_id[0]].name
+                    }`;
             } else {
                 return formattedUnitPrice;
             }
         }
 
         renderElement() {
-            var el_str  = QWeb.render(this.env.template, {widget: this});
+            var el_str = QWeb.render(this.env.template, { widget: this });
             var el_node = document.createElement('div');
-                el_node.innerHTML = el_str;
-                el_node = el_node.childNodes[1];
-            if(this.el && this.el.parentNode){
-                this.el.parentNode.replaceChild(el_node,this.el);
+            el_node.innerHTML = el_str;
+            el_node = el_node.childNodes[1];
+            if (this.el && this.el.parentNode) {
+                this.el.parentNode.replaceChild(el_node, this.el);
             }
             this.el = el_node;
             var list_container = el_node.querySelector('.productt-list');
-            for(var i = 0, len = this.product_list.length; i < len; i++){
+            for (var i = 0, len = this.product_list.length; i < len; i++) {
                 var product_node = this.render_product(this.product_list[i]);
-                product_node.addEventListener('click',this.click_product_handler);
+                product_node.addEventListener('click', this.click_product_handler);
                 list_container.appendChild(product_node);
             }
         }

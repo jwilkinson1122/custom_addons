@@ -37,9 +37,8 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				if (OrthoticRadio) {
 					OrthoticRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_orthotic').hide();
-					$('#half_orthotic').hide();
-					$('#quater_orthotic').hide();
+					$('#pair_orthotic').hide();
+					$('#single_orthotic').hide();
 					$('#ask').show();
 				}
 			}
@@ -50,48 +49,27 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				$('.side-prod-list').show();
 			}
 
-			full_size() {
+			both_side() {
 				var self = this;
-				$('#full_orthotic').show();
-				$('#half_orthotic').hide();
-				$('#quater_orthotic').hide();
+				$('#pair_orthotic').show();
+				$('#single_orthotic').hide();
 				$('#ask').hide();
-				$('#half_size_orthotic').hide();
-				$('#quater_size_orthotic').hide();
+				$('#single_side_orthotic').hide();
 				$('.modifiers-product-list').show();
 				self.modifier_attribute = [];
 			}
-			half_size() {
+			single_side() {
 				var self = this;
 				$('#ask').hide();
-				$('#half_orthotic').show();
-				$('#half_size_orthotic').show();
+				$('#single_orthotic').show();
+				$('#single_side_orthotic').show();
 				$('.modifiers-product-list').show();
-				$('#quater_orthotic').hide();
-				$('#full_orthotic').hide();
-				$('#quater_size_orthotic').hide();
+				$('#pair_orthotic').hide();
 				self.modifier_attribute = [];
-				var inHalfRadio = document.querySelector(
-					'input[name="half"]:checked'
+				var inSingleRadio = document.querySelector(
+					'input[name="single"]:checked'
 				);
-				if (inHalfRadio) {
-					$('.modifiers-product-list').show();
-				}
-			}
-			quater_size() {
-				var self = this;
-				$('#ask').hide();
-				$('#quater_orthotic').show();
-				$('#quater_size_orthotic').show();
-				$('.modifiers-product-list').show();
-				$('#half_orthotic').hide();
-				$('#full_orthotic').hide();
-				$('#half_size_orthotic').hide();
-				self.modifier_attribute = [];
-				var inQuaterRadio = document.querySelector(
-					'input[name="quater"]:checked'
-				);
-				if (inQuaterRadio) {
+				if (inSingleRadio) {
 					$('.modifiers-product-list').show();
 				}
 			}
@@ -106,34 +84,20 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				var checkRadio = document.querySelector(
 					'input[name="x"]:checked'
 				);
-				var portion = false;
-				var portion_type = false;
+				var side = false;
+				var side_type = false;
 				if (checkRadio.value == "full") {
-					portion = "Full Orthotic"
-					portion_type = "full"
-				} else if (checkRadio.value == "half") {
-					var halfRadio = document.querySelector(
-						'input[name="half"]:checked'
+					side = "Pair Orthotic"
+					side_type = "full"
+				} else if (checkRadio.value == "single") {
+					var singleRadio = document.querySelector(
+						'input[name="single"]:checked'
 					);
-					portion_type = "half"
-					if (halfRadio.value == "left side") {
-						portion = "Left Side";
-					} else if (halfRadio.value == "right side") {
-						portion = "Right Side";
-					}
-				} else if (checkRadio.value == "quater") {
-					var quaterRadio = document.querySelector(
-						'input[name="quater"]:checked'
-					);
-					portion_type = "quater"
-					if (quaterRadio.value == "1st quater") {
-						portion = "1st quater";
-					} else if (quaterRadio.value == "2nd quater") {
-						portion = "2nd quater";
-					} else if (quaterRadio.value == "3rd quater") {
-						portion = "3rd quater";
-					} else if (quaterRadio.value == "4th quater") {
-						portion = "4th quater";
+					side_type = "single"
+					if (singleRadio.value == "left side") {
+						side = "Left Side";
+					} else if (singleRadio.value == "right side") {
+						side = "Right Side";
 					}
 				}
 
@@ -141,8 +105,8 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				modifier_prod_list.push(product)
 				self.showPopup('ModifierProductPopup', {
 					modifier_prod: modifier_prod_list,
-					portion: portion,
-					portion_type: portion_type,
+					side: side,
+					side_type: side_type,
 					modifier_attribute: self.modifier_attribute,
 				})
 			}
@@ -174,9 +138,9 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				if (OrthoticRadio) {
 					OrthoticRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_orthotic').hide();
-					$('#half_orthotic').hide();
-					$('#quater_orthotic').hide();
+					$('#pair_orthotic').hide();
+					$('#single_orthotic').hide();
+
 					$('#ask').show();
 				}
 			}
@@ -232,9 +196,8 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				if (OrthoticRadio) {
 					OrthoticRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_orthotic').hide();
-					$('#half_orthotic').hide();
-					$('#quater_orthotic').hide();
+					$('#pair_orthotic').hide();
+					$('#single_orthotic').hide();
 					$('#ask').show();
 				}
 			}

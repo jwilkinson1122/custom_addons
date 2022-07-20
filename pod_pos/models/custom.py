@@ -15,7 +15,7 @@ class CustomPOS(models.Model):
     bom_product = fields.Boolean(
         string='POS BOM Product')
     modifier_ok = fields.Boolean(string='Modifier Product')
-    orthotic_pieces = fields.Boolean(string='Display Orthotic Pieces?')
+    orthotic_options = fields.Boolean(string='Display Orthotic Options?')
     modifier_groups_ids = fields.Many2many(
         "modifier.product", string="Modifier Groups")
     sub_products_ids = fields.Many2many(
@@ -87,16 +87,14 @@ class pos_order(models.Model):
             for l in order['lines']:
 
                 if l[2].get('is_modifier'):
-                    if 'is_pieces' in l[2]:
-                        if l[2]['is_pieces']:
+                    if 'is_options' in l[2]:
+                        if l[2]['is_options']:
                             for prod in l[2]['is_modifier']:
                                 if 'is_sub' in prod:
                                     qty = prod['qty']
                                 else:
-                                    if (prod['portion_type'] == 'half'):
+                                    if (prod['side_type'] == 'single'):
                                         qty = prod['qty']/2
-                                    elif (prod['portion_type'] == 'quater'):
-                                        qty = prod['qty']/4
                                     else:
                                         qty = prod['qty']
 

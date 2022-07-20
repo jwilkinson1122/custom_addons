@@ -6,7 +6,7 @@
     "version": "15.0.0.0",
     "category": "Point of Sale",
     'summary': 'POS combo POS combine product pos product combo pos orthotic modifier pos product modifier pos orthotic combo meal pos combo meal pos meal modifier pos meal product pos make own orthotic pos combo maker pos combo modifier pos customize orthotic pos customise combo',
-    "description": """This odoo app helps user to create orthotic product modifier, Add modifier product to modifier groups, set sub products with main modifier products and add to pos cart along with modifier product create bom product add bom sub product quantity and uom and manage stock for bom product. User can select piece of orthotic product, and also select modifiers for that, added modifiers also printed on pos receipt. """,
+    "description": """This odoo app helps user to create orthotic product modifier, Add modifier product to modifier groups, set sub products with main modifier products and add to pos cart along with modifier product create bom product add bom sub product quantity and uom and manage stock for bom product. User can select option of orthotic product, and also select modifiers for that, added modifiers also printed on pos receipt. """,
     "author": "NWPL",
     "website": "https://www.nwpodiatric.com",
     "depends": ['base', 'point_of_sale', 'stock', 'account'],
