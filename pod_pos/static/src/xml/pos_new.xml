@@ -6,8 +6,8 @@
 	<t t-name="ProductTemplatePopupWidget" owl="1">
 		<div class="modal-dialog">
 			<div class="popup popup-confirm" style="height: 450px;">
-				<p class="title" style="background-color: #7f82ac; color: #fff;">Products Variants</p>
-				<p style="color: #0075AC;">Select Your Variants</p>
+				<p class="title" style="background-color: #7f82ac; color: #fff;">Product Options</p>
+				<p style="color: #0075AC;">Select Items</p>
 				<div class="body" style="height: 300px; overflow  : auto">
 					<div t-if="props.variant_ids.length != 0" class="product-list">
 						<t t-foreach="props.variant_ids" t-as="product" t-key="product.id">
@@ -79,7 +79,7 @@
 				<li class="package_info" style="margin-left: 20px;font-size: 14px;">
 					<t t-if="props.line.get_modifier()">
 						<t t-foreach="props.line.get_modifier()" t-as="line">
-							<t t-if="line.side_type == 'full'">
+							<t t-if="line.side_type == 'pair'">
 								<span style="font-weight: bold;">
 									<t t-esc="line.display_name" />
 								</span>
@@ -97,7 +97,8 @@
 									<t t-esc="line.display_name" />
 								</span>
 								<span style="color:#888">
-									<t t-esc="(line.qty).toFixed(2)/2"/>
+									<!-- <t t-esc="(line.qty).toFixed(2)/2"/> -->
+									<t t-esc="(line.qty).toFixed(2)"/>
 									<t t-esc="line.uom_id[1]"/>
  (									<t t-esc="line.side"/>
 )
@@ -149,7 +150,7 @@
 					<div class="main-content modifier-full-content">
 						<div style="left: 0px;width: 100%;height: 100%;display: table;border: none;overflow: hidden;text-align: center;">
 							<div class="orthotic_info">
-								<p id="ask">How Would you modify your item??</p>
+								<p id="ask">How would you like to modify your selection?</p>
 								<p style="display:none;" id="pair_orthotic">You Selected Pair Orthotic Please Choose Modifier.</p>
 								<p style="display:none;" id="single_orthotic">You Selected Single Side Orthotic Please Choose Modifier For Left Side Or Right Side.</p>
 							</div>
@@ -159,13 +160,18 @@
 
 								<div class="hiddenradio" style="width: 140%">
 									<label>
-										<input style="width: 30px;float: left;cursor: pointer" type="radio" class="radio" name="x" value="full" id="y" t-on-click="both_side"/>
-										<img src="/pod_pos/static/src/img/pair_orthotic.png" style="margin:14px;width:23%;border-radius: 120px" />
+										<input style="width: 30px;float: left;cursor: pointer" type="radio" class="radio" name="x" value="pair" id="y" t-on-click="both_side"/>
+										<img src="/pod_pos/static/src/img/pair_orthotic.png" style="margin:14px;width:23%;border-radius: 100px" />
 									</label>
 
 									<label>
 										<input style="width: 30px;float: left;" type="radio" class="radio" name="x" value="single" id="z" t-on-click="single_side"/>
-										<img src="/pod_pos/static/src/img/left_orthotic.png" style="margin:14px;width:23%;border-radius: 120px"/>
+										<img src="/pod_pos/static/src/img/left_orthotic.png" style="margin:14px;width:23%;border-radius: 100px"/>
+									</label>
+
+									<label>
+										<input style="width: 30px;float: left;" type="radio" class="radio" name="x" value="single" id="z" t-on-click="single_side"/>
+										<img src="/pod_pos/static/src/img/right_orthotic.png" style="margin:14px;width:23%;border-radius: 100px"/>
 									</label>
 
 								</div>
@@ -201,7 +207,7 @@
 				<div class="button_of_side" style="margin-left:185px">
 					<button class="button-side" style="margin-top: 290px;width: 235px;margin-right: 5px;height: 43px;font-size: 19px;color: white;background: #6dc79a;border-radius: 10px;padding:5px" t-on-click="selectSubProduct">
 						<i class='fa fa-angle-double-left'></i>
-						Add Sub Product
+						Add Options
 					</button>
 					<button class="button close-side-prod" style="height: 43px;width: 200px;border-radius: 10px;font-size: 19px;padding:5px;color:#555555" t-on-click="cancel_add_side_product">
 						<i class='fa fa-angle-double-right'></i>
@@ -254,6 +260,7 @@
 		</xpath>
 	</t>
 
+	<!-- Order Receipt -->
 	<t t-extend="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
 		<xpath expr="//div[hasclass('orderlines')]" position="replace">
 
@@ -270,12 +277,12 @@
 
 							<div style="margin-left:7px;font-size:14px">
 								<t t-foreach="line.is_modifier" t-as="modifier">
-									<t t-if="modifier.side_type == 'full'">
+									<t t-if="modifier.side_type == 'pair'">
 										<span>
 											<t t-esc="modifier.display_name" />
 										</span>
 										<span style="color:#888">
-											<t t-esc="(modifier.qty).toFixed(2)"/>
+											<t t-esc="(modifier.qty).toFixed(2)*2"/>
 											<t t-esc="modifier.uom_id[1]"/>
  (											<t t-esc="modifier.side"/>
 )
@@ -288,7 +295,8 @@
 											<t t-esc="modifier.display_name" />
 										</span>
 										<span style="color:#888">
-											<t t-esc="(modifier.qty).toFixed(2)/2"/>
+											<!-- <t t-esc="(modifier.qty).toFixed(2)/2"/> -->
+											<t t-esc="(modifier.qty).toFixed(2)"/>
 											<t t-esc="modifier.uom_id[1]"/>
  (											<t t-esc="modifier.side"/>
 )
@@ -319,12 +327,12 @@
 
 							<div style="margin-left:7px;font-size:14px">
 								<t t-foreach="line.is_modifier" t-as="modifier">
-									<t t-if="modifier.side_type == 'full'">
+									<t t-if="modifier.side_type == 'pair'">
 										<span>
 											<t t-esc="modifier.display_name" />
 										</span>
 										<span style="color:#888">
-											<t t-esc="(modifier.qty).toFixed(2)"/>
+											<t t-esc="(modifier.qty).toFixed(2)*2"/>
 											<t t-esc="modifier.uom_id[1]"/>
  (											<t t-esc="modifier.side"/>
 )
@@ -337,7 +345,8 @@
 											<t t-esc="modifier.display_name" />
 										</span>
 										<span style="color:#888">
-											<t t-esc="(modifier.qty).toFixed(2)/2"/>
+											<t t-esc="(modifier.qty).toFixed(2)"/>
+											<!-- <t t-esc="(modifier.qty).toFixed(2)/2"/> -->
 											<t t-esc="modifier.uom_id[1]"/>
  (											<t t-esc="modifier.side"/>
 )

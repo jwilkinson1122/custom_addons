@@ -66,7 +66,7 @@ odoo.define('pod_pos.models', function (require) {
             prods.forEach(function (prod) {
                 if (prod) {
 
-                    if (prod.side_type == "full") {
+                    if (prod.side_type == "pair") {
                         total += (prod.lst_price * prod.qty)
                     }
 

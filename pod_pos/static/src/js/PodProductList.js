@@ -86,9 +86,9 @@ odoo.define('pod_pos.PodProductList', function (require) {
 				);
 				var side = false;
 				var side_type = false;
-				if (checkRadio.value == "full") {
+				if (checkRadio.value == "pair") {
 					side = "Pair Orthotic"
-					side_type = "full"
+					side_type = "pair"
 				} else if (checkRadio.value == "single") {
 					var singleRadio = document.querySelector(
 						'input[name="single"]:checked'
