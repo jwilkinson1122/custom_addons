@@ -1,0 +1,18 @@
+<odoo>
+
+  <template id="prescription_list_template" name="Prescription List">
+    <div id="wrap" class="container">
+      <h1>Prescriptions</h1>
+      <t t-foreach="prescriptions" t-as="prescription">
+        <div class="row">
+          <span t-field="prescription.name" />
+,
+          <span t-field="prescription.date_administered" />
+,
+          <span t-field="prescription.administrator_id" />
+        </div>
+      </t>
+    </div>
+  </template>
+
+</odoo>
