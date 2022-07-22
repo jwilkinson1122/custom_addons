@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <!--        custom_form_view-->
+        <record model="ir.ui.view" id="crm_customer_form_inherit">
+           <field name="name">crm customer inherit</field>
+           <field name="model">res.partner</field>
+           <field name="inherit_id" ref="base.view_partner_form"/>
+           <field name="type">form</field>
+            <field name="arch" type="xml">
+                 <field name="vat" required="True"/>
+                 <field name="vat" position="after" required="True">
+                     <group>
+                          <field name="related_patient_id"/>
+                          <field name="namexxx"/>
+                     </group>
+
+                 </field>
+                  <xpath expr="//page[2]" position="inside">
+                    <group>
+                        <field name="related_patient_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+    </data>
+</odoo>
