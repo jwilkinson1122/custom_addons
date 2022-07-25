@@ -31,7 +31,7 @@ class Bookout(models.Model):
     patient_image = fields.Binary(related="patient_id.image_128")
 
     patient_id = fields.Many2one("pod.patient", required=True)
-    user_id = fields.Many2one("res.users", "Librarian",
+    user_id = fields.Many2one("res.users", "User",
                               default=lambda s: s.env.user)
     line_ids = fields.One2many(
         "pod.bookout.line",

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="patients_form_view" model="ir.ui.view">
+            <field name="name">pod.patients.form.view</field>
+            <field name="model">pod.patient</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <header>
+                        <button name="print_report" type="object"
+                            string="Print Patient Information" class="oe_highlight" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="pod_patient_id" />
+                            </div>
+                            <h1>
+                                <field style="width: 30%%" name="pod_patient_id"
+                                    default_focus="1" placeholder="Patient Name"
+                                    context="{'default_is_patient': 1,'default_is_person': 1}"
+                                     />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="date_of_birth" />
+                            </group>
+                            <group>
+                                <field name="gender" />
+                                <field name="age" readonly="1" />
+                                <field name="partner_address_id" />
+                            </group>
+                        </group>
+                        <group>
+                            <separator colspan="4"
+                                string="Patient Information" />
+                            <newline />
+                            <field colspan="6" name="patient_info"
+                                nolabel="1" />
+                        </group>
+                        <notebook>
+                            <page string="General Information">
+                                <group string="Patient General Information">
+                                    <group>
+                                        <field name="rh" />
+                                        <field name="receivable" />
+                                        <field name="pod_doctor_id" />
+                                    </group>
+                                </group>
+
+                                <group colspan="4"
+                                    string="Patient Extra Information">
+                                    <field colspan="4" name="general_info"
+                                        nolabel="1" />
+                                    <newline />
+                                    <!-- <group>
+                                        <field name="deceased" />
+                                        <field name="date_of_death"
+                                            attrs="{'invisible':[('deceased','=',False)],'required':[('deceased','=',1)]}" />
+                                        <field name="cause_of_death"
+                                            attrs="{'invisible':[('deceased','=',False)]}" />
+                                    </group> -->
+                                </group>
+                            </page>
+
+                            <page string="Conditions">
+                                <field name="pod_patient_condition_ids"
+                                    nolabel="1" widget="one2many_list" />
+                            </page>
+
+
+                            <page string="Device">
+                                <group>
+                                    <field name="device_ids"
+                                        string="Device History"
+                                        colspan="4" widget="one2many_list" >
+                                        <tree>
+                                            <field name="treatment_id" />
+                                            <field name="diagnosis_pathology_id" />
+                                            <field name="is_active" />
+                                            <field name="pod_doctor_id" />
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+         
+                        </notebook>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="patients_tree_view" model="ir.ui.view">
+            <field name="name">pod.patients.tree.view</field>
+            <field name="model">pod.patient</field>
+            <field name="arch" type="xml">
+                <tree string="Patient Information">
+                    <field name="name" />
+                    <field name="pod_patient_id" />
+                    <field name="gender" />
+                    <field name="date_of_birth" />
+                    <field name="pod_doctor_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_patient" model="ir.actions.act_window">
+            <field name="name">Patients</field>
+            <field name="res_model">pod.patient</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_pod_patient_code" action="action_patient"
+            parent="menu_patients" sequence="0" />
+
+        <act_window id="action_view_priscription_id2" name="Orders"
+            res_model="pod.order" binding_model="pod.patient"
+            view_mode="tree" domain="[('pod_patient_id', '=', active_id)]" />
+
+        <act_window id="action_view_lab_id" name="Lab Reports"
+            res_model="lab" binding_model="pod.patient"
+            view_mode="tree,form" domain="[('pod_patient_id', '=', active_id)]" />
+
+        <act_window id="action_psc_id" name="PSC"
+            res_model="pod.patient.psc" binding_model="pod.patient"
+            view_mode="tree,form" domain="[('pod_patient_id', '=', active_id)]" />
+
+</odoo>

@@ -8,7 +8,7 @@
         <group>
           <field name="name" />
           <field name="email" />
-          <field name="card_number" />
+          <!-- <field name="card_number" /> -->
         </group>
         <!-- mail mixin fields -->
         <div class="oe_chatter">
@@ -27,7 +27,7 @@
     <field name="arch" type="xml">
       <tree>
         <field name="name" />
-        <field name="card_number" />
+        <!-- <field name="card_number" /> -->
       </tree>
     </field>
   </record>

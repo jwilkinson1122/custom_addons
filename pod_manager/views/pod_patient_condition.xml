@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="pod_patient_condition_form_view" model="ir.ui.view">
+            <field name="name">pod.condition.form.view</field>
+            <field name="model">pod.condition</field>
+            <field name="arch" type="xml">
+                <form string="Conditions">
+                    <group colspan="4" col="4" string="Main">
+                        <field name="pathology_id" />
+                        <field name="condition_severity" />
+                        <field name="is_active" />
+                        <field name="short_comment" />
+                        <field name="doctor_id" />
+                    </group>
+                    <group string="Extra Info">
+                        <field name="extra_info" nolabel="1" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="pod_patient_condition_tree_view" model="ir.ui.view">
+            <field name="name">pod.condition.tree.view</field>
+            <field name="model">pod.condition</field>
+            <field name="arch" type="xml">
+                <tree string="Conditions">
+                    <field name="pathology_id" />
+                    <field name="is_active" />
+                    <field name="condition_severity" />
+                    <field name="short_comment" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_pod_patient_condition" model="ir.actions.act_window">
+            <field name="name">Conditions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pod.condition</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+</odoo>

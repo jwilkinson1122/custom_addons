@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+	<record id="doctor_group" model="res.groups">
+        <field name="name">Doctor</field>
+        <field name="comment">the user will have access to doctor data.</field>
+    </record>
+
+    <record id="general_group" model="res.groups">
+        <field name="name"> Staff</field>
+        <field name="comment">the user will have access to general staff data.</field>
+    </record>
+
+    <record id="assistant_group" model="res.groups">
+        <field name="name"> Assistant</field>
+        <field name="comment">the user will have access to  assistant data.</field>
+    </record>
+
+    <record id="manager_group" model="res.groups">
+        <field name="name">Office Manager</field>
+        <field name="comment">the user will have access to office manager data.</field>
+    </record>
+
+</data>
+</odoo>

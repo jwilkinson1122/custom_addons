@@ -1,0 +1,32 @@
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_pod_order_shipment_wizard_view"
+            model="ir.ui.view">
+            <field name="name">Create Order Shipment</field>
+            <field name="model">pod.order.shipment</field>
+            <field name="arch" type="xml">
+                <form string="Create pod_order invoices">
+                    <separator 
+                        string="Do you want to create the pod_order Shipment ?" />
+                    <newline />
+                    <separator string="                  "
+                         />
+                     <footer>
+                    <button name="pod_order_shipment"
+                        class="oe_highlight" string="Create Order Shipment"
+                        type="object" />
+                        or
+                    <button special="cancel" string="Cancel" class="oe_highlight" />
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+
+        <act_window id="action_pod_order_shipment1"
+            name="Create Order Shipment" res_model="pod.order.shipment"
+            binding_model="pod.order" view_mode="form"
+            target="new" />
+
+</odoo> -->
