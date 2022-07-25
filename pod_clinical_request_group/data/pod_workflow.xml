@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<odoo>
-    <record id="pod_workflow.pod_workflow" model="workflow.type">
-        <field name="model_id" ref="model_pod_request_group" />
-        <field name="model_ids" eval="[(4, ref('model_pod_request_group'))]" />
-    </record>
-</odoo>

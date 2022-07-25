@@ -1,0 +1,11 @@
+<odoo>
+  <record id="action_pod_patient" model="ir.actions.act_window">
+    <field name="name">Podiatry Patients</field>
+    <field name="res_model">pod.patient</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_window, deprecated in Odoo 14
+    <act_window id="action_pod_patient" name="Podiatry Patients" res_model="pod.patient" view_mode="tree,form" />
+    -->
+  <menuitem id="menu_pod_patient" name="Patients" action="action_pod_patient" parent="pod_app.menu_pod" sequence="1"/>
+</odoo>

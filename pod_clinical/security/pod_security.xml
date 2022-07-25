@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<odoo>
-    <record id="group_pod_view_requests" model="res.groups">
-        <field name="name">Podiatry view requests</field>
-        <field name="category_id" ref="base.module_category_hidden" />
-        <field name="implied_ids" eval="[(4, ref('pod_base.group_pod_root_menu')), (4, ref('pod_base.group_pod_administration_menu')), (4, ref('pod_base.group_pod_clinical_menu')), (4, ref('pod_administration.group_pod_patient_display'))]" />
-    </record>
-</odoo>

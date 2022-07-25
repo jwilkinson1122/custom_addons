@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+  <record model="res.partner" id="res_partner_huxley">
+    <field name="name">Aldous Huxley</field>
+  </record>
+
+  <record model="pod.prescription" id="pod_prescription_tp">
+    <field name="name">Jane Doe</field>
+    <field name="doctor_ids" eval="[(4, ref('res_partner_huxley'))]" />
+    <field name="date_prescribed">2022-07-01</field>
+  </record>
+</odoo>

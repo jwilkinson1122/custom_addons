@@ -1,6 +1,0 @@
-<odoo>
-  <!-- Modify Group name -->
-  <record id="clinic_app.clinic_group_user" model="res.groups">
-    <field name="name">Clinic Member</field>
-  </record>
-</odoo>

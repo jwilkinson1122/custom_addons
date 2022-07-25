@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prescription_portal,Prescription Portal Access,pod_app.model_pod_prescription,base.group_portal,1,0,0,0
+access_patient_portal,Patient Portal Access,pod_patient.model_pod_patient,base.group_portal,1,0,0,0
+access_stage_portal,Bookout Stage Portal Access,pod_bookout.model_pod_bookout_stage,base.group_portal,1,0,0,0
+access_bookout_portal,Bookout Portal Access,pod_bookout.model_pod_bookout,base.group_portal,1,0,0,0
+access_bookout_line_portal,Bookout Portal Line Access,pod_bookout.model_pod_bookout_line,base.group_portal,1,0,0,0
