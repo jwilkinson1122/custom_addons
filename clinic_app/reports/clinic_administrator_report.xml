@@ -1,0 +1,39 @@
+<odoo>
+
+  <record id="action_administrator_report" model="ir.actions.report">
+    <field name="name">Prescriptions by Administrator</field>
+    <field name="model">res.partner</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">clinic_app.administrator_report</field>
+    <field name="binding_model_id" ref="base.model_res_partner" />
+    <field name="binding_type">report</field>
+  </record>
+
+  <template id="administrator_report">
+    <t t-call="web.html_container">
+      <t t-call="web.external_layout">
+
+        <div class="page">
+          <div class="container">
+            <h1>Prescriptions by Administrator</h1>
+            <t t-foreach="administrator_prescriptions" t-as="group">
+              <h2 t-field="group[0].name" />
+              <ul>
+                <t t-foreach="group[1]" t-as="prescription">
+                  <li>
+                    <b>
+                      <span t-field="prescription.name" />
+                    </b>
+                    <span t-field="prescription.doctor_ids" />
+                  </li>
+                </t>
+              </ul>
+            </t>
+          </div>
+        </div>
+
+      </t>
+    </t>
+  </template>
+
+</odoo>

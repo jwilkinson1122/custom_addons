@@ -1,0 +1,42 @@
+<odoo>
+
+  <template id="prescription_archive" name="Prescription List">
+    <t t-call="web.frontend_layout">
+      <t t-set="title">Prescription Archive</t>
+      <div class="oe_structure">
+        <div class="container">
+
+          <h1 class="h1-prescription-archive">Prescription Archive</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Published</th>
+                <th scope="col">Administrator</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <t t-foreach="prescriptions" t-as="prescription">
+                <tr scope="row">
+                  <td>
+                    <span t-field="prescription.name" />
+                  </td>
+                  <td>
+                    <span t-field="prescription.date_administered" />
+                  </td>
+                  <td>
+                    <span t-field="prescription.administrator_id" />
+                  </td>
+                </tr>
+              </t>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </t>
+  </template>
+
+</odoo>

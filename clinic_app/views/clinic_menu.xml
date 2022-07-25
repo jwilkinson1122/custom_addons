@@ -1,0 +1,20 @@
+<odoo>
+
+  <!-- Clinic App Menu -->
+  <menuitem id="menu_clinic" name="Clinic" />
+
+  <!-- Action to open the Prescription list -->
+  <record id="action_clinic_prescription" model="ir.actions.act_window">
+    <field name="name">Clinic Prescriptions</field>
+    <field name="res_model">clinic.prescription</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_wndow, deprecated
+  <act_window id="action_clinic_prescription" name="Clinic Prescriptions" res_model="clinic.prescription" view_mode="tree,form" />
+  -->
+  <!-- Menu item to open the Prescription list -->
+  <menuitem id="menu_clinic_prescription" name="Draft Orders" parent="menu_clinic" action="action_clinic_prescription" sequence="2"/>
+
+  <menuitem id="menu_clinic_configuration" name="Configuration" parent="menu_clinic" sequence="4"/>
+
+</odoo>
