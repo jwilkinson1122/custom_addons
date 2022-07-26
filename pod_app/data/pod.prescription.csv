@@ -1,3 +1,0 @@
-"id","name","date_prescribed","prescriber_id/id","doctor_ids/id"
-pod_prescription_vb,"Vinnie Boombotz","2022-07-01",res_partner_blaine,res_partner_doogie
-pod_prescription_tm,"Test McTesterson","2022-07-15",res_partner_blaine,"res_partner_holger"

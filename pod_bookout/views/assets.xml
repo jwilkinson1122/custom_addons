@@ -1,9 +1,0 @@
-<odoo>
-  <template id="assets_backend" inherit_id="web.assets_backend" name="Podiatry Bookout Kanban Assets">
-    <xpath expr="." position="inside">
-      <link rel="stylesheet" href="/pod_bookout/static/src/css/bookout.css"/>
-      <script type="text/javascript" src="/pod_bookout/static/src/js/bookout.js">
-      </script>
-    </xpath>
-  </template>
-</odoo>

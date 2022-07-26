@@ -1,0 +1,30 @@
+
+{
+    "name": "Pod Prescription Request",
+    "summary": "Pod prescription request and administration",
+    "version": "15.0.1.0.0",
+    "author": "NWPL",
+    "category": "Medical",
+    "website": "https://nwpodiatric.com",
+    "license": "LGPL-3",
+    "depends": [
+        "pod_workflow",
+        "pod_clinical",
+        "pod_prescription",
+        "pod_administration_location_stock",
+    ],
+    "data": [
+        "security/pod_security.xml",
+        "security/ir.model.access.csv",
+        "data/ir_sequence_data.xml",
+        "data/stock_location.xml",
+        "data/pod_workflow.xml",
+        "views/pod_request_views.xml",
+        "views/pod_prescription_administration_view.xml",
+        "views/pod_prescription_request.xml",
+    ],
+    "demo": [],
+    "application": False,
+    "installable": True,
+    "auto_install": False,
+}

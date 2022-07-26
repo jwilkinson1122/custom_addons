@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <menuitem id="pod_location_menu" name="Locations" sequence="30" parent="pod_base.pod_root_administration" groups="pod_administration_location.group_pod_location_list" action="pod_location_action" />
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pod_coverage_user,access.pod.coverage.user,model_pod_coverage,group_pod_coverage_display,1,0,0,0
+access_pod_coverage_manager,access.pod.coverage.manager,model_pod_coverage,group_pod_coverage_manager,0,1,1,0
+access_pod_coverage_template_user,access.pod.coverage.template.user,model_pod_coverage_template,group_pod_coverage_template_display,1,0,0,0
+access_pod_coverage_template_manager,access.pod.coverage.template.manager,model_pod_coverage_template,group_pod_coverage_template_manager,0,1,1,0

@@ -1,2 +1,0 @@
-# pod_manager
- 

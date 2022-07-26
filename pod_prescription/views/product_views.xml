@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <!-- <label for="sale_ok" position="after">
+                <div>
+                    <field name="is_medical_device" />
+                    <label for="is_medical_device" />
+                    <field name="over_the_counter" />
+                    <label for="over_the_counter" />
+                </div>
+
+            </label> -->
+            <notebook position="inside">
+                <page string="Medical" name="prescription" attrs="{'invisible':[('is_medical_device','=', False)]}">
+                    <group>
+                        <group>
+                            <!-- <field name="sct_code_id" options="{'no_create': True, 'no_open': True}" /> -->
+                            <field name="is_medical_device" />
+                            <field name="over_the_counter" />
+                            <!-- <field name="form_id" options="{'no_create': True, 'no_open': True}" /> -->
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="pod_prescription_action">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_medical_device', '=', True)]</field>
+        <field name="context">{'default_is_medical_device': True}</field>
+    </record>
+    <menuitem id="pod_prescription" name="Products" parent="pod_base.pod_root_prescriptions" groups="pod_prescription.group_pod_prescription_list" sequence="15" action="pod_prescription_action" />
+</odoo>

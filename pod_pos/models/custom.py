@@ -16,7 +16,7 @@ class CustomPOS(models.Model):
     bom_product = fields.Boolean(
         string='POS BOM Product')
     modifier_ok = fields.Boolean(string='Modifier Product')
-    laterality_options = fields.Boolean(string='Display Orthotic Pieces?')
+    laterality_options = fields.Boolean(string='Display Options?')
     modifier_groups_ids = fields.Many2many(
         "modifier.product", string="Modifier Groups")
     sub_products_ids = fields.Many2many(
