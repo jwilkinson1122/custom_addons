@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="create_rx_invoice_wizard_view" model="ir.ui.view">
+            <field name="name">create.rx.invoice.wizard.view</field>
+            <field name="model">create.rx.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Create rx invoices">
+                    <separator
+                        string="Do you want to create the rx invoice(s) ?" />
+                    <newline />
+                    <separator string="                  "
+                        colspan="6" />
+                    <footer>
+                        <button name="create_rx_invoice"
+                            class="oe_highlight" string="Create Rx Order Invoices"
+                            type="object" />
+                        or
+                        <button special="cancel" string="Cancel"
+                            class="oe_highlight" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_create_rx_invoice1"
+            name="Create Rx Order Invoice" res_model="create.rx.invoice"
+            binding_model="pod.rx.order" view_mode="form"
+            target="new" />
+
+</odoo>

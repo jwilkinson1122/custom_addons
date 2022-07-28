@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <act_window id="action_view_priscription_id2" name="Prescription Orders" res_model="pod.rx.order" binding_model="pod.patient" view_mode="tree" domain="[('patient_id', '=', active_id)]" />
+
+    <act_window id="action_view_priscription_id2" name="Prescription Orders" res_model="pod.rx.order" binding_model="pod.patient" view_mode="tree,form" domain="[('patient_id', '=', active_id)]" />
+
+    <!-- Tree view -->
+    <record id="pod_rx_order_tree_view" model="ir.ui.view">
+        <field name="name">pod.rx.order.tree.view</field>
+        <field name="model">pod.rx.order</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Rx Order">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="user_id"/>
+                <field name="rx_date"/>
+                <field name="doctor_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="pod_rx_order_form_view" model="ir.ui.view">
+        <field name="name">pod.rx.order.form.view</field>
+        <field name="model">pod.rx.order</field>
+        <field name="arch" type="xml">
+            <form string="Rx Order">
+                <header>
+                    <button name="rx_report" type="object" string="Print Rx Order" class="oe_highlight"/>
+                    <button name="%(action_create_rx_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+                </header>
+                <sheet>
+                    <group string="Rx Information">
+                        <group>
+                            <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}"/>
+                            <field name="rx_date" required="1"/>
+                            <field name="doctor_id" required="1"/>
+                        </group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="user_id"/>
+                            <field name="ship_to_patient" />
+                        </group>
+                    </group>
+                    <group string="Rx Order Detail">
+                        <field name="rx_line_ids" nolabel="1" widget="one2many_list"/>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="pod_rx_order_search_view" model="ir.ui.view">
+        <field name="name">pod.rx.order.search.view</field>
+        <field name="model">pod.rx.order</field>
+        <field name="type">search</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <search string="Search Patient Prescriptions">
+                <separator orientation="vertical"/>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="rx_date"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for pod prescriptions -->
+    <record id="action_pod_rx_order" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.rx.order</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="pod_rx_order_search_view"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- <menuitem id="menu_pod_rx_order_code" action="action_pod_rx_order" parent="menu_prescription_master" sequence="15"/> -->
+
+
+</odoo>

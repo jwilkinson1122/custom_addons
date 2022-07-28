@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_open_prescriptions" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.rx.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('practice_partner_id','=', active_id)]</field>
+        <field name="context">{'default_doctor_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first prescription !
+            </p>
+        </field>
+    </record>
+    <record id="pod_doctor_form_view" model="ir.ui.view">
+        <field name="name">pod.doctor.form.view</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <form string="Doctor">
+                <notebook>
+                    <page string="Main Info">
+                        <group colspan="4" col="4">
+                            <field name="partner_id" required="1" context="{'default_is_doctor': 1, 'search_default_is_doctor': 1}" />
+                            <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                            <field name="code" />
+                        </group>
+                    </page>
+                    <page string="Extra Info">
+                        <field name="info" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record id="pod_doctor_search_view" model="ir.ui.view">
+        <field name="name">pod.doctor.search.view</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <search string="Search Doctor">
+                <separator orientation="vertical" />
+                <field name="partner_id" select="1" />
+                <field name="code" select="1" />
+                <field name="practice_partner_id" select="1" />
+                <newline />
+                <group expand="1" string="Group By">
+                    <filter string="Doctor" name='by_user' context="{'group_by':'partner_id'}"/>
+                    <filter string="Medical Practice" name='by_practice' context="{'group_by':'practice_partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="pod_doctor_tree_view" model="ir.ui.view">
+        <field name="name">pod.doctor.tree.view</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <tree string="Doctor Information">
+                <field name="partner_id" />
+                <field name="code" />
+                <field name="practice_partner_id" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for pod doctors -->
+    <record id="action_pod_doctor" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.doctor</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Action for pod patients -->
+    <!-- <record id="action_pod_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">pod.patient</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_no_content_smiling_face">
+                Create your first patient!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pod_patient_code" action="action_pod_patient" parent="menu_patient_master" sequence="5"/> -->
+    <!-- 
+    <menuitem id="menu_physician" name='Physicians' parent="main_menu_configartion" sequence="7" />
+
+    <menuitem id="menu_medical_physician" parent="menu_physician" action="action_medical_physician" sequence="6" /> -->
+
+
+
+
+</odoo>

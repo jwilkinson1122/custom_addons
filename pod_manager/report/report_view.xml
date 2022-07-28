@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_print_rx" model="ir.actions.report">
+            <field name="name">Rx Order</field>
+            <field name="model">pod.rx.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pod_manager.rx_demo_report</field>
+            <field name="report_file">pod_manager.rx_demo_report</field>
+        </record>
+
+        <record id="report_print_patient_card" model="ir.actions.report">
+            <field name="name">Patient Card</field>
+            <field name="model">pod.patient</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pod_manager.report_patient_card</field>
+            <field name="report_file">pod_manager.report_patient_card</field>
+        </record>
+
+        <record id="report_print_patient_devices_document" model="ir.actions.report">
+            <field name="name">Device History New</field>
+            <field name="model">pod.patient</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pod_manager.patient_devices_document</field>
+            <field name="report_file">pod_manager.patient_devices_document</field>
+        </record>
+
+        <record id="report_print_patient_conditions_document" model="ir.actions.report">
+            <field name="name">Pathologies Report New</field>
+            <field name="model">pod.patient</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pod_manager.patient_conditions_document</field>
+            <field name="report_file">pod_manager.patient_conditions_document</field>
+        </record>
+
+    </data>
+</odoo>

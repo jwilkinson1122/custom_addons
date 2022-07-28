@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pod_pathology_category_form_view" model="ir.ui.view">
+        <field name="name">pod.pathology.category.form.view</field>
+        <field name="model">pod.pathology.category</field>
+        <field name="arch" type="xml">
+            <form string="Pathology Categories">
+                <group colspan="4" col="4">
+                    <field name="name" />
+                    <field name="active" />
+                    <field name="parent_id" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="pod_pathology_category_tree_view" model="ir.ui.view">
+        <field name="name">pod.pathology.category.tree.view</field>
+        <field name="model">pod.pathology.category</field>
+        <field name="arch" type="xml">
+            <tree string="Pathology Categories">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_pod_pathology_category_tree" model="ir.actions.act_window">
+        <field name="name">Pathology Categories Structure</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.pathology.category</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pod_pathology_category_form" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.pathology.category</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_pathologies" name="Pathologies" parent="menu_configuration_master" sequence='1' />
+
+    <menuitem id="menu_categories" name="Categories" parent="menu_pathologies" />
+
+    <menuitem id="menu_categories_structure" action="action_pod_pathology_category_tree" sequence="1" parent="menu_categories" />
+
+    <menuitem id="menu_categories_categories" action="action_pod_pathology_category_form" sequence="2" parent="menu_categories" />
+
+
+
+    <!--     <record id="action_pod_pathology" model="ir.actions.act_window">-->
+    <!--        <field name="name">Conditions</field>-->
+    <!--        <field name="type">ir.actions.act_window</field>-->
+    <!--        <field name="res_model">pod.pathology</field>-->
+    <!--        <field name="binding_view_types">form</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--    </record>-->
+
+    <!--    <menuitem id="menu_pathologies" name="Pathologies"-->
+    <!-- parent="menu_configuration_master" sequence='1'/>-->
+
+    <!--    <menuitem id="menu_sub_pathologies" action="action_pod_pathology"-->
+    <!-- sequence="3" parent="menu_pathologies"/>-->
+
+
+</odoo>

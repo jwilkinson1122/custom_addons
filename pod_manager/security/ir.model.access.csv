@@ -1,0 +1,76 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_conditions_category,pod.group.conditions.category,model_pod_pathology_category,group_pod_group,1,0,0,0
+access_conditions,pod.group.conditions,model_pod_pathology,group_pod_group,1,0,0,0
+
+access_conditions_category_doc,pod.group.conditions.category.doc,model_pod_pathology_category,bi_group_nwpl,1,1,1,0
+access_conditions_doc,pod.group.conditions.doc,model_pod_pathology,bi_group_nwpl,1,1,1,0
+
+access_pod_patient_doctor,pod.group.patient.doctor,model_pod_patient,bi_group_nwpl,1,1,1,1
+access_pod_patient_pod_group,pod.group.patient.pod.group,model_pod_patient,group_pod_group,1,0,0,0
+
+access_pod_doctor,pod.group.doctor,model_pod_doctor,group_pod_group,1,1,1,
+access_pod_doctor_doctor,pod.group.doctor.doctor,model_pod_doctor,bi_group_nwpl,1,1,1,
+access_pod_patient_device,pod.group.patient.device,model_pod_patient_device,group_pod_group,1,0,0,0
+access_pod_patient_device,pod.group.patient,model_pod_patient,group_pod_group,1,0,0,0
+access_patient_conditions,pod.group.patient.conditions,model_pod_patient_condition,group_pod_group,1,1,1,0
+access_pod_doctor,pod.group.pod.doctor,model_pod_doctor,group_pod_group,1,0,0,0
+
+access_doctor_pod_patient_condition,pod.doctor.group.pod.patient.condition,model_pod_patient_condition,bi_group_nwpl,1,1,1,1
+
+access_doctor_pod_patient_condition_line,pod.doctor.group.pod.patient.condition.line,model_pod_rx_order_line,bi_group_nwpl,1,1,1,1
+access_sale_order,sale.order,sale.model_sale_order,bi_group_nwpl,1,1,1,0
+access_sale_order_line,sale.order.line,sale.model_sale_order_line,bi_group_nwpl,1,1,1,1
+access_sale_order_line_accountant,sale.order.line accountant,sale.model_sale_order_line,bi_group_nwpl,1,1,0,0
+access_account_move_salesman,account_move salesman,account.model_account_move,bi_group_nwpl,1,1,1,0
+access_account_move_manager,account_move manager,account.model_account_move,bi_group_nwpl,1,1,1,1
+access_account_move_line_salesman,account_move.line salesman,account.model_account_move_line,bi_group_nwpl,1,1,1,0
+access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,bi_group_nwpl,1,0,0,0
+access_account_analytic_tag_sale_salesman,account.analytic.tag.sale.salesman,analytic.model_account_analytic_tag,bi_group_nwpl,1,0,0,0
+access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,bi_group_nwpl,1,1,1,0
+access_sale_order_manager,sale.order.manager,sale.model_sale_order,bi_group_nwpl,1,1,1,1
+access_sale_order_accountant,sale.order.accountant,sale.model_sale_order,bi_group_nwpl,1,1,0,0
+access_sale_report_salesman,sale.report,sale.model_sale_report,bi_group_nwpl,1,1,1,0
+access_sale_report_manager,sale.report,sale.model_sale_report,bi_group_nwpl,1,1,1,1
+access_ir_property_sales,ir.property.sales,base.model_ir_property,bi_group_nwpl,1,1,1,1
+access_sale_account_journal,account.journal sale order.user,account.model_account_journal,bi_group_nwpl,1,0,0,0
+
+access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,bi_group_nwpl,1,1,1,1
+
+access_res_partner_sale_manager_m,res.partner.sale.manager.m,base.model_res_partner,group_pod_group,1,0,0,0
+
+access_product_template_sale_user,product.template sale use,product.model_product_template,bi_group_nwpl,1,0,0,0
+access_product_product_sale_user,product.product sale use,product.model_product_product,bi_group_nwpl,1,0,0,0
+access_account_tax_user,account.tax.user,account.model_account_tax,bi_group_nwpl,1,0,0,0
+access_ir_attachment_sales,ir.attachment.sales,base.model_ir_attachment,bi_group_nwpl,1,1,1,0
+access_ir_attachment_manager,ir.attachment.manager,base.model_ir_attachment,bi_group_nwpl,1,1,1,1
+access_product_uom_user,product.uom.user,uom.model_uom_uom,bi_group_nwpl,1,0,0,0
+access_product_pricelist_sale_user,product.pricelist.sale.user,product.model_product_pricelist,bi_group_nwpl,1,0,0,0
+access_account_account_salesman,account_account salesman,account.model_account_account,bi_group_nwpl,1,0,0,0
+access_product_uom_categ_sale_manager,product.uom.categ salemanager,uom.model_uom_category,bi_group_nwpl,1,1,1,1
+access_product_uom_sale_manager,product.uom salemanager,uom.model_uom_uom,bi_group_nwpl,1,1,1,1
+access_product_category_sale_manager,product.category salemanager,product.model_product_category,bi_group_nwpl,1,1,1,1
+access_product_supplierinfo_user,product.supplierinfo.user,product.model_product_supplierinfo,bi_group_nwpl,1,0,0,0
+access_product_supplierinfo_sale_manager,product.supplierinfo salemanager,product.model_product_supplierinfo,bi_group_nwpl,1,1,1,1
+access_product_pricelist_sale_manager,product.pricelist salemanager,product.model_product_pricelist,bi_group_nwpl,1,1,1,1
+access_product_group_res_partner_sale_manager,res_partner group_sale_manager,base.model_res_partner,bi_group_nwpl,1,1,1,0
+access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,bi_group_nwpl,1,0,0,0
+access_sale_order_invoicing_payments,sale.order,sale.model_sale_order,bi_group_nwpl,1,1,0,0
+access_sale_order_line_invoicing_payments,sale.order.line,sale.model_sale_order_line,bi_group_nwpl,1,1,0,0
+
+access_pod_pathology_group_member,access_pod_pathology_group_member,model_pod_pathology_group_member,,1,1,1,1
+access_pod_pathology_group,access_pod_pathology_group,model_pod_pathology_group,,1,1,1,1
+access_pod_patient_device1,access_pod_patient_device1,model_pod_patient_device1,,1,1,1,1
+access_psc_code,access_psc_code,model_psc_code,,1,1,1,1
+access_pod_patient_device,access_pod_patient_device,model_pod_patient_device,,1,1,1,1
+
+access_pod_treatment,access_pod_treatment,model_pod_treatment,,1,0,0,0
+
+access_pod_rx_order,access_pod_rx_order,model_pod_rx_order,,1,0,0,0
+access_pod_rx_order_doctor,access_pod_rx_order_doctor,model_pod_rx_order,bi_group_nwpl,1,1,1,1
+
+
+access_pod_treatment_doctor,access_pod_treatment_doctor,model_pod_treatment,bi_group_nwpl,1,1,1,
+
+access_pet_type,access_pet_type,model_pet_type,,1,0,0,0
+
+access_create_rx_invoice,create.rx.invoice,model_create_rx_invoice,,1,1,1,1
