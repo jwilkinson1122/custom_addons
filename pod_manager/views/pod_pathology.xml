@@ -42,7 +42,7 @@
     </record>
 
 
-    <record id="action_pod_pathology" model="ir.actions.act_window">
+    <record id="action_pathology_conditions" model="ir.actions.act_window">
         <field name="name">Conditions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pod.pathology</field>

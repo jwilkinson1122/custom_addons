@@ -4,12 +4,18 @@
     <menuitem id="root" name="Podiatry Manager" sequence="8"/>
     <menuitem id="doctors" name="Doctors" action="action_pod_doctor" sequence="5" parent="root" />
     <menuitem id="patients" name="Patients" action="action_pod_patient" sequence="6" parent="root" />
-    <menuitem id="prescriptions" name="Prescriptions" action="action_pod_rx_order" sequence="10" parent="patients" />
+    <menuitem id="prescriptions" name="Prescriptions" action="action_pod_rx_order" sequence="7" parent="root" />
     <!-- Configuration -->
     <menuitem id="config" name="Configuration" sequence="100" parent="root" groups="bi_group_nwpl" />
     <menuitem id="settings" name="Settings" sequence="10" parent="config" />
-    <menuitem id="pathologies" name="Pathologies" parent="config" sequence='1'/>
-    <menuitem id="pathology_conditions" action="action_pod_pathology" sequence="3" parent="pathologies"/>
-    <menuitem id="pathology_condition_categories" action="action_pod_pathology_category" sequence="4" parent="pathologies"/>
+    <!-- Device Configuration -->
+    <!-- <menuitem id="products" name="Products" parent="config" sequence='1'/>
+    <menuitem id="device_categories" name="Device Categories" action="action_device_categories" sequence="10" parent="products"/>
+    <menuitem id="device_types" name="Device Types" action="action_device_types" sequence="20" parent="products"/> -->
+
+    <!-- Pathology Configuration -->
+    <menuitem id="pathologies" name="Pathologies" parent="config" sequence='2'/>
+    <menuitem id="pathology_conditions" action="action_pathology_conditions" sequence="10" parent="pathologies"/>
+    <menuitem id="pathology_condition_categories" action="action_pathology_categories" sequence="20" parent="pathologies"/>
 
 </odoo>

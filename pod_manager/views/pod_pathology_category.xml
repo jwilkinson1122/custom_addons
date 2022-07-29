@@ -40,7 +40,7 @@
         <field name="view_mode">tree,form</field>
     </record> -->
 
-    <record id="action_pod_pathology_category" model="ir.actions.act_window">
+    <record id="action_pathology_categories" model="ir.actions.act_window">
         <field name="name">Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pod.pathology.category</field>

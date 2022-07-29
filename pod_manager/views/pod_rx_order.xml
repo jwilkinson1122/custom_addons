@@ -79,6 +79,11 @@
         <field name="search_view_id" ref="pod_rx_order_search_view"/>
         <field name="domain">[]</field>
         <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_no_content_smiling_face">
+                Create a prescription!
+            </p>
+        </field>
     </record>
 
     <!-- <menuitem id="menu_pod_rx_order_code" action="action_pod_rx_order" parent="menu_prescription_master" sequence="15"/> -->
