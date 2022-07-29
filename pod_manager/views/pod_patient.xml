@@ -148,6 +148,6 @@
         </field>
     </record>
 
-    <menuitem id="menu_pod_patient_code" action="action_pod_patient" parent="menu_patient_master" sequence="5"/>
+    <!-- <menuitem id="menu_pod_patient_code" action="action_pod_patient" parent="menu_patient_master" sequence="5"/> -->
 
 </odoo>

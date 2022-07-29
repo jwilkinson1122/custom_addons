@@ -1,17 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem id="patient_main_menu" name="Pod Manager" sequence="8"/>
+    <menuitem id="root" name="Podiatry Manager" sequence="8"/>
+    <menuitem id="doctors" name="Doctors" action="action_pod_doctor" sequence="5" parent="root" />
+    <menuitem id="patients" name="Patients" action="action_pod_patient" sequence="6" parent="root" />
+    <menuitem id="prescriptions" name="Prescriptions" action="action_pod_rx_order" sequence="10" parent="patients" />
 
-    <menuitem id="menu_patient_master" name="Patients" parent="patient_main_menu" sequence="5"/>
+    <!-- Configuration -->
+    <menuitem id="config" name="Configuration" sequence="100" parent="root" groups="bi_group_nwpl" />
 
-    <menuitem id="menu_doctor_master" name="Doctors" parent="patient_main_menu" sequence="7"/>
+    <menuitem id="settings" name="Settings" sequence="10" parent="config" />
 
-    <menuitem id="menu_prescription_master" name="Prescriptions" parent="patient_main_menu" sequence="15"/>
+    <menuitem id="menu_pathologies" name="Pathologies" parent="config" sequence='1'/>
+    <menuitem id="menu_sub_pathologies" action="action_pod_pathology" sequence="3" parent="menu_pathologies"/>
 
+
+
+    <!-- <menuitem id="menu_pathologies" name="Pathologies" parent="menu_configuration_master" sequence='1'/>
+    <menuitem id="menu_sub_pathologies" action="action_pod_pathology" sequence="3" parent="menu_pathologies"/>
+
+
+    <menuitem id="menu_pathologies" name="Pathologies" parent="menu_configuration_master" sequence='1' />
+
+    <menuitem id="menu_categories" name="Categories" parent="menu_pathologies" />
+
+    <menuitem id="menu_categories_structure" action="action_pod_pathology_category_tree" sequence="1" parent="menu_categories" />
+
+    <menuitem id="menu_categories_categories" action="action_pod_pathology_category_form" sequence="2" parent="menu_categories" /> -->
+
+
+
+
+    <!-- <menuitem id="menu_pod_rx_order_code" action="action_pod_rx_order" parent="menu_prescription_master" sequence="15"/> -->
+
+
+
+    <!-- <menuitem id="menu_pod_doctor_code" action="action_pod_doctor" parent="menu_doctor_master" sequence="7"/> -->
+
+    <!-- <menuitem id="menu_doctor_master" name="Doctors" parent="patient_main_menu" sequence="7"/> -->
+
+    <!-- <menuitem id="root" name="Devices" action="action_device" sequence="10" web_icon="device,static/description/icon.png" />
+    <menuitem id="device" name="Devices" action="action_device" sequence="10" parent="root" /> -->
+
+
+
+    <!-- <menuitem id="menu_prescription_master" name="Prescriptions" parent="patient_main_menu" sequence="15"/>
     <menuitem id="menu_product_master" name="Products" parent="patient_main_menu" sequence="20"/>
+    <menuitem id="menu_configuration_master" name="Configuration" parent="patient_main_menu" sequence="25"/> -->
 
-    <menuitem id="menu_configuration_master" name="Configuration" parent="patient_main_menu" sequence="25"/>
+
+
+
+    <!-- Main Menu -->
+    <!-- <menuitem id="root" name="Devices" action="action_device" sequence="10" web_icon="device,static/description/icon.png" />
+    <menuitem id="device" name="Devices" action="action_device" sequence="10" parent="root" />
+    <menuitem id="config" name="Configuration" sequence="100" parent="root" groups="group_device_manager" /> -->
+
+    <!-- Configuration -->
+    <!-- <menuitem id="settings" name="Settings" sequence="10" parent="config" />
+    <menuitem id="category" name="Category" action="action_device_category" sequence="20" parent="config" />
+    <menuitem id="type" name="Types" action="action_device_type" sequence="30" parent="config" />
+    <menuitem id="color" name="Colors" action="action_device_color" sequence="40" parent="config" /> -->
+
 
 
 </odoo>
