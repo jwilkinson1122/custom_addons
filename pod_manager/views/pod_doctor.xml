@@ -72,28 +72,26 @@
         <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <menuitem id="menu_pod_doctor_code" action="action_pod_doctor" parent="menu_patient_master" sequence="7"/>
+    <!-- <menuitem id="menu_physician" name='Physicians' parent="main_menu_configartion" sequence="7" /> -->
 
+    <menuitem id="menu_pod_doctor_code" action="action_pod_doctor" parent="menu_doctor_master" sequence="7"/>
 
     <!-- Action for pod patients -->
     <!-- <record id="action_pod_patient" model="ir.actions.act_window">
-        <field name="name">Patients</field>
-        <field name="res_model">pod.patient</field>
-        <field name="binding_view_types">form</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{}</field>
-        <field name="help" type="html">
-            <p class="o_view_no_content_smiling_face">
+    <field name="name">Patients</field>
+    <field name="res_model">pod.patient</field>
+    <field name="binding_view_types">form</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+        <p class="o_view_no_content_smiling_face">
                 Create your first patient!
-            </p>
-        </field>
-    </record>
+        </p>
+    </field>
+</record>
 
-    <menuitem id="menu_pod_patient_code" action="action_pod_patient" parent="menu_patient_master" sequence="5"/> -->
-    <!-- 
-    <menuitem id="menu_physician" name='Physicians' parent="main_menu_configartion" sequence="7" />
-
-    <menuitem id="menu_medical_physician" parent="menu_physician" action="action_medical_physician" sequence="6" /> -->
+<menuitem id="menu_pod_patient_code" action="action_pod_patient" parent="menu_patient_master" sequence="5"/>
+ -->
 
 
 
