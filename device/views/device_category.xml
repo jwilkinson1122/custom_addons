@@ -1,0 +1,53 @@
+<odoo>
+
+    <!-- Device Category Tree View -->
+    <record id="view_device_category_tree" model="ir.ui.view">
+        <field name="name">view.device.category.tree</field>
+        <field name="model">device.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Device Category Form View -->
+    <record id="view_device_category_form" model="ir.ui.view">
+        <field name="name">view.device.category.form</field>
+        <field name="model">device.category</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <header />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group id="main">
+                        <group id="left" />
+                        <group id="right" />
+                    </group>
+                    <notebook>
+                        <page string="Types" id="types">
+                            <field name="type_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_device_category" model="ir.actions.act_window">
+        <field name="name">Category</field>
+        <field name="res_model">device.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a category.
+            </p>
+        </field>
+    </record>
+
+</odoo>

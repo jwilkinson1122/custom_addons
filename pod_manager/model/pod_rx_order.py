@@ -10,7 +10,7 @@ class pod_rx_order(models.Model):
     _description = 'podiatry Rx Order order'
 
     name = fields.Char('Rx Order ID')
-    # patient_id = fields.Many2one('pod.patient', 'Patient ID')
+    # patient_id = fields.Many2one('pod.patient', 'Patient')
     patient_id = fields.Many2one(
         'pod.patient', string="Patient", required=True)
 

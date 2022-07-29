@@ -8,6 +8,49 @@ from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
 
 
+# from odoo import api, fields, models
+
+
+# class device(models.Model):
+#     _name = "device"
+#     _description = "device"
+#     _inherit = ["mail.thread", "mail.activity.mixin"]
+#     _order = "name"
+
+#     name = fields.Char(string="Name")
+#     ref = fields.Char(string="Reference")
+#     categories_id = fields.Many2one(
+#         "device.categories", string="categories", required=True)
+#     type_id = fields.Many2one("device.type", string="Type", required=True)
+#     color_id = fields.Many2one("device.color", string="Color")
+#     size = fields.Char(string="Size")
+#     weight = fields.Float(string="Weight (in kg)")
+#     birth_date = fields.Date(string="Birth Date")
+#     gender = fields.Selection(
+#         string="Gender",
+#         selection=[
+#             ("female", "Female"),
+#             ("male", "Male"),
+#             ("hermaphrodite", "Hermaphrodite"),
+#             ("neutered", "Neutered"),
+#         ],
+#         default="female",
+#         required=True,
+#     )
+#     active = fields.Boolean(default=True)
+#     image = fields.Binary(
+#         "Image", attachment=True, help="This field holds the photo of the device."
+#     )
+
+#     @api.onchange("categories_id")
+#     def onchange_categories(self):
+#         self.type_id = False
+
+#     @api.onchange("type_id")
+#     def onchange_type(self):
+#         self.color_id = False
+
+
 class pod_patient(models.Model):
     _name = 'pod.patient'
     # _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
@@ -56,7 +99,7 @@ class pod_patient(models.Model):
     patient_id = fields.Many2one('res.partner', domain=[(
         'is_patient', '=', True)], string="Patient", required=True)
 
-    name = fields.Char(string='Patient ID', readonly=True)
+    name = fields.Char(string='Patient', readonly=True)
     first_name = fields.Char('First Name')
     firstname = fields.Char('First Name')
     last_name = fields.Char('Last Name')

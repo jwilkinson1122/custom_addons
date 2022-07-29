@@ -23,7 +23,7 @@
 							<span style="font-weight:normal;" t-field="doc.patient_id.name"/>
 						</th>
 
-						<th style="border: 0px ;" class="text-left">Patient ID : 
+						<th style="border: 0px ;" class="text-left">Patient : 
 							<span style="font-weight:normal;" t-field="doc.name"/>
 						</th>
 

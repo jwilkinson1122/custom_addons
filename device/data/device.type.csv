@@ -1,0 +1,8 @@
+id,name,category_id/id
+sg_flex,Superglass Flex,device.custom
+sg_everyday,Superglass Everyday,device.custom
+sg_proformance,Superglass Proformance,device.custom
+ncv_gentle,NCV Gentle,device.custom
+ncv_firm,NCV Firm,device.custom
+pc_multi_density,Prescription Comfort Multi-Density,device.custom
+pc_composite,Prescription Comfort Composite,device.custom

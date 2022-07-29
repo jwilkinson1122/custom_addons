@@ -33,6 +33,7 @@
                 </group> -->
                 <group>
                     <group string="Right Foot" name="right_foot_details">
+                        <field name="treatment_id" />
                         <!-- <field name="partner_id" attrs="{'invisible':[('reservation_type','in',('out'))]}" />
                         <field name="document_type" attrs="{'invisible':[('reservation_type','in',('out'))]}" />
                         <field name="document_number" attrs="{'invisible':[('reservation_type','in',('out'))]}" />
@@ -44,7 +45,7 @@
                         <field name="closure_reason_id" placeholder="Closure reason" attrs="{'invisible':[('reservation_type','not in',('out'))]}" /> -->
                     </group>
                     <group string="Left Foot" name="left_foot_details">
-
+                        <field name="left_treatment_id" />
                         <!-- <field name="show_update_pricelist" invisible="1" />
                         <field name="pricelist_id" options="{'no_open':True,'no_create': True}" attrs="{'invisible': [('reservation_type', '!=', 'normal')]}" />
                     

@@ -13,7 +13,7 @@ class pod_rx_order_line(models.Model):
     _description = 'podiatry rx line'
 
     name = fields.Many2one('pod.rx.order', 'Rx Order ID')
-    treatment_id = fields.Many2one('pod.treatment', 'Device')
+    treatment_id = fields.Many2one('pod.treatment', 'Right Device')
     left_treatment_id = fields.Many2one('pod.treatment', 'Left Device')
     form = fields.Char('Form')
     prnt = fields.Boolean('Print')
