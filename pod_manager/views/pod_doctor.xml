@@ -72,6 +72,9 @@
         <field name="view_mode">kanban,tree,form</field>
     </record>
 
+    <menuitem id="menu_pod_doctor_code" action="action_pod_doctor" parent="menu_patient_master" sequence="7"/>
+
+
     <!-- Action for pod patients -->
     <!-- <record id="action_pod_patient" model="ir.actions.act_window">
         <field name="name">Patients</field>

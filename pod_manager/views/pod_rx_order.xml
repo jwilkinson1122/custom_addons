@@ -81,7 +81,7 @@
         <field name="context">{}</field>
     </record>
 
-    <!-- <menuitem id="menu_pod_rx_order_code" action="action_pod_rx_order" parent="menu_prescription_master" sequence="15"/> -->
+    <menuitem id="menu_pod_rx_order_code" action="action_pod_rx_order" parent="menu_prescription_master" sequence="15"/>
 
 
 </odoo>

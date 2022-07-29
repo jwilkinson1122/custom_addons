@@ -50,7 +50,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- <menuitem id="menu_pathologies" name="Pathologies" parent="menu_configuration_master" sequence='1'/>
-    <menuitem id="menu_sub_pathologies" action="action_pod_pathology" sequence="3" parent="menu_pathologies"/> -->
+    <menuitem id="menu_pathologies" name="Pathologies" parent="menu_configuration_master" sequence='1'/>
+    <menuitem id="menu_sub_pathologies" action="action_pod_pathology" sequence="3" parent="menu_pathologies"/>
+
 
 </odoo>
