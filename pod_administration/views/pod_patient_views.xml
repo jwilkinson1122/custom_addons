@@ -188,8 +188,14 @@
                                                 <field name="display_name"/>
                                             </strong>
                                             <ul name="entity_details">
-                                                <li t-if="record.email.raw_value" class="o_text_overflow">
+                                                <!-- <li t-if="record.email.raw_value" class="o_text_overflow">
                                                     <field name="email"/>
+                                                </li> -->
+                                                <li>
+                                                    <field name="primary_doctor_id"/>
+                                                </li>
+                                                <li>
+                                                    <field name="internal_identifier"/>
                                                 </li>
                                             </ul>
                                             <div class="oe_kanban_partner_links"/>

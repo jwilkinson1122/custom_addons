@@ -15,7 +15,6 @@ from . import pod_pathology
 from . import pod_patient_condition
 from . import pod_patient_conditions
 from . import pod_rx_order_line
-from . import pet_type
 from . import psc_code
 
 

@@ -71,6 +71,4 @@ access_pod_rx_order_doctor,access_pod_rx_order_doctor,model_pod_rx_order,bi_grou
 
 access_pod_treatment_doctor,access_pod_treatment_doctor,model_pod_treatment,bi_group_nwpl,1,1,1,
 
-access_pet_type,access_pet_type,model_pet_type,,1,0,0,0
-
 access_create_rx_invoice,create.rx.invoice,model_create_rx_invoice,,1,1,1,1

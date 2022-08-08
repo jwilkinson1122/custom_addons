@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_device_user,device.user,model_device,base.group_user,1,1,1,1
-access_device_color_user,device.color.user,model_device_color,base.group_user,1,0,0,0
-access_device_color_manager,device.color.manaager,model_device_color,device.group_device_manager,1,1,1,1
-access_device_type_user,device.type.user,model_device_type,base.group_user,1,0,0,0
-access_device_type_manager,device.type.manager,model_device_type,device.group_device_manager,1,1,1,1
-access_device_category_user,device.category.user,model_device_category,base.group_user,1,0,0,0
-access_device_category_manager,device.category.manager,model_device_category,device.group_device_manager,1,1,1,0
