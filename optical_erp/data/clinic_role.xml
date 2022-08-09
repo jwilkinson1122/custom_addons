@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="clinic.role" id="doctor">
+        <field name="name">Doctor</field>
+        <field name="description">Doctor</field>
+    </record>
+    <record model="clinic.role" id="nurse">
+        <field name="name">Nurse</field>
+        <field name="description">Nurse</field>
+    </record>
+    <record model="clinic.role" id="pt">
+        <field name="name">Physical Therapist</field>
+        <field name="description">Physical Therapist</field>
+    </record>
+    <record model="clinic.role" id="assistant">
+        <field name="name">Assistant</field>
+        <field name="description">Assistant</field>
+    </record>
+    <record model="clinic.role" id="cit">
+        <field name="name">IT</field>
+        <field name="description">IT</field>
+    </record>
+    <record model="clinic.role" id="technician">
+        <field name="name">Technician</field>
+        <field name="description">Technician</field>
+    </record>
+    <record model="clinic.role" id="administrative">
+        <field name="name">Administrative</field>
+        <field name="description">Administrative</field>
+    </record>
+    <record model="clinic.role" id="manager">
+        <field name="name">Manager</field>
+        <field name="description">Manager</field>
+    </record>
+    <record model="clinic.role" id="general">
+        <field name="name">General Staff</field>
+        <field name="description">General Staff</field>
+    </record>
+</odoo>

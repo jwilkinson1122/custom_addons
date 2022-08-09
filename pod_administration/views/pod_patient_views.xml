@@ -8,6 +8,7 @@
             <tree>
                 <field name="internal_identifier"/>
                 <field name="name"/>
+                <field name="primary_doctor_id"/>
             </tree>
         </field>
     </record>

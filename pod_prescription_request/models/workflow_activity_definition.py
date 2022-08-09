@@ -3,8 +3,7 @@ from odoo import models
 
 
 class ActivityDefinition(models.Model):
-    # FHIR entity: Activity Definition
-    # (https://www.hl7.org/fhir/activitydefinition.html)
+
     _inherit = "workflow.activity.definition"
 
     def _get_pod_values(

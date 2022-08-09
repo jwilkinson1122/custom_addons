@@ -11,22 +11,28 @@
                 <field name="is_practitioner" invisible="1" />
             </xpath>
             <xpath expr="//h1" position="after">
-                <!--                <h3>-->
                 <field name="is_practitioner" invisible="1" />
                 <field name="practitioner_identifier" attrs="{'invisible': [('is_practitioner','=',False)]}" />
-                <!--                </h3>-->
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div>
                     <field name="practitioner_type" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
-                </div>
-                <div>
                     <field name="practitioner_role_ids" widget="many2many_tags" options="{'no_create': True}" readonly="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
                 </div>
             </xpath>
             <field name="company_type" position="attributes">
                 <attribute name="attrs">{'invisible': [('is_practitioner','=',True)]}</attribute>
             </field>
+            <notebook position="inside">
+                <page string="Medical" groups="base.group_user">
+                    <group>
+                        <field name="is_patient"/>
+                        <field name="is_practitioner"/>
+                        <field name="practitioner_role_ids" attrs="{'invisible': [('is_practitioner', '=', False)]}"/>
+                        <field name="is_practice" attrs="{'invisible': [('is_practitioner', '=', False)]}"/>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
     <record id="res_partner_practitioner_edit_view_form" model="ir.ui.view">

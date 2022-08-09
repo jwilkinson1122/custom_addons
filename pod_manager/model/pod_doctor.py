@@ -38,4 +38,4 @@ class pod_doctor(models.Model):
         for rec in self:
             prescription_count = self.env['pod.rx.order'].search_count(
                 [('doctor_id', '=', rec.id)])
-            rec.appointment_count = appointment_count
+            rec.prescription_count = prescription_count

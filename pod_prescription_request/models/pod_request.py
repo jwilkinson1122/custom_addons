@@ -10,7 +10,7 @@ class PodRequest(models.AbstractModel):
         comodel_name="pod.prescription.request",
         ondelete="restrict",
         index=True,
-    )  # FHIR Field: BasedOn
+    )
     prescription_request_ids = fields.One2many(
         string="Prescription requests",
         comodel_name="pod.prescription.request",
