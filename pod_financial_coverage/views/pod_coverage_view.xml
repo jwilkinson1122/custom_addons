@@ -19,7 +19,7 @@
         <field name="name">pod.coverage.view.form</field>
         <field name="model">pod.coverage</field>
         <field name="arch" type="xml">
-            <form string="Pod Coverage">
+            <form string="Podiatry Coverage">
                 <header>
                     <button string="Activate" type="object" name="draft2active" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}" />
                     <button string="Cancel" type="object" name="draft2cancelled" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}" />

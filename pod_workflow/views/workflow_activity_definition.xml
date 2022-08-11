@@ -54,7 +54,7 @@
         <field name="name">workflow.activity.definition.search</field>
         <field name="model">workflow.activity.definition</field>
         <field name="arch" type="xml">
-            <search string="Pod Care Plan">
+            <search string="Podiatry Care Plan">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="description" />

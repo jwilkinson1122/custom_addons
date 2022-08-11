@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class PodRequest(models.AbstractModel):
     _name = "pod.request"
-    _description = "Pod request"
+    _description = "Podiatry request"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 
@@ -103,7 +103,7 @@ class PodRequest(models.AbstractModel):
     )
     is_editable = fields.Boolean(compute="_compute_is_editable")
     is_pod_request = fields.Boolean(
-        "Pod request", compute="_compute_is_pod_request"
+        "Podiatry request", compute="_compute_is_pod_request"
     )
 
     def _compute_is_pod_request(self):

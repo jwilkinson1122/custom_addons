@@ -3,8 +3,8 @@ from odoo import api, fields, models
 
 
 class PodAbstractConceptMultiparent(models.AbstractModel):
-    # Pod Code system concept
-    # (https://www.hl7.org/fhir/codesystem.html)
+    # Podiatry Code system concept
+
     _name = "pod.abstract.concept.multiparent"
     _inherit = "pod.abstract.concept"
     _description = "pod abstract concept multiparent"
@@ -17,7 +17,7 @@ class PodAbstractConceptMultiparent(models.AbstractModel):
     )
     child_ids = fields.Many2many(
         comodel_name="pod.abstract.concept", compute="_compute_child_ids"
-    )  # FHIR Field: concept/concept
+    )
     full_parent_ids = fields.Many2many(
         comodel_name="pod.abstract.concept", compute="_compute_child_ids"
     )

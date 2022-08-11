@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Administration",
-    "summary": "Pod administration base module",
+    "name": "Podiatry Administration",
+    "summary": "Podiatry administration base module",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "website": "https://nwpodiatric.com",

@@ -48,7 +48,7 @@
         <field name="name">pod.prescription.request.view.search</field>
         <field name="model">pod.prescription.request</field>
         <field name="arch" type="xml">
-            <search string="Pod Care Plan">
+            <search string="Podiatry Care Plan">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="patient_id" />

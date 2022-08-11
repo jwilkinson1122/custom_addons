@@ -7,9 +7,9 @@ from .base_result import combine_result
 
 
 class PlanDefinitionAction(models.Model):
-    # FHIR entity: Action
+
     _name = "workflow.plan.definition.action"
-    _description = "Pod Plan Definition Action"
+    _description = "iatry Plan Definition Action"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _parent_name = "parent_id"
     _parent_store = True
@@ -18,7 +18,7 @@ class PlanDefinitionAction(models.Model):
 
     name = fields.Char(
         string="Action name", required=True
-    )  # FHIR field: title
+    )
     complete_name = fields.Char(
         "Full Action Name", compute="_compute_complete_name", store=True
     )
@@ -33,7 +33,7 @@ class PlanDefinitionAction(models.Model):
         comodel_name="workflow.plan.definition.action",
         inverse_name="parent_id",
         required=True,
-    )  # FHIR field: Action (sub-action)
+    )
     direct_plan_definition_id = fields.Many2one(
         string="Root plan definition",
         comodel_name="workflow.plan.definition",
@@ -61,7 +61,7 @@ class PlanDefinitionAction(models.Model):
         comodel_name="workflow.activity.definition",
         ondelete="cascade",
         index=True,
-    )  # FHIR field: definition (Activity Definition)
+    )
     parent_path = fields.Char(index=True)
 
     @api.depends("name", "parent_id")

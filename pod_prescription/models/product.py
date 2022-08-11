@@ -8,11 +8,11 @@ class Product(models.Model):
 
     is_medical_device = fields.Boolean(default=False)
 
-    sct_code_id = fields.Many2one(
-        string="Clinical Terms code",
-        comodel_name="pod.sct.concept",
+    code_id = fields.Many2one(
+        string="Clinical Terms Code",
+        comodel_name="code.concept",
         domain=[("is_medical_device_code", "=", True)],
-        help="Clinical Terms Prescription Codes",
+        help="Clinical Terms Prescription Code",
     )
 
     over_the_counter = fields.Boolean(
@@ -22,9 +22,9 @@ class Product(models.Model):
 
     form_id = fields.Many2one(
         string="Form code",
-        comodel_name="pod.sct.concept",
+        comodel_name="code.concept",
         domain=[("is_prescription_form", "=", True)],
-        help="Clinical Terms Form Codes",
+        help="Clinical Terms Form Code",
     )
 
     @api.constrains("type", "is_medical_device")

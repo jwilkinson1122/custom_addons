@@ -1,12 +1,11 @@
 
 
 {
-    "name": "Pod Administration Location",
+    "name": "Podiatry Administration Location",
     "version": "15.0.1.0.0",
     "category": "Medical",
     "website": "https://nwpodiatric.com",
-    "author": "LasLabs, Creu Blanca, Eficent,"
-    "Odoo Community Association (OCA)",
+    "author": "NWPL",
     "license": "LGPL-3",
     "depends": ["pod_administration"],
     "data": [

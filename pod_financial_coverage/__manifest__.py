@@ -1,6 +1,6 @@
 
 {
-    "name": "Pod Financial Coverage",
+    "name": "Podiatry Financial Coverage",
     "summary": "Add Coverage concept",
     "version": "15.0.1.0.0",
     "author": "NWPL",

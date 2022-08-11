@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Pod Administration Practitioner Specialty",
+    "name": "Podiatry Administration Practitioner Specialty",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",
@@ -9,12 +9,12 @@
     "license": "LGPL-3",
     "depends": [
         "pod_administration_practitioner",
-        "pod_terminology_sct",
+        "pod_terminology_code",
     ],
     "data": [
         "security/pod_security.xml",
         "security/ir.model.access.csv",
-        "data/sct_data.xml",
+        "data/code_data.xml",
         "views/res_partner_views.xml",
         "views/pod_specialty.xml",
     ],

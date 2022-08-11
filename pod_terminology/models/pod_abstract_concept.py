@@ -4,14 +4,13 @@ from odoo.osv import expression
 
 
 class PodAbstractConcept(models.AbstractModel):
-    # FHIR Entity: Pod Code system concept
-    # (https://www.hl7.org/fhir/codesystem.html)
-    _name = "pod.abstract.concept"
-    _description = "Pod abstract concept"
 
-    code = fields.Char(required=True, index=True)  # FHIR Field: code
-    name = fields.Char(required=True)  # FHIR Field: display
-    definition = fields.Char()  # FHIR Field: definition
+    _name = "pod.abstract.concept"
+    _description = "Podiatry abstract concept"
+
+    code = fields.Char(required=True, index=True)
+    name = fields.Char(required=True)
+    definition = fields.Char()
     editable = fields.Boolean(default=True)
 
     @api.depends("name", "code")

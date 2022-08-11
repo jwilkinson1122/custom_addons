@@ -5,7 +5,7 @@
         <field name="name">pod.coverage.template.view.tree</field>
         <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
-            <tree string="Pod Coverage Templates">
+            <tree string="Podiatry Coverage Templates">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="payor_id" />
@@ -17,7 +17,7 @@
         <field name="name">pod.coverage.template.view.form</field>
         <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
-            <form string="Pod Coverage Templates">
+            <form string="Podiatry Coverage Templates">
                 <header>
                     <button string="Activate" type="object" name="draft2active" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}" />
                     <button string="Cancel" type="object" name="draft2cancelled" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}" />
@@ -59,7 +59,7 @@
         <field name="name">pod.coverage.template.search</field>
         <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
-            <search string="Pod Coverage Template">
+            <search string="Podiatry Coverage Template">
                 <field name="internal_identifier" />
                 <separator />
                 <field name="name" />

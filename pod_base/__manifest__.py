@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Base",
-    "summary": "Pod Base",
+    "name": "Podiatry Base",
+    "summary": "Podiatry Base",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",

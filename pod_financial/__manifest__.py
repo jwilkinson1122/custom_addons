@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Financial",
-    "summary": "Pod financial",
+    "name": "Podiatry Financial",
+    "summary": "Podiatry financial",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",

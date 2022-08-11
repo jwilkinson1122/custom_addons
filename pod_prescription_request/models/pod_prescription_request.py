@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 class PodPrescriptionRequest(models.Model):
 
     _name = "pod.prescription.request"
-    _description = "Pod Prescription request"
+    _description = "Podiatry Prescription request"
     _inherit = "pod.request"
 
     internal_identifier = fields.Char(string="REQ")

@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 class PodPatient(models.Model):
     _name = "pod.patient"
-    _description = "Pod Patient"
+    _description = "Podiatry Patient"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 

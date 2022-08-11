@@ -10,7 +10,7 @@ class PodSpecialty(models.Model):
     name = fields.Char(required=True)
     description = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    sct_code = fields.Many2one(
-        comodel_name="pod.sct.concept",
+    code = fields.Many2one(
+        comodel_name="code.concept",
         domain=[("is_specialty", "=", True)],
     )

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="ir.ui.view" id="code_concept_tree">
+        <field name="name">code.concept.tree</field>
+        <field name="model">code.concept</field>
+        <field name="inherit_id" ref="pod_terminology.pod_abstract_concept_tree" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="string">Clinical Terms Concepts</attribute>
+                <attribute name="delete">false</attribute>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="code_concept_form">
+        <field name="name">code.concept.form</field>
+        <field name="model">code.concept</field>
+        <field name="inherit_id" ref="pod_terminology.pod_abstract_concept_multiparent_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="string">Clinical Terms Concept</attribute>
+                <attribute name="delete">false</attribute>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="code_concept_filter">
+        <field name="name">code.concept.filter</field>
+        <field name="model">code.concept</field>
+        <field name="inherit_id" ref="pod_terminology.pod_abstract_concept_filter" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search position="attributes">
+                <attribute name="string">Clinical Terms Filter</attribute>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="code_concept_window_action">
+        <field name="name">Podiatry code</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">code.concept</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+    <menuitem id="code_concept" name="Podiatry Code Concepts" parent="pod_base.pod_root_terminologies" groups="pod_terminology_code.group_code_concept_list" sequence="10" action="code_concept_window_action" />
+</odoo>

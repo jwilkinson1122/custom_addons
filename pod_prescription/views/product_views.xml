@@ -19,7 +19,7 @@
                 <page string="Medical" name="prescription" attrs="{'invisible':[('is_medical_device','=', False)]}">
                     <group>
                         <group>
-                            <!-- <field name="sct_code_id" options="{'no_create': True, 'no_open': True}" /> -->
+                            <!-- <field name="code_id" options="{'no_create': True, 'no_open': True}" /> -->
                             <field name="is_medical_device" />
                             <field name="over_the_counter" />
                             <!-- <field name="form_id" options="{'no_create': True, 'no_open': True}" /> -->

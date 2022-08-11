@@ -1,8 +1,8 @@
 
 
 {
-    "name": "Pod Workflow",
-    "summary": "Pod workflow base",
+    "name": "Podiatry Workflow",
+    "summary": "Podiatry workflow base",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",

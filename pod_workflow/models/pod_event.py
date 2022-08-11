@@ -1,4 +1,4 @@
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class PodEvent(models.AbstractModel):
     _name = "pod.event"
-    _description = "Pod event"
+    _description = "Podiatry event"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 

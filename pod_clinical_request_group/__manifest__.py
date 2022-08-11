@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Clinical Request Group",
-    "summary": "Pod request group",
+    "name": "Podiatry Clinical Request Group",
+    "summary": "Podiatry request group",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",

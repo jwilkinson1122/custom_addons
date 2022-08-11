@@ -3,9 +3,9 @@ from odoo import api, fields, models
 
 
 class PodCoverage(models.Model):
-    # FHIR Entity: Coverage (https://www.hl7.org/fhir/coverage.html)
+
     _name = "pod.coverage"
-    _description = "Pod Coverage"
+    _description = "Podiatry Coverage"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(string="Name")
@@ -17,7 +17,7 @@ class PodCoverage(models.Model):
         index=True,
         tracking=True,
         help="Patient name",
-    )  # FHIR Field: beneficiary
+    )
     coverage_template_id = fields.Many2one(
         string="Coverage Template",
         comodel_name="pod.coverage.template",

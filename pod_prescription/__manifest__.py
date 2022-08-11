@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Prescription",
-    "summary": "Pod prescription base",
+    "name": "Podiatry Prescription",
+    "summary": "Podiatry prescription base",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Medical",
@@ -9,18 +9,18 @@
     "license": "LGPL-3",
     "depends": [
         "pod_administration",
-        "pod_terminology_sct",
+        "pod_terminology_code",
         "product",
         "stock",
     ],
     "data": [
         "security/pod_security.xml",
-        "data/sct_data.xml",
+        "data/code_data.xml",
         "views/pod_menu.xml",
         "views/product_views.xml",
         "views/res_config_settings_views.xml",
     ],
-    "demo": ["demo/sct_data.xml", "demo/is_medical_device.xml"],
+    "demo": ["demo/code_data.xml", "demo/is_medical_device.xml"],
     "application": False,
     "installable": True,
     "auto_install": False,

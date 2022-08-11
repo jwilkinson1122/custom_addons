@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 class PodCoverageTemplate(models.Model):
     _name = "pod.coverage.template"
-    _description = "Pod Coverage Template"
+    _description = "Podiatry Coverage Template"
     _order = "payor_id,name"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 

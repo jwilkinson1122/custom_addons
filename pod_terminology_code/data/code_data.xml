@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="code_138875005" model="code.concept">
+        <field name="code">138875005</field>
+        <field name="name">Clinical Terms Concept</field>
+        <field name="editable" eval="False" />
+    </record>
+    <record id="code_123037004" model="code.concept">
+        <field name="code">123037004</field>
+        <field name="name">Foot structure</field>
+        <field name="parent_ids" eval="[(4, ref('code_138875005'))]" />
+        <field name="editable" eval="False" />
+    </record>
+    <record id="code_362981000" model="code.concept">
+        <field name="code">362981000</field>
+        <field name="name">Podiatry Product</field>
+        <field name="parent_ids" eval="[(4, ref('code_138875005'))]" />
+        <field name="editable" eval="False" />
+    </record>
+</odoo>

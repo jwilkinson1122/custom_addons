@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <odoo>
-    <!-- Pod Category -->
+    <!-- Podiatry Category -->
     <record id="ir_module_category_pod" model="ir.module.category">
         <field name="name">Podiatry</field>
     </record>

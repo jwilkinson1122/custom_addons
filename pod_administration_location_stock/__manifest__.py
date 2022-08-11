@@ -1,7 +1,7 @@
 
 {
-    "name": "Pod Location with stock",
-    "summary": "Pod administration location with stock",
+    "name": "Podiatry Location with stock",
+    "summary": "Podiatry administration location with stock",
     "version": "15.0.1.0.0",
     "category": "Medical",
     "author": "NWPL",

@@ -14,7 +14,7 @@
                     <group>
                         <field name="name" />
                         <field name="description" />
-                        <field name="sct_code" options="{'no_create': True, 'no_open': True}" />
+                        <field name="code" options="{'no_create': True, 'no_open': True}" />
                     </group>
                 </sheet>
             </form>
