@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="medical_patient_view_form" model="ir.ui.view">
+        <field name="name">medical.patient.form</field>
+        <field name="model">medical.patient</field>
+        <field name='inherit_id' ref='medical.medical_patient_view_form' />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_medical_buttons']" position="inside">
+                <button name="toggle_safety_cap_yn"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-warning"
+                        >
+                    <field name="safety_cap_yn"
+                           widget="boolean_button"
+                           options='{"terminology": {"string_true": "Safety Cap",
+                                                     "string_hover_true": "Switch to No Safety Cap",
+                                                     "string_false": "No Safety Cap",
+                                                     "string_hover_false": "Switch to Safety Cap"}}'
+                    />
+                </button>
+                <button name="toggle_counseling_yn"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-user"
+                        >
+                    <field name="counseling_yn"
+                           widget="boolean_button"
+                           options='{"terminology": {"string_true": "Counseling",
+                                                     "string_hover_true": "Switch to No Counseling",
+                                                     "string_false": "No Counseling",
+                                                     "string_hover_false": "Switch to Counseling"}}'
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

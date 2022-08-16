@@ -8,14 +8,12 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
     is_practitioner = fields.Boolean(default=True, string='Doctor')
-    # is_physician = fields.Boolean(string='Is Physician')
-    # is_practitioner = fields.Boolean(default=False)
-    is_patient = fields.Boolean(string='Patient')
+    # is_patient = fields.Boolean(string='Patient')
     # speciality = fields.Many2one('physician.speciality', string='Speciality')
     is_practice = fields.Many2one('res.partner', string='Medical Practice')
 
     practitioner_role_ids = fields.Many2many(
-        string="Clinical Roles", comodel_name="pod.role")
+        string="Podiatry Medical Roles", comodel_name="pod.role")
 
     practitioner_type = fields.Selection(
         string="Entity Type",

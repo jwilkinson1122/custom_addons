@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="medical_test_tree" model="ir.ui.view">
+        <field name="name">pod.manager.medical.test.tree</field>
+        <field name="model">pod.manager.medical.test</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="medical_test_form" model="ir.ui.view">
+        <field name="name">pod.manager.medical.test.form</field>
+        <field name="model">pod.manager.medical.test</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="medical_test_search" model="ir.ui.view">
+        <field name="name">pod.manager.medical.test.search</field>
+        <field name="model">pod.manager.medical.test</field>
+        <field name="arch" type="xml">
+            <search string="Medicaltest">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="medical_test_action" model="ir.actions.act_window">
+        <field name="name">Medicaltest</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.manager.medical.test</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create medical test List
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="practice_medical_test" name="Medical test" parent="practice_root" action="medical_test_action" />
+
+</odoo>

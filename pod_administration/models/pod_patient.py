@@ -25,19 +25,11 @@ class PodPatient(models.Model):
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female"), ("other", "Other")]
     )
-    # marital_status = fields.Selection(
-    #     [
-    #         ("s", "Single"),
-    #         ("m", "Married"),
-    #         ("w", "Widowed"),
-    #         ("d", "Divorced"),
-    #         ("l", "Separated"),
-    #     ]
-    # )
+
     birth_date = fields.Date(string="Birth date")
-    deceased_date = fields.Date(
-        string="Deceased date"
-    )
+    # deceased_date = fields.Date(
+    #     string="Deceased date"
+    # )
     # is_deceased = fields.Boolean(
     #     compute="_compute_is_deceased"
     # )
@@ -57,10 +49,10 @@ class PodPatient(models.Model):
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
 
-    @api.depends("deceased_date")
-    def _compute_is_deceased(self):
-        for record in self:
-            record.is_deceased = bool(record.deceased_date)
+    # @api.depends("deceased_date")
+    # def _compute_is_deceased(self):
+    #     for record in self:
+    #         record.is_deceased = bool(record.deceased_date)
 
     @api.model
     def _get_internal_identifier(self, vals):

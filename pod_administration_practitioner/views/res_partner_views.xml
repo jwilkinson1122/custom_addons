@@ -7,23 +7,33 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="groups_id" eval="[(4, ref('pod_administration_practitioner.group_pod_practitioner_display'))]" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
+            <!-- <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="before">
                 <field name="is_practitioner" invisible="1" />
-            </xpath>
+            </xpath> -->
             <xpath expr="//h1" position="after">
                 <field name="is_practitioner" invisible="1" />
                 <field name="practitioner_identifier" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+                <field name="practitioner_type" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+                <field name="practitioner_role_ids" widget="many2many_tags" options="{'no_create': True}" readonly="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+
+                <!-- <div>
+                    <field name="practitioner_type" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+                    <field name="practitioner_role_ids" widget="many2many_tags" options="{'no_create': True}" readonly="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+                </div> -->
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
+            <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
+                <field name="is_practitioner" invisible="1" />
+            </xpath>
+            <!-- <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div>
                     <field name="practitioner_type" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
                     <field name="practitioner_role_ids" widget="many2many_tags" options="{'no_create': True}" readonly="1" attrs="{'invisible': [('is_practitioner','=',False)]}" />
                 </div>
-            </xpath>
+            </xpath> -->
             <field name="company_type" position="attributes">
                 <attribute name="attrs">{'invisible': [('is_practitioner','=',True)]}</attribute>
             </field>
-            <notebook position="inside">
+            <!-- <notebook position="inside">
                 <page string="Medical" groups="base.group_user">
                     <group>
                         <field name="is_patient"/>
@@ -32,7 +42,7 @@
                         <field name="is_practice" attrs="{'invisible': [('is_practitioner', '=', False)]}"/>
                     </group>
                 </page>
-            </notebook>
+            </notebook> -->
         </field>
     </record>
     <record id="res_partner_practitioner_edit_view_form" model="ir.ui.view">

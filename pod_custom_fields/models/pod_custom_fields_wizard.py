@@ -121,7 +121,7 @@ class ir_model_fields(models.Model):
         search_inherited_view_id = ir_ui_view_obj.search(
             [('name', '=', 'bi_inherit_sale_order_view')])
         if not search_inherited_view_id:
-            MODULE = 'bi_add_custom_field_sales_order'
+            MODULE = 'pod_custom_fields'
             '''
 			if self._context.get('type') == 'out_invoice':
 					name = 'bi_inherit_customer_invoice_view'
