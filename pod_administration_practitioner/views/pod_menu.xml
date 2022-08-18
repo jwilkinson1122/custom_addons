@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <odoo>
-    <!-- <menuitem id="pod_conf_practitioner_menu" name="Contacts" parent="pod_base.pod_root_administration" groups="pod_administration_practitioner.group_pod_practitioner_list" action="pod_practitioner_action" sequence="20" /> -->
-    <!-- <menuitem id="pod_role_menu" name="Roles" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner.group_pod_role_list" action="pod_role_action" sequence="80" /> -->
-    <!--    <menuitem id="pod_specialties_menu" name="Specialties" parent="pod_base.pod_root_configuration" groups="pod_administration_practitioner.group_pod_specialty_list" action="pod_specialty_action" sequence="70" />-->
+
+    <menuitem id="pod_conf_practitioner_menu" name="Practitioners" parent="pod_base.pod_root_administration" groups="pod_administration_practitioner.group_pod_practitioner_list" action="pod_practitioner_action" sequence="20" />
+    <menuitem id="pod_role_menu" name="Roles" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner.group_pod_role_list" action="pod_role_action" sequence="70" />
+    <!-- <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner_specialty.group_pod_specialty_list" action="pod_specialty_action" sequence="60"/> -->
 
 </odoo>

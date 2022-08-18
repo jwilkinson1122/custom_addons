@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+    Copyright 2017 Creu Blanca
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <menuitem id="menu_pod_contact_root" name="Contacts" sequence="40" parent="pod_base.pod_root_administration" groups="pod_administration_contact.group_pod_contact_list" action="pod_contact_action" />
+</odoo>

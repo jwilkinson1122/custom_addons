@@ -1,5 +1,4 @@
 
-
 from odoo import api, fields, models
 from odoo.modules import get_module_resource
 
@@ -7,14 +6,11 @@ from odoo.modules import get_module_resource
 class ResPartner(models.Model):
 
     _inherit = "res.partner"
-    is_practitioner = fields.Boolean(default=True, string='Doctor')
-    # is_patient = fields.Boolean(string='Patient')
-    # speciality = fields.Many2one('physician.speciality', string='Speciality')
-    is_practice = fields.Many2one('res.partner', string='Medical Practice')
 
+    is_practitioner = fields.Boolean(default=False)
     practitioner_role_ids = fields.Many2many(
-        string="Podiatry Medical Roles", comodel_name="pod.role")
-
+        string="Practitioner Roles", comodel_name="pod.role"
+    )
     practitioner_type = fields.Selection(
         string="Entity Type",
         selection=[
@@ -43,7 +39,7 @@ class ResPartner(models.Model):
     @api.model
     def _get_practitioner_identifier(self, vals):
         return (
-            self.env["ir.sequence"].next_by_code("pod.practitioner") or "ID"
+            self.env["ir.sequence"].next_by_code("pod.practitioner") or "/"
         )
 
     @api.model
@@ -52,7 +48,7 @@ class ResPartner(models.Model):
             return get_module_resource(
                 "pod_administration_practitioner",
                 "static/src/img",
-                "user_avatar.jpg",
+                "practitioner-avatar.png",
             )
 
     @api.model

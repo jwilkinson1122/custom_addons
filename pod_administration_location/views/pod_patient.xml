@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <odoo>
+    <record id="pod_patient_view_form" model="ir.ui.view">
+        <field name="name">pod.patient.form</field>
+        <field name="model">pod.patient</field>
+        <field name="inherit_id" ref="pod_administration.pod_patient_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <h4>
+                    <field name="pod_location_primary_id" />
+                    <field name="pod_location_secondary_ids" widget="many2many_tags" />
+                </h4>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+<!-- <odoo>
     <record id="pod_patient_view_form" model="ir.ui.view">
         <field name="name">pod.patient.form</field>
         <field name="model">pod.patient</field>
         <field name="inherit_id" ref="pod_administration.pod_patient_form" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <!-- <xpath expr="//group[@id='primary_practice_info']" position="after">
+            <xpath expr="//group[@id='primary_practice_info']" position="after">
                 <field name="pod_location_primary_id" />
-            </xpath> -->
-            <xpath expr="//field[@name='user_ids']" position="after">
-                <field name="pod_location_primary_id" />
-                <field name="pod_location_secondary_ids" widget="many2many_tags"/>
-            </xpath>
-        </field>
-    </record>
-</odoo>
+            </xpath>  
+<xpath expr="//field[@name='user_ids']" position="after">
+    <field name="pod_location_primary_id" />
+    <field name="pod_location_secondary_ids" widget="many2many_tags"/>
+</xpath>
+</field>
+</record>
+</odoo> -->
 
-<!--<record id="medical_patient_view_tree" model="ir.ui.view">-->
-<!--    <field name="name">medical.patient.tree</field>-->
-<!--    <field name="model">medical.patient</field>-->
-<!--    <field name="inherit_id" ref="medical_abstract_entity_view_tree" />-->
-<!--    <field name="mode">primary</field>-->
-<!--    <field name="arch" type="xml">-->
-<!--        <xpath expr="//tree" position="attributes">-->
-<!--            <attribute name="string">Patients</attribute>-->
-<!--        </xpath>-->
-<!--        <xpath expr="//field[@name='email']" position="after">-->
-<!--            <field name="identification_code" />-->
-<!--            <field name="age" />-->
-<!--            <field name="gender" />-->
-<!--        </xpath>-->
-<!--    </field>-->
-<!--</record>-->
+ 

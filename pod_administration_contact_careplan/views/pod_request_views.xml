@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
+        <field name="priority" eval="16" />
+        <field name="arch" type="xml">
+            <group name="inheritance" position="inside">
+                <field name="contact_id" readonly="1" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('contact_id', '=', False)]}" />
+            </group>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="pod_request_form_contact">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
+        <field name="groups_id" eval="[(4, ref('pod_administration_contact.group_pod_contact_list'))]" />
+        <field name="arch" type="xml">
+            <field name="contact_id" position="attributes">
+                <attribute name="options">{'no_open': False, 'no_create': True}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

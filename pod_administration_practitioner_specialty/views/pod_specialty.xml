@@ -37,7 +37,6 @@
         <field name="res_model">pod.specialty</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner_specialty.group_pod_specialty_list" action="pod_specialty_action" />
+    <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner_specialty.group_pod_specialty_list" action="pod_specialty_action" sequence="60"/>
 
-    <!-- <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner_specialty.group_pod_specialty_list" action="pod_specialty_action" sequence="70" /> -->
 </odoo>

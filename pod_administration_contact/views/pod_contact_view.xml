@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="pod_contact_view_tree" model="ir.ui.view">
+        <field name="name">pod.contact.view.tree</field>
+        <field name="model">pod.contact</field>
+        <field name="arch" type="xml">
+            <tree string="Contacts">
+                <field name="internal_identifier" />
+                <field name="patient_id" />
+                <field name="location_id" />
+                <field name="priority_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+    <record id="pod_contact_view_form" model="ir.ui.view">
+        <field name="name">pod.contact.view.form</field>
+        <field name="model">pod.contact</field>
+        <field name="arch" type="xml">
+            <form string="Contact">
+                <header>
+                    <button string="Arrived" type="object" name="planned2arrived" class="oe_highlight" groups="pod_administration_contact.group_pod_contact_manager" attrs="{'invisible': [('state','!=','planned')]}" />
+                    <button string="Cancel" type="object" name="planned2cancelled" class="oe_highlight" groups="pod_administration_contact.group_pod_contact_manager" attrs="{'invisible': [('state','!=','planned')]}" />
+                    <button string="In-Progress" type="object" name="arrived2inprogress" class="oe_highlight" groups="pod_administration_contact.group_pod_contact_manager" attrs="{'invisible': [('state','!=','arrived')]}" />
+                    <button string="Cancel" type="object" name="arrived2cancelled" class="oe_highlight" groups="pod_administration_contact.group_pod_contact_manager" attrs="{'invisible': [('state','!=','arrived')]}" />
+                    <button string="On Leave" type="object" name="inprogress2onleave" class="oe_highlight" groups="pod_administration_contact.group_pod_contact_manager" attrs="{'invisible': [('state','!=','in-progress')]}" />
+                    <button string="Cancel" type="object" name="inprogress2cancelled" groups="pod_administration_contact.group_pod_contact_manager" class="oe_highlight" attrs="{'invisible': [('state','!=','in-progress')]}" />
+                    <button string="Finished" type="object" name="onleave2finished" groups="pod_administration_contact.group_pod_contact_manager" class="oe_highlight" attrs="{'invisible': [('state','!=','onleave')]}" />
+                    <button string="Cancel" type="object" name="onleave2cancelled" groups="pod_administration_contact.group_pod_contact_manager" class="oe_highlight" attrs="{'invisible': [('state','!=','onleave')]}" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                    </div>
+                    <h1>
+                        <label for="internal_identifier" />
+                        <field name="internal_identifier" />
+                        <field name="is_editable" invisible="1" />
+                    </h1>
+                    <h2>
+                        <field name="name" attrs="{'readonly': [('is_editable', '=', False)]}" />
+                    </h2>
+                    <group>
+                        <group name="patient">
+                            <field name="patient_id" attrs="{'readonly': [('is_editable', '=', False)]}" options="{'no_open': True, 'no_create': True}" />
+                            <field name="priority_id" attrs="{'readonly': [('is_editable', '=', False)]}" />
+                        </group>
+                    </group>
+                    <group name="location_id">
+                        <field name="location_id" attrs="{'readonly': [('is_editable', '=', False)]}" options="{'no_open': True, 'no_create': True}" />
+                    </group>
+                    <notebook>
+                        <page name="first" invisible="1" />
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="pod_contact_view_form_patient" model="ir.ui.view">
+        <field name="name">pod.contact.view.form</field>
+        <field name="model">pod.contact</field>
+        <field name="inherit_id" ref="pod_contact_view_form" />
+        <field name="groups_id" eval="[(4, ref('pod_administration.group_pod_patient_list'))]" />
+        <field name="arch" type="xml">
+            <field name="patient_id">
+                <attribute name="options">{'no_open': False, 'no_create': True}</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="pod_contact_view_form_location" model="ir.ui.view">
+        <field name="name">pod.contact.view.form</field>
+        <field name="model">pod.contact</field>
+        <field name="inherit_id" ref="pod_contact_view_form" />
+        <field name="groups_id" eval="[(4, ref('pod_administration_location.group_pod_location_list'))]" />
+        <field name="arch" type="xml">
+            <field name="location_id">
+                <attribute name="options">{'no_open': False, 'no_create': True}</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="view_pod_contact_search" model="ir.ui.view">
+        <field name="name">pod.contact.search</field>
+        <field name="model">pod.contact</field>
+        <field name="arch" type="xml">
+            <search string="Contact">
+                <field name="internal_identifier" />
+                <separator />
+                <field name="patient_id" />
+                <separator />
+                <field name="priority_id" />
+                <field name="location_id" />
+                <separator />
+                <filter name="planned" domain="[('state', '=', 'planned')]" string="Planned" />
+                <filter name="arrived" domain="[('state', '=', 'arrived')]" string="Arrived" />
+                <filter name="in-progress" domain="[('state', '=', 'in-progress')]" string="In progress" />
+                <filter name="onleave" domain="[('state', '=', 'onleave')]" string="On leave" />
+                <filter name="finished" domain="[('state', '=', 'finished')]" string="Finished" />
+                <filter name="cancelled" domain="[('state', '=', 'cancelled')]" string="Cancelled" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="pod_contact_action">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.contact</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pod_contact_search" />
+        <field name="context">{}</field>
+    </record>
+</odoo>

@@ -13,7 +13,6 @@
         "data/ir_sequence_data.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",
-        "views/pod_location_relationship.xml",
         "views/pod_patient.xml",
         "views/pod_menu.xml",
     ],

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="pod_administration_contact.group_pod_contact_display" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('pod_clinical_careplan.group_pod_careplan_display'))]" />
+    </record>
+</odoo>

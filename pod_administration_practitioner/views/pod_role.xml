@@ -38,6 +38,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="pod_role_menu" name="Roles" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner.group_pod_role_list" action="pod_role_action" sequence="1" />
+    <!-- 
+    <menuitem id="pod_role_menu" name="Roles" parent="pod_base.pod_administration_settings" groups="pod_administration_practitioner.group_pod_role_list" action="pod_role_action" sequence="70" /> -->
 
 </odoo>

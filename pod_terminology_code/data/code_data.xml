@@ -3,7 +3,7 @@
 <odoo>
     <record id="code_138875005" model="code.concept">
         <field name="code">138875005</field>
-        <field name="name">Clinical Terms Concept</field>
+        <field name="name">SNOMED CT Concept</field>
         <field name="editable" eval="False" />
     </record>
     <record id="code_123037004" model="code.concept">
