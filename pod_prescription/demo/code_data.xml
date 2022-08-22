@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<odoo>
-    <record id="code_441900009" model="code.concept">
-        <field name="code">441900009</field>
-        <field name="name">Hallux limitus</field>
-        <field name="parent_ids" eval="[(4,ref('pod_terminology_code.code_105590001'))]" />
-    </record>
-</odoo>

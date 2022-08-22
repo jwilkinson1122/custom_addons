@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<odoo>
-    <record id="pod_base.pod_root_financial" model="ir.ui.menu">
-        <field name="active" eval="True" />
-    </record>
-    <menuitem id="pod_financial_coverage" name="Coverages" parent="pod_base.pod_root_financial" sequence="10" />
-</odoo>

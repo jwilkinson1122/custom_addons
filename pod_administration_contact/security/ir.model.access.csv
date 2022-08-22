@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_contact_display,pod_contact_display,model_pod_contact,pod_administration_contact.group_pod_contact_display,1,0,0,0
-pod_contact_manager,pod_contact_manager,model_pod_contact,pod_administration_contact.group_pod_contact_manager,0,1,1,0

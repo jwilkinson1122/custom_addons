@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_careplan_display,pod_careplan_display,model_pod_careplan,pod_clinical_careplan.group_pod_careplan_display,1,0,0,0
-pod_careplan_manager,pod_careplan_manager,model_pod_careplan,pod_clinical_careplan.group_pod_careplan_manager,0,1,1,0
