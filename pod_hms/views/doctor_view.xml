@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="doctor_tree" model="ir.ui.view">
+        <field name="name">pod.doctor.tree</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="gender"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="age"/>
+                <field name="enrolled_date"/>
+
+                <field name="view_prescription_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="doctor_form" model="ir.ui.view">
+        <field name="name">pod.doctor.form</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- <header>
+                    <button name="action_url" string="Create Portal User" class="btn-primary" type="object"/>
+                </header> -->
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="gender"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+
+
+                            <field name="age"/>
+                            <field name="enrolled_date"/>
+                            <field name="image" widget='image' class='oe_avatar'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Patient List" autofocus="autofocus">
+                            <group string="Total prescriptions:">
+                                <h2>
+                                    <field name="total_prescriptions"/>
+                                </h2>
+                            </group>
+                            <field name='view_prescription_ids'/>
+                        </page>
+                        <page string="About">
+                            <field name='description'/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record id="doctor_search" model="ir.ui.view">
+        <field name="name">pod.doctor.search</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <search string="Doctor">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="gender"/>
+                <field name="phone"/>
+                <field name="age"/>
+            </search>
+        </field>
+    </record> -->
+
+    <record id="doctor_action" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.doctor</field>
+        <field name="view_mode">tree,form,search,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Doctors List
+            </p>
+        </field>
+    </record>
+
+    <!-- <record id="doctor_kanban" model="ir.ui.view">
+        <field name="name">pod.doctor.kanban</field>
+        <field name="model">pod.doctor</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="department_id">
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="phone"/>
+                <field name="email"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <h1 class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </h1>
+                                <ul>
+                                    <li>Gender :
+                                        <field name="gender"/>
+                                    </li>
+                                    <li>Phone :
+                                        <field name="phone"/>
+                                    </li>
+                                    <li>Email :
+                                        <field name="email"/>
+                                    </li>
+
+                                    <li>Status :
+                                        
+                                    </li>
+                                    <li>Department :
+                                        
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record> -->
+
+    <record id="action_halftime_confirm" model="ir.actions.server">
+        <field name="name">Confirm Parttime</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_pod_doctor"/>
+        <field name="binding_model_id" ref="model_pod_doctor"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_status_halftime()</field>
+    </record>
+
+    <record id="action_fulltime_confirm" model="ir.actions.server">
+        <field name="name">Confirm Fulltime</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_pod_doctor"/>
+        <field name="binding_model_id" ref="model_pod_doctor"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_status_fulltime()</field>
+    </record>
+
+    <menuitem id="podiatry_doctor" name="Doctors" parent="podiatry_root" action="doctor_action" sequence='2'/>
+
+</odoo>
