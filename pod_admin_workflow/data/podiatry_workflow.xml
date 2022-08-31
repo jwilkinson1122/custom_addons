@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="podiatry_workflow" model="workflow.type">
+        <field name="name">Podiatry</field>
+        <field name="description">Podiatry workflows</field>
+    </record>
+</odoo>

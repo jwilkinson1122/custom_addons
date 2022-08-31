@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="seq_podiatry_request_group" model="ir.sequence">
+        <field name="name">Request Group</field>
+        <field name="code">podiatry.request.group</field>
+        <field name="prefix">RG</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

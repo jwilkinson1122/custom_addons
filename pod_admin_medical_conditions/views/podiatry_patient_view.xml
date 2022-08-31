@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="podiatry_patient_view_form" model="ir.ui.view">
+        <field name="name">podiatry.patient.form (podiatry_condition)</field>
+        <field name="model">podiatry.patient</field>
+        <field name="inherit_id" ref="podiatry_administration.podiatry_patient_form" />
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" name="action_view_request" class="oe_stat_button" icon="fa-object-group" groups="podiatry_clinical_request_group.group_podiatry_request_group_list" attrs="{'readonly':[('is_editable', '=', False)]}" context="{'model_name': 'podiatry.request.group'}">
+                    <field name="request_group_count" widget="statinfo" string="Request Groups" />
+                    <field name='request_group_ids' invisible="1" />
+                </button>
+            </xpath>
+            <group name="inheritance" position="inside">
+                <field name="request_group_id" readonly="1" attrs="{'invisible': [('request_group_id', '=', False)]}" />
+            </group> -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(podiatry_condition.podiatry_patient_condition_action)d" type="action" class="oe_stat_button" icon="fa-list" context="{'search_default_patient_id': active_id}">
+                    <field name="count_condition_ids" widget="statinfo" string="Conditions"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

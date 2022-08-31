@@ -13,8 +13,10 @@ class Patient(models.Model):
     }
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
+    # patient_id = fields.Many2one('res.partner', domain=[(
+    #     'is_patient', '=', True)], string="Patient", required=True)
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Doctor')
+                                 help='Partner-related data of the Patient')
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)

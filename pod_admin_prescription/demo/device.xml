@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="product_device_01" model="product.product">
+        <field name="name">Test Device</field>
+        <field name="type">consu</field>
+        <field name="is_device" eval="True" />
+        <field name="company_id" eval="False" />
+        <field name="stc_code_id" ref="podiatry_terminology_sct.sct_123037004" />
+
+        <!-- <field name="atc_code_id" ref="podiatry_terminology_atc.atc_J01DF" /> -->
+    </record>
+</odoo>

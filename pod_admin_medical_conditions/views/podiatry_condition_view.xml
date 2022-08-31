@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- <menuitem id="podiatry_conf_practitioner_menu" name="Practitioners" parent="podiatry_base.podiatry_root_administration" groups="podiatry_administration_practitioner.group_podiatry_practitioner_list" action="podiatry_practitioner_action" sequence="20" /> -->
+
+    <!-- Conditions -->
+    <menuitem id="podiatry_root_condition" name="Condition" parent="podiatry_base.podiatry_root_administration" sequence="40" groups="podiatry_base.group_podiatry_user" />
+    <!--  Menu of Pathology-->
+    <menuitem id="podiatry_sub_condition" parent="podiatry_root_condition" sequence="1" action="podiatry_patient_condition_action" groups="podiatry_base.group_podiatry_user" />
+</odoo>

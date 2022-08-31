@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="podiatry_base.podiatry_root_devices" model="ir.ui.menu">
+        <field name="active" eval="True" />
+    </record>
+</odoo>
