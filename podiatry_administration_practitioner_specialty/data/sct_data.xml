@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="sct_394658006" model="podiatry.sct.concept">
+        <field name="code">394658006</field>
+        <field name="name">Clinical specialty</field>
+        <field name="parent_ids" eval="[(4, ref('podiatry_terminology_sct.sct_362981000'))]" />
+        <field name="editable" eval="False" />
+    </record>
+</odoo>

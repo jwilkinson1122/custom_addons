@@ -6,20 +6,32 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//group" position="inside">
+				<!-- <xpath expr="//group" position="inside">
 					<group>
-						<field name="dob" string="Dob" ></field>
-						<field name="age" string="Age" ></field>
+						<field name="dob" string="Dob"></field>
+						<field name="age" string="Age"></field>
 					</group>
-				</xpath>
+				</xpath> -->
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button name="open_customer_prescriptions"
-							class="oe_stat_button"
-							type="object"
-							icon="fa-tasks">
+					<button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>
+				<field name="function" position="after">
+					<field name="relationship" />
+					<field name="relative_partner_id" />
+				</field>
+				<notebook>
+					<page string="Medical">
+						<group colspan="4" col="4">
+							<field name="is_patient" />
+							<field name="is_doctor" />
+							<field name="is_practice" />
+							<field name="is_person" />
+						</group>
+
+					</page>
+				</notebook>
 			</field>
 		</record>
 	</data>

@@ -4,6 +4,8 @@ access_admin_prescription,access_admin_prescription,model_dr_prescription,base.g
 access_admin_config,access_admin_config,model_device_test_type,base.group_system,1,1,1,1
 access_doctor_device_test,access_doctor_device_test,model_device_test_type,group_pod_erp_doctors,1,0,0,0
 access_doctor,access_doctor,model_pod_dr,group_pod_erp_doctors,1,0,0,0
+access_patient,access_patient,model_pod_patient,group_pod_erp_patients,1,0,0,0
+access_admin_patient,access_admin_patient,model_pod_patient,base.group_system,1,1,1,1
 access_admin_doctor,access_admin_doctor,model_pod_dr,base.group_system,1,1,1,1
 
 

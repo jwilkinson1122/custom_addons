@@ -6,4 +6,9 @@
             <field name="users" eval="[(4, ref('base.group_system'))]"/>
         </record>
     </data>
+    <data noupdate="1">
+        <record id="group_pod_erp_patients" model="res.groups">
+            <field name="name">Patients</field>
+        </record>
+    </data>
 </odoo>

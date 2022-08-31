@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <menuitem id="podiatry_location_menu" name="Locations" sequence="30" parent="podiatry_base.podiatry_root_administration" groups="podiatry_administration_location.group_podiatry_location_list" action="podiatry_location_action" />
+</odoo>

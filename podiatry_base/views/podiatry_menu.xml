@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <menuitem id="podiatry_root" name="Podiatry" sequence="10" groups="podiatry_base.group_podiatry_root_menu" web_icon="podiatry_base,static/description/icon.png" />
+    <menuitem id="podiatry_root_administration" name="Administration" parent="podiatry_root" groups="podiatry_base.group_podiatry_administration_menu" sequence="1" />
+    <record id="podiatry_root_administration" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_clinical" name="Clinical" parent="podiatry_root" groups="podiatry_base.group_podiatry_clinical_menu" sequence="10" />
+    <record id="podiatry_root_clinical" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_diagnostics" name="Administration" parent="podiatry_root" groups="podiatry_base.group_podiatry_diagnostics_menu" sequence="20" />
+    <record id="podiatry_root_diagnostics" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_devices" name="Prescriptions" parent="podiatry_root" groups="podiatry_base.group_podiatry_devices_menu" sequence="30" />
+    <record id="podiatry_root_devices" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_financial" name="Financial" parent="podiatry_root" groups="podiatry_base.group_podiatry_financial_menu" sequence="40" />
+    <record id="podiatry_root_financial" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_workflow" name="Workflow" parent="podiatry_root" groups="podiatry_base.group_podiatry_workflow_menu" sequence="50" />
+    <record id="podiatry_root_workflow" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_terminologies" name="Terminologies" parent="podiatry_root" groups="podiatry_base.group_podiatry_terminologies_menu" sequence="60" />
+    <record id="podiatry_root_terminologies" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+    <menuitem id="podiatry_root_configuration" name="Configuration" parent="podiatry_root" groups="podiatry_base.group_podiatry_configuration_menu" sequence="100" />
+</odoo>

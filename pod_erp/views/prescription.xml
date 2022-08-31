@@ -244,7 +244,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Ophthalmology">
+                        <page string="Podiatry">
                             <div class="row">
                                 <div class="col-8">
                                     <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
@@ -405,6 +405,7 @@
 
         <menuitem id="pod_erp_root" name="Podiatry ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
         <menuitem id="pod_erp_doctor" name="Podiatrist" parent="pod_erp_root" action="action_doctor_window" groups="group_pod_erp_doctors,base.group_system" sequence="1"/>
+        <menuitem id="pod_erp_patient" name="Patient" parent="pod_erp_root" action="action_patient_window" groups="group_pod_erp_patients,base.group_system" sequence="2"/>
         <menuitem id="pod_erp_sale_order" name="Sale Order" parent="pod_erp_root" action="sale.action_orders" sequence="3"/>
         <menuitem id="pod_erp_customer" name="Customer" parent="pod_erp_root" action="base.action_partner_customer_form" sequence="4"/>
         <menuitem id="pod_erp_config" name="Configuration" parent="pod_erp_root" sequence="6"/>

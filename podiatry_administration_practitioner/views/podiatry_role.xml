@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="podiatry_role_view_form" model="ir.ui.view">
+        <field name="name">podiatry.role.view.form</field>
+        <field name="model">podiatry.role</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Role">
+                <header />
+                <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                    <field name="active" invisible="1" />
+                    <div name="button_box" class="oe_button_box" />
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="podiatry_role_view_tree" model="ir.ui.view">
+        <field name="name">podiatry.role.view.tree</field>
+        <field name="model">podiatry.role</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Roles">
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="podiatry_role_action">
+        <field name="name">Roles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.role</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
