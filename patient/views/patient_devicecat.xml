@@ -1,0 +1,56 @@
+<odoo>
+
+    <!-- Patient Device Categories Tree View -->
+    <record id="view_patient_devicecat_tree" model="ir.ui.view">
+        <field name="name">view.patient.devicecat.tree</field>
+        <field name="model">patient.devicecat</field>
+        <field name="arch" type="xml">
+            <tree string="Device Category">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Patient Device Categories Form View -->
+    <record id="view_patient_devicecat_form" model="ir.ui.view">
+        <field name="name">view.patient.devicecat.form</field>
+        <field name="model">patient.devicecat</field>
+        <field name="arch" type="xml">
+            <form string="Device Category">
+                <header />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                    <field name="active" invisible="1" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group id="main">
+                        <group id="left" />
+                        <group id="right" />
+                    </group>
+                    <notebook>
+                        <page string="Device Groups" id="devicegroups">
+                            <field name="devicegroup_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_patient_devicecat" model="ir.actions.act_window">
+        <field name="name">Device Categories</field>
+        <field name="res_model">patient.devicecat</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a devicecat.
+            </p>
+        </field>
+    </record>
+
+</odoo>

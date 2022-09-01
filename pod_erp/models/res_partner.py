@@ -14,10 +14,9 @@ class InheritedResPartner(models.Model):
     relationship = fields.Char(string='Relationship')
     relative_partner_id = fields.Many2one('res.partner', string="Relative_id")
     is_patient = fields.Boolean(string='Patient')
-    is_person = fields.Boolean(string="Person")
     is_doctor = fields.Boolean(string="Doctor")
-    is_practice = fields.Boolean('Medical Practice')
-    reference = fields.Char('ID Number')
+    speciality = fields.Many2one('physician.speciality', string='Speciality')
+    practice = fields.Many2one('res.partner', string='Medical Practice')
 
     def open_customer_prescriptions(self):
         for records in self:

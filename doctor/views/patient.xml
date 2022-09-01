@@ -1,0 +1,59 @@
+<odoo>
+
+    <!-- Patient Tree View -->
+    <record id="view_patient_doctor_tree" model="ir.ui.view">
+        <field name="name">view.patient.doctor.tree</field>
+        <field name="model">patient</field>
+        <field name="inherit_id" ref="patient.view_patient_tree" />
+        <field name="arch" type="xml">
+            <field name="devicetype_id" position="after">
+                <field name="partner_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Patient Form View -->
+    <record id="view_patient_doctor_form" model="ir.ui.view">
+        <field name="name">view.patient.doctor.form</field>
+        <field name="model">patient</field>
+        <field name="inherit_id" ref="patient.view_patient_form" />
+        <field name="arch" type="xml">
+            <field name="devicecat_id" position="after">
+                <field name="partner_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Patient Kanban View -->
+    <record id="view_patient_doctor_kanban" model="ir.ui.view">
+        <field name="name">view.patient.doctor.kanban</field>
+        <field name="model">patient</field>
+        <field name="inherit_id" ref="patient.view_patient_kanban" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="partner_id" />
+            </field>
+            <xpath expr="//div[hasclass('oe_kanban_details')]/ul" position="inside">
+                <li t-if="record.partner_id.raw_value">
+                    <field name="partner_id" />
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Patient Search View -->
+    <record id="view_patient_doctor_search" model="ir.ui.view">
+        <field name="name">view.patient.doctor.search</field>
+        <field name="model">patient</field>
+        <field name="inherit_id" ref="patient.view_patient_search" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="partner_id" />
+            </field>
+            <filter name="gender" position="before">
+                <filter name="partner_id" string="Doctor" domain="" context="{'group_by': 'partner_id'}" />
+            </filter>
+        </field>
+    </record>
+
+</odoo>

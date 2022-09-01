@@ -11,6 +11,16 @@
 						<field string="Prescriptions" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>
+				<!-- <notebook position="inside">
+					<page string="Medical" groups="base.group_user">
+						<group>
+							<field name="is_patient"/>
+							<field name="is_doctor"/>
+							<field name="speciality" attrs="{'invisible': [('is_doctor', '=', False)]}"/>
+							<field name="practice" attrs="{'invisible': [('is_doctor', '=', False)]}"/>
+						</group>
+					</page>
+				</notebook> -->
 			</field>
 		</record>
 	</data>

@@ -1,0 +1,137 @@
+<odoo>
+    <data>
+        <!-- Patient Tree View -->
+        <record id="view_patient_tree" model="ir.ui.view">
+            <field name="name">patient.tree</field>
+            <field name="model">patient</field>
+            <field name="arch" type="xml">
+                <tree string="Patients">
+                    <field name="ref" />
+                    <field name="name" />
+                    <field name="gender" />
+                    <field name="devicecat_id" />
+                    <field name="devicegroup_id" />
+                    <field name="devicetype_id" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Patient Form View -->
+        <record id="view_patient_form" model="ir.ui.view">
+            <field name="name">patient.form</field>
+            <field name="model">patient</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_devicetype="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <field name="active" invisible="1" />
+                        <field name="image" widget='image' class="oe_avatar" />
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                            <field name="gender" widget="radio" options="{'horizontal': true}" />
+                        </div>
+                        <group id="main">
+                            <group id="left">
+                                <field name="devicecat_id" />
+                                <field name="devicegroup_id" domain="[('devicecat_id', '=', devicecat_id)]" />
+                                <field name="devicetype_id" domain="[('devicegroup_id', '=', devicegroup_id)]" />
+                                <field name="size" />
+                            </group>
+                            <group id="right">
+                                <field name="ref" />
+                                <field name="weight" />
+                                <field name="birth_date" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Patient Kanban View -->
+        <record id="view_patient_kanban" model="ir.ui.view">
+            <field name="name">patient.kanban</field>
+            <field name="model">patient</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban">
+                    <field name="id" />
+                    <field name="image" />
+                    <field name="name" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
+                                <t t-if="record.image.raw_value">
+                                    <img class="o_kanban_image" t-att-src="kanban_image('patient', 'image', record.id.raw_value)" t-att-alt="record.name" />
+                                </t>
+                                <t t-else="">
+                                    <img class="o_kanban_image" alt="Avatar" t-att-src='_s + "/patient/static/img/avatar.png"'
+                                    />
+</t>
+<div class="oe_kanban_details">
+                                        <strong class="o_kanban_record_title oe_partner_heading">
+                                            <field name="display_name" />
+                                        </strong>
+                                        <div class="o_kanban_tags_section oe_kanban_partner_categories" />
+                                        <ul>
+                                            <li t-if="record.gender.raw_value">
+                                                <field name="gender" />
+                                            </li>
+                                            <li t-if="record.devicecat_id.raw_value and record.devicegroup_id.raw_value">
+                                                <field name="devicegroup_id" />
+                                                <field name="devicecat_id" />
+                                            </li>
+                                        </ul>
+                                        <div class="oe_kanban_partner_links" />
+                                    </div>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </record>
+
+            <!-- Search for patient -->
+            <record id="view_patient_search" model="ir.ui.view">
+                <field name="name">patient.search</field>
+                <field name="model">patient</field>
+                <field name="arch" type="xml">
+                    <search string="Patients">
+                        <field name="name" filter_domain="['|', ('name', 'ilike', self), ('ref', 'ilike', self)]" string="Name" />
+                        <field name="devicecat_id" />
+                        <field name="devicegroup_id" />
+                        <field name="devicetype_id" />
+                        <field name="size" />
+                        <separator />
+                        <filter string="Female" domain="[('gender', '=', 'female')]" name="female" />
+                        <filter string="Male" domain="[('gender', '=', 'male')]" name="male" />
+                        <separator />
+                        <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
+                        <separator />
+                        <group expand="0" string="Group By">
+                            <filter name="gender" string="Gender" domain="" context="{'group_by': 'gender'}" />
+                            <filter name="devicecat_id" string="Device Category" domain="" context="{'group_by': 'devicecat_id'}" />
+                            <filter name="devicegroup_id" string="Device Group" domain="" context="{'group_by': 'devicegroup_id'}" />
+                            <filter name="devicetype_id" string="devicetype" domain="" context="{'group_by': 'devicetype_id'}" />
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+            <record id="action_patient" model="ir.actions.act_window">
+                <field name="name">Patients</field>
+                <field name="res_model">patient</field>
+                <field name="view_mode">kanban,tree,form</field>
+                <field name="search_view_id" ref="view_patient_search" />
+                <field name="help" type="html">
+                    <p class="o_view_nocontent_smiling_face">Create an patient</p>
+                </field>
+            </record>
+        </data>
+    </odoo>

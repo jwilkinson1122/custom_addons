@@ -11,6 +11,8 @@ class Patient(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
+
+    active = fields.Boolean(default=True)
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
     # patient_id = fields.Many2one('res.partner', domain=[(
@@ -20,6 +22,16 @@ class Patient(models.Model):
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
+
+    gender = fields.Selection(
+        string="Gender",
+        selection=[
+            ("female", "Female"),
+            ("male", "Male"),
+        ],
+        # default="female",
+        # required=True,
+    )
 
     @api.depends('dob')
     def _cal_age(self):

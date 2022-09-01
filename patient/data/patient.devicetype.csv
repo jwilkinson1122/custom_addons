@@ -1,0 +1,4 @@
+id,name,devicegroup_id/id
+flex,Superglass Flex,patient.superglass
+everyday,Superglass Everyday,patient.superglass
+proformance,Superglass Proformance,patient.superglass
