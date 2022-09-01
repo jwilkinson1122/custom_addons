@@ -23,6 +23,7 @@ class Patient(models.Model):
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
 
+    active = fields.Boolean(default=True)
     gender = fields.Selection(
         string="Gender",
         selection=[
