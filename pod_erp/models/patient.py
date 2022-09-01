@@ -21,6 +21,17 @@ class Patient(models.Model):
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
 
+    active = fields.Boolean(default=True)
+    gender = fields.Selection(
+        string="Gender",
+        selection=[
+            ("female", "Female"),
+            ("male", "Male"),
+        ],
+        # default="female",
+        # required=True,
+    )
+
     @api.depends('dob')
     def _cal_age(self):
         for record in self:
