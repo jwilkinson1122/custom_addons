@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+    <record id="pod_specialty_general_podiatry" model="pod.specialty">
+        <field name="code">408467006</field>
+        <field name="name">General Podiatry</field>
+    </record>
+
+    <record id="pod_specialty_clinical_hospital" model="pod.specialty">
+        <field name="code">394601005</field>
+        <field name="name">Hospital</field>
+    </record>
+
+    <record id="pod_specialty_clinical_physio" model="pod.specialty">
+        <field name="code">394601005</field>
+        <field name="name">Clinical physiology</field>
+    </record>
+
+    <record id="pod_specialty_diabetic" model="pod.specialty">
+        <field name="code">408475000</field>
+        <field name="name">Diabetic medicine</field>
+    </record>
+
+    <record id="pod_specialty_gmp" model="pod.specialty">
+        <field name="code">408443003</field>
+        <field name="name">General medical practice</field>
+    </record>
+
+    <record id="pod_specialty_general" model="pod.specialty">
+        <field name="code">394802001</field>
+        <field name="name">General medicine</field>
+    </record>
+
+    <record id="pod_specialty_general_path" model="pod.specialty">
+        <field name="code">394915009</field>
+        <field name="name">General pathology</field>
+    </record>
+
+    <record id="pod_specialty_gp" model="pod.specialty">
+        <field name="code">394814009</field>
+        <field name="name">General practice</field>
+    </record>
+
+    <record id="pod_specialty_military" model="pod.specialty">
+        <field name="code">410001006</field>
+        <field name="name">Military medicine</field>
+    </record>
+
+    <record id="pod_specialty_veterans_affairs" model="pod.specialty">
+        <field name="code">408455009</field>
+        <field name="name">Veterans Affairs</field>
+    </record>
+
+    <record id="pod_specialty_rehab" model="pod.specialty">
+        <field name="code">394602003</field>
+        <field name="name">Rehabilitation</field>
+    </record>
+
+    <record id="pod_specialty_surgery_general" model="pod.specialty">
+        <field name="code">394609007</field>
+        <field name="name">Surgery: General</field>
+    </record>
+
+    <record id="pod_specialty_physical_therapist" model="pod.specialty">
+        <field name="code">409967009</field>
+        <field name="name">Physical Therapist</field>
+    </record>
+
+    <record id="pod_specialty_sports_medicine" model="pod.specialty">
+        <field name="code">408448007</field>
+        <field name="name">Sports medicine</field>
+    </record>
+
+</odoo>

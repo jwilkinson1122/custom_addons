@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_practice_make_test">
+            <field name="model">pod.practice.test.create.init</field>
+            <field name="type">form</field>
+            <field name="name">practice_make_test</field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_create_practice_test">
+            <field name="name">Practice: Create test</field>
+            <field name="wiz_name">pod.practice.test.create</field>
+            <field name="model">pod.patient.practice.test</field>
+        </record>
+        <record model="ir.action.keyword" id="act_create_practice_test_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">pod.patient.practice.test,-1</field>
+            <field name="action" ref="act_create_practice_test"/>
+        </record>
+
+        <record model="ir.ui.view" id="patient_practice_test_request_start_view_form">
+            <field name="model">pod.patient.practice.test.request.start</field>
+            <field name="type">form</field>
+            <field name="name">patient_practice_test_request_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="patient_practice_test_request">
+            <field name="name">Practice: Request new order</field>
+            <field name="wiz_name">pod.patient.practice.test.request</field>
+        </record>
+
+        <record model="ir.action.keyword" id="act_open_patient_practice_request_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">pod.patient,-1</field>
+            <field name="action" ref="patient_practice_test_request"/>
+        </record>
+
+        <menuitem parent="health_practice.pod_practiceoratory_menu" action="patient_practice_test_request" id="menu_patient_practice_test_request" sequence="10" icon="gnuhealth-execute"/>
+
+    </data>
+</odoo>

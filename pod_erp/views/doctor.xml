@@ -5,7 +5,7 @@
             <field name="name">Doctor</field>
             <field name="model">pod.dr</field>
             <field name="arch" type="xml">
-                <form string="Podiatrist">
+                <form string="Practitioner">
                     <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner_id', '=', False)]}">
                         A partner with the same
                         <span>
@@ -223,7 +223,7 @@
             </field>
         </record>
         <record id="dr_doctor_tree" model="ir.ui.view">
-            <field name="name">Podiatrist Tree View</field>
+            <field name="name">Practitioner Tree View</field>
             <field name="model">pod.dr</field>
             <field name="arch" type="xml">
                 <tree>
@@ -295,7 +295,7 @@
             </field>
         </record>
         <record id="action_doctor_window" model="ir.actions.act_window">
-            <field name="name">Podiatrist</field>
+            <field name="name">Practitioner</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pod.dr</field>
             <field name="view_mode">kanban,tree,form</field>

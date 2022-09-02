@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <menuitem id="pod_root" name="NWPL" sequence="10" web_icon="pod_base,static/description/icon.png" groups="pod_base.group_pod_user" />
+    <!-- ,social.group_soc_resp_reg,social.group_soc_direct -->
+    <menuitem id="pod_patient_root" name="Patients" parent="pod_root" sequence="10" groups="pod_base.group_pod_user" />
+    <menuitem id="pod_patient" name="Patients" parent="pod_patient_root" sequence="10" action="pod_patient_action" groups="pod_base.group_pod_user" />
+    <menuitem id="pod_root_sub" name="Configuration" parent="pod_root" sequence="100" groups="pod_base.group_pod_user" />
+</odoo>

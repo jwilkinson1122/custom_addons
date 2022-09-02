@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Include the Practiceoratory Test into the Patient History -->
+        <record model="ir.ui.view" id="pod_patient_view">
+            <field name="name">pod_patient.form</field>
+            <field name="model">pod.patient</field>
+            <field name="inherit_id" ref="pod_patient_view_form" />
+            <field name="priority" eval="60"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Practiceoratory">
+                        <notebook>
+                            <page name="Practiceoratory_info" string="Practiceoratory Info">
+                                <group string="Practices Test Requests">
+                                    <field name="practice_test_ids" string="Tests" context="{'default_patient_id': id}" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <!-- Podiatry  Patient Practice Test -->
+        <record model="ir.actions.act_window" id="pod_practice_test_requests_action">
+            <field name="name">Practice Test Requests</field>
+            <field name="res_model">pod.practice.test.requests</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test requested
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_requests_form">
+            <field name="name">pod_practice_test_requests_form</field>
+            <field name="model">pod.practice.test.requests</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Main Info" id="practice_main_info">
+                                <!--div class="oe_button_box" name="button_box">
+                                    <button class="oe_stat_button" type="object" name="get_result" icon="fa-flask">
+                                    </button>
+                                    <field name="result_count" />
+                                </div-->
+                                <group>
+                                    <group>
+                                        <field name="identity_id" options="{'create_edit': True}"/>
+                                        <field name="test_type" />
+                                        <field name="date" />
+                                    </group>
+                                    <group>
+                                        <field name="referenced_by" />
+                                        <field name="urgent" />
+                                        <field name="state" readonly="1" />
+                                    </group>
+                                </group>
+                            </page>
+                            <!--page string="Información de Pago" id="practice_test_pay_info">
+                                <group id="practice_test_pay_method_info" colspan="4">
+                                    <separator colspan="4" string="Detalles de pago:" id="separator_notes" />
+                                    <group>
+                                        <field name="amount"/>
+                                        <field name="pay_status" />
+                                        <field name="pay_method" />
+                                        <field name="pay_ref" />
+                                        <! - -field name="pay_status" / - - >
+                                    </group>
+                                </group>
+                            </page -->
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_requests_tree">
+            <field name="name">pod_practice_test_requests_tree</field>
+            <field name="model">pod.practice.test.requests</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="(urgent)">
+                    <field name="name" options="{'create_edit': True}" />
+                    <field name="date" widget="date" />
+                    <field name="test_type" />
+                    <field name="identity_id" />
+                    <field name="referenced_by" />
+                    <field name="state" readonly="1" />
+                    <field name="urgent" />
+                    <!--field name="pay_status" /-->
+                </tree>
+            </field>
+        </record>
+        <!-- Podiatry  Practice Test Results -->
+        <record model="ir.actions.act_window" id="pod_practice_test_result_action">
+            <field name="name">Practice Test Results</field>
+            <field name="res_model">pod.practice.test.result</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test Results registered
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_result_form">
+            <field name="model">pod.practice.test.result</field>
+            <field name="name">pod_practice_test_result_form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Main Info" id="practice_main_info">
+                                <div class="oe_button_box" name="button_box">
+                                </div>
+                                <group>
+                                    <field name="name" options="{'create_edit': False}" />
+                                    <field name="date" widget="date" />
+                                    <field name="test_type" />
+                                    <field name="identity_id" />
+                                    <field name="state"/>
+                                    <field name="date_analysis" />
+                                    <field name="urgent" />
+                                    <field name="requestor" />
+                                </group>
+                                <newline string="Resultados:" />
+                                <section class="s_two_columns bg-200 pt8 pb8" data-name="Columns">
+                                    <div class="container">
+                                        <div class="row d-flex s_nb_column_fixed">
+                                            <div class="col-lg-4 s_col_no_bgcolor pt8 pb0">
+                                                <field name="value"/>
+                                            </div>
+                                            <div class="col-lg-8 s_col_no_bgcolor pt8 pb0">
+                                                <!--field name="critearea" string="" view_id="pod_practice.pod_practice_test_critearea_ref,\
+                                                        pod_practice.test_critearea_view_form_test_type"/-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <newline />
+                                <group>
+                                    <field name="analytes_summary" string="Comentaries:"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_result_tree">
+            <field name="model">pod.practice.test.result</field>
+            <field name="name">pod_practice_test_result_tree</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="(urgent)">
+                    <field name="name" options="{'create_edit': True}" />
+                    <field name="date" widget="date" />
+                    <field name="test_type" options="{'create_edit': False}"/>
+                    <field name="identity_id" options="{'create_edit': False}"/>
+                    <field name="state"/>
+                    <field name="urgent" />
+                    <field name="analytes_summary" />
+                    <!--field name="pay_status" /-->
+                </tree>
+            </field>
+        </record>
+        <!-- Podiatry Values of Test Result -->
+        <record model="ir.ui.view" id="test_result_value_view_form_practice">
+            <field name="name">test_result_value_form_practice</field>
+            <field name="model">pod.practice.test.value</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="warning"/>
+                        <field name="result"/>
+                        <field name="result_text"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="test_result_value_view_tree_practice">
+            <field name="name">test_result_value_tree_practice</field>
+            <field name="model">pod.practice.test.value</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="warning" />
+                    <field name="result" />
+                    <field name="result_text"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Practice Test Units -->
+        <record model="ir.actions.act_window" id="pod_practice_test_units_action">
+            <field name="name">Practice Test Units</field>
+            <field name="res_model">pod.practice.test.units</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test Units registered
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_units_form">
+            <field name="name">pod_practice_test_units_form</field>
+            <field name="model">pod.practice.test.units</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" />
+                        <field name="code" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_units_tree">
+            <field name="name">pod_practice_test_units_tree</field>
+            <field name="model">pod.practice.test.units</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>
+        <!-- Practice Test Type - - >
+        <record model="ir.actions.act_window" id="pod_practice_test_type_action">
+            <field name="name">Practice Test Types</field>
+            <field name="res_model">pod.practice.test.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test Types registered
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_type_view">
+            <field name="name">pod_practice_test</field>
+            <field name="model">pod.practice.test.type</field>
+            <field name="inherit_id" ref="product_template_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name=options" position="after">
+                    <div>
+                        <field name="critearea" colspan="4" view_ids="pod_practice.test_critearea_view_tree_test_type,pod_practice.test_critearea_view_form_test_type"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_type_tree">
+            <field name="name">pod_practice_test_tree</field>
+            <field name="model">pod.practice.test.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="active" />
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="categ_id" />
+                </tree>
+            </field>
+        </record -->
+        <record model="ir.actions.act_window" id="pod_practice_test_type_action">
+            <field name="name">Practice Test Types</field>
+            <field name="res_model">pod.practice.test.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test Types registered
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_type_view">
+            <field name="name">pod_practice_test</field>
+            <field name="model">pod.practice.test.type</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="mode">primary</field>
+            <field name="priority" eval="100" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="after">
+                    <div>
+                        <!--field name="test_type" /-->
+                        <!--field name="critearea" colspan="4" view_ids="pod_practice.test_critearea_view_tree_test_type,pod_practice.test_critearea_view_form_test_type"/ -->
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!-- Critearea -->
+        <record model="ir.ui.view" id="test_critearea_view_form_test_type">
+            <field name="model">pod.practice.test.critearea</field>
+            <field name="name">test_critearea_form_test_type</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="units"/>
+                        <newline/>
+                        <field name="lower_limit"/>
+                        <field name="upper_limit"/>
+                        <newline/>
+                        <separator colspan="4" id="analyte_reference" string="Reference Value / Range"/>
+                        <newline/>
+                        <field colspan="4" name="normal_range"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="test_critearea_view_tree_test_type">
+            <field name="model">pod.practice.test.critearea</field>
+            <field name="name">test_critearea_tree_test_type</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="lower_limit"/>
+                    <field name="upper_limit"/>
+                    <field name="normal_range"/>
+                    <field name="units"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Practice Test Critearea -->
+        <record model="ir.actions.act_window" id="pod_practice_test_critearea_action">
+            <field name="name">Practice Test Critearea</field>
+            <field name="res_model">pod.practice.test.critearea</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Practice Test Critearea registered
+                </p>
+                <p>
+                    You can add some register
+                </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_critearea_form">
+            <field name="name">test_critearea_form_test_type</field>
+            <field name="model">pod.practice.test.critearea</field>
+            <field name="priority" eval="20" />
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="units"/>
+                        <field name="sequence"/>
+                        <newline/>
+                        <field name="lower_limit"/>
+                        <field name="upper_limit"/>
+                    </group>
+                    <separator colspan="4" id="analyte_reference" string="Reference Value / Range" />
+                    <group>
+                        <field colspan="4" name="normal_range" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_critearea_tree">
+            <field name="name">test_critearea_tree_test_type</field>
+            <field name="model">pod.practice.test.critearea</field>
+            <field name="priority" eval="10" />
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="sequence" />
+                    <field name="name" />
+                    <field name="lower_limit" />
+                    <field name="upper_limit" />
+                    <field name="normal_range" />
+                    <field name="units" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="pod_practice_test_critearea_ref">
+            <field name="name">test_critearea_tree_test_type_ref</field>
+            <field name="model">pod.practice.test.critearea</field>
+            <field name="priority" eval="10" />
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="lower_limit" />
+                    <field name="upper_limit" />
+                </tree>
+            </field>
+        </record>
+        <!-- Menu Items -->
+        <menuitem id="pod_root" name="Practiceoratorios" sequence="50" web_icon="pod_practiceoratories/static/description/icon.png" />
+        <menuitem id="pod_practiceoratory_menu" name="Practiceoratorio" sequence="51" parent="pod_root" />
+        <menuitem id="pod_practicetest_request" name="Exámenes Solicitados" sequence="52" parent="pod_practiceoratory_menu" action="pod_practice_test_requests_action" />
+        <menuitem id="pod_practicetest_result" name="Resultados de Exámenes" sequence="53" parent="pod_practiceoratory_menu" action="pod_practice_test_result_action" />
+        <menuitem id="pod_conf_practiceoratory" name="Configuración" sequence="54" parent="pod_root" />
+        <menuitem id="practice_unit_conf_menu" name="Unidades de Análisis" sequence="55" parent="pod_conf_practiceoratory" action="pod_practice_test_units_action" />
+        <menuitem id="practice_crit_conf_menu" name="Criterios de Análisis" sequence="56" parent="pod_conf_practiceoratory" action="pod_practice_test_critearea_action" />
+        <menuitem id="menu_pod_practice_test_type_action" name="Tipos de Exámenes" sequence="57" parent="pod_conf_practiceoratory" action="pod_practice_test_type_action" />
+        <!-- action="pod_practice_test_type_action" action="product.product_template_action_all"
+        / -->
+        <menuitem id="practice_centers_conf_menu" name="Centros de Salud" sequence="58" parent="pod_conf_practiceoratory" action="pod_medical_center_action" />
+        <menuitem id="practice_users_conf_menu" name="Patients" sequence="59" parent="pod_conf_practiceoratory" action="pod_patient_action" />
+    </data>
+</odoo>

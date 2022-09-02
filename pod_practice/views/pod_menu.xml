@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!--menuitem id="pod_root" name="NWPL" sequence="10" web_icon="pod_practiceoratories,static/description/icon.png" />
+    <menuitem id="pod_root" name="Practiceoratorios" sequence="50" web_icon="pod_practice,static/description/icon.png" />
+    <menuitem id="pod_patient_root" name="Patients" parent="pod_root" sequence="10" />
+    <menuitem id="pod_patient" name="Patients" parent="pod_patient_root" sequence="10" action="pod_patient_action"
+    /-->
+</odoo>

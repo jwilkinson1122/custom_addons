@@ -23,11 +23,14 @@
 				</field>
 				<notebook>
 					<page string="Medical">
-						<group colspan="4" col="4">
+						<group colspan="2" col="2">
 							<field name="is_patient" />
 							<field name="is_doctor" />
-							<field name="is_practice" />
-							<field name="is_person" />
+							<field name="is_practice" attrs="{'invisible': [('is_doctor', '=', False)]}"/>
+
+							<!-- <field name="speciality" attrs="{'invisible': [('is_physician', '=', False)]}"/>
+							<field name="practice" attrs="{'invisible': [('is_doctor', '=', False)]}"/> -->
+
 						</group>
 
 					</page>

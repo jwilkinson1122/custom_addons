@@ -31,7 +31,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Podiatrist :</td>
+                                                <td class="headings">Practitioner :</td>
                                                 <td class="text">
                                                     <span t-field="doc.dr"></span>
                                                 </td>
@@ -211,7 +211,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Exams
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.podiatrist_observation"></span>
+                                <span t-field="doc.practitioner_observation"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -312,7 +312,7 @@
                                             <span></span>
                                         </h6>
                                         <h6 style="font-size:small;">
-                                            <strong>Podiatrist :</strong>
+                                            <strong>Practitioner :</strong>
                                             <span t-esc="doc.dr.name"></span>
                                         </h6>
                                         <hr style="border:1px solid;"/>

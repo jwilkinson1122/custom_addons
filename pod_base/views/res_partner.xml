@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO: Activate this button -->
+<odoo>
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="id" invisible="True"/>
+                <field name="patient_ids" invisible="True"/>
+                <button name="pod_base.pod_patient_action" type="action" class="oe_stat_button" icon="fa-list" context="{'search_default_partner_id': id}" attrs="{'invisible': [('patient_ids', '=', [])]}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="count_patients" />
+                        </span>
+                        <span class="o_stat_text">Patient(s)</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

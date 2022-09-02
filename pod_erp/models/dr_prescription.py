@@ -12,7 +12,7 @@ class DrPrescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    dr = fields.Many2one('pod.dr', string='Podiatrist', readonly=True)
+    dr = fields.Many2one('pod.dr', string='Practitioner', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
@@ -20,7 +20,7 @@ class DrPrescription(models.Model):
     test_type = fields.Many2one('device.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
-    podiatrist_observation = fields.Text()
+    practitioner_observation = fields.Text()
     state = fields.Selection(
         [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 

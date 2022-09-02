@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_module_category_pod" model="ir.module.category">
+        <field name="name">Community Medical</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="group_pod_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="group_pod_assistant" model="res.groups">
+        <field name="name">Assistant</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_user'))]"/>
+    </record>
+    <record id="group_pod_doctor" model="res.groups">
+        <field name="name">Doctor</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_assistant'))]"/>
+    </record>
+    <record id="group_pod_center_manager" model="res.groups">
+        <field name="name">Center Manager</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_doctor'))]"/>
+    </record>
+    <record id="group_pod_manager" model="res.groups">
+        <field name="name">Company Manager</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_center_manager'))]"/>
+    </record>
+    <record id="group_pod_configurator" model="res.groups">
+        <field name="name">System Administrator</field>
+        <field name="category_id" ref="ir_module_category_pod"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_manager'))]"/>
+    </record>
+    <record id="base.group_erp_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_pod_configurator'))]"/>
+    </record>
+</odoo>

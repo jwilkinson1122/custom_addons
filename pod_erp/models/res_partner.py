@@ -15,6 +15,7 @@ class InheritedResPartner(models.Model):
     relative_partner_id = fields.Many2one('res.partner', string="Relative_id")
     is_patient = fields.Boolean(string='Patient')
     is_doctor = fields.Boolean(string="Doctor")
+    is_practice = fields.Boolean(string="Medical Practice")
     speciality = fields.Many2one('physician.speciality', string='Speciality')
     practice = fields.Many2one('res.partner', string='Medical Practice')
 
