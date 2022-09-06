@@ -1,0 +1,66 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
+
+
+class ParentRelation(models.Model):
+    '''Defining a Parent relation with child.'''
+
+    _name = "parent.relation"
+    _description = "Parent-child relation information"
+
+    name = fields.Char("Relation name", required=True,
+                       help='Parent relation with patient')
+
+
+class PodiatryParent(models.Model):
+    '''Defining a Doctor information.'''
+
+    _name = 'podiatry.parent'
+    _description = 'Parent Information'
+
+    partner_id = fields.Many2one('res.partner', 'User ID', ondelete="cascade",
+                                 delegate=True, required=True, help='Partner which is user over here')
+    relation_id = fields.Many2one('parent.relation', 'Relation with Child',
+                                  help='Parent relation with child')
+    patient_id = fields.Many2many('patient.patient', 'patients_parents_rel',
+                                  'patients_parent_id', 'patient_id', 'Children',
+                                  help='Patient of the following parent')
+    standard_id = fields.Many2many('podiatry.standard',
+                                   'podiatry_standard_parent_rel', 'class_parent_id', 'class_id',
+                                   'Academic Class', help='''Class of the patient of following parent''')
+    stand_id = fields.Many2many('standard.standard',
+                                'standard_standard_parent_rel', 'standard_parent_id', 'standard_id',
+                                'Academic Standard', help='''Standard of the patient of following parent''')
+    doctor_id = fields.Many2one('podiatry.doctor', 'Doctor', store=True,
+                                related="standard_id.user_id", help='Doctor of a patient')
+
+    @api.onchange('patient_id')
+    def onchange_patient_id(self):
+        """Onchange Method for Patient."""
+        standard_ids = self.patient_id.mapped('standard_id')
+        if standard_ids:
+            self.standard_id = [(6, 0, standard_ids.ids)]
+            self.stand_id = [(6, 0, standard_ids.mapped('standard_id').ids)]
+
+    @api.model
+    def create(self, vals):
+        """Inherited create method to assign values in
+        the users record to maintain the delegation"""
+        res = super(PodiatryParent, self).create(vals)
+        parent_grp_id = self.env.ref('podiatry.group_podiatry_parent')
+        emp_grp = self.env.ref('base.group_user')
+        self.env['res.users'].create({
+            'name': res.name,
+            'login': res.email,
+            'email': res.email,
+            'partner_id': res.partner_id.id,
+            'groups_id': [(6, 0, [emp_grp.id, parent_grp_id.id])]
+        })
+        return res
+
+    @api.onchange('state_id')
+    def onchange_state(self):
+        """Onchange Method for State."""
+        if self.state_id:
+            self.country_id = self.state_id.country_id.id or False

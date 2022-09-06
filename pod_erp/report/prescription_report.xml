@@ -53,7 +53,7 @@
                                             <tr>
                                                 <td class="headings">Test Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.test_type"></span>
+                                                    <span t-field="doc.device_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -748,7 +748,7 @@
                                             <tr>
                                                 <td class="headings">Test Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.test_type"></span>
+                                                    <span t-field="doc.prescription_id.device_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>

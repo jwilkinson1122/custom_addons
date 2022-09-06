@@ -17,7 +17,7 @@ class DrPrescription(models.Model):
         'res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
-    test_type = fields.Many2one('device.test.type')
+    device_type = fields.Many2one('device.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     practitioner_observation = fields.Text()

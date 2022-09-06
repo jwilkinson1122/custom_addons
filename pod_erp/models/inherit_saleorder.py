@@ -43,7 +43,7 @@ class InheritedSaleOrder(models.Model):
         }
 
     @api.onchange('prescription_id')
-    def test(self):
+    def device(self):
         product = self.env.ref('pod_erp.pod_erp_product')
         self.order_line = None
         if self.prescription_id.device_examination_chargeable == True:

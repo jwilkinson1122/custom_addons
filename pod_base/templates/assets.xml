@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<odoo>
-    <template id="assets_backend" inherit_id="web.assets_backend" name="Pod Assets">
-        <xpath expr=".">
-            <script type="text/javascript" src="/pod_base/static/src/pod/js.tour.js" />
-        </xpath>
-    </template>
-</odoo>

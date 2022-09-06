@@ -1,3 +1,0 @@
-
-
-from .practicetest import *

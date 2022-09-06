@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="report_patient_patient" model="ir.actions.report">
+        <field name="name">Identity Card</field>
+        <field name="model">patient.patient</field>
+        <field name="binding_model_id" ref="model_patient_patient"/>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">podiatry.identity_card</field>
+        <field name="report_file">podiatry.identity_card</field>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('podiatry.group_podiatry_administration')),
+                                       (4, ref('podiatry.group_podiatry_doctor')),
+                                       (4, ref('podiatry.group_podiatry_patient'))]"/>
+    </record>
+    <record id="report_podiatry_podiatry_identity_card" model="ir.actions.report">
+        <field name="name">Identity Card</field>
+        <field name="model">podiatry.doctor</field>
+        <field name="binding_model_id" ref="model_podiatry_doctor"/>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">podiatry.doctor_identity_card</field>
+        <field name="report_file">podiatry.doctor_identity_card</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

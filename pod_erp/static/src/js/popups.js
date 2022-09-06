@@ -1,4 +1,4 @@
-odoo.define('pod_erp.popups',function(require) {
+odoo.define('pod_erp.popups', function (require) {
     'use strict';
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
@@ -18,20 +18,20 @@ odoo.define('pod_erp.popups',function(require) {
             this.env.pos.pod.ProductCreationScreen = undefined;
             this.doctors = this.env.pos.pod.doctors;
             this.partners = this.env.pos.db.get_partners_sorted();
-            this.test_type = this.env.pos.pod.test_type;
+            this.device_type = this.env.pos.pod.device_type;
             if (this.env.pos.get_order().attributes.client)
                 this.customer = this.env.pos.get_order().attributes.client.id;
             else
                 this.customer = false;
-            var abc= [];
-            for (var i=0;i<180;i++)
+            var abc = [];
+            for (var i = 0; i < 180; i++)
                 abc.push(i);
-            this.abc= abc;
+            this.abc = abc;
             this.today = new Date().toISOString().substr(0, 10);;
         }
         mounted() {
         }
-        render_list(){
+        render_list() {
         }
         async click_confirm() {
             var self = this;
@@ -39,29 +39,29 @@ odoo.define('pod_erp.popups',function(require) {
             var vals = $("#prescription_form").serializeObject();
             vals["dr"] = $('option:selected', $('[name=dr]')).data('id');
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
-            vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
+            vals["device_type"] = $('option:selected', $('[name=device_type]')).data('id');
             vals = JSON.stringify(vals);
             var checkup_date = $('[name=checkup_date]').val();
-            var today = new Date().toJSON().slice(0,10);
-            if( !checkup_date) {
-//                this.env.pos.pod.ProductCreationScreen = this.gui.current_popup;
-//                this.env.pos.pod.ProductCreationScreen.hide();
-//                this.gui.current_popup = this.gui.popup_instances['error'];
+            var today = new Date().toJSON().slice(0, 10);
+            if (!checkup_date) {
+                //                this.env.pos.pod.ProductCreationScreen = this.gui.current_popup;
+                //                this.env.pos.pod.ProductCreationScreen.hide();
+                //                this.gui.current_popup = this.gui.popup_instances['error'];
                 this.showPopup('ErrorPopup', {
-                        title: this.env._t('Checkup date is empty'),
-                        body: this.env._t('You need to select a Checkup date'),
+                    title: this.env._t('Checkup date is empty'),
+                    body: this.env._t('You need to select a Checkup date'),
                 });
-//                    cancel: function () {
-//                        this.env.pos.pod.ProductCreationScreen.$el.removeClass('oe_hidden');
-//                        this.gui.current_popup = this.env.pos.pod.ProductCreationScreen
-//                        this.env.pos.pod.ProductCreationScreen = undefined;
-//                    }
-//                });
+                //                    cancel: function () {
+                //                        this.env.pos.pod.ProductCreationScreen.$el.removeClass('oe_hidden');
+                //                        this.gui.current_popup = this.env.pos.pod.ProductCreationScreen
+                //                        this.env.pos.pod.ProductCreationScreen = undefined;
+                //                    }
+                //                });
             }
             else {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
-                        title: this.env._t('Create a Prescription ?'),
-                        body: this.env._t('Are You Sure You Want a Create a Prescription'),
+                    title: this.env._t('Create a Prescription ?'),
+                    body: this.env._t('Are You Sure You Want a Create a Prescription'),
                 });
                 if (confirmed) {
                     this.env.pos.pod.ProductCreationScreen = undefined;
@@ -69,7 +69,7 @@ odoo.define('pod_erp.popups',function(require) {
                         model: 'dr.prescription',
                         method: 'create_product_pos',
                         args: [vals],
-                    }).then(function (products){
+                    }).then(function (products) {
                         self.env.pos.pod.all_orders.push(products);
                         self.env.pos.pod.order_by_id[products.id] = products;
                         $('.pod_prescription').text(products.name);
@@ -79,7 +79,7 @@ odoo.define('pod_erp.popups',function(require) {
                 }
             };
         }
-        cancel(){
+        cancel() {
             this.trigger('close-popup');
         }
 
@@ -106,18 +106,18 @@ odoo.define('pod_erp.popups',function(require) {
         }
         mounted() {
         }
-        render_list(){
+        render_list() {
         }
-        attribute_variant_onChange(){
+        attribute_variant_onChange() {
             var vals = $("#order_form").serializeObject();
             var variants = []
             $('#glasses').html("");
-            this.env.pos.pod.glasses.forEach(function(pod_glass){
-                pod_glass.attribute_line_ids.forEach(function(attribute_line_id){
+            this.env.pos.pod.glasses.forEach(function (pod_glass) {
+                pod_glass.attribute_line_ids.forEach(function (attribute_line_id) {
                     variants.push(self.env.pos.pod.product_attributes_lines_by_id[attribute_line_id].display_name);
                 })
-                pod_glass.product_variant_ids.forEach(function(product_template){
-                    if (variants.every(function(variant){return self.env.pos.db.product_by_id[product_template].display_name.includes(vals[variant])})){
+                pod_glass.product_variant_ids.forEach(function (product_template) {
+                    if (variants.every(function (variant) { return self.env.pos.db.product_by_id[product_template].display_name.includes(vals[variant]) })) {
                         $('#glasses').append($('<option>', {
                             value: product_template,
                             text: self.env.pos.db.product_by_id[product_template].display_name
@@ -135,12 +135,12 @@ odoo.define('pod_erp.popups',function(require) {
                 order.add_product(this.env.pos.db.product_by_id[id]);
             self.trigger('close-popup');
         }
-        cancel(){
+        cancel() {
             self.trigger('close-popup');
         }
     }
     OrderCreationWidget.template = 'OrderCreationWidget';
     Registries.Component.add(OrderCreationWidget);
 
-    return PrescriptionCreationWidget,OrderCreationWidget;
+    return PrescriptionCreationWidget, OrderCreationWidget;
 });

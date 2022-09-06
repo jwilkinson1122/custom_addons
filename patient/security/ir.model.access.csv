@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_patient_user,patient.user,model_patient,base.group_user,1,1,1,1
-access_patient_devicetype_user,patient.devicetype.user,model_patient_devicetype,base.group_user,1,0,0,0
-access_patient_devicetype_manager,patient.devicetype.manager,model_patient_devicetype,patient.group_patient_manager,1,1,1,1
-access_patient_devicegroup_user,patient.devicegroup.user,model_patient_devicegroup,base.group_user,1,0,0,0
-access_patient_devicegroup_manager,patient.devicegroup.manager,model_patient_devicegroup,patient.group_patient_manager,1,1,1,1
-access_patient_devicecat_user,patient.devicecat.user,model_patient_devicecat,base.group_user,1,0,0,0
-access_patient_devicecat_manager,patient.devicecat.manager,model_patient_devicecat,patient.group_patient_manager,1,1,1,1
