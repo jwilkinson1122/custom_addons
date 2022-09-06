@@ -215,7 +215,7 @@ class PodiatryStandard(models.Model):
     '''Defining a standard related to podiatry.'''
 
     _name = 'podiatry.standard'
-    _description = 'Podiatry Standards'
+    _description = 'Practice Standards'
     _rec_name = "standard_id"
 
     @api.depends('standard_id', 'podiatry_id', 'division_id', 'medium_id',
@@ -349,7 +349,7 @@ class PodiatryPodiatry(models.Model):
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
                                  required=True, delegate=True,
                                  help='Company_id of the podiatry')
-    com_name = fields.Char('Podiatry Name', related='company_id.name',
+    com_name = fields.Char('Practice Name', related='company_id.name',
                            store=True, help='Podiatry name')
     code = fields.Char('Code', required=True, help='Podiatry code')
     standards = fields.One2many('podiatry.standard', 'podiatry_id',
@@ -359,9 +359,9 @@ class PodiatryPodiatry(models.Model):
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
-    required_age = fields.Integer("Patient Admission Age Required", default=6,
+    required_age = fields.Integer("Patient Registration Age Required", default=6,
                                   help='''Minimum required age for 
-                                  patient admission''')
+                                  patient register''')
 
     @api.model
     def create(self, vals):
@@ -477,7 +477,7 @@ class AttendanceType(models.Model):
     """Defining attendance type."""
 
     _name = "attendance.type"
-    _description = "Podiatry Type"
+    _description = "Practice Type"
 
     name = fields.Char('Name', required=True, help='Attendance type name')
     code = fields.Char('Code', required=True, help='Attendance type code')
@@ -609,7 +609,7 @@ class PatientReference(models.Model):
 class PatientPreviousPodiatry(models.Model):
     ''' Defining a patient previous podiatry information '''
     _name = "patient.previous.podiatry"
-    _description = "Patient Previous Podiatry"
+    _description = "Patient Previous Practice"
 
     previous_podiatry_id = fields.Many2one('patient.patient', 'Patient',
                                            help='Related patient')
@@ -617,8 +617,8 @@ class PatientPreviousPodiatry(models.Model):
                        help='Patient previous podiatry name')
     registration_no = fields.Char('Registration No.', required=True,
                                   help='Patient registration number')
-    admission_date = fields.Date('Admission Date',
-                                 help='Patient admission date')
+    register_date = fields.Date('Registration Date',
+                                help='Patient register date')
     exit_date = fields.Date('Exit Date',
                             help='Patient previous podiatry exit date')
     course_id = fields.Many2one('standard.standard', 'Course', required=True,
@@ -626,23 +626,23 @@ class PatientPreviousPodiatry(models.Model):
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
                               help='Patient gender')
 
-    @api.constrains('admission_date', 'exit_date')
+    @api.constrains('register_date', 'exit_date')
     def check_date(self):
         new_dt = fields.Date.today()
-        if (self.admission_date and self.admission_date >= new_dt) or (
+        if (self.register_date and self.register_date >= new_dt) or (
                 self.exit_date and self.exit_date >= new_dt):
             raise ValidationError(_(
-                "Your admission date and exit date should be less than current date!"))
-        if (self.admission_date and self.exit_date) and (
-                self.admission_date > self.exit_date):
+                "Your register date and exit date should be less than current date!"))
+        if (self.register_date and self.exit_date) and (
+                self.register_date > self.exit_date):
             raise ValidationError(_(
-                "Admission date should be less than exit date in previous podiatry!"))
+                "Registration date should be less than exit date in previous podiatry!"))
 
 
 class AcademicSubject(models.Model):
     ''' Defining a patient previous podiatry information '''
     _name = "academic.subject"
-    _description = "Patient Previous Podiatry"
+    _description = "Patient Previous Practice"
 
     add_sub_id = fields.Many2one('patient.previous.podiatry', 'Add Subjects',
                                  invisible=True,

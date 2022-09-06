@@ -109,8 +109,8 @@ class PatientPatient(models.Model):
     relation = fields.Many2one('patient.relation.master', 'Relation',
                                help='Select patient relation')
 
-    admission_date = fields.Date('Admission Date', default=fields.Date.today(),
-                                 help='Enter patient admission date')
+    register_date = fields.Date('Registration Date', default=fields.Date.today(),
+                                help='Enter patient register date')
     middle = fields.Char('Middle Name', required=True,
                          states={'done': [('readonly', True)]},
                          help='Enter patient middle name')
@@ -134,7 +134,7 @@ class PatientPatient(models.Model):
                                     'References', states={'done': [('readonly', True)]},
                                     help='Enter patient references')
     previous_podiatry_ids = fields.One2many('patient.previous.podiatry',
-                                            'previous_podiatry_id', 'Previous Podiatry Detail',
+                                            'previous_podiatry_id', 'Previous Practice Detail',
                                             states={
                                                 'done': [('readonly', True)]},
                                             help='Enter patient podiatry details')
@@ -167,7 +167,7 @@ class PatientPatient(models.Model):
                                   states={'done': [('readonly', True)]}, help='Select podiatry', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
                               ('terminate', 'Terminate'), ('cancel', 'Cancel'),
-                              ('alumni', 'Alumni')], 'Status', readonly=True, default="draft",
+                              ('archive', 'Archive')], 'Status', readonly=True, default="draft",
                              tracking=True, help='State of the patient registration form')
     history_ids = fields.One2many('patient.history', 'patient_id', 'History',
                                   help='Enter patient history')
@@ -230,8 +230,8 @@ class PatientPatient(models.Model):
         # Assign group to patient based on condition
         emp_grp = self.env.ref('base.group_user')
         if res.state == 'draft':
-            admission_group = self.env.ref('podiatry.group_is_admission')
-            new_grp_list = [admission_group.id, emp_grp.id]
+            register_group = self.env.ref('podiatry.group_is_register')
+            new_grp_list = [register_group.id, emp_grp.id]
             res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
         elif res.state == 'done':
             done_patient = self.env.ref('podiatry.group_podiatry_patient')
@@ -265,10 +265,10 @@ class PatientPatient(models.Model):
         '''Method to change state to draft'''
         self.state = 'draft'
 
-    def set_alumni(self):
-        '''Method to change state to alumni'''
+    def set_archive(self):
+        '''Method to change state to archive'''
         for rec in self:
-            rec.state = 'alumni'
+            rec.state = 'archive'
             rec.standard_id._compute_total_patient()
             rec.active = False
             rec.user_id.active = False
@@ -277,7 +277,7 @@ class PatientPatient(models.Model):
         '''Method to change state to done'''
         self.state = 'done'
 
-    def admission_draft(self):
+    def register_draft(self):
         '''Set the state to draft'''
         self.state = 'draft'
 
@@ -285,12 +285,12 @@ class PatientPatient(models.Model):
         '''Set the state to terminate'''
         self.state = 'terminate'
 
-    def cancel_admission(self):
+    def cancel_register(self):
         '''Set the state to cancel.'''
         self.state = 'cancel'
 
-    def admission_done(self):
-        '''Method to confirm admission'''
+    def register_done(self):
+        '''Method to confirm register'''
         podiatry_standard_obj = self.env['podiatry.standard']
         ir_sequence = self.env['ir.sequence']
         patient_group = self.env.ref('podiatry.group_podiatry_patient')
@@ -325,20 +325,20 @@ class PatientPatient(models.Model):
                             str(rec.year.code) + str('/') +
                             str(pt_code))
             rec.write({'state': 'done',
-                       'admission_date': fields.Date.today(),
+                       'register_date': fields.Date.today(),
                        'patient_code': patient_code,
                        'reg_code': registation_code})
             template = self.env['mail.template'].sudo().search([
-                ('name', 'ilike', 'Admission Confirmation')], limit=1)
+                ('name', 'ilike', 'Registration Confirmation')], limit=1)
             if template:
                 for user in rec.parent_id:
-                    subject = _("About Admission Confirmation")
+                    subject = _("About Registration Confirmation")
                     if user.email:
                         body = """
                         <div>
                             <p>Dear """ + str(user.display_name) + """,
                             <br/><br/>
-                            Admission of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
+                            Registration of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
                             <br></br>
                             Thank You.
                         </div>

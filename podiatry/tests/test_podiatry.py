@@ -30,8 +30,8 @@ class TestPodiatry(common.TransactionCase):
         patient_list = [self.patient_done.id]
         self.patient_patient._compute_patient_age()
         self.patient_patient.check_age()
-        self.patient_patient.admission_done()
-        self.patient_patient.set_alumni()
+        self.patient_patient.register_done()
+        self.patient_patient.set_archive()
         self.parent.patient_id = [(6, 0, patient_list)]
         # Create academic Year
         self.academic_year_obj = self.env['academic.year']

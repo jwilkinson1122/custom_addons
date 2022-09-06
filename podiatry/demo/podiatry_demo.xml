@@ -625,7 +625,7 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
-        <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_4')]]"/>
+        <function model="patient.patient" name="register_done" eval="[[ref('demo_patient_patient_4')]]"/>
         <record id="demo_patient_patient_5" model="patient.patient">
             <field name="name">John</field>
             <field name="middle">William</field>
@@ -643,7 +643,7 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
-        <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_5')]]"/>
+        <function model="patient.patient" name="register_done" eval="[[ref('demo_patient_patient_5')]]"/>
         <record id="demo_patient_patient_6" model="patient.patient">
             <field name="name">Alexander</field>
             <field name="middle">Robert</field>
@@ -661,7 +661,7 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
         </record>
-        <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_6')]]"/>
+        <function model="patient.patient" name="register_done" eval="[[ref('demo_patient_patient_6')]]"/>
         <record id="demo_patient_patient_7" model="patient.patient">
             <field name="name">Sarah</field>
             <field name="middle">Isaac</field>
@@ -679,7 +679,7 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
-        <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_7')]]"/>
+        <function model="patient.patient" name="register_done" eval="[[ref('demo_patient_patient_7')]]"/>
         <record id="demo_patient_patient_8" model="patient.patient">
             <field name="name">Lucy</field>
             <field name="middle">William</field>
@@ -697,7 +697,7 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
-        <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_8')]]"/>
+        <function model="patient.patient" name="register_done" eval="[[ref('demo_patient_patient_8')]]"/>
 
         <record id="demo_patient_patient_1" model="patient.patient">
             <field name="name">Mary</field>

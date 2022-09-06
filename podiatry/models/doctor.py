@@ -14,7 +14,7 @@ class PodiatryDoctor(models.Model):
                                   ondelete="cascade", delegate=True, required=True,
                                   help='Enter related employee')
     standard_id = fields.Many2one('podiatry.standard',
-                                  "Responsibility of Academic Class",
+                                  "Responsibility",
                                   help="Standard for which the doctor responsible for.")
     stand_id = fields.Many2one('standard.standard', "Course",
                                related="standard_id.standard_id", store=True,
@@ -22,8 +22,8 @@ class PodiatryDoctor(models.Model):
     subject_id = fields.Many2many('subject.subject', 'subject_doctor_rel',
                                   'doctor_id', 'subject_id', 'Course-Subjects',
                                   help='Select subject of doctor')
-    podiatry_id = fields.Many2one('podiatry.podiatry', "Campus",
-                                  help='Select podiatry')
+    podiatry_id = fields.Many2one('podiatry.podiatry', "Location",
+                                  help='Select Practice')
     category_ids = fields.Many2many('hr.employee.category',
                                     'doctor_category_rel', 'emp_id', 'categ_id', 'Tags',
                                     help='Select employee category')

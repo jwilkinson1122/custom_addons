@@ -117,7 +117,7 @@
                 <sheet>
                     <separator string="Podiatry Configuration" />
                     <group col="4" colspan="4">
-                        <field name="name" string="Name" placeholder="Podiatry Name" />
+                        <field name="name" string="Name" placeholder="Practice Name" />
                         <field name="code" placeholder="Code" />
                     </group>
                     <group>
@@ -151,7 +151,7 @@
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
             <tree string="Podiatry Information">
-                <field name="name" string="Podiatry Name" />
+                <field name="name" string="Practice Name" />
                 <field name="code" />
             </tree>
         </field>
@@ -336,7 +336,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
@@ -791,7 +791,7 @@
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Information -->
     <record id="action_podiatry_podiatry_form" model="ir.actions.act_window">
-        <field name="name">Podiatrys</field>
+        <field name="name">Locations</field>
         <field name="res_model">podiatry.podiatry</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -941,15 +941,15 @@
     </record>
 
     <!-- Menu Item Of POD ERP -->
-    <menuitem id="menu_pod_erp" name="POD ERP" web_icon="podiatry,static/description/ems.png" sequence="1"/>
-    <!-- MenuItem Of Admission Register -->
-    <menuitem id="admission_register" name="Podiatry" parent="menu_pod_erp" sequence="2" />
+    <menuitem id="menu_pod_erp" name="POD ERP" web_icon="podiatry,static/description/doctor2.png" sequence="1"/>
+    <!-- MenuItem Of Patient Register -->
+    <menuitem id="register_register" name="Podiatry" parent="menu_pod_erp" sequence="2" />
     <menuitem id="podiatry_facilities" name="Facilities" parent="menu_pod_erp" sequence="3" />
     <menuitem id="podiatry_schedule" name="Schedule" parent="menu_pod_erp" sequence="4" />
-    <menuitem id="menu_admission_form_root" name="Admission" parent="admission_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
-    <menuitem id="menu_admission_form" name="Admission Register" parent="menu_admission_form_root" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
+    <menuitem id="menu_register_form_root" name="Registration" parent="register_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/>
+    <menuitem id="menu_register_form" name="Patient Register" parent="menu_register_form_root" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/>
     <!-- Menu Item Of Patients & Parents -->
-    <menuitem id="menu_patients_parents" name="Profiles" parent="admission_register" sequence="2"/>
+    <menuitem id="menu_patients_parents" name="Profiles" parent="register_register" sequence="2"/>
     <menuitem id="menu_patient_profile" name="Patients" parent="menu_patients_parents" action="action_patient_patient_form_12" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent" sequence="31"/>
     <!-- MenuItem For Reminders -->
     <menuitem id="menu_reminders_root" name="Reminders" parent="podiatry_schedule" sequence="8" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/>
@@ -979,8 +979,8 @@
     <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
     <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
     <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
-    <!-- Menuitem of alumni and terminate -->
-    <menuitem id="menu_patient_alumni" name="Alumni/Terminate" action="action_patient_alumni" parent="menu_admission_form_root" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor" sequence="2"/>
+    <!-- Menuitem of archive and terminate -->
+    <menuitem id="menu_patient_archive" name="Archive/Terminate" action="action_patient_archive" parent="menu_register_form_root" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor" sequence="2"/>
     <menuitem id="hr.menu_hr_root" name="Employees" groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,podiatry.group_podiatry_administration" web_icon="hr,static/description/icon.png" sequence="75"/>
     <!-- MenuItem For Configurations->Subject -->
     <!-- Inherited Form View Of Company -->
@@ -990,7 +990,7 @@
         <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
             <field name="name" position="attributes">
-                <attribute name="string">Podiatry Name</attribute>
+                <attribute name="string">Practice Name</attribute>
             </field>
         </field>
     </record>
