@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<odoo>
-    <record id="podiatry_base.podiatry_root_clinical" model="ir.ui.menu">
-        <field name="active" eval="True" />
-    </record>
-    <menuitem id="podiatry_clinical_request" name="Requests" parent="podiatry_base.podiatry_root_clinical" sequence="10" />
-    <menuitem id="podiatry_clinical_event" name="Events" parent="podiatry_base.podiatry_root_clinical" sequence="20" />
-</odoo>

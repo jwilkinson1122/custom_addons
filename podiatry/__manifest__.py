@@ -14,6 +14,7 @@
     'data': ['security/podiatry_security.xml',
              'security/ir.model.access.csv',
              'data/patient_sequence.xml',
+             'data/podiatry_sequence.xml',
              'data/mail_template.xml',
              'wizard/terminate_reason_view.xml',
              'views/patient_view.xml',

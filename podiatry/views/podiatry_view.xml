@@ -108,35 +108,47 @@
             </kanban>
         </field>
     </record>
-    <!-- Form View Of Podiatry Information -->
+    <!-- Form View Of Account Information -->
     <record id="view_podiatry_podiatry_form" model="ir.ui.view">
         <field name="name">podiatry.podiatry.form</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <form string="Podiatry Information">
+            <form string="Account Information">
                 <sheet>
-                    <separator string="Podiatry Configuration" />
+
+                    <div class="oe_title">
+
+                        <separator string="Account Information" style="font-size:20px; font-weight:bold" />
+                        <group col="2" colspan="2">
+                            <field name="name" string="Account Name" placeholder="Name" />
+                            <field name="practice_id" string="ID:" readonly="1"/>
+                        </group>
+                    </div>
                     <group col="4" colspan="4">
-                        <field name="name" string="Name" placeholder="Practice Name" />
-                        <field name="code" placeholder="Code" />
-                    </group>
-                    <group>
                         <label for="street" string="Address" />
                         <div class="o_address_format">
-                            <field name="street" class="o_address_street" placeholder="Street..." />
-                            <field name="street2" class="o_address_street" placeholder="Street2..." />
-                            <field name="city" class="o_address_city" placeholder="City" required="1" />
-                            <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                            <field name="zip" class="o_address_zip" placeholder="ZIP" />
-                            <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                            <group>
+                                <field name="street" placeholder="Street..." />
+                                <field name="street2" placeholder="Street2..." />
+                                <field name="city" placeholder="City" required="1" />
+                                <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                <field name="zip" placeholder="ZIP" />
+                                <field name="country_id" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                            </group>
                         </div>
                     </group>
-                    <group col="4" colspan="4">
-                        <field name="currency_id" placeholder="Select Or Create Currency" />
-                        <field name="lang" placeholder="Language"/>
-                        <field name="required_age" required="1"/>
-                    </group>
                     <notebook colspan="4">
+                        <page string="Contacts">
+
+                        </page>
+                        <page string="Patients" autofocus="autofocus">
+                            <group string="All Patients:">
+                                <!-- <h2>
+                                    <field name="total_appointments"/>
+                                </h2> -->
+                            </group>
+                            <!-- <field name='view_appointment_ids'/> -->
+                        </page>
                         <page string="Standards">
                             <field name="standards" nolabel="1" colspan="4" readonly="1"/>
                         </page>
@@ -145,18 +157,67 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Podiatry Information -->
+    <!-- Tree View Of Account Information -->
     <record id="view_podiatry_podiatry_tree" model="ir.ui.view">
         <field name="name">podiatry.podiatry.tree</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <tree string="Podiatry Information">
+            <tree string="Account Information">
                 <field name="name" string="Practice Name" />
-                <field name="code" />
+                <field name="practice_id" />
             </tree>
         </field>
     </record>
-    <!-- Form View Of Podiatry Attendace -->
+    <!-- Kanban View Of Podiatry Information -->
+    <record id="doctor_kanban" model="ir.ui.view">
+        <field name="name">podiatry.podiatry.kanban</field>
+        <field name="model">podiatry.podiatry</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <!-- <kanban default_group_by="name"> -->
+                <field name="name"/>
+                <!-- <field name="gender"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="status"/>
+                <field name="college"/> -->
+                <field name="practice_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <h1 class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </h1>
+                                <ul>
+                                    <!-- <li>Gender :
+                                        <field name="gender"/>
+                                    </li>
+                                    <li>Phone :
+                                        <field name="phone"/>
+                                    </li>
+                                    <li>Email :
+                                        <field name="email"/>
+                                    </li>
+                                    <li>College :
+                                        <field name="college"/>
+                                    </li>
+                                    <li>Status :
+                                        <field name="status"/>
+                                    </li> -->
+                                    <li>Practice ID :
+                                        <field name="practice_id"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View Of Account Attendace -->
     <record id="view_podiatry_attendance_form" model="ir.ui.view">
         <field name="name">podiatry.attendance.form</field>
         <field name="model">attendance.type</field>
@@ -170,7 +231,7 @@
             </form>
         </field>
     </record>
-    <!-- Form View Of Podiatry Standard Information -->
+    <!-- Form View Of Account Standard Information -->
     <record id="view_podiatry_standard_form" model="ir.ui.view">
         <field name="name">podiatry.standard.form</field>
         <field name="model">podiatry.standard</field>
@@ -182,7 +243,7 @@
                         <field name="standard_id" widget="selection" placeholder="Standard"/>
                         <field name="division_id" widget="selection" placeholder="Division"/>
                         <field name="medium_id" widget="selection" placeholder="Medium"/>
-                        <field name="podiatry_id" widget="selection" placeholder="Podiatry"/>
+                        <field name="podiatry_id" widget="selection" placeholder="Account"/>
                         <field name="user_id" placeholder="Select Faculty Name" widget="selection"/>
                         <field name="capacity"/>
                         <field name="total_patients"/>
@@ -236,7 +297,7 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Podiatry Standard Information -->
+    <!-- Tree View Of Account Standard Information -->
     <record id="view_podiatry_standard_tree" model="ir.ui.view">
         <field name="name">podiatry.standard.tree</field>
         <field name="model">podiatry.standard</field>
@@ -250,7 +311,7 @@
             </tree>
         </field>
     </record>
-    <!-- Kanban View Of Podiatry Standard Information -->
+    <!-- Kanban View Of Account Standard Information -->
     <record id="podiatry_standard_kanban_view" model="ir.ui.view">
         <field name="name">podiatry.standard.kanban</field>
         <field name="model">podiatry.standard</field>
@@ -272,7 +333,7 @@
                                         <tr>
                                             <td class="oe_kanban_title1" align="left" valign="middle">
                                                 <div>
-                                                    Podiatry :-
+                                                    Account :-
                                                     <field name="podiatry_id" />
                                                 </div>
                                             </td>
@@ -285,7 +346,7 @@
                                             <td valign="top" align="left">
                                                 <div class="oe_kanban_title2">
                                                     <div>
-                                                        Class Doctor :-
+                                                        Doctor :-
                                                         <field name="user_id" />
                                                     </div>
                                                 </div>
@@ -322,7 +383,7 @@
             </kanban>
         </field>
     </record>
-    <!-- Search View Of Podiatry Standard Information -->
+    <!-- Search View Of Account Standard Information -->
     <record id="view_patient_patient_search" model="ir.ui.view">
         <field name="name">podiatry.standard.search</field>
         <field name="model">podiatry.standard</field>
@@ -789,13 +850,13 @@
         <field name="view_id" ref="patient_reminder_kanban_view" />
         <field name="act_window_id" ref="action_patient_reminder" />
     </record>
-    <!-- Action Of Form & Tree Views Of Podiatry Information -->
+    <!-- Action Of Form & Tree Views Of Account Information -->
     <record id="action_podiatry_podiatry_form" model="ir.actions.act_window">
-        <field name="name">Locations</field>
+        <field name="name">Accounts</field>
         <field name="res_model">podiatry.podiatry</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Podiatry Standard -->
+    <!-- Action Of Form & Tree Views Of Account Standard -->
     <record id="action_podiatry_standard_form" model="ir.actions.act_window">
         <field name="name">Classes</field>
         <field name="res_model">podiatry.standard</field>
@@ -943,7 +1004,7 @@
     <!-- Menu Item Of POD ERP -->
     <menuitem id="menu_pod_erp" name="POD ERP" web_icon="podiatry,static/description/doctor2.png" sequence="1"/>
     <!-- MenuItem Of Patient Register -->
-    <menuitem id="register_register" name="Podiatry" parent="menu_pod_erp" sequence="2" />
+    <menuitem id="register_register" name="Practice" parent="menu_pod_erp" sequence="2" />
     <menuitem id="podiatry_facilities" name="Facilities" parent="menu_pod_erp" sequence="3" />
     <menuitem id="podiatry_schedule" name="Schedule" parent="menu_pod_erp" sequence="4" />
     <menuitem id="menu_register_form_root" name="Registration" parent="register_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/>
@@ -956,14 +1017,14 @@
     <menuitem id="menu_reminders" name="Reminders" parent="menu_reminders_root" action="action_patient_reminder" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/>
     <!-- MenuItem For Configurations -->
     <menuitem id="menu_configuration" name="Configurations" parent="menu_pod_erp" sequence="13" groups="group_podiatry_administration" />
-    <!-- MenuItem For Configurations->Podiatry Configurations -->
-    <menuitem id="menu_podiatry_config_form1" name="Podiatry Configurations" parent="menu_configuration" />
+    <!-- MenuItem For Configurations->Account Configurations -->
+    <menuitem id="menu_podiatry_config_form1" name="Account Configurations" parent="menu_configuration" />
     <menuitem id="menu_cast" name="Religion/Caste" parent="menu_podiatry_config_form1" action="action_patient_cast_form_7" />
     <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_podiatry_config_form1" action="action_document_type_form" />
     <menuitem id="submenu_sub_grade" name="Grade" parent="menu_podiatry_config_form1" action="action_grade_master_form" />
     <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_podiatry_config_form1" action="view_patient_news" />
-    <menuitem id="mother_tongue_menu" name="Mother Tongue" parent="menu_podiatry_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
-    <menuitem id="menu_podiatry_podiatry_sub_form" name="Podiatry" parent="menu_podiatry_config_form1" action="action_podiatry_podiatry_form" />
+    <menuitem id="mother_tongue_menu" name="Language" parent="menu_podiatry_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
+    <menuitem id="menu_podiatry_podiatry_sub_form" name="Accounts" parent="menu_podiatry_config_form1" action="action_podiatry_podiatry_form" />
     <!-- MenuItem For Configurations->Academic Years -->
     <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration" />
     <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form" />
@@ -983,6 +1044,7 @@
     <menuitem id="menu_patient_archive" name="Archive/Terminate" action="action_patient_archive" parent="menu_register_form_root" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor" sequence="2"/>
     <menuitem id="hr.menu_hr_root" name="Employees" groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,podiatry.group_podiatry_administration" web_icon="hr,static/description/icon.png" sequence="75"/>
     <!-- MenuItem For Configurations->Subject -->
+
     <!-- Inherited Form View Of Company -->
     <record id="view_company_form_inherit" model="ir.ui.view">
         <field name="name">res.company.form</field>

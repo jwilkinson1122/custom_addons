@@ -249,8 +249,8 @@ class PodiatryStandard(models.Model):
         for rec in self:
             rec.remaining_seats = rec.capacity - rec.total_patients
 
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry', required=True,
-                                  help='Podiatry of the following standard')
+    podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice Account', required=True,
+                                  help='Practice Account of the following standard')
     standard_id = fields.Many2one('standard.standard', 'Standard',
                                   required=True, help='Standard')
     division_id = fields.Many2one('standard.division', 'Division',
@@ -327,18 +327,21 @@ class PodiatryStandard(models.Model):
 
 
 class PodiatryPodiatry(models.Model):
-    ''' Defining Podiatry Information'''
+    ''' Defining Account Information'''
 
     _name = 'podiatry.podiatry'
-    _description = 'Podiatry Information'
+    _description = 'Account Information'
     _rec_name = "com_name"
+
+    practice_id = fields.Char(string='Account Practice Reference', required=True, copy=False, readonly=True,
+                              default=lambda self: _('New Account'))
 
     @api.constrains('code')
     def _check_code(self):
         for record in self:
             if self.env["podiatry.podiatry"].search(
-                    [('code', '=', record.code), ('id', '!=', record.id)]):
-                raise ValidationError("Podiatry Code must be Unique")
+                    [('practice_id', '=', record.code), ('id', '!=', record.id)]):
+                raise ValidationError("Account Code must be Unique")
 
     @api.model
     def _lang_get(self):
@@ -350,22 +353,22 @@ class PodiatryPodiatry(models.Model):
                                  required=True, delegate=True,
                                  help='Company_id of the podiatry')
     com_name = fields.Char('Practice Name', related='company_id.name',
-                           store=True, help='Podiatry name')
-    code = fields.Char('Code', required=True, help='Podiatry code')
+                           store=True, help='Account Name')
+    code = fields.Char('Code', required=False, help='Account code')
     standards = fields.One2many('podiatry.standard', 'podiatry_id',
-                                'Standards', help='Podiatry standard')
+                                'Standards', help='Account standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
-    required_age = fields.Integer("Patient Registration Age Required", default=6,
-                                  help='''Minimum required age for 
-                                  patient register''')
 
     @api.model
     def create(self, vals):
-        '''Inherited create method to assign company_id to podiatry'''
+        if vals.get('practice_id', _('New Account')) == _('New Account'):
+            vals['practice_id'] = self.env['ir.sequence'].next_by_code(
+                'podiatry.podiatry') or _('New Account')
+
         res = super(PodiatryPodiatry, self).create(vals)
         main_company = self.env.ref('base.main_company')
         res.company_id.parent_id = main_company.id

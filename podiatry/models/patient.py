@@ -163,8 +163,8 @@ class PatientPatient(models.Model):
                                     help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
                          help='Remark can be entered if any')
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry',
-                                  states={'done': [('readonly', True)]}, help='Select podiatry', tracking=True)
+    podiatry_id = fields.Many2one('podiatry.podiatry', 'Account',
+                                  states={'done': [('readonly', True)]}, help='Select Account', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
                               ('terminate', 'Terminate'), ('cancel', 'Cancel'),
                               ('archive', 'Archive')], 'Status', readonly=True, default="draft",
