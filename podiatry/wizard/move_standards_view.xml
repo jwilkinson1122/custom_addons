@@ -8,17 +8,17 @@
         <field name="model">move.standards</field>
         <field name="arch" type="xml">
             <form string="Move Classes">
-                    <group>
-                        <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
-                    </group>
-                    <footer>
-                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
-                        <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
-                    </footer>
-           </form>
+                <group>
+                    <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
+                </group>
+                <footer>
+                    <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                    <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
+                </footer>
+            </form>
         </field>
     </record>
-    
+
     <!-- Action Of Form & Tree Views Of Move Classes -->
     <record id="action_move_standards_form" model="ir.actions.act_window">
         <field name="name">Move Classes</field>
@@ -29,6 +29,6 @@
     </record>
 
     <!-- MenuItem For Configurations->Move Classes -->
-    <menuitem id="menu_move_standards_form" name="Move Classes" parent="menu_configuration" action="action_move_standards_form" />
+    <!-- <menuitem id="menu_move_standards_form" name="Move Classes" parent="menu_configuration" action="action_move_standards_form" /> -->
 
 </odoo>

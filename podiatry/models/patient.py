@@ -92,8 +92,8 @@ class PatientPatient(models.Model):
                                store=True, readonly=True, help='Patient Name')
     pid = fields.Char('Patient ID', required=True,
                       default=lambda self: _('New'), help='Personal IDentification Number')
-    reg_code = fields.Char('Registration Code',
-                           help='Patient Registration Code')
+    reg_code = fields.Char('Registry Code',
+                           help='Patient Registry Code')
     patient_code = fields.Char('Patient Code', help='Enter patient code')
     contact_phone = fields.Char('Phone no.', help='Enter patient phone no.')
     contact_mobile = fields.Char('Mobile no', help='Enter patient mobile no.')
@@ -109,7 +109,7 @@ class PatientPatient(models.Model):
     relation = fields.Many2one('patient.relation.master', 'Relation',
                                help='Select patient relation')
 
-    register_date = fields.Date('Registration Date', default=fields.Date.today(),
+    register_date = fields.Date('Registry Date', default=fields.Date.today(),
                                 help='Enter patient register date')
     middle = fields.Char('Middle Name', required=True,
                          states={'done': [('readonly', True)]},
@@ -166,7 +166,7 @@ class PatientPatient(models.Model):
     podiatry_id = fields.Many2one('podiatry.podiatry', 'Account',
                                   states={'done': [('readonly', True)]}, help='Select Account', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
-                              ('terminate', 'Terminate'), ('cancel', 'Cancel'),
+                              ('delete', 'Archive'), ('cancel', 'Cancel'),
                               ('archive', 'Archive')], 'Status', readonly=True, default="draft",
                              tracking=True, help='State of the patient registration form')
     history_ids = fields.One2many('patient.history', 'patient_id', 'History',
@@ -196,8 +196,8 @@ class PatientPatient(models.Model):
                                  'patient_id', 'patients_parent_id', 'Parent(s)',
                                  states={'done': [('readonly', True)]},
                                  help='Enter patient parents')
-    terminate_reason = fields.Text('Reason',
-                                   help='Enter patient terminate reason', tracking=True)
+    delete_reason = fields.Text('Reason',
+                                help='Enter patient delete reason', tracking=True)
     active = fields.Boolean(default=True,
                             help='Activate/Deactivate patient record', tracking=True)
     doctor_user_grp = fields.Boolean("Doctor Group",
@@ -249,17 +249,17 @@ class PatientPatient(models.Model):
                     data.write({'patient_id': [(4, self.id)]})
         return super(PatientPatient, self).write(vals)
 
-    @api.constrains('date_of_birth')
-    def check_age(self):
-        '''Method to check age should be greater than 6'''
-        if self.date_of_birth:
-            start = self.date_of_birth
-            age_calc = ((fields.Date.today() - start).days / 365)
-            # Check if age less than required age
-            if age_calc < self.podiatry_id.required_age:
-                raise ValidationError(_(
-                    "Age of patient should be greater than %s years!" % (
-                        self.podiatry_id.required_age)))
+    # @api.constrains('date_of_birth')
+    # def check_age(self):
+    #     '''Method to check age should be greater than 6'''
+    #     if self.date_of_birth:
+    #         start = self.date_of_birth
+    #         age_calc = ((fields.Date.today() - start).days / 365)
+    #         # Check if age less than required age
+    #         if age_calc < self.podiatry_id.required_age:
+    #             raise ValidationError(_(
+    #                 "Age of patient should be greater than %s years!" % (
+    #                     self.podiatry_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''
@@ -281,9 +281,9 @@ class PatientPatient(models.Model):
         '''Set the state to draft'''
         self.state = 'draft'
 
-    def set_terminate(self):
-        '''Set the state to terminate'''
-        self.state = 'terminate'
+    def set_delete(self):
+        '''Set the state to delete'''
+        self.state = 'delete'
 
     def cancel_register(self):
         '''Set the state to cancel.'''
@@ -329,16 +329,16 @@ class PatientPatient(models.Model):
                        'patient_code': patient_code,
                        'reg_code': registation_code})
             template = self.env['mail.template'].sudo().search([
-                ('name', 'ilike', 'Registration Confirmation')], limit=1)
+                ('name', 'ilike', 'Registry Confirmation')], limit=1)
             if template:
                 for user in rec.parent_id:
-                    subject = _("About Registration Confirmation")
+                    subject = _("About Registry Confirmation")
                     if user.email:
                         body = """
                         <div>
                             <p>Dear """ + str(user.display_name) + """,
                             <br/><br/>
-                            Registration of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
+                            Registry of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
                             <br></br>
                             Thank You.
                         </div>

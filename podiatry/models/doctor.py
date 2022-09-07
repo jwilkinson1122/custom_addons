@@ -70,7 +70,7 @@ class PodiatryDoctor(models.Model):
 # Removing this code because of issue faced due to email id of the
 # user is same for parent and Doctor, and system will not allow it.
 # now user shuld create Parent record first and then select it in
-# related parent in Doctor Profile. - Anu Patel (24/03/2021)
+# related parent in Contact Profiles. - Anu Patel (24/03/2021)
 #    def parent_crt(self, manager_id):
 #        """Method to create parent record based on parent field"""
 #        pt_parent = []

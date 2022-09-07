@@ -12,7 +12,7 @@
             <field name="company_id" eval="False"/>
         </record>
 
-        <!-- Sequences For patient.registration (Registration Code) -->
+        <!-- Sequences For patient.registration (Registry Code) -->
 
         <record id="seq_patient_reg" model="ir.sequence">
             <field name="name">Patient registration code</field>

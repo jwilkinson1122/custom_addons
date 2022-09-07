@@ -260,10 +260,10 @@ class PodiatryStandard(models.Model):
     subject_ids = fields.Many2many('subject.subject', 'subject_standards_rel',
                                    'subject_id', 'standard_id', 'Subject',
                                    help='Subjects of the standard')
-    user_id = fields.Many2one('podiatry.doctor', 'Class Doctor',
+    user_id = fields.Many2one('podiatry.doctor', 'Doctor',
                               help='Doctor of the standard')
     patient_ids = fields.One2many('patient.patient', 'standard_id',
-                                  'Patient In Class',
+                                  'Patient assigned',
                                   compute='_compute_patient', store=True,
                                   help='Patients which are in this standard'
                                   )
@@ -618,9 +618,9 @@ class PatientPreviousPodiatry(models.Model):
                                            help='Related patient')
     name = fields.Char('Name', required=True,
                        help='Patient previous podiatry name')
-    registration_no = fields.Char('Registration No.', required=True,
+    registration_no = fields.Char('Registry No.', required=True,
                                   help='Patient registration number')
-    register_date = fields.Date('Registration Date',
+    register_date = fields.Date('Registry Date',
                                 help='Patient register date')
     exit_date = fields.Date('Exit Date',
                             help='Patient previous podiatry exit date')
@@ -639,7 +639,7 @@ class PatientPreviousPodiatry(models.Model):
         if (self.register_date and self.exit_date) and (
                 self.register_date > self.exit_date):
             raise ValidationError(_(
-                "Registration date should be less than exit date in previous podiatry!"))
+                "Registry date should be less than exit date in previous podiatry!"))
 
 
 class AcademicSubject(models.Model):

@@ -16,7 +16,7 @@
              'data/patient_sequence.xml',
              'data/podiatry_sequence.xml',
              'data/mail_template.xml',
-             'wizard/terminate_reason_view.xml',
+             'wizard/delete_reason_view.xml',
              'views/patient_view.xml',
              'views/podiatry_view.xml',
              'views/doctor_view.xml',

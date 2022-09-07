@@ -2,28 +2,28 @@
 
 <odoo>
     <data>
-        <!-- Form View of terminate patient wizard -->
-        <record id="podiatry_terminate_reason" model="ir.ui.view">
-            <field name="name">Terminate Reason</field>
-            <field name="model">terminate.reason</field>
+        <!-- Form View of delete patient wizard -->
+        <record id="podiatry_delete_reason" model="ir.ui.view">
+            <field name="name">Archive Reason</field>
+            <field name="model">delete.reason</field>
             <field name="arch" type="xml">
-                <form string="Terminate Wizard">
+                <form string="Archive Wizard">
                     <sheet>
                         <group>
                             <field name="reason" required="1" nolabel="1" placeholder="Reason"/>
                         </group>
                         <footer>
-                            <button name="save_terminate" string="Terminate" type="object"/>
+                            <button name="save_delete" string="Archive" type="object"/>
                             <button special="cancel" string="Cancel"/>
                         </footer>
                     </sheet>
                 </form>
             </field>
         </record>
-        <!-- Action of Terminate Patient Wizard -->
-        <record id="action_terminate_wizard" model="ir.actions.act_window">
+        <!-- Action of Archive Patient Wizard -->
+        <record id="action_delete_wizard" model="ir.actions.act_window">
             <field name="name">Termination Reason</field>
-            <field name="res_model">terminate.reason</field>
+            <field name="res_model">delete.reason</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

@@ -30,7 +30,7 @@
         </record>
 
         <record id="group_is_register" model="res.groups">
-            <field name="name">In Registration</field>
+            <field name="name">In Registry</field>
             <field name="category_id" ref="module_category_podiatry"/>
         </record>
 

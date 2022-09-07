@@ -136,7 +136,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="menu_res_partner_form" name="Parents" parent="menu_patients_parents" action="action_podiatry_parent_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/>
+        <!-- <menuitem id="menu_res_partner_form" name="Parents" parent="menu_patients_parents" action="action_podiatry_parent_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/> -->
 
     </data>
 </odoo>

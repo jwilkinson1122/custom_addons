@@ -175,13 +175,14 @@
 
         <!-- Action View Of podiatry doctor-->
 
-        <record id="action_podiatry_doctor_form" model="ir.actions.act_window">
-            <field name="name">Doctor Profile</field>
+        <record id="action_podiatry_practitioner_form" model="ir.actions.act_window">
+            <field name="name">Contact Profiles</field>
             <field name="res_model">podiatry.doctor</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="doctor_profile_menu" name="Doctors" action="action_podiatry_doctor_form" parent="menu_patients_parents" sequence="32" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
+        <menuitem id="sub_menu_practitioners" name="Practice Contacts" parent="menu_account_master" action="action_podiatry_practitioner_form" sequence="2" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
+
 
     </data>
 </odoo>
