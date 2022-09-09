@@ -51,13 +51,58 @@
         </field>
     </record>
 
+    <!-- Kanban View Of physician Profiles -->
+
+    <record id="podiatry_physician_kanban_view" model="ir.ui.view">
+        <field name="name">podiatry.physician.kanban.view</field>
+        <field name="model">podiatry.physician</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="partner_id" quick_create="true">
+                <!-- <field name="name"/> -->
+                <field name="partner_id" />
+                <field name="code" />
+                <field name="institution_partner_id" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <h1 class="o_kanban_record_title">
+                                    <field name="partner_id"/>
+                                </h1>
+                                <ul>
+                                    <!-- <li>Doctor :
+                                        <field name="partner_id"/>
+                                    </li> -->
+                                    <li>Code :
+                                        <field name="code"/>
+                                    </li>
+                                    <li>Practice :
+                                        <field name="institution_partner_id"/>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="action_podiatry_physician" model="ir.actions.act_window">
         <field name="name">Physicians</field>
-        <field name="type">ir.actions.act_window</field>
+        <!-- <field name="type">ir.actions.act_window</field> -->
         <field name="res_model">podiatry.physician</field>
         <field name="binding_view_types">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
     </record>
+
+    <!-- <record id="action_podiatry_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record> -->
 
     <menuitem id="menu_physician" name='Physicians' parent="main_menu_configuration" sequence="7" />
 

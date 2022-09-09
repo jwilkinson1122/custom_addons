@@ -33,7 +33,7 @@
         <record id="patient_registration_sequence" model="ir.sequence">
             <field name="name">Patient Seq</field>
             <field name="code">podiatry.patient</field>
-            <field name="prefix">PAC</field>
+            <field name="prefix">PID</field>
             <field name="padding">2</field>
         </record>
 
