@@ -1,0 +1,17 @@
+<odoo>
+    <record id="action_practice_bookout" model="ir.actions.act_window">
+        <field name="name">Bookouts</field>
+        <field name="res_model">practice.bookout</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+    </record>
+
+    <menuitem id="menu_practice_bookout" name="Bookout" action="action_practice_bookout" parent="practice_app.menu_practice" />
+
+    <record id="action_practice_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">practice.bookout.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_practice_stage" name="Stages" action="action_practice_stage" parent="practice_app.menu_practice_configuration" />
+</odoo>

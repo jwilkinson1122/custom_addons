@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prescription_portal,Prescription Portal Access,practice_app.model_practice_prescription,base.group_portal,1,0,0,0
+access_practitioner_portal,Practitioner Portal Access,practice_practitioner.model_practice_practitioner,base.group_portal,1,0,0,0
+access_stage_portal,Bookout Stage Portal Access,practice_bookout.model_practice_bookout_stage,base.group_portal,1,0,0,0
+access_bookout_portal,Bookout Portal Access,practice_bookout.model_practice_bookout,base.group_portal,1,0,0,0
+access_bookout_line_portal,Bookout Portal Line Access,practice_bookout.model_practice_bookout_line,base.group_portal,1,0,0,0

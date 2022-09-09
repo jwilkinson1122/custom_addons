@@ -1,0 +1,11 @@
+<odoo>
+  <template id="prescription_list_extended" name="Extended Prescription List" inherit_id="practice_app.prescription_list_template">
+
+    <xpath expr="//span[@t-field='prescription.administrator_id']" position="after">
+      <t t-if="not prescription.is_available">
+        <b>(Not Available)</b>
+      </t>
+    </xpath>
+
+  </template>
+</odoo>

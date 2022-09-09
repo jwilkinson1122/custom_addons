@@ -34,7 +34,7 @@ The Acedemic year from which you need to move the patient to next Year.""")
                 next_stand = podiatry_stand_obj.search([
                     ('standard_id', '=', next_class_id),
                     ('division_id', '=', division),
-                    ('podiatry_id', '=', pat.podiatry_id.id),
+                    ('account_id', '=', pat.account_id.id),
                     ('medium_id', '=', pat.medium_id.id)])
                 if next_stand:
                     std_vals = {'year': next_year_id.id,

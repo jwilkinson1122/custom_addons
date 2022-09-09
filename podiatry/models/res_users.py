@@ -18,6 +18,6 @@ class ResUsers(models.Model):
                 self.env.ref('base.group_user').id,
                 self.env.ref('base.group_partner_manager').id]
             res.write({'groups_id': [(6, 0, doctor_group_ids)],
-                       'company_id': self._context.get('podiatry_id'),
-                       'company_ids': [(4, self._context.get('podiatry_id'))]})
+                       'company_id': self._context.get('account_id'),
+                       'company_ids': [(4, self._context.get('account_id'))]})
         return res

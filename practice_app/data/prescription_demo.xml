@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+  <record model="res.partner" id="res_partner_huxley">
+    <field name="name">Aldous Huxley</field>
+  </record>
+
+  <record model="practice.prescription" id="practice_prescription_bnw">
+    <field name="name">Brave New World</field>
+    <field name="scriptor_ids" eval="[(4, ref('res_partner_huxley'))]" />
+    <field name="date_submitted">1932-01-01</field>
+  </record>
+</odoo>

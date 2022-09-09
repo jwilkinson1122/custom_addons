@@ -115,33 +115,50 @@
         <field name="arch" type="xml">
             <form string="Account Information">
                 <sheet>
-
                     <div class="oe_title">
-
                         <separator string="Account Information" style="font-size:20px; font-weight:bold" />
-                        <group col="2" colspan="2">
+                        <!-- <group col="2" colspan="2">
                             <field name="name" string="Account Name" placeholder="Name" />
-                            <field name="practice_id" string="ID:" readonly="1"/>
-                        </group>
+                            <field name="account_id" string="ID:" readonly="1"/>
+                        </group> -->
                     </div>
-                    <group col="4" colspan="4">
-                        <label for="street" string="Address" />
+                    <group>
+                        <!-- <label for="name" string="Account Name" />
+                        <label for="account_id" string="Practice ID:" /> -->
+
+                        <div class="o_address_format">
+                            <group>
+                                <field name="name" string="Account Name" placeholder="Name" />
+                                <field name="account_id" string="Account #:" readonly="1"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="active" widget="boolean_toggle"/>
+
+
+                            </group>
+
+                            <!-- <field name="active" widget="boolean_toggle"/> -->
+
+                        </div>
+
+                        <!-- <label for="street" string="Address" /> -->
                         <div class="o_address_format">
                             <group>
                                 <field name="street" placeholder="Street..." />
                                 <field name="street2" placeholder="Street2..." />
                                 <field name="city" placeholder="City" required="1" />
                                 <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                <field name="zip" placeholder="ZIP" />
                                 <field name="country_id" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                                <field name="zip" placeholder="ZIP" />
                             </group>
+
                         </div>
                     </group>
                     <notebook colspan="4">
-                        <page string="Contacts">
+                        <page string="Contacts" autofocus="autofocus">
 
                         </page>
-                        <page string="Patients" autofocus="autofocus">
+                        <page string="Patients">
                             <group string="All Patients:">
                                 <!-- <h2>
                                     <field name="total_appointments"/>
@@ -164,7 +181,7 @@
         <field name="arch" type="xml">
             <tree string="Account Information">
                 <field name="name" string="Practice Name" />
-                <field name="practice_id" />
+                <field name="account_id" />
             </tree>
         </field>
     </record>
@@ -176,12 +193,12 @@
             <kanban>
                 <!-- <kanban default_group_by="name"> -->
                 <field name="name"/>
-                <!-- <field name="gender"/>
-                <field name="phone"/>
-                <field name="email"/>
-                <field name="status"/>
-                <field name="college"/> -->
-                <field name="practice_id"/>
+                <field name="account_id"/>
+                <field name="city"/>
+                <field name="state_id" />
+                <field name="zip"/>
+                <field name="country_id"/>
+
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -190,24 +207,24 @@
                                     <field name="name"/>
                                 </h1>
                                 <ul>
-                                    <!-- <li>Gender :
-                                        <field name="gender"/>
-                                    </li>
-                                    <li>Phone :
-                                        <field name="phone"/>
-                                    </li>
-                                    <li>Email :
-                                        <field name="email"/>
-                                    </li>
-                                    <li>College :
-                                        <field name="college"/>
-                                    </li>
-                                    <li>Status :
-                                        <field name="status"/>
-                                    </li> -->
                                     <li>Practice ID :
-                                        <field name="practice_id"/>
+                                        <field name="account_id"/>
                                     </li>
+                                    <li>City :
+                                        <field name="city"/>
+                                    </li>
+                                    <li>State :
+                                        <field name="state_id"/>
+                                    </li>
+                                    <li>Zip :
+                                        <field name="zip"/>
+                                    </li>
+                                    <li>Country :
+                                        <field name="country_id"/>
+                                    </li>
+                                    <!-- <li>Active :
+                                        <field name="active"/>
+                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -243,12 +260,12 @@
                         <field name="standard_id" widget="selection" placeholder="Standard"/>
                         <field name="division_id" widget="selection" placeholder="Division"/>
                         <field name="medium_id" widget="selection" placeholder="Medium"/>
-                        <field name="podiatry_id" widget="selection" placeholder="Account"/>
+                        <field name="account_id" widget="selection" placeholder="Account"/>
                         <field name="user_id" placeholder="Select Faculty Name" widget="selection"/>
                         <field name="capacity"/>
                         <field name="total_patients"/>
                         <field name="remaining_seats"/>
-                        <field name="class_room_id" options="{&quot;no_create&quot;: True}"/>
+                        <field name="practice_location_id" options="{&quot;no_create&quot;: True}"/>
                         <field name="name" invisible="1"/>
                         <field name="total_no_subjects" invisible="1"/>
                     </group>
@@ -258,14 +275,14 @@
                                 <tree string="Patient Information">
                                     <field name="roll_no" />
                                     <field name="name" />
-                                    <field name="year" />
+                                    <!-- <field name="year" /> -->
                                     <field name="state" invisible="1" />
                                 </tree>
                                 <form string="Patient Information">
                                     <group col="4" colspan="4">
                                         <field name="roll_no" />
                                         <field name="name" placeholder="Name" />
-                                        <field name="year" placeholder="Year" />
+                                        <!-- <field name="year" placeholder="Year" /> -->
                                         <field name="state" invisible="1" />
                                     </group>
                                 </form>
@@ -317,7 +334,7 @@
         <field name="model">podiatry.standard</field>
         <field name="arch" type="xml">
             <kanban default_group_by="standard_id">
-                <field name="podiatry_id" />
+                <field name="account_id" />
                 <field name="standard_id" />
                 <field name="division_id" />
                 <field name="medium_id" />
@@ -325,7 +342,7 @@
                 <field name="color" />
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.podiatry_id.value)" />
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.account_id.value)" />
                         <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
@@ -334,7 +351,7 @@
                                             <td class="oe_kanban_title1" align="left" valign="middle">
                                                 <div>
                                                     Account :-
-                                                    <field name="podiatry_id" />
+                                                    <field name="account_id" />
                                                 </div>
                                             </td>
                                         </tr>
@@ -397,7 +414,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'account_id'}" />
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
@@ -967,55 +984,145 @@
         <field name="res_model">patient.news</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Form View of Class Room -->
-    <record id="class_room_form_view" model="ir.ui.view">
-        <field name="name">class.room.form</field>
-        <field name="model">class.room</field>
+    <!-- Form View of Practice Location -->
+    <record id="practice_location_form_view" model="ir.ui.view">
+        <field name="name">practice.location.form</field>
+        <field name="model">practice.location</field>
         <field name="arch" type="xml">
-            <form string="Class Room Form View">
+            <form string="Practice Location Form View">
                 <sheet>
-                    <group col="4" colspan="4">
+                    <!-- <group col="4" colspan="4">
                         <field name="name" required="1"/>
-                        <field name="number" required="1"/>
+                        <field name="account_id" widget="selection" placeholder="Account"/>
+                    </group> -->
+
+                    <div class="oe_title">
+                        <separator string="Practice Information" style="font-size:20px; font-weight:bold" />
+                    </div>
+                    <group>
+                        <div class="o_address_format">
+                            <group>
+                                <field name="account_id" widget="selection" placeholder="Parent Account"/>
+                                <field name="name" string="Practice Name" placeholder="Name" />
+                                <field name="account_id" string="Practice #:" readonly="1"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </div>
+
+                        <div class="o_address_format">
+                            <group>
+                                <field name="street" placeholder="Street..." />
+                                <field name="street2" placeholder="Street2..." />
+                                <field name="city" placeholder="City" required="1" />
+                                <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                <field name="country_id" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                                <field name="zip" placeholder="ZIP" />
+                            </group>
+
+                        </div>
                     </group>
+                    <notebook colspan="4">
+                        <page string="Contacts" autofocus="autofocus">
+
+                        </page>
+                        <page string="Practices">
+                            <field name="practices" nolabel="1" colspan="4" readonly="1"/>
+                        </page>
+                        <page string="Patients">
+                            <group string="All Patients:">
+                                <!-- <h2>
+                                    <field name="total_appointments"/>
+                                </h2> -->
+                            </group>
+                            <!-- <field name='view_appointment_ids'/> -->
+                        </page>
+                        <page string="Standards">
+                            <field name="standards" nolabel="1" colspan="4" readonly="1"/>
+                        </page>
+
+                    </notebook>
+
                 </sheet>
             </form>
         </field>
     </record>
-    <!-- Tree view of class Room -->
-    <record id="class_room_tree_view" model="ir.ui.view">
-        <field name="name">class.room.tree</field>
-        <field name="model">class.room</field>
+    <!-- Tree view of practice location -->
+    <record id="practice_location_tree_view" model="ir.ui.view">
+        <field name="name">practice.location.tree</field>
+        <field name="model">practice.location</field>
         <field name="arch" type="xml">
             <tree string="Class Room Tree View">
                 <field name="name"/>
-                <field name="number"/>
+                <field name="account_id"/>
+
+                <!-- <field name="number"/> -->
             </tree>
         </field>
     </record>
 
-    <!-- Action of Class Room -->
-    <record id="action_class_room" model="ir.actions.act_window">
-        <field name="name">Class Room</field>
-        <field name="res_model">class.room</field>
+    <!-- Action of Practice location -->
+    <record id="action_podiatry_location_form" model="ir.actions.act_window">
+        <field name="name">Practice Locations</field>
+        <field name="res_model">practice.location</field>
         <field name="view_mode">tree,form</field>
     </record>
 
+    <!-- Menu Items-->
     <!-- Menu Item Of POD ERP -->
     <menuitem id="menu_pod_erp" name="POD ERP" web_icon="podiatry,static/description/doctor2.png" sequence="1"/>
-
     <!-- MenuItem Of Accounts  -->
     <menuitem id="menu_account_master" name="Accounts" parent="menu_pod_erp" sequence="2" />
-    <menuitem id="sub_menu_accounts" name="Practice Accounts" parent="menu_account_master" action="action_podiatry_account_form" sequence="1" groups="podiatry.group_podiatry_administration"/>
-    <!-- <menuitem id="sub_menu_practitioners" name="Practice Contacts" parent="menu_account_master" action="action_podiatry_practitioner_form" sequence="2" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/> -->
-
-
-
+    <menuitem id="sub_menu_accounts" name="Primary Accounts" parent="menu_account_master" action="action_podiatry_account_form" sequence="1" groups="podiatry.group_podiatry_administration"/>
+    <menuitem id="sub_menu_locations" name="Practice Locations" parent="menu_account_master" action="action_podiatry_location_form" sequence="2" groups="podiatry.group_podiatry_administration"/>
     <!-- MenuItem Of Patients  -->
     <menuitem id="menu_patient_master" name="Patients" parent="menu_pod_erp" sequence="3" />
     <menuitem id="sub_menu_patient_register" name="Patient Register" parent="menu_patient_master" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/>
     <menuitem id="sub_menu_patient_profiles" name="Patient Profiles" parent="menu_patient_master" action="action_patient_patient_form_12" sequence="2" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/>
-    <menuitem id="sub_menu_patient_archive" name="Archive / Delete" parent="menu_patient_master" action="action_patient_archive" sequence="3" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
+    <menuitem id="sub_menu_patient_archive" name="Archive / Delete" parent="menu_patient_master" action="action_patient_archive_delete" sequence="3" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
+
+    <!-- MenuItem Of Admission Register -->
+    <!-- <menuitem id="admission_register" name="Account" parent="menu_pod_erp" sequence="2" /> -->
+    <menuitem id="practice_facilities" name="Facilities" parent="menu_pod_erp" sequence="4" />
+    <!-- <menuitem id="practice_schedule" name="Schedule" parent="menu_pod_erp" sequence="5" />
+    <menuitem id="menu_admission_form_root" name="Admission" parent="menu_account_master" sequence="10" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/>
+    <menuitem id="menu_admission_form" name="Admission Register" parent="menu_admission_form_root" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_register"/> -->
+    <!-- Menu Item Of Students & Parents -->
+    <!-- <menuitem id="menu_patients_parents" name="Profiles" parent="admission_register" sequence="2"/>
+    <menuitem id="menu_patient_profile" name="Students" parent="menu_patients_parents" action="action_patient_patient_form_12" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_practice_parent" sequence="31"/> -->
+    <!-- MenuItem For Reminders -->
+    <!-- <menuitem id="menu_reminders_root" name="Reminders" parent="practice_schedule" sequence="8" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/>
+    <menuitem id="menu_reminders" name="Reminders" parent="menu_reminders_root" action="action_patient_reminder" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent"/> -->
+    <!-- MenuItem For Configurations -->
+    <menuitem id="menu_configuration" name="Configurations" parent="menu_pod_erp" sequence="13" groups="group_podiatry_administration" />
+    <!-- MenuItem For Configurations->Account Configurations -->
+    <menuitem id="menu_practice_config_form1" name="Account Configurations" parent="menu_configuration" />
+    <!-- <menuitem id="menu_cast" name="Religion/Caste" parent="menu_practice_config_form1" action="action_patient_cast_form_7" /> -->
+    <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_practice_config_form1" action="action_document_type_form" />
+    <!-- <menuitem id="submenu_sub_grade" name="Grade" parent="menu_practice_config_form1" action="action_grade_master_form" />
+    <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_practice_config_form1" action="view_patient_news" />
+    <menuitem id="mother_tongue_menu" name="Mother Tongue" parent="menu_practice_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/> -->
+    <!-- <menuitem id="menu_practice_practice_sub_form" name="Account" parent="menu_practice_config_form1" action="action_podiatry_account_form" /> -->
+    <!-- MenuItem For Configurations->Academic Years -->
+    <!-- <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration" />
+    <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form" />
+    <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form" /> -->
+    <!-- MenuItem For Configurations->Standards -->
+    <menuitem id="menu_practice_standard_form" name="Standards" parent="menu_configuration" />
+    <!-- <menuitem id="menu_sub_practice_standard_form" name="Classes" parent="menu_practice_standard_form" action="action_practice_standard_form" /> -->
+    <menuitem id="menu_standard_standard_form" name="Standards" parent="menu_practice_standard_form" action="action_standard_standard_form" />
+    <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_practice_standard_form" action="action_standard_division_form" />
+    <menuitem id="menu_standard_medium_form" name="Medium" parent="menu_practice_standard_form" action="action_standard_medium_form" />
+    <!-- <menuitem id="menu_class_room" name="Class Room" parent="menu_practice_standard_form" action="action_class_room"/> -->
+    <!-- MenuItem For Configurations->Subject -->
+    <!-- <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
+    <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
+    <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" /> -->
+    <!-- Menuitem of archived / deleted -->
+    <!-- <menuitem id="menu_patient_archive_delete" name="Archive/Delete" action="action_patient_archive_delete" parent="menu_admission_form_root" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor" sequence="2"/> -->
+    <!-- <menuitem id="hr.menu_hr_root" name="Employees" groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,podiatry.group_podiatry_administration" web_icon="hr,static/description/icon.png" sequence="75"/> -->
+    <!-- MenuItem For Configurations->Subject -->
 
 
     <!-- Inherited Form View Of Company -->

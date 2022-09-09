@@ -22,8 +22,8 @@ class PodiatryDoctor(models.Model):
     subject_id = fields.Many2many('subject.subject', 'subject_doctor_rel',
                                   'doctor_id', 'subject_id', 'Course-Subjects',
                                   help='Select subject of doctor')
-    podiatry_id = fields.Many2one('podiatry.podiatry', "Location",
-                                  help='Select Practice')
+    account_id = fields.Many2one('podiatry.podiatry', "Location",
+                                 help='Select Practice')
     category_ids = fields.Many2many('hr.employee.category',
                                     'doctor_category_rel', 'emp_id', 'categ_id', 'Tags',
                                     help='Select employee category')
@@ -41,8 +41,8 @@ class PodiatryDoctor(models.Model):
     @api.onchange('standard_id')
     def _onchange_standard_id(self):
         for rec in self:
-            rec.podiatry_id = (rec.standard_id and rec.standard_id.podiatry_id and
-                               rec.standard_id.podiatry_id.id or False)
+            rec.account_id = (rec.standard_id and rec.standard_id.account_id and
+                              rec.standard_id.account_id.id or False)
 
     @api.onchange('is_parent')
     def _onchange_isparent(self):
@@ -60,7 +60,7 @@ class PodiatryDoctor(models.Model):
                      'email': doctor_id.work_email,
                      }
         ctx_vals = {'doctor_create': True,
-                    'podiatry_id': doctor_id.podiatry_id.company_id.id}
+                    'account_id': doctor_id.account_id.company_id.id}
         user_rec = user_obj.with_context(ctx_vals).create(user_vals)
         doctor_id.employee_id.write({'user_id': user_rec.id})
 #        if vals.get('is_parent'):
@@ -132,10 +132,10 @@ class PodiatryDoctor(models.Model):
             self.work_email = self.user_id.email
             self.image = self.image or self.user_id.image
 
-    @api.onchange('podiatry_id')
+    @api.onchange('account_id')
     def onchange_podiatry(self):
         """Onchange method for podiatry."""
-        partner = self.podiatry_id.company_id.partner_id
+        partner = self.account_id.company_id.partner_id
         self.address_id = partner.id or False
         self.mobile_phone = partner.mobile or False
         self.work_location_id = partner.id or False

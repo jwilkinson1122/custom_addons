@@ -72,14 +72,14 @@ class PatientPatient(models.Model):
             if doctor and rec.state == 'done':
                 rec.doctor_user_grp = True
 
-    @api.model
-    def check_current_year(self):
-        '''Method to get default value of logged in Patient'''
-        res = self.env['academic.year'].search([('current', '=', True)])
-        if not res:
-            raise ValidationError(_(
-                "There is no current Academic Year defined! Please contact Administator!"))
-        return res.id
+    # @api.model
+    # def check_current_year(self):
+    #     '''Method to get default value of logged in Patient'''
+    #     res = self.env['academic.year'].search([('current', '=', True)])
+    #     if not res:
+    #         raise ValidationError(_(
+    #             "There is no current Academic Year defined! Please contact Administator!"))
+    #     return res.id
 
     family_con_ids = fields.One2many('patient.family.contact',
                                      'family_contact_id', 'Family Contact Detail',
@@ -101,9 +101,9 @@ class PatientPatient(models.Model):
                              help='Enter patient roll no.')
     photo = fields.Binary('Photo', default=_default_image,
                           help='Attach patient photo')
-    year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-                           default=check_current_year, help='Select academic year',
-                           tracking=True)
+    # year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
+    #                        default=check_current_year, help='Select academic year',
+    #                        tracking=True)
     cast_id = fields.Many2one('patient.cast', 'Religion/Caste',
                               help='Select patient cast')
     relation = fields.Many2one('patient.relation.master', 'Relation',
@@ -133,11 +133,11 @@ class PatientPatient(models.Model):
     reference_ids = fields.One2many('patient.reference', 'reference_id',
                                     'References', states={'done': [('readonly', True)]},
                                     help='Enter patient references')
-    previous_podiatry_ids = fields.One2many('patient.previous.podiatry',
-                                            'previous_podiatry_id', 'Previous Practice Detail',
-                                            states={
-                                                'done': [('readonly', True)]},
-                                            help='Enter patient podiatry details')
+    previous_account_ids = fields.One2many('patient.previous.podiatry',
+                                           'previous_account_id', 'Previous Practice Detail',
+                                           states={
+                                               'done': [('readonly', True)]},
+                                           help='Enter patient podiatry details')
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]},
                          help='Enter doctor name for patient medical details')
     designation = fields.Char('Designation', help='Enter doctor designation')
@@ -163,8 +163,8 @@ class PatientPatient(models.Model):
                                     help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
                          help='Remark can be entered if any')
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Account',
-                                  states={'done': [('readonly', True)]}, help='Select Account', tracking=True)
+    account_id = fields.Many2one('podiatry.podiatry', 'Practice',
+                                 states={'done': [('readonly', True)]}, help='Select Practice', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
                               ('delete', 'Archive'), ('cancel', 'Cancel'),
                               ('archive', 'Archive')], 'Status', readonly=True, default="draft",
@@ -184,8 +184,8 @@ class PatientPatient(models.Model):
                                  'Award List', help='Patient award list')
     pt_name = fields.Char('First Name', related='user_id.name',
                           readonly=True, help='Enter patient first name', tracking=True)
-    Acadamic_year = fields.Char('Year', related='year.name',
-                                help='Academic Year', readonly=True, tracking=True)
+    # Acadamic_year = fields.Char('Year', related='year.name',
+    #                             help='Academic Year', readonly=True, tracking=True)
     division_id = fields.Many2one('standard.division', 'Division',
                                   help='Select patient standard division', tracking=True)
     medium_id = fields.Many2one('standard.medium', 'Medium',
@@ -256,10 +256,10 @@ class PatientPatient(models.Model):
     #         start = self.date_of_birth
     #         age_calc = ((fields.Date.today() - start).days / 365)
     #         # Check if age less than required age
-    #         if age_calc < self.podiatry_id.required_age:
+    #         if age_calc < self.account_id.required_age:
     #             raise ValidationError(_(
     #                 "Age of patient should be greater than %s years!" % (
-    #                     self.podiatry_id.required_age)))
+    #                     self.account_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''
@@ -297,11 +297,11 @@ class PatientPatient(models.Model):
         emp_group = self.env.ref('base.group_user')
         for rec in self:
             if not rec.standard_id:
-                raise ValidationError(_("Please select class!"))
+                raise ValidationError(_("Please select location!"))
             if rec.standard_id.remaining_seats <= 0:
                 raise ValidationError(_('Seats of class %s are full'
                                         ) % rec.standard_id.standard_id.name)
-            domain = [('podiatry_id', '=', rec.podiatry_id.id)]
+            domain = [('account_id', '=', rec.account_id.id)]
             # Checks the standard if not defined raise error
             if not podiatry_standard_obj.search(domain):
                 raise UserError(_(
@@ -316,12 +316,12 @@ class PatientPatient(models.Model):
                 number += 1
             # Assign registration code to patient
             reg_code = ir_sequence.next_by_code('patient.registration')
-            registation_code = (str(rec.podiatry_id.state_id.name) + str('/') +
-                                str(rec.podiatry_id.city) + str('/') +
-                                str(rec.podiatry_id.name) + str('/') +
+            registation_code = (str(rec.account_id.state_id.name) + str('/') +
+                                str(rec.account_id.city) + str('/') +
+                                str(rec.account_id.name) + str('/') +
                                 str(reg_code))
             pt_code = ir_sequence.next_by_code('patient.code')
-            patient_code = (str(rec.podiatry_id.code) + str('/') +
+            patient_code = (str(rec.account_id.code) + str('/') +
                             str(rec.year.code) + str('/') +
                             str(pt_code))
             rec.write({'state': 'done',
@@ -338,7 +338,7 @@ class PatientPatient(models.Model):
                         <div>
                             <p>Dear """ + str(user.display_name) + """,
                             <br/><br/>
-                            Registry of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
+                            Registry of """+str(rec.display_name)+""" has been confirmed in """+str(rec.account_id.name)+""".
                             <br></br>
                             Thank You.
                         </div>

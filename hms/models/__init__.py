@@ -1,1 +1,0 @@
-from . import hms_patient,hms_doctors,hms_departments,hms_tags

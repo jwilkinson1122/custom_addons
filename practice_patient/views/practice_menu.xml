@@ -1,0 +1,11 @@
+<odoo>
+  <record id="action_practice_practitioner" model="ir.actions.act_window">
+    <field name="name">Practice Practitioners</field>
+    <field name="res_model">practice.practitioner</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_window, deprecated in Odoo 14
+    <act_window id="action_practice_practitioner" name="Practice Practitioners" res_model="practice.practitioner" view_mode="tree,form" />
+    -->
+  <menuitem id="menu_practice_practitioner" name="Practitioners" action="action_practice_practitioner" parent="practice_app.menu_practice" />
+</odoo>

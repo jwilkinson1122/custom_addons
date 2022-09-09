@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!--sequence for practice-->
         <record id="seq_podiatry_practice" model="ir.sequence">
-            <field name="practice_id">Podiatry Practice Sequence</field>
+            <field name="name">Podiatry Practice Sequence</field>
             <field name="code">podiatry.podiatry</field>
             <field name="prefix">Account #:</field>
             <field name="padding">5</field>

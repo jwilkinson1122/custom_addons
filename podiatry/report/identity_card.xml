@@ -13,7 +13,7 @@
                                     <td colspan="2" align="center">
                                         <h1>
                                             <strong>
-                                                <span t-field="patient.podiatry_id.name" />
+                                                <span t-field="patient.account_id.name" />
                                             </strong>
                                         </h1>
                                     </td>

@@ -39,11 +39,11 @@
                         <group string="Patient Information">
                             <field name="patient_code" readonly="1" />
                             <field name="roll_no" help="Roll number of Patient" readonly="1"/>
-                            <field name="year" placeholder="Year" widget="selection" help="Academic year of Patient" attrs="{'readonly':['|',('state','in',['archive','delete']),('doctor_user_grp','=',True)]}"/>
-                            <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['archive','delete']),('doctor_user_grp','=',True)]}"/>
+                            <!-- <field name="year" placeholder="Year" widget="selection" help="Academic year of Patient" attrs="{'readonly':['|',('state','in',['archive','delete']),('doctor_user_grp','=',True)]}"/> -->
+                            <field name="account_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['archive','delete']),('doctor_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
-                            <field name="standard_id" placeholder="Standard" readonly="1" domain="[('podiatry_id','=',podiatry_id)]" widget="selection" attrs="{'readonly':[('state','in',['archive','delete'])]}"/>
+                            <field name="standard_id" placeholder="Standard" readonly="1" domain="[('account_id','=',account_id)]" widget="selection" attrs="{'readonly':[('state','in',['archive','delete'])]}"/>
                             <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['archive','delete'])]}"/>
                             <field name="medium_id" placeholder="Medium" readonly="1" widget="selection" attrs="{'readonly':[('state','in',['archive','delete'])]}"/>
                         </group>
@@ -123,7 +123,7 @@
                             </field>
                         </page>
                         <page string="Previous Practice">
-                            <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['archive','delete'])]}">
+                            <field name="previous_account_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['archive','delete'])]}">
                                 <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
@@ -252,14 +252,14 @@
                         <page string="History" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor,podiatry.group_podiatry_parent,podiatry.group_podiatry_patient">
                             <field name="history_ids" nolabel="1" colspan="4" readonly="1" attrs="{'readonly':[('state','in',['archive','delete'])]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                 <tree string="History">
-                                    <field name="academice_year_id" required="1"/>
+                                    <!-- <field name="academice_year_id" required="1"/> -->
                                     <field name="standard_id" required="1"/>
                                     <field name="percentage"/>
                                     <field name="result"/>
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
-                                        <field name="academice_year_id" placeholder="Acadamic Year" />
+                                        <!-- <field name="academice_year_id" placeholder="Acadamic Year" /> -->
                                         <field name="standard_id" placeholder="Select or Create Standard" />
                                         <field name="percentage" />
                                         <field name="result" />
@@ -285,11 +285,11 @@
                 <field name="pid" />
                 <field name="name" />
                 <field name="patient_name" invisible="1" />
-                <field name="year" widget="selection" />
+                <!-- <field name="year" widget="selection" /> -->
                 <field name="register_date" />
                 <field name="gender" />
                 <field name="state" />
-                <field name="podiatry_id" />
+                <field name="account_id" />
             </tree>
         </field>
     </record>
@@ -302,16 +302,16 @@
                 <group col="10" colspan="4">
                     <field name="pid" />
                     <field name="patient_name" invisible="1" />
-                    <field name="year" />
+                    <!-- <field name="year" /> -->
                     <field name="gender" />
-                    <field name="podiatry_id" placeholder="Practice"/>
+                    <field name="account_id" placeholder="Practice"/>
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" help="By Class" context="{'group_by':'patient_name'}" />
-                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'account_id'}" />
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
                 <separator/>
@@ -350,7 +350,7 @@
                                                         <field name="last" />
                                                         <field name="patient_name" invisible="1" />
                                                         <field name="standard_id" invisible="1" />
-                                                        <field name="podiatry_id" invisible="1" />
+                                                        <field name="account_id" invisible="1" />
                                                         <field name="gender" invisible="1" />
                                                         <field name="state" invisible="1" />
                                                     </a>
@@ -447,13 +447,13 @@
                     </div>
                     <group>
                         <group string="Practice Information">
-                            <field name="podiatry_id" placeholder="Practice Name" required="1" attrs="{'readonly':[('state','=','archive')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
-                            <field name="year" widget="selection" placeholder="Academic Year" readonly="1"/>
+                            <field name="account_id" placeholder="Practice Name" required="1" attrs="{'readonly':[('state','=','archive')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            <!-- <field name="year" widget="selection" placeholder="Academic Year" readonly="1"/> -->
                             <field name="company_id" invisible="1"/>
                         </group>
-                        <group string="Class Information">
+                        <group>
                             <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','archive')]}"/>
-                            <field name="standard_id" placeholder="Class" domain="[('podiatry_id','=',podiatry_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','archive')]}"/>
+                            <field name="standard_id" placeholder="Class" domain="[('account_id','=',account_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','archive')]}"/>
                             <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','archive')]}" invisible="1"/>
 
                         </group>
@@ -529,7 +529,7 @@
                             </field>
                         </page>
                         <page string="Previous Practice">
-                            <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','archive')]}">
+                            <field name="previous_account_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','archive')]}">
                                 <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
@@ -608,9 +608,9 @@
                 <field name="pid" />
                 <field name="name" />
                 <field name="patient_name" invisible="1" />
-                <field name="year" widget="selection" />
+                <!-- <field name="year" widget="selection" /> -->
                 <field name="standard_id" widget="selection" />
-                <field name="podiatry_id" />
+                <field name="account_id" />
                 <field name="register_date" />
                 <field name="gender" />
                 <field name="state" />
@@ -626,16 +626,16 @@
                 <filter string="Draft" name="state_patient" domain="[('state','=', 'draft')]" help="Registry In Draft State" />
                 <separator orientation="vertical" />
                 <field name="patient_name" invisible="1" />
-                <field name="year" />
+                <!-- <field name="year" /> -->
                 <field name="standard_id" />
                 <field name="gender" />
-                <field name="podiatry_id" />
+                <field name="account_id" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" domain="[]" help="By Class" context="{'group_by':'patient_name'}" />
-                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'account_id'}" />
                 </group>
             </search>
         </field>
@@ -679,7 +679,7 @@
     </record>
 
     <!-- Action of Archive state -->
-    <record id="action_patient_archive" model="ir.actions.act_window">
+    <record id="action_patient_archive_delete" model="ir.actions.act_window">
         <field name="name">Patient Archive</field>
         <field name="domain">[('active','=',False)]</field>
         <field name="res_model">patient.patient</field>

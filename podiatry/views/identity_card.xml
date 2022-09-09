@@ -20,7 +20,7 @@
                                 <tr>
                                     <td width="100%" align="center" height="30">
                                         <strong>
-                                            <span t-field="patient.podiatry_id.name" />
+                                            <span t-field="patient.account_id.name" />
                                         </strong>
                                     </td>
                                 </tr>

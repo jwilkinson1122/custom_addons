@@ -96,13 +96,13 @@ class AcademicYear(models.Model):
                 raise ValidationError(_(
                     "Error! You cannot define overlapping academic years."))
 
-    @api.constrains('current')
-    def check_current_year(self):
-        '''Constraint on active current year'''
-        current_year_rec = self.search_count([('current', '=', True)])
-        if current_year_rec >= 2:
-            raise ValidationError(_(
-                "Error! You cannot set two current year active!"))
+    # @api.constrains('current')
+    # def check_current_year(self):
+    #     '''Constraint on active current year'''
+    #     current_year_rec = self.search_count([('current', '=', True)])
+    #     if current_year_rec >= 2:
+    #         raise ValidationError(_(
+    #             "Error! You cannot set two current year active!"))
 
 
 class AcademicMonth(models.Model):
@@ -218,15 +218,15 @@ class PodiatryStandard(models.Model):
     _description = 'Practice Standards'
     _rec_name = "standard_id"
 
-    @api.depends('standard_id', 'podiatry_id', 'division_id', 'medium_id',
-                 'podiatry_id')
+    @api.depends('standard_id', 'account_id', 'division_id', 'medium_id',
+                 'account_id')
     def _compute_patient(self):
         '''Compute patient of done state'''
         patient_obj = self.env['patient.patient']
         for rec in self:
             rec.patient_ids = patient_obj.\
                 search([('standard_id', '=', rec.id),
-                        ('podiatry_id', '=', rec.podiatry_id.id),
+                        ('account_id', '=', rec.account_id.id),
                         ('division_id', '=', rec.division_id.id),
                         ('medium_id', '=', rec.medium_id.id),
                         ('state', '=', 'done')])
@@ -249,8 +249,8 @@ class PodiatryStandard(models.Model):
         for rec in self:
             rec.remaining_seats = rec.capacity - rec.total_patients
 
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice Account', required=True,
-                                  help='Practice Account of the following standard')
+    account_id = fields.Many2one('podiatry.podiatry', 'Practice Account', required=True,
+                                 help='Practice Account of the following standard')
     standard_id = fields.Many2one('standard.standard', 'Standard',
                                   required=True, help='Standard')
     division_id = fields.Many2one('standard.division', 'Division',
@@ -269,7 +269,7 @@ class PodiatryStandard(models.Model):
                                   )
     color = fields.Integer('Color Index', help='Index of color')
     cmp_id = fields.Many2one('res.company', 'Company Name',
-                             related='podiatry_id.company_id', store=True,
+                             related='account_id.company_id', store=True,
                              help='Company_id of the podiatry')
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
                                    'Syllabus',
@@ -287,8 +287,8 @@ class PodiatryStandard(models.Model):
                                      compute="_compute_remain_seats",
                                      store=True,
                                      help='Remaining seats of the standard')
-    class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='Class room of the standard')
+    practice_location_id = fields.Many2one('practice.location', 'Location',
+                                           help='Practice location of the account')
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):
@@ -302,7 +302,7 @@ class PodiatryStandard(models.Model):
         if self.env['podiatry.standard'].search([
             ('standard_id', '=', self.standard_id.id),
             ('division_id', '=', self.division_id.id),
-            ('podiatry_id', '=', self.podiatry_id.id),
+            ('account_id', '=', self.account_id.id),
                 ('id', 'not in', self.ids)]):
             raise ValidationError(_("Division and class should be unique!"))
 
@@ -331,16 +331,35 @@ class PodiatryPodiatry(models.Model):
 
     _name = 'podiatry.podiatry'
     _description = 'Account Information'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = "com_name"
 
-    practice_id = fields.Char(string='Account Practice Reference', required=True, copy=False, readonly=True,
-                              default=lambda self: _('New Account'))
+    account_id = fields.Char(string='Account Reference', required=True, copy=False, readonly=True,
+                             default=lambda self: _('New Account'))
+
+    active = fields.Boolean(string='Active', default=True, required=True, copy=True,
+                            help='Activate/Deactivate account record', tracking=True)
+
+    is_parent = fields.Boolean(string='Active', default=True, required=True, copy=True,
+                               help='Activate/Deactivate account record', tracking=True)
+
+    phone = fields.Char(string='Phone', required=True, tracking=True)
+    email = fields.Char(string='Email', required=True, tracking=True)
+
+    @api.constrains('email')
+    def _check_email(self):
+        for record in self:
+            valid_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
+                                   record.email)
+
+            if valid_email is None:
+                raise ValidationError('Please provide a valid E-mail')
 
     @api.constrains('code')
     def _check_code(self):
         for record in self:
             if self.env["podiatry.podiatry"].search(
-                    [('practice_id', '=', record.code), ('id', '!=', record.id)]):
+                    [('account_id', '=', record.code), ('id', '!=', record.id)]):
                 raise ValidationError("Account Code must be Unique")
 
     @api.model
@@ -355,7 +374,12 @@ class PodiatryPodiatry(models.Model):
     com_name = fields.Char('Practice Name', related='company_id.name',
                            store=True, help='Account Name')
     code = fields.Char('Code', required=False, help='Account code')
-    standards = fields.One2many('podiatry.standard', 'podiatry_id',
+
+    # account_id = fields.Many2one('podiatry.podiatry', 'Practice Account', required=True,
+    #                               help='Practice Account of the following standard')
+    practices = fields.One2many('practice.location', 'account_id',
+                                'Practices', help='Account practices')
+    standards = fields.One2many('podiatry.standard', 'account_id',
                                 'Standards', help='Account standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
@@ -365,125 +389,14 @@ class PodiatryPodiatry(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('practice_id', _('New Account')) == _('New Account'):
-            vals['practice_id'] = self.env['ir.sequence'].next_by_code(
+        if vals.get('account_id', _('New Account')) == _('New Account'):
+            vals['account_id'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.podiatry') or _('New Account')
 
         res = super(PodiatryPodiatry, self).create(vals)
         main_company = self.env.ref('base.main_company')
         res.company_id.parent_id = main_company.id
         return res
-
-
-class SubjectSubject(models.Model):
-    '''Defining a subject '''
-    _name = "subject.subject"
-    _description = "Subjects"
-
-    name = fields.Char('Name', required=True, help='Subject name')
-    code = fields.Char('Code', required=True, help='Subject code')
-    maximum_marks = fields.Integer("Maximum marks",
-                                   help='Maximum marks of the subject can get')
-    minimum_marks = fields.Integer("Minimum marks", help='''Required minimum
-                                                     marks of the subject''')
-    weightage = fields.Integer("WeightAge", help='Weightage of the subject')
-    doctor_ids = fields.Many2many('podiatry.doctor', 'subject_doctor_rel',
-                                  'subject_id', 'doctor_id', 'Doctors',
-                                  help='Doctors of the following subject')
-    standard_ids = fields.Many2many('standard.standard', string='Standards',
-                                    help='''Standards in which the 
-                                    following subject taught''')
-    standard_id = fields.Many2one('standard.standard', 'Class',
-                                  help='''Class in which the following
-                                  subject taught''')
-    is_practical = fields.Boolean('Is Practical',
-                                  help='Check this if subject is practical.')
-    elective_id = fields.Many2one('subject.elective',
-                                  help='''Elective subject respective
-                                  the following subject''')
-    patient_ids = fields.Many2many('patient.patient',
-                                   'elective_subject_patient_rel',
-                                   'subject_id', 'patient_id', 'Patients',
-                                   help='Patients who choose this subject')
-
-    @api.constrains("maximum_marks", "minimum_marks")
-    def check_marks(self):
-        """Method to check marks."""
-        if self.minimum_marks >= self.maximum_marks:
-            raise ValidationError(
-                _("Configure Maximum marks greater than minimum marks!"))
-
-    @api.model
-    def _search(
-            self, args, offset=0, limit=None, order=None, count=False,
-            access_rights_uid=None, ):
-        """Override method to get exam of subject selection."""
-        if self._context.get("is_from_subject_report") and \
-                self._context.get("active_model") and \
-                self._context.get("active_id"):
-
-            doctor_rec = self.env[self._context.get("active_model")].browse(
-                self._context.get("active_id"))
-            sub_ids = [sub_id.id for sub_id in doctor_rec.subject_id]
-            args.append(("id", "in", sub_ids))
-        return super(SubjectSubject, self)._search(args=args, offset=offset,
-                                                   limit=limit, order=order, count=count,
-                                                   access_rights_uid=access_rights_uid, )
-
-
-class SubjectSyllabus(models.Model):
-    '''Defining a  syllabus'''
-    _name = "subject.syllabus"
-    _description = "Syllabus"
-    _rec_name = "subject_id"
-
-    standard_id = fields.Many2one('podiatry.standard', 'Standard',
-                                  help='Standard which had this subject')
-    subject_id = fields.Many2one('subject.subject', 'Subject', help='Subject')
-    syllabus_doc = fields.Binary("Syllabus Doc",
-                                 help="Attach syllabus related to Subject")
-
-
-class SubjectElective(models.Model):
-    ''' Defining Subject Elective '''
-    _name = 'subject.elective'
-    _description = "Elective Subject"
-
-    name = fields.Char("Name", help='Elective subject name')
-    subject_ids = fields.One2many('subject.subject', 'elective_id',
-                                  'Elective Subjects',
-                                  help="Subjects of the respective elective subject")
-
-
-class MotherTongue(models.Model):
-    """Defining mother tongue."""
-
-    _name = 'mother.toungue'
-    _description = "Mother Toungue"
-
-    name = fields.Char("Mother Tongue", help='Language name')
-
-
-class PatientAward(models.Model):
-    """Defining patient award."""
-
-    _name = 'patient.award'
-    _description = "Patient Awards"
-
-    award_list_id = fields.Many2one('patient.patient', 'Patient',
-                                    help='Patients who about to get the award')
-    name = fields.Char('Award Name', help='Award name')
-    description = fields.Char('Description', help='Description')
-
-
-class AttendanceType(models.Model):
-    """Defining attendance type."""
-
-    _name = "attendance.type"
-    _description = "Practice Type"
-
-    name = fields.Char('Name', required=True, help='Attendance type name')
-    code = fields.Char('Code', required=True, help='Attendance type code')
 
 
 class PatientDocument(models.Model):
@@ -539,24 +452,6 @@ class PatientDescription(models.Model):
     description = fields.Char('Description', help='Patient description')
 
 
-class PatientDescipline(models.Model):
-    """Definign patient dscipline."""
-
-    _name = 'patient.descipline'
-    _description = "Patient Discipline"
-
-    patient_id = fields.Many2one('patient.patient', 'Patient',
-                                 help='Patient')
-    doctor_id = fields.Many2one('podiatry.doctor', 'Doctor',
-                                help='Doctor who examine the patient')
-    date = fields.Date('Date', help='Date')
-    class_id = fields.Many2one('standard.standard', 'Class',
-                               help='Class of patient')
-    note = fields.Text('Note', help='Discipline Note')
-    action_taken = fields.Text('Action Taken',
-                               help='Action taken against discipline')
-
-
 class PatientHistory(models.Model):
     """Defining Patient History."""
 
@@ -573,19 +468,6 @@ class PatientHistory(models.Model):
                               help='Percentage of the patient')
     result = fields.Char('Result', readonly=True,
                          help='Result of the patient')
-
-
-class PatientCertificate(models.Model):
-    """Defining patient certificate."""
-
-    _name = "patient.certificate"
-    _description = "Patient Certificate"
-
-    patient_id = fields.Many2one('patient.patient', 'Patient',
-                                 help='Related patient')
-    description = fields.Char('Description', help='Description')
-    certi = fields.Binary('Certificate', required=True,
-                          help='Patient certificate')
 
 
 class PatientReference(models.Model):
@@ -614,8 +496,8 @@ class PatientPreviousPodiatry(models.Model):
     _name = "patient.previous.podiatry"
     _description = "Patient Previous Practice"
 
-    previous_podiatry_id = fields.Many2one('patient.patient', 'Patient',
-                                           help='Related patient')
+    previous_account_id = fields.Many2one('patient.patient', 'Patient',
+                                          help='Related patient')
     name = fields.Char('Name', required=True,
                        help='Patient previous podiatry name')
     registration_no = fields.Char('Registry No.', required=True,
@@ -626,8 +508,6 @@ class PatientPreviousPodiatry(models.Model):
                             help='Patient previous podiatry exit date')
     course_id = fields.Many2one('standard.standard', 'Course', required=True,
                                 help='Patient gender')
-    add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
-                              help='Patient gender')
 
     @api.constrains('register_date', 'exit_date')
     def check_date(self):
@@ -640,54 +520,6 @@ class PatientPreviousPodiatry(models.Model):
                 self.register_date > self.exit_date):
             raise ValidationError(_(
                 "Registry date should be less than exit date in previous podiatry!"))
-
-
-class AcademicSubject(models.Model):
-    ''' Defining a patient previous podiatry information '''
-    _name = "academic.subject"
-    _description = "Patient Previous Practice"
-
-    add_sub_id = fields.Many2one('patient.previous.podiatry', 'Add Subjects',
-                                 invisible=True,
-                                 help='Select patient previous podiatry')
-    name = fields.Char('Name', required=True,
-                       help='Enter previous podiatry name')
-    maximum_marks = fields.Integer("Maximum marks", help='Enter maximum mark')
-    minimum_marks = fields.Integer("Minimum marks", help='Enter minimum marks')
-
-
-class PatientFamilyContact(models.Model):
-    ''' Defining a patient emergency contact information '''
-    _name = "patient.family.contact"
-    _description = "Patient Family Contact"
-
-    @api.depends('relation', 'pt_name')
-    def _compute_get_name(self):
-        for rec in self:
-            relative_name = rec.name
-            if rec.pt_name:
-                rec.relative_name = rec.pt_name.name
-            rec.relative_name = relative_name
-
-    family_contact_id = fields.Many2one('patient.patient', 'Patient Ref.',
-                                        help='Enter related patient')
-    rel_name = fields.Selection([('exist', 'Link to Existing Patient'),
-                                 ('new', 'Create New Relative Name')],
-                                'Related Patient', help="Select Name",
-                                required=True)
-    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              help='Enter related user of the patient')
-    pt_name = fields.Many2one('patient.patient', 'Existing Patient',
-                              help="Select Patient From Existing List")
-    name = fields.Char('Relative Name', help='Enter relative name')
-    relation = fields.Many2one('patient.relation.master', 'Relation',
-                               required=True,
-                               help='Select patient relation with member')
-    phone = fields.Char('Phone', required=True,
-                        help='Enter family member contact')
-    email = fields.Char('E-Mail', help='Enter patient email')
-    relative_name = fields.Char(compute='_compute_get_name', string='Name',
-                                help='Enter patient family member name')
 
 
 class PatientRelationMaster(models.Model):
@@ -744,130 +576,59 @@ it will allow you to set the grade as fail.''')
                         "Error! You cannot define overlapping Marks!"))
 
 
-class PatientNews(models.Model):
-    """Defining patient news."""
+class PracticeLocation(models.Model):
+    """Defining practice location (child/sub accounts)."""
 
-    _name = 'patient.news'
-    _description = 'Patient News'
-    _rec_name = 'subject'
-    _order = 'date asc'
+    _name = "practice.location"
+    _description = "Practice Location"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = "com_name"
 
-    subject = fields.Char('Subject', required=True,
-                          help='Subject of the news.')
-    description = fields.Text('Description', help="Description")
-    date = fields.Datetime('Expiry Date', help='Expiry date of the news.')
-    user_ids = fields.Many2many('res.users', 'user_news_rel', 'id', 'user_ids',
-                                'User News', help='Name to whom this news is related.')
-    color = fields.Integer('Color Index', default=0, help='Color index')
+    name = fields.Char("Name", help='Practice name')
+    account_id = fields.Many2one('podiatry.podiatry', 'Account', required=True,
+                                 help='Parent Account')
 
-    @api.constrains("date")
-    def checknews_dates(self):
-        """Check news date."""
-        new_date = fields.datetime.today()
-        if self.date < new_date:
-            raise ValidationError(_(
-                "Configure expiry date greater than current date!"))
+    practice_id = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
+                              default=lambda self: _('New Practice'))
 
-    def news_update(self):
-        '''Method to send email to patient for news update'''
-        emp_obj = self.env['hr.employee']
-        obj_mail_server = self.env['ir.mail_server']
-        user = self.env.user
-        # Check if out going mail configured
-        mail_server_record = obj_mail_server.search([], limit=1)
-        if not mail_server_record:
-            raise UserError(_('''User Email Configuration!
-"Outgoing mail server not specified!'''))
-        email_list = []
-        # Check email is defined in patient
-        for news in self:
-            if news.user_ids and news.date:
-                email_list = [news_user.email for news_user in news.user_ids
-                              if news_user.email]
-                if not email_list:
-                    raise UserError(_('''User Email Configuration!,
-Email not found in users!'''))
-            # Check email is defined in user created from employee
-            else:
-                for employee in emp_obj.search([]):
-                    if employee.work_email:
-                        email_list.append(employee.work_email)
-                    elif employee.user_id and employee.user_id.email:
-                        email_list.append(employee.user_id.email)
-                if not email_list:
-                    raise UserError(_('''Email Configuration!,
-Email not defined!'''))
-            news_date = news.create_date
-            # Add company name while sending email
-            company = user.company_id.name or ''
-            body = """Hi,<br/><br/>
-                    This is a news update from <b>%s</b> posted at %s<br/>
-                    <br/> %s <br/><br/>
-                    Thank you.""" % (company,
-                                     news_date.strftime(
-                                         DEFAULT_SERVER_DATETIME_FORMAT),
-                                     news.description or '')
-            smtp_user = mail_server_record.smtp_user or False
-            # Check if mail of outgoing server configured
-            if not smtp_user:
-                raise UserError(_('''Email Configuration,
-Kindly,Configure Outgoing Mail Server!'''))
-            notification = 'Notification for news update.'
-            # Configure email
-            message = obj_mail_server.build_email(email_from=smtp_user,
-                                                  email_to=email_list, subject=notification, body=body,
-                                                  body_alternative=body, reply_to=smtp_user, subtype='html')
-            # Send Email configured above with help of send mail method
-            obj_mail_server.send_email(message=message,
-                                       mail_server_id=mail_server_ids[0].id)
-        return True
+    active = fields.Boolean(string='Active', default=True, required=True, copy=True,
+                            help='Activate/Deactivate practice record', tracking=True)
 
+    phone = fields.Char(string='Phone', required=True, tracking=True)
+    email = fields.Char(string='Email', required=True, tracking=True)
 
-class PatientReminder(models.Model):
-    """Defining patient reminder."""
+    @api.constrains('email')
+    def _check_email(self):
+        for record in self:
+            valid_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
+                                   record.email)
 
-    _name = 'patient.reminder'
-    _description = "Patient Reminder"
+            if valid_email is None:
+                raise ValidationError('Please provide a valid E-mail')
+
+    @api.constrains('code')
+    def _check_code(self):
+        for record in self:
+            if self.env["podiatry.podiatry"].search(
+                    [('practice_id', '=', record.code), ('id', '!=', record.id)]):
+                raise ValidationError("Practice Code must be Unique")
+
+    # company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
+    #                              required=True, delegate=True,
+    #                              help='Company_id of the podiatry')
+    # com_name = fields.Char('Practice Name', related='company_id.name',
+    #                        store=True, help='Account Name')
 
     @api.model
-    def check_user(self):
-        '''Method to get default value of logged in Patient'''
-        return self.env['patient.patient'].search([
-            ('user_id', '=', self._uid)]).id
+    def create(self, vals):
+        if vals.get('practice_id', _('New Practice')) == _('New Practice'):
+            vals['account_id'] = self.env['ir.sequence'].next_by_code(
+                'podiatry.podiatry') or _('New Account')
 
-    pt_id = fields.Many2one('patient.patient', 'Patient Name', required=True,
-                            default=check_user, help='Relative patient')
-    name = fields.Char('Title', help='Reminder name')
-    date = fields.Date('Date', help='Reminder date')
-    description = fields.Text('Description',
-                              help='Description of the reminder')
-    color = fields.Integer('Color Index', default=0, help='Color index')
-
-    @api.constrains("date")
-    def check_date(self):
-        """Method to check constraint of due date and assign date"""
-        if self.date < fields.Date.today():
-            raise ValidationError(_(
-                "Reminder date of must be greater or equal current date !"))
-
-
-class PatientCast(models.Model):
-    """Defining patient cast."""
-
-    _name = "patient.cast"
-    _description = "Patient Cast"
-
-    name = fields.Char("Name", required=True, help='Patient cast')
-
-
-class ClassRoom(models.Model):
-    """Defining class room."""
-
-    _name = "class.room"
-    _description = "Class Room"
-
-    name = fields.Char("Name", help='Class room name')
-    number = fields.Char("Room Number", help='Class room number')
+        res = super(PracticeLocation, self).create(vals)
+        main_company = self.env.ref('base.main_company')
+        res.company_id.parent_id = main_company.id
+        return res
 
 
 class Report(models.Model):

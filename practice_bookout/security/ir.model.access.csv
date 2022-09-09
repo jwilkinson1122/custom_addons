@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bookout_user,Bookout User,model_practice_bookout,practice_app.practice_group_user,1,1,1,1
+bookout_line_user,Bookout Line User,model_practice_bookout_line,practice_app.practice_group_user,1,1,1,1
+bookout_stage_user,Bookout Stage User,model_practice_bookout_stage,practice_app.practice_group_user,1,0,0,0
+bookout_stage_manager,Bookout Stage Manager,model_practice_bookout_stage,practice_app.practice_group_manager,1,1,1,1
+bookout_massmessage_user,Bookout Mass Message User,model_practice_bookout_massmessage,practice_app.practice_group_user,1,1,1,1

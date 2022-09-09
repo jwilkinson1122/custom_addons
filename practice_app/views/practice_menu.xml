@@ -1,0 +1,20 @@
+<odoo>
+
+  <!-- Practice App Menu -->
+  <menuitem id="menu_practice" name="Practice" />
+
+  <!-- Action to open the Prescription list -->
+  <record id="action_practice_prescription" model="ir.actions.act_window">
+    <field name="name">Practice Prescriptions</field>
+    <field name="res_model">practice.prescription</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_wndow, deprecated
+  <act_window id="action_practice_prescription" name="Practice Prescriptions" res_model="practice.prescription" view_mode="tree,form" />
+  -->
+  <!-- Menu item to open the Prescription list -->
+  <menuitem id="menu_practice_prescription" name="Prescriptions" parent="menu_practice" action="action_practice_prescription" />
+
+  <menuitem id="menu_practice_configuration" name="Configuration" parent="menu_practice" />
+
+</odoo>

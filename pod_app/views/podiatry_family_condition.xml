@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="podiatry_family_condition_tree_view" model="ir.ui.view">
+        <field name="name">podiatry.family.condition.tree.view</field>
+        <field name="model">podiatry.family.condition</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="podiatry_pathology_id" />
+                <field name="relative" />
+                <field name="metrnal" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

@@ -91,6 +91,7 @@
             <field name="groups" eval="[(4, ref('group_podiatry_parent'))]"/>
         </record>
 
+
         <!-- Rule For Podiatry Standard Record As An Administrator -->
 
         <record id="rule_podiatry_standard_record_as_admin" model="ir.rule">
@@ -105,7 +106,7 @@
             <field name="name">Doctor Account Standard Record Rule</field>
             <field name="model_id" ref="model_podiatry_standard"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('podiatry_id.company_id','=',user.company_id.id)]</field>
+            <field name="domain_force">[('account_id.company_id','=',user.company_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_podiatry_doctor'))]"/>
         </record>
 

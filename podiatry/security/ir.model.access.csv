@@ -164,8 +164,8 @@ access_standard_standard_patient_register_podiatry,standard.standard,podiatry.mo
 access_grade_line_patient_register_is,grade.line,podiatry.model_grade_line,group_is_register,1,0,0,0
 access_podiatry_standard_user_patient_inregister_podiatry,podiatry.standard,podiatry.model_podiatry_standard,group_is_register,1,0,0,0
 access_subject_syllabus_patient_register_patient,subject.syllabus,model_subject_syllabus,group_is_register,1,0,0,0
-access_class_room_doctor,class.room,model_class_room,group_podiatry_doctor,1,0,0,0
-access_class_room_admin,class.room,model_class_room,group_podiatry_administration,1,1,1,1
+access_practice_location_doctor,practice.location,model_practice_location,group_podiatry_doctor,1,0,0,0
+access_practice_location_admin,practice.location,model_practice_location,group_podiatry_administration,1,1,1,1
 access_parent_relation_admin,parent.relation,podiatry.model_parent_relation,group_podiatry_administration,1,1,1,1
 access_parent_relation_patient,parent.relation,podiatry.model_parent_relation,group_podiatry_patient,1,0,0,0
 access_parent_relation_parent_grp,parent.relation,podiatry.model_parent_relation,group_podiatry_parent,1,1,1,0
