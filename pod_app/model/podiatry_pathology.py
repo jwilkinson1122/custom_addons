@@ -14,7 +14,4 @@ class podiatry_pathology(models.Model):
         'podiatry.pathology.category', string="Condition Category")
     line_ids = fields.One2many(
         'podiatry.pathology.group.member', 'condition_group_id', string="Group")
-    chromosome = fields.Char(string="Affected Chromosome")
-    gene = fields.Char(string="Gene")
-    protein = fields.Char(string="Protein")
     info = fields.Text(string="Extra Info")

@@ -26,7 +26,7 @@
                     <field name="week_of_pregnancy" />
                 </group>
                 <group colspan="4" col="4" string="Therapy">
-                    <field name="is_on_treatment" />
+                    <field name="has_device" />
                     <field name="treatment_description" />
                     <field name="date_start_treatment" />
                     <field name="date_stop_treatment" />

@@ -47,16 +47,16 @@ access_podiatry_lab_test_critearea_chem,podiatry.group.podiatry.lab.test.critear
 
 access_podiatry_physician,podiatry.group.physician,model_podiatry_physician,group_podiatry_group,1,1,1,
 access_podiatry_physician_doctor,podiatry.group.physician.doctor,model_podiatry_physician,group_doctor,1,1,1,
-access_dose_unit,podiatry.group.dose.unit,model_podiatry_dose_unit,group_podiatry_group,1,1,1,1
+access_quantity_unit,podiatry.group.quantity.unit,model_podiatry_quantity_unit,group_podiatry_group,1,1,1,1
 access_podiatry_patient_device,podiatry.group.patient.device,model_podiatry_patient_device,group_podiatry_group,1,0,0,0
 access_podiatry_patient_device,podiatry.group.patient,model_podiatry_patient,group_podiatry_group,1,0,0,0
 access_patient_conditions,podiatry.group.patient.conditions,model_podiatry_patient_condition,group_podiatry_group,1,1,1,0
-access_podiatry_device_dosage,podiatry.group.device.dosage,model_podiatry_device_dosage,group_podiatry_group,1,1,1,0
+access_podiatry_device_quantity,podiatry.group.device.quantity,model_podiatry_device_quantity,group_podiatry_group,1,1,1,0
 access_podiatry_physician,podiatry.group.podiatry.physician,model_podiatry_physician,group_podiatry_group,1,0,0,0
 access_podiatry_lab,podiatry.group.podiatry.lab,model_podiatry_lab,group_podiatry_group,1,1,1,1
 
 
-access_podiatry_inpatient_registration_r,podiatry.group.podiatry.inpatient.registration.r,model_podiatry_inpatient_registration,group_receptionist,1,1,1,0
+access_podiatry_patient_registration_r,podiatry.group.podiatry.patient.registration.r,model_podiatry_patient_registration,group_receptionist,1,1,1,0
 
 access_podiatry_lab_lab_tech,podiatry.group.podiatry.lab.lab_tech,model_podiatry_lab,group_lab_tech,1,1,1,1
 
@@ -85,12 +85,12 @@ access_receptionist_line,receptionist.prescription.line,model_podiatry_prescript
 access_receptionist_podiatry_patient_device,receptionist.group.patient,model_podiatry_patient,group_receptionist,1,1,1,0
 
 access_receptionist_physician,receptionist.group.physician,model_podiatry_physician,group_receptionist,1,1,1,0
-access_doctor_podiatry_inpatient_registration,podiatry.doctor.group.podiatry.inpatient.registration,model_podiatry_inpatient_registration,group_doctor,1,1,1,1
+access_doctor_podiatry_patient_registration,podiatry.doctor.group.podiatry.patient.registration,model_podiatry_patient_registration,group_doctor,1,1,1,1
 
 access_doctor_podiatry_patient_condition,podiatry.doctor.group.podiatry.patient.condition,model_podiatry_patient_condition,group_doctor,1,1,1,1
 
 access_doctor_podiatry_patient_condition_line,podiatry.doctor.group.podiatry.patient.condition.line,model_podiatry_prescription_line,group_doctor,1,1,1,1
-access_doctor_podiatry_dose_unit,podiatry.doctor.group.podiatry_dose_unit,model_podiatry_dose_unit,group_doctor,1,1,1,1
+access_doctor_podiatry_quantity_unit,podiatry.doctor.group.podiatry_quantity_unit,model_podiatry_quantity_unit,group_doctor,1,1,1,1
 access_sale_order,sale.order,sale.model_sale_order,group_doctor,1,1,1,0
 access_sale_order_line,sale.order.line,sale.model_sale_order_line,group_doctor,1,1,1,1
 access_sale_order_line_accountant,sale.order.line accountant,sale.model_sale_order_line,group_doctor,1,1,0,0
@@ -137,15 +137,15 @@ access_product_group_res_partner_sale_manager,res_partner group_sale_manager,bas
 access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,group_doctor,1,0,0,0
 access_sale_order_invoicing_payments,sale.order,sale.model_sale_order,group_doctor,1,1,0,0
 access_sale_order_line_invoicing_payments,sale.order.line,sale.model_sale_order_line,group_doctor,1,1,0,0
-access_podiatry_diagnostic_hypotesis,access_podiatry_diagnostic_hypotesis,model_podiatry_diagnostic_hypotesis,,1,1,1,1
+access_podiatry_diagnostic_hypothesis,access_podiatry_diagnostic_hypothesis,model_podiatry_diagnostic_hypothesis,,1,1,1,1
 access_podiatry_diet_therapeutic,access_podiatry_diet_therapeutic,model_podiatry_diet_therapeutic,,1,1,1,1
 access_podiatry_directions,access_podiatry_directions,model_podiatry_directions,,1,1,1,1
 access_podiatry_family_condition,access_podiatry_family_condition,model_podiatry_family_condition,,1,1,1,1
 access_podiatry_icu_ventilation,access_podiatry_icu_ventilation,model_podiatry_icu_ventilation,,1,1,1,1
-access_podiatry_inpatient_diet,access_podiatry_inpatient_diet,model_podiatry_inpatient_diet,,1,1,1,1
-access_podiatry_inpatient_device_admin_time,access_podiatry_inpatient_device_admin_time,model_podiatry_inpatient_device_admin_time,,1,1,1,1
-access_podiatry_inpatient_device_log,access_podiatry_inpatient_device_log,model_podiatry_inpatient_device_log,,1,1,1,1
-access_podiatry_inpatient_device,access_podiatry_inpatient_device,model_podiatry_inpatient_device,,1,1,1,1
+access_podiatry_patient_diet,access_podiatry_patient_diet,model_podiatry_patient_diet,,1,1,1,1
+access_podiatry_patient_device_admin_time,access_podiatry_patient_device_admin_time,model_podiatry_patient_device_admin_time,,1,1,1,1
+access_podiatry_patient_device_log,access_podiatry_patient_device_log,model_podiatry_patient_device_log,,1,1,1,1
+access_podiatry_patient_device,access_podiatry_patient_device,model_podiatry_patient_device,,1,1,1,1
 access_podiatry_insurance_plan,access_podiatry_insurance_plan,model_podiatry_insurance_plan,,1,1,1,1
 
 
@@ -174,12 +174,12 @@ access_podiatry_rounding_procedure,access_podiatry_rounding_procedure,model_podi
 access_podiatry_secondary_condition,access_podiatry_secondary_condition,model_podiatry_secondary_condition,,1,1,1,1
 access_podiatry_signs_and_sympotoms,access_podiatry_signs_and_sympotoms,model_podiatry_signs_and_sympotoms,,1,1,1,1
 access_psc_code,access_psc_code,model_psc_code,,1,1,1,1
-access_bed_transfer,access_bed_transfer,model_bed_transfer,,1,1,1,1
+access_location_transfer,access_location_transfer,model_location_transfer,,1,1,1,1
 access_podiatry_icu_chest_drainage,access_podiatry_icu_chest_drainage,model_podiatry_icu_chest_drainage,,1,1,1,1
 access_podiatry_patient_device,access_podiatry_patient_device,model_podiatry_patient_device,,1,1,1,1
 access_podiatry_icu_ecg,access_podiatry_icu_ecg,model_podiatry_icu_ecg,,1,0,0,0
 access_podiatry_icu_glasgow,access_podiatry_icu_glasgow,model_podiatry_icu_glasgow,,1,0,0,0
-access_podiatry_drug_route,access_podiatry_drug_route,model_podiatry_drug_route,,1,0,0,0
+access_podiatry_device_route,access_podiatry_device_route,model_podiatry_device_route,,1,0,0,0
 
 access_podiatry_treatment,access_podiatry_treatment,model_podiatry_treatment,,1,0,0,0
 
@@ -194,15 +194,15 @@ access_podiatry_treatment_doctor,access_podiatry_treatment_doctor,model_podiatry
 
 access_pet_type,access_pet_type,model_pet_type,,1,0,0,0
 access_podiatry_patient_evaluation,access_podiatry_patient_evaluation,model_podiatry_patient_evaluation,,1,0,0,0
-access_podiatry_appointment,access_podiatry_appointment,model_podiatry_appointment,,1,0,0,0
-access_podiatry_appointment1,access_podiatry_appointment1,model_podiatry_appointment,group_receptionist,1,1,1,0
+access_podiatry_evaluation,access_podiatry_evaluation,model_podiatry_evaluation,,1,0,0,0
+access_podiatry_evaluation1,access_podiatry_evaluation1,model_podiatry_evaluation,group_receptionist,1,1,1,0
 access_podiatry_insurance,podiatry.insurance,model_podiatry_insurance,group_doctor,1,1,1,0
 
 access_podiatry_patient_lab_test,podiatry.patient.lab.test,model_podiatry_patient_lab_test,group_doctor,1,1,1,0
 access_podiatry_patient_lab_test_chem,podiatry.patient.lab.test.chem,model_podiatry_patient_lab_test,group_lab_tech,1,0,0,0
 
 
-access_podiatry_appointments_invoice_wizard,podiatry.appointments.invoice.wizard,model_podiatry_appointments_invoice_wizard,,1,1,1,1
+access_podiatry_evaluations_invoice_wizard,podiatry.evaluations.invoice.wizard,model_podiatry_evaluations_invoice_wizard,,1,1,1,1
 
 
 access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1

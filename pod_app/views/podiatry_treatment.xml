@@ -11,12 +11,12 @@
                     <page string="Main Info">
                         <group colspan="4" col="4">
                             <field name="product_id" required="1" context="{'default_is_treatment': 1, 'search_default_is_treatment': 1,'search_default_type': 'service','default_type': 'service'}" />
-                            <field name="therapeutic_action" />
-                            <field name="active_component" />
+                            <field name="corrective_action" />
+                            <field name="components" />
                             <field name="price" />
                             <field name="qty_available" />
                             <newline />
-                            <field name="indications" colspan="4" />
+                            <!-- <field name="indications" colspan="4" /> -->
                         </group>
                     </page>
                     <page string="Presentation">
@@ -26,28 +26,12 @@
                         <field name="composition" />
                     </page>
 
-                    <page string="Dosage">
+                    <page string="Quatity">
                         <group colspan="4" col="4">
-                            <field name="dosage" />
-                            <field name="overdosage" />
+                            <field name="quantity" />
                         </group>
                     </page>
 
-                    <page string="Pregnancy / Lactancy">
-                        <group colspan="4" col="4">
-                            <field name="pregnancy_warning" />
-                            <field name="pregnancy_category" />
-                            <field name="pregnancy" />
-                        </group>
-                    </page>
-
-                    <page string="Adverse Reactions">
-                        <field name="adverse_reaction" />
-                    </page>
-
-                    <page string="Storage Conditions">
-                        <field name="storage" />
-                    </page>
 
                     <page string="Extra Info">
                         <field name="notes" />
@@ -64,10 +48,9 @@
         <field name="arch" type="xml">
             <tree string="treatment">
                 <field name="product_id" />
-                <field name="active_component" />
+                <field name="components" />
                 <field name="qty_available" />
-                <field name="therapeutic_action" />
-                <field name="pregnancy_warning" />
+                <field name="corrective_action" />
                 <field name="price" />
             </tree>
         </field>

@@ -19,8 +19,8 @@ class podiatry_prescription_order(models.Model):
     inv_id = fields.Many2one('account.invoice', 'Invoice')
     invoice_to_insurer = fields.Boolean('Invoice to Insurance')
     doctor_id = fields.Many2one('podiatry.physician', 'Prescribing Doctor')
-    podiatry_appointment_id = fields.Many2one(
-        'podiatry.appointment', 'Appointment')
+    podiatry_evaluation_id = fields.Many2one(
+        'podiatry.evaluation', 'Evaluation')
     state = fields.Selection(
         [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
     lab_partner_id = fields.Many2one(
@@ -29,7 +29,7 @@ class podiatry_prescription_order(models.Model):
         'podiatry.prescription.line', 'name', 'Prescription Line')
     invoice_done = fields.Boolean('Invoice Done')
     notes = fields.Text('Prescription Note')
-    appointment_id = fields.Many2one('podiatry.appointment')
+    evaluation_id = fields.Many2one('podiatry.evaluation')
     is_invoiced = fields.Boolean(copy=False, default=False)
     insurer_id = fields.Many2one('podiatry.insurance', 'Insurer')
     is_shipped = fields.Boolean(default=False, copy=False)

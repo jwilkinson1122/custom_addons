@@ -11,17 +11,18 @@ class podiatry_prescription_line(models.Model):
 
     name = fields.Many2one('podiatry.prescription.order', 'Prescription ID')
     treatment_id = fields.Many2one('podiatry.treatment', 'Treatment')
-    indication = fields.Char('Indication')
+    pathology = fields.Char('Pathology')
     allow_substitution = fields.Boolean('Allow Substitution')
     form = fields.Char('Form')
     prnt = fields.Boolean('Print')
     route = fields.Char('Administration Route')
     end_treatement = fields.Datetime('Administration Route')
-    dose = fields.Float('Dose')
-    dose_unit_id = fields.Many2one('podiatry.dose.unit', 'Dose Unit')
+    quantity = fields.Float('Quantity')
+    quantity_unit_id = fields.Many2one(
+        'podiatry.quantity.unit', 'Quantity Unit')
     qty = fields.Integer('x')
-    device_dosage_id = fields.Many2one(
-        'podiatry.device.dosage', 'Frequency')
+    device_quantity_id = fields.Many2one(
+        'podiatry.device.quantity', 'Frequency')
     admin_times = fields.Char('Admin Hours', size=128)
     frequency = fields.Integer('Frequency')
     frequency_unit = fields.Selection([('seconds', 'Seconds'), ('minutes', 'Minutes'), (

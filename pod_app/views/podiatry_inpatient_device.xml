@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="podiatry_inpatient_device_form_view" model="ir.ui.view">
-        <field name="name">podiatry.inpatient.device.form.view</field>
-        <field name="model">podiatry.inpatient.device</field>
+    <record id="podiatry_patient_device_form_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.device.form.view</field>
+        <field name="model">podiatry.patient.device</field>
         <field name="arch" type="xml">
-            <form string="Device History">
+            <form string="Prescription History">
                 <group>
                     <group colspan="4" col="4">
                         <field name="podiatry_treatment_id" />
-                        <field name="podiatry_inpatient_device_physician_id" />
+                        <field name="podiatry_patient_device_physician_id" />
                         <field name="is_active" />
                         <field name="podiatry_pathology_id" />
                         <field name="start_treatment" />
@@ -19,25 +19,25 @@
                     <separator colspan="4" string="Admnistration" />
                     <group colspan="4" col="4">
                     </group>
-                    <separator colspan="4" string="Dosage" />
+                    <separator colspan="4" string="Quatity" />
                     <group colspan="4" col="4">
-                        <field name="dose" />
+                        <field name="quantity" />
                         <field name="qty" />
-                        <field name="podiatry_dose_unit_id" />
+                        <field name="podiatry_quantity_unit_id" />
                     </group>
                     <separator colspan="4" string=" Treatment Duration " />
                     <group colspan="4" col="4">
                         <field name="duration" />
                         <field name="duration_period" />
                     </group>
-                    <separator colspan="4" string="  Common Dosage  " />
+                    <separator colspan="4" string="  Common Quatity  " />
                     <group>
-                        <field name="podiatry_device_dosage_id" />
+                        <field name="podiatry_device_quantity_id" />
                     </group>
                     <group colspan="2" col="2">
-                        <field name="inpatient_admin_times_ids" />
+                        <field name="patient_admin_times_ids" />
                     </group>
-                    <separator colspan="4" string="  Specific Dosage  " />
+                    <separator colspan="4" string="  Specific Quatity  " />
                     <group colspan="4" col="4">
                         <field name="frequency" />
                         <field name="frequency_unit" />
@@ -48,13 +48,13 @@
         </field>
     </record>
 
-    <record id="podiatry_inpatient_device_tree_view" model="ir.ui.view">
-        <field name="name">podiatry.inpatient.device.tree.view</field>
-        <field name="model">podiatry.inpatient.device</field>
+    <record id="podiatry_patient_device_tree_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.device.tree.view</field>
+        <field name="model">podiatry.patient.device</field>
         <field name="arch" type="xml">
             <tree string="Device">
                 <field name="podiatry_treatment_id" />
-                <field name="podiatry_inpatient_device_physician_id" />
+                <field name="podiatry_patient_device_physician_id" />
                 <field name="is_active" />
                 <field name="podiatry_pathology_id" />
                 <field name="start_treatment" />

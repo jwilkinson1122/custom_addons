@@ -9,7 +9,7 @@
                     <page string="Main Info">
                         <group colspan="4" col="4">
                             <field name="partner_id" required="1" context="{'default_is_doctor': 1, 'search_default_is_doctor': 1}" />
-                            <field name="institution_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                            <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
                             <field name="code" />
                         </group>
                     </page>
@@ -29,11 +29,11 @@
                 <separator orientation="vertical" />
                 <field name="partner_id" select="1" />
                 <field name="code" select="1" />
-                <field name="institution_partner_id" select="1" />
+                <field name="practice_partner_id" select="1" />
                 <newline />
                 <group expand="1" string="Group By">
                     <filter string="Doctor" name='by_user' context="{'group_by':'partner_id'}"/>
-                    <filter string="Institution" name='by_institution' context="{'group_by':'institution_partner_id'}"/>
+                    <filter string="Practice" name='by_practice' context="{'group_by':'practice_partner_id'}"/>
                 </group>
             </search>
         </field>
@@ -46,7 +46,7 @@
             <tree string="Physician Information">
                 <field name="partner_id" />
                 <field name="code" />
-                <field name="institution_partner_id" />
+                <field name="practice_partner_id" />
             </tree>
         </field>
     </record>
@@ -61,7 +61,7 @@
                 <!-- <field name="name"/> -->
                 <field name="partner_id" />
                 <field name="code" />
-                <field name="institution_partner_id" />
+                <field name="practice_partner_id" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -77,7 +77,7 @@
                                         <field name="code"/>
                                     </li>
                                     <li>Practice :
-                                        <field name="institution_partner_id"/>
+                                        <field name="practice_partner_id"/>
                                     </li>
 
                                 </ul>

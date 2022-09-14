@@ -28,7 +28,7 @@
 											<span t-field='o.patient_id.name' />
 											<br></br>
 											<b>Gender :</b>
-											<span t-field='o.sex' />
+											<span t-field='o.gender' />
 											<br></br>
 											<b>Date of Birth :</b>
 											<span t-field='o.date_of_birth' />
@@ -37,7 +37,7 @@
 											<span t-field='o.age' />
 											<br></br>
 											<b>Blood Group:</b>
-											<span t-field='o.blood_type' />
+											<span t-field='o.shoe_type' />
 											<br></br>
 											<b>Address:</b>
 											<span t-raw="'%s' % o.patient_id.street if  o.patient_id.street  else ''" />

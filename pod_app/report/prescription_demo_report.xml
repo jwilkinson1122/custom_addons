@@ -99,12 +99,12 @@
 										<span t-field="test.form"/>
 									</td>
 								</tr>
-								<tr t-if="test.indication">
+								<tr t-if="test.pathology">
 									<td>
-										<strong>Indication</strong>
+										<strong>Pathology</strong>
 									</td>
 									<td>
-										<span t-field="test.indication"/>
+										<span t-field="test.pathology"/>
 									</td>
 								</tr>
 								<tr t-if="test.route">
@@ -115,12 +115,12 @@
 										<span t-field="test.route"/>
 									</td>
 								</tr>
-								<tr t-if="test.device_dosage_id">
+								<tr t-if="test.device_quantity_id">
 									<td>
-										<strong>Common Dosage</strong>
+										<strong>Common Quatity</strong>
 									</td>
 									<td>
-										<span t-field="test.device_dosage_id"/>
+										<span t-field="test.device_quantity_id"/>
 									</td>
 								</tr>
 								<tr t-if="test.frequency">

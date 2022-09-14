@@ -9,16 +9,16 @@
             <field name="padding">3</field>
         </record>
 
-        <record id="inpatient_registration_code_sequence" model="ir.sequence">
+        <record id="patient_registration_code_sequence" model="ir.sequence">
             <field name="name">Patients</field>
-            <field name="code">podiatry.inpatient.registration</field>
+            <field name="code">podiatry.patient.registration</field>
             <field name="prefix">INPAC</field>
             <field name="padding">3</field>
         </record>
 
-        <record id="podiatry_appointment_code_sequence" model="ir.sequence">
-            <field name="name">Appointment</field>
-            <field name="code">podiatry.appointment</field>
+        <record id="podiatry_evaluation_code_sequence" model="ir.sequence">
+            <field name="name">Evaluation</field>
+            <field name="code">podiatry.evaluation</field>
             <field name="prefix">APT</field>
             <field name="padding">0</field>
         </record>
@@ -87,8 +87,8 @@
             <field name="padding">4</field>
         </record>
 
-        <record id="podiatry_appointments_invoice_sequence" model="ir.sequence">
-            <field name="name">Podiatry Appointments Invoice</field>
+        <record id="podiatry_evaluations_invoice_sequence" model="ir.sequence">
+            <field name="name">Podiatry Evaluations Invoice</field>
             <field name="code">podiatry_app_inv_seq</field>
             <field name="prefix">MED/INV/</field>
             <field name="padding">4</field>

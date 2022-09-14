@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_practitioner_user,Practitioner User Access,model_practice_practitioner,practice_app.practice_group_user,1,1,1,0
-access_practitioner_manager,Practitioner Manager Access,model_practice_practitioner,practice_app.practice_group_manager,1,1,1,1

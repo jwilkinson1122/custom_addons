@@ -10,7 +10,7 @@ class podiatry_physician(models.Model):
     _rec_name = 'partner_id'
 
     partner_id = fields.Many2one('res.partner', 'Physician', required=True)
-    institution_partner_id = fields.Many2one(
-        'res.partner', domain=[('is_practice', '=', True)], string='Institution')
+    practice_partner_id = fields.Many2one(
+        'res.partner', domain=[('is_practice', '=', True)], string='Practice')
     code = fields.Char('Id')
     info = fields.Text('Extra Info')

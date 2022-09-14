@@ -9,12 +9,12 @@
             <field name="report_file">pod_app.prescription_demo_report</field>
         </record>
 
-        <record id="report_print_appointment" model="ir.actions.report">
-            <field name="name">Appointment Recipts New</field>
-            <field name="model">podiatry.appointment</field>
+        <record id="report_print_evaluation" model="ir.actions.report">
+            <field name="name">Evaluation Recipts New</field>
+            <field name="model">podiatry.evaluation</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">pod_app.appointment_recipts_report</field>
-            <field name="report_file">pod_app.appointment_recipts_report</field>
+            <field name="report_name">pod_app.evaluation_recipts_report</field>
+            <field name="report_file">pod_app.evaluation_recipts_report</field>
         </record>
 
         <record id="report_print_patient_card" model="ir.actions.report">
@@ -26,7 +26,7 @@
         </record>
 
         <record id="report_print_patient_devices_document" model="ir.actions.report">
-            <field name="name">Device History New</field>
+            <field name="name">Prescription History New</field>
             <field name="model">podiatry.patient</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">pod_app.patient_devices_document</field>
