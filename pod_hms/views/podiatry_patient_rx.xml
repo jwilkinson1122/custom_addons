@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="podiatry_patient_rx_tree_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.rx.tree.view</field>
+        <field name="model">podiatry.patient.rx</field>
+        <field name="arch" type="xml">
+            <tree string="Test Requests">
+                <field name="request" readonly="1" />
+                <field name="podiatry_rx_type_id" required="1" />
+                <field name="date" />
+                <field name="patient_id" required="1" />
+                <field name="doctor_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="podiatry_patient_rx_form_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.rx.form.view</field>
+        <field name="model">podiatry.patient.rx</field>
+        <field name="arch" type="xml">
+            <form string="Test Requests">
+                <header>
+                    <button name="%(action_create_rx_result2)d" string="Create Rx" type="action" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(action_create_rx_invoice2)d" string="Create Rx Invoice" type="action" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="cancel_rx" string="Create Rx Request" type="object" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}" />
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,tested,cancel" readonly="1" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="podiatry_rx_type_id" required="1" />
+                            <field name="date" />
+                            <field name="ship_to_patient" />
+                        </group>
+                        <group>
+                            <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                            <field name="doctor_id" />
+                            <!-- <field name="insurer_id" attrs="{'invisible': [('ship_to_patient','=', False)]}" /> -->
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+
+
+    <record id="action_podiatry_patient_rx" model="ir.actions.act_window">
+        <field name="name">Rx Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.patient.rx</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_podiatry_patient_rx_draft" model="ir.actions.act_window">
+        <field name="name">Draft Rx Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.patient.rx</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+    </record>
+
+    <record id="action_podiatry_patient_rx_todays_draft" model="ir.actions.act_window">
+        <field name="name">Today's Draft Rx Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.patient.rx</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft'),('date','>=',time.strftime('%Y-%m-%d'))]</field>
+    </record>
+
+    <menuitem name="RX" id="main_menu_rx" parent="main_menu_podiatry_management" sequence='7' />
+
+    <menuitem name="Rx Requests" id="menu_rx_requests" parent="pod_hms.main_menu_rx" sequence="1" action="action_podiatry_patient_rx_draft"/>
+
+    <menuitem name="Draft Rx Requests" id="sub_menu_draft_req" parent="menu_rx_requests" action="action_podiatry_patient_rx_draft" />
+
+    <menuitem name="Today's Draft Rx Requests" id="sub_menu_today_draft_req" parent="menu_rx_requests" action="action_podiatry_patient_rx_todays_draft" />
+
+
+
+</odoo>

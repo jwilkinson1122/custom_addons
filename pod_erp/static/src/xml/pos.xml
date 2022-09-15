@@ -660,9 +660,9 @@ Description
         </div>
     </t>
 
-    <t t-name="SelectGlassesButton" owl="1">
+    <t t-name="SelectShellButton" owl="1">
         <div class='control-button button confirm'>
-            Select Glasses
+            Select Shell
         </div>
     </t>
 
@@ -1205,7 +1205,7 @@ Description
                             </td>
                         </tr>
                         <tr>
-                            <th>Glasses:</th>
+                            <th>Shell:</th>
                             <td colspan="3">
                                 <select id="devices">
                                 </select>
@@ -1364,7 +1364,7 @@ Glass left</td>
                                                 <th>Test Type</th>
                                                 <th>Prescription Type</th>
                                                 <th>Status</th>
-                                                <th>Send to Glasses</th>
+                                                <th>Send to Shell</th>
                                                 <th>Prescription</th>
                                             </tr>
                                         </thead>

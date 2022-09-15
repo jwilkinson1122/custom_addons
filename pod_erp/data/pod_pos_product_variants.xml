@@ -180,7 +180,7 @@
         <!--Product 1-->
 
         <!--        <record id="product_product_00_product_template" model="product.template">-->
-        <!--            <field name="name">Podiatry Glasses 01</field>-->
+        <!--            <field name="name">Podiatry Shell 01</field>-->
         <!--            <field name="standard_price">500.0</field>-->
         <!--            <field name="list_price">750.0</field>-->
         <!--            <field name="type">consu</field>-->

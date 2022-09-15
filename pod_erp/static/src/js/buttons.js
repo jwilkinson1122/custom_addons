@@ -26,7 +26,7 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
             condition: function () {
                 return true;
             },
-            position: ['before', 'SelectGlassesButton'],
+            position: ['before', 'SelectShellButton'],
         });
 
     Registries.Component.add(PrescriptionHistoryButton);
@@ -62,12 +62,12 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
 
     //-----------------------------------------
     //-----------------------------------------
-    // Select Glasses Button on Main Page
+    // Select Shell Button on Main Page
     //-----------------------------------------
     //-----------------------------------------
 
 
-    class SelectGlassesButton extends PosComponent {
+    class SelectShellButton extends PosComponent {
         constructor() {
             super(...arguments);
             useListener('click', this.button_click);
@@ -93,15 +93,15 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
                  self.showPopup('OrderCreationWidget');;
         }
     }
-    SelectGlassesButton.template = 'SelectGlassesButton';
+    SelectShellButton.template = 'SelectShellButton';
     ProductScreen.addControlButton({
-            component: SelectGlassesButton,
+            component: SelectShellButton,
             condition: function () {
                 return true;
             },
             position: ['before', 'PrescriptionHistoryButton'],
         });
 
-    Registries.Component.add(SelectGlassesButton);
-    return PrescriptionHistoryButton,PrescriptionButton,SelectGlassesButton;
+    Registries.Component.add(SelectShellButton);
+    return PrescriptionHistoryButton,PrescriptionButton,SelectShellButton;
 });

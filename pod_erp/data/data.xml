@@ -3,10 +3,10 @@
     <data noupdate="1">
 
         <record id="foot_test_config_one" model="foot.test.type">
-            <field name="name">Glasses</field>
+            <field name="name">Shell</field>
         </record>
         <record id="foot_test_config_two" model="foot.test.type">
-            <field name="name">Contact Lense</field>
+            <field name="name">Top Cover</field>
         </record>
 
         <record id="pod_erp_product" model="product.product">

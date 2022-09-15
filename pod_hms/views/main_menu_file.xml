@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="main_menu_podiatry_management" name="Podiatry Management" web_icon="pod_hms,static/description/icon.png" />
+
+    <menuitem id="main_menu_configuration" name="Configuration" parent="main_menu_podiatry_management" sequence = '13'/>
+
+    <menuitem id="main_menu_conf_rx" name="RX" parent="main_menu_configuration" sequence='0'/>
+
+    <menuitem id="menu_podiatry_health_service" name='Medical Product' parent="main_menu_podiatry_management" sequence="11" />
+
+    <menuitem id="menu_patients" name='Patients' parent="main_menu_podiatry_management" sequence="2" />
+
+    <menuitem id="menu_podiatry_paper_archive" name='Archive' parent="main_menu_podiatry_management" sequence="4" />
+
+    <menuitem id="menu_podiatry_management" name="Medical" />
+
+</odoo>

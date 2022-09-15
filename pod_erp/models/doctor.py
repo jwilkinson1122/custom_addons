@@ -10,7 +10,7 @@ class Doctor(models.Model):
     create_users_button = fields.Boolean()
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
-    is_doctor = fields.Boolean()
+    is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
 
@@ -29,30 +29,30 @@ class Doctor(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['dr.prescription'].search_count([('dr', '=', records.id)])
+            count = self.env['dr.prescription'].search_count(
+                [('dr', '=', records.id)])
             records.prescription_count = count
 
-    def create_doctors(self):
+    def create_users(self):
         print('.....res')
-        self.is_doctor = True
+        self.is_practitioner = True
         if len(self.partner_id.user_ids):
             raise UserError(_('User for this patient already created.'))
         else:
             self.create_users_button = False
         doctor_id = []
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Doctors')]).id)
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Doctors')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Internal User')]).id)
 
         return {
             'type': 'ir.actions.act_window',
             'name': 'Name ',
             'view_mode': 'form',
-            'view_id': self.env.ref("doctor.view_create_user_wizard_form").id,
+            'view_id': self.env.ref("pod_erp.view_create_user_wizard_form").id,
             'target': 'new',
             'res_model': 'res.users',
-            'context': {'default_partner_id': self.partner_id.id, 'default_is_doctor': True,
+            'context': {'default_partner_id': self.partner_id.id, 'default_is_practitioner': True,
                         'default_groups_id': [(6, 0, doctor_id)]}
         }
-
-
-

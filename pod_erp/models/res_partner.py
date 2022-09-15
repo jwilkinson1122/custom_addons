@@ -10,7 +10,7 @@ class InheritedResPartner(models.Model):
 
     is_patient = fields.Boolean(string='Patient')
     is_person = fields.Boolean(string="Person")
-    is_doctor = fields.Boolean(string="Doctor")
+    is_practitioner = fields.Boolean(string="Practitioner")
     is_practice = fields.Boolean('Practice')
     dob = fields.Date()
     age = fields.Integer(compute='_cal_age', store=True, readonly=True)
