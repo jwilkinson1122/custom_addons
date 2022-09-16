@@ -43,6 +43,6 @@
     </record>
 
     <menuitem id="menu_conditions" name="Pathologies" parent="main_menu_configuration" sequence='1' />
-    <menuitem id="menu_sub_conditions" action="action_podiatry_pathology" sequence="3" parent="menu_conditions" />
+    <menuitem id="menu_sub_conditions" action="action_podiatry_pathology" parent="menu_conditions" sequence="3"/>
 
 </odoo>

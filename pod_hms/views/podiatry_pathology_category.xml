@@ -45,7 +45,7 @@
     </record>
 
 
-    <menuitem id="menu_categories_categories" action="action_podiatry_pathology_category_form" sequence="2" parent="menu_conditions" />
+    <!-- <menuitem id="menu_categories_categories" action="action_podiatry_pathology_category_form" sequence="2" parent="menu_conditions" /> -->
 
 
 
