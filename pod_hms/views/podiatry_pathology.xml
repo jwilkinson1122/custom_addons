@@ -30,19 +30,20 @@
                 <field name="name" />
                 <field name="code" />
                 <field name="category_id" />
+                <field name="info" />
             </tree>
         </field>
     </record>
 
     <record id="action_podiatry_pathology" model="ir.actions.act_window">
-        <field name="name">Conditions</field>
+        <field name="name">Pathologies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.pathology</field>
         <field name="binding_view_types">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_conditions" name="Pathologies" parent="main_menu_configuration" sequence='1' />
-    <menuitem id="menu_sub_conditions" action="action_podiatry_pathology" parent="menu_conditions" sequence="3"/>
+    <menuitem id="menu_pathologies_root" name="Pathologies" parent="pod_hms.main_menu_configuration" sequence='3' />
+    <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="3"/>
 
 </odoo>

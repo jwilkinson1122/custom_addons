@@ -36,6 +36,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="Product Units" id="menu_rxing_units" parent="main_menu_conf_rx" action="action_podiatry_rx_units" />
+    <menuitem name="Product Units" id="menu_rx_units" parent="main_menu_conf_rx" action="action_podiatry_rx_units" />
 
 </odoo>

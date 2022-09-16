@@ -20,8 +20,6 @@
 
     <act_window id="action_create_rx_result2" name="Create Rx Result" res_model="podiatry.rx.create" binding_model="podiatry.patient.rx" view_mode="form" target="new" />
 
-    <menuitem name="RX" id="main_menu_conf_rx"
-            parent = "pod_hms.main_menu_configuration" sequence='0'
-           />
+    <menuitem name="Products" id="main_menu_conf_rx" parent = "pod_hms.main_menu_configuration" sequence='0'/>
 
 </odoo>

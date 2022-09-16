@@ -76,13 +76,13 @@
         <field name="domain">[('state','=','draft'),('date','>=',time.strftime('%Y-%m-%d'))]</field>
     </record>
 
-    <menuitem name="RX" id="main_menu_rx" parent="main_menu_podiatry_management" sequence='7' />
+    <!-- <menuitem name="RX" id="main_menu_rx" parent="main_menu_podiatry_management" sequence='7' />
 
     <menuitem name="Rx Requests" id="menu_rx_requests" parent="pod_hms.main_menu_rx" sequence="1" action="action_podiatry_patient_rx_draft"/>
 
     <menuitem name="Draft Rx Requests" id="sub_menu_draft_req" parent="menu_rx_requests" action="action_podiatry_patient_rx_draft" />
 
-    <menuitem name="Today's Draft Rx Requests" id="sub_menu_today_draft_req" parent="menu_rx_requests" action="action_podiatry_patient_rx_todays_draft" />
+    <menuitem name="Today's Draft Rx Requests" id="sub_menu_today_draft_req" parent="menu_rx_requests" action="action_podiatry_patient_rx_todays_draft" /> -->
 
 
 

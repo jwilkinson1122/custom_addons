@@ -57,4 +57,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+
+    <menuitem id="menu_pathology_conditions" parent="pod_hms.menu_pathologies_root" action="action_podiatry_patient_condition" sequence='3' />
+    <!-- <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="1"/> -->
+
+
+
+
+
 </odoo>
