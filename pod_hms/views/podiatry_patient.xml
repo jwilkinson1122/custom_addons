@@ -61,7 +61,7 @@
                             </group>
                         </page>
 
-                        <page string="Conditions">
+                        <page string="Pathologies">
                             <field name="patient_condition_ids" nolabel="1" widget="one2many_list" />
                         </page>
 

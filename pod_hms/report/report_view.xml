@@ -34,7 +34,7 @@
         </record>
 
         <record id="report_print_patient_conditions_document" model="ir.actions.report">
-            <field name="name">Conditions Report New</field>
+            <field name="name">Pathologies Report New</field>
             <field name="model">podiatry.patient</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">pod_hms.patient_conditions_document</field>

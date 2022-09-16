@@ -85,6 +85,6 @@
 
     <act_window id="action_view_rx_id" name="Rx Reports" res_model="podiatry.rx" binding_model="podiatry.patient" view_mode="tree,form" domain="[('patient_id', '=', active_id)]" />
 
-    <menuitem name="Rx Results" id="menu_rx_result" parent="pod_hms.main_menu_rx" action="action_podiatry_rx_form" sequence="0" />
+    <!-- <menuitem name="Rx Results" id="menu_rx_result" parent="pod_hms.main_menu_rx" action="action_podiatry_rx_form" sequence="0" /> -->
 
 </odoo>

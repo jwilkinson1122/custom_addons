@@ -37,7 +37,7 @@
                         <field name="adverse_reaction" />
                     </page>
 
-                    <page string="Storage Conditions">
+                    <page string="Storage Pathologies">
                         <field name="storage" />
                     </page>
 

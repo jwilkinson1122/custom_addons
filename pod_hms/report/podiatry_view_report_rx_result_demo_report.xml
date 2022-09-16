@@ -53,7 +53,7 @@
 							<tr style="border-bottom: 1px solid black;">
 								<th style="border-right: 1px solid black;">Analyte</th>
 								<th style="border-right: 1px solid black;">Result</th>
-								<th style="border-right: 1px solid black;">Normal Range</th>
+								<!-- <th style="border-right: 1px solid black;">Normal Range</th> -->
 								<th style="border-right: 1px solid black;">Units</th>
 							</tr>
 						</thead>

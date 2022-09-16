@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 class podiatry_rx_units(models.Model):
 
     _name = 'podiatry.rx.units'
-    _description = 'Medical Rx Units'
+    _description = 'Medical Product Units'
 
     name = fields.Char('Name', required=True)
     code = fields.Char('Code')

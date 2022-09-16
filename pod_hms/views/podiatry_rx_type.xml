@@ -53,13 +53,13 @@
     </record>
 
     <record id="action_podiatry_rx_type" model="ir.actions.act_window">
-        <field name="name">Rx Type</field>
+        <field name="name">Product Type</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.rx_type</field>
         <field name="binding_view_types">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="Rx Type" id="menu_rx_new_type_rx" parent="main_menu_conf_rx" action="action_podiatry_rx_type" />
+    <menuitem name="Product Type" id="menu_rx_new_type_rx" parent="main_menu_conf_rx" action="action_podiatry_rx_type" />
 
 </odoo>

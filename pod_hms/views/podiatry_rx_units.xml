@@ -29,13 +29,13 @@
     </record>
 
     <record id="action_podiatry_rx_units" model="ir.actions.act_window">
-        <field name="name">Rx Units</field>
+        <field name="name">Product Units</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.rx.units</field>
         <field name="binding_view_types">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="Rx Units" id="menu_rxing_units" parent="main_menu_conf_rx" action="action_podiatry_rx_units" />
+    <menuitem name="Product Units" id="menu_rxing_units" parent="main_menu_conf_rx" action="action_podiatry_rx_units" />
 
 </odoo>

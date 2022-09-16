@@ -5,7 +5,7 @@
 
     <menuitem id="main_menu_configuration" name="Configuration" parent="main_menu_podiatry_management" sequence = '13'/>
 
-    <menuitem id="main_menu_conf_rx" name="RX" parent="main_menu_configuration" sequence='0'/>
+    <menuitem id="main_menu_conf_rx" name="Products" parent="main_menu_configuration" sequence='0'/>
 
     <menuitem id="menu_podiatry_health_service" name='Medical Product' parent="main_menu_podiatry_management" sequence="11" />
 

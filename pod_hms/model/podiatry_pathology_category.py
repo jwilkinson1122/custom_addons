@@ -12,3 +12,4 @@ class podiatry_pathology_category(models.Model):
     active = fields.Boolean(string="Active", default=True)
     parent_id = fields.Many2one(
         'podiatry.pathology.category', string="Parent Category")
+    code = fields.Char(string="Code")

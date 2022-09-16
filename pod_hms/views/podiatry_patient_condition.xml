@@ -4,7 +4,7 @@
         <field name="name">podiatry.patient.condition.form.view</field>
         <field name="model">podiatry.patient.condition</field>
         <field name="arch" type="xml">
-            <form string="Conditions">
+            <form string="Pathologies">
                 <group colspan="4" col="4" string="Main">
                     <field name="pathology_id" />
                     <field name="condition_severity" />
@@ -38,14 +38,12 @@
         <field name="name">podiatry.patient.condition.tree.view</field>
         <field name="model">podiatry.patient.condition</field>
         <field name="arch" type="xml">
-            <tree string="Conditions">
+            <tree string="Pathologies">
                 <field name="pathology_id" />
                 <field name="status" />
                 <field name="is_active" />
-                <field name="is_infectious" />
                 <field name="condition_severity" />
                 <field name="diagnosis_date" />
-                <field name="date_stop_treatment" />
                 <field name="short_comment" />
             </tree>
         </field>

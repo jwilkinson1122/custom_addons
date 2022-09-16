@@ -44,7 +44,7 @@
                             <field name="user_id" />
                             <field name="doctor_id" required="1" />
                             <field name="ship_to_patient" />
-                            <field name="insurer_id" attrs="{'invisible': [('ship_to_patient','=', False)]}" />
+                            <!-- <field name="insurer_id" attrs="{'invisible': [('ship_to_patient','=', False)]}" /> -->
                         </group>
                     </group>
                     <group string="Prescription Detail">

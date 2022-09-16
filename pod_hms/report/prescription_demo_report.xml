@@ -22,7 +22,7 @@
 							<span style="font-weight:normal;" t-field="doc.prescription_date"/>
 						</th>
 
-						<th style="border: 0px ;" class="text-left">Prescribing Practitioner : 
+						<th style="border: 0px ;" class="text-left">Prescribing Doctor : 
 							<span style="font-weight:normal;" t-field="doc.doctor_id.partner_id.name"/>
 						</th>
 

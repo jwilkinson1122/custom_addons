@@ -19,7 +19,7 @@ class podiatry_prescription_order(models.Model):
     inv_id = fields.Many2one('account.invoice', 'Invoice')
     ship_to_patient = fields.Boolean('Ship to Patient')
     doctor_id = fields.Many2one(
-        'podiatry.practitioner', 'Prescribing Practitioner')
+        'podiatry.practitioner', 'Prescribing Doctor')
     state = fields.Selection(
         [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
     # pharmacy_partner_id = fields.Many2one(

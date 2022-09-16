@@ -232,7 +232,7 @@ class podiatry_patient_evaluation(models.Model):
     derived_to_practitioner_id = fields.Many2one(
         'podiatry.practitioner', 'Derived to Practitioner')
     secondary_conditions_ids = fields.One2many(
-        'podiatry.secondary_condition', 'patient_evaluation_id', 'Secondary Conditions')
+        'podiatry.secondary_condition', 'patient_evaluation_id', 'Secondary Pathologies')
     diagnostic_hypothesis_ids = fields.One2many(
         'podiatry.diagnostic_hypothesis', 'patient_evaluation_id', 'Pathologies')
     procedure_ids = fields.One2many(
