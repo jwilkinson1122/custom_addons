@@ -3,16 +3,16 @@
 
     <menuitem id="main_menu_podiatry_management" name="Podiatry Management" web_icon="pod_hms,static/description/icon.png" />
 
+    <menuitem id="menu_podiatry_practice" name='Clinics' parent="main_menu_podiatry_management" sequence="0" />
+
+    <menuitem id="menu_podiatry_patients" name='Patients' parent="main_menu_podiatry_management" sequence="3" />
+
+    <menuitem id="menu_podiatry_health_service" name='Medical Product' parent="main_menu_podiatry_management" sequence="11" />
+
     <menuitem id="main_menu_configuration" name="Configuration" parent="main_menu_podiatry_management" sequence = '13'/>
 
     <menuitem id="main_menu_conf_rx" name="Products" parent="main_menu_configuration" sequence='0'/>
 
-    <menuitem id="menu_podiatry_health_service" name='Medical Product' parent="main_menu_podiatry_management" sequence="11" />
 
-    <menuitem id="menu_patients" name='Patients' parent="main_menu_podiatry_management" sequence="2" />
-
-    <menuitem id="menu_podiatry_paper_archive" name='Archive' parent="main_menu_podiatry_management" sequence="4" />
-
-    <menuitem id="menu_podiatry_management" name="Medical" />
 
 </odoo>

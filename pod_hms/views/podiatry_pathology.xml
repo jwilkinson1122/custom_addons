@@ -43,7 +43,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_pathologies_root" name="Pathologies" parent="pod_hms.main_menu_configuration" sequence='3' />
-    <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="3"/>
+    <!-- <menuitem id="menu_pathologies_root" name="Pathologies" parent="pod_hms.main_menu_configuration" sequence='3' />
+    <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="3"/> -->
 
 </odoo>

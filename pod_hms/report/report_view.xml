@@ -17,12 +17,12 @@
             <field name="report_file">pod_hms.report_patient_card</field>
         </record>
 
-        <record id="report_print_patient_devices_document" model="ir.actions.report">
+        <record id="report_print_patient_prescriptions_document" model="ir.actions.report">
             <field name="name">Device History New</field>
             <field name="model">podiatry.patient</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">pod_hms.patient_devices_document</field>
-            <field name="report_file">pod_hms.patient_devices_document</field>
+            <field name="report_name">pod_hms.patient_prescriptions_document</field>
+            <field name="report_file">pod_hms.patient_prescriptions_document</field>
         </record>
 
         <record id="report_print_patient_vaccinations_document" model="ir.actions.report">

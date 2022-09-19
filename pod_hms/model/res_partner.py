@@ -14,7 +14,8 @@ class res_partner(models.Model):
     is_practice = fields.Boolean(
         "Partner Practice", track_visibility='onchange')
 
-    reference = fields.Char('ID Number')
+    reference = fields.One2many(
+        'res.partner.reference', 'partner_id', copy=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

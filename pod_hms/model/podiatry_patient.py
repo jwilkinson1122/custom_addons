@@ -69,8 +69,8 @@ class podiatry_patient(models.Model):
     rx_ids = fields.One2many('podiatry.patient.rx', 'patient_id')
     lastname = fields.Char('Last Name')
     report_date = fields.Date('Date', default=datetime.today().date())
-    device_ids = fields.One2many(
-        'podiatry.patient.device1', 'podiatry_patient_device_id')
+    prescription_ids = fields.One2many(
+        'podiatry.patient.prescription1', 'podiatry_patient_prescription_id')
     deaths_2nd_week = fields.Integer('Deceased after 2nd week')
     deaths_1st_week = fields.Integer('Deceased after 1st week')
     ses_notes = fields.Text('Notes')

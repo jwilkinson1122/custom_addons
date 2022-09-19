@@ -89,6 +89,6 @@
 
 
 
-    <menuitem id="dental_prescription_child" action="action_podiatry_prescription_order" name="Prescriptions" parent="menu_patients" sequence="2" />
+    <!-- <menuitem id="podiatry_prescription_order" action="action_podiatry_prescription_order" name="Prescriptions" parent="main_menu_podiatry_management" sequence="2" /> -->
 
 </odoo>

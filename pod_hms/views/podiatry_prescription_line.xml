@@ -14,7 +14,7 @@
                 <field name="quantity" />
                 <field name="quantity_unit_id" />
                 <field name="form" />
-                <field name="device_quantity_id" />
+                <field name="prescription_quantity_id" />
                 <field name="quantity" />
                 <field name="duration" />
                 <field name="duration_period" />
@@ -48,7 +48,7 @@
                     </group>
                     <separator string="Common Quantity" />
                     <group colspan="4" col="4">
-                        <field name="device_quantity_id" />
+                        <field name="prescription_quantity_id" />
                         <field name="admin_times" />
                     </group>
                     <separator string="Specific Quantity" />

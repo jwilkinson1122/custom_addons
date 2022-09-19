@@ -62,7 +62,7 @@
                                         <field name="name"/>
                                     </li>
                                     <li>Parent Category :
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- <field name="parent_id"/> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- <field name="parent_id"/> -->
                                         <field name="parent_id"/>
 
                                     </li>
@@ -119,15 +119,7 @@
 
 
 
-    <menuitem id="menu_pathology_categories" parent="pod_hms.menu_pathologies_root" action="action_podiatry_pathology_category_form" sequence='2' />
-    <menuitem id="menu_pathology_category_structure" parent="pod_hms.menu_pathologies_root" action="action_podiatry_pathology_category_tree" sequence='2' />
-
-    <!-- <menuitem id="menu_categories_categories" action="action_podiatry_pathology_category_form" sequence="2" parent="pod_hms.main_menu_configuration" /> -->
-
-
-
-
-
-
+    <!-- <menuitem id="menu_pathology_categories" parent="main_menu_configuration" action="action_podiatry_pathology_category_form" sequence='10' />
+    <menuitem id="menu_pathology_category_structure" parent="main_menu_configuration" action="action_podiatry_pathology_category_tree" sequence='12' /> -->
 
 </odoo>

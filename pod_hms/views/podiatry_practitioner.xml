@@ -60,16 +60,10 @@
     </record>
 
 
-    <!-- <menuitem id="menu_patients" name='Patients' parent="main_menu_podiatry_management" sequence="0" /> -->
-
-
-    <menuitem id="menu_practitioner" name='Practitioners' parent="main_menu_podiatry_management" action="action_podiatry_practitioner" sequence="0" />
 
 
 
+    <menuitem id="menu_practitioners" name='Practitioners' parent="menu_clinics_root" action="action_podiatry_practitioner" sequence="2" />
 
-    <!-- <menuitem id="menu_practitioner" name='Practitioners' parent="main_menu_configuration" sequence="7" />
-
-    <menuitem id="menu_podiatry_practitioner" parent="menu_practitioner" action="action_podiatry_practitioner" sequence="6" /> -->
 
 </odoo>

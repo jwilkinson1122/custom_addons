@@ -115,12 +115,12 @@
 										<span t-field="test.route"/>
 									</td>
 								</tr>
-								<tr t-if="test.device_quantity_id">
+								<tr t-if="test.prescription_quantity_id">
 									<td>
 										<strong>Common Quantity</strong>
 									</td>
 									<td>
-										<span t-field="test.device_quantity_id"/>
+										<span t-field="test.prescription_quantity_id"/>
 									</td>
 								</tr>
 								<tr t-if="test.frequency">

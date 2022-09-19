@@ -5,10 +5,18 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <!-- <field name="function" position="after">
-                <field name="relationship" />
-                <field name="relative_partner_id" />
-            </field> -->
+            <page name="internal_notes" position="after">
+                <page name="references" string="References">
+                    <field name="reference" context="{'default_partner_id': id}">
+                        <tree editable="bottom">
+                            <field name="reference_type_id"/>
+                            <field name="value"/>
+                            <field name="partner_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+
             <notebook>
                 <page string="Medical">
                     <group colspan="6" col="6">
@@ -16,30 +24,13 @@
                         <field name="is_practitioner" />
                         <field name="is_practice" />
                         <field name="is_person" />
-                        <!-- <field name="is_insurance_company" />
-                        <field name="is_pharmacy" /> -->
                     </group>
-                    <!-- <field name="company_insurance_ids" colspan="4" widget="one2many_list" />
-                    <field name="patient_insurance_ids" colspan="4" widget="one2many_list" /> -->
                 </page>
             </notebook>
         </field>
     </record>
 
-    <!-- <record model="ir.actions.act_window" id="act_res_partner">
-        <field name="name">Insurances Company</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner</field>
-        <field name="binding_view_types">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('is_insurance_company','=',1)]</field>
-        <field name="context">{'default_is_insurance_company': 1,'search_default_is_insurance_company': 1}
-        </field>
-    </record> -->
+    <menuitem id="menu_podiatry_clinics" name="Podiatry Clinics" parent="main_menu_configuration" />
 
-    <menuitem id="menu_health_centers1" name="Health Centers" parent="main_menu_configuration" />
-
-    <!-- <menuitem id="menu_insurance" name="Insurances" parent="main_menu_configuration" sequence='9' />
-    <menuitem id="menu_insurance_company" action="act_res_partner" sequence="0" parent="menu_insurance" /> -->
 
 </odoo>

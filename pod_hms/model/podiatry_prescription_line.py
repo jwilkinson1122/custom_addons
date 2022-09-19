@@ -21,8 +21,8 @@ class podiatry_prescription_line(models.Model):
     quantity_unit_id = fields.Many2one(
         'podiatry.quantity.unit', 'Quantity Unit')
     qty = fields.Integer('x')
-    device_quantity_id = fields.Many2one(
-        'podiatry.device.quantity', 'Frequency')
+    prescription_quantity_id = fields.Many2one(
+        'podiatry.prescription.quantity', 'Frequency')
     admin_times = fields.Char('Admin Hours', size=128)
     frequency = fields.Integer('Frequency')
     frequency_unit = fields.Selection([('seconds', 'Seconds'), ('minutes', 'Minutes'), (
