@@ -63,7 +63,7 @@
 
 
 
-    <menuitem id="menu_practitioners" name='Practitioners' parent="menu_clinics_root" action="action_podiatry_practitioner" sequence="2" />
+    <menuitem id="menu_practitioners" name='Practitioners' parent="menu_podiatry_accounts" action="action_podiatry_practitioner" sequence="2" />
 
 
 </odoo>

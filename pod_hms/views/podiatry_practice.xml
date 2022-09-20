@@ -75,9 +75,9 @@
 
     <!-- <menuitem id="menu_practitioners" name='Practitioners' parent="pod_hms.main_menu_podiatry_management" action="action_podiatry_practitioner" sequence="2" />
  -->
-    <menuitem id="menu_clinics_root" name='Administration' parent="menu_podiatry_practice" />
+    <menuitem id="menu_clinics" name='Clinics' parent="menu_podiatry_accounts" action="action_podiatry_practice" />
 
-    <menuitem id="menu_clinics" name='Clinics' parent="menu_clinics_root" action="action_podiatry_practice" sequence="0" />
+    <!-- <menuitem id="menu_clinics" name='Clinics' parent="menu_clinics_root" action="action_podiatry_practice" sequence="0" /> -->
 
 
 </odoo>

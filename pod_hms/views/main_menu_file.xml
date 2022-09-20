@@ -3,7 +3,7 @@
 
     <menuitem id="main_menu_podiatry_management" name="Podiatry Management" web_icon="pod_hms,static/description/icon.png" />
 
-    <menuitem id="menu_podiatry_practice" name='Clinics' parent="main_menu_podiatry_management" sequence="0" />
+    <menuitem id="menu_podiatry_accounts" name='Accounts' parent="main_menu_podiatry_management" sequence="0" />
 
     <menuitem id="menu_podiatry_patients" name='Patients' parent="main_menu_podiatry_management" sequence="3" />
 

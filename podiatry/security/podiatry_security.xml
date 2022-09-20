@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="module_category_podiatry" model="ir.module.category">
+            <field name="name">Podiatry Management</field>
+            <field name="sequence">22</field>
+        </record>
+
+        <record id="group_podiatry_administration" model="res.groups">
+            <field name="name">Podiatry Administrator</field>
+            <field name="category_id" ref="module_category_podiatry"/>
+            <field name="users" eval="[(4, ref('base.user_root')),(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="group_podiatry_hcp" model="res.groups">
+            <field name="name">Podiatry HCP</field>
+            <field name="category_id" ref="module_category_podiatry"/>
+        </record>
+
+        <record id="group_podiatry_patient" model="res.groups">
+            <field name="name">Podiatry Patient</field>
+            <field name="category_id" ref="module_category_podiatry"/>
+        </record>
+
+        <record id="group_podiatry_doctor" model="res.groups">
+            <field name="name">Patient Doctor</field>
+            <field name="category_id" ref="module_category_podiatry"/>
+        </record>
+
+        <record id="group_is_admission" model="res.groups">
+            <field name="name">In Admission</field>
+            <field name="category_id" ref="module_category_podiatry"/>
+        </record>
+
+        <!-- Rule For Creating Personal Podiatry Record As A HCP, Patient & Doctor-->
+
+        <record id="rule_personal_podiatry_record" model="ir.rule">
+            <field name="name">Rule Personal Podiatry Record</field>
+            <field name="model_id" ref="model_podiatry_podiatry"/>
+            <field name="domain_force">['|','|',('company_id.child_ids', 'child_of', [user.company_id.id]),('company_id', 'child_of', [user.company_id.id]),('company_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_hcp')),(4, ref('group_podiatry_patient')),(4, ref('group_podiatry_doctor'))]"/>
+        </record>
+
+        <!-- Rule For Patient Profile Record As A Patient -->
+
+        <record id="rule_patient_profile_record_as_patient" model="ir.rule">
+            <field name="name">Rule Patient Profile Record As A Patient</field>
+            <field name="model_id" ref="model_patient_patient"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_patient'))]"/>
+        </record>
+
+        <!-- Rule For Patient Profile Record As An Administrator -->
+
+        <record id="rule_patient_profile_record_as_admin" model="ir.rule">
+            <field name="name">Rule Patient Profile Record As An Administrator</field>
+            <field name="model_id" ref="model_patient_patient"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> ['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_administration'))]"/>
+        </record>
+
+        <!-- Rule For Patient Profile Record As A HCP -->
+
+        <record id="rule_patient_profile_record_as_hcp" model="ir.rule">
+            <field name="name">Rule Patient Profile Record As A HCP</field>
+            <field name="model_id" ref="model_patient_patient"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_hcp'))]"/>
+        </record>
+
+        <!-- Rule For Patient Profile Record As A Doctor -->
+
+        <!--         <record id="rule_patient_profile_record_as_doctor" model="ir.rule"> -->
+        <!--             <field name="name">Rule Patient Profile Record As A Doctor</field> -->
+        <!--             <field name="model_id" ref="model_patient_patient"/> -->
+        <!--             <field name="global" eval="True"/> -->
+        <!--             <field name="domain_force"> [('id','in', user.partner_id.patient_ids.ids)]</field> -->
+        <!--             <field name="groups" eval="[(4, ref('group_podiatry_doctor'))]"/> -->
+        <!--         </record> -->
+
+        <record id="rule_patient_profile_record_as_doctor" model="ir.rule">
+            <field name="name">Rule Patient Profile Record As A Doctor</field>
+            <field name="model_id" ref="model_patient_patient"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('doctor_id.partner_id','=',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_doctor'))]"/>
+        </record>
+
+        <!-- Rule For Podiatry Standard Record As An Administrator -->
+
+        <record id="rule_podiatry_standard_record_as_admin" model="ir.rule">
+            <field name="name">Rule Podiatry Standard Record As An Administrator</field>
+            <field name="model_id" ref="model_podiatry_standard"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_administration'))]"/>
+        </record>
+        <!-- Record Rule hcp can see standards related to podiatry -->
+        <record id="rule_podiatry_standard_hcp" model="ir.rule">
+            <field name="name">HCP Podiatry Standard Record Rule</field>
+            <field name="model_id" ref="model_podiatry_standard"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('podiatry_id.company_id','=',user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_hcp'))]"/>
+        </record>
+
+        <!-- Rule For News Update Record As A Patient & HCP -->
+        <record id="rule_patient_news_update_record" model="ir.rule">
+            <field name="name">Rule News Update Record</field>
+            <field name="model_id" ref="model_patient_news"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('user_ids.id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient')),(4, ref('podiatry.group_podiatry_hcp'))]"/>
+        </record>
+
+        <!-- Record Rule doctors can see reminder of own child -->
+        <record id="doctors_reminder_record_rule" model="ir.rule">
+            <field name="name">Doctors Reminder Record Rule</field>
+            <field name="model_id" ref="model_patient_reminder"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('pt_id.doctor_id.partner_id','=',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_doctor'))]"/>
+        </record>
+
+        <!-- Record Rule patient can see reminder of their own  -->
+        <record id="patient_reminder_record_rule" model="ir.rule">
+            <field name="name">Patient Remainder Record Rule</field>
+            <field name="model_id" ref="model_patient_reminder"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('pt_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient'))]"/>
+        </record>
+
+        <!--  Rule For Podiatry HCP -->
+        <!--        <record id="rule_podiatry_hcp_own" model="ir.rule"> -->
+        <!--            <field name="name">Rule Podiatry HCP Self</field> -->
+        <!--            <field name="model_id" ref="hr.model_hr_employee"/> -->
+        <!--            <field name="global" eval="True"/> -->
+        <!--            <field name="domain_force"> [('user_id','=',user.id)]</field> -->
+        <!--            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_hcp'))]"/> -->
+        <!--        </record> -->
+        <record id="rule_personal_podiatry_hcp" model="ir.rule">
+            <field name="name">Rule Personal hcp Record</field>
+            <field name="model_id" ref="model_podiatry_hcp"/>
+            <field name="domain_force">[('employee_id.user_id.id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_hcp'))]"/>
+        </record>
+
+        <!--  Rule For Doctor Profile Record As A Doctor -->
+        <record id="rule_podiatry_doctors" model="ir.rule">
+            <field name="name">Rule Doctor Profile Record As A Doctor</field>
+            <field name="model_id" ref="model_podiatry_doctor"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('partner_id','=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_doctor'))]"/>
+        </record>
+        <!-- Record Rule patient can see own doctor -->
+        <record id="rule_pat_doctor" model="ir.rule">
+            <field name="name">Record rule patient can see own doctor</field>
+            <field name="model_id" ref="model_podiatry_doctor"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('patient_id.user_id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient'))]"/>
+        </record>
+
+        <!-- Rule For Patient Profile Record in Adminssion -->
+
+        <record id="rule_patient_profile_record_as_patient_in_admisssion" model="ir.rule">
+            <field name="name">Rule Patient Profile Record As A Patient for in Adminssion </field>
+            <field name="model_id" ref="model_patient_patient"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_is_admission'))]"/>
+        </record>
+    </data>
+</odoo>
