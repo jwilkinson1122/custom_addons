@@ -115,35 +115,40 @@
         <field name="arch" type="xml">
             <form string="Practice Information">
                 <sheet>
-                    <separator string="Practice Configuration" />
-                    <group col="4" colspan="4">
-                        <field name="name" string="Name" placeholder="Practice Name" />
-                        <field name="is_location" invisible="0" />
-                        <!-- <field name="code" placeholder="LOC" attrs="{'invisible': [('is_location','=',True)]}" /> -->
-                        <field name="code" placeholder="Code" />
-                    </group>
+                    <separator string="Practice Information" style="font-size:18pt"/>
+
+
                     <group>
-                        <label for="street" string="Address" />
-                        <div class="o_address_format">
-                            <field name="street" class="o_address_street" placeholder="Street..." />
-                            <field name="street2" class="o_address_street" placeholder="Street2..." />
-                            <field name="city" class="o_address_city" placeholder="City" required="1" />
-                            <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                            <field name="zip" class="o_address_zip" placeholder="ZIP" />
-                            <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
-                        </div>
+                        <group>
+                            <label for="street" string="Address" />
+                            <div class="o_address_format">
+                                <field name="name" string="Name" placeholder="Practice Name" />
+                                <field name="street" class="o_address_street" placeholder="Street..." />
+                                <field name="street2" class="o_address_street" placeholder="Street2..." />
+                                <field name="city" class="o_address_city" placeholder="City" required="1" />
+                                <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                <field name="zip" class="o_address_zip" placeholder="ZIP" />
+                                <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="o_address_format">
+                                <field name="currency_id" placeholder="Select Or Create Currency" />
+                                <field name="code" placeholder="Code" />
+                                <field name="is_location" widget="boolean_toggle"/>
+                            </div>
+                        </group>
                     </group>
-                    <group col="4" colspan="4">
-                        <field name="currency_id" placeholder="Select Or Create Currency" />
-                        <!-- <field name="lang" placeholder="Language"/> -->
-                        <!-- <field name="patient_age" required="0"/> -->
-                    </group>
+
                     <notebook colspan="4">
                         <page string="Related Clinics">
                             <!-- <field name="standards" nolabel="1" colspan="4" readonly="1"/> -->
                         </page>
-                        <page string="Standards">
+                        <!-- <page string="Standards">
                             <field name="standards" nolabel="1" colspan="4" readonly="1"/>
+                        </page> -->
+                        <page string="Contacts">
+
                         </page>
                     </notebook>
                 </sheet>

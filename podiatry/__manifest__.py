@@ -3,8 +3,8 @@
 {
     'name': 'Podiatry',
     'version': '15.0.1.0.0',
-    'author': 'Serpent Consulting Services Pvt. Ltd.',
-    'website': 'http://www.serpentcs.com',
+    'author': 'NWPL',
+    'website': 'http://www.nwpodiatric.com',
     'category': 'Podiatry Management',
     'license': "AGPL-3",
     'complexity': 'easy',

@@ -20,7 +20,7 @@
                         <newline />
                         <separator string="Patient Information" style="font-size:18pt"/>
 
-                        <!-- <separator string="Patient Information" style="font-size:16pt;font-weight:bold"/> -->
+                        <!-- <separator string="Patient Information" style="font-size:12pt;font-weight:bold"/> -->
 
                         <!-- <b>
                             <field name="reg_code" readonly="1" />
@@ -33,72 +33,90 @@
                                     <field name="name" placeholder="First Name" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                                     <field name="middle" placeholder="Middle Name" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                                     <field name="last" placeholder="Last Name" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <!-- <field name="gender" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Gender" required="1"/> -->
+                                    <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="age"/>
+                                    <field name="gender" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Gender" required="1"/>
+
+
 
                                 </group>
                                 <group>
                                     <field name="pid" invisible="0" readonly="1"/>
                                     <field name="patient_code" readonly="1" />
-                                    <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
+                                    <field name="podiatry_id" placeholder="Practice" widget="selection" required="1" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
+                                    <!-- <field name="mother_tongue" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="First Language"/> -->
                                 </group>
                             </group>
 
-                        </div>
-                    </div>
-                    <newline/>
-                    <separator string="Address Information"/>
-                    <group>
-                        <group>
-                            <label for="street" string="Address" />
-                            <div class="o_address_format">
-                                <field name="street" class="o_address_street" placeholder="Street..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="street2" class="o_address_street" placeholder="Street2..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="phone" placeholder="Phone Number" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="mobile" placeholder="Mobile Number" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="email" placeholder="Email Address" String="Email" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="hcp_user_grp" invisible="1"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="General" name="general">
                             <group>
-                                <group>
+                                <!-- <group>
                                     <field name="gender" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Gender" required="1"/>
-                                    <!-- <field name="cast_id" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="Religion/Caste"/> -->
                                     <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                                     <field name="age"/>
+                                </group> -->
+                                <!-- <group>
+                                    <field name="pid" invisible="0" readonly="1"/>
+                                    <field name="patient_code" readonly="1" />
+                                    <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
                                 </group>
                                 <group>
                                     <field name="mother_tongue" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="First Language"/>
                                     <field name="created_date" widget="date" placeholder="Created Date" attrs="{'readonly':[('state','in',['prior','delete'])]}" readonly="1"/>
-                                    <!-- <field name="maritual_status" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Maritial Status"/> -->
+                                </group> -->
+                            </group>
+
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <page string="General" name="general">
+                            <separator string="Address Information" style="font-size:12pt"/>
+                            <group>
+                                <group>
+                                    <field name="street" class="o_address_street" placeholder="Street..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="street2" class="o_address_street" placeholder="Street2..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+
+                                    <!-- <label for="street" string="Address" />
+                                    <div class="o_address_format">
+                                        <field name="street" class="o_address_street" placeholder="Street..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                        <field name="street2" class="o_address_street" placeholder="Street2..." attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                        <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                        <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    </div> -->
                                 </group>
-                                <newline />
-                                <separator string="Emergency Contact Details" colspan="4" />
-                                <newline />
-                                <group colspan="4" col="4">
-                                    <field name="contact_phone" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Phone Number"/>
-                                    <field name="contact_mobile" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Mobile Number"/>
+                                <group>
+                                    <field name="phone" placeholder="Phone Number" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="mobile" placeholder="Mobile Number" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="email" placeholder="Email Address" String="Email" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="website" widget="url" placeholder="e.g. www.nwpodiatric.com" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="hcp_user_grp" invisible="1"/>
                                 </group>
-                                <newline />
                             </group>
                             <newline/>
-                            <separator string="Termination Reason" attrs="{'invisible':[('state','in',['draft','done','prior'])]}"/>
+                            <separator string="Delete Reason" attrs="{'invisible':[('state','in',['draft','done','prior'])]}"/>
                             <group>
                                 <field name="delete_reason" attrs="{'invisible':[('state','in',['draft','done','prior'])]}" readonly="1"/>
                             </group>
                         </page>
                         <page string="Doctors">
                             <field name="doctor_id" attrs="{'readonly':[('state','in',['prior','delete'])]}" context="{'form_view_ref':'podiatry.view_doctor_form','default_doctor_podiatry':1}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+
+                            <!-- <group>
+                                <separator string="Doctor Information" style="font-size:12pt"/>
+                                <field name="designation" placeholder="Doctor Designation" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                <field name="doctor_phone" placeholder="Doctor's Contact No" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                            </group>
+                            <newline />
+                            <field name="doctor_id" attrs="{'readonly':[('state','in',['prior','delete'])]}" context="{'form_view_ref':'podiatry.view_doctor_form','default_doctor_podiatry':1}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/> -->
                         </page>
-                        <page string="References">
+                        <!-- <page string="References">
                             <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['prior','delete'])]}">
                                 <tree string="Reference" editable="top">
                                     <field name="name" />
@@ -119,8 +137,8 @@
                                     </group>
                                 </form>
                             </field>
-                        </page>
-                        <page string="Previous Practice">
+                        </page> -->
+                        <!-- <page string="Previous Practice">
                             <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['prior','delete'])]}">
                                 <tree string="Previous Practice Details">
                                     <field name="name" />
@@ -189,50 +207,85 @@
                                     <field name="phone" />
                                 </tree>
                             </field>
-                        </page>
+                        </page> -->
                         <page string="Medical">
+                            <!-- Physical Notes -->
+                            <separator string="Physical Information" style="font-size:12pt"/>
                             <group>
-                                <group string="Doctor Information">
-                                    <field name="designation" placeholder="Doctor Designation" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                    <field name="doctor_phone" placeholder="Doctor's Contact No" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                </group>
-                                <group string="Physical Information">
-                                    <field name="blood_group" placeholder="e.g.B+,Ab+" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                <group>
                                     <field name="height" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Height"/>
                                     <field name="weight" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Weight"/>
                                 </group>
+                                <group>
+                                    <field name="shoe_size" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder=""/>
+                                    <field name="shoe_width" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder=""/>
+                                </group>
                             </group>
-                            <separator string="Does the applicant have any Disabilities?" colspan="4" />
-                            <group col="6" colspan="4">
-                                <field name="eye" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="ear" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="nose_throat" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="respiratory" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="cardiovascular" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="neurological" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="muskoskeletal" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="dermatological" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <field name="blood_pressure" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                            <!-- Patient Diagnosis -->
+                            <separator string="Patient Diagnosis" style="font-size:12pt"/>
+                            <group>
+                                <group>
+                                    <field name="patient_diagnosis" nolabel="1" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Diagnosis"/>
+                                </group>
                             </group>
-                            <separator string="Notes" colspan="4" />
-                            <group col="6" colspan="4">
-                                <field name="comment" placeholder="Notes About Medical.." nolabel="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                            <!-- Pathologies -->
+                            <separator string="Pathologies / Conditions" style="font-size:12pt"/>
+                            <group>
+                                <group col="6" colspan="6">
+                                    <field name="hallux_limitus" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="sesamoiditis" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="plantar_fasciitis" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="diabetic" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="bone_spurs" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="tendonitis" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="neuroma" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="hammertoes" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="arthritis" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                </group>
+                            </group>
+                            <!-- Patient Notes -->
+                            <separator string="Notes" style="font-size:12pt"/>
+                            <group>
+                                <group col="6" colspan="4">
+                                    <field name="comment" placeholder="Patient Notes" nolabel="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                </group>
+                            </group>
+
+                        </page>
+                        <page name="podiatry_images" string="Files / Images">
+                            <group name="photo_group_tlOo2">
+                                <group name="photo_group_tlOo2_left">
+                                    <field widget="image" options='{"size": [0, 150]}' name="left_photo" string="Left Image"/>
+                                </group>
+                                <group name="photo_group_tlOo2_right">
+                                    <field widget="image" options='{"size": [0, 150]}' name="right_photo" string="Right Image"/>
+                                </group>
+                            </group>
+                            <group name="obj_group_DPydw">
+                                <group name="obj_group_DPydw_left">
+                                    <field filename="left_obj_file_name" name="left_obj_model" string="Left Scan"/>
+                                    <field invisible="1" name="left_obj_file_name"/>
+                                </group>
+                                <group name="obj_group_DPydw_right">
+                                    <field filename="right_obj_file_name" name="right_obj_model" string="Right Scan"/>
+                                    <field invisible="1" name="right_obj_file_name"/>
+                                </group>
                             </group>
                         </page>
-                        <page string="Certificates">
+                        <!-- <page string="Files / Images">
                             <field name="certificate_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['prior','delete'])]}">
-                                <form string="Certificate">
+                                <form string="Files / Images">
                                     <group col="4">
-                                        <field name="description" placeholder="Description About Certificate" />
+                                        <field name="description" placeholder="Description About Files / Images" />
                                         <field name="certi" />
                                     </group>
                                 </form>
-                                <tree string="Certifaicate" editable="top">
+                                <tree string="Files / Images" editable="top">
                                     <field name="description" required="1" placeholder="Enter Description"/>
-                                    <field name="certi" required="1" placeholder="Upload Certi"/>
+                                    <field name="certi" required="1" placeholder="Upload File"/>
                                 </tree>
                             </field>
-                        </page>
+                        </page> -->
                         <page string="Remarks">
                             <field name="description" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['prior','delete'])]}">
                                 <form string="Extra Details">
@@ -474,7 +527,7 @@
                             <field name="phone" placeholder="Phone Number" attrs="{'readonly':[('state','=','prior')]}"/>
                             <field name="mobile" placeholder="Mobile Number" attrs="{'readonly':[('state','=','prior')]}"/>
                             <field name="email" placeholder="Email Address" String="Email" attrs="{'readonly':[('state','=','prior')]}"/>
-                            <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" attrs="{'readonly':[('state','=','prior')]}"/>
+                            <field name="website" widget="url" placeholder="e.g. www.nwpodiatric.com" attrs="{'readonly':[('state','=','prior')]}"/>
                         </group>
                     </group>
                     <notebook colspan="4">

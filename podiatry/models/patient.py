@@ -103,9 +103,6 @@ class PatientPatient(models.Model):
                           help='Attach patient photo')
     year = fields.Many2one('academic.year', 'Year', readonly=True, help='Select academic year',
                            tracking=True)
-    # year = fields.Many2one('academic.year', 'Year', readonly=True,
-    #                        default=check_current_year, help='Select academic year',
-    #                        tracking=True)
     cast_id = fields.Many2one('patient.cast', 'Religion/Caste',
                               help='Select patient cast')
     relation = fields.Many2one('patient.relation.master', 'Relation',
@@ -144,10 +141,22 @@ class PatientPatient(models.Model):
                          help='Enter doctor name for patient medical details')
     designation = fields.Char('Designation', help='Enter doctor designation')
     doctor_phone = fields.Char('Contact No.', help='Enter doctor phone')
-    # blood_group = fields.Char('Blood Group', help='Enter patient blood group')
     height = fields.Float('Height', help="Height in inches")
     weight = fields.Float('Weight', help="Weight in lbs")
-    shoe_size
+    patient_diagnosis = fields.Float('Diagnosis', help="Patient Diagnosis")
+    shoe_size = fields.Float('Shoe Size', help="Shoe Size")
+    # shoe_width = fields.Float('Shoe Size', help="Shoe Width")
+    shoe_width = fields.Selection(
+        [('narrow', 'Narrow'), ('wide', 'Wide'), ('xwide', 'Extra Wide')], string='Shoe Width')
+    shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
+        'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+    other_shoe_type = fields.Char('Other Shoe Type')
+    right_photo = fields.Image("Right Photo")
+    left_photo = fields.Image("Left Photo")
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char(string="Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char(string="Right Obj File Name")
 
     diabetic = fields.Boolean(
         'Diabetic', help='Diabetic for medical info')
