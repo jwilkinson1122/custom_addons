@@ -249,8 +249,8 @@ class PodiatryStandard(models.Model):
         for rec in self:
             rec.remaining_seats = rec.capacity - rec.total_patients
 
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry', required=True,
-                                  help='Podiatry of the following standard')
+    podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice', required=True,
+                                  help='Practice of the following standard')
     standard_id = fields.Many2one('standard.standard', 'Standard',
                                   required=True, help='Standard')
     division_id = fields.Many2one('standard.division', 'Division',
@@ -330,7 +330,7 @@ class PodiatryPodiatry(models.Model):
     ''' Defining Podiatry Information'''
 
     _name = 'podiatry.podiatry'
-    _description = 'Podiatry Information'
+    _description = 'Practice Information'
     _rec_name = "com_name"
 
     is_location = fields.Boolean(default=False)
@@ -340,7 +340,7 @@ class PodiatryPodiatry(models.Model):
         for record in self:
             if self.env["podiatry.podiatry"].search(
                     [('code', '=', record.code), ('id', '!=', record.id)]):
-                raise ValidationError("Podiatry Code must be Unique")
+                raise ValidationError("Practice Code must be Unique")
 
     @api.model
     def _lang_get(self):
@@ -354,10 +354,10 @@ class PodiatryPodiatry(models.Model):
     com_name = fields.Char('Practice Name', related='company_id.name',
                            store=True, help='practice name')
     code = fields.Char('Code', readonly=True,
-                       help='Podiatry code')  # Field: identifier
+                       help='Practice code')  # Field: identifier
     # code = fields.Char('Code', required=True, help='Podiatry code')
     standards = fields.One2many('podiatry.standard', 'podiatry_id',
-                                'Standards', help='Podiatry standard')
+                                'Standards', help='Practice standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
@@ -484,7 +484,7 @@ class MotherTongue(models.Model):
     _name = 'mother.toungue'
     _description = "Mother Toungue"
 
-    name = fields.Char("Mother Tongue", help='Language name')
+    name = fields.Char("First Language", help='Language name')
 
 
 class PatientAward(models.Model):
@@ -635,7 +635,7 @@ class PatientReference(models.Model):
 class PatientPreviousPodiatry(models.Model):
     ''' Defining a patient previous podiatry information '''
     _name = "patient.previous.podiatry"
-    _description = "Patient Previous Podiatry"
+    _description = "Patient Previous Practice"
 
     previous_podiatry_id = fields.Many2one('patient.patient', 'Patient',
                                            help='Related patient')
@@ -668,7 +668,7 @@ class PatientPreviousPodiatry(models.Model):
 class AcademicSubject(models.Model):
     ''' Defining a patient previous podiatry information '''
     _name = "academic.subject"
-    _description = "Patient Previous Podiatry"
+    _description = "Patient Previous Practice"
 
     add_sub_id = fields.Many2one('patient.previous.podiatry', 'Add Subjects',
                                  invisible=True,

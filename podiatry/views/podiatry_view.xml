@@ -108,16 +108,16 @@
             </kanban>
         </field>
     </record>
-    <!-- Form View Of Podiatry Information -->
+    <!-- Form View Of Practice Information -->
     <record id="view_podiatry_podiatry_form" model="ir.ui.view">
         <field name="name">podiatry.podiatry.form</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <form string="Podiatry Information">
+            <form string="Practice Information">
                 <sheet>
-                    <separator string="Podiatry Configuration" />
+                    <separator string="Practice Configuration" />
                     <group col="4" colspan="4">
-                        <field name="name" string="Name" placeholder="Clinic Name" />
+                        <field name="name" string="Name" placeholder="Practice Name" />
                         <field name="is_location" invisible="0" />
                         <!-- <field name="code" placeholder="LOC" attrs="{'invisible': [('is_location','=',True)]}" /> -->
                         <field name="code" placeholder="Code" />
@@ -150,12 +150,12 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Podiatry Information -->
+    <!-- Tree View Of Practice Information -->
     <record id="view_podiatry_podiatry_tree" model="ir.ui.view">
         <field name="name">podiatry.podiatry.tree</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <tree string="Podiatry Information">
+            <tree string="Practice Information">
                 <field name="name" string="Name" />
                 <field name="code" />
             </tree>
@@ -175,7 +175,7 @@
             </form>
         </field>
     </record>
-    <!-- Form View Of Podiatry Standard Information -->
+    <!-- Form View Of Practice Standard Information -->
     <record id="view_podiatry_standard_form" model="ir.ui.view">
         <field name="name">podiatry.standard.form</field>
         <field name="model">podiatry.standard</field>
@@ -187,7 +187,7 @@
                         <field name="standard_id" widget="selection" placeholder="Standard"/>
                         <field name="division_id" widget="selection" placeholder="Division"/>
                         <field name="medium_id" widget="selection" placeholder="Medium"/>
-                        <field name="podiatry_id" widget="selection" placeholder="Podiatry"/>
+                        <field name="podiatry_id" widget="selection" placeholder="Practice"/>
                         <field name="user_id" placeholder="Select Faculty Name" widget="selection"/>
                         <field name="capacity"/>
                         <field name="total_patients"/>
@@ -255,7 +255,7 @@
             </tree>
         </field>
     </record>
-    <!-- Kanban View Of Podiatry Standard Information -->
+    <!-- Kanban View Of Practice Standard Information -->
     <record id="podiatry_standard_kanban_view" model="ir.ui.view">
         <field name="name">podiatry.standard.kanban</field>
         <field name="model">podiatry.standard</field>
@@ -277,7 +277,7 @@
                                         <tr>
                                             <td class="oe_kanban_title1" align="left" valign="middle">
                                                 <div>
-                                                    Podiatry :-
+                                                    Practice :-
                                                     <field name="podiatry_id" />
                                                 </div>
                                             </td>
@@ -341,7 +341,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
@@ -578,26 +578,26 @@
         <field name="name">mother tongue</field>
         <field name="model">mother.toungue</field>
         <field name="arch" type="xml">
-            <form string="Mother Tongue">
+            <form string="First Language">
                 <group>
                     <field name="name" required="1"/>
                 </group>
             </form>
         </field>
     </record>
-    <!-- Tree View of Mother Tongue -->
+    <!-- Tree View of First Language -->
     <record id="mother_tongue_tree_view" model="ir.ui.view">
-        <field name="name">Mother Tongue</field>
+        <field name="name">First Language</field>
         <field name="model">mother.toungue</field>
         <field name="arch" type="xml">
-            <tree string="Mother Tongue" editable="top">
+            <tree string="First Language" editable="top">
                 <field name="name" required="1"/>
             </tree>
         </field>
     </record>
     <!-- Action of mother Toungue -->
     <record id="action_mother_toungue" model="ir.actions.act_window">
-        <field name="name">Mother Tongue</field>
+        <field name="name">First Language</field>
         <field name="res_model">mother.toungue</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -976,7 +976,7 @@
     <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_podiatry_config_form1" action="action_document_type_form" />
     <menuitem id="submenu_sub_grade" name="Grade" parent="menu_podiatry_config_form1" action="action_grade_master_form" />
     <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_podiatry_config_form1" action="view_patient_news" />
-    <menuitem id="mother_tongue_menu" name="Mother Tongue" parent="menu_podiatry_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
+    <menuitem id="mother_tongue_menu" name="First Language" parent="menu_podiatry_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
 
     <!-- <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patients_doctors" action="action_podiatry_doctor_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/> -->
 

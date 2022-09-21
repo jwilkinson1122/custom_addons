@@ -6,7 +6,7 @@
         <field name="name">patient.patient.form.1</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <form string="Patient Information">
+            <form string="Patient Details">
                 <!-- <form string="Patient Information" create="false" delete="false"> -->
                 <header>
                     <button class="oe_highlight oe_stat_button" name="%(podiatry.action_delete_wizard)d" string="Delete" type="action" icon="fa-ban" states="done" groups="podiatry.group_podiatry_administration" />
@@ -18,29 +18,35 @@
                     <div class="oe_button_box" name="buttons"></div>
                     <div class="oe_inline">
                         <newline />
-                        <separator string="Personal Information" />
-                        <b>
+                        <separator string="Patient Information" style="font-size:18pt"/>
+
+                        <!-- <separator string="Patient Information" style="font-size:16pt;font-weight:bold"/> -->
+
+                        <!-- <b>
                             <field name="reg_code" readonly="1" />
                         </b>
-                        <br />
-                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['prior','delete'])]}" class="oe_avatar oe_right" style="max-width:100px;max-height:117px;"/>
-                        <div class="oe_title">
+                        <br /> -->
+                        <!-- <field name="photo" widget="image" attrs="{'readonly':[('state','in',['prior','delete'])]}" class="oe_avatar oe_right" style="max-width:100px;max-height:117px;"/> -->
+                        <div class="o_address_format">
                             <group>
-                                <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <br />
-                                <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <br />
-                                <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                                <br />
-                                <field name="pid" invisible="1"/>
+                                <group>
+                                    <field name="name" placeholder="First Name" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="middle" placeholder="Middle Name" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+                                    <field name="last" placeholder="Last Name" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
+
+                                </group>
+                                <group>
+                                    <field name="pid" invisible="0" readonly="1"/>
+                                    <field name="patient_code" readonly="1" />
+                                    <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
+                                </group>
                             </group>
+
                         </div>
                     </div>
-                    <group>
+                    <!-- <group>
                         <group string="Patient Information">
                             <field name="patient_code" readonly="1" />
-                            <field name="roll_no" help="Roll number of Patient" readonly="1"/>
-                            <field name="year" placeholder="Year" widget="selection" help="Academic year of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
                             <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
@@ -48,7 +54,12 @@
                             <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                             <field name="medium_id" placeholder="Medium" readonly="1" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                         </group>
-                    </group>
+                    </group> -->
+
+                    <newline/>
+                    <separator string="Address Information"/>
+
+
                     <group>
                         <group>
                             <label for="street" string="Address" />
@@ -123,17 +134,17 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Previous Podiatry">
+                        <page string="Previous Practice">
                             <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['prior','delete'])]}">
-                                <tree string="Previous Podiatry Details">
+                                <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
                                     <field name="admission_date" />
                                     <field name="exit_date" />
                                     <field name="course_id" widget="selection" />
                                 </tree>
-                                <form string="Previous Podiatry Details">
-                                    <separator string="Previous Podiatry Details" />
+                                <form string="Previous Practice Details">
+                                    <separator string="Previous Practice Details" />
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
@@ -306,14 +317,14 @@
                     <field name="patient_name" invisible="1" />
                     <field name="year" />
                     <field name="gender" />
-                    <field name="podiatry_id" placeholder="Podiatry"/>
+                    <field name="podiatry_id" placeholder="Practice"/>
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" help="By Class" context="{'group_by':'patient_name'}" />
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
                 <separator/>
@@ -331,7 +342,8 @@
         <field name="name">Patient KANBAN</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="standard_id" nocreate="1" create="false">
+            <kanban default_group_by="podiatry_id">
+                <!-- <kanban default_group_by="standard_id" nocreate="1" create="false"> -->
                 <field name="color"/>
                 <field name="id"/>
                 <field name="name"/>
@@ -448,7 +460,7 @@
                         </div>
                     </div>
                     <group>
-                        <group string="Podiatry Information">
+                        <group string="Practice Information">
                             <field name="podiatry_id" placeholder="Name" required="1" attrs="{'readonly':[('state','=','prior')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             <field name="year" widget="selection" placeholder="Year" readonly="1"/>
                             <field name="company_id" invisible="1"/>
@@ -490,7 +502,7 @@
                                             <field name="age" />
                                         </group>
                                         <group>
-                                            <field name="mother_tongue" widget="selection" placeholder="Mother Tongue" attrs="{'readonly':[('state','=','prior')]}"/>
+                                            <field name="mother_tongue" widget="selection" placeholder="First Language" attrs="{'readonly':[('state','=','prior')]}"/>
                                             <field name="admission_date" placeholder="Admission Date" attrs="{'readonly':[('state','=','prior')]}" readonly="1"/>
                                             <field name="maritual_status" placeholder="Select Maritual Status" attrs="{'readonly':[('state','=','prior')]}"/>
                                         </group>
@@ -530,17 +542,17 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Previous Podiatry">
+                        <page string="Previous Practice">
                             <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','prior')]}">
-                                <tree string="Previous Podiatry Details">
+                                <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
                                     <field name="admission_date" />
                                     <field name="exit_date" />
                                     <field name="course_id" widget="selection" />
                                 </tree>
-                                <form string="Previous Podiatry Details">
-                                    <separator string="Previous Podiatry Details" />
+                                <form string="Previous Practice Details">
+                                    <separator string="Previous Practice Details" />
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
@@ -637,7 +649,7 @@
                     <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" domain="[]" help="By Class" context="{'group_by':'patient_name'}" />
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                 </group>
             </search>
         </field>

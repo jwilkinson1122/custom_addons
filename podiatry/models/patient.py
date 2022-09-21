@@ -94,7 +94,7 @@ class PatientPatient(models.Model):
                       default=lambda self: _('New'), help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Patient Registration Code')
-    patient_code = fields.Char('Patient Code', help='Enter patient code')
+    patient_code = fields.Char('PID', help='Enter patient code')
     contact_phone = fields.Char('Phone no.', help='Enter patient phone no.')
     contact_mobile = fields.Char('Mobile no', help='Enter patient mobile no.')
     roll_no = fields.Integer('Roll No.', readonly=True,
@@ -124,7 +124,7 @@ class PatientPatient(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]},
                                 help='Enter patient date of birth')
-    mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue",
+    mother_tongue = fields.Many2one('mother.toungue', "First Language",
                                     help='Select patient mother tongue')
     age = fields.Integer(compute='_compute_patient_age', string='Age',
                          readonly=True, help='Enter patient age')
@@ -136,7 +136,7 @@ class PatientPatient(models.Model):
                                     'References', states={'done': [('readonly', True)]},
                                     help='Enter patient references')
     previous_podiatry_ids = fields.One2many('patient.previous.podiatry',
-                                            'previous_podiatry_id', 'Previous Podiatry Detail',
+                                            'previous_podiatry_id', 'Previous Practice Detail',
                                             states={
                                                 'done': [('readonly', True)]},
                                             help='Enter patient podiatry details')
