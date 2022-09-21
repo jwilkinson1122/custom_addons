@@ -482,7 +482,7 @@ class MotherTongue(models.Model):
     """Defining mother tongue."""
 
     _name = 'mother.toungue'
-    _description = "Mother Toungue"
+    _description = "First Language"
 
     name = fields.Char("First Language", help='Language name')
 
@@ -643,8 +643,8 @@ class PatientPreviousPodiatry(models.Model):
                        help='Patient previous podiatry name')
     registration_no = fields.Char('Registration No.', required=True,
                                   help='Patient registration number')
-    admission_date = fields.Date('Admission Date',
-                                 help='Patient admission date')
+    created_date = fields.Date('Created Date',
+                               help='Patient admission date')
     exit_date = fields.Date('Exit Date',
                             help='Patient previous podiatry exit date')
     course_id = fields.Many2one('standard.standard', 'Course', required=True,
@@ -652,15 +652,15 @@ class PatientPreviousPodiatry(models.Model):
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
                               help='Patient gender')
 
-    @api.constrains('admission_date', 'exit_date')
+    @api.constrains('created_date', 'exit_date')
     def check_date(self):
         new_dt = fields.Date.today()
-        if (self.admission_date and self.admission_date >= new_dt) or (
+        if (self.created_date and self.created_date >= new_dt) or (
                 self.exit_date and self.exit_date >= new_dt):
             raise ValidationError(_(
                 "Your admission date and exit date should be less than current date!"))
-        if (self.admission_date and self.exit_date) and (
-                self.admission_date > self.exit_date):
+        if (self.created_date and self.exit_date) and (
+                self.created_date > self.exit_date):
             raise ValidationError(_(
                 "Admission date should be less than exit date in previous podiatry!"))
 

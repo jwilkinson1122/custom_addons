@@ -111,8 +111,8 @@ class PatientPatient(models.Model):
     relation = fields.Many2one('patient.relation.master', 'Relation',
                                help='Select patient relation')
 
-    admission_date = fields.Date('Admission Date', default=fields.Date.today(),
-                                 help='Enter patient admission date')
+    created_date = fields.Date('Created Date', default=fields.Date.today(),
+                               help='Enter patient admission date')
     middle = fields.Char('Middle Name', required=True,
                          states={'done': [('readonly', True)]},
                          help='Enter patient middle name')
@@ -144,25 +144,30 @@ class PatientPatient(models.Model):
                          help='Enter doctor name for patient medical details')
     designation = fields.Char('Designation', help='Enter doctor designation')
     doctor_phone = fields.Char('Contact No.', help='Enter doctor phone')
-    blood_group = fields.Char('Blood Group', help='Enter patient blood group')
-    height = fields.Float('Height', help="Hieght in C.M")
-    weight = fields.Float('Weight', help="Weight in K.G")
-    eye = fields.Boolean('Eyes', help='Eye for medical info')
-    ear = fields.Boolean('Ears', help='Eye for medical info')
-    nose_throat = fields.Boolean('Nose & Throat',
-                                 help='Nose & Throat for medical info')
-    respiratory = fields.Boolean('Respiratory',
-                                 help='Respiratory for medical info')
-    cardiovascular = fields.Boolean('Cardiovascular',
-                                    help='Cardiovascular for medical info')
-    neurological = fields.Boolean('Neurological',
-                                  help='Neurological for medical info')
-    muskoskeletal = fields.Boolean('Musculoskeletal',
-                                   help='Musculoskeletal for medical info')
-    dermatological = fields.Boolean('Dermatological',
-                                    help='Dermatological for medical info')
-    blood_pressure = fields.Boolean('Blood Pressure',
-                                    help='Blood pressure for medical info')
+    # blood_group = fields.Char('Blood Group', help='Enter patient blood group')
+    height = fields.Float('Height', help="Height in inches")
+    weight = fields.Float('Weight', help="Weight in lbs")
+    shoe_size
+
+    diabetic = fields.Boolean(
+        'Diabetic', help='Diabetic for medical info')
+    sesamoiditis = fields.Boolean(
+        'Sesamoiditis', help='Sesamoiditis for medical info')
+    hallux_limitus = fields.Boolean(
+        'Hallux Limitus', help='Hallux Limitus for medical info')
+    plantar_fasciitis = fields.Boolean(
+        'Plantar Fasciits', help='Plantar Fasciits for medical info')
+    bone_spurs = fields.Boolean(
+        'Bone Spurs', help='Bone Spurs for medical info')
+    tendonitis = fields.Boolean(
+        'Tendonitis', help='Tendonitis for medical info')
+    arthritis = fields.Boolean(
+        'Arthritis', help='Arthritis for medical info')
+    hammertoes = fields.Boolean(
+        'Hammertoes', help='Hammertoes for medical info')
+    neuroma = fields.Boolean(
+        'Neuroma', help='Neuroma for medical info')
+
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
                          help='Remark can be entered if any')
     podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice',
@@ -327,7 +332,7 @@ class PatientPatient(models.Model):
                             str(rec.year.code) + str('/') +
                             str(pt_code))
             rec.write({'state': 'done',
-                       'admission_date': fields.Date.today(),
+                       'created_date': fields.Date.today(),
                        'patient_code': patient_code,
                        'reg_code': registation_code})
             template = self.env['mail.template'].sudo().search([

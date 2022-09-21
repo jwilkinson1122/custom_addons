@@ -92,7 +92,7 @@
                                                     <span t-field="patient.date_of_birth" />
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td style="font-family: 'Helvetica';padding-left:20px;">
                                                     <strong>Blood Group</strong>
                                                 </td>
@@ -102,7 +102,7 @@
                                                 <td>
                                                     <span t-field="patient.blood_group" />
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                         </table>
                                     </td>
                                 </tr>

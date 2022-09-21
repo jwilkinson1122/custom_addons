@@ -44,22 +44,8 @@
 
                         </div>
                     </div>
-                    <!-- <group>
-                        <group string="Patient Information">
-                            <field name="patient_code" readonly="1" />
-                            <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
-                        </group>
-                        <group string="Standard Information">
-                            <field name="standard_id" placeholder="Standard" readonly="1" domain="[('podiatry_id','=',podiatry_id)]" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                            <field name="medium_id" placeholder="Medium" readonly="1" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
-                        </group>
-                    </group> -->
-
                     <newline/>
                     <separator string="Address Information"/>
-
-
                     <group>
                         <group>
                             <label for="street" string="Address" />
@@ -84,15 +70,15 @@
                         <page string="General" name="general">
                             <group>
                                 <group>
-                                    <field name="cast_id" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="Religion/Caste"/>
-                                    <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                                     <field name="gender" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Gender" required="1"/>
+                                    <!-- <field name="cast_id" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="Religion/Caste"/> -->
+                                    <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
                                     <field name="age"/>
                                 </group>
                                 <group>
                                     <field name="mother_tongue" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="First Language"/>
-                                    <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['prior','delete'])]}" readonly="1"/>
-                                    <field name="maritual_status" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Maritial Status"/>
+                                    <field name="created_date" widget="date" placeholder="Created Date" attrs="{'readonly':[('state','in',['prior','delete'])]}" readonly="1"/>
+                                    <!-- <field name="maritual_status" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Maritial Status"/> -->
                                 </group>
                                 <newline />
                                 <separator string="Emergency Contact Details" colspan="4" />
@@ -139,7 +125,7 @@
                                 <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
-                                    <field name="admission_date" />
+                                    <field name="created_date" />
                                     <field name="exit_date" />
                                     <field name="course_id" widget="selection" />
                                 </tree>
@@ -148,7 +134,7 @@
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
-                                        <field name="admission_date" />
+                                        <field name="created_date" />
                                         <field name="exit_date" />
                                         <field name="course_id" widget="selection"/>
                                         <newline />
@@ -299,7 +285,7 @@
                 <field name="name" />
                 <field name="patient_name" invisible="1" />
                 <field name="year" widget="selection" />
-                <field name="admission_date" />
+                <field name="created_date" />
                 <field name="gender" />
                 <field name="state" />
                 <field name="podiatry_id" />
@@ -400,10 +386,10 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Admission Date : </td>
+                                                        <td>Created Date : </td>
                                                         <td style="padding-left:10px;">
                                                             <b>
-                                                                <field name="admission_date" />
+                                                                <field name="created_date" />
                                                             </b>
                                                         </td>
                                                     </tr>
@@ -503,7 +489,7 @@
                                         </group>
                                         <group>
                                             <field name="mother_tongue" widget="selection" placeholder="First Language" attrs="{'readonly':[('state','=','prior')]}"/>
-                                            <field name="admission_date" placeholder="Admission Date" attrs="{'readonly':[('state','=','prior')]}" readonly="1"/>
+                                            <field name="created_date" placeholder="Created Date" attrs="{'readonly':[('state','=','prior')]}" readonly="1"/>
                                             <field name="maritual_status" placeholder="Select Maritual Status" attrs="{'readonly':[('state','=','prior')]}"/>
                                         </group>
                                         <newline />
@@ -520,7 +506,7 @@
                         <page string="Doctors">
                             <field name="doctor_id" attrs="{'readonly':[('state','=','prior')]}" context="{'form_view_ref':'podiatry.view_doctor_form','default_doctor_podiatry':1}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                         </page>
-                        <page string="References">
+                        <!-- <page string="References">
                             <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','prior')]}">
                                 <tree string="Reference" editable="top">
                                     <field name="name" placeholder="Firstname"/>
@@ -541,13 +527,13 @@
                                     </group>
                                 </form>
                             </field>
-                        </page>
-                        <page string="Previous Practice">
+                        </page> -->
+                        <!-- <page string="Previous Practice">
                             <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','prior')]}">
                                 <tree string="Previous Practice Details">
                                     <field name="name" />
                                     <field name="registration_no" />
-                                    <field name="admission_date" />
+                                    <field name="created_date" />
                                     <field name="exit_date" />
                                     <field name="course_id" widget="selection" />
                                 </tree>
@@ -556,7 +542,7 @@
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
-                                        <field name="admission_date" placeholder="Admission Date"/>
+                                        <field name="created_date" placeholder="Created Date"/>
                                         <field name="exit_date" placeholder="Exit Date"/>
                                         <field name="course_id" placeholder="Course" widget="selection"/>
                                         <newline />
@@ -574,8 +560,8 @@
                                     </group>
                                 </form>
                             </field>
-                        </page>
-                        <page string="Family Details">
+                        </page> -->
+                        <!-- <page string="Family Details">
                             <field name="family_con_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','prior')]}">
                                 <tree string="Family  Contact Details">
                                     <field name="relative_name"/>
@@ -598,7 +584,7 @@
                                     </group>
                                 </form>
                             </field>
-                        </page>
+                        </page> -->
                         <page string="Remarks">
                             <form string="Remarks">
                                 <field name="remark" placeholder="Remark" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','prior')]}"/>
@@ -625,7 +611,7 @@
                 <field name="year" widget="selection" />
                 <field name="standard_id" widget="selection" />
                 <field name="podiatry_id" />
-                <field name="admission_date" />
+                <field name="created_date" />
                 <field name="gender" />
                 <field name="state" />
             </tree>
