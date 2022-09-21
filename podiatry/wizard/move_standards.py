@@ -9,7 +9,7 @@ class MoveStandards(models.TransientModel):
     _name = 'move.standards'
     _description = "Move Standards"
 
-    academic_year_id = fields.Many2one('academic.year', 'Academic Year',
+    academic_year_id = fields.Many2one('academic.year', 'Year',
                                        required=True, help="""
 The Acedemic year from which you need to move the patient to next Year.""")
 

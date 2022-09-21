@@ -9,3 +9,4 @@ from . import patient
 from . import hcp
 from . import doctor
 from . import res_users
+from . import podiatry_abstract

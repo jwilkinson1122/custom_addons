@@ -35,7 +35,7 @@ class PodiatryHCP(models.Model):
                                    help='Enter patient doctor')
     patient_id = fields.Many2many('patient.patient',
                                   'patients_hcps_doctor_rel', 'hcp_id', 'patient_id',
-                                  'Children', help='Select patient')
+                                  'Patients', help='Select patient')
     phone_numbers = fields.Char("Phone Number", help='Patient PH no')
 
     @api.onchange('standard_id')
@@ -119,8 +119,8 @@ class PodiatryHCP(models.Model):
 
     @api.onchange('department_id')
     def onchange_department_id(self):
-        """Onchange method for deepartment."""
-        self.doctor_id = (self.department_id and
+        """Onchange method for department."""
+        self.parent_id = (self.department_id and
                           self.department_id.manager_id and
                           self.department_id.manager_id.id) or False
 

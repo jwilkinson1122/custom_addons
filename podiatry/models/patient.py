@@ -37,8 +37,8 @@ class PatientPatient(models.Model):
         if name and hcp_group and doctor_grp:
             doctor_login_pat_rec = self.env['podiatry.doctor'].search([
                 ('partner_id', '=', login_user_rec.partner_id.id)])
-            childrens = doctor_login_pat_rec.patient_id
-            args.append(('id', 'in', childrens.ids))
+            patients = doctor_login_pat_rec.patient_id
+            args.append(('id', 'in', patients.ids))
         return super(PatientPatient, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
             access_rights_uid=access_rights_uid)
@@ -72,14 +72,14 @@ class PatientPatient(models.Model):
             if hcp and rec.state == 'done':
                 rec.hcp_user_grp = True
 
-    @api.model
-    def check_current_year(self):
-        '''Method to get default value of logged in Patient'''
-        res = self.env['academic.year'].search([('current', '=', True)])
-        if not res:
-            raise ValidationError(_(
-                "There is no current Academic Year defined! Please contact Administator!"))
-        return res.id
+    # @api.model
+    # def check_current_year(self):
+    #     '''Method to get default value of logged in Patient'''
+    #     res = self.env['academic.year'].search([('current', '=', True)])
+    #     if not res:
+    #         raise ValidationError(_(
+    #             "There is no current Year defined! Please contact Administator!"))
+    #     return res.id
 
     family_con_ids = fields.One2many('patient.family.contact',
                                      'family_contact_id', 'Family Contact Detail',
@@ -101,9 +101,11 @@ class PatientPatient(models.Model):
                              help='Enter patient roll no.')
     photo = fields.Binary('Photo', default=_default_image,
                           help='Attach patient photo')
-    year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-                           default=check_current_year, help='Select academic year',
+    year = fields.Many2one('academic.year', 'Year', readonly=True, help='Select academic year',
                            tracking=True)
+    # year = fields.Many2one('academic.year', 'Year', readonly=True,
+    #                        default=check_current_year, help='Select academic year',
+    #                        tracking=True)
     cast_id = fields.Many2one('patient.cast', 'Religion/Caste',
                               help='Select patient cast')
     relation = fields.Many2one('patient.relation.master', 'Relation',
@@ -163,8 +165,8 @@ class PatientPatient(models.Model):
                                     help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
                          help='Remark can be entered if any')
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry',
-                                  states={'done': [('readonly', True)]}, help='Select podiatry', tracking=True)
+    podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice',
+                                  states={'done': [('readonly', True)]}, help='Select practice', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
                               ('delete', 'Delete'), ('cancel', 'Cancel'),
                               ('prior', 'Prior')], 'Status', readonly=True, default="draft",
@@ -185,7 +187,7 @@ class PatientPatient(models.Model):
     pt_name = fields.Char('First Name', related='user_id.name',
                           readonly=True, help='Enter patient first name', tracking=True)
     Acadamic_year = fields.Char('Year', related='year.name',
-                                help='Academic Year', readonly=True, tracking=True)
+                                help='Year', readonly=True, tracking=True)
     division_id = fields.Many2one('standard.division', 'Division',
                                   help='Select patient standard division', tracking=True)
     medium_id = fields.Many2one('standard.medium', 'Medium',
@@ -256,10 +258,10 @@ class PatientPatient(models.Model):
             start = self.date_of_birth
             age_calc = ((fields.Date.today() - start).days / 365)
             # Check if age less than required age
-            if age_calc < self.podiatry_id.required_age:
+            if age_calc < self.podiatry_id.patient_age:
                 raise ValidationError(_(
                     "Age of patient should be greater than %s years!" % (
-                        self.podiatry_id.required_age)))
+                        self.podiatry_id.patient_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''

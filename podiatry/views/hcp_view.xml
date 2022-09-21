@@ -30,7 +30,8 @@
             <field name="name">HCP KANBAN</field>
             <field name="model">podiatry.hcp</field>
             <field name="arch" type="xml">
-                <kanban nocreate="1" create="false">
+                <kanban>
+                    <!-- <kanban nocreate="1" create="false"> -->
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -152,7 +153,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Children" attrs="{'invisible': [('is_doctor','=', False)]}">
+                            <page string="Patients" attrs="{'invisible': [('is_doctor','=', False)]}">
                                 <field name="patient_id" domain="[('state', '=', 'done')]"/>
                             </page>
                             <page string="HR Settings" groups="hr.group_hr_user" invisible="1">
@@ -181,7 +182,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="hcp_profile_menu" name="HCPs" action="action_podiatry_hcp_form" parent="menu_patients_doctors" sequence="32" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp"/>
+        <menuitem id="hcp_profile_menu" name="Personel" action="action_podiatry_hcp_form" parent="menu_patients_doctors" sequence="32" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp"/>
 
     </data>
 </odoo>

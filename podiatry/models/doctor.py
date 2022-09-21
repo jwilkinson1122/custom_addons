@@ -4,10 +4,10 @@ from odoo import api, fields, models
 
 
 class DoctorRelation(models.Model):
-    '''Defining a Doctor relation with child.'''
+    '''Defining a Doctor relation with patient.'''
 
     _name = "doctor.relation"
-    _description = "Doctor-child relation information"
+    _description = "Doctor-patient relation information"
 
     name = fields.Char("Relation name", required=True,
                        help='Doctor relation with patient')
@@ -21,10 +21,10 @@ class PodiatryDoctor(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'User ID', ondelete="cascade",
                                  delegate=True, required=True, help='Partner which is user over here')
-    relation_id = fields.Many2one('doctor.relation', 'Relation with Child',
-                                  help='Doctor relation with child')
+    relation_id = fields.Many2one('doctor.relation', 'Relation with Patient',
+                                  help='Doctor relation with patient')
     patient_id = fields.Many2many('patient.patient', 'patients_doctors_rel',
-                                  'patients_doctor_id', 'patient_id', 'Children',
+                                  'patients_doctor_id', 'patient_id', 'Patients',
                                   help='Patient of the following doctor')
     standard_id = fields.Many2many('podiatry.standard',
                                    'podiatry_standard_doctor_rel', 'class_doctor_id', 'class_id',

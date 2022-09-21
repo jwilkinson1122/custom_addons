@@ -118,7 +118,7 @@
             <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient')),(4, ref('podiatry.group_podiatry_hcp'))]"/>
         </record>
 
-        <!-- Record Rule doctors can see reminder of own child -->
+        <!-- Record Rule doctors can see reminder of own patient -->
         <record id="doctors_reminder_record_rule" model="ir.rule">
             <field name="name">Doctors Reminder Record Rule</field>
             <field name="model_id" ref="model_patient_reminder"/>

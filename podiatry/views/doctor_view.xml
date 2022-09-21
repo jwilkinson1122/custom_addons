@@ -19,7 +19,8 @@
             <field name="name">Doctor KANBAN</field>
             <field name="model">podiatry.doctor</field>
             <field name="arch" type="xml">
-                <kanban nocreate="1" create="false">
+                <kanban>
+                    <!-- <kanban nocreate="1" create="false"> -->
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -116,7 +117,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="children" string="Children">
+                            <page name="patient" string="Patients">
                                 <field name="patient_id" colspan="4" domain="[('state','=','done')]"/>
                             </page>
                             <page name="internal_notes" string="Internal Notes">
@@ -134,9 +135,17 @@
             <field name="name">Doctor Profile</field>
             <field name="res_model">podiatry.doctor</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to add a new doctor.
+                </p>
+                <p>
+             This structure is used to create and manage all Doctor Profiles.
+                </p>
+            </field>
         </record>
 
-        <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patients_doctors" action="action_podiatry_doctor_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
+        <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patients_doctors" action="action_podiatry_doctor_form" sequence="31" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
 
     </data>
 </odoo>

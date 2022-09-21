@@ -26,7 +26,7 @@ class AcademicYear(models.Model):
     '''Defines an academic year.'''
 
     _name = "academic.year"
-    _description = "Academic Year"
+    _description = "Year"
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
@@ -96,13 +96,13 @@ class AcademicYear(models.Model):
                 raise ValidationError(_(
                     "Error! You cannot define overlapping academic years."))
 
-    @api.constrains('current')
-    def check_current_year(self):
-        '''Constraint on active current year'''
-        current_year_rec = self.search_count([('current', '=', True)])
-        if current_year_rec >= 2:
-            raise ValidationError(_(
-                "Error! You cannot set two current year active!"))
+    # @api.constrains('current')
+    # def check_current_year(self):
+    #     '''Constraint on active current year'''
+    #     current_year_rec = self.search_count([('current', '=', True)])
+    #     if current_year_rec >= 2:
+    #         raise ValidationError(_(
+    #             "Error! You cannot set two current year active!"))
 
 
 class AcademicMonth(models.Model):
@@ -118,7 +118,7 @@ class AcademicMonth(models.Model):
                              help='Start date')
     date_stop = fields.Date('End of Period', required=True,
                             help='End Date')
-    year_id = fields.Many2one('academic.year', 'Academic Year', required=True,
+    year_id = fields.Many2one('academic.year', 'Year', required=True,
                               help="Related academic year ")
     description = fields.Text('Description', help='Description')
 
@@ -333,6 +333,8 @@ class PodiatryPodiatry(models.Model):
     _description = 'Podiatry Information'
     _rec_name = "com_name"
 
+    is_location = fields.Boolean(default=False)
+
     @api.constrains('code')
     def _check_code(self):
         for record in self:
@@ -349,9 +351,11 @@ class PodiatryPodiatry(models.Model):
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
                                  required=True, delegate=True,
                                  help='Company_id of the podiatry')
-    com_name = fields.Char('Podiatry Name', related='company_id.name',
-                           store=True, help='Podiatry name')
-    code = fields.Char('Code', required=True, help='Podiatry code')
+    com_name = fields.Char('Practice Name', related='company_id.name',
+                           store=True, help='practice name')
+    code = fields.Char('Code', readonly=True,
+                       help='Podiatry code')  # Field: identifier
+    # code = fields.Char('Code', required=True, help='Podiatry code')
     standards = fields.One2many('podiatry.standard', 'podiatry_id',
                                 'Standards', help='Podiatry standard')
     lang = fields.Selection(_lang_get, 'Language',
@@ -359,9 +363,9 @@ class PodiatryPodiatry(models.Model):
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
-    required_age = fields.Integer("Patient Admission Age Required", default=6,
-                                  help='''Minimum required age for 
-                                  patient admission''')
+    patient_age = fields.Integer("Patient Age",
+                                 help='''Age for 
+                                  patient''')
 
     @api.model
     def create(self, vals):
@@ -370,6 +374,28 @@ class PodiatryPodiatry(models.Model):
         main_company = self.env.ref('base.main_company')
         res.company_id.parent_id = main_company.id
         return res
+
+    @api.model
+    def _get_podiatry_identifiers(self):
+        res = super(PodiatryPodiatry, self)._get_podiatry_identifiers()
+        res.append(
+            (
+                "is_location",
+                "code",
+                self._get_location_identifier,
+            )
+        )
+        return res
+
+    @api.model
+    def _get_location_identifier(self, vals):
+        return self.env["ir.sequence"].next_by_code("podiatry.podiatry") or "LOC"
+
+    @api.model
+    def default_podiatry_fields(self):
+        result = super(PodiatryPodiatry, self).default_podiatry_fields()
+        result.append("is_location")
+        return result
 
 
 class SubjectSubject(models.Model):
@@ -562,7 +588,7 @@ class PatientHistory(models.Model):
 
     patient_id = fields.Many2one('patient.patient', 'Patient',
                                  help='Related Patient')
-    academic_year_id = fields.Many2one('academic.year', 'Academic Year',
+    academic_year_id = fields.Many2one('academic.year', 'Year',
                                        help='Academice Year')
     standard_id = fields.Many2one('podiatry.standard', 'Standard',
                                   help='Standard of the following patient')

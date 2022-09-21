@@ -135,9 +135,9 @@
             <field name="name">Room 15</field>
             <field name="number">15</field>
         </record>
-        <!--Academic Year  Information-->
+        <!--Year  Information-->
         <record id="demo_academic_year_1" model="academic.year">
-            <field eval="'Academic Year ' + str((DateTime.today() - relativedelta(years=1)).strftime('%Y'))" name="name"/>
+            <field eval="'Year ' + str((DateTime.today() - relativedelta(years=1)).strftime('%Y'))" name="name"/>
             <field eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y')" name="code"/>
             <field name="sequence">1</field>
             <field name="grade_id" ref="demo_patient_grade_1"/>
@@ -145,7 +145,7 @@
             <field eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
         <record id="demo_academic_year_2" model="academic.year">
-            <field eval="'Academic Year ' + str((DateTime.today()).strftime('%Y'))" name="name"/>
+            <field eval="'Year ' + str((DateTime.today()).strftime('%Y'))" name="name"/>
             <field eval="(DateTime.today()).strftime('%Y')" name="code"/>
             <field name="sequence">2</field>
             <field name="current" eval="True" />
@@ -154,7 +154,7 @@
             <field eval="(DateTime.today()).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
         <record id="demo_academic_year_3" model="academic.year">
-            <field eval="'Academic Year ' + str((DateTime.today() + relativedelta(years=1)).strftime('%Y'))" name="name"/>
+            <field eval="'Year ' + str((DateTime.today() + relativedelta(years=1)).strftime('%Y'))" name="name"/>
             <field eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y')" name="code"/>
             <field name="sequence">3</field>
             <field name="grade_id" ref="demo_patient_grade_1"/>

@@ -6,7 +6,8 @@
         <field name="name">patient.patient.form.1</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <form string="Patient Information" create="false" delete="false">
+            <form string="Patient Information">
+                <!-- <form string="Patient Information" create="false" delete="false"> -->
                 <header>
                     <button class="oe_highlight oe_stat_button" name="%(podiatry.action_delete_wizard)d" string="Delete" type="action" icon="fa-ban" states="done" groups="podiatry.group_podiatry_administration" />
                     <button class="oe_stat_button" name="set_prior" string="Prior" type="object" icon="fa-archive" states="done" groups="podiatry.group_podiatry_administration" />
@@ -22,7 +23,7 @@
                             <field name="reg_code" readonly="1" />
                         </b>
                         <br />
-                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['prior','delete'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
+                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['prior','delete'])]}" class="oe_avatar oe_right" style="max-width:100px;max-height:117px;"/>
                         <div class="oe_title">
                             <group>
                                 <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
@@ -40,7 +41,7 @@
                             <field name="patient_code" readonly="1" />
                             <field name="roll_no" help="Roll number of Patient" readonly="1"/>
                             <field name="year" placeholder="Year" widget="selection" help="Academic year of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
-                            <field name="podiatry_id" placeholder="Podiatry" widget="selection" help="Podiatry of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
+                            <field name="podiatry_id" placeholder="Practice" widget="selection" help="Practice of Patient" attrs="{'readonly':['|',('state','in',['prior','delete']),('hcp_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
                             <field name="standard_id" placeholder="Standard" readonly="1" domain="[('podiatry_id','=',podiatry_id)]" widget="selection" attrs="{'readonly':[('state','in',['prior','delete'])]}"/>
@@ -78,7 +79,7 @@
                                     <field name="age"/>
                                 </group>
                                 <group>
-                                    <field name="mother_tongue" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="Mother Tounge"/>
+                                    <field name="mother_tongue" attrs="{'readonly':[('state','in',['prior','delete'])]}" widget="selection" placeholder="First Language"/>
                                     <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['prior','delete'])]}" readonly="1"/>
                                     <field name="maritual_status" attrs="{'readonly':[('state','in',['prior','delete'])]}" placeholder="Maritial Status"/>
                                 </group>
@@ -134,7 +135,7 @@
                                 <form string="Previous Podiatry Details">
                                     <separator string="Previous Podiatry Details" />
                                     <group col="4" colspan="4">
-                                        <field name="name" placeholder="Podiatry Name" />
+                                        <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
                                         <field name="admission_date" />
                                         <field name="exit_date" />
@@ -281,7 +282,8 @@
         <field name="name">patient.patient.tree.1</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <tree string="Patient Information" create="false" delete="false">
+            <tree string="Patient Information">
+                <!-- <tree string="Patient Information" create="false" delete="false"> -->
                 <field name="pid" />
                 <field name="name" />
                 <field name="patient_name" invisible="1" />
@@ -447,8 +449,8 @@
                     </div>
                     <group>
                         <group string="Podiatry Information">
-                            <field name="podiatry_id" placeholder="Podiatry Name" required="1" attrs="{'readonly':[('state','=','prior')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
-                            <field name="year" widget="selection" placeholder="Academic Year" readonly="1"/>
+                            <field name="podiatry_id" placeholder="Name" required="1" attrs="{'readonly':[('state','=','prior')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            <field name="year" widget="selection" placeholder="Year" readonly="1"/>
                             <field name="company_id" invisible="1"/>
                         </group>
                         <group string="Class Information">
@@ -540,7 +542,7 @@
                                 <form string="Previous Podiatry Details">
                                     <separator string="Previous Podiatry Details" />
                                     <group col="4" colspan="4">
-                                        <field name="name" placeholder="Podiatry Name" />
+                                        <field name="name" placeholder="Name" />
                                         <field name="registration_no" placeholder="Registration No" />
                                         <field name="admission_date" placeholder="Admission Date"/>
                                         <field name="exit_date" placeholder="Exit Date"/>
@@ -643,7 +645,7 @@
 
     <!-- Action Of Form, Tree & Kanban View Of Admission Register Information -->
     <record id="action_patient_patient_form_2" model="ir.actions.act_window">
-        <field name="name">Admission Register</field>
+        <field name="name">Register</field>
         <field name="res_model">patient.patient</field>
         <field name="domain">['|',('state','=','draft'),('state','=','cancel')]</field>
         <field name="view_id" ref="view_patient_patient_form_2" />
