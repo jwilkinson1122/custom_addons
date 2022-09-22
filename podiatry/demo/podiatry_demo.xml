@@ -415,45 +415,45 @@
             <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"/>
             <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"/>
         </record>
-        <!--Standard Information-->
-        <record id="demo_standard_standard_1" model="standard.standard">
+        <!--Practice Information-->
+        <record id="demo_practice_practice_1" model="practice.practice">
             <field name="name">10th</field>
             <field name="code">FRT</field>
             <field name="sequence">1</field>
         </record>
-        <record id="demo_standard_standard_2" model="standard.standard">
+        <record id="demo_practice_practice_2" model="practice.practice">
             <field name="name">11th</field>
             <field name="code">SCN</field>
             <field name="sequence">2</field>
         </record>
-        <record id="demo_standard_standard_3" model="standard.standard">
+        <record id="demo_practice_practice_3" model="practice.practice">
             <field name="name">12th</field>
             <field name="code">THR</field>
             <field name="sequence">3</field>
         </record>
-        <!--Standard Medium Information-->
-        <record id="demo_standard_medium_1" model="standard.medium">
+        <!--Practice Medium Information-->
+        <record id="demo_practice_medium_1" model="practice.medium">
             <field name="name">English</field>
             <field name="code">ENG</field>
             <field name="sequence">1</field>
         </record>
-        <record id="demo_standard_medium_2" model="standard.medium">
+        <record id="demo_practice_medium_2" model="practice.medium">
             <field name="name">French</field>
             <field name="code">FRENCH</field>
             <field name="sequence">2</field>
         </record>
-        <record id="demo_standard_medium_3" model="standard.medium">
+        <record id="demo_practice_medium_3" model="practice.medium">
             <field name="name">Urdu</field>
             <field name="code">URDU</field>
             <field name="sequence">3</field>
         </record>
-        <!--Standard Division Information-->
-        <record id="demo_standard_division_1" model="standard.division">
+        <!--Practice Division Information-->
+        <record id="demo_practice_division_1" model="practice.division">
             <field name="name">A</field>
             <field name="code">A</field>
             <field name="sequence">1</field>
         </record>
-        <record id="demo_standard_division_2" model="standard.division">
+        <record id="demo_practice_division_2" model="practice.division">
             <field name="name">B</field>
             <field name="code">B</field>
             <field name="sequence">2</field>
@@ -465,7 +465,7 @@
             <field name="code">MAT</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6,0,[ref('demo_podiatry_hcp_1'),ref('demo_podiatry_hcp_3')])]"/> -->
         </record>
         <record id="demo_subject_subject_2" model="subject.subject">
@@ -473,7 +473,7 @@
             <field name="code">SCN</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [ref('demo_podiatry_hcp_1'),ref('demo_podiatry_hcp_3')])]"/> -->
         </record>
         <record id="demo_subject_subject_3" model="subject.subject">
@@ -481,7 +481,7 @@
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [ref('demo_podiatry_hcp_1'),ref('demo_podiatry_hcp_2')])]"/> -->
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
@@ -489,7 +489,7 @@
             <field name="code">SOS</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [ref('demo_podiatry_hcp_1'),ref('demo_podiatry_hcp_2')])]"/> -->
         </record>
         <record id="demo_subject_subject_5" model="subject.subject">
@@ -497,7 +497,7 @@
             <field name="code">CMP</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [ref('demo_podiatry_hcp_1'),ref('demo_podiatry_hcp_2')])]"/> -->
         </record>
         <record id="demo_subject_subject_6" model="subject.subject">
@@ -505,7 +505,7 @@
             <field name="code">PET</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [ref('demo_podiatry_hcp_2'),ref('demo_podiatry_hcp_3')])]"/> -->
         </record>
         <record id="demo_subject_subject_7" model="subject.subject">
@@ -513,7 +513,7 @@
             <field name="code">MS</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [])]"/> -->
         </record>
         <record id="demo_subject_subject_8" model="subject.subject">
@@ -521,15 +521,15 @@
             <field name="code">PH</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
-            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
+            <field name="practice_ids" eval="[(6,0,[ref('demo_practice_practice_1'),ref('demo_practice_practice_2'),ref('demo_practice_practice_3')])]"/>
             <!-- <field name="hcp_ids" eval="[(6, 0, [])]"/> -->
         </record>
 
-        <!-- Podiatry Standard -->
-        <record id="demo_podiatry_standard_1" model="podiatry.standard">
-            <field name="standard_id" ref="demo_standard_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
+        <!-- Podiatry Practice -->
+        <record id="demo_podiatry_practice_1" model="podiatry.practice">
+            <field name="practice_id" ref="demo_practice_practice_1"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_1"/>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_hcp_1"/> -->
             <field name="name">10th-A</field>
@@ -537,10 +537,10 @@
             <field name="capacity">30</field>
             <field name="subject_ids" eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5'),ref('demo_subject_subject_6')])]"/>
         </record>
-        <record id="demo_podiatry_standard_2" model="podiatry.standard">
-            <field name="standard_id" ref="demo_standard_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
+        <record id="demo_podiatry_practice_2" model="podiatry.practice">
+            <field name="practice_id" ref="demo_practice_practice_2"/>
+            <field name="division_id" ref="demo_practice_division_2"/>
+            <field name="medium_id" ref="demo_practice_medium_2"/>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_hcp_2"/> -->
             <field name="class_room_id" ref="class_room2"/>
@@ -548,10 +548,10 @@
             <field name="capacity">30</field>
             <field name="subject_ids" eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6'),ref('demo_subject_subject_7')])]"/>
         </record>
-        <record id="demo_podiatry_standard_3" model="podiatry.standard">
-            <field name="standard_id" ref="demo_standard_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_3"/>
+        <record id="demo_podiatry_practice_3" model="podiatry.practice">
+            <field name="practice_id" ref="demo_practice_practice_3"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_3"/>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_hcp_3"/> -->
             <field name="class_room_id" ref="class_room3"/>
@@ -566,7 +566,7 @@
             <field name="name">Winely</field>
             <field name="work_email">winely@demo.com</field>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
-            <field name="standard_id" ref="demo_podiatry_standard_1"/>
+            <field name="practice_id" ref="demo_podiatry_practice_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5')])]" name="subject_id"/>
         </record>
 
@@ -574,7 +574,7 @@
             <field name="name">Peter White</field>
             <field name="work_email">peter@demo.com</field>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
-            <field name="standard_id" ref="demo_podiatry_standard_2"/>
+            <field name="practice_id" ref="demo_podiatry_practice_2"/>
             <field eval="[(6,0,[ref('demo_subject_subject_5'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
 
@@ -582,7 +582,7 @@
             <field name="name">Winparker Gabriel</field>
             <field name="work_email">winparker@demo.com</field>
             <field name="podiatry_id" ref="demo_podiatry_1"/>
-            <field name="standard_id" ref="demo_podiatry_standard_1"/>
+            <field name="practice_id" ref="demo_podiatry_practice_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
 
@@ -621,9 +621,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">London</field>
-            <field name="standard_id" ref="demo_podiatry_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
+            <field name="practice_id" ref="demo_podiatry_practice_1"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_1"/>
         </record>
         <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_4')]]"/>
         <record id="demo_patient_patient_5" model="patient.patient">
@@ -639,9 +639,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Manchester</field>
-            <field name="standard_id" ref="demo_podiatry_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
+            <field name="practice_id" ref="demo_podiatry_practice_2"/>
+            <field name="division_id" ref="demo_practice_division_2"/>
+            <field name="medium_id" ref="demo_practice_medium_2"/>
         </record>
         <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_5')]]"/>
         <record id="demo_patient_patient_6" model="patient.patient">
@@ -657,9 +657,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Headingly</field>
-            <field name="standard_id" ref="demo_podiatry_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_3"/>
+            <field name="practice_id" ref="demo_podiatry_practice_3"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_3"/>
         </record>
         <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_6')]]"/>
         <record id="demo_patient_patient_7" model="patient.patient">
@@ -675,9 +675,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">Johesburg</field>
-            <field name="standard_id" ref="demo_podiatry_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
+            <field name="practice_id" ref="demo_podiatry_practice_1"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_1"/>
         </record>
         <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_7')]]"/>
         <record id="demo_patient_patient_8" model="patient.patient">
@@ -693,9 +693,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">CapeTown</field>
-            <field name="standard_id" ref="demo_podiatry_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
+            <field name="practice_id" ref="demo_podiatry_practice_2"/>
+            <field name="division_id" ref="demo_practice_division_2"/>
+            <field name="medium_id" ref="demo_practice_medium_2"/>
         </record>
         <function model="patient.patient" name="admission_done" eval="[[ref('demo_patient_patient_8')]]"/>
 
@@ -712,9 +712,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Melbourne</field>
-            <field name="standard_id" ref="demo_podiatry_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
+            <field name="practice_id" ref="demo_podiatry_practice_1"/>
+            <field name="division_id" ref="demo_practice_division_1"/>
+            <field name="medium_id" ref="demo_practice_medium_1"/>
         </record>
         <record id="demo_patient_patient_2" model="patient.patient">
             <field name="name">William</field>
@@ -729,9 +729,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Sydney</field>
-            <field name="standard_id" ref="demo_podiatry_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
+            <field name="practice_id" ref="demo_podiatry_practice_2"/>
+            <field name="division_id" ref="demo_practice_division_2"/>
+            <field name="medium_id" ref="demo_practice_medium_2"/>
         </record>
         <record id="demo_patient_patient_3" model="patient.patient">
             <field name="name">Jacob</field>
@@ -746,9 +746,9 @@
             <field name="podiatry_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Adelaide</field>
-            <field name="standard_id" ref="demo_podiatry_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_3"/>
+            <field name="practice_id" ref="demo_podiatry_practice_3"/>
+            <field name="division_id" ref="demo_practice_division_2"/>
+            <field name="medium_id" ref="demo_practice_medium_3"/>
         </record>
 
         <!-- Patient Doctor Information -->

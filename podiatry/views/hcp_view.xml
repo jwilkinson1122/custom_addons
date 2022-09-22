@@ -15,7 +15,7 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter name="class" string="Class" domain="[]" context="{'group_by':'standard_id'}"/>
+                        <filter name="class" string="Class" domain="[]" context="{'group_by':'practice_id'}"/>
                         <filter name="manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
                         <filter name="department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
@@ -104,8 +104,8 @@
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <group>
-                            <field name="standard_id" widget="selection"/>
-                            <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
+                            <field name="practice_id" widget="selection"/>
+                            <!-- <field name="practice_ids" required="1" widget="many2many_tags"/> -->
                             <field name="subject_id" required="1" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="podiatry_id" required="1" widget="selection"/>
                         </group>

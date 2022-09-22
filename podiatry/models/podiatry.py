@@ -156,76 +156,76 @@ class AcademicMonth(models.Model):
                     "Error! You cannot define overlapping months!"))
 
 
-class StandardMedium(models.Model):
-    ''' Defining a medium(ENGLISH, HINDI, GUJARATI) related to standard'''
+class PracticeMedium(models.Model):
+    ''' Defining a medium(ENGLISH, HINDI, GUJARATI) related to practice'''
 
-    _name = "standard.medium"
-    _description = "Standard Medium"
+    _name = "practice.medium"
+    _description = "Practice Medium"
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
                               help='Sequence of the record')
     name = fields.Char('Name', required=True,
-                       help='Medium of the standard')
+                       help='Medium of the practice')
     code = fields.Char('Code', required=True,
                        help='Medium code')
     description = fields.Text('Description', help='Description')
 
 
-class StandardDivision(models.Model):
-    '''Defining a division(A, B, C) related to standard'''
+class PracticeDivision(models.Model):
+    '''Defining a division(A, B, C) related to practice'''
 
-    _name = "standard.division"
-    _description = "Standard Division"
+    _name = "practice.division"
+    _description = "Practice Division"
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
                               help='Sequence of the record')
     name = fields.Char('Name', required=True,
-                       help='Division of the standard')
+                       help='Division of the practice')
     code = fields.Char('Code', required=True,
-                       help='Standard code')
+                       help='Practice code')
     description = fields.Text('Description', help='Description')
 
 
-class StandardStandard(models.Model):
-    '''Defining Standard Information.'''
+class PracticePractice(models.Model):
+    '''Defining Practice Information.'''
 
-    _name = 'standard.standard'
-    _description = 'Standard Information'
+    _name = 'practice.practice'
+    _description = 'Practice Information'
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
                               help='Sequence of the record')
     name = fields.Char('Name', required=True,
-                       help='Standard name')
+                       help='Practice name')
     code = fields.Char('Code', required=True,
-                       help='Code of standard')
+                       help='Code of practice')
     description = fields.Text('Description', help='Description')
 
     @api.model
-    def next_standard(self, sequence):
-        '''This method check sequence of standard'''
-        stand_rec = self.search([('sequence', '>', sequence)], order='id',
+    def next_practice(self, sequence):
+        '''This method check sequence of practice'''
+        pract_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
-        return stand_rec and stand_rec.id or False
+        return pract_rec and pract_rec.id or False
 
 
-class PodiatryStandard(models.Model):
-    '''Defining a standard related to podiatry.'''
+class PodiatryPractice(models.Model):
+    '''Defining a practice related to podiatry.'''
 
-    _name = 'podiatry.standard'
-    _description = 'Podiatry Standards'
-    _rec_name = "standard_id"
+    _name = 'podiatry.practice'
+    _description = 'Podiatry Practices'
+    _rec_name = "practice_id"
 
-    @api.depends('standard_id', 'podiatry_id', 'division_id', 'medium_id',
+    @api.depends('practice_id', 'podiatry_id', 'division_id', 'medium_id',
                  'podiatry_id')
     def _compute_patient(self):
         '''Compute patient of done state'''
         patient_obj = self.env['patient.patient']
         for rec in self:
             rec.patient_ids = patient_obj.\
-                search([('standard_id', '=', rec.id),
+                search([('practice_id', '=', rec.id),
                         ('podiatry_id', '=', rec.podiatry_id.id),
                         ('division_id', '=', rec.division_id.id),
                         ('medium_id', '=', rec.medium_id.id),
@@ -250,69 +250,69 @@ class PodiatryStandard(models.Model):
             rec.remaining_seats = rec.capacity - rec.total_patients
 
     podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice', required=True,
-                                  help='Practice of the following standard')
-    standard_id = fields.Many2one('standard.standard', 'Standard',
-                                  required=True, help='Standard')
-    division_id = fields.Many2one('standard.division', 'Division',
-                                  required=True, help='Standard division')
-    medium_id = fields.Many2one('standard.medium', 'Medium', required=True,
-                                help='Medium of the standard')
-    subject_ids = fields.Many2many('subject.subject', 'subject_standards_rel',
-                                   'subject_id', 'standard_id', 'Subject',
-                                   help='Subjects of the standard')
+                                  help='Practice of the following practice')
+    practice_id = fields.Many2one('practice.practice', 'Practice',
+                                  required=True, help='Practice')
+    division_id = fields.Many2one('practice.division', 'Division',
+                                  required=True, help='Practice division')
+    medium_id = fields.Many2one('practice.medium', 'Medium', required=True,
+                                help='Medium of the practice')
+    subject_ids = fields.Many2many('subject.subject', 'subject_practices_rel',
+                                   'subject_id', 'practice_id', 'Subject',
+                                   help='Subjects of the practice')
     user_id = fields.Many2one('podiatry.hcp', 'Class HCP',
-                              help='HCP of the standard')
-    patient_ids = fields.One2many('patient.patient', 'standard_id',
+                              help='HCP of the practice')
+    patient_ids = fields.One2many('patient.patient', 'practice_id',
                                   'Patient In Class',
                                   compute='_compute_patient', store=True,
-                                  help='Patients which are in this standard'
+                                  help='Patients which are in this practice'
                                   )
     color = fields.Integer('Color Index', help='Index of color')
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='podiatry_id.company_id', store=True,
                              help='Company_id of the podiatry')
-    syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
+    syllabus_ids = fields.One2many('subject.syllabus', 'practice_id',
                                    'Syllabus',
-                                   help='Syllabus of the following standard')
+                                   help='Syllabus of the following practice')
     total_no_subjects = fields.Integer('Total No of Subject',
                                        compute="_compute_subject",
-                                       help='Total subjects in the standard')
-    name = fields.Char('Name', help='Standard name')
-    capacity = fields.Integer("Total Seats", help='Standard capacity')
+                                       help='Total subjects in the practice')
+    name = fields.Char('Name', help='Practice name')
+    capacity = fields.Integer("Total Seats", help='Practice capacity')
     total_patients = fields.Integer("Total Patients",
                                     compute="_compute_total_patient",
                                     store=True,
-                                    help='Total patients of the standard')
+                                    help='Total patients of the practice')
     remaining_seats = fields.Integer("Available Seats",
                                      compute="_compute_remain_seats",
                                      store=True,
-                                     help='Remaining seats of the standard')
+                                     help='Remaining seats of the practice')
     class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='Class room of the standard')
+                                    help='Class room of the practice')
 
-    @api.onchange('standard_id', 'division_id')
+    @api.onchange('practice_id', 'division_id')
     def onchange_combine(self):
-        '''Onchange to assign name respective of it's standard and division'''
-        self.name = str(self.standard_id.name
+        '''Onchange to assign name respective of it's practice and division'''
+        self.name = str(self.practice_id.name
                         ) + '-' + str(self.division_id.name)
 
-    @api.constrains('standard_id', 'division_id')
-    def check_standard_unique(self):
-        """Method to check unique standard."""
-        if self.env['podiatry.standard'].search([
-            ('standard_id', '=', self.standard_id.id),
+    @api.constrains('practice_id', 'division_id')
+    def check_practice_unique(self):
+        """Method to check unique practice."""
+        if self.env['podiatry.practice'].search([
+            ('practice_id', '=', self.practice_id.id),
             ('division_id', '=', self.division_id.id),
             ('podiatry_id', '=', self.podiatry_id.id),
                 ('id', 'not in', self.ids)]):
             raise ValidationError(_("Division and class should be unique!"))
 
     def unlink(self):
-        """Method to check unique standard."""
+        """Method to check unique practice."""
         for rec in self:
             if rec.patient_ids or rec.subject_ids or rec.syllabus_ids:
                 raise ValidationError(_(
                     "You cannot delete as it has reference with patient, subject or syllabus!"))
-        return super(PodiatryStandard, self).unlink()
+        return super(PodiatryPractice, self).unlink()
 
     @api.constrains('capacity')
     def check_seats(self):
@@ -321,8 +321,8 @@ class PodiatryStandard(models.Model):
             raise ValidationError(_("Total seats should be greater than 0!"))
 
     def name_get(self):
-        '''Method to display standard and division'''
-        return [(rec.id, rec.standard_id.name + '[' + rec.division_id.name +
+        '''Method to display practice and division'''
+        return [(rec.id, rec.practice_id.name + '[' + rec.division_id.name +
                  ']') for rec in self]
 
 
@@ -334,6 +334,9 @@ class PodiatryPodiatry(models.Model):
     _rec_name = "com_name"
 
     is_location = fields.Boolean(default=False)
+
+    podiatry_id = fields.Many2one('podiatry.podiatry', "Practice",
+                                  help='Select practice')
 
     @api.constrains('code')
     def _check_code(self):
@@ -356,8 +359,8 @@ class PodiatryPodiatry(models.Model):
     code = fields.Char('Code', readonly=True,
                        help='Practice code')  # Field: identifier
     # code = fields.Char('Code', required=True, help='Podiatry code')
-    standards = fields.One2many('podiatry.standard', 'podiatry_id',
-                                'Standards', help='Practice standard')
+    practices = fields.One2many('podiatry.practice', 'podiatry_id',
+                                'Practices', help='Practice practice')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
@@ -398,6 +401,77 @@ class PodiatryPodiatry(models.Model):
         return result
 
 
+# class PodiatryPractice(models.Model):
+#     _name = "podiatry.practice"
+#     _inherits = {
+#         'res.partner': 'partner_id',
+#     }
+#     # create_users_button = fields.Boolean()
+#     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+#                                  help='Partner-related data of the Doctor')
+#     is_practice = fields.Boolean()
+#     related_company_id = fields.Many2one(related='partner_id.user_id')
+#     prescription_count = fields.Integer(compute='get_prescription_count')
+
+#     podiatry_id = fields.Many2one('podiatry.podiatry', "Practice",
+#                                   help='Select practice')
+#     category_ids = fields.Many2many('hr.employee.category',
+#                                     'hcp_category_rel', 'emp_id', 'categ_id', 'Tags',
+#                                     help='Select employee category')
+#     department_id = fields.Many2one('hr.department', 'Department',
+#                                     help='Select department')
+#     is_doctor = fields.Boolean('Is doctor',
+#                                help='Select this if it doctor')
+#     pt_doctor_id = fields.Many2one('podiatry.doctor', 'Related doctor',
+#                                    help='Enter patient doctor')
+#     patient_id = fields.Many2many('patient.patient',
+#                                   'patients_hcps_doctor_rel', 'hcp_id', 'patient_id',
+#                                   'Patients', help='Select patient')
+
+#     def open_doctor_prescriptions(self):
+#         for records in self:
+#             return {
+#                 'name': _('Doctor Prescription'),
+#                 'view_type': 'form',
+#                 'domain': [('dr', '=', records.id)],
+#                 'res_model': 'dr.prescription',
+#                 'view_id': False,
+#                 'view_mode': 'tree,form',
+#                 'context': {'default_dr': self.id},
+#                 'type': 'ir.actions.act_window',
+#             }
+
+#     def get_prescription_count(self):
+#         for records in self:
+#             count = self.env['dr.prescription'].search_count(
+#                 [('dr', '=', records.id)])
+#             records.prescription_count = count
+
+#     def create_users(self):
+#         print('.....res')
+#         self.is_practice = True
+#         if len(self.partner_id.user_ids):
+#             raise UserError(_('User for this patient already created.'))
+#         else:
+#             self.create_users_button = False
+#         doctor_id = []
+#         doctor_id.append(self.env['res.groups'].search(
+#             [('name', '=', 'Doctors')]).id)
+#         doctor_id.append(self.env['res.groups'].search(
+#             [('name', '=', 'Internal User')]).id)
+
+#         return {
+#             'type': 'ir.actions.act_window',
+#             'name': 'Name ',
+#             'view_mode': 'form',
+#             'view_id': self.env.ref("pod_erp.view_create_user_wizard_form").id,
+#             'target': 'new',
+#             'res_model': 'res.users',
+#             'context': {'default_partner_id': self.partner_id.id, 'default_is_practice': True,
+#                         'default_groups_id': [(6, 0, doctor_id)]}
+#         }
+
+
 class SubjectSubject(models.Model):
     '''Defining a subject '''
     _name = "subject.subject"
@@ -413,10 +487,10 @@ class SubjectSubject(models.Model):
     hcp_ids = fields.Many2many('podiatry.hcp', 'subject_hcp_rel',
                                'subject_id', 'hcp_id', 'HCPs',
                                help='HCPs of the following subject')
-    standard_ids = fields.Many2many('standard.standard', string='Standards',
-                                    help='''Standards in which the 
+    practice_ids = fields.Many2many('practice.practice', string='Practices',
+                                    help='''Practices in which the 
                                     following subject taught''')
-    standard_id = fields.Many2one('standard.standard', 'Class',
+    practice_id = fields.Many2one('practice.practice', 'Class',
                                   help='''Class in which the following
                                   subject taught''')
     is_practical = fields.Boolean('Is Practical',
@@ -460,8 +534,8 @@ class SubjectSyllabus(models.Model):
     _description = "Syllabus"
     _rec_name = "subject_id"
 
-    standard_id = fields.Many2one('podiatry.standard', 'Standard',
-                                  help='Standard which had this subject')
+    practice_id = fields.Many2one('podiatry.practice', 'Practice',
+                                  help='Practice which had this subject')
     subject_id = fields.Many2one('subject.subject', 'Subject', help='Subject')
     syllabus_doc = fields.Binary("Syllabus Doc",
                                  help="Attach syllabus related to Subject")
@@ -573,7 +647,7 @@ class PatientDescipline(models.Model):
     hcp_id = fields.Many2one('podiatry.hcp', 'HCP',
                              help='HCP who examine the patient')
     date = fields.Date('Date', help='Date')
-    class_id = fields.Many2one('standard.standard', 'Class',
+    class_id = fields.Many2one('practice.practice', 'Class',
                                help='Class of patient')
     note = fields.Text('Note', help='Discipline Note')
     action_taken = fields.Text('Action Taken',
@@ -590,8 +664,8 @@ class PatientHistory(models.Model):
                                  help='Related Patient')
     academic_year_id = fields.Many2one('academic.year', 'Year',
                                        help='Academice Year')
-    standard_id = fields.Many2one('podiatry.standard', 'Standard',
-                                  help='Standard of the following patient')
+    practice_id = fields.Many2one('podiatry.practice', 'Practice',
+                                  help='Practice of the following patient')
     percentage = fields.Float("Percentage", readonly=True,
                               help='Percentage of the patient')
     result = fields.Char('Result', readonly=True,
@@ -647,7 +721,7 @@ class PatientPreviousPodiatry(models.Model):
                                help='Patient admission date')
     exit_date = fields.Date('Exit Date',
                             help='Patient previous podiatry exit date')
-    course_id = fields.Many2one('standard.standard', 'Course', required=True,
+    course_id = fields.Many2one('practice.practice', 'Course', required=True,
                                 help='Patient gender')
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
                               help='Patient gender')

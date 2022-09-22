@@ -202,12 +202,12 @@ class PatientPatient(models.Model):
                           readonly=True, help='Enter patient first name', tracking=True)
     Acadamic_year = fields.Char('Year', related='year.name',
                                 help='Year', readonly=True, tracking=True)
-    division_id = fields.Many2one('standard.division', 'Division',
-                                  help='Select patient standard division', tracking=True)
-    medium_id = fields.Many2one('standard.medium', 'Medium',
-                                help='Select patient standard medium', tracking=True)
-    standard_id = fields.Many2one('podiatry.standard', 'Class',
-                                  help='Select patient standard', tracking=True)
+    division_id = fields.Many2one('practice.division', 'Division',
+                                  help='Select patient practice division', tracking=True)
+    medium_id = fields.Many2one('practice.medium', 'Medium',
+                                help='Select patient practice medium', tracking=True)
+    practice_id = fields.Many2one('podiatry.practice', 'Class',
+                                  help='Select patient practice', tracking=True)
     doctor_id = fields.Many2many('podiatry.doctor', 'patients_doctors_rel',
                                  'patient_id', 'patients_doctor_id', 'doctor(s)',
                                  states={'done': [('readonly', True)]},
@@ -285,7 +285,7 @@ class PatientPatient(models.Model):
         '''Method to change state to prior'''
         for rec in self:
             rec.state = 'prior'
-            rec.standard_id._compute_total_patient()
+            rec.practice_id._compute_total_patient()
             rec.active = False
             rec.user_id.active = False
 
@@ -307,28 +307,28 @@ class PatientPatient(models.Model):
 
     def admission_done(self):
         '''Method to confirm admission'''
-        podiatry_standard_obj = self.env['podiatry.standard']
+        podiatry_practice_obj = self.env['podiatry.practice']
         ir_sequence = self.env['ir.sequence']
         patient_group = self.env.ref('podiatry.group_podiatry_patient')
         emp_group = self.env.ref('base.group_user')
         for rec in self:
-            if not rec.standard_id:
+            if not rec.practice_id:
                 raise ValidationError(_("Please select class!"))
-            if rec.standard_id.remaining_seats <= 0:
+            if rec.practice_id.remaining_seats <= 0:
                 raise ValidationError(_('Seats of class %s are full'
-                                        ) % rec.standard_id.standard_id.name)
+                                        ) % rec.practice_id.practice_id.name)
             domain = [('podiatry_id', '=', rec.podiatry_id.id)]
-            # Checks the standard if not defined raise error
-            if not podiatry_standard_obj.search(domain):
+            # Checks the practice if not defined raise error
+            if not podiatry_practice_obj.search(domain):
                 raise UserError(_(
-                    "Warning! The standard is not defined in podiatry!"))
+                    "Warning! The practice is not defined in podiatry!"))
             # Assign group to patient
             rec.user_id.write({'groups_id': [(6, 0,
                                               [emp_group.id, patient_group.id])]})
             # Assign roll no to patient
             number = 1
-            for rec_std in rec.search(domain):
-                rec_std.roll_no = number
+            for rec_pract in rec.search(domain):
+                rec_pract.roll_no = number
                 number += 1
             # Assign registration code to patient
             reg_code = ir_sequence.next_by_code('patient.registration')

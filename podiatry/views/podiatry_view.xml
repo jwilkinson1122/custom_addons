@@ -132,20 +132,22 @@
                             </div>
                         </group>
                         <group>
-                            <div class="o_address_format">
-                                <field name="currency_id" placeholder="Select Or Create Currency" />
-                                <field name="code" placeholder="Code" />
-                                <field name="is_location" widget="boolean_toggle"/>
-                            </div>
+                            <group>
+                                <div class="o_address_format">
+                                    <field name="currency_id" placeholder="Select Or Create Currency" />
+                                    <field name="code" placeholder="Code" />
+                                    <field name="is_location" widget="boolean_toggle"/>
+                                </div>
+                            </group>
                         </group>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Related Clinics">
-                            <!-- <field name="standards" nolabel="1" colspan="4" readonly="1"/> -->
+                            <!-- <field name="practices" nolabel="1" colspan="4" readonly="1"/> -->
                         </page>
-                        <!-- <page string="Standards">
-                            <field name="standards" nolabel="1" colspan="4" readonly="1"/>
+                        <!-- <page string="Practices">
+                            <field name="practices" nolabel="1" colspan="4" readonly="1"/>
                         </page> -->
                         <page string="Contacts">
 
@@ -171,7 +173,7 @@
         <field name="name">podiatry.attendance.form</field>
         <field name="model">attendance.type</field>
         <field name="arch" type="xml">
-            <form string="Standard Information">
+            <form string="Practice Information">
                 <separator string="Attendance Type" />
                 <group col="4" colspan="2">
                     <field name="name" placeholder="name"/>
@@ -180,16 +182,16 @@
             </form>
         </field>
     </record>
-    <!-- Form View Of Practice Standard Information -->
-    <record id="view_podiatry_standard_form" model="ir.ui.view">
-        <field name="name">podiatry.standard.form</field>
-        <field name="model">podiatry.standard</field>
+    <!-- Form View Of Practice Practice Information -->
+    <record id="view_podiatry_practice_form" model="ir.ui.view">
+        <field name="name">podiatry.practice.form</field>
+        <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <form string="Standard Information">
+            <form string="Practice Information">
                 <sheet>
-                    <separator string="Standard Information" />
+                    <separator string="Practice Information" />
                     <group col="4" colspan="4">
-                        <field name="standard_id" widget="selection" placeholder="Standard"/>
+                        <field name="practice_id" widget="selection" placeholder="Practice"/>
                         <field name="division_id" widget="selection" placeholder="Division"/>
                         <field name="medium_id" widget="selection" placeholder="Medium"/>
                         <field name="podiatry_id" widget="selection" placeholder="Practice"/>
@@ -225,9 +227,9 @@
                         </page>
                         <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
                             <group>
-                                <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_standard_id':standard_id}">
+                                <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_practice_id':practice_id}">
                                     <tree editable="top" string="Syllabs">
-                                        <field name="standard_id" invisible="1"/>
+                                        <field name="practice_id" invisible="1"/>
                                         <field name="subject_id" required="1" widget="selection"/>
                                         <field name="syllabus_doc" required="1"/>
                                     </tree>
@@ -246,13 +248,13 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Podiatry Standard Information -->
-    <record id="view_podiatry_standard_tree" model="ir.ui.view">
-        <field name="name">podiatry.standard.tree</field>
-        <field name="model">podiatry.standard</field>
+    <!-- Tree View Of Podiatry Practice Information -->
+    <record id="view_podiatry_practice_tree" model="ir.ui.view">
+        <field name="name">podiatry.practice.tree</field>
+        <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <tree string="Standard Information">
-                <field name="standard_id"/>
+            <tree string="Practice Information">
+                <field name="practice_id"/>
                 <field name="user_id"/>
                 <field name="division_id"/>
                 <field name="medium_id"/>
@@ -260,14 +262,14 @@
             </tree>
         </field>
     </record>
-    <!-- Kanban View Of Practice Standard Information -->
-    <record id="podiatry_standard_kanban_view" model="ir.ui.view">
-        <field name="name">podiatry.standard.kanban</field>
-        <field name="model">podiatry.standard</field>
+    <!-- Kanban View Of Practice Practice Information -->
+    <record id="podiatry_practice_kanban_view" model="ir.ui.view">
+        <field name="name">podiatry.practice.kanban</field>
+        <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="standard_id">
+            <kanban default_group_by="practice_id">
                 <field name="podiatry_id" />
-                <field name="standard_id" />
+                <field name="practice_id" />
                 <field name="division_id" />
                 <field name="medium_id" />
                 <field name="user_id" />
@@ -301,8 +303,8 @@
                                                 </div>
                                                 <div class="oe_kanban_title3">
                                                     <div>
-                                                        Standard :-
-                                                        <field name="standard_id" />
+                                                        Practice :-
+                                                        <field name="practice_id" />
                                                     </div>
                                                     <div>
                                                         Division :-
@@ -332,14 +334,14 @@
             </kanban>
         </field>
     </record>
-    <!-- Search View Of Podiatry Standard Information -->
+    <!-- Search View Of Podiatry Practice Information -->
     <record id="view_patient_patient_search" model="ir.ui.view">
-        <field name="name">podiatry.standard.search</field>
-        <field name="model">podiatry.standard</field>
+        <field name="name">podiatry.practice.search</field>
+        <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <search string="Standard Information">
+            <search string="Practice Information">
                 <group col="10" colspan="4">
-                    <field name="standard_id" />
+                    <field name="practice_id" />
                     <field name="user_id" />
                     <field name="division_id" />
                     <field name="medium_id" />
@@ -347,7 +349,7 @@
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
-                    <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="class" string="Class" help="By Class" context="{'group_by':'practice_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
                 </group>
@@ -522,10 +524,10 @@
             </tree>
         </field>
     </record>
-    <!-- From View Of Standard Medium Information -->
-    <record id="view_standard_medium_form" model="ir.ui.view">
-        <field name="name">standard.medium.form</field>
-        <field name="model">standard.medium</field>
+    <!-- From View Of Practice Medium Information -->
+    <record id="view_practice_medium_form" model="ir.ui.view">
+        <field name="name">practice.medium.form</field>
+        <field name="model">practice.medium</field>
         <field name="arch" type="xml">
             <form string="Medium">
                 <sheet>
@@ -540,10 +542,10 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Standard Medium Information -->
-    <record id="view_standard_medium_tree" model="ir.ui.view">
-        <field name="name">standard.medium.tree</field>
-        <field name="model">standard.medium</field>
+    <!-- Tree View Of Practice Medium Information -->
+    <record id="view_practice_medium_tree" model="ir.ui.view">
+        <field name="name">practice.medium.tree</field>
+        <field name="model">practice.medium</field>
         <field name="arch" type="xml">
             <tree string="Medium">
                 <field name="sequence" />
@@ -612,10 +614,10 @@
         <field name="res_model">document.type</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Form View Of Standard Division Information-->
-    <record id="view_standard_division_form" model="ir.ui.view">
-        <field name="name">standard.division.form</field>
-        <field name="model">standard.division</field>
+    <!-- Form View Of Practice Division Information-->
+    <record id="view_practice_division_form" model="ir.ui.view">
+        <field name="name">practice.division.form</field>
+        <field name="model">practice.division</field>
         <field name="arch" type="xml">
             <form string="Divisions">
                 <sheet>
@@ -630,10 +632,10 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Standard Division Information-->
-    <record id="view_standard_division_tree" model="ir.ui.view">
-        <field name="name">standard.division.tree</field>
-        <field name="model">standard.division</field>
+    <!-- Tree View Of Practice Division Information-->
+    <record id="view_practice_division_tree" model="ir.ui.view">
+        <field name="name">practice.division.tree</field>
+        <field name="model">practice.division</field>
         <field name="arch" type="xml">
             <tree string="Divisions">
                 <field name="sequence" />
@@ -663,13 +665,13 @@
                                     <field name="elective_id" string="Elective Subject" invisible="1" />
                                 </group>
                                 <notebook colspan="4">
-                                    <page string="Standards">
-                                        <field name="standard_ids" nolabel="1" colspan="4" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
-                                            <tree string="Standards">
+                                    <page string="Practices">
+                                        <field name="practice_ids" nolabel="1" colspan="4" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
+                                            <tree string="Practices">
                                                 <field name="name" />
                                                 <field name="code" />
                                             </tree>
-                                            <form string="Standards">
+                                            <form string="Practices">
                                                 <group col="4" colspan="4">
                                                     <field name="name" placeholder="Name"/>
                                                     <field name="code" placeholder="Code"/>
@@ -707,16 +709,16 @@
                         <field name="elective_id" string="Elective Subject Group" readonly="1" />
                     </group>
                     <notebook colspan="4">
-                        <page string="Standards">
-                            <field name="standard_ids" nolabel="1" colspan="4" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
-                                <tree string="Standards">
+                        <page string="Practices">
+                            <field name="practice_ids" nolabel="1" colspan="4" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
+                                <tree string="Practices">
                                     <field name="name" />
                                     <field name="code" />
                                 </tree>
-                                <form string="Standards">
+                                <form string="Practices">
                                     <group col="4" colspan="4">
-                                        <field name="name" placeholder="Standard Name"/>
-                                        <field name="code" placeholder="Standard Code"/>
+                                        <field name="name" placeholder="Practice Name"/>
+                                        <field name="code" placeholder="Practice Code"/>
                                     </group>
                                 </form>
                             </field>
@@ -745,12 +747,12 @@
             </tree>
         </field>
     </record>
-    <!-- Form View Of Standard Information -->
-    <record id="view_standard_standard_form" model="ir.ui.view">
-        <field name="name">standard.standard.form</field>
-        <field name="model">standard.standard</field>
+    <!-- Form View Of Practice Information -->
+    <record id="view_practice_practice_form" model="ir.ui.view">
+        <field name="name">practice.practice.form</field>
+        <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <form string="Standard Information">
+            <form string="Practice Information">
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="sequence"/>
@@ -764,12 +766,12 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Standard Information -->
-    <record id="view_standard_standard_tree" model="ir.ui.view">
-        <field name="name">standard.standard.tree</field>
-        <field name="model">standard.standard</field>
+    <!-- Tree View Of Practice Information -->
+    <record id="view_practice_practice_tree" model="ir.ui.view">
+        <field name="name">practice.practice.tree</field>
+        <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <tree string="Standard Information">
+            <tree string="Practice Information">
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -813,10 +815,10 @@
             </p>
         </field>
     </record>
-    <!-- Action Of Form & Tree Views Of Podiatry Standard -->
-    <record id="action_podiatry_standard_form" model="ir.actions.act_window">
+    <!-- Action Of Form & Tree Views Of Podiatry Practice -->
+    <record id="action_podiatry_practice_form" model="ir.actions.act_window">
         <field name="name">Classes</field>
-        <field name="res_model">podiatry.standard</field>
+        <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Elective Subject -->
@@ -843,16 +845,16 @@
         <field name="res_model">academic.month</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Standard Medium Information -->
-    <record id="action_standard_medium_form" model="ir.actions.act_window">
+    <!-- Action Of Form & Tree Views Of Practice Medium Information -->
+    <record id="action_practice_medium_form" model="ir.actions.act_window">
         <field name="name">Medium</field>
-        <field name="res_model">standard.medium</field>
+        <field name="res_model">practice.medium</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Standard Division Information Action -->
-    <record id="action_standard_division_form" model="ir.actions.act_window">
+    <!-- Action Of Form & Tree Views Of Practice Division Information Action -->
+    <record id="action_practice_division_form" model="ir.actions.act_window">
         <field name="name">Divisions</field>
-        <field name="res_model">standard.division</field>
+        <field name="res_model">practice.division</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Subject Information -->
@@ -861,10 +863,10 @@
         <field name="res_model">subject.subject</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Standard Information -->
-    <record id="action_standard_standard_form" model="ir.actions.act_window">
-        <field name="name">Standards</field>
-        <field name="res_model">standard.standard</field>
+    <!-- Action Of Form & Tree Views Of Practice Information -->
+    <record id="action_practice_practice_form" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">practice.practice</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Form View Of Patient News -->
@@ -993,13 +995,13 @@
     <menuitem id="menu_academic_year_form" name="Years" parent="menu_configuration" />
     <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form" />
     <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form" />
-    <!-- MenuItem For Configurations->Standards -->
-    <menuitem id="menu_podiatry_standard_form" name="Standards" parent="menu_configuration" />
-    <menuitem id="menu_sub_podiatry_standard_form" name="Classes" parent="menu_podiatry_standard_form" action="action_podiatry_standard_form" />
-    <menuitem id="menu_standard_standard_form" name="Standards" parent="menu_podiatry_standard_form" action="action_standard_standard_form" />
-    <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_podiatry_standard_form" action="action_standard_division_form" />
-    <menuitem id="menu_standard_medium_form" name="Medium" parent="menu_podiatry_standard_form" action="action_standard_medium_form" />
-    <menuitem id="menu_class_room" name="Class Room" parent="menu_podiatry_standard_form" action="action_class_room"/>
+    <!-- MenuItem For Configurations->Practices -->
+    <menuitem id="menu_podiatry_practice_form" name="Practices" parent="menu_configuration" />
+    <menuitem id="menu_sub_podiatry_practice_form" name="Classes" parent="menu_podiatry_practice_form" action="action_podiatry_practice_form" />
+    <menuitem id="menu_practice_practice_form" name="Practices" parent="menu_podiatry_practice_form" action="action_practice_practice_form" />
+    <menuitem id="menu_practice_division_form" name="Divisions" parent="menu_podiatry_practice_form" action="action_practice_division_form" />
+    <menuitem id="menu_practice_medium_form" name="Medium" parent="menu_podiatry_practice_form" action="action_practice_medium_form" />
+    <menuitem id="menu_class_room" name="Class Room" parent="menu_podiatry_practice_form" action="action_class_room"/>
     <!-- MenuItem For Configurations->Subject -->
     <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
     <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />

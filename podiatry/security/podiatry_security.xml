@@ -91,19 +91,19 @@
             <field name="groups" eval="[(4, ref('group_podiatry_doctor'))]"/>
         </record>
 
-        <!-- Rule For Podiatry Standard Record As An Administrator -->
+        <!-- Rule For Podiatry Practice Record As An Administrator -->
 
-        <record id="rule_podiatry_standard_record_as_admin" model="ir.rule">
-            <field name="name">Rule Podiatry Standard Record As An Administrator</field>
-            <field name="model_id" ref="model_podiatry_standard"/>
+        <record id="rule_podiatry_practice_record_as_admin" model="ir.rule">
+            <field name="name">Rule Podiatry Practice Record As An Administrator</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
             <field name="global" eval="True"/>
             <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','=',False)]</field>
             <field name="groups" eval="[(4, ref('group_podiatry_administration'))]"/>
         </record>
-        <!-- Record Rule hcp can see standards related to podiatry -->
-        <record id="rule_podiatry_standard_hcp" model="ir.rule">
-            <field name="name">HCP Podiatry Standard Record Rule</field>
-            <field name="model_id" ref="model_podiatry_standard"/>
+        <!-- Record Rule hcp can see practices related to podiatry -->
+        <record id="rule_podiatry_practice_hcp" model="ir.rule">
+            <field name="name">HCP Podiatry Practice Record Rule</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
             <field name="global" eval="True"/>
             <field name="domain_force">[('podiatry_id.company_id','=',user.company_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_podiatry_hcp'))]"/>

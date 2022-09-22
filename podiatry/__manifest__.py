@@ -22,7 +22,7 @@
              'views/hcp_view.xml',
              'views/doctor_view.xml',
              'wizard/assign_roll_no_wizard.xml',
-             'wizard/move_standards_view.xml',
+             'wizard/move_practices_view.xml',
              'report/report_view.xml',
              'report/identity_card.xml',
              "report/hcp_identity_card.xml",

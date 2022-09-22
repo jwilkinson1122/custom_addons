@@ -26,22 +26,22 @@ class PodiatryDoctor(models.Model):
     patient_id = fields.Many2many('patient.patient', 'patients_doctors_rel',
                                   'patients_doctor_id', 'patient_id', 'Patients',
                                   help='Patient of the following doctor')
-    standard_id = fields.Many2many('podiatry.standard',
-                                   'podiatry_standard_doctor_rel', 'class_doctor_id', 'class_id',
+    practice_id = fields.Many2many('podiatry.practice',
+                                   'podiatry_practice_doctor_rel', 'class_doctor_id', 'class_id',
                                    'Academic Class', help='''Class of the patient of following doctor''')
-    stand_id = fields.Many2many('standard.standard',
-                                'standard_standard_doctor_rel', 'standard_doctor_id', 'standard_id',
-                                'Academic Standard', help='''Standard of the patient of following doctor''')
+    pract_id = fields.Many2many('practice.practice',
+                                'practice_practice_doctor_rel', 'practice_doctor_id', 'practice_id',
+                                'Academic Practice', help='''Practice of the patient of following doctor''')
     hcp_id = fields.Many2one('podiatry.hcp', 'HCP', store=True,
-                             related="standard_id.user_id", help='HCP of a patient')
+                             related="practice_id.user_id", help='HCP of a patient')
 
     @api.onchange('patient_id')
     def onchange_patient_id(self):
         """Onchange Method for Patient."""
-        standard_ids = self.patient_id.mapped('standard_id')
-        if standard_ids:
-            self.standard_id = [(6, 0, standard_ids.ids)]
-            self.stand_id = [(6, 0, standard_ids.mapped('standard_id').ids)]
+        practice_ids = self.patient_id.mapped('practice_id')
+        if practice_ids:
+            self.practice_id = [(6, 0, practice_ids.ids)]
+            self.pract_id = [(6, 0, practice_ids.mapped('practice_id').ids)]
 
     @api.model
     def create(self, vals):

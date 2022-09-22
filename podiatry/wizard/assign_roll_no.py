@@ -9,8 +9,8 @@ class AssignRollNo(models.TransientModel):
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'
 
-    standard_id = fields.Many2one('podiatry.standard', 'Class', required=True)
-    medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
+    practice_id = fields.Many2one('podiatry.practice', 'Class', required=True)
+    medium_id = fields.Many2one('practice.medium', 'Medium', required=True)
 
     def assign_rollno(self):
         '''Method to assign roll no to patients'''
@@ -20,7 +20,7 @@ class AssignRollNo(models.TransientModel):
             # Assign roll no according to name.
             number = 1
             for patient in patient_obj.search([
-                ('standard_id', '=', rec.standard_id.id),
+                ('practice_id', '=', rec.practice_id.id),
                 ('medium_id', '=', rec.medium_id.id)],
                     order="name"):
                 patient.write({'roll_no': number})

@@ -61,13 +61,13 @@
                                             </tr>
                                             <tr>
                                                 <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                    <strong>Standard</strong>
+                                                    <strong>Practice</strong>
                                                 </td>
                                                 <td>
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="patient.standard_id.standard_id.name"/>
+                                                    <span t-field="patient.practice_id.practice_id.name"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -78,7 +78,7 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="patient.standard_id.division_id.name"/>
+                                                    <span t-field="patient.practice_id.division_id.name"/>
                                                 </td>
                                             </tr>
                                             <tr>

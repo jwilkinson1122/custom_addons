@@ -13,17 +13,17 @@ class PodiatryHCP(models.Model):
     employee_id = fields.Many2one('hr.employee', 'Employee ID',
                                   ondelete="cascade", delegate=True, required=True,
                                   help='Enter related employee')
-    standard_id = fields.Many2one('podiatry.standard',
+    practice_id = fields.Many2one('podiatry.practice',
                                   "Responsibility of Academic Class",
-                                  help="Standard for which the hcp responsible for.")
-    stand_id = fields.Many2one('standard.standard', "Course",
-                               related="standard_id.standard_id", store=True,
-                               help='''Select standard which are assigned to hcp''')
+                                  help="Practice for which the hcp responsible for.")
+    pract_id = fields.Many2one('practice.practice', "Course",
+                               related="practice_id.practice_id", store=True,
+                               help='''Select practice which are assigned to hcp''')
     subject_id = fields.Many2many('subject.subject', 'subject_hcp_rel',
                                   'hcp_id', 'subject_id', 'Course-Subjects',
                                   help='Select subject of hcp')
-    podiatry_id = fields.Many2one('podiatry.podiatry', "Campus",
-                                  help='Select podiatry')
+    podiatry_id = fields.Many2one('podiatry.podiatry', "Practice",
+                                  help='Select practice')
     category_ids = fields.Many2many('hr.employee.category',
                                     'hcp_category_rel', 'emp_id', 'categ_id', 'Tags',
                                     help='Select employee category')
@@ -38,11 +38,11 @@ class PodiatryHCP(models.Model):
                                   'Patients', help='Select patient')
     phone_numbers = fields.Char("Phone Number", help='Patient PH no')
 
-    @api.onchange('standard_id')
-    def _onchange_standard_id(self):
+    @api.onchange('practice_id')
+    def _onchange_practice_id(self):
         for rec in self:
-            rec.podiatry_id = (rec.standard_id and rec.standard_id.podiatry_id and
-                               rec.standard_id.podiatry_id.id or False)
+            rec.podiatry_id = (rec.practice_id and rec.practice_id.podiatry_id and
+                               rec.practice_id.podiatry_id.id or False)
 
     @api.onchange('is_doctor')
     def _onchange_is_doctor(self):

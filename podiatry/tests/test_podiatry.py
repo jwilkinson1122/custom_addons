@@ -11,16 +11,16 @@ class TestPodiatry(common.TransactionCase):
         self.hcp_obj = self.env['podiatry.hcp']
         self.doctor_obj = self.env['podiatry.doctor']
         self.podiatry_podiatry_obj = self.env['podiatry.podiatry']
-        self.podiatry_standard_obj = self.env['podiatry.standard']
+        self.podiatry_practice_obj = self.env['podiatry.practice']
         self.res_company_obj = self.env['res.company']
         self.assign_roll_obj = self.env['assign.roll.no']
         self.podiatry_id = self.env.ref('podiatry.demo_podiatry_1')
-        self.standard_medium = self.env.ref('podiatry.demo_standard_medium_1')
+        self.practice_medium = self.env.ref('podiatry.demo_practice_medium_1')
         self.year = self.env.ref('podiatry.demo_academic_year_2')
         self.currency_id = self.env.ref('base.INR')
         self.sch = self.env.ref('podiatry.demo_podiatry_1')
         self.country_id = self.env.ref('base.in')
-        self.std = self.env.ref('podiatry.demo_standard_standard_1')
+        self.pract = self.env.ref('podiatry.demo_practice_practice_1')
         self.state_id = self.env.ref('base.state_in_gj')
         self.subject1 = self.env.ref('podiatry.demo_subject_subject_1')
         self.subject2 = self.env.ref('podiatry.demo_subject_subject_2')
@@ -55,11 +55,11 @@ class TestPodiatry(common.TransactionCase):
         self.academic_month._check_duration()
         self.academic_month._check_year_limit()
         self.assign_roll_no = self.assign_roll_obj.\
-            create({'standard_id': self.std.id,
-                    'medium_id': self.standard_medium.id
+            create({'practice_id': self.pract.id,
+                    'medium_id': self.practice_medium.id
                     })
         self.assign_roll_no.assign_rollno()
 
     def test_podiatry(self):
         self.assertEqual(self.patient_patient.podiatry_id,
-                         self.patient_patient.standard_id.podiatry_id)
+                         self.patient_patient.practice_id.podiatry_id)
