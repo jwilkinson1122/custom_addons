@@ -487,13 +487,18 @@
                         <!-- <separator string="Account Information" style="font-size:18px; font-weight:bold"/> -->
                         <separator string="Patient Information" style="font-size:24px; font-weight:bold"/>
                         <newline />
+                        <!-- "<td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n" -->
 
-                        <field name="photo" widget="image" class="oe_avatar oe_right" style="max-width:100px;max-height:117px;" />
+                        <!-- <field name="photo" widget="image" class="oe_avatar oe_right" style="max-width:100px; max-height:117px; padding:15px;" /> -->
+                        <label for="pid" string="PID:" />
+                        <field name="pid" readonly="1"/>
+                        <br />
+
                         <div class="oe_title">
-                            <label for="pid" string="PID:" />
+                            <!-- <label for="pid" string="PID:" />
 
                             <field name="pid" readonly="1"/>
-                            <br />
+                            <br /> -->
 
 
                             <!-- <field name="pid" nolabel="1" readonly="1"/> -->
