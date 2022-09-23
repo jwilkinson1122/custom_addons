@@ -61,26 +61,16 @@
                                             </tr>
                                             <tr>
                                                 <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                    <strong>Division</strong>
+                                                    <strong>Type</strong>
                                                 </td>
                                                 <td>
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="patient.practice_id.division_id.name"/>
+                                                    <span t-field="patient.practice_id.type_id.name"/>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                    <strong>Medium</strong>
-                                                </td>
-                                                <td>
-                                                    <strong>: </strong>
-                                                </td>
-                                                <td>
-                                                    <span t-field="patient.medium_id.name" />
-                                                </td>
-                                            </tr>
+
                                             <tr>
                                                 <td style="font-family: 'Helvetica';padding-left:20px;">
                                                     <strong>BirthDate</strong>

@@ -7,7 +7,7 @@
         <field name="name">move_practices.form</field>
         <field name="model">move.practices</field>
         <field name="arch" type="xml">
-            <form string="Move Locations">
+            <form string="Move Account Locations">
                 <group>
                     <field name="academic_year_id" placeholder="Enter Year" widget="selection"/>
                 </group>
@@ -19,16 +19,16 @@
         </field>
     </record>
 
-    <!-- Action Of Form & Tree Views Of Move Locations -->
+    <!-- Action Of Form & Tree Views Of Move Account Locations -->
     <record id="action_move_practices_form" model="ir.actions.act_window">
-        <field name="name">Move Locations</field>
+        <field name="name">Move Account Locations</field>
         <field name="res_model">move.practices</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_move_practices_form" />
         <field name="target">new</field>
     </record>
 
-    <!-- MenuItem For Configurations->Move Locations -->
-    <!-- <menuitem id="menu_move_practices_form" name="Move Locations" parent="menu_configuration" action="action_move_practices_form" /> -->
+    <!-- MenuItem For Configurations->Move Account Locations -->
+    <!-- <menuitem id="menu_move_practices_form" name="Move Account Locations" parent="menu_configuration" action="action_move_practices_form" /> -->
 
 </odoo>

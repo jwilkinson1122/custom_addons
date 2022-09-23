@@ -15,7 +15,7 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter name="class" string="Location" domain="[]" context="{'group_by':'practice_id'}"/>
+                        <filter name="class" string="Practice Location" domain="[]" context="{'group_by':'practice_id'}"/>
                         <filter name="manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
                         <filter name="department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>

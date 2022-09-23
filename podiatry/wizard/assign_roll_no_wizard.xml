@@ -12,7 +12,7 @@
                 <separator string="Assign Roll Number" colspan="4"/>
                 <group colspan="4" col="6">
                     <field name="practice_id" widget="selection" />
-                    <field name="medium_id" widget="selection" />
+
                 </group>
                 <footer>
                     <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
@@ -31,7 +31,7 @@
         <field name="target">new</field>
     </record>
 
-    <!-- MenuItem For Configurations->Move Locations -->
+    <!-- MenuItem For Configurations->Move Account Locations -->
     <menuitem id="menu_assign_rollno_form" name="Assign Roll Number" parent="menu_configuration" action="action_assign_roll_no_form" />
 
 </odoo>

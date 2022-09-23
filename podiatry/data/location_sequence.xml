@@ -2,7 +2,7 @@
 
 <odoo>
     <record id="seq_podiatry_location" model="ir.sequence">
-        <field name="name">Location sequence</field>
+        <field name="name">Practice Location sequence</field>
         <field name="code">podiatry.podiatry</field>
         <field name="prefix">LOC</field>
         <field name="padding">6</field>

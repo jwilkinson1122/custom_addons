@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Action of practice location -->
+    <record id="open_practice_location_form_tree" model="ir.actions.act_window">
+        <field name="name">Location</field>
+        <field name="res_model">practice.location</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for practice practice type -->
+    <record id="open_practice_practice_type_form_tree" model="ir.actions.act_window">
+        <field name="name">Room Type</field>
+        <field name="res_model">practice.practice.type</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for practice practice amenities type -->
+    <record id="action_practice_practice_amenities_type_view_form" model="ir.actions.act_window">
+        <field name="name">Amenities Type</field>
+        <field name="res_model">practice.practice.amenities.type</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for practice practice amenities -->
+    <record id="action_practice_practice_amenities_view_form" model="ir.actions.act_window">
+        <field name="name">Amenities</field>
+        <field name="res_model">practice.practice.amenities</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_iscategid':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_id" ref="view_practice_practice_amenities_list" />
+    </record>
+    <!-- Action for practice practice -->
+    <record id="action_practice_practice_form" model="ir.actions.act_window">
+        <field name="name">Room</field>
+        <field name="res_model">practice.practice</field>
+        <field name="context">{'default_ispractice':1,'default_rental':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_id" ref="view_practice_practice_tree" />
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <!-- Action for practice prescription -->
+    <record id="open_practice_prescription1_form_tree_all" model="ir.actions.act_window">
+        <field name="name">Generate Prescription</field>
+        <field name="res_model">practice.prescription</field>
+        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="context">{'prescription': True}</field>
+    </record>
+    <!-- Action for practice service type -->
+    <record id="open_practice_service_type_form_tree" model="ir.actions.act_window">
+        <field name="name">Service Type</field>
+        <field name="res_model">practice.service.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for practice service -->
+    <record id="action_practice_services_form" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="res_model">practice.services</field>
+        <field name="context">{'default_isservice':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

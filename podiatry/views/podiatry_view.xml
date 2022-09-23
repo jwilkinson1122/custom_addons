@@ -108,21 +108,25 @@
             </kanban>
         </field>
     </record>
-    <!-- Form View Of Practice Information -->
+    <!-- Form View Of Account Information -->
     <record id="view_podiatry_podiatry_form" model="ir.ui.view">
         <field name="name">podiatry.podiatry.form</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <form string="Practice Information">
+            <form string="Account Information">
                 <sheet>
-                    <separator string="Practice Information" style="font-size:18pt"/>
+                    <!-- <separator string="Account Information" style="font-size:18pt"/> -->
 
+                    <label for="account_id" string="Acct Number" />
+                    <h1>
+                        <field name="account_id" colspan="4" />
+                    </h1>
 
                     <group>
                         <group>
                             <label for="street" string="Address" />
                             <div class="o_address_format">
-                                <field name="name" string="Name" placeholder="Practice Name" />
+                                <field name="name" string="Name" placeholder="Account Name" />
                                 <field name="street" class="o_address_street" placeholder="Street..." />
                                 <field name="street2" class="o_address_street" placeholder="Street2..." />
                                 <field name="city" class="o_address_city" placeholder="City" required="1" />
@@ -136,7 +140,9 @@
                                 <div class="o_address_format">
                                     <field name="currency_id" placeholder="Select Or Create Currency" />
                                     <field name="code" placeholder="Code" />
-                                    <field name="is_location" widget="boolean_toggle"/>
+                                    <label for="is_parent_account" string="Parent Account"/>
+
+                                    <field name="is_parent_account" widget="boolean_toggle"/>
                                 </div>
                             </group>
                         </group>
@@ -157,12 +163,12 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Practice Information -->
+    <!-- Tree View Of Account Information -->
     <record id="view_podiatry_podiatry_tree" model="ir.ui.view">
         <field name="name">podiatry.podiatry.tree</field>
         <field name="model">podiatry.podiatry</field>
         <field name="arch" type="xml">
-            <tree string="Practice Information">
+            <tree string="Account Information">
                 <field name="name" string="Name" />
                 <field name="code" />
             </tree>
@@ -173,7 +179,7 @@
         <field name="name">podiatry.attendance.form</field>
         <field name="model">attendance.type</field>
         <field name="arch" type="xml">
-            <form string="Practice Information">
+            <form string="Account Information">
                 <separator string="Attendance Type" />
                 <group col="4" colspan="2">
                     <field name="name" placeholder="name"/>
@@ -182,24 +188,21 @@
             </form>
         </field>
     </record>
-    <!-- Form View Of Practice Practice Information -->
+    <!-- Form View Of Practice Account Information -->
     <record id="view_podiatry_practice_form" model="ir.ui.view">
         <field name="name">podiatry.practice.form</field>
         <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <form string="Practice Information">
+            <form string="Account Information">
                 <sheet>
-                    <separator string="Practice Information" />
+                    <separator string="Account Information" />
                     <group col="4" colspan="4">
                         <field name="practice_id" widget="selection" placeholder="Practice"/>
-                        <field name="division_id" widget="selection" placeholder="Division"/>
-                        <field name="medium_id" widget="selection" placeholder="Medium"/>
+                        <field name="type_id" widget="selection" placeholder="Type"/>
                         <field name="podiatry_id" widget="selection" placeholder="Practice"/>
                         <field name="user_id" placeholder="Select Faculty Name" widget="selection"/>
-                        <field name="capacity"/>
                         <field name="total_patients"/>
-                        <field name="remaining_seats"/>
-                        <field name="class_room_id" options="{&quot;no_create&quot;: True}"/>
+                        <field name="account_location_id" options="{&quot;no_create&quot;: True}"/>
                         <field name="name" invisible="1"/>
                         <field name="total_no_subjects" invisible="1"/>
                     </group>
@@ -248,21 +251,21 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Podiatry Practice Information -->
+    <!-- Tree View Of Podiatry Account Information -->
     <record id="view_podiatry_practice_tree" model="ir.ui.view">
         <field name="name">podiatry.practice.tree</field>
         <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <tree string="Practice Information">
+            <tree string="Account Information">
                 <field name="practice_id"/>
                 <field name="user_id"/>
-                <field name="division_id"/>
-                <field name="medium_id"/>
-                <field name="remaining_seats"/>
+                <field name="type_id"/>
+
+
             </tree>
         </field>
     </record>
-    <!-- Kanban View Of Practice Practice Information -->
+    <!-- Kanban View Of Practice Account Information -->
     <record id="podiatry_practice_kanban_view" model="ir.ui.view">
         <field name="name">podiatry.practice.kanban</field>
         <field name="model">podiatry.practice</field>
@@ -270,8 +273,7 @@
             <kanban default_group_by="practice_id">
                 <field name="podiatry_id" />
                 <field name="practice_id" />
-                <field name="division_id" />
-                <field name="medium_id" />
+                <field name="type_id" />
                 <field name="user_id" />
                 <field name="color" />
                 <templates>
@@ -297,7 +299,7 @@
                                             <td valign="top" align="left">
                                                 <div class="oe_kanban_title2">
                                                     <div>
-                                                        Location HCP :-
+                                                        Practice Location HCP :-
                                                         <field name="user_id" />
                                                     </div>
                                                 </div>
@@ -307,13 +309,10 @@
                                                         <field name="practice_id" />
                                                     </div>
                                                     <div>
-                                                        Division :-
-                                                        <field name="division_id" />
+                                                        Type :-
+                                                        <field name="type_id" />
                                                     </div>
-                                                    <div>
-                                                        Medium :-
-                                                        <field name="medium_id" />
-                                                    </div>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -334,24 +333,24 @@
             </kanban>
         </field>
     </record>
-    <!-- Search View Of Podiatry Practice Information -->
+    <!-- Search View Of Podiatry Account Information -->
     <record id="view_patient_patient_search" model="ir.ui.view">
         <field name="name">podiatry.practice.search</field>
         <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
-            <search string="Practice Information">
+            <search string="Account Information">
                 <group col="10" colspan="4">
                     <field name="practice_id" />
                     <field name="user_id" />
-                    <field name="division_id" />
-                    <field name="medium_id" />
+                    <field name="type_id" />
+
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
-                    <filter name="class" string="Location" help="By Location" context="{'group_by':'practice_id'}" />
-                    <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
-                    <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
+                    <filter name="class" string="Practice Location" help="By Practice Location" context="{'group_by':'practice_id'}" />
+                    <filter name="type" string="Type" help="By Type" context="{'group_by':'type_id'}" />
+
                 </group>
             </search>
         </field>
@@ -614,12 +613,12 @@
         <field name="res_model">document.type</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Form View Of Practice Division Information-->
-    <record id="view_practice_division_form" model="ir.ui.view">
-        <field name="name">practice.division.form</field>
-        <field name="model">practice.division</field>
+    <!-- Form View Of Practice Type Information-->
+    <record id="view_practice_type_form" model="ir.ui.view">
+        <field name="name">practice.type.form</field>
+        <field name="model">practice.type</field>
         <field name="arch" type="xml">
-            <form string="Divisions">
+            <form string="Types">
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="sequence" />
@@ -632,12 +631,12 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Practice Division Information-->
-    <record id="view_practice_division_tree" model="ir.ui.view">
-        <field name="name">practice.division.tree</field>
-        <field name="model">practice.division</field>
+    <!-- Tree View Of Practice Type Information-->
+    <record id="view_practice_type_tree" model="ir.ui.view">
+        <field name="name">practice.type.tree</field>
+        <field name="model">practice.type</field>
         <field name="arch" type="xml">
-            <tree string="Divisions">
+            <tree string="Types">
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -747,12 +746,12 @@
             </tree>
         </field>
     </record>
-    <!-- Form View Of Practice Information -->
+    <!-- Form View Of Account Information -->
     <record id="view_practice_practice_form" model="ir.ui.view">
-        <field name="name">practice.practice.form</field>
-        <field name="model">practice.practice</field>
+        <field name="name">podiatry.account.form</field>
+        <field name="model">podiatry.account</field>
         <field name="arch" type="xml">
-            <form string="Practice Information">
+            <form string="Account Information">
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="sequence"/>
@@ -766,12 +765,12 @@
             </form>
         </field>
     </record>
-    <!-- Tree View Of Practice Information -->
+    <!-- Tree View Of Account Information -->
     <record id="view_practice_practice_tree" model="ir.ui.view">
-        <field name="name">practice.practice.tree</field>
-        <field name="model">practice.practice</field>
+        <field name="name">podiatry.account.tree</field>
+        <field name="model">podiatry.account</field>
         <field name="arch" type="xml">
-            <tree string="Practice Information">
+            <tree string="Account Information">
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -817,7 +816,7 @@
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Practice -->
     <record id="action_podiatry_locations_form" model="ir.actions.act_window">
-        <field name="name">Locations</field>
+        <field name="name">Account Locations</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
@@ -851,10 +850,10 @@
         <field name="res_model">practice.medium</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Practice Division Information Action -->
-    <record id="action_practice_division_form" model="ir.actions.act_window">
-        <field name="name">Divisions</field>
-        <field name="res_model">practice.division</field>
+    <!-- Action Of Form & Tree Views Of Practice Type Information Action -->
+    <record id="action_practice_type_form" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="res_model">practice.type</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Subject Information -->
@@ -863,10 +862,10 @@
         <field name="res_model">subject.subject</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Action Of Form & Tree Views Of Practice Information -->
+    <!-- Action Of Form & Tree Views Of Account Information -->
     <record id="action_practice_practice_form" model="ir.actions.act_window">
         <field name="name">Practices</field>
-        <field name="res_model">practice.practice</field>
+        <field name="res_model">podiatry.account</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Form View Of Patient News -->
@@ -926,12 +925,12 @@
         <field name="res_model">patient.news</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Form View of Location Room -->
-    <record id="class_room_form_view" model="ir.ui.view">
-        <field name="name">class.room.form</field>
-        <field name="model">class.room</field>
+    <!-- Form View of Practice Location Room -->
+    <record id="account_location_form_view" model="ir.ui.view">
+        <field name="name">account.locations.form</field>
+        <field name="model">account.locations</field>
         <field name="arch" type="xml">
-            <form string="Location Room Form View">
+            <form string="Practice Location Room Form View">
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="name" required="1"/>
@@ -942,21 +941,21 @@
         </field>
     </record>
     <!-- Tree view of class Room -->
-    <record id="class_room_tree_view" model="ir.ui.view">
-        <field name="name">class.room.tree</field>
-        <field name="model">class.room</field>
+    <record id="account_location_tree_view" model="ir.ui.view">
+        <field name="name">account.locations.tree</field>
+        <field name="model">account.locations</field>
         <field name="arch" type="xml">
-            <tree string="Location Room Tree View">
+            <tree string="Practice Location Room Tree View">
                 <field name="name"/>
                 <field name="number"/>
             </tree>
         </field>
     </record>
 
-    <!-- Action of Location Room -->
-    <record id="action_class_room" model="ir.actions.act_window">
-        <field name="name">Location Room</field>
-        <field name="res_model">class.room</field>
+    <!-- Action of Practice Location Room -->
+    <record id="action_account_location" model="ir.actions.act_window">
+        <field name="name">Practice Location Room</field>
+        <field name="res_model">account.locations</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -991,7 +990,7 @@
 
     <!-- MenuItem For Configurations->Practices -->
     <menuitem id="menu_account_administration_form" name="Account Administration" parent="administration_register" sequence="2" />
-    <menuitem id="menu_podiatry_locations_form" name="Locations" parent="menu_account_administration_form" action="action_podiatry_locations_form" sequence="31"/>
+    <menuitem id="menu_podiatry_locations_form" name="Account Locations" parent="menu_account_administration_form" action="action_podiatry_locations_form" sequence="31"/>
     <menuitem id="account_profile_menu" name="Accounts" parent="menu_account_administration_form" action="action_podiatry_podiatry_form" sequence="30" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
 
 

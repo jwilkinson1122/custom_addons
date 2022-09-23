@@ -17,7 +17,7 @@ The Acedemic year from which you need to move the patient to next Year.""")
         '''Code for moving patient to next practice'''
         academic_obj = self.env['academic.year']
         podiatry_pract_obj = self.env['podiatry.practice']
-        practice_obj = self.env["practice.practice"]
+        practice_obj = self.env["podiatry.account"]
         patient_obj = self.env['patient.patient']
         next_year_id = academic_obj.next_year(self.academic_year_id.sequence)
         if not next_year_id:
@@ -27,15 +27,14 @@ The Acedemic year from which you need to move the patient to next Year.""")
                                        ('year', '=', self.academic_year_id.id)])
         for pat in done_rec:
             practice_seq = pat.practice_id.practice_id.sequence
-            next_class_id = practice_obj.next_practice(practice_seq)
+            next_class_id = practice_obj.next_account(practice_seq)
             # Assign the academic year
             if next_class_id:
-                division = pat.practice_id.division_id.id or False
+                type = pat.practice_id.type_id.id or False
                 next_pract = podiatry_pract_obj.search([
                     ('practice_id', '=', next_class_id),
-                    ('division_id', '=', division),
-                    ('podiatry_id', '=', pat.podiatry_id.id),
-                    ('medium_id', '=', pat.medium_id.id)])
+                    ('type_id', '=', type),
+                    ('podiatry_id', '=', pat.podiatry_id.id)])
                 if next_pract:
                     pract_vals = {'year': next_year_id.id,
                                   'practice_id': next_pract.id}

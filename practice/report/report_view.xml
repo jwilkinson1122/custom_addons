@@ -1,0 +1,11 @@
+<odoo>
+    <!--Report for practice prescription -->
+    <record id="report_practice_management" model="ir.actions.report">
+        <field name="name">Practice Prescription</field>
+        <field name="model">practice.prescription</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_file">practice.report_practice_prescription</field>
+        <field name="report_name">practice.report_practice_prescription</field>
+
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<odoo>
+    <!--Form view for prescription report wizard -->
+    <record id="view_practice_prescription_wizard" model="ir.ui.view">
+        <field name="name">prescription.report.wizard</field>
+        <field name="model">prescription.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Prescription Report">
+                <group col="4">
+                    <field name="date_start" required="1" />
+                    <field name="date_end" required="1" />
+                </group>
+                <footer>
+                    <button name="print_report" string="Print Prescription" icon="fa-print" type="object" class="oe_highlight" />
+                    <button string="Cancel" icon="fa-close" class="btn btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--Action for prescription report wizard -->
+    <record id="practice_prescription_wizard" model="ir.actions.act_window">
+        <field name="name">Practice Prescription Report</field>
+        <field name="res_model">prescription.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem name="Practice Prescription Report" action="practice_prescription_wizard" id="wizard_practice_menu" parent="practice_report_menu" sequence="31" />
+</odoo>

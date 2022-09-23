@@ -56,7 +56,6 @@ class TestPodiatry(common.TransactionCase):
         self.academic_month._check_year_limit()
         self.assign_roll_no = self.assign_roll_obj.\
             create({'practice_id': self.pract.id,
-                    'medium_id': self.practice_medium.id
                     })
         self.assign_roll_no.assign_rollno()
 

@@ -172,43 +172,54 @@ class PracticeMedium(models.Model):
     description = fields.Text('Description', help='Description')
 
 
-class PracticeDivision(models.Model):
-    '''Defining a division(A, B, C) related to practice'''
+class PracticeType(models.Model):
+    '''Defining a type(General Podiatry, Hospital, VA etc.) related to practice'''
 
-    _name = "practice.division"
-    _description = "Practice Division"
+    _name = "practice.type"
+    _description = "Practice Type"
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
                               help='Sequence of the record')
     name = fields.Char('Name', required=True,
-                       help='Division of the practice')
+                       help='Type of the practice')
     code = fields.Char('Code', required=True,
                        help='Practice code')
     description = fields.Text('Description', help='Description')
 
 
-class PracticePractice(models.Model):
-    '''Defining Practice Information.'''
+class PodiatryAccount(models.Model):
+    '''Defining Account Information.'''
 
-    _name = 'practice.practice'
-    _description = 'Practice Information'
+    _name = 'podiatry.account'
+    _description = 'Account Information'
     _order = "sequence"
 
     sequence = fields.Integer('Sequence', required=True,
                               help='Sequence of the record')
     name = fields.Char('Name', required=True,
-                       help='Practice name')
+                       help='Acccount name')
     code = fields.Char('Code', required=True,
-                       help='Code of practice')
+                       help='Code of account')
+
     description = fields.Text('Description', help='Description')
 
     @api.model
-    def next_practice(self, sequence):
-        '''This method check sequence of practice'''
+    def next_account(self, sequence):
+        '''This method check sequence of account'''
         stand_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
         return stand_rec and stand_rec.id or False
+
+
+class PodiatryLocation(models.Model):
+
+    _name = "podiatry.location"
+    _description = "Location"
+    _order = "sequence"
+
+    name = fields.Char("Location Name", required=True, index=True)
+    sequence = fields.Integer("sequence")
 
 
 class PodiatryPractice(models.Model):
@@ -218,8 +229,7 @@ class PodiatryPractice(models.Model):
     _description = 'Podiatry Practices'
     _rec_name = "practice_id"
 
-    @api.depends('practice_id', 'podiatry_id', 'division_id', 'medium_id',
-                 'podiatry_id')
+    @api.depends('practice_id', 'podiatry_id', 'type_id', 'podiatry_id')
     def _compute_patient(self):
         '''Compute patient of done state'''
         patient_obj = self.env['patient.patient']
@@ -227,8 +237,7 @@ class PodiatryPractice(models.Model):
             rec.patient_ids = patient_obj.\
                 search([('practice_id', '=', rec.id),
                         ('podiatry_id', '=', rec.podiatry_id.id),
-                        ('division_id', '=', rec.division_id.id),
-                        ('medium_id', '=', rec.medium_id.id),
+                        ('type_id', '=', rec.type_id.id),
                         ('state', '=', 'done')])
 
     @api.depends('subject_ids')
@@ -243,27 +252,20 @@ class PodiatryPractice(models.Model):
         for rec in self:
             rec.total_patients = len(rec.patient_ids)
 
-    @api.depends("capacity", "total_patients")
-    def _compute_remain_seats(self):
-        '''Method to compute remaining seats.'''
-        for rec in self:
-            rec.remaining_seats = rec.capacity - rec.total_patients
-
     podiatry_id = fields.Many2one('podiatry.podiatry', 'Practice', required=True,
                                   help='Practice of the following practice')
-    practice_id = fields.Many2one('practice.practice', 'Practice',
+    practice_id = fields.Many2one('podiatry.account', 'Practice',
                                   required=True, help='Practice')
-    division_id = fields.Many2one('practice.division', 'Division',
-                                  required=True, help='Practice division')
-    medium_id = fields.Many2one('practice.medium', 'Medium', required=True,
-                                help='Medium of the practice')
+    type_id = fields.Many2one('practice.type', 'Type',
+                              required=True, help='Practice type')
+
     subject_ids = fields.Many2many('subject.subject', 'subject_practices_rel',
                                    'subject_id', 'practice_id', 'Subject',
                                    help='Subjects of the practice')
-    user_id = fields.Many2one('podiatry.hcp', 'Location',
+    user_id = fields.Many2one('podiatry.hcp', 'Practice Location',
                               help='HCP of the practice')
     patient_ids = fields.One2many('patient.patient', 'practice_id',
-                                  'Patient In Location',
+                                  'Patient In Practice Location',
                                   compute='_compute_patient', store=True,
                                   help='Patients which are in this practice'
                                   )
@@ -278,33 +280,30 @@ class PodiatryPractice(models.Model):
                                        compute="_compute_subject",
                                        help='Total subjects in the practice')
     name = fields.Char('Name', help='Practice name')
-    capacity = fields.Integer("Total Seats", help='Practice capacity')
+
     total_patients = fields.Integer("Total Patients",
                                     compute="_compute_total_patient",
                                     store=True,
                                     help='Total patients of the practice')
-    remaining_seats = fields.Integer("Available Seats",
-                                     compute="_compute_remain_seats",
-                                     store=True,
-                                     help='Remaining seats of the practice')
-    class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='Location room of the practice')
 
-    @api.onchange('practice_id', 'division_id')
+    account_location_id = fields.Many2one('account.locations', 'Practice Location ID',
+                                          help='Practice Location of the practice')
+
+    @api.onchange('practice_id', 'type_id')
     def onchange_combine(self):
-        '''Onchange to assign name respective of it's practice and division'''
+        '''Onchange to assign name respective of it's practice and type'''
         self.name = str(self.practice_id.name
-                        ) + '-' + str(self.division_id.name)
+                        ) + '-' + str(self.type_id.name)
 
-    @api.constrains('practice_id', 'division_id')
+    @api.constrains('practice_id', 'type_id')
     def check_practice_unique(self):
         """Method to check unique practice."""
         if self.env['podiatry.practice'].search([
             ('practice_id', '=', self.practice_id.id),
-            ('division_id', '=', self.division_id.id),
+            ('type_id', '=', self.type_id.id),
             ('podiatry_id', '=', self.podiatry_id.id),
                 ('id', 'not in', self.ids)]):
-            raise ValidationError(_("Division and class should be unique!"))
+            raise ValidationError(_("Type and class should be unique!"))
 
     def unlink(self):
         """Method to check unique practice."""
@@ -314,15 +313,9 @@ class PodiatryPractice(models.Model):
                     "You cannot delete as it has reference with patient, subject or syllabus!"))
         return super(PodiatryPractice, self).unlink()
 
-    @api.constrains('capacity')
-    def check_seats(self):
-        """Method to check seats."""
-        if self.capacity <= 0:
-            raise ValidationError(_("Total seats should be greater than 0!"))
-
     def name_get(self):
-        '''Method to display practice and division'''
-        return [(rec.id, rec.practice_id.name + '[' + rec.division_id.name +
+        '''Method to display practice and type'''
+        return [(rec.id, rec.practice_id.name + '[' + rec.type_id.name +
                  ']') for rec in self]
 
 
@@ -330,13 +323,8 @@ class PodiatryPodiatry(models.Model):
     ''' Defining Podiatry Information'''
 
     _name = 'podiatry.podiatry'
-    _description = 'Practice Information'
+    _description = 'Account Information'
     _rec_name = "com_name"
-
-    is_location = fields.Boolean(default=False)
-
-    podiatry_id = fields.Many2one('podiatry.podiatry', "Practice",
-                                  help='Select practice')
 
     @api.constrains('code')
     def _check_code(self):
@@ -346,10 +334,27 @@ class PodiatryPodiatry(models.Model):
                 raise ValidationError("Practice Code must be Unique")
 
     @api.model
+    def name_search(self, name="", args=None, operator="ilike", limit=100):
+        if args is None:
+            args = []
+        args += [("name", operator, name)]
+        account = self.search(args, limit=100)
+        return account.name_get()
+
+    @api.model
     def _lang_get(self):
         '''Method to get language'''
         languages = self.env['res.lang'].search([])
         return [(language.code, language.name) for language in languages]
+
+    is_parent_account = fields.Boolean(
+        'Parent Acct', default=True, help='Select this if parent account')
+
+    podiatry_id = fields.Many2one('podiatry.podiatry', "Practice",
+                                  help='Select practice')
+
+    name = fields.Char("Acct Number", readonly=True,
+                       index=True, default="New Account", help='Acct number')
 
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
                                  required=True, delegate=True,
@@ -357,7 +362,7 @@ class PodiatryPodiatry(models.Model):
     com_name = fields.Char('Practice Name', related='company_id.name',
                            store=True, help='practice name')
     code = fields.Char('Code', readonly=True,
-                       help='Practice code')  # Field: identifier
+                       help='Practice code')
     # code = fields.Char('Code', required=True, help='Podiatry code')
     practices = fields.One2many('podiatry.practice', 'podiatry_id',
                                 'Practices', help='Practice practice')
@@ -383,7 +388,7 @@ class PodiatryPodiatry(models.Model):
         res = super(PodiatryPodiatry, self)._get_podiatry_identifiers()
         res.append(
             (
-                "is_location",
+                "is_parent_account",
                 "code",
                 self._get_location_identifier,
             )
@@ -397,7 +402,7 @@ class PodiatryPodiatry(models.Model):
     @api.model
     def default_podiatry_fields(self):
         result = super(PodiatryPodiatry, self).default_podiatry_fields()
-        result.append("is_location")
+        result.append("is_parent_account")
         return result
 
 
@@ -487,11 +492,11 @@ class SubjectSubject(models.Model):
     hcp_ids = fields.Many2many('podiatry.hcp', 'subject_hcp_rel',
                                'subject_id', 'hcp_id', 'HCPs',
                                help='HCPs of the following subject')
-    practice_ids = fields.Many2many('practice.practice', string='Practices',
+    practice_ids = fields.Many2many('podiatry.account', string='Practices',
                                     help='''Practices in which the 
                                     following subject taught''')
-    practice_id = fields.Many2one('practice.practice', 'Location',
-                                  help='''Location in which the following
+    practice_id = fields.Many2one('podiatry.account', 'Practice Location',
+                                  help='''Practice Location in which the following
                                   subject taught''')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
@@ -647,8 +652,8 @@ class PatientDescipline(models.Model):
     hcp_id = fields.Many2one('podiatry.hcp', 'HCP',
                              help='HCP who examine the patient')
     date = fields.Date('Date', help='Date')
-    class_id = fields.Many2one('practice.practice', 'Location',
-                               help='Location of patient')
+    class_id = fields.Many2one('podiatry.account', 'Practice Location',
+                               help='Practice Location of patient')
     note = fields.Text('Note', help='Discipline Note')
     action_taken = fields.Text('Action Taken',
                                help='Action taken against discipline')
@@ -721,7 +726,7 @@ class PatientPreviousPodiatry(models.Model):
                                help='Patient admission date')
     exit_date = fields.Date('Exit Date',
                             help='Patient previous podiatry exit date')
-    course_id = fields.Many2one('practice.practice', 'Course', required=True,
+    course_id = fields.Many2one('podiatry.account', 'Course', required=True,
                                 help='Patient gender')
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
                               help='Patient gender')
@@ -957,14 +962,18 @@ class PatientCast(models.Model):
     name = fields.Char("Name", required=True, help='Patient cast')
 
 
-class LocationRoom(models.Model):
-    """Defining class room."""
+class AccountLocations(models.Model):
+    """Defining account locations"""
 
-    _name = "class.room"
-    _description = "Location Room"
+    _name = "account.locations"
+    _description = "Practice Locations"
 
-    name = fields.Char("Name", help='Location room name')
-    number = fields.Char("Room Number", help='Location room number')
+    name = fields.Char("Name", help='Practice Location names')
+    # number = fields.Char("Account Location Number",
+    #                      help='Account Location number')
+
+    number = fields.Char("Practice Location Number", readonly=True,
+                         index=True, default="New Account", help='Practice Location number')
 
 
 class Report(models.Model):

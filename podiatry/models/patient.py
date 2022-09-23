@@ -202,10 +202,9 @@ class PatientPatient(models.Model):
                           readonly=True, help='Enter patient first name', tracking=True)
     Acadamic_year = fields.Char('Year', related='year.name',
                                 help='Year', readonly=True, tracking=True)
-    division_id = fields.Many2one('practice.division', 'Division',
-                                  help='Select patient practice division', tracking=True)
-    medium_id = fields.Many2one('practice.medium', 'Medium',
-                                help='Select patient practice medium', tracking=True)
+    type_id = fields.Many2one('practice.type', 'Type',
+                              help='Select patient practice type', tracking=True)
+
     practice_id = fields.Many2one('podiatry.practice', 'Practice',
                                   help='Select patient practice', tracking=True)
     doctor_id = fields.Many2many('podiatry.doctor', 'patients_doctors_rel',
@@ -314,9 +313,6 @@ class PatientPatient(models.Model):
         for rec in self:
             if not rec.practice_id:
                 raise ValidationError(_("Please select class!"))
-            if rec.practice_id.remaining_seats <= 0:
-                raise ValidationError(_('Seats of class %s are full'
-                                        ) % rec.practice_id.practice_id.name)
             domain = [('podiatry_id', '=', rec.podiatry_id.id)]
             # Checks the practice if not defined raise error
             if not podiatry_practice_obj.search(domain):
