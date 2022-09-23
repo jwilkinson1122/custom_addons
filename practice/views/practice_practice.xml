@@ -60,9 +60,9 @@
                                 <field name="taxes_id" widget="many2many_tags" string="Customer Taxes" />
                             </group>
                         </page>
-                        <page string="Practice Amenities">
-                            <separator string=" Practice Amenities" />
-                            <field name="practice_amenities_ids" colspan="4" nolabel="1" />
+                        <page string="Practice Devices">
+                            <separator string=" Practice Devices" />
+                            <field name="practice_devices_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Procurement">
                             <group colspan="4" col="4">

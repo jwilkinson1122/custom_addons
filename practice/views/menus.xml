@@ -6,9 +6,9 @@
     <menuitem id="menu_open_practice_location_form_tree" name="Practice Locations" action="open_practice_location_form_tree" sequence="21" parent="practice.menu_practice_practice" />
     <menuitem id="menu_practice_practice" name="Practice Administration" parent="practice.practice_configuration_menu" sequence="2" />
     <menuitem id="menu_open_practice_practice_type_form_tree" name="Practice Types" action="open_practice_practice_type_form_tree" sequence="6" parent="practice.menu_practice_practice" />
-    <menuitem id="menu_amenity" name="Amenity" parent="practice.practice_configuration_menu" sequence="2" />
-    <menuitem name="Amenity Types" id="menu_action_practice_practice_amenities_type_view_form" action="action_practice_practice_amenities_type_view_form" sequence="3" parent="practice.menu_amenity" />
-    <menuitem id="menu_action_practice_practice_amenities_view_form" name="Amenities" action="action_practice_practice_amenities_view_form" sequence="2" parent="practice.menu_amenity" />
+    <menuitem id="menu_device" name="Device" parent="practice.practice_configuration_menu" sequence="2" />
+    <menuitem name="Device Types" id="menu_action_practice_practice_devices_type_view_form" action="action_practice_practice_devices_type_view_form" sequence="3" parent="practice.menu_device" />
+    <menuitem id="menu_action_practice_practice_devices_view_form" name="Devices" action="action_practice_practice_devices_view_form" sequence="2" parent="practice.menu_device" />
     <menuitem id="menu_open_practice_practice_form" name="Practices" action="action_practice_practice_form" sequence="5" parent="practice.menu_practice_practice" />
     <menuitem id="menu_all_prescription" name="Prescription" parent="practice.practice_management_menu" sequence="4" />
     <menuitem name="Generate Prescription" id="menu_open_practice_prescription1_form_tree_all" action="open_practice_prescription1_form_tree_all" sequence="5" parent="menu_all_prescription" />

@@ -18,7 +18,7 @@
         "report/practice_prescription_report_template.xml",
         "views/practice_prescription.xml",
         "views/practice_practice.xml",
-        "views/practice_practice_amenities.xml",
+        "views/practice_practice_devices.xml",
         "views/practice_practice_type.xml",
         "views/practice_service_type.xml",
         "views/practice_services.xml",

@@ -15,24 +15,24 @@
         <field eval="&quot;Third&quot;" name="name" />
         <field eval="3" name="sequence" />
     </record>
-    <!-- practice_practice_amenities_type -->
-    <record id="practice_practice_amenities_type_0" model="practice.practice.amenities.type">
+    <!-- practice_practice_devices_type -->
+    <record id="practice_practice_devices_type_0" model="practice.practice.devices.type">
         <field name="name">All Aminities</field>
     </record>
-    <record id="practice_practice_amenities_type_1" model="practice.practice.amenities.type">
-        <field name="amenity_id" search="[('name', '=', 'All Aminities')]" />
+    <record id="practice_practice_devices_type_1" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Aminities')]" />
         <field name="name">Beds</field>
     </record>
-    <record id="practice_practice_amenities_type_2" model="practice.practice.amenities.type">
-        <field name="amenity_id" search="[('name', '=', 'All Aminities')]" />
+    <record id="practice_practice_devices_type_2" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Aminities')]" />
         <field name="name">Tables</field>
     </record>
-    <record id="practice_practice_amenities_type_3" model="practice.practice.amenities.type">
-        <field name="amenity_id" search="[('name', '=', 'Beds')]" />
+    <record id="practice_practice_devices_type_3" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Beds')]" />
         <field name="name">Single Bed</field>
     </record>
-    <record id="practice_practice_amenities_type_4" model="practice.practice.amenities.type">
-        <field name="amenity_id" search="[('name', '=', 'Beds')]" />
+    <record id="practice_practice_devices_type_4" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Beds')]" />
         <field name="name">Double Bed</field>
     </record>
     <!-- practice_practice_type -->
@@ -139,20 +139,20 @@
         <field name="service_categ_id" search="[('name', '=', 'Fixed')]" />
         <field name="list_price">150.00</field>
     </record>
-    <!--Amenities -->
-    <record id="practice_practice_amenities_1" model="practice.practice.amenities">
+    <!--Devices -->
+    <record id="practice_practice_devices_1" model="practice.practice.devices">
         <field name="name">Toiletries</field>
         <field name="iscategid">1</field>
-        <field name="amenities_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
     </record>
-    <record id="practice_practice_amenities_2" model="practice.practice.amenities">
+    <record id="practice_practice_devices_2" model="practice.practice.devices">
         <field name="name">Iron</field>
         <field name="iscategid">1</field>
-        <field name="amenities_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
     </record>
-    <record id="practice_practice_amenities_3" model="practice.practice.amenities">
+    <record id="practice_practice_devices_3" model="practice.practice.devices">
         <field name="name">Irons Boards</field>
         <field name="iscategid">1</field>
-        <field name="amenities_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
     </record>
 </odoo>

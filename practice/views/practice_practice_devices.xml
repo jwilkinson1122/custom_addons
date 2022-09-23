@@ -1,38 +1,38 @@
 <odoo>
-    <!--==== Amenities Type ==== -->
-    <!-- Form view of practice practice amenities type -->
-    <record id="view_practice_practice_amenities_type_form" model="ir.ui.view">
-        <field name="name">practice.practice_amenities_type_form</field>
-        <field name="model">practice.practice.amenities.type</field>
+    <!--==== Devices Type ==== -->
+    <!-- Form view of practice practice devices type -->
+    <record id="view_practice_practice_devices_type_form" model="ir.ui.view">
+        <field name="name">practice.practice_devices_type_form</field>
+        <field name="model">practice.practice.devices.type</field>
         <field name="arch" type="xml">
-            <form string="Practice Practice Amenities Type">
+            <form string="Practice Practice Devices Type">
                 <sheet>
                     <group>
-                        <field name="name" string="Amenity Type" />
-                        <field name="amenity_id" />
+                        <field name="name" string="Device Type" />
+                        <field name="device_id" />
                         <field name="child_ids" invisible="1" />
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
-    <!-- Tree view of practice practice amenities type -->
-    <record id="view_practice_practice_amenities_type_list" model="ir.ui.view">
-        <field name="name">practice.practice_amenities_type_list</field>
-        <field name="model">practice.practice.amenities.type</field>
+    <!-- Tree view of practice practice devices type -->
+    <record id="view_practice_practice_devices_type_list" model="ir.ui.view">
+        <field name="name">practice.practice_devices_type_list</field>
+        <field name="model">practice.practice.devices.type</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <!--===== Practice Amenities ===== -->
-    <!-- Form view of practice practice amenities -->
-    <record id="view_practice_practice_amenities_form" model="ir.ui.view">
-        <field name="name">practice.practice.amenities.form</field>
-        <field name="model">practice.practice.amenities</field>
+    <!--===== Practice Devices ===== -->
+    <!-- Form view of practice practice devices -->
+    <record id="view_practice_practice_devices_form" model="ir.ui.view">
+        <field name="name">practice.practice.devices.form</field>
+        <field name="model">practice.practice.devices</field>
         <field name="arch" type="xml">
-            <form string="Practice Practice Amenities">
+            <form string="Practice Practice Devices">
                 <sheet>
                     <label for="name" string="Name" />
                     <h1>
@@ -41,9 +41,9 @@
                     <notebook>
                         <page string="Information">
                             <group colspan="4" col="4">
-                                <field name="type" select="2" string="Amenity Type" />
-                                <field name="amenities_categ_id" string="Amenities Category" />
-                                <field name="product_manager" select="2" string="Amenity manager" />
+                                <field name="type" select="2" string="Device Type" />
+                                <field name="devices_categ_id" string="Devices Category" />
+                                <field name="product_manager" select="2" string="Device manager" />
                                 <field name="uom_id" />
                                 <field name="default_code" />
                                 <field name="uom_po_id" />
@@ -78,27 +78,27 @@
             </form>
         </field>
     </record>
-    <!-- Search view of practice practice amenities -->
+    <!-- Search view of practice practice devices -->
     <record id="view_practice_practice_aenities_search" model="ir.ui.view">
-        <field name="name">practice.practice_amenities_search</field>
-        <field name="model">practice.practice.amenities</field>
+        <field name="name">practice.practice_devices_search</field>
+        <field name="model">practice.practice.devices</field>
         <field name="arch" type="xml">
-            <search string="Practice Practice Amenities">
+            <search string="Practice Practice Devices">
                 <field name="name" />
-                <field name="amenities_categ_id" string="Amenities Category" />
-                <field name="list_price" string="Amenity rate" />
+                <field name="devices_categ_id" string="Devices Category" />
+                <field name="list_price" string="Device rate" />
             </search>
         </field>
     </record>
-    <!-- Tree view of practice practice amenities -->
-    <record id="view_practice_practice_amenities_list" model="ir.ui.view">
-        <field name="name">practice.practice_amenities_list</field>
-        <field name="model">practice.practice.amenities</field>
+    <!-- Tree view of practice practice devices -->
+    <record id="view_practice_practice_devices_list" model="ir.ui.view">
+        <field name="name">practice.practice_devices_list</field>
+        <field name="model">practice.practice.devices</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
-                <field name="amenities_categ_id" string="Amenities Category" />
-                <field name="list_price" string="Amenity Rate" invisible="1" />
+                <field name="devices_categ_id" string="Devices Category" />
+                <field name="list_price" string="Device Rate" invisible="1" />
             </tree>
         </field>
     </record>

@@ -38,8 +38,8 @@ class PracticePractice(models.Model):
     practice_categ_id = fields.Many2one(
         "practice.practice.type", "Practice Category", required=True, ondelete="restrict"
     )
-    practice_amenities_ids = fields.Many2many(
-        "practice.practice.amenities", string="Practice Amenities", help="List of practice amenities."
+    practice_devices_ids = fields.Many2many(
+        "practice.practice.devices", string="Practice Devices", help="List of practice devices."
     )
     status = fields.Selection(
         [("available", "Available"), ("occupied", "Occupied")],
@@ -202,15 +202,15 @@ class PracticePracticeType(models.Model):
         return categories.name_get()
 
 
-class PracticePracticeAmenitiesType(models.Model):
+class PracticePracticeDevicesType(models.Model):
 
-    _name = "practice.practice.amenities.type"
-    _description = "amenities Type"
+    _name = "practice.practice.devices.type"
+    _description = "devices Type"
 
-    amenity_id = fields.Many2one(
-        "practice.practice.amenities.type", "Category")
+    device_id = fields.Many2one(
+        "practice.practice.devices.type", "Category")
     child_ids = fields.One2many(
-        "practice.practice.amenities.type", "amenity_id", "Amenities Child Categories"
+        "practice.practice.devices.type", "device_id", "Devices Child Categories"
     )
     product_categ_id = fields.Many2one(
         "product.category",
@@ -223,28 +223,28 @@ class PracticePracticeAmenitiesType(models.Model):
 
     @api.model
     def create(self, vals):
-        if "amenity_id" in vals:
-            amenity_categ = self.env["practice.practice.amenities.type"].browse(
-                vals.get("amenity_id")
+        if "device_id" in vals:
+            device_categ = self.env["practice.practice.devices.type"].browse(
+                vals.get("device_id")
             )
-            vals.update({"parent_id": amenity_categ.product_categ_id.id})
-        return super(PracticePracticeAmenitiesType, self).create(vals)
+            vals.update({"parent_id": device_categ.product_categ_id.id})
+        return super(PracticePracticeDevicesType, self).create(vals)
 
     def write(self, vals):
-        if "amenity_id" in vals:
-            amenity_categ = self.env["practice.practice.amenities.type"].browse(
-                vals.get("amenity_id")
+        if "device_id" in vals:
+            device_categ = self.env["practice.practice.devices.type"].browse(
+                vals.get("device_id")
             )
-            vals.update({"parent_id": amenity_categ.product_categ_id.id})
-        return super(PracticePracticeAmenitiesType, self).write(vals)
+            vals.update({"parent_id": device_categ.product_categ_id.id})
+        return super(PracticePracticeDevicesType, self).write(vals)
 
     def name_get(self):
         def get_names(cat):
-            """Return the list [cat.name, cat.amenity_id.name, ...]"""
+            """Return the list [cat.name, cat.device_id.name, ...]"""
             res = []
             while cat:
                 res.append(cat.name)
-                cat = cat.amenity_id
+                cat = cat.device_id
             return res
 
         return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
@@ -270,11 +270,11 @@ class PracticePracticeAmenitiesType(models.Model):
                 if operator in expression.NEGATIVE_TERM_OPERATORS:
                     categories = self.search([("id", "not in", category_ids)])
                     domain = expression.OR(
-                        [[("amenity_id", "in", categories.ids)], domain]
+                        [[("device_id", "in", categories.ids)], domain]
                     )
                 else:
                     domain = expression.AND(
-                        [[("amenity_id", "in", category_ids)], domain]
+                        [[("device_id", "in", category_ids)], domain]
                     )
                 for i in range(1, len(category_names)):
                     domain = [
@@ -298,21 +298,21 @@ class PracticePracticeAmenitiesType(models.Model):
         return categories.name_get()
 
 
-class PracticePracticeAmenities(models.Model):
+class PracticePracticeDevices(models.Model):
 
-    _name = "practice.practice.amenities"
-    _description = "Practice amenities"
+    _name = "practice.practice.devices"
+    _description = "Practice devices"
 
     product_id = fields.Many2one(
         "product.product",
-        "Practice Amenities Product",
+        "Practice Devices Product",
         required=True,
         delegate=True,
         ondelete="cascade",
     )
-    amenities_categ_id = fields.Many2one(
-        "practice.practice.amenities.type",
-        "Amenities Category",
+    devices_categ_id = fields.Many2one(
+        "practice.practice.devices.type",
+        "Devices Category",
         required=True,
         ondelete="restrict",
     )
@@ -320,12 +320,12 @@ class PracticePracticeAmenities(models.Model):
 
     @api.model
     def create(self, vals):
-        if "amenities_categ_id" in vals:
-            amenities_categ = self.env["practice.practice.amenities.type"].browse(
-                vals.get("amenities_categ_id")
+        if "devices_categ_id" in vals:
+            devices_categ = self.env["practice.practice.devices.type"].browse(
+                vals.get("devices_categ_id")
             )
-            vals.update({"categ_id": amenities_categ.product_categ_id.id})
-        return super(PracticePracticeAmenities, self).create(vals)
+            vals.update({"categ_id": devices_categ.product_categ_id.id})
+        return super(PracticePracticeDevices, self).create(vals)
 
     def write(self, vals):
         """
@@ -333,9 +333,9 @@ class PracticePracticeAmenities(models.Model):
         @param self: The object pointer
         @param vals: dictionary of fields value.
         """
-        if "amenities_categ_id" in vals:
-            amenities_categ = self.env["practice.practice.amenities.type"].browse(
-                vals.get("amenities_categ_id")
+        if "devices_categ_id" in vals:
+            devices_categ = self.env["practice.practice.devices.type"].browse(
+                vals.get("devices_categ_id")
             )
-            vals.update({"categ_id": amenities_categ.product_categ_id.id})
-        return super(PracticePracticeAmenities, self).write(vals)
+            vals.update({"categ_id": devices_categ.product_categ_id.id})
+        return super(PracticePracticeDevices, self).write(vals)
