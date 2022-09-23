@@ -8,17 +8,17 @@ from odoo.osv import expression
 class PracticeLocation(models.Model):
 
     _name = "practice.location"
-    _description = "Location"
+    _description = "Practice Locations"
     _order = "sequence"
 
     name = fields.Char("Location Name", required=True, index=True)
     sequence = fields.Integer("sequence", default=10)
 
 
-class PracticeRoom(models.Model):
+class PracticePractice(models.Model):
 
     _name = "practice.practice"
-    _description = "Practice Room"
+    _description = "Practice Practice"
 
     product_id = fields.Many2one(
         "product.product",
@@ -36,10 +36,10 @@ class PracticeRoom(models.Model):
     max_adult = fields.Integer()
     max_child = fields.Integer()
     practice_categ_id = fields.Many2one(
-        "practice.practice.type", "Room Category", required=True, ondelete="restrict"
+        "practice.practice.type", "Practice Category", required=True, ondelete="restrict"
     )
     practice_amenities_ids = fields.Many2many(
-        "practice.practice.amenities", string="Room Amenities", help="List of practice amenities."
+        "practice.practice.amenities", string="Practice Amenities", help="List of practice amenities."
     )
     status = fields.Selection(
         [("available", "Available"), ("occupied", "Occupied")],
@@ -47,7 +47,7 @@ class PracticeRoom(models.Model):
     )
     capacity = fields.Integer(required=True)
     practice_line_ids = fields.One2many(
-        "prescription.practice.line", "practice_id", string="Room Reservation Line"
+        "prescription.practice.line", "practice_id", string="Practice Reservation Line"
     )
     product_manager = fields.Many2one("res.users")
 
@@ -57,13 +57,14 @@ class PracticeRoom(models.Model):
             practice_categ = self.env["practice.practice.type"].browse(
                 vals.get("practice_categ_id"))
             vals.update({"categ_id": practice_categ.product_categ_id.id})
-        return super(PracticeRoom, self).create(vals)
+        return super(PracticePractice, self).create(vals)
 
     @api.constrains("capacity")
     def _check_capacity(self):
         for practice in self:
             if practice.capacity <= 0:
-                raise ValidationError(_("Room capacity must be more than 0"))
+                raise ValidationError(
+                    _("Practice capacity must be more than 0"))
 
     @api.onchange("ispractice")
     def _ispractice_change(self):
@@ -88,7 +89,7 @@ class PracticeRoom(models.Model):
             vals.update({"color": 2, "status": "occupied"})
         if "ispractice" in vals and vals["ispractice"] is True:
             vals.update({"color": 5, "status": "available"})
-        return super(PracticeRoom, self).write(vals)
+        return super(PracticePractice, self).write(vals)
 
     def set_practice_status_occupied(self):
         """
@@ -109,14 +110,14 @@ class PracticeRoom(models.Model):
         return self.write({"ispractice": True, "color": 5})
 
 
-class PracticeRoomType(models.Model):
+class PracticePracticeType(models.Model):
 
     _name = "practice.practice.type"
-    _description = "Room Type"
+    _description = "Practice Type"
 
     categ_id = fields.Many2one("practice.practice.type", "Category")
     child_ids = fields.One2many(
-        "practice.practice.type", "categ_id", "Room Child Categories")
+        "practice.practice.type", "categ_id", "Practice Child Categories")
     product_categ_id = fields.Many2one(
         "product.category",
         "Product Category",
@@ -132,14 +133,14 @@ class PracticeRoomType(models.Model):
             practice_categ = self.env["practice.practice.type"].browse(
                 vals.get("categ_id"))
             vals.update({"parent_id": practice_categ.product_categ_id.id})
-        return super(PracticeRoomType, self).create(vals)
+        return super(PracticePracticeType, self).create(vals)
 
     def write(self, vals):
         if "categ_id" in vals:
             practice_categ = self.env["practice.practice.type"].browse(
                 vals.get("categ_id"))
             vals.update({"parent_id": practice_categ.product_categ_id.id})
-        return super(PracticeRoomType, self).write(vals)
+        return super(PracticePracticeType, self).write(vals)
 
     def name_get(self):
         def get_names(cat):
@@ -201,7 +202,7 @@ class PracticeRoomType(models.Model):
         return categories.name_get()
 
 
-class PracticeRoomAmenitiesType(models.Model):
+class PracticePracticeAmenitiesType(models.Model):
 
     _name = "practice.practice.amenities.type"
     _description = "amenities Type"
@@ -227,7 +228,7 @@ class PracticeRoomAmenitiesType(models.Model):
                 vals.get("amenity_id")
             )
             vals.update({"parent_id": amenity_categ.product_categ_id.id})
-        return super(PracticeRoomAmenitiesType, self).create(vals)
+        return super(PracticePracticeAmenitiesType, self).create(vals)
 
     def write(self, vals):
         if "amenity_id" in vals:
@@ -235,7 +236,7 @@ class PracticeRoomAmenitiesType(models.Model):
                 vals.get("amenity_id")
             )
             vals.update({"parent_id": amenity_categ.product_categ_id.id})
-        return super(PracticeRoomAmenitiesType, self).write(vals)
+        return super(PracticePracticeAmenitiesType, self).write(vals)
 
     def name_get(self):
         def get_names(cat):
@@ -297,14 +298,14 @@ class PracticeRoomAmenitiesType(models.Model):
         return categories.name_get()
 
 
-class PracticeRoomAmenities(models.Model):
+class PracticePracticeAmenities(models.Model):
 
     _name = "practice.practice.amenities"
-    _description = "Room amenities"
+    _description = "Practice amenities"
 
     product_id = fields.Many2one(
         "product.product",
-        "Room Amenities Product",
+        "Practice Amenities Product",
         required=True,
         delegate=True,
         ondelete="cascade",
@@ -324,7 +325,7 @@ class PracticeRoomAmenities(models.Model):
                 vals.get("amenities_categ_id")
             )
             vals.update({"categ_id": amenities_categ.product_categ_id.id})
-        return super(PracticeRoomAmenities, self).create(vals)
+        return super(PracticePracticeAmenities, self).create(vals)
 
     def write(self, vals):
         """
@@ -337,4 +338,4 @@ class PracticeRoomAmenities(models.Model):
                 vals.get("amenities_categ_id")
             )
             vals.update({"categ_id": amenities_categ.product_categ_id.id})
-        return super(PracticeRoomAmenities, self).write(vals)
+        return super(PracticePracticeAmenities, self).write(vals)

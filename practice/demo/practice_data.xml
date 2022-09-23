@@ -37,18 +37,18 @@
     </record>
     <!-- practice_practice_type -->
     <record id="practices" model="practice.practice.type">
-        <field name="name">All Rooms</field>
+        <field name="name">All Practices</field>
     </record>
     <record id="practice_practice_type_1" model="practice.practice.type">
-        <field name="categ_id" search="[('name', '=', 'All Rooms')]" />
+        <field name="categ_id" search="[('name', '=', 'All Practices')]" />
         <field name="name">Single</field>
     </record>
     <record id="practice_practice_type_2" model="practice.practice.type">
-        <field name="categ_id" search="[('name', '=', 'All Rooms')]" />
+        <field name="categ_id" search="[('name', '=', 'All Practices')]" />
         <field name="name">Double</field>
     </record>
     <record id="practice_practice_type_3" model="practice.practice.type">
-        <field name="categ_id" search="[('name', '=', 'All Rooms')]" />
+        <field name="categ_id" search="[('name', '=', 'All Practices')]" />
         <field name="name">Triple</field>
     </record>
     <!-- practice_service_type -->

@@ -41,14 +41,14 @@
                                 <field name="duration" readonly="1" />
                                 <field name="duration_dummy" invisible="1" />
                             </group>
-                            <separator string="Room Lines" colspan="4" />
-                            <field name="practice_line_ids" colspan="4" string="Room Line" nolabel="1" context="{'default_checkin_date':checkin_date,
+                            <separator string="Practice Lines" colspan="4" />
+                            <field name="practice_line_ids" colspan="4" string="Practice Line" nolabel="1" context="{'default_checkin_date':checkin_date,
                                         'default_checkout_date':checkout_date}">
                                 <tree editable="bottom">
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
                                     <field name="checkin_date" />
                                     <field name="checkout_date" />
-                                    <field name="product_id" string="Room No" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'checkin_date':checkin_date, 'checkout_date':checkout_date}" domain="[('ispractice','=',True)]" options="{'no_open': True}" />
+                                    <field name="product_id" string="Practice No" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'checkin_date':checkin_date, 'checkout_date':checkout_date}" domain="[('ispractice','=',True)]" options="{'no_open': True}" />
                                     <field name="name" />
                                     <field name="product_uom_qty" string="Duration" />
                                     <field name="product_uom_category_id" invisible="1" />

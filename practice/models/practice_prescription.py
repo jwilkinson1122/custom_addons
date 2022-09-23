@@ -8,10 +8,10 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import get_lang
 
 
-class PrescriptionRoomLine(models.Model):
+class PrescriptionPracticeLine(models.Model):
 
     _name = "prescription.practice.line"
-    _description = "Practice Room Reservation"
+    _description = "Practice Practice Reservation"
     _rec_name = "practice_id"
 
     practice_id = fields.Many2one(
@@ -142,8 +142,8 @@ class PracticePrescription(models.Model):
                     if record:
                         raise ValidationError(
                             _(
-                                """Room Duplicate Exceeded!, """
-                                """You Cannot Take Same %s Room Twice!"""
+                                """Practice Duplicate Exceeded!, """
+                                """You Cannot Take Same %s Practice Twice!"""
                             )
                             % (product.name)
                         )
@@ -352,7 +352,7 @@ class PracticePrescriptionLine(models.Model):
         if self.checkin_date >= self.checkout_date:
             raise ValidationError(
                 _(
-                    """Room line Check In Date Should be """
+                    """Practice line Check In Date Should be """
                     """less than the Check Out Date!"""
                 )
             )
@@ -360,7 +360,7 @@ class PracticePrescriptionLine(models.Model):
             if self.checkin_date.date() < self.prescription_id.date_order.date():
                 raise ValidationError(
                     _(
-                        """Room line check in date should be """
+                        """Practice line check in date should be """
                         """greater than the current date."""
                     )
                 )

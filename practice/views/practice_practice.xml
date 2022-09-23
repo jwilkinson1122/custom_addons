@@ -26,13 +26,13 @@
             </tree>
         </field>
     </record>
-    <!-- ====== Rooms ====== -->
+    <!-- ====== Practices ====== -->
     <!-- Form view of practice practice -->
     <record id="view_practice_practice_form" model="ir.ui.view">
         <field name="name">practice.practice.form</field>
         <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <form string="Practice Room">
+            <form string="Practice Practice">
                 <sheet>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}" />
                     <div class="oe_title">
@@ -53,15 +53,15 @@
                             <group colspan="4" col="4">
                                 <field name="location_id" string="Location" />
                                 <field name="practice_categ_id" select="1" />
-                                <field name="product_manager" select="2" string="Room Manager" />
+                                <field name="product_manager" select="2" string="Practice Manager" />
                                 <field name="capacity" />
                                 <field name="uom_id" invisible="1" />
                                 <field name="supplier_taxes_id" widget="many2many_tags" string="Supplier Taxes" />
                                 <field name="taxes_id" widget="many2many_tags" string="Customer Taxes" />
                             </group>
                         </page>
-                        <page string="Room Amenities">
-                            <separator string=" Room Amenities" />
+                        <page string="Practice Amenities">
+                            <separator string=" Practice Amenities" />
                             <field name="practice_amenities_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Procurement">
@@ -84,10 +84,10 @@
                             <separator string="Description" />
                             <field name="description" colspan="4" nolabel="1" />
                         </page>
-                        <page string="Prescription Room Reservations">
-                            <separator colspan='4' string="Prescription Room Reservation Line" />
+                        <page string="Prescription Practice Reservations">
+                            <separator colspan='4' string="Prescription Practice Reservation Line" />
                             <field name="practice_line_ids" colspan="4" nolabel='1'>
-                                <form string=" Room line">
+                                <form string=" Practice line">
                                     <group colspan='4' col='4'>
                                         <field name="practice_id" />
                                         <field name="check_in" />
@@ -115,10 +115,10 @@
         <field name="name">practice.practice.search</field>
         <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <search string="Practice Room">
+            <search string="Practice Practice">
                 <field name="name" filter_domain="[('name', 'ilike', self)]" />
                 <field name="practice_categ_id" />
-                <field name="list_price" string="Room rate" />
+                <field name="list_price" string="Practice rate" />
                 <field name="status" string="Status" />
                 <newline />
                 <filter name="available" string="Available" domain="[('status','=', 'available')]" />
@@ -134,7 +134,7 @@
             <tree>
                 <field name="name" />
                 <field name="practice_categ_id" />
-                <field name="list_price" string="Room rate" />
+                <field name="list_price" string="Practice rate" />
                 <field name="status" />
                 <field name="capacity" />
             </tree>

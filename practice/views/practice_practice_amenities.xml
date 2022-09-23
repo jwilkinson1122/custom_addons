@@ -5,7 +5,7 @@
         <field name="name">practice.practice_amenities_type_form</field>
         <field name="model">practice.practice.amenities.type</field>
         <field name="arch" type="xml">
-            <form string="Practice Room Amenities Type">
+            <form string="Practice Practice Amenities Type">
                 <sheet>
                     <group>
                         <field name="name" string="Amenity Type" />
@@ -26,13 +26,13 @@
             </tree>
         </field>
     </record>
-    <!--===== Room Amenities ===== -->
+    <!--===== Practice Amenities ===== -->
     <!-- Form view of practice practice amenities -->
     <record id="view_practice_practice_amenities_form" model="ir.ui.view">
         <field name="name">practice.practice.amenities.form</field>
         <field name="model">practice.practice.amenities</field>
         <field name="arch" type="xml">
-            <form string="Practice Room Amenities">
+            <form string="Practice Practice Amenities">
                 <sheet>
                     <label for="name" string="Name" />
                     <h1>
@@ -83,7 +83,7 @@
         <field name="name">practice.practice_amenities_search</field>
         <field name="model">practice.practice.amenities</field>
         <field name="arch" type="xml">
-            <search string="Practice Room Amenities">
+            <search string="Practice Practice Amenities">
                 <field name="name" />
                 <field name="amenities_categ_id" string="Amenities Category" />
                 <field name="list_price" string="Amenity rate" />

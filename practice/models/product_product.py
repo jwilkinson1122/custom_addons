@@ -7,7 +7,7 @@ class ProductProduct(models.Model):
 
     _inherit = "product.product"
 
-    ispractice = fields.Boolean("Is Room")
+    ispractice = fields.Boolean("Is Practice")
     iscategid = fields.Boolean("Is Categ")
     isservice = fields.Boolean("Is Service")
 
