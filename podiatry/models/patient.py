@@ -206,7 +206,7 @@ class PatientPatient(models.Model):
                                   help='Select patient practice division', tracking=True)
     medium_id = fields.Many2one('practice.medium', 'Medium',
                                 help='Select patient practice medium', tracking=True)
-    practice_id = fields.Many2one('podiatry.practice', 'Class',
+    practice_id = fields.Many2one('podiatry.practice', 'Practice',
                                   help='Select patient practice', tracking=True)
     doctor_id = fields.Many2many('podiatry.doctor', 'patients_doctors_rel',
                                  'patient_id', 'patients_doctor_id', 'doctor(s)',

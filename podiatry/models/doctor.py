@@ -26,9 +26,8 @@ class PodiatryDoctor(models.Model):
     patient_id = fields.Many2many('patient.patient', 'patients_doctors_rel',
                                   'patients_doctor_id', 'patient_id', 'Patients',
                                   help='Patient of the following doctor')
-    practice_id = fields.Many2many('podiatry.practice',
-                                   'podiatry_practice_doctor_rel', 'class_doctor_id', 'class_id',
-                                   'Academic Class', help='''Class of the patient of following doctor''')
+    practice_id = fields.Many2many('podiatry.practice', 'podiatry_practice_doctor_rel', 'class_doctor_id', 'class_id',
+                                   'Academic Location', help='''Location of the patient of following doctor''')
     pract_id = fields.Many2many('practice.practice',
                                 'practice_practice_doctor_rel', 'practice_doctor_id', 'practice_id',
                                 'Academic Practice', help='''Practice of the patient of following doctor''')

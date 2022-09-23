@@ -9,7 +9,8 @@ class AssignRollNo(models.TransientModel):
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'
 
-    practice_id = fields.Many2one('podiatry.practice', 'Class', required=True)
+    practice_id = fields.Many2one(
+        'podiatry.practice', 'Location', required=True)
     medium_id = fields.Many2one('practice.medium', 'Medium', required=True)
 
     def assign_rollno(self):

@@ -360,9 +360,9 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="class" string="Class" help="By Class" context="{'group_by':'practice_id'}" />
+                    <filter name="class" string="Location" help="By Location" context="{'group_by':'practice_id'}" />
                     <filter name="gender" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter name="name" string="Name" help="By Class" context="{'group_by':'patient_name'}" />
+                    <filter name="name" string="Name" help="By Location" context="{'group_by':'patient_name'}" />
                     <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
@@ -536,8 +536,10 @@
                             <field name="company_id" invisible="1"/>
                         </group>
                         <group>
+                            <field name="practice_id" placeholder="Location" domain="[('podiatry_id','=',podiatry_id)]" widget="selection" attrs="{'readonly':[('state','=','prior')]}"/>
+
                             <!-- <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','prior')]}"/>
-                            <field name="practice_id" placeholder="Class" domain="[('podiatry_id','=',podiatry_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','prior')]}"/>
+                            <field name="practice_id" placeholder="Location" domain="[('podiatry_id','=',podiatry_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','prior')]}"/>
                             <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','prior')]}" invisible="1"/> -->
 
                         </group>
@@ -718,9 +720,9 @@
                 <field name="podiatry_id" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'practice_id'}" />
+                    <filter name="class" string="Location" domain="[]" help="By Location" context="{'group_by':'practice_id'}" />
                     <filter name="gender" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter name="name" string="Name" domain="[]" help="By Class" context="{'group_by':'patient_name'}" />
+                    <filter name="name" string="Name" domain="[]" help="By Location" context="{'group_by':'patient_name'}" />
                     <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
                 </group>
             </search>

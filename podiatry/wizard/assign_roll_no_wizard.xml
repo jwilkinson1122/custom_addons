@@ -31,7 +31,7 @@
         <field name="target">new</field>
     </record>
 
-    <!-- MenuItem For Configurations->Move Classes -->
+    <!-- MenuItem For Configurations->Move Locations -->
     <menuitem id="menu_assign_rollno_form" name="Assign Roll Number" parent="menu_configuration" action="action_assign_roll_no_form" />
 
 </odoo>

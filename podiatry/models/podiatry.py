@@ -206,9 +206,9 @@ class PracticePractice(models.Model):
     @api.model
     def next_practice(self, sequence):
         '''This method check sequence of practice'''
-        pract_rec = self.search([('sequence', '>', sequence)], order='id',
+        stand_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
-        return pract_rec and pract_rec.id or False
+        return stand_rec and stand_rec.id or False
 
 
 class PodiatryPractice(models.Model):
@@ -260,10 +260,10 @@ class PodiatryPractice(models.Model):
     subject_ids = fields.Many2many('subject.subject', 'subject_practices_rel',
                                    'subject_id', 'practice_id', 'Subject',
                                    help='Subjects of the practice')
-    user_id = fields.Many2one('podiatry.hcp', 'Class HCP',
+    user_id = fields.Many2one('podiatry.hcp', 'Location',
                               help='HCP of the practice')
     patient_ids = fields.One2many('patient.patient', 'practice_id',
-                                  'Patient In Class',
+                                  'Patient In Location',
                                   compute='_compute_patient', store=True,
                                   help='Patients which are in this practice'
                                   )
@@ -288,7 +288,7 @@ class PodiatryPractice(models.Model):
                                      store=True,
                                      help='Remaining seats of the practice')
     class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='Class room of the practice')
+                                    help='Location room of the practice')
 
     @api.onchange('practice_id', 'division_id')
     def onchange_combine(self):
@@ -490,8 +490,8 @@ class SubjectSubject(models.Model):
     practice_ids = fields.Many2many('practice.practice', string='Practices',
                                     help='''Practices in which the 
                                     following subject taught''')
-    practice_id = fields.Many2one('practice.practice', 'Class',
-                                  help='''Class in which the following
+    practice_id = fields.Many2one('practice.practice', 'Location',
+                                  help='''Location in which the following
                                   subject taught''')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
@@ -647,8 +647,8 @@ class PatientDescipline(models.Model):
     hcp_id = fields.Many2one('podiatry.hcp', 'HCP',
                              help='HCP who examine the patient')
     date = fields.Date('Date', help='Date')
-    class_id = fields.Many2one('practice.practice', 'Class',
-                               help='Class of patient')
+    class_id = fields.Many2one('practice.practice', 'Location',
+                               help='Location of patient')
     note = fields.Text('Note', help='Discipline Note')
     action_taken = fields.Text('Action Taken',
                                help='Action taken against discipline')
@@ -957,14 +957,14 @@ class PatientCast(models.Model):
     name = fields.Char("Name", required=True, help='Patient cast')
 
 
-class ClassRoom(models.Model):
+class LocationRoom(models.Model):
     """Defining class room."""
 
     _name = "class.room"
-    _description = "Class Room"
+    _description = "Location Room"
 
-    name = fields.Char("Name", help='Class room name')
-    number = fields.Char("Room Number", help='Class room number')
+    name = fields.Char("Name", help='Location room name')
+    number = fields.Char("Room Number", help='Location room number')
 
 
 class Report(models.Model):

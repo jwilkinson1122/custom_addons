@@ -15,7 +15,7 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter name="class" string="Class" domain="[]" context="{'group_by':'practice_id'}"/>
+                        <filter name="class" string="Location" domain="[]" context="{'group_by':'practice_id'}"/>
                         <filter name="manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
                         <filter name="department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
@@ -182,7 +182,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="hcp_profile_menu" name="Personel" action="action_podiatry_hcp_form" parent="menu_patients_doctors" sequence="32" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp"/>
+        <menuitem id="hcp_profile_menu" name="Personnel" action="action_podiatry_hcp_form" parent="menu_account_administration_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp"/>
 
     </data>
 </odoo>

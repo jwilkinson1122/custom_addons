@@ -145,7 +145,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patients_doctors" action="action_podiatry_doctor_form" sequence="31" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
+        <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_account_administration_form" action="action_podiatry_doctor_form" sequence="32" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
 
     </data>
 </odoo>

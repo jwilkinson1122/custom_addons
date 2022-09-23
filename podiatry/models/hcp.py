@@ -14,7 +14,7 @@ class PodiatryHCP(models.Model):
                                   ondelete="cascade", delegate=True, required=True,
                                   help='Enter related employee')
     practice_id = fields.Many2one('podiatry.practice',
-                                  "Responsibility of Academic Class",
+                                  "Responsibility of Academic Location",
                                   help="Practice for which the hcp responsible for.")
     pract_id = fields.Many2one('practice.practice', "Course",
                                related="practice_id.practice_id", store=True,

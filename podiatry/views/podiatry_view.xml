@@ -143,7 +143,7 @@
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Related Clinics">
+                        <page string="Related Accounts">
                             <!-- <field name="practices" nolabel="1" colspan="4" readonly="1"/> -->
                         </page>
                         <!-- <page string="Practices">
@@ -297,7 +297,7 @@
                                             <td valign="top" align="left">
                                                 <div class="oe_kanban_title2">
                                                     <div>
-                                                        Class HCP :-
+                                                        Location HCP :-
                                                         <field name="user_id" />
                                                     </div>
                                                 </div>
@@ -349,7 +349,7 @@
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="podiatry" string="Practice" help="By Practice" context="{'group_by':'podiatry_id'}" />
-                    <filter name="class" string="Class" help="By Class" context="{'group_by':'practice_id'}" />
+                    <filter name="class" string="Location" help="By Location" context="{'group_by':'practice_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
                 </group>
@@ -803,7 +803,7 @@
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Information -->
     <record id="action_podiatry_podiatry_form" model="ir.actions.act_window">
-        <field name="name">Clinics</field>
+        <field name="name">Accounts</field>
         <field name="res_model">podiatry.podiatry</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
@@ -816,8 +816,8 @@
         </field>
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Practice -->
-    <record id="action_podiatry_practice_form" model="ir.actions.act_window">
-        <field name="name">Classes</field>
+    <record id="action_podiatry_locations_form" model="ir.actions.act_window">
+        <field name="name">Locations</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
@@ -926,12 +926,12 @@
         <field name="res_model">patient.news</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- Form View of Class Room -->
+    <!-- Form View of Location Room -->
     <record id="class_room_form_view" model="ir.ui.view">
         <field name="name">class.room.form</field>
         <field name="model">class.room</field>
         <field name="arch" type="xml">
-            <form string="Class Room Form View">
+            <form string="Location Room Form View">
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="name" required="1"/>
@@ -946,16 +946,16 @@
         <field name="name">class.room.tree</field>
         <field name="model">class.room</field>
         <field name="arch" type="xml">
-            <tree string="Class Room Tree View">
+            <tree string="Location Room Tree View">
                 <field name="name"/>
                 <field name="number"/>
             </tree>
         </field>
     </record>
 
-    <!-- Action of Class Room -->
+    <!-- Action of Location Room -->
     <record id="action_class_room" model="ir.actions.act_window">
-        <field name="name">Class Room</field>
+        <field name="name">Location Room</field>
         <field name="res_model">class.room</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -963,52 +963,41 @@
     <!-- Menu Item Of ERP -->
     <menuitem id="menu_erp" name="POD ERP" web_icon="podiatry,static/description/icon.png" sequence="1"/>
     <!-- MenuItem Of Admission Register -->
-    <menuitem id="admission_register" name="Administration" parent="menu_erp" sequence="2" />
+    <menuitem id="administration_register" name="Administration" parent="menu_erp" sequence="2" />
     <menuitem id="podiatry_facilities" name="Facilities" parent="menu_erp" sequence="3" />
     <menuitem id="podiatry_schedule" name="Schedule" parent="menu_erp" sequence="4" />
 
-    <menuitem id="menu_admission_form_root" name="Admission" parent="admission_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
-    <menuitem id="menu_admission_form" name="Admission Register" parent="menu_admission_form_root" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
+    <!-- <menuitem id="menu_patient_administration_form_root" name="Register" parent="administration_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
+    <menuitem id="menu_patient_administration_form" name="Patient Register" parent="menu_patient_administration_form_root" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/> -->
+
     <!-- Menu Item Of Patients & Doctors -->
-    <menuitem id="menu_patients_doctors" name="Medical Profiles" parent="admission_register" sequence="2"/>
-    <menuitem id="menu_patient_profile" name="Patients" parent="menu_patients_doctors" action="action_patient_patient_form_12" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor" sequence="33"/>
+    <menuitem id="menu_patient_administration" name="Patient Administration" parent="administration_register" sequence="30"/>
+    <menuitem id="menu_patient_profile" name="Patients" parent="menu_patient_administration" action="action_patient_patient_form_12" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor" sequence="33"/>
+    <!-- <menuitem id="menu_patient_administration_form_root" name="Patient Administration" parent="administration_register" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/> -->
+    <menuitem id="menu_patient_administration_form" name="Patient Profile Test" parent="menu_patient_administration" action="action_patient_patient_form_2" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_is_admission"/>
+
     <!-- MenuItem For Reminders -->
     <menuitem id="menu_reminders_root" name="Reminders" parent="podiatry_schedule" sequence="8" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
     <menuitem id="menu_reminders" name="Reminders" parent="menu_reminders_root" action="action_patient_reminder" sequence="1" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/>
+
     <!-- MenuItem For Configurations -->
     <menuitem id="menu_configuration" name="Configurations" parent="menu_erp" sequence="13" groups="group_podiatry_administration" />
-    <!-- MenuItem For Configurations->Podiatry Configurations -->
-    <menuitem id="menu_podiatry_config_form1" name="Clinic Configurations" parent="menu_configuration" />
-    <menuitem id="menu_cast" name="Religion/Caste" parent="menu_podiatry_config_form1" action="action_patient_cast_form_7" />
-    <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_podiatry_config_form1" action="action_document_type_form" />
-    <menuitem id="submenu_sub_grade" name="Grade" parent="menu_podiatry_config_form1" action="action_grade_master_form" />
-    <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_podiatry_config_form1" action="view_patient_news" />
-    <menuitem id="mother_tongue_menu" name="First Language" parent="menu_podiatry_config_form1" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
+    <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_configuration" action="action_document_type_form" />
+    <!-- <menuitem id="submenu_sub_grade" name="Grade" parent="menu_podiatry_config_form1" action="action_grade_master_form" /> -->
+    <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_configuration" action="view_patient_news" />
+    <menuitem id="mother_tongue_menu" name="First Language" parent="menu_configuration" action="action_mother_toungue" groups="podiatry.group_podiatry_administration"/>
 
-    <!-- <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patients_doctors" action="action_podiatry_doctor_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/> -->
+    <!-- <menuitem id="menu_res_partner_form" name="Doctors" parent="menu_patient_administration" action="action_podiatry_doctor_form" sequence="33" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_patient,podiatry.group_podiatry_hcp,podiatry.group_podiatry_doctor"/> -->
 
-    <menuitem id="clinic_profile_menu" name="Clinics" parent="menu_patients_doctors" action="action_podiatry_podiatry_form" sequence="30" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
-
-
-
-    <!-- MenuItem For Configurations->Years -->
-    <menuitem id="menu_academic_year_form" name="Years" parent="menu_configuration" />
-    <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form" />
-    <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form" />
     <!-- MenuItem For Configurations->Practices -->
-    <menuitem id="menu_podiatry_practice_form" name="Practices" parent="menu_configuration" />
-    <menuitem id="menu_sub_podiatry_practice_form" name="Classes" parent="menu_podiatry_practice_form" action="action_podiatry_practice_form" />
-    <menuitem id="menu_practice_practice_form" name="Practices" parent="menu_podiatry_practice_form" action="action_practice_practice_form" />
-    <menuitem id="menu_practice_division_form" name="Divisions" parent="menu_podiatry_practice_form" action="action_practice_division_form" />
-    <menuitem id="menu_practice_medium_form" name="Medium" parent="menu_podiatry_practice_form" action="action_practice_medium_form" />
-    <menuitem id="menu_class_room" name="Class Room" parent="menu_podiatry_practice_form" action="action_class_room"/>
-    <!-- MenuItem For Configurations->Subject -->
-    <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
-    <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
-    <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
+    <menuitem id="menu_account_administration_form" name="Account Administration" parent="administration_register" sequence="2" />
+    <menuitem id="menu_podiatry_locations_form" name="Locations" parent="menu_account_administration_form" action="action_podiatry_locations_form" sequence="31"/>
+    <menuitem id="account_profile_menu" name="Accounts" parent="menu_account_administration_form" action="action_podiatry_podiatry_form" sequence="30" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_doctor"/>
+
+
 
     <!-- Menuitem of prior and delete -->
-    <menuitem id="menu_patient_prior" name="Prior/Delete" action="action_patient_prior" parent="menu_admission_form_root" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp" sequence="2"/>
+    <menuitem id="menu_patient_prior" name="Prior/Delete" action="action_patient_prior" parent="menu_patient_administration" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_hcp" sequence="2"/>
     <menuitem id="hr.menu_hr_root" name="Employees" groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,podiatry.group_podiatry_administration" web_icon="hr,static/description/icon.png" sequence="75"/>
     <!-- MenuItem For Configurations->Subject -->
     <!-- Inherited Form View Of Company -->
