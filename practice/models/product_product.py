@@ -42,13 +42,13 @@ class ProductProduct(models.Model):
                 assigned = False
                 for rm_line in practice.practice_line_ids:
                     if rm_line.status != "cancel":
-                        if (checkin_date <= rm_line.check_in <= checkout_date) or (
-                            checkin_date <= rm_line.check_out <= checkout_date
+                        if (checkin_date <= rm_line.book_in <= checkout_date) or (
+                            checkin_date <= rm_line.book_out <= checkout_date
                         ):
                             assigned = True
                         elif (
-                            rm_line.check_in <= checkin_date <= rm_line.check_out
-                        ) or (rm_line.check_in <= checkout_date <= rm_line.check_out):
+                            rm_line.book_in <= checkin_date <= rm_line.book_out
+                        ) or (rm_line.book_in <= checkout_date <= rm_line.book_out):
                             assigned = True
                 if not assigned:
                     avail_prod_ids.append(practice.product_id.id)

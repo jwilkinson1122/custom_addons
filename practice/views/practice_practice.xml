@@ -90,16 +90,16 @@
                                 <form string=" Practice line">
                                     <group colspan='4' col='4'>
                                         <field name="practice_id" />
-                                        <field name="check_in" />
-                                        <field name="check_out" />
+                                        <field name="book_in" />
+                                        <field name="book_out" />
                                         <field name="prescription_id" />
                                         <field name="status" />
                                     </group>
                                 </form>
                                 <tree>
                                     <field name="practice_id" />
-                                    <field name="check_in" />
-                                    <field name="check_out" />
+                                    <field name="book_in" />
+                                    <field name="book_out" />
                                     <field name="prescription_id" />
                                     <field name="status" />
                                 </tree>

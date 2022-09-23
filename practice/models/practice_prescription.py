@@ -16,8 +16,8 @@ class PrescriptionPracticeLine(models.Model):
 
     practice_id = fields.Many2one(
         "practice.practice", ondelete="restrict", index=True)
-    check_in = fields.Datetime("Check In Date", required=True)
-    check_out = fields.Datetime("Check Out Date", required=True)
+    book_in = fields.Datetime("Book In Date", required=True)
+    book_out = fields.Datetime("Book Out Date", required=True)
     prescription_id = fields.Many2one(
         "practice.prescription", "Prescription Number", ondelete="cascade")
     status = fields.Selection(related="prescription_id.state", string="state")
@@ -67,14 +67,14 @@ class PracticePrescription(models.Model):
         "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
     )
     checkin_date = fields.Datetime(
-        "Check In",
+        "Book In",
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
         default=_get_checkin_date,
     )
     checkout_date = fields.Datetime(
-        "Check Out",
+        "Book Out",
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
@@ -99,8 +99,8 @@ class PracticePrescription(models.Model):
     practice_policy = fields.Selection(
         [
             ("prepaid", "On Booking"),
-            ("manual", "On Check In"),
-            ("picking", "On Checkout"),
+            ("manual", "On Book In"),
+            ("picking", "On Bookout"),
         ],
         default="manual",
         help="Practice policy for payment that "
@@ -159,8 +159,8 @@ class PracticePrescription(models.Model):
                 practice.write({"ispractice": False})
                 vals = {
                     "practice_id": practice.id,
-                    "check_in": rec.checkin_date,
-                    "check_out": rec.checkout_date,
+                    "book_in": rec.checkin_date,
+                    "book_out": rec.checkout_date,
                     "prescription_id": rec.id,
                 }
                 prescription_practice_line_obj.create(vals)
@@ -220,8 +220,8 @@ class PracticePrescription(models.Model):
                     practice_obj.write({"ispractice": False})
                     vals = {
                         "practice_id": practice_obj.id,
-                        "check_in": rec.checkin_date,
-                        "check_out": rec.checkout_date,
+                        "book_in": rec.checkin_date,
+                        "book_out": rec.checkout_date,
                         "prescription_id": rec.id,
                     }
                     prescription_practice_line_obj.create(vals)
@@ -233,8 +233,8 @@ class PracticePrescription(models.Model):
                     practice_obj.write({"ispractice": False})
                     practice_vals = {
                         "practice_id": practice_obj.id,
-                        "check_in": rec.checkin_date,
-                        "check_out": rec.checkout_date,
+                        "book_in": rec.checkin_date,
+                        "book_out": rec.checkout_date,
                         "prescription_id": rec.id,
                     }
                     prescription_romline_rec = prescription_practice_line_obj.search(
@@ -322,8 +322,8 @@ class PracticePrescriptionLine(models.Model):
     )
     prescription_id = fields.Many2one(
         "practice.prescription", "Prescription", ondelete="cascade")
-    checkin_date = fields.Datetime("Check In", required=True)
-    checkout_date = fields.Datetime("Check Out", required=True)
+    checkin_date = fields.Datetime("Book In", required=True)
+    checkout_date = fields.Datetime("Book Out", required=True)
     is_reserved = fields.Boolean(
         help="True when prescription line created from Reservation")
 
@@ -352,8 +352,8 @@ class PracticePrescriptionLine(models.Model):
         if self.checkin_date >= self.checkout_date:
             raise ValidationError(
                 _(
-                    """Practice line Check In Date Should be """
-                    """less than the Check Out Date!"""
+                    """Practice line Book In Date Should be """
+                    """less than the Book Out Date!"""
                 )
             )
         if self.prescription_id.date_order and self.checkin_date:
@@ -839,7 +839,7 @@ class PracticeServiceLine(models.Model):
             self.ser_checkout_date = time_a
         if self.ser_checkout_date < self.ser_checkin_date:
             raise ValidationError(
-                _("Checkout must be greater or equal checkin date"))
+                _("Bookout must be greater or equal checkin date"))
         if self.ser_checkin_date and self.ser_checkout_date:
             diffDate = self.ser_checkout_date - self.ser_checkin_date
             qty = diffDate.days + 1
