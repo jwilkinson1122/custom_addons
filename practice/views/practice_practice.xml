@@ -32,7 +32,7 @@
         <field name="name">practice.practice.form</field>
         <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <form string="Practice Practice">
+            <form string="Practice">
                 <sheet>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}" />
                     <div class="oe_title">
@@ -61,8 +61,12 @@
                             </group>
                         </page>
                         <page string="Practice Devices">
-                            <separator string=" Practice Devices" />
+                            <separator string="Practice Devices" />
                             <field name="practice_devices_ids" colspan="4" nolabel="1" />
+                        </page>
+                        <page string="Practice Accommodations">
+                            <separator string="Practice Accommodations" />
+                            <field name="practice_accommodations_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Procurement">
                             <group colspan="4" col="4">
@@ -115,7 +119,7 @@
         <field name="name">practice.practice.search</field>
         <field name="model">practice.practice</field>
         <field name="arch" type="xml">
-            <search string="Practice Practice">
+            <search string="Practice">
                 <field name="name" filter_domain="[('name', 'ilike', self)]" />
                 <field name="practice_categ_id" />
                 <field name="list_price" string="Practice rate" />

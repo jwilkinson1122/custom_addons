@@ -16,40 +16,131 @@
         <field eval="3" name="sequence" />
     </record>
     <!-- practice_practice_devices_type -->
-    <record id="practice_practice_devices_type_0" model="practice.practice.devices.type">
-        <field name="name">All Aminities</field>
+    <record id="practice_practice_devices_type_00" model="practice.practice.devices.type">
+        <field name="name">All Devices</field>
     </record>
-    <record id="practice_practice_devices_type_1" model="practice.practice.devices.type">
-        <field name="device_id" search="[('name', '=', 'All Aminities')]" />
-        <field name="name">Beds</field>
+    <!-- SG -->
+    <record id="practice_practice_devices_type_01" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Superglass</field>
     </record>
-    <record id="practice_practice_devices_type_2" model="practice.practice.devices.type">
-        <field name="device_id" search="[('name', '=', 'All Aminities')]" />
-        <field name="name">Tables</field>
+    <record id="practice_practice_devices_type_02" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Superglass')]" />
+        <field name="name">Flex</field>
     </record>
-    <record id="practice_practice_devices_type_3" model="practice.practice.devices.type">
-        <field name="device_id" search="[('name', '=', 'Beds')]" />
-        <field name="name">Single Bed</field>
+    <record id="practice_practice_devices_type_03" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Superglass')]" />
+        <field name="name">Everyday</field>
     </record>
-    <record id="practice_practice_devices_type_4" model="practice.practice.devices.type">
-        <field name="device_id" search="[('name', '=', 'Beds')]" />
-        <field name="name">Double Bed</field>
+    <record id="practice_practice_devices_type_04" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Superglass')]" />
+        <field name="name">Proformance</field>
+    </record>
+    <!-- NCV -->
+    <record id="practice_practice_devices_type_06" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">NCV</field>
+    </record>
+    <record id="practice_practice_devices_type_07" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'NCV')]" />
+        <field name="name">Gentle</field>
+    </record>
+    <record id="practice_practice_devices_type_08" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'NCV')]" />
+        <field name="name">Firm</field>
+    </record>
+    <!-- PC -->
+    <record id="practice_practice_devices_type_09" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Prescription Comfort</field>
+    </record>
+    <record id="practice_practice_devices_type_10" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'PC')]" />
+        <field name="name">Multi-Density</field>
+    </record>
+    <record id="practice_practice_devices_type_11" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'PC')]" />
+        <field name="name">Composite</field>
+    </record>
+    <!-- Polypropylene -->
+    <record id="practice_practice_devices_type_12" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Polypropylene</field>
+    </record>
+    <record id="practice_practice_devices_type_13" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Polypropylene')]" />
+        <field name="name">Semi-Flexible</field>
+    </record>
+    <record id="practice_practice_devices_type_14" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Polypropylene')]" />
+        <field name="name">Semi-Rigid</field>
+    </record>
+    <record id="practice_practice_devices_type_15" model="practice.practice.devices.type">
+        <field name="device_id" search="[('name', '=', 'Polypropylene')]" />
+        <field name="name">Rigid</field>
+    </record>
+
+    <!-- practice_practice_accommodations_type -->
+    <record id="practice_practice_accommodations_type_00" model="practice.practice.accommodations.type">
+        <field name="name">All Accommodations</field>
+    </record>
+    <!-- Arch Height -->
+    <record id="practice_practice_accommodations_type_01" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'All Accommodations')]" />
+        <field name="name">Arch Height</field>
+    </record>
+    <record id="practice_practice_accommodations_type_02" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'Arch Height')]" />
+        <field name="name">Very High</field>
+    </record>
+    <record id="practice_practice_accommodations_type_03" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'Arch Height')]" />
+        <field name="name">High</field>
+    </record>
+    <record id="practice_practice_accommodations_type_04" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'Arch Height')]" />
+        <field name="name">Standard</field>
+    </record>
+    <record id="practice_practice_accommodations_type_05" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'Arch Height')]" />
+        <field name="name">Low</field>
+    </record>
+    <!-- XGUard -->
+    <record id="practice_practice_accommodations_type_06" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'All Accommodations')]" />
+        <field name="name">X-Guard</field>
+    </record>
+    <record id="practice_practice_accommodations_type_07" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'X-Guard')]" />
+        <field name="name">Standard</field>
+    </record>
+    <record id="practice_practice_accommodations_type_08" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'X-Guard')]" />
+        <field name="name">Sulcus</field>
+    </record>
+    <record id="practice_practice_accommodations_type_09" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'X-Guard')]" />
+        <field name="name">Full</field>
+    </record>
+    <record id="practice_practice_accommodations_type_10" model="practice.practice.accommodations.type">
+        <field name="accommodation_id" search="[('name', '=', 'X-Guard')]" />
+        <field name="name">Complete</field>
     </record>
     <!-- practice_practice_type -->
     <record id="practices" model="practice.practice.type">
         <field name="name">All Practices</field>
     </record>
-    <record id="practice_practice_type_1" model="practice.practice.type">
+    <record id="practice_practice_type_01" model="practice.practice.type">
         <field name="categ_id" search="[('name', '=', 'All Practices')]" />
-        <field name="name">Single</field>
+        <field name="name">General Practice</field>
     </record>
-    <record id="practice_practice_type_2" model="practice.practice.type">
+    <record id="practice_practice_type_02" model="practice.practice.type">
         <field name="categ_id" search="[('name', '=', 'All Practices')]" />
-        <field name="name">Double</field>
+        <field name="name">Hospital</field>
     </record>
-    <record id="practice_practice_type_3" model="practice.practice.type">
+    <record id="practice_practice_type_03" model="practice.practice.type">
         <field name="categ_id" search="[('name', '=', 'All Practices')]" />
-        <field name="name">Triple</field>
+        <field name="name">VA</field>
     </record>
     <!-- practice_service_type -->
     <record id="practice_service_type_0" model="practice.service.type">
@@ -141,18 +232,34 @@
     </record>
     <!--Devices -->
     <record id="practice_practice_devices_1" model="practice.practice.devices">
-        <field name="name">Toiletries</field>
+        <field name="name">Device1</field>
         <field name="iscategid">1</field>
-        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Devices')]" />
     </record>
     <record id="practice_practice_devices_2" model="practice.practice.devices">
-        <field name="name">Iron</field>
+        <field name="name">Device2</field>
         <field name="iscategid">1</field>
-        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Devices')]" />
     </record>
     <record id="practice_practice_devices_3" model="practice.practice.devices">
-        <field name="name">Irons Boards</field>
+        <field name="name">Device3</field>
         <field name="iscategid">1</field>
-        <field name="devices_categ_id" search="[('name', '=', 'All Aminities')]" />
+        <field name="devices_categ_id" search="[('name', '=', 'All Devices')]" />
+    </record>
+    <!--Accommodations -->
+    <record id="practice_practice_accommodations_1" model="practice.practice.accommodations">
+        <field name="name">Accommodation1</field>
+        <field name="iscategid">1</field>
+        <field name="accommodations_categ_id" search="[('name', '=', 'All Accommodations')]" />
+    </record>
+    <record id="practice_practice_accommodations_2" model="practice.practice.accommodations">
+        <field name="name">Accommodation2</field>
+        <field name="iscategid">1</field>
+        <field name="accommodations_categ_id" search="[('name', '=', 'All Accommodations')]" />
+    </record>
+    <record id="practice_practice_accommodations_3" model="practice.practice.accommodations">
+        <field name="name">Accommodation3</field>
+        <field name="iscategid">1</field>
+        <field name="accommodations_categ_id" search="[('name', '=', 'All Accommodations')]" />
     </record>
 </odoo>

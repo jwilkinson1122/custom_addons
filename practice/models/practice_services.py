@@ -44,7 +44,8 @@ class PracticeServices(models.Model):
             service_categ_id = self.env["practice.service.type"].browse(
                 vals.get("service_categ_id")
             )
-            vals.update({"categ_id": service_categ_id.product_categ_id.id})
+            vals.update(
+                {"categ_id": service_categ_id.product_categ_id.id})
         return super(PracticeServices, self).write(vals)
 
 
@@ -53,7 +54,8 @@ class PracticeServiceType(models.Model):
     _name = "practice.service.type"
     _description = "Service Type"
 
-    service_id = fields.Many2one("practice.service.type", "Service Category")
+    service_id = fields.Many2one(
+        "practice.service.type", "Service Category")
     child_ids = fields.One2many(
         "practice.service.type", "service_id", "Service Child Categories"
     )

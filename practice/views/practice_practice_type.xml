@@ -6,7 +6,7 @@
         <field name="name">practice.practice_type.form</field>
         <field name="model">practice.practice.type</field>
         <field name="arch" type="xml">
-            <form string=" Practice Practice Type">
+            <form string=" Practice Type">
                 <sheet>
                     <group>
                         <field name="name" />

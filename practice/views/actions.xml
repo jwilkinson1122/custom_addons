@@ -29,6 +29,22 @@
         </field>
         <field name="view_id" ref="view_practice_practice_devices_list" />
     </record>
+    <!-- Action for practice practice accommodations type -->
+    <record id="action_practice_practice_accommodations_type_view_form" model="ir.actions.act_window">
+        <field name="name">Accommodations Type</field>
+        <field name="res_model">practice.practice.accommodations.type</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for practice practice accommodations -->
+    <record id="action_practice_practice_accommodations_view_form" model="ir.actions.act_window">
+        <field name="name">Accommodations</field>
+        <field name="res_model">practice.practice.accommodations</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_iscategid':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_id" ref="view_practice_practice_accommodations_list" />
+    </record>
     <!-- Action for practice practice -->
     <record id="action_practice_practice_form" model="ir.actions.act_window">
         <field name="name">Practice</field>

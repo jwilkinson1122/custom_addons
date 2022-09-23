@@ -11,7 +11,7 @@ from odoo.tools.misc import get_lang
 class PrescriptionPracticeLine(models.Model):
 
     _name = "prescription.practice.line"
-    _description = "Practice Practice Reservation"
+    _description = "Practice Reservation"
     _rec_name = "practice_id"
 
     practice_id = fields.Many2one(
