@@ -18,7 +18,7 @@ class PracticeLocation(models.Model):
 class PracticePractice(models.Model):
 
     _name = "practice.practice"
-    _description = "Practice"
+    _description = "Practice Practice"
 
     product_id = fields.Many2one(
         "product.product",

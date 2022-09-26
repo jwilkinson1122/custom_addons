@@ -5,7 +5,7 @@
         <field name="name">practice.location.form</field>
         <field name="model">practice.location</field>
         <field name="arch" type="xml">
-            <form string=" Practice Location">
+            <form string="Practice Location">
                 <sheet>
                     <group>
                         <field name="name" />
@@ -114,6 +114,7 @@
             </form>
         </field>
     </record>
+
     <!-- Search view of practice practice -->
     <record id="view_practice_practice_search" model="ir.ui.view">
         <field name="name">practice.practice.search</field>
@@ -130,6 +131,7 @@
             </search>
         </field>
     </record>
+
     <!-- Tree view of practice practice -->
     <record id="view_practice_practice_tree" model="ir.ui.view">
         <field name="name">practice.practice.tree</field>
