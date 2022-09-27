@@ -10,17 +10,12 @@
                 <header>
                     <!-- The button is only visible for contacts. -->
                     <!-- It is not visible for companies and addresses. -->
-                    <button type="action"
-                        name="%(action_res_partner_change_parent)d"
-                        string="Change Parent Entity"
-                        class="oe_highlight"
-                        attrs="{'invisible': [
+                    <button type="action" name="%(action_res_partner_change_parent)d" string="Change Parent Entity" class="oe_highlight" attrs="{'invisible': [
                             '|', '|',
                             ('id', '=', False),
                             ('is_company', '=', True),
                             ('type', '!=', 'contact'),
-                        ]}"
-                    />
+                        ]}" />
                 </header>
             </sheet>
         </field>
@@ -35,10 +30,13 @@
                 <field name="id" invisible="1"/>
             </field>
             <field name="parent_id" position="attributes">
+                <attribute name="attrs" operation="python_dict">{'readonly': [('id','!=',False)]}</attribute>
+            </field>
+            <!-- <field name="parent_id" position="attributes">
                 <attribute name="attrs" operation="python_dict" key="readonly">
                     [('id', '!=', False)]
                 </attribute>
-            </field>
+            </field> -->
         </field>
     </record>
 
@@ -51,14 +49,17 @@
                 <field name="id" invisible="1"/>
             </field>
             <field name="parent_id" position="attributes">
+                <attribute name="attrs" operation="python_dict">{'readonly': [('id','!=',False)]}</attribute>
+            </field>
+            <!-- <field name="parent_id" position="attributes">
                 <attribute name="attrs" operation="python_dict" key="readonly">
                     [('id', '!=', False)]
                 </attribute>
-            </field>
+            </field> -->
         </field>
     </record>
 
-    <record id="view_partner_short_form_company_not_editable" model="ir.ui.view">
+    <!-- <record id="view_partner_short_form_company_not_editable" model="ir.ui.view">
         <field name="name">Partner Short Form With Parent Company Not Editable</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_short_form"/>
@@ -67,11 +68,10 @@
                 <field name="id" invisible="1"/>
             </field>
             <field name="parent_id" position="attributes">
-                <attribute name="attrs" operation="python_dict" key="readonly">
-                    [('id', '!=', False)]
-                </attribute>
+                <attribute name="attrs" operation="python_dict">{'readonly': [('id','!=',False)]}</attribute>
             </field>
+       
         </field>
-    </record>
+    </record> -->
 
 </odoo>
