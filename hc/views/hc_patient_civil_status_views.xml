@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Form
+    -->
+    <record id="view_hc_patient_civil_status_form" model="ir.ui.view">
+        <field name="name">hc.patient.civil_status.form</field>
+        <field name="model">hc.patient.civil_status</field>
+        <field name="arch" type="xml">
+            <form string="Civil Status">
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <!--
+                    Button Box
+                    -->
+                    <div name="button_box" class="oe_button_box"/>
+
+                    <!--
+                    Ribbons
+                    -->
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+
+                    <!--
+                    Title
+                    -->
+                    <div class="oe_title">
+                        <h1 name="name">
+                            <field name="name" placeholder="e.g. Civil Union"/>
+                        </h1>
+                    </div>
+
+                    <!--
+                    Content
+                    -->
+                    <group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+
+                    <!--
+                    Notebook
+                    -->
+                    <notebook>
+                        <page name="notes" string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+    Tree
+    -->
+    <record id="view_hc_patient_civil_status_tree" model="ir.ui.view">
+        <field name="name">hc.patient.civil_status.tree</field>
+        <field name="model">hc.patient.civil_status</field>
+        <field name="arch" type="xml">
+            <tree string="Civil Statuses" editable="top" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="code"/>
+                <field name="notes" optional="hide"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_hc_patient_civil_status_search" model="ir.ui.view">
+        <field name="name">hc.patient.civil_status.search</field>
+        <field name="model">hc.patient.civil_status</field>
+        <field name="arch" type="xml">
+            <search string="Civil Statuses">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="code" operator="="/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--
+    Action
+    -->
+    <record id="action_hc_patient_civil_status" model="ir.actions.act_window">
+        <field name="name">Civil Statuses</field>
+        <field name="res_model">hc.patient.civil_status</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_hc_patient_civil_status_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new civil status
+            </p>
+            <p>
+                Organize and manage civil statuses at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!--
+    Submenu: Settings / Civil Statuses
+    -->
+    <menuitem
+        id="menu_hc_patient_civil_status"
+        name="Civil Statuses"
+        parent="menu_configuration_patient"
+        action="action_hc_patient_civil_status"
+        groups="group_manager"
+        sequence="20"
+    />
+
+</odoo>

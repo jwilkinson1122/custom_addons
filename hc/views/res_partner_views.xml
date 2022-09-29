@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Action
+    -->
+    <record id="action_hc_patient_from_partner" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hc.patient</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record>
+
+    <!--
+    Form
+    -->
+    <record id="view_res_partner_form_inherit_hc" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.hc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="patient_ids" invisible="1"/>
+                <button
+                    type="action"
+                    name="%(action_hc_patient_from_partner)d"
+                    class="oe_stat_button" icon="fa-user"
+                    attrs="{'invisible' : [('patient_ids', '=', [])]}"
+                >
+                    <field name="patient_count" string="Patients" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_res_partner_search_inherit_hc" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.hc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+    Action
+        TODO: Add integration with the Contacts module
+    -->
+    <record id="action_res_partner_patients" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="context">{'search_default_is_patient': True}</field>
+    </record>
+
+    <!--
+    Submenu: Settings / Other / Contacts
+    -->
+    <menuitem
+        id="menu_res_partners"
+        name="Contacts"
+        action="action_res_partner_patients"
+        parent="menu_configuration_other"
+        sequence="20"
+    />
+
+</odoo>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="doctor_kanban" model="ir.ui.view">
+        <field name="name">Doctors kanban</field>
+        <field name="model">cgu_hospital.doctor</field>
+        <field name="arch" type="xml">
+            <kanban
+                    class="o_kanban_mobile"
+                    default_group_by="speciality_id">
+
+                <field name="name"/>
+                <field name="speciality_id"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="o_kanban_card_header_title">
+                                <div>
+                                    <field name="name"/>
+                                    <field name="speciality_id"/>
+                                </div>
+                            </div>
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle btn"
+                                   data-toggle="dropdown" href="#">
+                                    <span class="fa fa-ellipsis-v"
+                                          aria-hidden="true"/>
+                                </a>
+                                <div class="o_kanban_card_manage_setting row mt16">
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable">
+                                            <a role="menuitem" type="edit"
+                                               class="dropdown-item">Edit
+                                            </a>
+                                        </t>
+                                        <t t-if="widget.deletable">
+                                            <a role="menuitem"
+                                               type="delete"
+                                               class="dropdown-item">Delete
+                                            </a>
+                                        </t>
+                                        <ul class="oe_kanban_colorpicker"
+                                            data-field="color"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_primary_left">
+                                        <field name="speciality_id"/>
+                                        <t t-if="widget.editable">
+                                            <a role="menuitem" type="edit"
+                                               class="dropdown-item">Edit
+                                            </a>
+                                        </t>
+                                        <t t-if="widget.deletable">
+                                            <a role="menuitem"
+                                               type="delete"
+                                               class="dropdown-item">Delete
+                                            </a>
+                                        </t>
+
+
+                                        <!--                                        <button class="btn btn-primary"-->
+                                        <!--                                                string="Confirm"-->
+                                        <!--                                                name="set_confirm"-->
+                                        <!--                                                type="object">-->
+                                        <!--                                            <span>Confirm</span>-->
+                                        <!--                                        </button>-->
+                                    </div>
+                                    <!--                                    <div class="col-6 o_kanban_primary_right">-->
+                                    <!--                                        <field name="personal_patient_ids" widget="many2many_tags"/>-->
+                                    <!--                                    </div>-->
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="doctor_form" model="ir.ui.view">
+        <field name="name">Doctor form</field>
+        <field name="model">cgu_hospital.doctor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Main">
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="LastName"/>
+                                    <field name="FirstName"/>
+                                    <field name="Surname"/>
+                                    <field name="speciality_id"/>
+                                </group>
+                                <group>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="personal_patients">
+                            <group>
+                                <field name="personal_patient_ids"/>
+                            </group>
+                        </page>
+                        <!--                         <page string="doctor_history">-->
+                        <!--                            <field name="doctor_history_ids">-->
+                        <!--                                <tree>-->
+                        <!--                                    <field name="date_medication"/>-->
+                        <!--                                    <field name="patient_id"/>-->
+                        <!--                                    <field name="sick_id"/>-->
+                        <!--                                    <field name="sick_type_id"/>-->
+                        <!--                                    <field name="sick_type_color"/>-->
+                        <!--                                </tree>-->
+                        <!--                            </field>-->
+                        <!--                        </page>-->
+                        <!--                        <page string="patient_visit_ids">-->
+                        <!--                            <field name="patient_visit_ids">-->
+                        <!--                                <tree>-->
+                        <!--                                    <field name="date_visit"/>-->
+                        <!--                                    <field name="patient_id"/>-->
+                        <!--                                    <field name="diagnosis_id"/>-->
+                        <!--                                    <field name="recommendations"/>-->
+                        <!--                                </tree>-->
+                        <!--                            </field>-->
+                        <!--                        </page>-->
+
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="doctor_list" model="ir.ui.view">
+        <field name="name">Doctors list</field>
+        <field name="model">cgu_hospital.doctor</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="speciality_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_window_doctors" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="res_model">cgu_hospital.doctor</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <menuitem id="cgu_hospital.doctors" name="Doctors" parent="cgu_hospital.menu_directories"
+              action="cgu_hospital.action_window_doctors"/>
+
+</odoo>

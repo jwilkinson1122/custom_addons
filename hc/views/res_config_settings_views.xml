@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Form
+    -->
+    <record id="view_res_config_settings_form_inherit_hc" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.hc</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Patients" string="Patients" data-key="hc" groups="hc.group_manager">
+                    <h2>Patients</h2>
+
+                    <div class="row mt16 o_settings_container" name="patients_settings_container">
+
+                        <!-- hc_calendar -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_calendar_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hc_calendar"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hc_calendar" string="Appointments"/>
+                                <div class="text-muted">
+                                        Schedule appointments for patient visits
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- hc_encounter -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_encounter_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hc_encounter"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hc_encounter" string="Encounters"/>
+                                <div class="text-muted">
+                                        Capture and organize patient encounters
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- hc_patient_tags -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_tags_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hc_patient_tags"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hc_patient_tags" string="Tags"/>
+                                <div class="text-muted">
+                                        Organize and manage your patients using tags
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- hc_phone_validation -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_phone_validation_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hc_phone_validation"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hc_phone_validation" string="Phone Number Validation"/>
+                                <div class="text-muted">
+                                        Automatically format and validate phone numbers
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+    Action
+    -->
+    <record id="action_res_config_settings_inherit_hc" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.res_config_settings_view_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'hc'}</field>
+    </record>
+
+    <!--
+    Submenu: Settings
+    -->
+    <menuitem id="menu_settings" name="Settings" parent="menu_configuration" action="action_res_config_settings_inherit_hc" sequence="5"/>
+
+</odoo>

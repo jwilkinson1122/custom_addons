@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Top level menu
+    -->
+    <menuitem
+        id="menu_root"
+        name="Patients"
+        groups="group_user"
+        sequence="50"
+        web_icon="hc,static/description/icon.png"
+    />
+
+    <!--
+    Menu: Reports
+    -->
+    <menuitem
+        id="menu_report"
+        name="Reporting"
+        parent="menu_root"
+        groups="group_user"
+        sequence="95"
+    />
+
+    <!--
+    Menu: Settings
+    -->
+    <menuitem
+        id="menu_configuration"
+        name="Configuration"
+        parent="menu_root"
+        groups="group_manager"
+        sequence="100"
+    />
+
+    <!--
+    Menu: Settings / Patient
+    -->
+
+    <menuitem
+        id="menu_configuration_patient"
+        name="Patient"
+        parent="menu_configuration"
+        groups="group_manager"
+        sequence="95"
+    />
+
+    <!--
+    Menu: Settings / Other
+    -->
+    <menuitem
+        id="menu_configuration_other"
+        name="Other"
+        parent="menu_configuration"
+        groups="group_manager"
+        sequence="100"
+    />
+
+</odoo>

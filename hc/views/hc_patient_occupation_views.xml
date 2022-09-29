@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Form
+    -->
+    <record id="view_hc_patient_occupation_form" model="ir.ui.view">
+        <field name="name">hc.patient.occupation.form</field>
+        <field name="model">hc.patient.occupation</field>
+        <field name="arch" type="xml">
+            <form string="Occupation">
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <!--
+                    Button Box
+                    -->
+                    <div name="button_box" class="oe_button_box"/>
+
+                    <!--
+                    Ribbons
+                    -->
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+
+                    <!--
+                    Title
+                    -->
+                    <div class="oe_title">
+                        <h1 name="name">
+                            <field name="name" placeholder="e.g. Software Engineer"/>
+                        </h1>
+                    </div>
+
+                    <!--
+                    Content
+                    -->
+                    <group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+
+                    <!--
+                    Notebook
+                    -->
+                    <notebook>
+                        <page name="notes" string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+    Tree
+    -->
+    <record id="view_hc_patient_occupation_tree" model="ir.ui.view">
+        <field name="name">hc.patient.occupation.tree</field>
+        <field name="model">hc.patient.occupation</field>
+        <field name="arch" type="xml">
+            <tree string="Occupations" editable="top" decoration-muted="not active">
+                <field name="name" decoration-bf="1"/>
+                <field name="code"/>
+                <field name="notes" optional="hide"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_hc_patient_occupation_search" model="ir.ui.view">
+        <field name="name">hc.patient.occupation.search</field>
+        <field name="model">hc.patient.occupation</field>
+        <field name="arch" type="xml">
+            <search string="Occupations">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="code" operator="="/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--
+    Action
+    -->
+    <record id="action_hc_patient_occupation" model="ir.actions.act_window">
+        <field name="name">Occupations</field>
+        <field name="res_model">hc.patient.occupation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_hc_patient_occupation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new occupation
+            </p>
+            <p>
+                Organize and manage occupations at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!--
+    Submenu: Settings / Occupations
+    -->
+    <menuitem
+        id="menu_hc_patient_occupation"
+        name="Occupations"
+        parent="menu_configuration_patient"
+        action="action_hc_patient_occupation"
+        groups="group_manager"
+        sequence="30"
+    />
+
+</odoo>

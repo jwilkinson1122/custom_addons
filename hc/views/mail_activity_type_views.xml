@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Action
+    -->
+    <record id="action_mail_activity_type_healthcare" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_res_model': 'hc.patient'}</field>
+        <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['hc.patient'])]</field>
+    </record>
+
+    <!--
+    Submenu: Settings / Other / Activity Types
+    -->
+    <menuitem
+        id="menu_mail_activity_type"
+        name="Activity Types"
+        parent="menu_configuration_other"
+        action="action_mail_activity_type_healthcare"
+        sequence="10"/>
+
+</odoo>

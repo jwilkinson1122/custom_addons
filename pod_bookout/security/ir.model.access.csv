@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-bookout_user,Bookout User,model_pod_bookout,pod_app.pod_group_user,1,1,1,1
-bookout_line_user,Bookout Line User,model_pod_bookout_line,pod_app.pod_group_user,1,1,1,1
-bookout_stage_user,Bookout Stage User,model_pod_bookout_stage,pod_app.pod_group_user,1,0,0,0
-bookout_stage_manager,Bookout Stage Manager,model_pod_bookout_stage,pod_app.pod_group_manager,1,1,1,1
-bookout_massmessage_user,Bookout Mass Message User,model_pod_bookout_massmessage,pod_app.pod_group_user,1,1,1,1
