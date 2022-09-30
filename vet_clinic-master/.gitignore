@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*~
+*~*
+
+# C extensions
+*.so
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# pyCharm
+.idea
+
