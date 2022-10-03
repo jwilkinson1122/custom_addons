@@ -3,17 +3,19 @@
 from odoo import models, fields, api, _
 from datetime import time
 
+# model_pod_clinic_prescription
 
-class Appointment(models.Model):
-    _name = 'pod_clinic.appointment'
+
+class Prescription(models.Model):
+    _name = 'pod_clinic.prescription'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _rec_name = 'appointment_id'
+    _rec_name = 'prescription_id'
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
-    appointment_id = fields.Char(string='ID', required=True, copy=False, readonly=True,
-                                 index=True, default=lambda self: _('New'))
+    prescription_id = fields.Char(string='ID', required=True, copy=False, readonly=True,
+                                  index=True, default=lambda self: _('New'))
     date = fields.Datetime(
         string='Date', required=True)
     state = fields.Selection([
@@ -25,19 +27,20 @@ class Appointment(models.Model):
 
     # Owner
     owner = fields.Many2one(
-        'pod_clinic.client', required=True)
+        'pod_clinic.practice', required=True)
     owner_id = fields.Integer(related='owner.id')
 
-    # Pet
-    pet = fields.Many2one('pod_clinic.pet', required=True,
-                          domain="[('owner', '=', owner)]")
-    pet_rec_name = fields.Char(related='pet.rec_name', string='Pet Recname')
-    pet_id = fields.Integer(related='pet.id', string='Pet')
-    pet_name = fields.Char(related='pet.name', string='Pet')
+    # Patient
+    patient = fields.Many2one('pod_clinic.patient', required=True,
+                              domain="[('owner', '=', owner)]")
+    patient_rec_name = fields.Char(
+        related='patient.rec_name', string='Patient Recname')
+    patient_id = fields.Integer(related='patient.id', string='Patient')
+    patient_name = fields.Char(related='patient.name', string='Patient')
 
     # Item
     item_service = fields.Many2one(
-        'pod_clinic.item', string='Service', required=True, domain="[('item_type', '=', 'service')]")
+        'pod_clinic.item', string='Accommodation', required=True, domain="[('item_type', '=', 'service')]")
 
     # Doctor
     doctor = fields.Many2one(
@@ -47,10 +50,10 @@ class Appointment(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('appointment_id', _('New')) == _('New'):
-            vals['appointment_id'] = self.env['ir.sequence'].next_by_code(
-                'pet_appointment.seq') or _('New')
-        result = super(Appointment, self).create(vals)
+        if vals.get('prescription_id', _('New')) == _('New'):
+            vals['prescription_id'] = self.env['ir.sequence'].next_by_code(
+                'patient_prescription.seq') or _('New')
+        result = super(Prescription, self).create(vals)
         return result
 
     def action_confirm(self):

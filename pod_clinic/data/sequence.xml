@@ -2,18 +2,18 @@
 <odoo>
 
     <data noupdate="1">
-        <!-- sequence pet -->
-        <record id="seq_id_pet" model="ir.sequence">
-            <field name="name">Pet ID</field>
-            <field name="code">pet.seq</field>
+        <!-- sequence patient -->
+        <record id="seq_id_patient" model="ir.sequence">
+            <field name="name">Patient ID</field>
+            <field name="code">patient.seq</field>
             <field name="prefix">PP</field>
             <field name="padding">4</field>
             <field name="company_id" eval="False" />
         </record>
-        <!-- sequence client -->
-        <record id="seq_id_client" model="ir.sequence">
-            <field name="name">Client ID</field>
-            <field name="code">client.seq</field>
+        <!-- sequence practice -->
+        <record id="seq_id_practice" model="ir.sequence">
+            <field name="name">Practice ID</field>
+            <field name="code">practice.seq</field>
             <field name="prefix">PC</field>
             <field name="padding">4</field>
             <field name="company_id" eval="False" />
@@ -26,10 +26,10 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False" />
         </record>
-        <!-- sequence appointment -->
-        <record id="seq_id_appointment" model="ir.sequence">
-            <field name="name">Appointment ID</field>
-            <field name="code">pet_appointment.seq</field>
+        <!-- sequence prescription -->
+        <record id="seq_id_prescription" model="ir.sequence">
+            <field name="name">Prescription ID</field>
+            <field name="code">patient_prescription.seq</field>
             <field name="prefix">PA/%(year)s/%(range_month)s/</field>
             <field eval="1" name="number_next" />
             <field eval="1" name="number_increment" />
@@ -40,7 +40,7 @@
         <!-- sequence visitation -->
         <record id="seq_id_visitation" model="ir.sequence">
             <field name="name">Visitation ID</field>
-            <field name="code">pet_visitation.seq</field>
+            <field name="code">patient_visitation.seq</field>
             <field name="prefix">PV/%(year)s/%(month)s/%(range_day)s/</field>
             <field eval="1" name="number_next" />
             <field eval="1" name="number_increment" />
@@ -50,8 +50,8 @@
         </record>
         <!-- sequence service -->
         <record id="seq_id_service" model="ir.sequence">
-            <field name="name">Service ID</field>
-            <field name="code">pet_service.seq</field>
+            <field name="name">Accommodation ID</field>
+            <field name="code">patient_service.seq</field>
             <field name="prefix">PS/%(year)s/%(month)s/%(range_day)s/</field>
             <field eval="1" name="number_next" />
             <field eval="1" name="number_increment" />

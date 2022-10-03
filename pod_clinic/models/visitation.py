@@ -23,15 +23,16 @@ class Visitation(models.Model):
 
     # Owner
     owner = fields.Many2one(
-        'pod_clinic.client', required=True)
+        'pod_clinic.practice', required=True)
     owner_id = fields.Integer(related='owner.id')
 
-    # Pet
-    pet = fields.Many2one('pod_clinic.pet', required=True,
-                          domain="[('owner', '=', owner)]")
-    pet_rec_name = fields.Char(related='pet.rec_name', string='Pet Recname')
-    pet_id = fields.Integer(related='pet.id', string='Pet')
-    pet_name = fields.Char(related='pet.name', string='Pet')
+    # Patient
+    patient = fields.Many2one('pod_clinic.patient', required=True,
+                              domain="[('owner', '=', owner)]")
+    patient_rec_name = fields.Char(
+        related='patient.rec_name', string='Patient Recname')
+    patient_id = fields.Integer(related='patient.id', string='Patient')
+    patient_name = fields.Char(related='patient.name', string='Patient')
 
     # Doctor
     doctor = fields.Many2one(
@@ -42,7 +43,7 @@ class Visitation(models.Model):
     def create(self, vals):
         if vals.get('visitation_id', _('New')) == _('New'):
             vals['visitation_id'] = self.env['ir.sequence'].next_by_code(
-                'pet_visitation.seq') or _('New')
+                'patient_visitation.seq') or _('New')
         result = super(Visitation, self).create(vals)
         return result
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 
-# class Petclinic(http.Controller):
+# class Patientclinic(http.Controller):
 #     @http.route('/pod_clinic/pod_clinic/', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"

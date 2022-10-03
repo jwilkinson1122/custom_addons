@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'canceled'" decoration-success="state == 'done'" decoration-danger="state == 'in_process'">
                     <field name="visitation_id" />
-                    <field name="pet" />
+                    <field name="patient" />
                     <field name="owner" />
                     <field name="date" />
                     <field name="doctor_name" />
@@ -21,9 +21,9 @@
             <field name="name">pod_clinic.visitation_form</field>
             <field name="model">pod_clinic.visitation</field>
             <field name="arch" type="xml">
-                <form string="Pet">
+                <form string="Patient">
                     <header>
-                        <button name="%(pod_clinic.create_service_wizard)d" string="Create Service" type="action" class="oe_highlight" context="{'default_visitation': active_id}" />
+                        <button name="%(pod_clinic.create_service_wizard)d" string="Create Accommodation" type="action" class="oe_highlight" context="{'default_visitation': active_id}" />
                         <button name="action_check" type="object" string="Check" class="oe_highlight" states="draft" />
                         <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible': [('state','!=', 'in_process')]}" />
                         <button name="action_cancel" type="object" string="Cancel" />
@@ -37,7 +37,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="pet" />
+                                <field name="patient" />
                                 <field name="owner" />
                             </group>
                             <group>
@@ -68,7 +68,7 @@
                 <kanban default_group_by="state" class="o_kanban_small_column">
                     <field name="id" />
                     <field name="visitation_id" />
-                    <field name="pet" />
+                    <field name="patient" />
                     <field name="doctor_name" />
                     <field name="date" />
                     <templates>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div class="col-6 text-right">
                                         <strong>
-                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date" />
+                                            <i class="fa fa-file-text-o" role="img" aria-label="Date" title="Date" />
                                             <field name="date" />
                                         </strong>
                                     </div>
@@ -92,7 +92,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span>
-                                            <field name="pet" />
+                                            <field name="patient" />
                                         </span>
                                     </div>
                                 </div>
@@ -117,22 +117,22 @@
         </record>
 
         <!-- Visitation Calendar View-->
-        <record id="pod_clinic_visitation_calendar" model="ir.ui.view">
+        <!-- <record id="pod_clinic_visitation_calendar" model="ir.ui.view">
             <field name="name">pod_clinic.visitation_calendar</field>
             <field name="model">pod_clinic.visitation</field>
             <field name="arch" type="xml">
-                <calendar string="Visitation Calendar" date_start="date" color="pet" mode="month" quick_add="False">
+                <calendar string="Visitation Calendar" date_start="date" color="patient" mode="month" quick_add="False">
                     <field name="visitation_id" />
-                    <field name="pet" />
+                    <field name="patient" />
                     <field name="doctor_name" />
                 </calendar>
             </field>
-        </record>
+        </record> -->
 
 
         <!-- Visitation Graph View -->
         <record id="pod_clinic_visitation_graph" model="ir.ui.view">
-            <field name="name">pod_clinic.pet_graph</field>
+            <field name="name">pod_clinic.patient_graph</field>
             <field name="model">pod_clinic.visitation</field>
             <field name="arch" type="xml">
                 <graph string="Visitation Graph" type="pie">
@@ -174,8 +174,8 @@
         </record>
 
         <!-- Menu Root -->
-        <menuitem name="Pet Clinic" id="pod_clinic.root_menu" web_icon="pod_clinic,static/description/icon.png" />
-        />
+        <menuitem name="Practice" id="pod_clinic.root_menu" web_icon="pod_clinic,static/description/icon.png" />
+
         <!-- Menu Visitation -->
         <menuitem name="Visitation" id="pod_clinic.visitation" parent="pod_clinic.root_menu" action="pod_clinic_visitation_action_window" />
     </data>

@@ -2,7 +2,7 @@ from odoo import models, fields, api, _
 from datetime import time
 
 
-class Service(models.Model):
+class Accommodation(models.Model):
     _name = 'pod_clinic.service'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'rec_name'
@@ -29,14 +29,14 @@ class Service(models.Model):
 
     # Item
     item_service = fields.Many2one(
-        'pod_clinic.item', string='Service', required=True, domain="[('item_type', '=', 'service')]")
+        'pod_clinic.item', string='Accommodation', required=True, domain="[('item_type', '=', 'service')]")
     service_name = fields.Char(related='item_service.name')
 
     # Visitation
     visitation = fields.Many2one(
         'pod_clinic.visitation', string='visitation ID', required=True)
-    visitation_pet_name = fields.Char(
-        related='visitation.pet_name', string='Pet')
+    visitation_patient_name = fields.Char(
+        related='visitation.patient_name', string='Patient')
     visitation_doctor_name = fields.Char(
         related='visitation.doctor_name', string='Doctor')
 
@@ -44,14 +44,14 @@ class Service(models.Model):
     def create(self, vals):
         if vals.get('service_id', _('New')) == _('New'):
             vals['service_id'] = self.env['ir.sequence'].next_by_code(
-                'pet_service.seq') or _('New')
-        result = super(Service, self).create(vals)
+                'patient_service.seq') or _('New')
+        result = super(Accommodation, self).create(vals)
         return result
 
-    @api.depends('visitation_pet_name', 'service_name')
+    @api.depends('visitation_patient_name', 'service_name')
     def _compute_fields_rec_name(self):
         for rec in self:
-            rec.rec_name = '{} - {}'.format(rec.visitation_pet_name,
+            rec.rec_name = '{} - {}'.format(rec.visitation_patient_name,
                                             rec.service_name)
 
     def action_check(self):

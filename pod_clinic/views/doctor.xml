@@ -21,9 +21,12 @@
           <sheet>
             <!-- Doctor Button Box -->
             <div class="oe_button_box" name="button_box">
-              <!-- Doctor Appointment Button -->
-              <button name="open_doctor_appointment" class="oe_stat_button" type="object" icon="fa-calendar">
-                <field string="Janji" name="appointment_count" widget="statinfo" />
+              <!-- Doctor Prescription Button -->
+              <button name="open_doctor_prescription" class="oe_stat_button" type="object" icon="fa-file-text-o">
+                <field string="Prescriptions" name="prescription_count" widget="statinfo" />
+              </button>
+              <button name="open_doctor_patient" class="oe_stat_button" type="object" icon="fa-address-card-o">
+                <field string="Patients" name="patient_count" widget="statinfo" />
               </button>
             </div>
             <div class="oe_title">
@@ -37,18 +40,28 @@
             <group>
               <group>
                 <field name="name" />
-                <field name="age" />
-                <field name="gender" />
+                <!-- <field name="age" />
+                <field name="gender" /> -->
               </group>
               <group>
-                <field name="phone" />
+                <!-- <field name="phone" />
                 <field name="email" />
-                <field name="address" />
+                <field name="address" /> -->
               </group>
             </group>
             <group name="Speciality">
               <field name="item_service" />
             </group>
+
+            <notebook>
+              <page name="prescriptions_page" string="Prescriptions">
+                <field name="prescription" widget="many2many_kanban" domain="[('owner', '=', False)]" />
+              </page>
+              <page name="patients_page" string="Patients">
+                <field name="patient" widget="many2many_kanban" domain="[('owner', '=', False)]" />
+              </page>
+
+            </notebook>
           </sheet>
           <div class="oe_chatter">
             <field name="message_follower_ids" widget="mail_followers" />
@@ -69,7 +82,7 @@
           <field name="image" />
           <field name="name" />
           <field name="phone" />
-          <field name="age" />
+          <!-- <field name="age" /> -->
           <templates>
             <t t-name="kanban-box">
               <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_pod_clinic_docotr_kanban">
@@ -85,10 +98,10 @@
                   </strong>
                   <div class="o_kanban_tags_section" />
                   <ul>
-                    <li>
+                    <!-- <li>
                       Age :
                       <field name="age" />
-                    </li>
+                    </li> -->
                     <li>
                       Phone :
                       <field name="phone" />
@@ -122,17 +135,14 @@
 
     <!-- Doctor Action Window -->
     <record model="ir.actions.act_window" id="doctor_clinic_doctor_action_window">
-      <field name="name">Doctor</field>
+      <field name="name">Doctors</field>
       <field name="res_model">pod_clinic.doctor</field>
       <field name="view_mode">tree,form,kanban</field>
     </record>
 
-    <!-- Menu Root -->
-    <menuitem name="Pet Clinic" id="pod_clinic.root_menu" web_icon="pod_clinic,static/description/icon.png" />
-    />
-    <!-- Menu Master Data -->
-    <menuitem name="Master Data" id="pod_clinic.master_data" parent="pod_clinic.root_menu" />
-    <!-- Menu Doctor -->
-    <menuitem name="Doctor" id="pod_clinic.doctor" parent="pod_clinic.master_data" action="doctor_clinic_doctor_action_window" />
+
+    <menuitem name="Doctors" id="pod_clinic.menu_doctor" parent="pod_clinic.root_menu" action="doctor_clinic_doctor_action_window" sequence="2"/>
+
   </data>
 </odoo>
+ 

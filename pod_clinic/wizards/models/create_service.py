@@ -3,14 +3,14 @@
 from odoo import models, fields
 
 
-class CreateService(models.TransientModel):
+class CreateAccommodation(models.TransientModel):
     _name = 'create.service'
-    _description = 'Create Service Wizard'
+    _description = 'Create Accommodation Wizard'
 
     visitation = fields.Many2one(
         'pod_clinic.visitation', string='visitation ID', required=True)
     service = fields.Many2one(
-        'pod_clinic.item', string='Service', required=True, domain="[('item_type', '=', 'service')]")
+        'pod_clinic.item', string='Accommodation', required=True, domain="[('item_type', '=', 'service')]")
     date_start = fields.Datetime(
         string='Date Start', required=True)
     date_end = fields.Datetime(
@@ -24,7 +24,7 @@ class CreateService(models.TransientModel):
             'date_end': self.date_end
         }
         self.owner.message_post(
-            body="Your New Service Has Been Added", subject="New Service")
+            body="Your New Accommodation Has Been Added", subject="New Accommodation")
         new_service = self.env['service_clinic.service'].create(vals)
         context = dict(self.env.context)
         context['form_view_initial_mode'] = 'edit'

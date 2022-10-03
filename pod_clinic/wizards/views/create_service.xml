@@ -5,7 +5,7 @@
         <field name="name">create.service.wizard</field>
         <field name="model">create.service</field>
         <field name="arch" type="xml">
-            <form string="Create Service">
+            <form string="Create Accommodation">
                 <group>
                     <field name="visitation" />
                     <field name="service" />
@@ -21,7 +21,7 @@
     </record>
 
     <record id="create_service_wizard" model="ir.actions.act_window">
-        <field name="name">Create Service</field>
+        <field name="name">Create Accommodation</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">create.service</field>
         <field name="view_mode">form</field>

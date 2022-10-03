@@ -17,7 +17,7 @@ class Item(models.Model):
     price = fields.Float(string='Price')
     item_type = fields.Selection([
         ('product', 'Product'),
-        ('service', 'Service')
+        ('service', 'Accommodation')
     ], default='service', string='Type', required=True)
     image = fields.Binary(string='Image')
     amount = fields.Integer(string='Amount')

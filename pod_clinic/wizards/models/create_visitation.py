@@ -8,12 +8,12 @@ class CreateVisitation(models.TransientModel):
     _name = 'create.visitation'
     _description = 'Create visitation Wizard'
 
-    appointment = fields.Many2one(
-        'pod_clinic.appointment')
-    owner = fields.Many2one('pod_clinic.client',
+    prescription = fields.Many2one(
+        'pod_clinic.prescription')
+    owner = fields.Many2one('pod_clinic.practice',
                             required=True)
-    pet = fields.Many2one(
-        'pod_clinic.pet', required=True)
+    patient = fields.Many2one(
+        'pod_clinic.patient', required=True)
     doctor = fields.Many2one(
         'pod_clinic.doctor', required=True)
     date = fields.Datetime(string='Date', required=True)
@@ -21,11 +21,11 @@ class CreateVisitation(models.TransientModel):
     def create_visitation(self):
         vals = {
             'owner': self.owner.id,
-            'pet': self.pet.id,
+            'patient': self.patient.id,
             'date': self.date,
             'doctor': self.doctor.id
         }
-        self.appointment.message_post(
+        self.prescription.message_post(
             body="new visitation Created", subject="visitation Creation")
         # creating visitations from the code
         new_visitation = self.env['pod_clinic.visitation'].create(vals)

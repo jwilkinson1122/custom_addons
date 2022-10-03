@@ -1,13 +1,13 @@
 <odoo>
     <data>
-        <!-- Service Tree View -->
+        <!-- Accommodation Tree View -->
         <record model="ir.ui.view" id="pod_clinic_service_tree">
             <field name="name">pod_clinic.service_tree</field>
             <field name="model">pod_clinic.service</field>
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'canceled'" decoration-success="state == 'done'" decoration-danger="state == 'in_process'">
                     <field name="service_id" />
-                    <field name="visitation_pet_name" />
+                    <field name="visitation_patient_name" />
                     <field name="visitation_doctor_name" />
                     <field name="date_start" />
                     <field name="date_end" />
@@ -16,12 +16,12 @@
             </field>
         </record>
 
-        <!-- Service Form View -->
+        <!-- Accommodation Form View -->
         <record model="ir.ui.view" id="pod_clinic_service_form">
             <field name="name">pod_clinic.service_form</field>
             <field name="model">pod_clinic.service</field>
             <field name="arch" type="xml">
-                <form string="Pet">
+                <form string="Patient">
                     <header>
                         <button name="action_check" type="object" string="Check" class="oe_highlight" states="draft" />
                         <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible': [('state','!=', 'in_process')]}" />
@@ -36,7 +36,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="visitation_pet_name" />
+                                <field name="visitation_patient_name" />
                                 <field name="visitation_doctor_name" />
                             </group>
                             <group>
@@ -45,7 +45,7 @@
                             </group>
                         </group>
                         <group string="Description">
-                            <field name="description" nolabel="1" placeholder="This is Service Note" />
+                            <field name="description" nolabel="1" placeholder="This is Accommodation Note" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -57,7 +57,7 @@
             </field>
         </record>
 
-        <!-- Service Kanban View -->
+        <!-- Accommodation Kanban View -->
         <record id="pod_clinic_service_kanban" model="ir.ui.view">
             <field name="name">pod_clinic.service_kanban</field>
             <field name="model">pod_clinic.service</field>
@@ -65,7 +65,7 @@
                 <kanban default_group_by="state" class="o_kanban_small_column">
                     <field name="id" />
                     <field name="service_id" />
-                    <field name="visitation_pet_name" />
+                    <field name="visitation_patient_name" />
                     <field name="visitation_doctor_name" />
                     <field name="date_start" />
                     <field name="date_end" />
@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="col-6 text-right">
                                         <i>
-                                            <i class="fa fa-calendar" role="img" aria-label="Start" title="Start" />
+                                            <i class="fa fa-file-text-o" role="img" aria-label="Start" title="Start" />
                                             <field name="date_start" />
                                         </i>
                                     </div>
@@ -90,12 +90,12 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span>
-                                            <field name="visitation_pet_name" />
+                                            <field name="visitation_patient_name" />
                                         </span>
                                     </div>
                                     <div class="col-6  text-right">
                                         <i>
-                                            <i class="fa fa-calendar-check-o" role="img" aria-label="End" title="End" />
+                                            <i class="fa fa-file-text-o-check-o" role="img" aria-label="End" title="End" />
                                             <field name="date_end" />
                                         </i>
                                     </div>
@@ -120,38 +120,26 @@
             </field>
         </record>
 
-        <!-- Service Calendar View-->
-        <record id="pod_clinic_service_calendar" model="ir.ui.view">
-            <field name="name">pod_clinic.service_calendar</field>
-            <field name="model">pod_clinic.service</field>
-            <field name="arch" type="xml">
-                <calendar string="Service Calendar" date_start="date_start" color="visitation_pet_name" mode="month" quick_add="True">
-                    <field name="service_id" />
-                    <field name="visitation_pet_name" />
-                    <field name="visitation_doctor_name" />
-                </calendar>
-            </field>
-        </record>
 
 
-        <!-- Service Graph View -->
+        <!-- Accommodation Graph View -->
         <record id="pod_clinic_service_graph" model="ir.ui.view">
-            <field name="name">pod_clinic.pet_graph</field>
+            <field name="name">pod_clinic.patient_graph</field>
             <field name="model">pod_clinic.service</field>
             <field name="arch" type="xml">
-                <graph string="Service Graph" type="pie">
+                <graph string="Accommodation Graph" type="pie">
                     <field name="date_start" />
                     <field name="date_start" type="measure" />
                 </graph>
             </field>
         </record>
 
-        <!-- Service Search View -->
+        <!-- Accommodation Search View -->
         <record id="pod_clinic_service_search" model="ir.ui.view">
             <field name="name">pod_clinic.service_search</field>
             <field name="model">pod_clinic.service</field>
             <field name="arch" type="xml">
-                <search string="Search Service">
+                <search string="Search Accommodation">
                     <field name="service_id" filter_domain="[('service_id', 'ilike', self)]" />
                     <field name="visitation_doctor_name" />
                     <separator />
@@ -169,18 +157,19 @@
             </field>
         </record>
 
-        <!-- Service Action Window -->
+        <!-- Accommodation Action Window -->
         <record model="ir.actions.act_window" id="pod_clinic_service_action_window">
-            <field name="name">Service</field>
+            <field name="name">Accommodation</field>
             <field name="res_model">pod_clinic.service</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_date_today': 1}</field>
         </record>
 
         <!-- Menu Root -->
-        <menuitem name="Pet Clinic" id="pod_clinic.root_menu" />
+        <menuitem name="Practice" id="pod_clinic.root_menu" />
 
-        <!-- Menu Service -->
-        <menuitem name="Service" id="pod_clinic.service" parent="pod_clinic.root_menu" action="pod_clinic_service_action_window" />
+        <!-- Menu Accommodation -->
+        <menuitem name="Accommodation" id="pod_clinic.service" parent="pod_clinic.root_menu" action="pod_clinic_service_action_window" />
+        <!-- <menuitem name="Accommodation" id="pod_clinic.service" parent="pod_clinic.root_menu" action="pod_clinic_service_action_window" /> -->
     </data>
 </odoo>

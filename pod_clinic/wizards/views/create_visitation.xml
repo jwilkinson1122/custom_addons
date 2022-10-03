@@ -9,7 +9,7 @@
                 <group>
                     <group>
                         <field name="owner" />
-                        <field name="pet" />
+                        <field name="patient" />
                     </group>
                     <group>
                         <field name="date" />

@@ -104,7 +104,7 @@
                 <search string="Search Item">
                     <field name="name" filter_domain="['|',('name', 'ilike', self),('internal_reference', 'ilike', self)]" />
                     <separator />
-                    <filter string="Services" name="services" domain="[('item_type','=','service')]" />
+                    <filter string="Accommodations" name="services" domain="[('item_type','=','service')]" />
                     <filter string="Products" name="product" domain="[('item_type', '=', 'product')]" />
                     <filter string="Available Items" name="amount" domain="[('amount','&gt;',0)]" />
                     <separator />
@@ -124,10 +124,10 @@
         </record>
 
         <!-- Menu Root -->
-        <menuitem name="Pet Clinic" id="pod_clinic.root_menu" web_icon="pod_clinic,static/description/icon.png" />
-        />
-        <!-- Menu Master Data -->
-        <menuitem name="Master Data" id="pod_clinic.master_data" parent="pod_clinic.root_menu" />
+        <menuitem name="Practice" id="pod_clinic.root_menu" web_icon="pod_clinic,static/description/icon.png" />
+
+        <!-- Menu Configuration -->
+        <menuitem name="Configuration" id="pod_clinic.master_data" parent="pod_clinic.root_menu" />
 
         <!-- Menu Item -->
         <menuitem name="Item" id="pod_clinic.item" parent="pod_clinic.master_data" action="item_clinic_item_action_window" />
