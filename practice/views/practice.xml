@@ -9,9 +9,9 @@
                     <field name="ref" />
                     <field name="name" />
                     <field name="gender" />
-                    <field name="species_id" />
-                    <field name="breed_id" />
-                    <field name="color_id" />
+                    <field name="type_id" />
+                    <field name="specialty_id" />
+
                 </tree>
             </field>
         </record>
@@ -34,9 +34,8 @@
                         </div>
                         <group id="main">
                             <group id="left">
-                                <field name="species_id" />
-                                <field name="breed_id" domain="[('species_id', '=', species_id)]" />
-                                <field name="color_id" domain="[('breed_id', '=', breed_id)]" />
+                                <field name="type_id" />
+                                <field name="specialty_id" domain="[('type_id', '=', type_id)]" />
                                 <field name="size" />
                             </group>
                             <group id="right">
@@ -83,9 +82,9 @@
                                             <li t-if="record.gender.raw_value">
                                                 <field name="gender" />
                                             </li>
-                                            <li t-if="record.species_id.raw_value and record.breed_id.raw_value">
-                                                <field name="breed_id" />
-                                                <field name="species_id" />
+                                            <li t-if="record.type_id.raw_value and record.specialty_id.raw_value">
+                                                <field name="specialty_id" />
+                                                <field name="type_id" />
                                             </li>
                                         </ul>
                                         <div class="oe_kanban_partner_links" />
@@ -104,9 +103,9 @@
                 <field name="arch" type="xml">
                     <search string="Practices">
                         <field name="name" filter_domain="['|', ('name', 'ilike', self), ('ref', 'ilike', self)]" string="Name" />
-                        <field name="species_id" />
-                        <field name="breed_id" />
-                        <field name="color_id" />
+                        <field name="type_id" />
+                        <field name="specialty_id" />
+
                         <field name="size" />
                         <separator />
                         <filter string="Female" domain="[('gender', '=', 'female')]" name="female" />
@@ -118,9 +117,9 @@
                         <separator />
                         <group expand="0" string="Group By">
                             <filter name="gender" string="Gender" domain="" context="{'group_by': 'gender'}" />
-                            <filter name="species_id" string="Species" domain="" context="{'group_by': 'species_id'}" />
-                            <filter name="breed_id" string="Breed" domain="" context="{'group_by': 'breed_id'}" />
-                            <filter name="color_id" string="Color" domain="" context="{'group_by': 'color_id'}" />
+                            <filter name="type_id" string="Type" domain="" context="{'group_by': 'type_id'}" />
+                            <filter name="specialty_id" string="Specialty" domain="" context="{'group_by': 'specialty_id'}" />
+
                         </group>
                     </search>
                 </field>

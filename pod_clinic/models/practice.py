@@ -35,11 +35,8 @@ class Practice(models.Model):
         comodel_name='res.partner', string="Contact",
     )
 
-    # Children
-
-    prescription_count = fields.Integer(compute='compute_prescription_count')
     # Doctors
-    doctor = fields.One2many('pod_clinic.doctor', string='Doctor')
+    doctor = fields.One2many('pod_clinic.doctor', 'owner', string='Doctor')
     doctor_count = fields.Integer(compute='compute_doctor_count')
     # Patients
     patient = fields.One2many('pod_clinic.patient', 'owner', string='Patient')

@@ -31,57 +31,30 @@ class Doctor(models.Model):
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")
     notes = fields.Text(string="Notes")
-    # partner_id = fields.Many2one(
-    #     comodel_name='res.partner', string="Contact",
-    # )
-
-    # Doctor -> Type
-    # doctor_type = fields.Many2one('pod_clinic.doctor.type',
-    #                               string='Specialty')
-    # doctor_type_name = fields.Char(related='doctor_type.name',
-    #                                string='Specialty')
-
-    # Doctor -> Role
-    # doctor_role = fields.Many2one('pod_clinic.doctor.role', domain="[('doctor_type','=',doctor_type)]",
-    #                               string='Role')
-    # doctor_role_name = fields.Char(related='doctor_role.name',
-    #                                string='Role')
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', string="Contact",
+    )
 
     # Owner
     owner = fields.Many2one(
-        'pod_clinic.doctor', string='Owner', store=True, readonly=False)
+        'pod_clinic.practice', string='Owner', store=True, readonly=False)
     owner_id = fields.Integer(
         related='owner.id', string='Doctor Owner ID')
     owner_name = fields.Char(
         related='owner.name', string='Owner Name')
 
-    # Prescription count
-    # prescription_count = fields.Integer(compute='compute_prescription_count')
-    # Patient count
-    # patient_count = fields.Integer(compute='compute_patient_count')
+    # Practices
+    practice = fields.One2many(
+        'pod_clinic.practice', 'owner', string='Practice')
+    practice_count = fields.Integer(compute='compute_practice_count')
 
     # Patients
     patient = fields.One2many('pod_clinic.patient', 'owner', string='Patient')
     patient_count = fields.Integer(compute='compute_patient_count')
-
     # Prescription
     prescription = fields.One2many(
         'pod_clinic.prescription', 'owner', string='Prescription')
     prescription_count = fields.Integer(compute='compute_prescription_count')
-
-    # @api.depends('name', 'doctor_type_name', 'doctor_role_name')
-    # def _compute_fields_rec_name(self):
-    #     for doctor in self:
-    #         if(doctor.doctor_type_name == False and doctor.doctor_role_name == False):
-    #             doctor.rec_name = '{}'.format(doctor.name)
-    #         elif(doctor.doctor_role_name == False):
-    #             doctor.rec_name = '{} - {}'.format(doctor.name,
-    #                                                doctor.doctor_type_name)
-    #         elif(doctor.doctor_type_name == False):
-    #             doctor.rec_name = '{}'.format(doctor.name)
-    #         else:
-    #             doctor.rec_name = '{} - {} {}'.format(doctor.name,
-    #                                                   doctor.doctor_type_name, doctor.doctor_role_name)
 
     # Item
     item_service = fields.Many2many(
@@ -95,19 +68,32 @@ class Doctor(models.Model):
         result = super(Doctor, self).create(vals)
         return result
 
+    # Button Doctor Count
+
+    def compute_doctor_count(self):
+        for record in self:
+            record.doctor_count = self.env['pod_clinic.doctor'].search_count(
+                [('practice', '=', self.id)])
     # Button Prescription Handle
-    def open_doctor_prescription(self):
+
+    def open_practice_doctor(self):
         return {
-            'name': _('Prescriptions'),
-            'domain': [('doctor', '=', self.id)],
+            'name': _('Doctors'),
+            'domain': [('practice', '=', self.id)],
             'view_type': 'form',
-            'res_model': 'pod_clinic.prescription',
+            'res_model': 'pod_clinic.doctor',
             'view_id': False,
             'view_mode': 'kanban,tree,form',
             'type': 'ir.actions.act_window',
         }
 
+    # Button Patient Count
+    def compute_patient_count(self):
+        for record in self:
+            record.patient_count = self.env['pod_clinic.patient'].search_count(
+                [('doctor', '=', self.id)])
     # Button Prescription Handle
+
     def open_doctor_patient(self):
         return {
             'name': _('Patients'),
@@ -119,17 +105,23 @@ class Doctor(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    # Button Prescription Count
+        # Button Prescription Count
     def compute_prescription_count(self):
         for record in self:
             record.prescription_count = self.env['pod_clinic.prescription'].search_count(
                 [('doctor', '=', self.id)])
+    # Button Prescription Handle
 
-        # Button Patient Count
-    def compute_patient_count(self):
-        for record in self:
-            record.patient_count = self.env['pod_clinic.patient'].search_count(
-                [('doctor', '=', self.id)])
+    def open_doctor_prescription(self):
+        return {
+            'name': _('Prescriptions'),
+            'domain': [('doctor', '=', self.id)],
+            'view_type': 'form',
+            'res_model': 'pod_clinic.prescription',
+            'view_id': False,
+            'view_mode': 'kanban,tree,form',
+            'type': 'ir.actions.act_window',
+        }
 
 
 # class DoctorType(models.Model):

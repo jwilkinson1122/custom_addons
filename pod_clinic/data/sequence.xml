@@ -18,6 +18,14 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False" />
         </record>
+        <!-- sequence affiliate -->
+        <record id="seq_id_affiliate" model="ir.sequence">
+            <field name="name">Affiliate ID</field>
+            <field name="code">affiliate.seq</field>
+            <field name="prefix">AP</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False" />
+        </record>
         <!-- sequence doctor -->
         <record id="seq_id_doctor" model="ir.sequence">
             <field name="name">Doctor ID</field>

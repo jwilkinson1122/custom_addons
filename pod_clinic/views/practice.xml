@@ -27,6 +27,9 @@
           <sheet>
             <!-- Practice Button Box -->
             <div class="oe_button_box" name="button_box">
+              <button name="open_practice_doctor" class="oe_stat_button" type="object" icon="fa-user-md">
+                <field string="Doctors" name="doctor_count" widget="statinfo" />
+              </button>
               <button name="open_practice_patient" class="oe_stat_button" type="object" icon="fa-address-card-o">
                 <field string="Patients" name="patient_count" widget="statinfo" />
               </button>
@@ -64,8 +67,11 @@
               </group>
             </group>
             <notebook>
-              <page name="doctors_page" string="Doctors">
+              <page name="affiliates_page" string="Affiliates">
                 <!-- <field name="doctor" widget="many2many_kanban" domain="[('owner', '=', False)]" /> -->
+              </page>
+              <page name="doctors_page" string="Doctors">
+                <field name="doctor" widget="many2many_kanban" domain="[('owner', '=', False)]" />
               </page>
               <page name="patients_page" string="Patients">
                 <field name="patient" widget="many2many_kanban" domain="[('owner', '=', False)]" />

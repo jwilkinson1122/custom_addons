@@ -114,19 +114,6 @@
       </field>
     </record>
 
-    <!-- Prescription Calendar View-->
-    <!-- <record id="pod_clinic_prescription_calendar" model="ir.ui.view">
-      <field name="name">pod_clinic.prescription_calendar</field>
-      <field name="model">pod_clinic.prescription</field>
-      <field name="arch" type="xml">
-        <calendar string="Prescription Calendar" date_start="date" color="patient" mode="month" quick_add="False">
-          <field name="prescription_id" />
-          <field name="patient" />
-          <field name="doctor" />
-        </calendar>
-      </field>
-    </record> -->
-
 
     <!-- Prescription Graph View -->
     <record id="pod_clinic_prescription_graph" model="ir.ui.view">

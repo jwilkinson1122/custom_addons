@@ -1,8 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_practice_user,practice.user,model_practice,base.group_user,1,1,1,1
-access_practice_color_user,practice.color.user,model_practice_color,base.group_user,1,0,0,0
-access_practice_color_manager,practice.color.manaager,model_practice_color,practice.group_practice_manager,1,1,1,1
-access_practice_breed_user,practice.breed.user,model_practice_breed,base.group_user,1,0,0,0
-access_practice_breed_manager,practice.breed.manager,model_practice_breed,practice.group_practice_manager,1,1,1,1
-access_practice_species_user,practice.species.user,model_practice_species,base.group_user,1,0,0,0
-access_practice_species_manager,practice.species.manager,model_practice_species,practice.group_practice_manager,1,1,1,1
+access_practice_specialty_user,practice.specialty.user,model_practice_specialty,base.group_user,1,0,0,0
+access_practice_specialty_manager,practice.specialty.manager,model_practice_specialty,practice.group_practice_manager,1,1,1,1
+access_practice_type_user,practice.type.user,model_practice_type,base.group_user,1,0,0,0
+access_practice_type_manager,practice.type.manager,model_practice_type,practice.group_practice_manager,1,1,1,1

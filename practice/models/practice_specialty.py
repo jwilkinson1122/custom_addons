@@ -3,13 +3,13 @@
 from odoo import fields, models
 
 
-class PracticeBreed(models.Model):
-    _name = "practice.breed"
-    _description = "Practice Breeds"
+class PracticeSpecialty(models.Model):
+    _name = "practice.specialty"
+    _description = "Practice Specialties"
     _order = "name"
 
     name = fields.Char(string="Name", translate=True)
-    species_id = fields.Many2one(
-        "practice.species", string="Species", required=True)
+    type_id = fields.Many2one(
+        "practice.type", string="Type", required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer()

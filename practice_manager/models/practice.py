@@ -7,5 +7,5 @@ class Practice(models.Model):
     _inherit = "practice"
 
     partner_id = fields.Many2one(
-        "res.partner", string="Owner", index=True, tracking=True
+        "res.partner", string="Manager", index=True, tracking=True
     )
