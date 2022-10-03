@@ -161,7 +161,7 @@
         <record model="ir.actions.act_window" id="pod_clinic_service_action_window">
             <field name="name">Accommodation</field>
             <field name="res_model">pod_clinic.service</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
             <field name="context">{'search_default_date_today': 1}</field>
         </record>
 

@@ -169,7 +169,7 @@
         <record model="ir.actions.act_window" id="pod_clinic_visitation_action_window">
             <field name="name">Visitation</field>
             <field name="res_model">pod_clinic.visitation</field>
-            <field name="view_mode">calendar,kanban,tree,form,graph</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
             <field name="context">{'search_default_date_today': 1}</field>
         </record>
 

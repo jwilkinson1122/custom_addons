@@ -40,7 +40,7 @@
             <group name="practice_patient">
               <!-- Patient Information-->
               <group name="patient_information" string="Patient Information">
-                <field name="name" placeholder="Practice Name..."/>
+                <field name="name" placeholder="Patient Name..."/>
                 <field name="mobile" widget="phone" help="help"/>
                 <field name="phone" widget="phone"/>
                 <field name="email" widget="email"/>

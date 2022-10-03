@@ -35,15 +35,16 @@ class Practice(models.Model):
         comodel_name='res.partner', string="Contact",
     )
 
-    # Doctors
-    # doctor = fields.One2many('pod_clinic.doctor', string='Doctor')
-    # doctor_count = fields.Integer(compute='compute_doctor_count')
+    # Children
 
+    prescription_count = fields.Integer(compute='compute_prescription_count')
+    # Doctors
+    doctor = fields.One2many('pod_clinic.doctor', string='Doctor')
+    doctor_count = fields.Integer(compute='compute_doctor_count')
     # Patients
     patient = fields.One2many('pod_clinic.patient', 'owner', string='Patient')
     patient_count = fields.Integer(compute='compute_patient_count')
-
-    # Prescription
+    # Prescriptions
     prescription = fields.One2many(
         'pod_clinic.prescription', 'owner', string='Prescription')
     prescription_count = fields.Integer(compute='compute_prescription_count')
@@ -63,22 +64,22 @@ class Practice(models.Model):
         return result
 
     # Button Doctor Handle
-    # def open_practice_doctor(self):
-    #     return {
-    #         'name': _('Doctors'),
-    #         'domain': [('owner', '=', self.id)],
-    #         'view_type': 'form',
-    #         'res_model': 'pod_clinic.doctor',
-    #         'view_id': False,
-    #         'view_mode': 'kanban,tree,form',
-    #         'type': 'ir.actions.act_window',
-    #     }
-    # Button Doctor Count
+    def open_practice_doctor(self):
+        return {
+            'name': _('Doctors'),
+            'domain': [('owner', '=', self.id)],
+            'view_type': 'form',
+            'res_model': 'pod_clinic.doctor',
+            'view_id': False,
+            'view_mode': 'kanban,tree,form',
+            'type': 'ir.actions.act_window',
+        }
 
-    # def compute_doctor_count(self):
-    #     for record in self:
-    #         record.doctor_count = self.env['pod_clinic.doctor'].search_count(
-    #             [('owner', '=', self.id)])
+    # Button Doctor Count
+    def compute_doctor_count(self):
+        for record in self:
+            record.doctor_count = self.env['pod_clinic.doctor'].search_count(
+                [('owner', '=', self.id)])
 
     # Button Patient Handle
 

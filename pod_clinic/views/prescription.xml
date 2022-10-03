@@ -166,7 +166,7 @@
     <record model="ir.actions.act_window" id="pod_clinic_prescription_action_window">
       <field name="name">Prescription</field>
       <field name="res_model">pod_clinic.prescription</field>
-      <field name="view_mode">calendar,kanban,tree,form,graph</field>
+      <field name="view_mode">kanban,tree,form,graph</field>
       <field name="context">{'search_default_date_today': 1}</field>
     </record>
 

@@ -19,6 +19,7 @@ class Doctor(models.Model):
     mobile = fields.Char(string="Mobile")
     street = fields.Char(string="Street")
     street2 = fields.Char(string="Street 2")
+
     country_id = fields.Many2one(
         comodel_name='res.country', string="Country",
         default=lambda self: self.env.company.country_id,
