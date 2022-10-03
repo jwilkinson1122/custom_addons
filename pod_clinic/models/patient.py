@@ -55,15 +55,18 @@ class Patient(models.Model):
 
     # Owner
     owner = fields.Many2one(
-        'pod_clinic.practice', string='Owner', store=True, readonly=False)
+        'pod_clinic.doctor', string='Owner', store=True, readonly=False)
     owner_id = fields.Integer(
         related='owner.id', string='Patient Owner ID')
     owner_name = fields.Char(
         related='owner.name', string='Owner Name')
 
     # Prescription
-    prescription = fields.One2many(
-        'pod_clinic.prescription', 'owner', string='Prescription')
+    # prescription = fields.One2many(
+    #     'pod_clinic.prescription', 'owner', string='Prescription')
+    # prescription_count = fields.Integer(compute='compute_prescription_count')
+
+    # Appointment
     prescription_count = fields.Integer(compute='compute_prescription_count')
 
     @api.depends('name', 'patient_type_name', 'patient_diagnosis_name')

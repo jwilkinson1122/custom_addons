@@ -38,12 +38,11 @@ class Practice(models.Model):
     # Doctors
     doctor = fields.One2many('pod_clinic.doctor', 'owner', string='Doctor')
     doctor_count = fields.Integer(compute='compute_doctor_count')
-    # Patients
-    patient = fields.One2many('pod_clinic.patient', 'owner', string='Patient')
+
+    # Patient
     patient_count = fields.Integer(compute='compute_patient_count')
-    # Prescriptions
-    prescription = fields.One2many(
-        'pod_clinic.prescription', 'owner', string='Prescription')
+
+    # Prescription
     prescription_count = fields.Integer(compute='compute_prescription_count')
 
     @api.model
@@ -60,7 +59,8 @@ class Practice(models.Model):
         result = super(Practice, self).create(vals)
         return result
 
-    # Button Doctor Handle
+        # Button Doctor Handle
+
     def open_practice_doctor(self):
         return {
             'name': _('Doctors'),
@@ -71,14 +71,14 @@ class Practice(models.Model):
             'view_mode': 'kanban,tree,form',
             'type': 'ir.actions.act_window',
         }
-
     # Button Doctor Count
+
     def compute_doctor_count(self):
         for record in self:
             record.doctor_count = self.env['pod_clinic.doctor'].search_count(
                 [('owner', '=', self.id)])
 
-    # Button Patient Handle
+     # Button Patient Handle
 
     def open_practice_patient(self):
         return {
