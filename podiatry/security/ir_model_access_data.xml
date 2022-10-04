@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        resource.resource
+        -->
+        <record id="access_resource_resource_group_manager" model="ir.model.access">
+            <field name="name">access.resource.resource.podiatry.group.manager</field>
+            <field name="model_id" ref="resource.model_resource_resource"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!--
+        podiatry.patient
+        -->
+        <record id="access_podiatry_patient_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.patient.group.manager</field>
+            <field name="model_id" ref="model_podiatry_patient"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_patient_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.patient.group.user</field>
+            <field name="model_id" ref="model_podiatry_patient"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        podiatry.patient.shoe_size
+        -->
+        <record id="access_podiatry_patient_shoe_size_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.patient.shoe_size.group.manager</field>
+            <field name="model_id" ref="model_podiatry_patient_shoe_size"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_patient_shoe_size_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.patient.shoe_size.group.user</field>
+            <field name="model_id" ref="model_podiatry_patient_shoe_size"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        podiatry.patient.diagnosis
+        -->
+        <record id="access_podiatry_patient_diagnosis_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.patient.diagnosis.group.manager</field>
+            <field name="model_id" ref="model_podiatry_patient_diagnosis"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_patient_diagnosis_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.patient.diagnosis.group.user</field>
+            <field name="model_id" ref="model_podiatry_patient_diagnosis"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        podiatry.patient.weight
+        -->
+        <record id="access_podiatry_patient_weight_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.patient.weight.group.manager</field>
+            <field name="model_id" ref="model_podiatry_patient_weight"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_patient_weight_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.patient.weight.group.user</field>
+            <field name="model_id" ref="model_podiatry_patient_weight"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        podiatry.practice
+        -->
+        <record id="access_podiatry_practice_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.practice.group.manager</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
+            <field name="group_id" ref="podiatry.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_practice_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.practice.group.user</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
+            <field name="group_id" ref="podiatry.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        podiatry.type
+        -->
+        <record id="access_podiatry_type_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.type.group.manager</field>
+            <field name="model_id" ref="model_podiatry_type"/>
+            <field name="group_id" ref="podiatry.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_type_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.type.group.user</field>
+            <field name="model_id" ref="model_podiatry_type"/>
+            <field name="group_id" ref="podiatry.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+    </data>
+</odoo>
