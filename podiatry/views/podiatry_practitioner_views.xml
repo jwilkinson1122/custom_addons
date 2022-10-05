@@ -29,13 +29,25 @@
                     <div name="avatar">
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
+                    <!-- Title -->
                     <div name="title" class="oe_title">
+                        <field name="practice_id" readonly="1"/>
+
                         <div name="name">
+                            <!-- <field name="practice_id" placeholder="Practice" readonly="not context.get('can_edit_parent_id', True)"/> -->
                             <h1>
                                 <field name="name" required="1" placeholder="Contact's Name"/>
                             </h1>
                         </div>
                     </div>
+
+                    <!-- Title -->
+                    <!-- <div class="oe_title">
+                        <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
+                        <h1>
+                            <field name="name" placeholder="Practice's Name" required="1"/>
+                        </h1>
+                    </div> -->
                     <notebook>
 
                         <!--
@@ -290,10 +302,13 @@
                                     <div name="heading" class="o_kanban_record_headings">
                                         <strong name="title" class="o_kanban_record_title">
                                             <field name="name"/>
+                                            <field name="practice_id"/>
+
                                         </strong>
                                         <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
                                             <small t-if="record.identification.raw_value">
                                                 <field name="identification"/>
+                                                <!-- <field name="practice_id"/> -->
                                             </small>
                                         </span>
                                     </div>
@@ -301,9 +316,9 @@
 
                                 <div name="content"/>
 
-                                <!--
+
                                 <div name="details" class="container-fluid">
-                                    <div name="gender" class="row">
+                                    <!-- <div name="gender" class="row">
                                         <div class="col-1 p-0">
                                             <i class="fa fa-venus-mars"/>
                                         </div>
@@ -318,7 +333,7 @@
                                         <div class="col">
                                             <field name="age"/>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div name="mobile" class="row">
                                         <div class="col-1 p-0">
                                             <i class="fa fa-mobile"/>
@@ -336,7 +351,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                -->
+
 
                                 <!--
                                 -->
