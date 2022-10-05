@@ -11,7 +11,7 @@ class Diagnosis(models.Model):
         default=True,
     )
     name = fields.Char(
-        string="Diagnosis Title",
+        string="Diagnosis",
         required=True,
         index=True, translate=True,
     )

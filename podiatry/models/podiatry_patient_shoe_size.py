@@ -11,7 +11,7 @@ class ShoeSize(models.Model):
         default=True,
     )
     name = fields.Char(
-        string="Description",
+        string="Shoe Size",
         required=True,
         index=True, translate=True,
     )

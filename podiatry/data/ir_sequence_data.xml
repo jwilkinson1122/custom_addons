@@ -8,6 +8,12 @@
             <field name="padding">6</field>
         </record>
 
+        <record id="sequence_podiatry_practice" model="ir.sequence">
+            <field name="name">Practice Number</field>
+            <field name="code">podiatry.practice</field>
+            <field name="padding">5</field>
+        </record>
+
         <!--
         <record id="sequence_podiatry_episode" model="ir.sequence">
             <field name="name">Episode Number</field>

@@ -1,4 +1,8 @@
+import base64
+from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
+from odoo.modules.module import get_module_resource
+
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -7,7 +11,8 @@ _logger = logging.getLogger(__name__)
 class Practice(models.Model):
     _name = 'podiatry.practice'
     _description = "Care Practice"
-    _inherit = ['resource.mixin']
+    _inherit = ['resource.mixin', 'mail.thread',
+                'mail.activity.mixin', 'image.mixin']
     _order = 'sequence,id'
 
     _parent_name = 'parent_id'
@@ -23,20 +28,44 @@ class Practice(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
-    active = fields.Boolean(string="Active", default=True)
+    @api.model
+    def _get_sequence_code(self):
+        return 'podiatry.practice'
+
+    active = fields.Boolean(string="Active", default=True, tracking=True)
     name = fields.Char(string="Practice Name", index=True, translate=True)
     color = fields.Integer(string="Color Index (0-15)")
+
     sequence = fields.Integer(
         string="Sequence", required=True,
         default=5,
     )
 
     code = fields.Char(string="Code", copy=False)
+
     full_name = fields.Char(
         string="Full Name",
         compute='_compute_full_name',
         store=True,
     )
+
+    email = fields.Char(string="E-mail")
+    phone = fields.Char(string="Telephone")
+    mobile = fields.Char(string="Mobile")
+    street = fields.Char(string="Street")
+    street2 = fields.Char(string="Street 2")
+    country_id = fields.Many2one(
+        comodel_name='res.country', string="Country",
+        default=lambda self: self.env.company.country_id,
+    )
+    state_id = fields.Many2one(
+        comodel_name='res.country.state', string="State",
+        default=lambda self: self.env.company.state_id,
+    )
+    city = fields.Char(string="City")
+    zip = fields.Char(string="ZIP Code")
+
+    notes = fields.Text(string="Notes")
 
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
@@ -56,8 +85,19 @@ class Practice(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name='res.users',
-        string="User",
+        string="Created by",
     )
+
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', string="Contact",
+    )
+
+    # other_partner_ids = fields.Many2many(
+    #     comodel_name='res.partner',
+    #     relation='podiatry_practice_partners_rel',
+    #     column1='practice_id', column2='partner_id',
+    #     string="Other Contacts",
+    # )
 
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -90,3 +130,68 @@ class Practice(models.Model):
         if not self.env.context.get('hierarchical_naming', True):
             return [(record.id, record.name) for record in self]
         return super(Practice, self).name_get()
+
+    @api.model
+    # def _default_image(self):
+    #     image_path = get_module_resource(
+    #         'podiatry', 'static/src/img', 'default_image.png')
+    #     return base64.b64encode(open(image_path, 'rb').read())
+    def _set_code(self):
+        for practice in self:
+            sequence = self._get_sequence_code()
+            practice.code = self.env['ir.sequence'].next_by_code(sequence)
+        return
+
+    # same_identification_practice_id = fields.Many2one(
+    #     comodel_name='podiatry.practice',
+    #     string='Practice with same ID',
+    #     compute='_compute_same_identification_practice_id',
+    # )
+
+    # @api.depends('identification')
+    # def _compute_same_identification_practice_id(self):
+    #     for practice in self:
+    #         domain = [
+    #             ('identification', '=', practice.identification),
+    #         ]
+
+    #         origin_id = practice._origin.id
+
+    #         if origin_id:
+    #             domain += [('id', '!=', origin_id)]
+
+    #         practice.same_identification_practice_id = bool(practice.identification) and \
+    #             self.with_context(active_test=False).sudo().search(
+    #                 domain, limit=1)
+
+    # @api.model
+    # def _default_image(self):
+    #     image_path = get_module_resource(
+    #         'podaitry', 'static/src/img', 'default_image.png')
+    #     return base64.b64encode(open(image_path, 'rb').read())
+
+    # def _add_followers(self):
+    #     for patient in self:
+    #         partner_ids = (patient.user_id.partner_id |
+    #                        patient.responsible_id.partner_id).ids
+    #         patient.message_subscribe(partner_ids=partner_ids)
+
+    # def _set_number(self):
+    #     for patient in self:
+    #         sequence = self._get_sequence_code()
+    #         patient.number = self.env['ir.sequence'].next_by_code(sequence)
+    #     return
+
+    # @api.model
+    # def create(self, values):
+    #     patient = super(Practice, self).create(values)
+    #     patient._add_followers()
+    #     patient._set_number()
+
+    #     return patient
+
+    # def write(self, values):
+    #     result = super(Practice, self).write(values)
+    #     if 'user_id' in values or 'other_partner_ids' in values:
+    #         self._add_followers()
+    #     return result

@@ -11,7 +11,7 @@ class ShoeWidth(models.Model):
         default=True,
     )
     name = fields.Char(
-        string="Description",
+        string="Shoe Width",
         required=True,
         index=True, translate=True,
     )

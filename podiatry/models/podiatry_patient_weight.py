@@ -11,7 +11,7 @@ class Weight(models.Model):
         default=True,
     )
     name = fields.Char(
-        string="Weight Title",
+        string="Weight",
         required=True,
         index=True, translate=True,
     )
