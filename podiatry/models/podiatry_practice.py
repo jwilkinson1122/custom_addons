@@ -80,7 +80,7 @@ class Practice(models.Model):
 
     notes = fields.Text(string="Notes")
 
-    patient_id = fields.Many2one(
+    patient_id = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='practice_id',
         string="Patients",
