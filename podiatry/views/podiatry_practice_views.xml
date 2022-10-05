@@ -99,10 +99,21 @@
                                 <field name="practitioner_id"/>
                             </group>
                         </page>
-
-                        <page name="orders_list" string="Orders">
-
+                        <page name="practice_patients_list" string="Patients">
+                            <group>
+                                <field name="patient_id"/>
+                            </group>
                         </page>
+                        <page name="practice_prescriptions_list" string="Prescriptions">
+                            <group>
+                                <field name="practice_prescription_id"/>
+                            </group>
+                        </page>
+                        <!-- <page name="perscriptions_list" string="Prescriptions">
+                            <group>
+                                <field name="practitioner_prescription_id"/>
+                            </group>
+                        </page> -->
 
                         <page name="notes" string="Notes">
                             <field name="notes"/>

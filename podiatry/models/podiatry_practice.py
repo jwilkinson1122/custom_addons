@@ -101,6 +101,12 @@ class Practice(models.Model):
         string="Created by",
     )
 
+    practice_prescription_id = fields.One2many(
+        comodel_name='podiatry.practitioner.prescription',
+        inverse_name='practice_id',
+        string="Prescriptions",
+    )
+
     partner_id = fields.Many2one(
         comodel_name='res.partner', string="Contact",
     )

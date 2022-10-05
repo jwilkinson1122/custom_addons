@@ -54,17 +54,16 @@
                         -->
                         <page name="patient_information" string="Patient Information">
                             <group name="personal_information">
-                                <group name="responsible" string="Responsible">
-
+                                <group name="responsible" string="Administrator">
                                     <field name="practitioner_id"/>
                                     <field name="practice_id"/>
-
+                                    <field name="identification" required="1"/>
                                 </group>
 
                                 <!--
-                                Citizenship
+                                Nationality
                                 -->
-                                <group name="citizenship" string="Citizenship">
+                                <!-- <group name="citizenship" string="Nationality">
                                     <field name="identification" required="1"/>
                                     <label for="birthdate"/>
                                     <div name="birthdate">
@@ -80,7 +79,7 @@
                                         <span class="oe_read_only">, </span>
                                         <field name="birth_country_id" placeholder="Country" options="{'no_create': true, 'no_open': true}"/>
                                     </div>
-                                </group>
+                                </group> -->
 
                                 <!--
                                 Attributes
@@ -89,7 +88,7 @@
                                     <field name="gender" required="1"/>
                                     <field name="diagnosis"/>
                                     <field name="shoe_size_id" options="{'no_open': true}"/>
-                                    <field name="diagnosis_id" options="{'no_open': true}"/>
+                                    <!-- <field name="diagnosis_id" options="{'no_open': true}"/> -->
                                     <field name="weight_id" options="{'no_open': true}"/>
                                 </group>
                             </group>
@@ -140,7 +139,7 @@
                         <!--
                         Patient Information
                         -->
-                        <page name="order_information" string="Orders">
+                        <page name="patient_prescription_information" string="Prescriptions">
 
                         </page>
 
@@ -189,17 +188,6 @@
     Tree
     -->
 
-    <!-- <record id="patient_list" model="ir.ui.view">
-        <field name="name">Patients list</field>
-        <field name="model">cgu_hospital.patient</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="personal_doctor_id"/>
-            </tree>
-        </field>
-    </record> -->
-
     <record id="view_podiatry_patient_tree" model="ir.ui.view">
         <field name="name">podiatry.patient.tree</field>
         <field name="model">podiatry.patient</field>
@@ -212,17 +200,17 @@
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>
                 <field name="gender" optional="show"/>
-                <!-- <field name="diagnosis" optional="hide"/>
+                <field name="diagnosis" optional="show"/>
                 <field name="diagnosis_id" optional="hide"/>
                 <field name="shoe_size_id" optional="hide"/>
                 <field name="weight_id" optional="hide"/>
-                <field name="nationality_id" optional="show"/>
+                <field name="nationality_id" optional="hide"/>
                 <field name="birth_country_id" optional="hide"/>
                 <field name="birth_state_id" optional="hide"/>
                 <field name="mobile" widget="phone" optional="show"/>
-                <field name="phone" widget="phone" optional="show"/> -->
+                <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
-                <field name="user_id" widget="many2one_avatar" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar" optional="show"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>

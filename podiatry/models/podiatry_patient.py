@@ -54,7 +54,7 @@ class Patient(models.Model):
         ('plantar_fasciitis', 'Plantar Fasciitis'),
         ('diabetes', 'Diabetes'),
         ('other', 'Other'),
-    ], string="Diagnosis Group")
+    ], string="Diagnosis")
 
     signature = fields.Binary(string="Signature")
 
@@ -103,6 +103,12 @@ class Patient(models.Model):
         string="Practitioner",
     )
 
+    patient_prescription_id = fields.One2many(
+        comodel_name='podiatry.practitioner.prescription',
+        inverse_name='patient_id',
+        string="Prescriptions",
+    )
+
     user_id = fields.Many2one(
         comodel_name='res.users',
         string="Created by",
@@ -118,6 +124,10 @@ class Patient(models.Model):
         column1='patient_id', column2='partner_id',
         string="Other Contacts",
     )
+
+    diagnosis_id = fields.Many2one(
+        comodel_name='podiatry.patient.diagnosis',
+        string='Diagnosis')
 
     age = fields.Char(compute='_compute_age')
 

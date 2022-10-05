@@ -25,6 +25,11 @@ class Practitioner(models.Model):
         string="Practices",
     )
 
+    practitioner_prescription_id = fields.One2many(
+        comodel_name='podiatry.practitioner.prescription',
+        inverse_name='practitioner_id',
+        string='Prescriptions')
+
     practitioner_history_id = fields.One2many(
         comodel_name='podiatry.personal.practitioner.history',
         inverse_name='practitioner_id',
@@ -75,7 +80,7 @@ class Practitioner(models.Model):
     ], string="Gender")
 
     salutation = fields.Selection(selection=[
-        ('doctor', 'Doctor'),
+        ('doctor', 'Practitioner'),
         ('mr', 'Mr.'),
         ('ms', 'Ms.'),
         ('mrs', 'Mrs.'),

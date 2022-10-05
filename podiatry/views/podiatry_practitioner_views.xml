@@ -32,7 +32,7 @@
                     <div name="title" class="oe_title">
                         <div name="name">
                             <h1>
-                                <field name="name" required="1" placeholder="Practitioner's Name"/>
+                                <field name="name" required="1" placeholder="Contact's Name"/>
                             </h1>
                         </div>
                     </div>
@@ -88,10 +88,10 @@
                             </group>
                         </page>
 
-                        <page name="orders_list" string="Orders">
-                            <!-- <group>
-                                <field name="prescription_ids"/>
-                            </group> -->
+                        <page name="perscriptions_list" string="Prescriptions">
+                            <group>
+                                <field name="practitioner_prescription_id"/>
+                            </group>
                         </page>
                         <page string="practitioner_history">
                             <!-- <field name="practitioner_history_id">

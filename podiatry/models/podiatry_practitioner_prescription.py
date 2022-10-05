@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 class PractitionerPrescription(models.Model):
     _name = 'podiatry.practitioner.prescription'
-    _description = 'Doctor Appointment'
+    _description = 'Practitioner Prescription'
 
     name = fields.Char()
     # readonly = True
@@ -14,9 +14,13 @@ class PractitionerPrescription(models.Model):
     date = fields.Date()
     time = fields.Datetime()
 
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice')
+
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
-        string='Doctor')
+        string='Practitioner')
 
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
