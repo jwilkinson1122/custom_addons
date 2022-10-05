@@ -249,6 +249,6 @@
     <!--
     Submenu: Settings / Practices
     -->
-    <menuitem id="menu_podiatry_practice" name="Practices" action="action_podiatry_practice" groups="group_manager" parent="menu_configuration" sequence="30" />
+    <!-- <menuitem id="menu_podiatry_practice" name="Practices" action="action_podiatry_practice" groups="group_manager" parent="menu_configuration" sequence="30" /> -->
 
 </odoo>

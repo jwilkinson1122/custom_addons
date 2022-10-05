@@ -22,12 +22,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="patient_ids" invisible="1"/>
-                <button
-                    type="action"
-                    name="%(action_podiatry_patient_from_partner)d"
-                    class="oe_stat_button" icon="fa-user"
-                    attrs="{'invisible' : [('patient_ids', '=', [])]}"
-                >
+                <button type="action" name="%(action_podiatry_patient_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
                     <field name="patient_count" string="Patients" widget="statinfo"/>
                 </button>
             </xpath>
@@ -60,15 +55,27 @@
         <field name="context">{'search_default_is_patient': True}</field>
     </record>
 
+
+    <!-- <record model="ir.actions.act_window" id="action_membership_members">
+        <field name="name">Members</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="view_res_partner_member_filter"/>
+        <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                  Add a new member
+            </p>
+            <p>
+                  Odoo helps you easily track all activities related to a member: 
+                  Current Membership Status, Discussions and History of Membership, etc.
+            </p>
+        </field>
+    </record> -->
+
     <!--
     Submenu: Settings / Other / Contacts
     -->
-    <menuitem
-        id="menu_res_partners"
-        name="Contacts"
-        action="action_res_partner_patients"
-        parent="menu_configuration_other"
-        sequence="20"
-    />
+    <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_other" sequence="20"/>
 
 </odoo>
