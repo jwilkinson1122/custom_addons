@@ -1,0 +1,182 @@
+<odoo>
+    <data>
+        <!-- Visitation Tree View -->
+        <record model="ir.ui.view" id="patient_clinic_visitation_tree">
+            <field name="name">patient_clinic.visitation_tree</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'canceled'" decoration-success="state == 'done'" decoration-danger="state == 'in_process'">
+                    <field name="visitation_id" />
+                    <field name="patient" />
+                    <field name="owner" />
+                    <field name="date" />
+                    <field name="doctor_name" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Visitation Form View -->
+        <record model="ir.ui.view" id="patient_clinic_visitation_form">
+            <field name="name">patient_clinic.visitation_form</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <header>
+                        <button name="%(patient_clinic.create_service_wizard)d" string="Create Service" type="action" class="oe_highlight" context="{'default_visitation': active_id}" />
+                        <button name="action_check" type="object" string="Check" class="oe_highlight" states="draft" />
+                        <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible': [('state','!=', 'in_process')]}" />
+                        <button name="action_cancel" type="object" string="Cancel" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_process,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="visitation_id" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="patient" />
+                                <field name="owner" />
+                            </group>
+                            <group>
+                                <field name="doctor" />
+                                <field name="date" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" nolabel="1" placeholder="This is Visitation Note" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Visitation Kanban View -->
+        <record id="patient_clinic_visitation_kanban" model="ir.ui.view">
+            <field name="name">patient_clinic.visitation_kanban</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="id" />
+                    <field name="visitation_id" />
+                    <field name="patient" />
+                    <field name="doctor_name" />
+                    <field name="date" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        <strong>
+                                            <span>
+                                                <field name="visitation_id" />
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <strong>
+                                            <i class="fa fa-file-text-o" role="img" aria-label="Date" title="Date" />
+                                            <field name="date" />
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>
+                                            <field name="patient" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>
+                                            Doctor
+                                            <field name="doctor_name" />
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="float-right" style="font-size:16px;">
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'in_process': 'warning', 'done': 'success', 'canceled': 'danger'}}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Visitation Calendar View-->
+        <!-- <record id="patient_clinic_visitation_calendar" model="ir.ui.view">
+            <field name="name">patient_clinic.visitation_calendar</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <calendar string="Visitation Calendar" date_start="date" color="patient" mode="month" quick_add="False">
+                    <field name="visitation_id" />
+                    <field name="patient" />
+                    <field name="doctor_name" />
+                </calendar>
+            </field>
+        </record> -->
+
+
+        <!-- Visitation Graph View -->
+        <record id="patient_clinic_visitation_graph" model="ir.ui.view">
+            <field name="name">patient_clinic.patient_graph</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <graph string="Visitation Graph" type="pie">
+                    <field name="date" />
+                    <field name="date" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <!-- Visitation Search View -->
+        <record id="patient_clinic_visitation_search" model="ir.ui.view">
+            <field name="name">patient_clinic.visitation_search</field>
+            <field name="model">patient_clinic.visitation</field>
+            <field name="arch" type="xml">
+                <search string="Search Visitation">
+                    <field name="visitation_id" filter_domain="[('visitation_id', 'ilike', self)]" />
+                    <field name="doctor_name" />
+                    <field name="date" />
+                    <separator />
+                    <filter string="Today" name="date_today" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date', '&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]" />
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
+                    <filter string="In Process" name="in_process" domain="[('state', '=', 'in_process')]" />
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]" />
+                    <filter string="Canceled" name="canceled" domain="[('state', '=', 'canceled')]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="state" context="{'group_by':'state'}" />
+                        <filter string="Doctor" name="doctor_name" context="{'group_by':'doctor_name'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Visitation Action Window -->
+        <record model="ir.actions.act_window" id="patient_clinic_visitation_action_window">
+            <field name="name">Visitation</field>
+            <field name="res_model">patient_clinic.visitation</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="context">{'search_default_date_today': 1}</field>
+        </record>
+
+        <!-- Menu Root -->
+        <menuitem name="Patient Clinic" id="patient_clinic.root_menu" web_icon="patient_clinic,static/description/icon.png" />
+
+        <!-- Menu Visitation -->
+        <menuitem name="Visitation" id="patient_clinic.visitation" parent="patient_clinic.root_menu" action="patient_clinic_visitation_action_window" />
+    </data>
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_podiatry_practitioner_prescription_list" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="time"/>
+                <field name="practitioner_id"/>
+                <field name="patient_id"/>
+                <field name="diagnosis_id"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_podiatry_practitioner_prescription_calendar" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date" string="visits" mode="month" color="color">
+                <field name="patient_id"/>
+                <field name="practitioner_id"/>
+                <field name="date"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="view_podiatry_practitioner_prescription_form" model="ir.ui.view">
+        <field name="name">Practitioner Prescription</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <notebook>
+                        <page string="Main">
+                            <group>
+                                <group>
+                                    <field name="date"/>
+                                    <field name="time"/>
+                                </group>
+                                <group>
+                                    <field name="practitioner_id"/>
+                                    <field name="patient_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_podiatry_practitioner_prescription_search" model="ir.ui.view">
+        <field name="name">podiatry.practitioner.prescription.search</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field name="arch" type="xml">
+            <search string="Prescriptions">
+
+                <!-- <field name="parent_id" invisible="1"/> -->
+
+                <!-- Fields -->
+                <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="parent_id" operator="child_of"/>
+                <separator/> -->
+
+                <!-- Filters -->
+                <!-- <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <separator/> -->
+
+                <!-- Searchpanel -->
+                <!-- <searchpanel>
+                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                    <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
+                </searchpanel> -->
+            </search>
+        </field>
+    </record>
+
+    <!-- <record id="action_window_practitioner_prescriptions" model="ir.actions.act_window">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="res_model">podiatry.practitioner.prescription</field>
+        <field name="view_mode">tree,calendar,form</field>
+    </record>
+
+    <menuitem id="podiatry.practitioner_prescriptions" name="Practitioner Prescriptions" parent="podiatry.menu_documents" action="podiatry.action_window_practitioner_prescriptions"/>
+ -->
+
+    <!--
+    Action: Prescriptions (Dashboard)
+    -->
+    <record id="action_podiatry_practitioner_prescription_dashboard" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">podiatry.practitioner.prescription</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_podiatry_practitioner_prescription_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new prescription
+            </p>
+            <p>
+                Organize and manage prescriptions at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!--
+    menu: Prescriptons
+    -->
+    <menuitem id="menu_podiatry_practitioner_prescriptions" name="Prescriptions" action="action_podiatry_practitioner_prescription_dashboard" parent="menu_root" sequence="20" />
+    <!--
+    Menu: Patients
+    -->
+    <!-- <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="10" /> -->
+
+</odoo>

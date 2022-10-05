@@ -49,6 +49,7 @@ class Practice(models.Model):
         store=True,
     )
 
+    identification = fields.Char(string="Identification", index=True)
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -81,8 +82,20 @@ class Practice(models.Model):
 
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
-        string="Patient",
+        inverse_name='practice_id',
+        string="Patients",
     )
+    # practitioner_id = fields.Many2one(
+    #     comodel_name='podiatry.practitioner',
+    #     inverse_name='practice_id',
+    #     string="Practitioners",
+    # )
+    practitioner_id = fields.One2many(
+        comodel_name='podiatry.practitioner',
+        inverse_name='practice_id',
+        string="Contacts",
+    )
+
     user_id = fields.Many2one(
         comodel_name='res.users',
         string="Created by",
@@ -92,12 +105,16 @@ class Practice(models.Model):
         comodel_name='res.partner', string="Contact",
     )
 
-    # other_partner_ids = fields.Many2many(
-    #     comodel_name='res.partner',
-    #     relation='podiatry_practice_partners_rel',
-    #     column1='practice_id', column2='partner_id',
-    #     string="Other Contacts",
-    # )
+    speciality_id = fields.Many2one(
+        comodel_name='podiatry.speciality',
+        string='speciality')
+
+    other_partner_ids = fields.Many2many(
+        comodel_name='res.partner',
+        relation='podiatry_practice_partners_rel',
+        column1='practice_id', column2='partner_id',
+        string="Other Contacts",
+    )
 
     company_id = fields.Many2one(
         comodel_name='res.company',

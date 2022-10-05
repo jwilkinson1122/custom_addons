@@ -16,6 +16,30 @@
         </record>
 
         <!--
+        podiatry.practitioner
+        -->
+        <record id="access_podiatry_practitioner_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.practitioner.group.manager</field>
+            <field name="model_id" ref="model_podiatry_practitioner"/>
+            <field name="group_id" ref="podiatry.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_practitioner_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.practitioner.group.user</field>
+            <field name="model_id" ref="model_podiatry_practitioner"/>
+            <field name="group_id" ref="podiatry.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
+        <!--
         podiatry.patient
         -->
         <record id="access_podiatry_patient_group_manager" model="ir.model.access">

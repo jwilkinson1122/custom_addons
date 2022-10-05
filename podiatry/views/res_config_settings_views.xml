@@ -21,9 +21,9 @@
                                 <field name="module_podiatry_calendar"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_podiatry_calendar" string="Appointments"/>
+                                <label for="module_podiatry_calendar" string="Prescriptions"/>
                                 <div class="text-muted">
-                                        Schedule appointments for patient visits
+                                        Schedule order delivery dates
                                 </div>
                             </div>
                         </div>

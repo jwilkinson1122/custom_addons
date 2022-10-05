@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="False">
+    <record id="analysis_type_demo_1" model="cgu_hospital.analysis.type">
+        <field name="name">Mochi</field>
+
+        <field name="active" eval="True"/>
+    </record>
+
+   <record id="analysis_type_demo_2" model="cgu_hospital.analysis.type">
+        <field name="name">Krovi</field>
+
+        <field name="active" eval="True"/>
+    </record>
+
+   <record id="analysis_type_demo_3" model="cgu_hospital.analysis.type">
+        <field name="name">Rengen</field>
+
+        <field name="active" eval="True"/>
+    </record>
+
+ </odoo>

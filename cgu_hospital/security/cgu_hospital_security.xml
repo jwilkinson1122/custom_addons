@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cgu_hospital_doctor_appointment_rule_user" model="ir.rule">
+        <field name="name">users can only view own appointments</field>
+        <field name="model_id" ref="model_cgu_hospital_doctor_appointment"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hospital_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="cgu_hospital_doctor_appointment_rule_admin" model="ir.rule">
+        <field name="name">administrators have full rights on appointments</field>
+        <field name="model_id" ref="model_cgu_hospital_doctor_appointment"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_hospital_admin'))]"/>
+    </record>
+</odoo>
+

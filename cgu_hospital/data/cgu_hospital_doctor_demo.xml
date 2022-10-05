@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="False">
+    <record id="doctor_demo_1" model="cgu_hospital.doctor">
+        <field name="name">Ivanov Ivan Ivanovich</field>
+        <field name="LastName">Ivanov</field>
+        <field name="FirstName">Ivan</field>
+        <field name="Surname">Ivanovich</field>
+        <field name="phone">+380673456789</field>
+        <field name="email">Ivanov@gmail.com</field>
+<!--        <field name="photo" type="base64" file="base/static/img/public_user-image.png"/>-->
+
+        <field name="sex">man</field>
+        <field name="speciality_id" ref="cgu_hospital.speciality_demo_1"/>
+
+        <field name="active" eval="True"/>
+    </record>
+
+      <record id="doctor_demo_2" model="cgu_hospital.doctor">
+        <field name="name">Petrov Petr Petrovich</field>
+        <field name="LastName">Petrov</field>
+        <field name="FirstName">Petr</field>
+        <field name="Surname">Petrovich</field>
+        <field name="phone">+380679876543</field>
+        <field name="email">Petrov@gmail.com</field>
+        <!--        <field name="photo"> Чурай</field>-->
+        <field name="sex">man</field>
+        <field name="speciality_id" ref="cgu_hospital.speciality_demo_2"/>
+
+        <field name="active" eval="True"/>
+    </record>
+
+      <record id="doctor_demo_3" model="cgu_hospital.doctor">
+        <field name="name">Sidorov Sidor Sidorovich</field>
+        <field name="LastName">Sidorov</field>
+        <field name="FirstName">Sidor</field>
+        <field name="Surname">Sidorovich</field>
+        <field name="phone">+380678765432</field>
+        <field name="email">Sidorov@gmail.com</field>
+        <!--        <field name="photo"> Чурай</field>-->
+        <field name="sex">man</field>
+        <field name="speciality_id" ref="cgu_hospital.speciality_demo_3"/>
+
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

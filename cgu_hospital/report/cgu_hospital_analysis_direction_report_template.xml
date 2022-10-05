@@ -1,0 +1,74 @@
+<odoo>
+    <template id="logo_template">
+        <div>
+            <div class="col-6">
+                <img t-att-src="image_data_uri(user.company_id.logo)"
+                     alt="Logo"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="print_now_date_time">
+        <div name="hr_hospital" style="text-align:left;">
+            <span>printed</span>
+            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+        </div>
+    </template>
+
+    <template id="print_name_date">
+        <div style="text-align:left;">
+            <strong>
+                <span>Analysis direction #</span>
+                <span t-field="doc.name"/>
+                <span>from</span>
+                <span t-field="doc.date"/>
+            </strong>
+        </div>
+    </template>
+
+    <template id="maine_data">
+        <div style="text-align:right;">
+            <table class="table-bordered" style="text-align:right;">
+                <tr>
+                    <th>Doctor</th>
+                    <th style="text-align:left;">
+                        <div t-field="doc.doctor_id"/>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Patient</th>
+                    <th style="text-align:left;">
+                        <div t-field="doc.patient_id"/>
+                    </th>
+                </tr>
+                <tr>
+                    <th>analysis_type</th>
+                    <th style="text-align:left;">
+                        <div t-field="doc.analysis_type_id"/>
+                    </th>
+                </tr>
+                <tr>
+                    <th>comment</th>
+                    <th style="text-align:left;">
+                        <div t-field="doc.comment"/>
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+
+    <template id="analysis_direction_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="cgu_hospital.logo_template"/>
+                <br/>
+                <t t-call="cgu_hospital.print_name_date"/>
+                <br/>
+                <t t-call="cgu_hospital.maine_data"/>
+                <br/>
+                <t t-call="cgu_hospital.print_now_date_time"/>
+            </t>
+        </t>
+    </template>
+</odoo>

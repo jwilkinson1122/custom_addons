@@ -43,17 +43,23 @@
                                 <span name="age" attrs="{'invisible': [('age', '=', False)]}"> · <field name="age" class="oe_inline"/> old
                                 </span>
                             </div>
-                            <field name="sex"/>
+                            <field name="gender"/>
                         </group>
                     -->
                     </div>
                     <notebook>
 
                         <!--
-                        Personal Information
+                        Patient Information
                         -->
-                        <page name="personal_information" string="Personal Information">
+                        <page name="patient_information" string="Patient Information">
                             <group name="personal_information">
+                                <group name="responsible" string="Responsible">
+
+                                    <field name="practitioner_id"/>
+                                    <field name="practice_id"/>
+
+                                </group>
 
                                 <!--
                                 Citizenship
@@ -80,8 +86,8 @@
                                 Attributes
                                 -->
                                 <group name="attributes" string="Attributes">
-                                    <field name="sex" required="1"/>
-                                    <field name="blood"/>
+                                    <field name="gender" required="1"/>
+                                    <field name="diagnosis"/>
                                     <field name="shoe_size_id" options="{'no_open': true}"/>
                                     <field name="diagnosis_id" options="{'no_open': true}"/>
                                     <field name="weight_id" options="{'no_open': true}"/>
@@ -112,6 +118,12 @@
                                         <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                                     </div>
                                 </group>
+                                <!--
+                                Patinet Notes
+                                -->
+                                <group name="notes" string="Patient Notes" colspan="4">
+                                    <field name="notes" nolabel="1" placeholder="Start typing..."/>
+                                </group>
                             </group>
 
                             <!--
@@ -124,20 +136,14 @@
                             <field name="other_partner_ids" mode="kanban" context="{'default_type': 'contact'}"/>
                         </page>
 
+
                         <!--
                         Patient Information
                         -->
-                        <page name="patient_information" string="Patient Information">
-                            <group name="patient_information">
+                        <page name="order_information" string="Orders">
 
-                                <!--
-                                Notes
-                                -->
-                                <group name="notes" string="Notes" colspan="4">
-                                    <field name="notes" nolabel="1" placeholder="Start typing..."/>
-                                </group>
-                            </group>
                         </page>
+
 
                         <!--
                         Page: Internal
@@ -161,7 +167,7 @@
                                         'default_phone': phone,
                                         'default_mobile': mobile,
                                         'default_email': email,
-                                        'default_vat': identification,
+ 
                                     }"/>
                                     <field name="user_id" string="Related User"/>
                                     <field name="responsible_id"/>
@@ -182,17 +188,31 @@
     <!--
     Tree
     -->
+
+    <!-- <record id="patient_list" model="ir.ui.view">
+        <field name="name">Patients list</field>
+        <field name="model">cgu_hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="personal_doctor_id"/>
+            </tree>
+        </field>
+    </record> -->
+
     <record id="view_podiatry_patient_tree" model="ir.ui.view">
         <field name="name">podiatry.patient.tree</field>
         <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
             <tree string="Patients" decoration-muted="not active">
                 <field name="name" decoration-bf="1"/>
+                <field name="practitioner_id"/>
+                <field name="practice_id"/>
                 <field name="identification"/>
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>
-                <field name="sex" optional="show"/>
-                <field name="blood" optional="hide"/>
+                <field name="gender" optional="show"/>
+                <!-- <field name="diagnosis" optional="hide"/>
                 <field name="diagnosis_id" optional="hide"/>
                 <field name="shoe_size_id" optional="hide"/>
                 <field name="weight_id" optional="hide"/>
@@ -200,7 +220,7 @@
                 <field name="birth_country_id" optional="hide"/>
                 <field name="birth_state_id" optional="hide"/>
                 <field name="mobile" widget="phone" optional="show"/>
-                <field name="phone" widget="phone" optional="show"/>
+                <field name="phone" widget="phone" optional="show"/> -->
                 <field name="email" widget="email" optional="show"/>
                 <field name="user_id" widget="many2one_avatar" optional="hide"/>
                 <field name="active" invisible="1"/>
@@ -274,6 +294,9 @@
                                         <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
                                             <small t-if="record.identification.raw_value">
                                                 <field name="identification"/>
+                                                <field name="practitioner_id"/>
+                                                <field name="practice_id"/>
+
                                             </small>
                                         </span>
                                     </div>
@@ -281,14 +304,14 @@
 
                                 <div name="content"/>
 
-                                <!--
+
                                 <div name="details" class="container-fluid">
-                                    <div name="sex" class="row">
+                                    <div name="gender" class="row">
                                         <div class="col-1 p-0">
                                             <i class="fa fa-venus-mars"/>
                                         </div>
                                         <div class="col">
-                                            <field name="sex"/>
+                                            <field name="gender"/>
                                         </div>
                                     </div>
                                     <div name="age" class="row">
@@ -316,15 +339,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                -->
+
 
                                 <!--
                                 -->
                                 <ul name="details">
-                                    <li t-if="record.sex.raw_value or record.age.raw_value">
-                                        <span t-if="record.sex.raw_value" class="mr-2">
+                                    <li t-if="record.gender.raw_value or record.age.raw_value">
+                                        <span t-if="record.gender.raw_value" class="mr-2">
                                             <i style="width: 1.25rem;" class="fa fa-venus-mars"/>
-                                            <field name="sex"/>
+                                            <field name="gender"/>
                                         </span>
                                         <span t-if="record.age.raw_value">
                                             <i style="width: 1.25rem;" class="fa fa-birthday-cake"/>
@@ -412,16 +435,19 @@
                 Groups
                 -->
                 <group name="group_by" string="Group By">
-                    <filter string="Blood" name="blood" context="{'group_by': 'blood'}"/>
-                    <filter string="Sex" name="sex" context="{'group_by': 'sex'}"/>
+                    <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
+                    <filter string="Practitioner" name="practitioner_id" context="{'group_by': 'practitioner_id'}"/>
                     <separator/>
-                    <filter string="Shoe Size" name="shoe_size_id" context="{'group_by': 'shoe_size_id'}"/>
-                    <filter string="Diagnosis" name="diagnosis_id" context="{'group_by': 'diagnosis_id'}"/>
-                    <filter string="Weight" name="weight_id" context="{'group_by': 'weight_id'}"/>
+                    <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
                     <separator/>
-                    <filter string="Nationality" name="nationality_id" context="{'group_by': 'nationality_id'}"/>
+                    <!-- <filter string="Shoe Size" name="shoe_size_id" context="{'group_by': 'shoe_size_id'}"/> -->
+                    <!-- <filter string="Diagnosis" name="diagnosis_id" context="{'group_by': 'diagnosis_id'}"/> -->
+                    <!-- <filter string="Weight" name="weight_id" context="{'group_by': 'weight_id'}"/> -->
+                    <!-- <separator/> -->
+                    <!-- <filter string="Nationality" name="nationality_id" context="{'group_by': 'nationality_id'}"/>
                     <filter string="Birthplace" name="birth_state_id" context="{'group_by': 'birth_state_id'}"/>
-                    <separator/>
+                    <separator/> -->
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
                 </group>
@@ -431,10 +457,13 @@
                 -->
 
                 <searchpanel>
-                    <field name="sex" icon="fa-venus-mars" enable_counters="1"/>
-                    <field name="blood" icon="fa-tint" enable_counters="1"/>
-                    <field name="shoe_size_id" icon="fa-male" enable_counters="1"/>
-                    <field name="diagnosis_id" icon="fa-graduation-cap" enable_counters="1"/>
+                    <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
+                    <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
+                    <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
+                    <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/> -->
+                    <!-- <field name="diagnosis" icon="fa-tint" enable_counters="1"/> -->
+                    <!-- <field name="shoe_size_id" icon="fa-male" enable_counters="1"/> -->
+                    <!-- <field name="diagnosis_id" icon="fa-graduation-cap" enable_counters="1"/> -->
                     <field name="country_id" icon="fa-globe" enable_counters="1"/>
                 </searchpanel>
 
@@ -481,7 +510,7 @@
     <!--
     Menu: Patients
     -->
-    <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="10" />
+    <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="15" />
 
     <!--
     Submenu: Patients / All Patients
@@ -548,6 +577,6 @@
     <!--
     Submenu: Reports / Patients
     -->
-    <menuitem id="menu_podiatry_patient_dashboard" name="Patients" parent="menu_report" action="action_podiatry_patient_report" sequence="10" />
+    <menuitem id="menu_podiatry_patient_dashboard" name="Patients" parent="menu_report" action="action_podiatry_patient_report" sequence="35" />
 
 </odoo>

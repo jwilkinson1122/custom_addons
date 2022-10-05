@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <record id="patient_list" model="ir.ui.view">
+        <field name="name">Patients list</field>
+        <field name="model">cgu_hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="personal_doctor_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="patient_form" model="ir.ui.view">
+        <field name="name">Patient form</field>
+        <field name="model">cgu_hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <notebook>
+                        <page string="Main">
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="LastName"/>
+                                    <field name="FirstName"/>
+                                    <field name="Surname"/>
+                                </group>
+                                <group>
+                                    <field name="passport_series"/>
+                                    <field name="passport_number"/>
+                                    <field name="passport_issued_when"/>
+                                    <field name="passport_issued_whom"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="personal_doctor_id"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                </group>
+                                <group>
+                                    <field name="date_birth"/>
+                                    <field name="date_today"/>
+                                    <field name="age"/>
+                                    <field name="sex"/>
+                                </group>
+                            </group>
+                        </page>
+                     </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    <record id="action_window_patients" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">cgu_hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="cgu_hospital.patients" name="Patients" parent="cgu_hospital.menu_directories"
+              action="cgu_hospital.action_window_patients"/>
+
+</odoo>

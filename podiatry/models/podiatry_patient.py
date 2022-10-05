@@ -19,6 +19,10 @@ class Patient(models.Model):
 
     number = fields.Char(string="Patient Number")
 
+    practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner',
+        string='Practitioner')
+
     identification = fields.Char(string="Identification", index=True)
 
     birthdate = fields.Datetime(string="Birthdate")
@@ -41,18 +45,16 @@ class Patient(models.Model):
 
     notes = fields.Text(string="Notes")
 
-    sex = fields.Selection(selection=[
+    gender = fields.Selection(selection=[
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
-    ], string="Sex")
-    blood = fields.Selection(selection=[
-        ('o-', 'O-'), ('o+', 'O+'),
-        ('a-', 'A-'), ('a+', 'A+'),
-        ('b-', 'B-'), ('b+', 'B+'),
-        ('ab-', 'AB-'), ('ab+', 'AB+'),
+    ], string="Gender")
+    diagnosis = fields.Selection(selection=[
+        ('plantar_fasciitis', 'Plantar Fasciitis'),
+        ('diabetes', 'Diabetes'),
         ('other', 'Other'),
-    ], string="Blood Group")
+    ], string="Diagnosis Group")
 
     signature = fields.Binary(string="Signature")
 
@@ -86,9 +88,26 @@ class Patient(models.Model):
         comodel_name='res.users', string="User",
     )
     responsible_id = fields.Many2one(
-        comodel_name='res.users', string="Responsible",
+        comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        inverse_name='patient_id',
+        string="Practice",
+    )
+    practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner',
+        inverse_name='patient_id',
+        string="Practitioner",
+    )
+
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string="Created by",
+    )
+
     partner_id = fields.Many2one(
         comodel_name='res.partner', string="Contact",
     )

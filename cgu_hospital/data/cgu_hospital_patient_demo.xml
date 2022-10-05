@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="False">
+    <record id="patient_demo_1" model="cgu_hospital.patient">
+        <field name="name">Polanov Pol Polich</field>
+        <field name="LastName">Polanov</field>
+        <field name="FirstName">Pol</field>
+        <field name="Surname">Polich</field>
+        <field name="phone">+380673456789</field>
+        <field name="email">Pol@gmail.com</field>
+        <!--        <field name="photo" type="base64" file="base/static/img/public_user-image.png"/>-->
+
+        <field name="sex">man</field>
+        <field name="date_birth">1977-04-14</field>
+        <field name="date_today" eval="datetime.now()"/>
+
+        <field name="age">50</field>
+        <field name="passport_series">TT</field>
+        <field name="passport_number">123456</field>
+        <field name="passport_issued_when">2000-01-01</field>
+        <field name="passport_issued_whom">RYGY Kyiv Ukraine</field>
+
+
+        <field name="personal_doctor_id" ref="cgu_hospital.doctor_demo_1"/>
+
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="patient_demo_2" model="cgu_hospital.patient">
+        <field name="name">Bendera Stepan Andriyobvich</field>
+        <field name="LastName">Bendera</field>
+        <field name="FirstName">Stepan</field>
+        <field name="Surname">Andriyobvich</field>
+        <field name="phone">+380673456789</field>
+        <field name="email">Bendera@gmail.com</field>
+        <!--        <field name="photo" type="base64" file="base/static/img/public_user-image.png"/>-->
+
+        <field name="sex">man</field>
+        <field name="date_birth">1909-01-01</field>
+        <field name="date_today" eval="datetime.now()"/>
+
+        <field name="age">50</field>
+        <field name="passport_series">TT</field>
+        <field name="passport_number">123456</field>
+        <field name="passport_issued_when">2000-01-01</field>
+        <field name="passport_issued_whom">Старый Угринов</field>
+
+
+        <field name="personal_doctor_id" ref="cgu_hospital.doctor_demo_2"/>
+
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="patient_demo_3" model="cgu_hospital.patient">
+        <field name="name">Mazepa Ivan Stepanovich</field>
+        <field name="LastName">Mazepa</field>
+        <field name="FirstName">Ivan</field>
+        <field name="Surname">Stepanovich</field>
+        <field name="phone">+380673456789</field>
+        <field name="email">Mazepa@gmail.com</field>
+        <!--        <field name="photo" type="base64" file="base/static/img/public_user-image.png"/>-->
+
+        <field name="date_birth">1639-03-30</field>
+        <field name="date_today" eval="datetime.now()"/>
+
+        <field name="age">50</field>
+        <field name="passport_series">TT</field>
+        <field name="passport_number">123456</field>
+        <field name="passport_issued_when">2000-01-01</field>
+        <field name="passport_issued_whom">RYGY Mazepinzi</field>
+
+
+        <field name="personal_doctor_id" ref="cgu_hospital.doctor_demo_3"/>
+
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

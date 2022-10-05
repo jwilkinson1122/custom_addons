@@ -3,7 +3,7 @@
     "version": "15.0.1.0",
     "category": "Health Care/Health Care",
 
-    "summary": "podiatry practice, doctor, patient and prescription information",
+    "summary": "podiatry practice, practitioner, patient and prescription information",
     "author": "NWPL",
 
     "website": "https://nwpodiatric.com",
@@ -41,6 +41,9 @@
         "views/podiatry_patient_weight_views.xml",
         "views/podiatry_practice_views.xml",
         "views/podiatry_type_views.xml",
+        "views/podiatry_practitioner_views.xml",
+        "views/podiatry_practitioner_prescription_views.xml",
+        "views/podiatry_specialty_views.xml",
         "views/res_partner_views.xml",
 
         # -------

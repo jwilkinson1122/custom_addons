@@ -6,4 +6,9 @@ from . import podiatry_patient_diagnosis
 from . import podiatry_patient_weight
 from . import podiatry_practice
 from . import podiatry_type
+from . import podiatry_practitioner
+from . import podiatry_practitioner_prescription
+from . import podiatry_practitioner_history
+from . import podiatry_specialty
+from . import podiatry_contact_mixin
 from . import res_partner
