@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_search_prescription_form" model="ir.ui.view">
+        <field name="name">search.prescription.wizard.form</field>
+        <field name="model">search.prescription.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Search Prescription">
+                <group>
+                    <field name="patient_id"/>
+                </group>
+                <footer>
+                    <button name="action_search_prescription_m1" type="object" string="Search Prescriptions (M1)" class="btn-primary"/>
+                    <button name="action_search_prescription_m2" type="object" string="Search Prescriptions (M2)" class="btn-primary"/>
+                    <button name="action_search_prescription_m3" type="object" string="Search Prescriptions (M3)" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_search_prescription" model="ir.actions.act_window">
+        <field name="name">View Prescription</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">search.prescription.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_search_prescription_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

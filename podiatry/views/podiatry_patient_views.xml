@@ -23,13 +23,23 @@
                     •                    <field name="same_identification_patient_id"/>
                 </div>
                 <sheet>
-                    <div name="button_box" class="oe_button_box">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <div class="o_stat_info">
+                                <field name="prescription_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Prescriptions</span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+
                     <div name="avatar">
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
                     <div name="title" class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
                         <div name="name">
                             <h1>
                                 <field name="name" required="1" placeholder="Patient's Name"/>
@@ -193,13 +203,14 @@
         <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
             <tree string="Patients" decoration-muted="not active">
+                <field name="reference"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="practitioner_id"/>
                 <field name="practice_id"/>
                 <field name="identification"/>
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>
-                <field name="gender" optional="show"/>
+                <field name="gender" optional="hide"/>
                 <field name="diagnosis" optional="show"/>
                 <field name="diagnosis_id" optional="hide"/>
                 <field name="shoe_size_id" optional="hide"/>
@@ -207,10 +218,11 @@
                 <field name="nationality_id" optional="hide"/>
                 <field name="birth_country_id" optional="hide"/>
                 <field name="birth_state_id" optional="hide"/>
-                <field name="mobile" widget="phone" optional="show"/>
-                <field name="phone" widget="phone" optional="show"/>
-                <field name="email" widget="email" optional="show"/>
+                <field name="mobile" widget="phone" optional="hide"/>
+                <field name="phone" widget="phone" optional="hide"/>
+                <field name="email" widget="email" optional="hide"/>
                 <field name="user_id" widget="many2one_avatar" optional="show"/>
+                <field name="prescription_count"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
@@ -224,25 +236,20 @@
         <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
             <kanban string="Patients">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="reference"/>
                 <field name="color"/>
                 <field name="active"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div name="kanban_card" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} o_kanban_record_has_image_fill oe_kanban_global_click">
-
-                            <!--
-                            Image
-                            -->
                             <t t-if="record.image_128.raw_value">
                                 <field name="image_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
                             </t>
                             <t t-else="">
                                 <div class="o_kanban_image_fill_left" style="background-image: url('/base/static/img/avatar_grey.png')"/>
                             </t>
-
-                            <!--
-                            Dropdown
-                            -->
                             <div name="dropdown" class="o_dropdown_kanban dropdown">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Options" title="Options">
                                     <span class="fa fa-ellipsis-v"/>
@@ -265,15 +272,7 @@
                                     <ul t-if="widget.editable" class="oe_kanban_colorpicker mt8" data-field="color"/>
                                 </div>
                             </div>
-
-                            <!--
-                            Card
-                            -->
                             <div class="oe_kanban_details d-flex flex-column justify-content-between">
-
-                                <!--
-                                Top
-                                -->
                                 <div name="top" class="o_kanban_record_top">
                                     <div name="heading" class="o_kanban_record_headings">
                                         <strong name="title" class="o_kanban_record_title">
@@ -282,8 +281,9 @@
                                         <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
                                             <small t-if="record.identification.raw_value">
                                                 <field name="identification"/>
-                                                <field name="practitioner_id"/>
                                                 <field name="practice_id"/>
+                                                <field name="practitioner_id"/>
+                                                <field name="reference"/>
 
                                             </small>
                                         </span>
@@ -294,7 +294,7 @@
 
 
                                 <div name="details" class="container-fluid">
-                                    <div name="gender" class="row">
+                                    <!-- <div name="gender" class="row">
                                         <div class="col-1 p-0">
                                             <i class="fa fa-venus-mars"/>
                                         </div>
@@ -325,14 +325,15 @@
                                         <div class="col">
                                             <field name="phone"/>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
 
                                 <!--
                                 -->
                                 <ul name="details">
-                                    <li t-if="record.gender.raw_value or record.age.raw_value">
+
+                                    <!-- <li t-if="record.gender.raw_value or record.age.raw_value">
                                         <span t-if="record.gender.raw_value" class="mr-2">
                                             <i style="width: 1.25rem;" class="fa fa-venus-mars"/>
                                             <field name="gender"/>
@@ -353,7 +354,7 @@
                                     <li t-if="record.email.raw_value" class="o_force_ltr">
                                         <i style="width: 1.25rem;" class="fa fa-envelope" widget="email"/>
                                         <field name="email"/>
-                                    </li>
+                                    </li> -->
                                 </ul>
 
                                 <!--
@@ -426,9 +427,9 @@
                     <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
                     <filter string="Practitioner" name="practitioner_id" context="{'group_by': 'practitioner_id'}"/>
                     <separator/>
-                    <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
+                    <!-- <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
                     <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
-                    <separator/>
+                    <separator/> -->
                     <!-- <filter string="Shoe Size" name="shoe_size_id" context="{'group_by': 'shoe_size_id'}"/> -->
                     <!-- <filter string="Diagnosis" name="diagnosis_id" context="{'group_by': 'diagnosis_id'}"/> -->
                     <!-- <filter string="Weight" name="weight_id" context="{'group_by': 'weight_id'}"/> -->
@@ -437,7 +438,7 @@
                     <filter string="Birthplace" name="birth_state_id" context="{'group_by': 'birth_state_id'}"/>
                     <separator/> -->
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
-                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                    <!-- <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/> -->
                 </group>
 
                 <!--
@@ -447,7 +448,7 @@
                 <searchpanel>
                     <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
                     <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
-                    <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
+                    <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/> -->
                     <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/> -->
                     <!-- <field name="diagnosis" icon="fa-tint" enable_counters="1"/> -->
                     <!-- <field name="shoe_size_id" icon="fa-male" enable_counters="1"/> -->

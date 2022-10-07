@@ -191,13 +191,17 @@ Unarchive</t>
                                             <field name="name"/>
                                         </strong>
                                         <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
-                                            <field name="code"/>
+                                            <field name="parent_id"/>
+
+                                            <!-- <field name="code"/> -->
                                         </span>
                                     </div>
                                 </div>
                                 <div name="content">
+                                    <field name="parent_id"/>
+
                                     <!-- <field name="company_id" widget="many2one_avatar"/> -->
-                                    <field name="patient_id" widget="many2one_avatar"/>
+                                    <!-- <field name="patient_id" widget="many2one_avatar"/> -->
                                 </div>
                                 <div name="footer" class="o_kanban_record_bottom">
                                     <div name="bottom_left" class="oe_kanban_bottom_left"/>

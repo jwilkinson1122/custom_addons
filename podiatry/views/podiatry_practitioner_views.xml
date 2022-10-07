@@ -228,13 +228,13 @@
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>
                 <field name="gender" optional="hide"/>
-                <field name="nationality_id" optional="show"/>
+                <field name="nationality_id" optional="hide"/>
                 <field name="birth_country_id" optional="hide"/>
                 <field name="birth_state_id" optional="hide"/>
                 <field name="mobile" widget="phone" optional="show"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
-                <field name="user_id" widget="many2one_avatar" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar" optional="show"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>

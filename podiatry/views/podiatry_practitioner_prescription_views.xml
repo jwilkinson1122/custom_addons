@@ -22,7 +22,7 @@
         <field name="model">podiatry.practitioner.prescription</field>
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <calendar date_start="date" string="visits" mode="month" color="color">
+            <calendar date_start="date" string="orders" mode="month" color="color">
                 <field name="patient_id"/>
                 <field name="practitioner_id"/>
                 <field name="date"/>
@@ -35,6 +35,69 @@
         <field name="name">Practitioner Prescription</field>
         <field name="model">podiatry.practitioner.prescription</field>
         <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
+                    <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
+                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <!-- <field name="age"/> -->
+                            <!-- <field name="gender"/> -->
+                            <!-- <field name="phone" groups="podiatry.group_manager"/>
+                            <field name="email"/> -->
+                        </group>
+                        <group>
+                            <field name="prescription_date"/>
+                            <field name="completed_date"/>
+                            <field name="practitioner_id"/>
+                            <field name="note" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Doctor prescription">
+                            <field name='description'/>
+                        </page>
+                        <page string="Devices">
+                            <field name="prescription_line_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                        </group>
+                                        <group>
+                                            <field name="qty"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Test">
+                            <!-- <field name="prescription_medical_test_ids"/> -->
+                        </page>
+                    </notebook>
+                </sheet>
+                <!-- <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div> -->
+            </form>
+        </field>
+        <!-- <field name="arch" type="xml">
             <form>
                 <sheet>
                     <group>
@@ -60,7 +123,7 @@
 
                 </sheet>
             </form>
-        </field>
+        </field> -->
     </record>
 
     <!--
@@ -70,36 +133,24 @@
         <field name="name">podiatry.practitioner.prescription.search</field>
         <field name="model">podiatry.practitioner.prescription</field>
         <field name="arch" type="xml">
-            <search string="Prescriptions">
-
-                <!-- <field name="parent_id" invisible="1"/> -->
-
-                <!-- Fields -->
-                <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/>
-                <field name="parent_id" operator="child_of"/>
-                <separator/> -->
-
-                <!-- Filters -->
-                <!-- <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
-                <separator/> -->
-
-                <!-- Searchpanel -->
-                <!-- <searchpanel>
-                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
-                    <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
-                </searchpanel> -->
+            <search string="Prescription">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <!-- <field name="gender"/> -->
+                <!-- <field name="phone" groups="km_hospital.group_hospital_admin"/> -->
+                <!-- <field name="age"/> -->
+                <field name="state"/>
+                <field name="practitioner_id"/>
+                <separator/>
+                <!-- <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/> -->
+                <group expand="1" string="Group By">
+                    <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                </group>
             </search>
         </field>
     </record>
 
-    <!-- <record id="action_window_practitioner_prescriptions" model="ir.actions.act_window">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="res_model">podiatry.practitioner.prescription</field>
-        <field name="view_mode">tree,calendar,form</field>
-    </record>
-
-    <menuitem id="podiatry.practitioner_prescriptions" name="Practitioner Prescriptions" parent="podiatry.menu_documents" action="podiatry.action_window_practitioner_prescriptions"/>
- -->
 
     <!--
     Action: Prescriptions (Dashboard)
@@ -118,6 +169,75 @@
             </p>
         </field>
     </record>
+
+    <!-- calender view -->
+    <record id="prescription_view_calendar" model="ir.ui.view">
+        <field name="name">podiatry.practitioner.prescription.calendar</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field name="arch" type="xml">
+            <calendar string="Prescriptions" date_start="prescription_date" date_stop="completed_date" event_open_popup="true" mode="month" color="name" quick_add="False">
+                <field name="patient_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- pivot view -->
+    <record id="prescription_pivot" model="ir.ui.view">
+        <field name="name">podiatry.practitioner.prescription.pivot</field>
+        <field name="model">podiatry.practitioner.prescription</field>
+        <field name="arch" type="xml">
+            <pivot string="Prescriptions Pivot View">
+                <field name="patient_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="prescription_action" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.practitioner.prescription</field>
+        <field name="view_mode">tree,form,search,kanban,calendar,pivot</field>
+        <field name="context">{}</field>
+        <!--for default group & filter => {'search_default_state': 1, 'search_default_male': 1}-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Prescription
+            </p>
+        </field>
+    </record>
+
+    <!-- action server for changing the stata to confirmed -->
+    <record id="action_prescription_confirm" model="ir.actions.server">
+        <field name="name">Confirm prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
+    </record>
+
+    <!-- action server for changing the state to done -->
+    <record id="action_prescription_done" model="ir.actions.server">
+        <field name="name">Done prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_done()</field>
+    </record>
+
+    <!-- action server for changing the staete to confirmed -->
+    <!-- <record id="action_prescription_cancel" model="ir.actions.server">
+        <field name="name">Cancel prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_practitioner_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_cancel()</field>
+    </record> -->
 
     <!--
     menu: Prescriptons
