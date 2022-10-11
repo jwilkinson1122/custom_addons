@@ -2,7 +2,6 @@ import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
-from odoo.exceptions import ValidationError
 
 
 class Patient(models.Model):
@@ -17,9 +16,6 @@ class Patient(models.Model):
     active = fields.Boolean(string="Active", default=True, tracking=True)
     name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
-
-    reference = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
 
     number = fields.Char(string="Patient Number")
 
@@ -135,42 +131,6 @@ class Patient(models.Model):
 
     age = fields.Char(compute='_compute_age')
 
-    note = fields.Text(string='Description')
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
-                              ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
-                             string="Status", tracking=True)
-    responsible_id = fields.Many2one('res.partner', string="Responsible")
-
-    prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count')
-
-    image = fields.Binary(string="Patient Image")
-
-    prescription_ids = fields.One2many(
-        'podiatry.practitioner.prescription', 'patient_id', string="Prescriptions")
-
-    def _compute_prescription_count(self):
-        for rec in self:
-            prescription_count = self.env['podiatry.practitioner.prescription'].search_count(
-                [('patient_id', '=', rec.id)])
-            rec.prescription_count = prescription_count
-
-    def action_confirm(self):
-        for rec in self:
-            rec.state = 'confirm'
-
-    def action_done(self):
-        for rec in self:
-            rec.state = 'done'
-
-    def action_draft(self):
-        for rec in self:
-            rec.state = 'draft'
-
-    def action_cancel(self):
-        for rec in self:
-            rec.state = 'cancel'
-
     @api.model
     def _relativedelta_to_text(self, delta):
         result = []
@@ -250,59 +210,16 @@ class Patient(models.Model):
             patient.number = self.env['ir.sequence'].next_by_code(sequence)
         return
 
-    # @api.model
-    # def create(self, values):
-    #     patient = super(Patient, self).create(values)
-    #     patient._add_followers()
-    #     patient._set_number()
-
-    #     return patient
-
     @api.model
     def create(self, values):
-        if not values.get('notes'):
-            values['notes'] = 'New Patient'
-        if values.get('reference', _('New')) == _('New'):
-            values['reference'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.patient') or _('New')
         patient = super(Patient, self).create(values)
         patient._add_followers()
+        patient._set_number()
+
         return patient
-
-    @api.constrains('name')
-    def check_name(self):
-        for rec in self:
-            patients = self.env['hospital.patient'].search(
-                [('name', '=', rec.name), ('id', '!=', rec.id)])
-            if patients:
-                raise ValidationError(_("Name %s Already Exists" % rec.name))
-
-    @api.constrains('age')
-    def check_age(self):
-        for rec in self:
-            if rec.age == 0:
-                raise ValidationError(_("Age Cannot Be Zero .. !"))
-
-    def name_get(self):
-        result = []
-        for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
-            result.append((rec.id, name))
-        return result
 
     def write(self, values):
         result = super(Patient, self).write(values)
         if 'user_id' in values or 'other_partner_ids' in values:
             self._add_followers()
         return result
-
-    def action_open_prescriptions(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Prescriptions',
-            'res_model': 'podiatry.practitioner.prescription',
-            'domain': [('patient_id', '=', self.id)],
-            'context': {'default_patient_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }
