@@ -58,11 +58,12 @@
 
     ],
 
-    # "assets": {
-    #     "web.assets_backend": [
-    #         "podiatry/static/src/**/*",
-    #     ],
-    # },
+    'assets': {
+        'web.assets_backend': [
+            'podiatry/static/src/scss/podiatry_practice.scss',
+            'podiatry/static/src/scss/card.scss',
+        ],
+    },
     "demo": [],
 
     "installable": True,

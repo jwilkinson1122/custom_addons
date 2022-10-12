@@ -49,7 +49,7 @@ class Practitioner(models.Model):
     color = fields.Integer(string="Color Index (0-15)")
     number = fields.Char(string="Number")
     identification = fields.Char(string="Identification", index=True)
-    reference = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
     birthdate = fields.Datetime(string="Birthdate")
 
@@ -102,6 +102,24 @@ class Practitioner(models.Model):
         comodel_name='res.country', string="Nationality",
         default=lambda self: self.env.company.country_id,
     )
+
+    prescription_count = fields.Integer(
+        string='Prescription Count', compute='_compute_prescription_count')
+
+    practitioner_prescription_id = fields.One2many(
+        comodel_name='podiatry.prescription',
+        inverse_name='practitioner_id',
+        string="Prescriptions",
+    )
+
+    prescription_line_ids = fields.One2many(
+        'podiatry.prescription.line', 'name', 'Prescription Line')
+
+    def _compute_prescription_count(self):
+        for rec in self:
+            prescription_count = self.env['podiatry.prescription'].search_count(
+                [('practitioner_id', '=', rec.id)])
+            rec.prescription_count = prescription_count
 
     user_id = fields.Many2one(
         comodel_name='res.users', string="User",
@@ -184,6 +202,28 @@ class Practitioner(models.Model):
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
 
+    same_reference_practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner',
+        string='Practitioner with same Identity',
+        compute='_compute_same_reference_practitioner_id',
+    )
+
+    @api.depends('reference')
+    def _compute_same_reference_practitioner_id(self):
+        for practitioner in self:
+            domain = [
+                ('reference', '=', practitioner.reference),
+            ]
+
+            origin_id = practitioner._origin.id
+
+            if origin_id:
+                domain += [('id', '!=', origin_id)]
+
+            practitioner.same_reference_practitioner_id = bool(practitioner.reference) and \
+                self.with_context(active_test=False).sudo().search(
+                    domain, limit=1)
+
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
@@ -203,18 +243,48 @@ class Practitioner(models.Model):
                 sequence)
         return
 
-    def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("podiatry.patient") or "PID"
+    # def _get_internal_identifier(self, vals):
+    #     return self.env["ir.sequence"].next_by_code("podiatry.patient") or "PID"
+
+    # @api.model
+    # def create(self, values):
+    #     practitioner = super(Practitioner, self).create(values)
+    #     practitioner._add_followers()
+    #     practitioner._set_number()
+    #     return practitioner
 
     @api.model
-    def create(self, values):
-        practitioner = super(Practitioner, self).create(values)
-        practitioner._add_followers()
+    def create(self, vals):
+        if not vals.get('notes'):
+            vals['notes'] = 'New Practitioner'
+        if vals.get('reference', _('New')) == _('New'):
+            vals['reference'] = self.env['ir.sequence'].next_by_code(
+                'podiatry.practitioner') or _('New')
+        practitioner = super(Practitioner, self).create(vals)
         practitioner._set_number()
+        practitioner._add_followers()
         return practitioner
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = '[' + rec.reference + '] ' + rec.name
+            result.append((rec.id, name))
+        return result
 
     def write(self, values):
         result = super(Practitioner, self).write(values)
         if 'user_id' in values or 'other_partner_ids' in values:
             self._add_followers()
         return result
+
+    def action_open_prescriptions(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'podiatry.prescription',
+            'domain': [('practitioner_id', '=', self.id)],
+            'context': {'default_practitioner_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
