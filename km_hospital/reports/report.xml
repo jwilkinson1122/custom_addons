@@ -84,7 +84,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <span>E-Prescription Details using python</span>
+                                <span>Prescription Details using python</span>
                                 <table class="table table-condensed" style="border: 2px solid black !important;">
                                     <thead>
                                         <tr>
@@ -119,8 +119,8 @@
                         <br />
 
                         <t t-if="o.patient_prescription_ids">
-                            <span>E-Prescription Details</span>
-                            <table class="table table-sm o_main_table" name="eprescription">
+                            <span>Prescription Details</span>
+                            <table class="table table-sm o_main_table" name="prescription">
                                 <thead>
                                     <tr>
                                         <th name="th_checkupdate" class="text-left">

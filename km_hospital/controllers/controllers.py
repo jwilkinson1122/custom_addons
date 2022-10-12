@@ -24,7 +24,7 @@ class KmHospital(http.Controller):
             'patients': patients
         })
 
-    # route for eprescription website
+    # route for prescription website
     @http.route('/prescription_webform', type='http', auth='user', website=True)
     def prescription_webform(self, **kw):
         patient_rec = request.env['kmhospital.patient'].sudo().search([])
@@ -37,5 +37,5 @@ class KmHospital(http.Controller):
     @http.route('/create/webprescription', type="http", auth="user", website=True)
     def create_webprescription(self, **kw):
         print("\nData Received.....", kw)
-        request.env['kmhospital.eprescription'].sudo().create(kw)
+        request.env['kmhospital.prescription'].sudo().create(kw)
         return request.render("km_hospital.prescription_thanks", {})

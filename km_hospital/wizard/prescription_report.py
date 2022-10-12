@@ -5,8 +5,8 @@ from odoo import api, fields, models, _
 
 
 class PrescriptionReportWizard(models.TransientModel):
-    _name = "kmhospital.eprescription.report.wizard"
-    _description = "Print E-Prescription Wizard"
+    _name = "kmhospital.prescription.report.wizard"
+    _description = "Print Prescription Wizard"
 
     date_from = fields.Datetime(string='Date from', required=False)
     date_to = fields.Datetime(string='Date to', required=False)
@@ -26,7 +26,7 @@ class PrescriptionReportWizard(models.TransientModel):
             domain += [('checkup_date', '<=', date_to)]
         # print("\n\nTest................\n", domain)
 
-        prescriptions = self.env['kmhospital.eprescription'].search_read(
+        prescriptions = self.env['kmhospital.prescription'].search_read(
             domain)
 
         data = {

@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="view_search_prescription_form" model="ir.ui.view">
-        <field name="name">search.eprescription.wizard.form</field>
-        <field name="model">search.eprescription.wizard</field>
+        <field name="name">search.prescription.wizard.form</field>
+        <field name="model">search.prescription.wizard</field>
         <field name="arch" type="xml">
-            <form string="Search E-Prescription">
+            <form string="Search Prescription">
                 <group>
                     <field name="patient_id"/>
                 </group>
@@ -20,9 +20,9 @@
     </record>
 
     <record id="action_search_prescription" model="ir.actions.act_window">
-        <field name="name">View E-Prescription</field>
+        <field name="name">View Prescription</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">search.eprescription.wizard</field>
+        <field name="res_model">search.prescription.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_search_prescription_form"/>
         <field name="target">new</field>

@@ -59,8 +59,8 @@
                         <br/>
 
                         <t t-if="o.prescription_ids">
-                            <span>E-Prescription Details</span>
-                            <table class="table table-sm o_main_table" name="eprescription">
+                            <span>Prescription Details</span>
+                            <table class="table table-sm o_main_table" name="prescription">
                                 <thead>
                                     <tr>
                                         <th name="th_reference" class="text-left">

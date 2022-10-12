@@ -3,10 +3,10 @@ from odoo import models, fields, api, _
 
 
 class HospitalPrescriptionWizard(models.TransientModel):
-    _name = 'kmhospital.eprescription.wizard'
-    _description = 'Create E-Prescription'
+    _name = 'kmhospital.prescription.wizard'
+    _description = 'Create Prescription'
 
-    name = fields.Char(string='E-Prescription Reference', required=True, copy=False, readonly=True,
+    name = fields.Char(string='Prescription Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
     patient_id = fields.Many2one(
         "kmhospital.patient", string='Patient Name', required=True)
@@ -19,7 +19,7 @@ class HospitalPrescriptionWizard(models.TransientModel):
     age = fields.Integer(string='Age', related='patient_id.age')
     description = fields.Text()
     prescription_date = fields.Datetime(
-        string='E-Prescription Date', default=fields.datetime.now())
+        string='Prescription Date', default=fields.datetime.now())
     checkup_date = fields.Datetime(string='Checkup Date', required=True)
     appointed_doctor_id = fields.Many2one(
         "kmhospital.doctor", string="Doctor name", required=True)

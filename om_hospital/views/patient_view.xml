@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_create_prescriptions" model="ir.actions.server">
-        <field name="name">Create E-Prescription</field>
+        <field name="name">Create Prescription</field>
         <field name="model_id" ref="om_hospital.model_hospital_patient"/>
         <field name="binding_model_id" ref="om_hospital.model_hospital_patient"/>
         <field name="binding_view_types">list,form</field>
@@ -16,8 +16,8 @@
     </record>
 
     <record id="view_patient_kanban" model="ir.ui.view">
-        <field name="name">podiatry.patient.kanban</field>
-        <field name="model">podiatry.patient</field>
+        <field name="name">hospital.patient.kanban</field>
+        <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
             <kanban default_order="id asc">
                 <field name="id"/>
@@ -51,8 +51,8 @@
     </record>
 
     <record id="view_patient_tree" model="ir.ui.view">
-        <field name="name">podiatry.patient.tree</field>
-        <field name="model">podiatry.patient</field>
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="reference"/>
@@ -68,8 +68,8 @@
     </record>
 
     <record id="view_patient_form" model="ir.ui.view">
-        <field name="name">podiatry.patient.form</field>
-        <field name="model">podiatry.patient</field>
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -77,7 +77,7 @@
                     <button id="button_done" name="action_done" string="Mark As Done" class="btn-primary" states="confirm" type="object"/>
                     <button id="button_draft" name="action_draft" string="Set To Draft" class="btn-primary" states="cancel" type="object"/>
                     <button id="button_cancel" name="action_cancel" string="Cancel" states="draft,done,confirm" confirm="Are you sure that you need to cancel ?" type="object"/>
-                    <button id="button_create_prescription" name="%(om_hospital.action_create_prescription)d" string="Create E-Prescription" class="btn-primary" type="action"/>
+                    <button id="button_create_prescription" name="%(om_hospital.action_create_prescription)d" string="Create Prescription" class="btn-primary" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done,confirm"/> -->
                 </header>
                 <sheet>
@@ -108,7 +108,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Prescriptions" name="eprescription">
+                        <page string="Prescriptions" name="prescription">
                             <field name="prescription_ids" readonly="1">
                             </field>
                         </page>
@@ -124,8 +124,8 @@
     </record>
 
     <record id="view_patient_search" model="ir.ui.view">
-        <field name="name">podiatry.patient.search</field>
-        <field name="model">podiatry.patient</field>
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
             <search string="Patients">
                 <field name="name"/>
@@ -146,7 +146,7 @@
     <record id="action_hospital_patient" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">podiatry.patient</field>
+        <field name="res_model">hospital.patient</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="context">{}</field>
         <!--        <field name="context">{'search_default_responsible_id': 1}</field>-->
@@ -157,7 +157,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_hospital_root" name="Podiatry" sequence="10"/>
+    <menuitem id="menu_hospital_root" name="Hospital" sequence="10"/>
 
     <menuitem id="menu_patient_root" name="Patients" parent="menu_hospital_root" sequence="10"/>
 

@@ -5,9 +5,9 @@ from odoo.exceptions import ValidationError
 
 
 class HospitalPatient(models.Model):
-    _name = "podiatry.patient"
+    _name = "hospital.patient"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Podiatry Patient"
+    _description = "Hospital Patient"
     _order = "id desc"
 
     @api.model
@@ -32,16 +32,16 @@ class HospitalPatient(models.Model):
     responsible_id = fields.Many2one('res.partner', string="Responsible")
 
     prescription_count = fields.Integer(
-        string='E-Prescription Count', compute='_compute_prescription_count')
+        string='Prescription Count', compute='_compute_prescription_count')
 
     image = fields.Binary(string="Patient Image")
 
     prescription_ids = fields.One2many(
-        'podiatry.eprescription', 'patient_id', string="Prescriptions")
+        'hospital.prescription', 'patient_id', string="Prescriptions")
 
     def _compute_prescription_count(self):
         for rec in self:
-            prescription_count = self.env['podiatry.eprescription'].search_count(
+            prescription_count = self.env['hospital.prescription'].search_count(
                 [('patient_id', '=', rec.id)])
             rec.prescription_count = prescription_count
 
@@ -67,14 +67,14 @@ class HospitalPatient(models.Model):
             vals['note'] = 'New Patient'
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.patient') or _('New')
+                'hospital.patient') or _('New')
         res = super(HospitalPatient, self).create(vals)
         return res
 
     @api.constrains('name')
     def check_name(self):
         for rec in self:
-            patients = self.env['podiatry.patient'].search(
+            patients = self.env['hospital.patient'].search(
                 [('name', '=', rec.name), ('id', '!=', rec.id)])
             if patients:
                 raise ValidationError(_("Name %s Already Exists" % rec.name))
@@ -96,7 +96,7 @@ class HospitalPatient(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'podiatry.eprescription',
+            'res_model': 'hospital.prescription',
             'domain': [('patient_id', '=', self.id)],
             'context': {'default_patient_id': self.id},
             'view_mode': 'tree,form',

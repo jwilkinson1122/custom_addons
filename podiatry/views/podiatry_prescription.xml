@@ -48,13 +48,20 @@
 
                 </header>
                 <sheet>
-                    <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+                    <group>
+                        <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
+                        <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+
+                    </group>
+                    <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
+                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
 
                     <group string="Patient and Doctor Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="prescription_date" required="1" />
+                            <!-- <field name="prescription_count"/> -->
+
                         </group>
                         <group>
                             <field name="name" readonly="1" />

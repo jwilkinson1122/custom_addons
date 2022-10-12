@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_confirm_prescriptions" model="ir.actions.server">
-        <field name="name">Confirm E-Prescription</field>
+        <field name="name">Confirm Prescription</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_hospital_prescription"/>
         <field name="binding_model_id" ref="model_hospital_prescription"/>
@@ -11,8 +11,8 @@
     </record>
 
     <record id="view_prescription_tree" model="ir.ui.view">
-        <field name="name">podiatry.eprescription.tree</field>
-        <field name="model">podiatry.eprescription</field>
+        <field name="name">hospital.prescription.tree</field>
+        <field name="model">hospital.prescription</field>
         <field name="arch" type="xml">
             <tree multi_edit="1">
                 <header>
@@ -32,8 +32,8 @@
     </record>
 
     <record id="view_prescription_form" model="ir.ui.view">
-        <field name="name">podiatry.eprescription.form</field>
-        <field name="model">podiatry.eprescription</field>
+        <field name="name">hospital.prescription.form</field>
+        <field name="model">hospital.prescription</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -63,9 +63,9 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Doctor E-Prescription" name="doctor_prescription">
+                        <page string="Doctor Prescription" name="doctor_prescription">
                             <group>
-                                <field name="eprescription"/>
+                                <field name="prescription"/>
                             </group>
                         </page>
                         <page string="Medicine" name="medicine">
@@ -101,8 +101,8 @@
     </record>
 
     <record id="view_prescription_search" model="ir.ui.view">
-        <field name="name">podiatry.eprescription.search</field>
-        <field name="model">podiatry.eprescription</field>
+        <field name="name">hospital.prescription.search</field>
+        <field name="model">hospital.prescription</field>
         <field name="arch" type="xml">
             <search string="Patients">
                 <field name="name"/>
@@ -119,12 +119,12 @@
     <record id="action_hospital_prescription" model="ir.actions.act_window">
         <field name="name">Prescriptions</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">podiatry.eprescription</field>
+        <field name="res_model">hospital.prescription</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_draft': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create your first eprescription !
+                Create your first prescription !
             </p>
         </field>
     </record>
@@ -133,8 +133,8 @@
 
     <menuitem id="menu_prescription" name="Prescriptions" parent="menu_prescription_root" action="action_hospital_prescription" sequence="10"/>
 
-    <menuitem id="menu_create_prescription" name="Create E-Prescription" parent="menu_prescription_root" action="action_create_prescription" sequence="20"/>
+    <menuitem id="menu_create_prescription" name="Create Prescription" parent="menu_prescription_root" action="action_create_prescription" sequence="20"/>
 
-    <menuitem id="menu_search_prescription" name="Search E-Prescription" parent="menu_prescription_root" action="action_search_prescription" sequence="30"/>
+    <menuitem id="menu_search_prescription" name="Search Prescription" parent="menu_prescription_root" action="action_search_prescription" sequence="30"/>
 
 </odoo>

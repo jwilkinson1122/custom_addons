@@ -2,13 +2,13 @@
 <odoo>
 
     <record id="menu_prescription_form" model="website.menu">
-        <field name="name">Create eprescription</field>
+        <field name="name">Create prescription</field>
         <field name="url">/prescription_webform</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence">55</field>
     </record>
 
-    <template id="create_prescription" name="Create eprescription">
+    <template id="create_prescription" name="Create prescription">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
@@ -58,7 +58,7 @@
     <record id="prescription_thanks" model="website.page">
         <field name="name">Thanks</field>
         <field name="type">qweb</field>
-        <field name="url">/eprescription-thank-you</field>
+        <field name="url">/prescription-thank-you</field>
         <field name="website_published">True</field>
         <field name="key">km_hospital.prescription_thanks</field>
         <field name="arch" type="xml">
@@ -69,7 +69,7 @@
                             <h1>Thanks!</h1>
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <div class="alert alert-success" role="status"> The eprescription has been Created successfully. </div>
+                                    <div class="alert alert-success" role="status"> The prescription has been Created successfully. </div>
                                 </div>
                             </div>
                         </div>

@@ -4,11 +4,11 @@ from odoo import api, fields, models, _
 
 
 class SearchPrescriptionWizard(models.TransientModel):
-    _name = "search.eprescription.wizard"
-    _description = "Search E-Prescription Wizard"
+    _name = "search.prescription.wizard"
+    _description = "Search Prescription Wizard"
 
     patient_id = fields.Many2one(
-        'podiatry.patient', string="Patient", required=True)
+        'hospital.patient', string="Patient", required=True)
 
     def action_search_prescription_m1(self):
         action = self.env.ref(
@@ -26,7 +26,7 @@ class SearchPrescriptionWizard(models.TransientModel):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'podiatry.eprescription',
+            'res_model': 'hospital.prescription',
             'view_type': 'form',
             'domain': [('patient_id', '=', self.patient_id.id)],
             'view_mode': 'tree,form',

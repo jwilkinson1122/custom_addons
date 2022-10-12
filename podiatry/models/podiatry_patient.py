@@ -50,6 +50,7 @@ class Patient(models.Model):
         ('female', 'Female'),
         ('other', 'Other'),
     ], string="Gender")
+
     diagnosis = fields.Selection(selection=[
         ('plantar_fasciitis', 'Plantar Fasciitis'),
         ('diabetes', 'Diabetes'),
@@ -76,17 +77,21 @@ class Patient(models.Model):
         comodel_name='podiatry.patient.shoe_size',
         string="Shoe Size",
     )
+
     diagnosis_id = fields.Many2one(
         comodel_name='podiatry.patient.diagnosis',
         string="Diagnosis",
     )
+
     weight_id = fields.Many2one(
         comodel_name='podiatry.patient.weight',
         string="Weight",
     )
+
     user_id = fields.Many2one(
         comodel_name='res.users', string="User",
     )
+
     responsible_id = fields.Many2one(
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
@@ -97,11 +102,15 @@ class Patient(models.Model):
         inverse_name='patient_id',
         string="Practice",
     )
+
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         inverse_name='patient_id',
         string="Practitioner",
     )
+
+    prescription_count = fields.Integer(
+        string='Prescription Count', compute='_compute_prescription_count')
 
     patient_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
@@ -109,8 +118,14 @@ class Patient(models.Model):
         string="Prescriptions",
     )
 
-    # patient_prescription_ids = fields.One2many(
-    #     'podiatry.prescription', 'patient_id', string='Prescriptions')
+    prescription_line_ids = fields.One2many(
+        'podiatry.prescription.line', 'name', 'Prescription Line')
+
+    def _compute_prescription_count(self):
+        for rec in self:
+            prescription_count = self.env['podiatry.prescription'].search_count(
+                [('patient_id', '=', rec.id)])
+            rec.prescription_count = prescription_count
 
     user_id = fields.Many2one(
         comodel_name='res.users',
@@ -131,6 +146,24 @@ class Patient(models.Model):
     diagnosis_id = fields.Many2one(
         comodel_name='podiatry.patient.diagnosis',
         string='Diagnosis')
+
+    photo = fields.Binary(string="Picture")
+
+    # shoe_size = fields.Float('Shoe Size')
+    shoe_width = fields.Selection(
+        [('narrow', 'Narrow'), ('wide', 'Wide'), ('xwide', 'Extra Wide')], string='Shoe Width')
+
+    shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
+        'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+
+    other_shoe_type = fields.Char('Other Shoe Type')
+
+    right_photo = fields.Image("Right Photo")
+    left_photo = fields.Image("Left Photo")
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char(string="Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char(string="Right Obj File Name")
 
     age = fields.Char(compute='_compute_age')
 

@@ -11,14 +11,14 @@ class PatientReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
 
         docs = self.env['kmhospital.patient'].browse(docids)
-        prescriptions = self.env['kmhospital.eprescription'].search(
+        prescriptions = self.env['kmhospital.prescription'].search(
             [("name", "=", docids)])
         prescription_list = []
-        for eprescription in prescriptions:
+        for prescription in prescriptions:
             values = {
-                "checkup_date": eprescription.checkup_date,
-                "status": eprescription.status,
-                "appointed_doctor_id": eprescription.appointed_doctor_id.name,
+                "checkup_date": prescription.checkup_date,
+                "status": prescription.status,
+                "appointed_doctor_id": prescription.appointed_doctor_id.name,
             }
             prescription_list.append(values)
         return {

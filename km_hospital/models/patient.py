@@ -5,7 +5,7 @@ import re
 
 class HospitalPatient(models.Model):
     _name = 'kmhospital.patient'
-    _description = 'Podiatry Patient'
+    _description = 'Hospital Patient'
     _order = 'id desc'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
@@ -18,7 +18,7 @@ class HospitalPatient(models.Model):
     phone = fields.Char(string='Phone', required=True, tracking=True)
     age = fields.Integer(string='Age', required=True, tracking=True)
     email = fields.Char(string='Email', tracking=True)
-    patient_prescription_ids = fields.One2many('kmhospital.eprescription', 'patient_id', string="E-Prescription Count",
+    patient_prescription_ids = fields.One2many('kmhospital.prescription', 'patient_id', string="Prescription Count",
                                                readonly=True)
     total_prescriptions = fields.Integer(
         string='No. of prescriptions', compute='_compute_prescriptions')
@@ -49,7 +49,7 @@ class HospitalPatient(models.Model):
     # compute prescriptions of individual patient
     def _compute_prescriptions(self):
         for record in self:
-            record.total_prescriptions = self.env['kmhospital.eprescription'].search_count(
+            record.total_prescriptions = self.env['kmhospital.prescription'].search_count(
                 [('patient_id', '=', record.id)])
 
     def action_url(self):
