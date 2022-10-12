@@ -1,6 +1,6 @@
 {
     "name": "Podiatry Patients",
-    "description": "Manage patients.",
+    "description": "Manage patients prescriptions.",
     "author": "NWPL",
     "license": "AGPL-3",
     "depends": ["podiatry_app", "mail"],
