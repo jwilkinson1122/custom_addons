@@ -3,12 +3,12 @@ from odoo import models, fields, api, _
 
 
 class HospitalPrescription(models.Model):
-    _name = 'kmhospital.prescription'
+    _name = 'kmhospital.eprescription'
     _description = 'Prescriptions'
     _order = "id desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Prescription Reference', required=True, copy=False, readonly=True,
+    name = fields.Char(string='E-Prescription Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
     patient_id = fields.Many2one(
         "kmhospital.patient", string='Patient Name', required=True)
@@ -28,11 +28,11 @@ class HospitalPrescription(models.Model):
         ('cancel', 'Canceled')
     ], default='draft', required=True, tracking=True)
     prescription_date = fields.Datetime(
-        string='Prescription Date', default=fields.datetime.now(), tracking=True)
+        string='E-Prescription Date', default=fields.datetime.now(), tracking=True)
     checkup_date = fields.Datetime(
         string='Checkup Date', required=True, tracking=True)
-    prescription_medicine_ids = fields.One2many("kmhospital.prescription.prescription.medicine",
-                                                "prescription_medicine_id", string="Prescription Medicine")
+    prescription_medicine_ids = fields.One2many("kmhospital.eprescription.eprescription.medicine",
+                                                "prescription_medicine_id", string="E-Prescription Medicine")
     appointed_doctor_id = fields.Many2one(
         "kmhospital.doctor", string="Doctor name", required=True)
     prescription_medical_test_ids = fields.Many2many("kmhospital.medicaltest", "medical_test_ids",
@@ -64,7 +64,7 @@ class HospitalPrescription(models.Model):
             vals['description'] = "Enter the description here"
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'kmhospital.prescription') or _('New')
+                'kmhospital.eprescription') or _('New')
 
         res = super(HospitalPrescription, self).create(vals)
         return res
@@ -73,17 +73,17 @@ class HospitalPrescription(models.Model):
     def _change_prescription_note(self):
         if self.patient_id:
             if not self.note:
-                self.note = "New prescription"
+                self.note = "New eprescription"
         else:
             self.note = ""
 
 
-# for medicine record in patient prescription
+# for medicine record in patient eprescription
 class PrescriptionPrescriptionMedicine(models.Model):
-    _name = "kmhospital.prescription.prescription.medicine"
-    _description = "Prescription Prescription Medicine"
+    _name = "kmhospital.eprescription.eprescription.medicine"
+    _description = "E-Prescription E-Prescription Medicine"
 
     name = fields.Char(string="Medicine", required=True)
     quantity = fields.Integer(string="Quantity")
     prescription_medicine_id = fields.Many2one(
-        "kmhospital.prescription", string="Prescription medicine")
+        "kmhospital.eprescription", string="E-Prescription medicine")

@@ -178,11 +178,11 @@
         </record>
 
         <!--
-        podiatry.practitioner.prescription
+        podiatry.prescription
         -->
-        <record id="access_podiatry_practitioner_prescription_group_manager" model="ir.model.access">
-            <field name="name">access.podiatry.practitioner.prescription.group.manager</field>
-            <field name="model_id" ref="model_podiatry_practitioner_prescription"/>
+        <record id="access_podiatry_prescription_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.group.manager</field>
+            <field name="model_id" ref="model_podiatry_prescription"/>
             <field name="group_id" ref="group_manager"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
@@ -190,15 +190,53 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <record id="access_podiatry_practitioner_prescription_group_user" model="ir.model.access">
-            <field name="name">access.podiatry.practitioner.prescription.group.user</field>
-            <field name="model_id" ref="model_podiatry_practitioner_prescription"/>
+        <record id="access_podiatry_prescription_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.group.user</field>
+            <field name="model_id" ref="model_podiatry_prescription"/>
             <field name="group_id" ref="group_user"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_unlink" eval="0"/>
         </record>
+
+        <!--
+        podiatry.prescription.line
+        -->
+        <record id="access_podiatry_prescription_line_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.line.group.manager</field>
+            <field name="model_id" ref="model_podiatry_prescription_line"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_prescription_line_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.line.group.user</field>
+            <field name="model_id" ref="model_podiatry_prescription_line"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="access_create_prescription_invoice" model="ir.model.access">
+            <field name="name">access.create.prescription.invoice</field>
+            <field name="model_id" ref="model_create_prescription_invoice"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+
+
+        <!-- access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1 -->
+
+
 
     </data>
 </odoo>

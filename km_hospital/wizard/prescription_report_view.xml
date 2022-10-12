@@ -2,8 +2,8 @@
 <odoo>
 
     <record id="view_report_prescription_form" model="ir.ui.view">
-        <field name="name">kmhospital.prescription.report.wizard.form</field>
-        <field name="model">kmhospital.prescription.report.wizard</field>
+        <field name="name">kmhospital.eprescription.report.wizard.form</field>
+        <field name="model">kmhospital.eprescription.report.wizard</field>
         <field name="arch" type="xml">
             <form string="Print Prescriptions">
                 <group>
@@ -20,9 +20,9 @@
     </record>
 
     <record id="action_report_prescription" model="ir.actions.act_window">
-        <field name="name">Print Prescription</field>
+        <field name="name">Print E-Prescription</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">kmhospital.prescription.report.wizard</field>
+        <field name="res_model">kmhospital.eprescription.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_report_prescription_form"/>
         <field name="target">new</field>

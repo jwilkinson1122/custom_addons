@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "KM Hospital",
+    'name': "KM Podiatry",
     'sequence': 1,
     'summary': """
-        A hospital management module.""",
+        A podiatry management module.""",
 
     'description': """
-        A hospital management module for creating patient, doctor, 
+        A podiatry management module for creating patient, doctor, 
         department, medical test, and prescriptions.
     """,
 

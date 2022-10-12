@@ -5,7 +5,7 @@ import re
 
 class HospitalDoctor(models.Model):
     _name = 'kmhospital.doctor'
-    _description = 'Hospital Doctor'
+    _description = 'Podiatry Doctor'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Doctor Name', required=True, tracking=True)
@@ -19,7 +19,7 @@ class HospitalDoctor(models.Model):
     email = fields.Char(string='Email', required=True, tracking=True)
     department_id = fields.Many2one(
         "hr.department", string='Department', required=True, tracking=True)
-    view_prescription_ids = fields.One2many('kmhospital.prescription', 'appointed_doctor_id', string="Prescription Count",
+    view_prescription_ids = fields.One2many('kmhospital.eprescription', 'appointed_doctor_id', string="E-Prescription Count",
                                             readonly=True)
     age = fields.Integer(string='Age', required=True, tracking=True)
     status = fields.Selection([
@@ -57,5 +57,5 @@ class HospitalDoctor(models.Model):
     # compute prescriptions of individual doctor
     def _compute_prescriptions(self):
         for record in self:
-            record.total_prescriptions = self.env['kmhospital.prescription'].search_count(
+            record.total_prescriptions = self.env['kmhospital.eprescription'].search_count(
                 [('appointed_doctor_id', '=', record.id)])

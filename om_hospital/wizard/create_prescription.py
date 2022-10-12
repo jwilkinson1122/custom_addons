@@ -4,8 +4,8 @@ from odoo import api, fields, models, _
 
 
 class CreatePrescriptionWizard(models.TransientModel):
-    _name = "create.prescription.wizard"
-    _description = "Create Prescription Wizard"
+    _name = "create.eprescription.wizard"
+    _description = "Create E-Prescription Wizard"
 
     @api.model
     def default_get(self, fields):
@@ -16,7 +16,7 @@ class CreatePrescriptionWizard(models.TransientModel):
 
     date_prescription = fields.Date(string='Date', required=False)
     patient_id = fields.Many2one(
-        'hospital.patient', string="Patient", required=True)
+        'podiatry.patient', string="Patient", required=True)
 
     def action_create_prescription(self):
         vals = {
@@ -24,12 +24,12 @@ class CreatePrescriptionWizard(models.TransientModel):
             'doctor_id': 2,
             'date_prescription': self.date_prescription
         }
-        prescription_rec = self.env['hospital.prescription'].create(vals)
+        prescription_rec = self.env['podiatry.eprescription'].create(vals)
         return {
-            'name': _('Prescription'),
+            'name': _('E-Prescription'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'hospital.prescription',
+            'res_model': 'podiatry.eprescription',
             'res_id': prescription_rec.id,
         }
 
@@ -45,7 +45,7 @@ class CreatePrescriptionWizard(models.TransientModel):
     #     # return {
     #     #     'type': 'ir.actions.act_window',
     #     #     'name': 'Prescriptions',
-    #     #     'res_model': 'hospital.prescription',
+    #     #     'res_model': 'podiatry.eprescription',
     #     #     'view_type': 'form',
     #     #     'domain': [('patient_id', '=', self.patient_id.id)],
     #     #     'view_mode': 'tree,form',

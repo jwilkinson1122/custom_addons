@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_podiatry_prescription_line_list" model="ir.ui.view">
+        <field name="name">podiatry.prescription.line.tree.view</field>
+        <field name="model">podiatry.prescription.line</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Prescription lines">
+                <field name="laterality" />
+                <field name="prnt" />
+                <field name="product_id" />
+                <field name="pathology" />
+                <field name="quantity" />
+                <field name="quantity_unit_id" />
+                <field name="form" />
+                <field name="device_quantity_id" />
+                <field name="allow_substitution" />
+                <field name="short_comment" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="podiatry_prescription_line_form_view" model="ir.ui.view">
+        <field name="name">podiatry.prescription.line.form.view</field>
+        <field name="model">podiatry.prescription.line</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <group colspan="4" col="4">
+                    <field name="laterality"/>
+                    <field name="product_id" required="1" />
+                    <field name="pathology" />
+                    <field name="allow_substitution" />
+                    <field name="prnt" />
+                    <field name="form" />
+                </group>
+                <group colspan="4" string="Quantity">
+                    <group colspan="6" col="6">
+                        <field name="quantity" />
+                        <field name="quantity_unit_id" />
+                        <field name="device_quantity_id" />
+                        <field name="qty" />
+                    </group>
+                </group>
+                <group colspan="4" col="4">
+                    <field name="quantity" />
+                    <field name="short_comment" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

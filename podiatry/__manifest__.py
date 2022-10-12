@@ -21,38 +21,40 @@
         # ====
         "data/ir_sequence_data.xml",
         "data/ir_module_category_data.xml",
-
         # --------
         # Security
         # ========
         "security/res_groups_data.xml",
         "security/ir_model_access_data.xml",
-
         # -----
         # Views
         # =====
-        "views/podiatry_root_views.xml",
-        "views/res_config_settings_views.xml",
-        "views/mail_activity_type_views.xml",
-        "views/podiatry_patient_views.xml",
-        "views/podiatry_patient_shoe_size_views.xml",
-        "views/podiatry_patient_shoe_width_views.xml",
-        "views/podiatry_patient_diagnosis_views.xml",
-        "views/podiatry_patient_weight_views.xml",
-        "views/podiatry_practice_views.xml",
-        "views/podiatry_type_views.xml",
-        "views/podiatry_practitioner_views.xml",
-        "views/podiatry_practitioner_prescription_views.xml",
-        "views/podiatry_specialty_views.xml",
-        "views/res_partner_views.xml",
-
+        "views/podiatry_root.xml",
+        "views/res_config_settings.xml",
+        "views/mail_activity_type.xml",
+        "views/podiatry_patient.xml",
+        "views/podiatry_patient_shoe_size.xml",
+        "views/podiatry_patient_shoe_width.xml",
+        "views/podiatry_patient_diagnosis.xml",
+        "views/podiatry_patient_weight.xml",
+        "views/podiatry_practice.xml",
+        "views/podiatry_type.xml",
+        "views/podiatry_practitioner.xml",
+        "views/podiatry_prescription.xml",
+        "views/podiatry_prescription_line.xml",
+        "views/podiatry_specialty.xml",
+        "views/res_partner.xml",
         # -------
         # Reports
         # =======
-
+        "report/report_view.xml",
+        "report/patient_card_report.xml",
+        "report/prescription_demo_report.xml",
         # -------
         # Wizards
         # =======
+        "wizard/create_prescription_invoice_wizard.xml",
+        "wizard/create_prescription_shipment_wizard.xml",
 
     ],
 

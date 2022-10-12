@@ -104,10 +104,13 @@ class Patient(models.Model):
     )
 
     patient_prescription_id = fields.One2many(
-        comodel_name='podiatry.practitioner.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='patient_id',
         string="Prescriptions",
     )
+
+    # patient_prescription_ids = fields.One2many(
+    #     'podiatry.prescription', 'patient_id', string='Prescriptions')
 
     user_id = fields.Many2one(
         comodel_name='res.users',

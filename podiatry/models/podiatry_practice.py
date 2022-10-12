@@ -98,7 +98,7 @@ class Practice(models.Model):
     )
 
     practice_prescription_id = fields.One2many(
-        comodel_name='podiatry.practitioner.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='practice_id',
         string="Prescriptions",
     )

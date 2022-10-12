@@ -4,9 +4,9 @@ from odoo import api, fields, models, _
 
 
 class HospitalDoctor(models.Model):
-    _name = "hospital.doctor"
+    _name = "podiatry.doctor"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Hospital Doctor"
+    _description = "Podiatry Doctor"
     _rec_name = 'doctor_name'
 
     doctor_name = fields.Char(string='Name', required=True, tracking=True)
@@ -19,7 +19,7 @@ class HospitalDoctor(models.Model):
     note = fields.Text(string='Description')
     image = fields.Binary(string="Patient Image")
     prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count')
+        string='E-Prescription Count', compute='_compute_prescription_count')
     active = fields.Boolean(string="Active", default=True)
 
     def copy(self, default=None):
@@ -32,6 +32,6 @@ class HospitalDoctor(models.Model):
 
     def _compute_prescription_count(self):
         for rec in self:
-            prescription_count = self.env['hospital.prescription'].search_count(
+            prescription_count = self.env['podiatry.eprescription'].search_count(
                 [('doctor_id', '=', rec.id)])
             rec.prescription_count = prescription_count

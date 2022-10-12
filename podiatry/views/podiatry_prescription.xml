@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_podiatry_prescription_list" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="time"/>
+                <field name="practitioner_id"/>
+                <field name="patient_id"/>
+                <field name="user_id" />
+                <field name="diagnosis_id"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.prescription</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date" string="orders" mode="month" color="color">
+                <field name="patient_id"/>
+                <field name="practitioner_id"/>
+                <field name="date"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_podiatry_prescription_form" model="ir.ui.view">
+        <field name="name">Prescription</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <header>
+                    <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
+                    <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
+                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
+                    <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
+                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
+
+                </header>
+                <sheet>
+                    <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
+                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+
+                    <group string="Patient and Doctor Information">
+                        <group>
+                            <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                            <field name="prescription_date" required="1" />
+                        </group>
+                        <group>
+                            <field name="name" readonly="1" />
+                            <field name="user_id" />
+                            <field name="practitioner_id" required="1" />
+                        </group>
+                    </group>
+                    <group string="Prescription Detail">
+                        <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+
+        </field>
+        <!-- <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
+                    <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
+                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
+                    <field name="state" widget="statebar" statebar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="practitioner_id"/>
+                            <field name="inv_state"/>
+                        </group>
+                        <group>
+                            <field name="prescription_date"/>
+                            <field name="completed_date"/>
+                            <field name="notes" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+          
+                </sheet>
+               
+            </form>
+        </field> -->
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_podiatry_prescription_search" model="ir.ui.view">
+        <field name="name">podiatry.prescription.search</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <search string="Prescription">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <!-- <field name="gender"/> -->
+                <!-- <field name="phone" groups="km_hospital.group_hospital_admin"/> -->
+                <!-- <field name="age"/> -->
+                <field name="state"/>
+                <field name="practitioner_id"/>
+                <separator/>
+                <!-- <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/> -->
+                <group expand="1" string="Group By">
+                    <filter string="State" name="state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!--
+    Action: Prescriptions (Dashboard)
+    -->
+    <record id="action_podiatry_prescription_dashboard" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_podiatry_prescription_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new prescription
+            </p>
+            <p>
+                Organize and manage prescriptions at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!-- calender view -->
+    <record id="prescription_view_calendar" model="ir.ui.view">
+        <field name="name">podiatry.prescription.calendar</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <calendar string="Prescriptions" date_start="prescription_date" date_stop="completed_date" event_open_popup="true" mode="month" color="name" quick_add="False">
+                <field name="patient_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- pivot view -->
+    <record id="prescription_pivot" model="ir.ui.view">
+        <field name="name">podiatry.prescription.pivot</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <pivot string="Prescriptions Pivot View">
+                <field name="patient_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="prescription_action" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="view_mode">tree,form,search,kanban,calendar,pivot</field>
+        <field name="context">{}</field>
+        <!--for default group & filter => {'search_default_state': 1, 'search_default_male': 1}-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Prescription
+            </p>
+        </field>
+    </record>
+
+    <!-- action server for changing the state to confirmed -->
+    <record id="action_prescription_confirm" model="ir.actions.server">
+        <field name="name">Confirm prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
+    </record>
+
+    <!-- action server for changing the state to done -->
+    <record id="action_prescription_done" model="ir.actions.server">
+        <field name="name">Done prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_done()</field>
+    </record>
+
+    <!-- action server for changing the staete to confirmed -->
+    <!-- <record id="action_prescription_cancel" model="ir.actions.server">
+        <field name="name">Cancel prescription</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_model_id" ref="model_podiatry_prescription"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_cancel()</field>
+    </record> -->
+
+    <!--
+    menu: Prescriptons
+    -->
+    <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription_dashboard" parent="menu_root" sequence="20" />
+    <!--
+    Menu: Patients
+    -->
+    <!-- <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="10" /> -->
+
+</odoo>

@@ -22,12 +22,10 @@ class Practitioner(models.Model):
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
         inverse_name='practitioner_id',
-        string="Practice",
-
-    )
+        string='Practice')
 
     practitioner_prescription_id = fields.One2many(
-        comodel_name='podiatry.practitioner.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='practitioner_id',
         string='Prescriptions')
 
@@ -51,6 +49,8 @@ class Practitioner(models.Model):
     color = fields.Integer(string="Color Index (0-15)")
     number = fields.Char(string="Number")
     identification = fields.Char(string="Identification", index=True)
+    reference = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
+                            default=lambda self: _('New'))
     birthdate = fields.Datetime(string="Birthdate")
 
     email = fields.Char(string="E-mail")
@@ -203,12 +203,14 @@ class Practitioner(models.Model):
                 sequence)
         return
 
+    def _get_internal_identifier(self, vals):
+        return self.env["ir.sequence"].next_by_code("podiatry.patient") or "PID"
+
     @api.model
     def create(self, values):
         practitioner = super(Practitioner, self).create(values)
         practitioner._add_followers()
         practitioner._set_number()
-
         return practitioner
 
     def write(self, values):

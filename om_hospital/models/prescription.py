@@ -5,19 +5,19 @@ from odoo.exceptions import ValidationError
 
 
 class HospitalPrescription(models.Model):
-    _name = "hospital.prescription"
+    _name = "podiatry.eprescription"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Hospital Prescription"
+    _description = "Podiatry E-Prescription"
     _order = "doctor_id,name,age"
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
     patient_id = fields.Many2one(
-        'hospital.patient', string="Patient", required=True)
+        'podiatry.patient', string="Patient", required=True)
     age = fields.Integer(
         string='Age', related='patient_id.age', tracking=True, store=True)
     doctor_id = fields.Many2one(
-        'hospital.doctor', string="Doctor", required=True)
+        'podiatry.doctor', string="Doctor", required=True)
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -29,9 +29,9 @@ class HospitalPrescription(models.Model):
     note = fields.Text(string='Description')
     date_prescription = fields.Date(string="Date")
     date_checkup = fields.Datetime(string="Check Up Time")
-    prescription = fields.Text(string="Prescription")
-    prescription_line_ids = fields.One2many('prescription.prescription.lines', 'prescription_id',
-                                            string="Prescription Lines")
+    eprescription = fields.Text(string="E-Prescription")
+    prescription_line_ids = fields.One2many('eprescription.eprescription.lines', 'prescription_id',
+                                            string="E-Prescription Lines")
 
     def action_confirm(self):
         self.state = 'confirm'
@@ -49,7 +49,7 @@ class HospitalPrescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'hospital.prescription') or _('New')
+                'podiatry.eprescription') or _('New')
         res = super(HospitalPrescription, self).create(vals)
         return res
 
@@ -74,15 +74,15 @@ class HospitalPrescription(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': 'https://apps.odoo.com/apps/modules/14.0/%s/' % self.prescription,
+            'url': 'https://apps.odoo.com/apps/modules/14.0/%s/' % self.eprescription,
         }
 
 
 class PrescriptionPrescriptionLines(models.Model):
-    _name = "prescription.prescription.lines"
-    _description = "Prescription Prescription Lines"
+    _name = "eprescription.eprescription.lines"
+    _description = "E-Prescription E-Prescription Lines"
 
     name = fields.Char(string="Medicine", required=True)
     qty = fields.Integer(string="Quantity")
     prescription_id = fields.Many2one(
-        'hospital.prescription', string="Prescription")
+        'podiatry.eprescription', string="E-Prescription")
