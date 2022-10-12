@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hospital_patient,access.hospital.patient,model_hospital_patient,,1,1,1,1
-access_hospital_doctor,access.hospital.doctor,model_hospital_doctor,,1,1,1,1
-access_hospital_prescription,access.hospital.prescription,model_hospital_prescription,,1,1,1,1
-access_create_prescription_wizard,access.create.prescription.wizard,model_create_prescription_wizard,,1,1,1,1
-access_search_prescription_wizard,access.search.prescription.wizard,model_search_prescription_wizard,,1,1,1,1
-access_hospital_prescription_lines,access.hospital.prescription.lines,model_hospital_prescription_lines,,1,1,1,1
