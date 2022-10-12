@@ -21,6 +21,6 @@ class PractitionerHistory(models.Model):
         comodel_name='podiatry.patient',
         string='patient')
 
-    @api.onchange('patient_id', 'practitioner_id', 'practitioner_id', 'date')
-    def _onchange_name(self):
-        self.name = f'{self.patient_id.name} | {self.practitioner_id.name} ({self.date})'
+    # @api.onchange('patient_id', 'practitioner_id', 'practitioner_id', 'date')
+    # def _onchange_name(self):
+    #     self.name = f'{self.patient_id.name} | {self.practitioner_id.name} ({self.date})'

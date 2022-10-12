@@ -21,6 +21,11 @@ class Prescription(models.Model):
         comodel_name='podiatry.practitioner',
         string='Practitioner')
 
+    practitioner_phone = fields.Char(
+        string='Phone', related='practitioner_id.phone')
+    practitioner_email = fields.Char(
+        string='Email', related='practitioner_id.email')
+
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
@@ -29,6 +34,10 @@ class Prescription(models.Model):
         ('male', 'Male'),
         ('female', 'Female')
     ], related='patient_id.gender')
+
+    patient_phone = fields.Char(string='Phone', related='patient_id.phone')
+    patient_email = fields.Char(string='Email', related='patient_id.email')
+    # patient_age = fields.Integer(string='Age', related='patient_id.age')
 
     description = fields.Text(string='Description')
 
@@ -53,7 +62,7 @@ class Prescription(models.Model):
                               ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
                              string="Status", tracking=True)
 
-    prescription_date = fields.Date(string="Date")
+    prescription_date = fields.Date(string="Date", tracking=True)
 
     completed_date = fields.Datetime(string="Completed Date")
 
@@ -96,21 +105,29 @@ class Prescription(models.Model):
 
     @api.model
     def create(self, vals):
-        # vals['name'] = self.env['ir.sequence'].next_by_code(
-        #     'podiatry.prescription') or _('New')
-        # return super(Prescription, self).create(vals)
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription') or _('New')
         res = super(Prescription, self).create(vals)
         return res
 
+    # @api.model
+    # def create(self, vals):
+    #     if not vals['description']:
+    #         vals['description'] = "Enter the description here"
+    #     if vals.get('name', _('New')) == _('New'):
+    #         vals['name'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.prescription') or _('New')
+
+    #     res = super(Prescription, self).create(vals)
+    #     return res
+
     def prescription_report(self):
         return self.env.ref('podiatry.report_print_prescription').report_action(self)
 
-    @api.onchange('patient_id', 'practitioner_id', 'date')
-    def _onchange_name(self):
-        self.name = f'{self.patient_id.name} | {self.practitioner_id.name} ({self.date})'
+    # @api.onchange('patient_id', 'practitioner_id', 'date')
+    # def _onchange_name(self):
+    #     self.name = f'{self.patient_id.name} | {self.practitioner_id.name} ({self.date})'
 
     @api.onchange('patient_id')
     def onchange_patient_id(self):
@@ -122,6 +139,13 @@ class Prescription(models.Model):
         else:
             self.gender = ''
             self.notes = ''
+    # @api.onchange('patient_id')
+    # def _change_prescription_notes(self):
+    #     if self.patient_id:
+    #         if not self.notes:
+    #             self.notes = "New prescription"
+    #     else:
+    #         self.notes = ""
 
     def unlink(self):
         if self.state == 'done':
@@ -138,3 +162,13 @@ class Prescription(models.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# for device record in patient prescription
+# class PrescriptionDevice(models.Model):
+#     _name = "podiatry.prescription.device"
+#     _description = "Prescription Device"
+
+#     name = fields.Char(string="Device", required=True)
+#     quantity = fields.Integer(string="Quantity")
+#     prescription_device_id = fields.Many2one(
+#         "podiatry.prescription", string="Prescription device")

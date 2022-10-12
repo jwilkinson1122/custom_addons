@@ -155,12 +155,6 @@
                     <t t-name="kanban-box">
                         <div name="kanban_card" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
 
-                            <!-- Ribbon
-                            <div class="ribbon ribbon-top-right">
-                                <span>Busy</span>
-                            </div>
-                            -->
-
                             <!--
                             Dropdown
                             -->
