@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="doctor_appointment__list" model="ir.ui.view">
+        <field name="name">Doctor Appointments</field>
+        <field name="model">cgu_hospital.doctor.appointment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="time"/>
+                <field name="doctor_id"/>
+                <field name="patient_id"/>
+                <!--                <field name="diagnosis_id"/>-->
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="doctor_appointment_calendar" model="ir.ui.view">
+        <field name="name">Doctor Appointments</field>
+        <field name="model">cgu_hospital.doctor.appointment</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date"
+                      string="visits"
+                      mode="month"
+                      color="color">
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="date"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="doctor_appointment_form" model="ir.ui.view">
+        <field name="name">Doctor Appointment</field>
+        <field name="model">cgu_hospital.doctor.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <notebook>
+                        <page string="Main">
+                            <group>
+                                <group>
+                                    <field name="date"/>
+                                    <field name="time"/>
+                                </group>
+                                <group>
+                                    <field name="doctor_id"/>
+                                    <field name="patient_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_window_doctor_appointments" model="ir.actions.act_window">
+        <field name="name">Doctor Appointments</field>
+        <field name="res_model">cgu_hospital.doctor.appointment</field>
+        <field name="view_mode">tree,calendar,form</field>
+    </record>
+
+    <menuitem id="cgu_hospital.doctor_appointments" name="Doctor Appointments" parent="cgu_hospital.menu_documents"
+              action="cgu_hospital.action_window_doctor_appointments"/>
+
+</odoo>

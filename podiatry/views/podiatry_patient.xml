@@ -9,22 +9,10 @@
                 <field name="name" decoration-bf="1"/>
                 <field name="practitioner_id"/>
                 <field name="practice_id"/>
-                <!-- <field name="reference"/> -->
-                <field name="identification"/>
-                <!-- <field name="identification"/>
-                <field name="birthdate" widget="date" optional="hide"/>
-                <field name="age" optional="hide"/>
-                <field name="gender" optional="show"/> -->
+                <field name="reference"/>
+                <field name="identification" optional="hide"/>
                 <field name="diagnosis" optional="show"/>
                 <field name="diagnosis_id" optional="hide"/>
-                <!-- <field name="shoe_size_id" optional="hide"/>
-                <field name="weight_id" optional="hide"/>
-                <field name="nationality_id" optional="hide"/>
-                <field name="birth_country_id" optional="hide"/>
-                <field name="birth_state_id" optional="hide"/>
-                <field name="mobile" widget="phone" optional="show"/>
-                <field name="phone" widget="phone" optional="show"/>
-                <field name="email" widget="email" optional="show"/> -->
                 <field name="user_id" widget="many2one_avatar" optional="show"/>
                 <field name="active" invisible="1"/>
             </tree>
@@ -41,6 +29,11 @@
                 <header>
 
                 </header>
+                <div name="alert_patient_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_patient_id', '=', False)]}">
+                    A patient with the same reference already exists, are you sure you want to create a new one?
+                    <br/>
+                    •                    <field name="same_reference_patient_id"/>
+                </div>
                 <div name="alert_patient_identification_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_identification_patient_id', '=', False)]}">
                     A patient with the same identification already exists, are you sure you want to create a new one?
                     <br/>
@@ -60,18 +53,18 @@
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
                     <div name="title" class="oe_title">
-                        <!-- <div name="reference">
+                        <div name="reference">
                             <h1>
                                 <field name="reference"/>
                             </h1>
-                        </div> -->
+                        </div>
                         <div name="name">
                             <h1>
                                 <field name="name" required="1" placeholder="Patient's Name"/>
                             </h1>
                         </div>
-                        <!-- <label for="prescription_count" string="Prescriptions:"/>
-                        <field name="prescription_count"/> -->
+                        <label for="prescription_count" string="Prescriptions:"/>
+                        <field name="prescription_count"/>
                     </div>
                     <notebook>
                         <!-- Patient Information -->
@@ -80,7 +73,7 @@
                                 <group name="responsible" string="Administrator">
                                     <field name="practitioner_id"/>
                                     <field name="practice_id"/>
-                                    <field name="identification" required="1"/>
+                                    <field name="identification"/>
                                 </group>
                                 <!-- Attributes-->
                                 <group name="attributes" string="Attributes">
@@ -245,6 +238,9 @@
                                                 ID: <field name="reference"/>
                                             </li> -->
                                             <li>
+                                                ID: <field name="reference"/>
+                                            </li>
+                                            <li>
                                                 Name: <field name="name"/>
                                             </li>
                                             <li>
@@ -261,11 +257,11 @@
                                             <field name="prescription_count"/> -->
 
                                         </strong>
-                                        <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
+                                        <!-- <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
                                             <small t-if="record.identification.raw_value">
                                                 <field name="identification"/>
                                             </small>
-                                        </span>
+                                        </span> -->
                                     </div>
                                 </div>
 
@@ -355,6 +351,7 @@
                 -->
                 <field name="name"/>
                 <field name="identification" operator="="/>
+                <field name="reference" operator="="/>
                 <separator/>
 
                 <!--
@@ -375,13 +372,6 @@
                     <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
                     <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
                     <separator/>
-                    <!-- <filter string="Shoe Size" name="shoe_size_id" context="{'group_by': 'shoe_size_id'}"/> -->
-                    <!-- <filter string="Diagnosis" name="diagnosis_id" context="{'group_by': 'diagnosis_id'}"/> -->
-                    <!-- <filter string="Weight" name="weight_id" context="{'group_by': 'weight_id'}"/> -->
-                    <!-- <separator/> -->
-                    <!-- <filter string="Nationality" name="nationality_id" context="{'group_by': 'nationality_id'}"/>
-                    <filter string="Birthplace" name="birth_state_id" context="{'group_by': 'birth_state_id'}"/>
-                    <separator/> -->
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
                 </group>
@@ -394,10 +384,6 @@
                     <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
                     <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
                     <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
-                    <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/> -->
-                    <!-- <field name="diagnosis" icon="fa-tint" enable_counters="1"/> -->
-                    <!-- <field name="shoe_size_id" icon="fa-male" enable_counters="1"/> -->
-                    <!-- <field name="diagnosis_id" icon="fa-graduation-cap" enable_counters="1"/> -->
                     <field name="country_id" icon="fa-globe" enable_counters="1"/>
                 </searchpanel>
 
@@ -437,6 +423,7 @@
                 <field name="name" invisible="1"/>
                 <field name="color" invisible="1"/>
                 <field name="identification" invisible="1"/>
+                <field name="reference" invisible="1"/>
                 <field name="mobile" invisible="1"/>
                 <field name="phone" invisible="1"/>
                 <field name="email" invisible="1"/>

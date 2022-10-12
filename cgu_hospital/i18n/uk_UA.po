@@ -1,0 +1,567 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* cgu_hospital
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-05 13:03+0000\n"
+"PO-Revision-Date: 2022-09-05 16:26+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 3.1.1\n"
+
+#. module: cgu_hospital
+#: model:ir.actions.report,print_report_name:cgu_hospital.action_report_analysis_direction
+#, fuzzy
+msgid "'analysis_direction - %s' % (object.name)"
+msgstr "<span>Напрямок аналізу №</span>"
+
+#. module: cgu_hospital
+#: model:ir.ui.menu,name:cgu_hospital.menu_root
+msgid "(CGU) Hospital"
+msgstr "(CGU) Лікарня"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.print_name_date
+msgid "<span>Analysis direction #</span>"
+msgstr "<span>Напрямок аналізу №</span>"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.print_name_date
+msgid "<span>from</span>"
+msgstr "<span>від</span>"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.print_now_date_time
+msgid "<span>printed</span>"
+msgstr "<span>надрукований</span>"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__active
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__active
+msgid "Active"
+msgstr "Активний"
+
+#. module: cgu_hospital
+#: model:res.groups,name:cgu_hospital.group_hospital_admin
+msgid "Administrator"
+msgstr "Адміністратор"
+
+#. module: cgu_hospital
+#: model:res.groups,comment:cgu_hospital.group_hospital_admin
+msgid "Administrators of the cgu_hospital (full rights)"
+msgstr "Адміністратори cgu_hospital (повні права)"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_analysis_direction
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__analysis_direction_id
+msgid "Analysis Direction"
+msgstr "Напрямок аналізу"
+
+#. module: cgu_hospital
+#: model:ir.actions.report,name:cgu_hospital.action_report_analysis_direction
+msgid "Analysis Direction Report"
+msgstr "Звіт про напрямок аналізу"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_analysis_result
+msgid "Analysis Resalt"
+msgstr "Результат аналізу"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_analysis_type
+msgid "Analysis Type"
+msgstr "Тип аналізу"
+
+#. module: cgu_hospital
+#: model:ir.ui.menu,name:cgu_hospital.analysis_directions
+msgid "Analysis directions"
+msgstr "Напрямки аналізу"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_analysis_directions
+msgid "Analysis directions\""
+msgstr "Напрямки аналізу\""
+
+#. module: cgu_hospital
+#: model:ir.ui.menu,name:cgu_hospital.analysis_results
+msgid "Analysis results"
+msgstr "Результати аналізу"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_analysis_results
+msgid "Analysis results\""
+msgstr "Результати аналізу\""
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_analysis_types
+#: model:ir.ui.menu,name:cgu_hospital.analysis_types
+msgid "Analysis types"
+msgstr "Види аналізу"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.set_doctor_for_patients_wizard_view_form
+msgid "Close"
+msgstr "Закрити"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__color
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__color
+msgid "Color"
+msgstr "Колір"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__comment
+msgid "Comment"
+msgstr "Коментар"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_contact_mixin
+msgid "Contact mixin"
+msgstr "Контактний міксин"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__create_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__create_uid
+msgid "Created by"
+msgstr "Створено"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__create_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__create_date
+msgid "Created on"
+msgstr "Створено о"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__date
+msgid "Date"
+msgstr "Дата"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__date_birth
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__date_birth
+msgid "Date Birth"
+msgstr "Дата народження"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__date_today
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__date_today
+msgid "Date Today"
+msgstr "Дата сьогодні"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_kanban
+msgid "Delete"
+msgstr "Видалити"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__description
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_appointment_form
+msgid "Description"
+msgstr "Опис"
+
+#. module: cgu_hospital
+#: model:ir.ui.menu,name:cgu_hospital.menu_directories
+msgid "Directories"
+msgstr "Довідники"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__display_name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__display_name
+msgid "Display Name"
+msgstr "Відображуване ім’я"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_doctor
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__doctor_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__doctor_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__doctor_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__doctor_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__doctor_id
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.maine_data
+msgid "Doctor"
+msgstr "Персонал"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_doctor_appointment
+msgid "Doctor Appointment"
+msgstr "Призначення лікаря"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_doctor_appointments
+#: model:ir.ui.menu,name:cgu_hospital.doctor_appointments
+msgid "Doctor Appointments"
+msgstr "Призначення лікаря"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_doctors
+#: model:ir.ui.menu,name:cgu_hospital.doctors
+msgid "Doctors"
+msgstr "Лікарі"
+
+#. module: cgu_hospital
+#: model:ir.ui.menu,name:cgu_hospital.menu_documents
+msgid "Documents"
+msgstr "Документи"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_kanban
+msgid "Edit"
+msgstr "Редагувати"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__FirstName
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__FirstName
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__FirstName
+msgid "First Name"
+msgstr "Ім'я"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__name
+msgid "Full name"
+msgstr "Повне ім'я"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_personal_doctor_history
+msgid "HR Hospital personal_doctor_history"
+msgstr "HR лікарня особиста_історія_лікаря"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__id
+msgid "ID"
+msgstr "ID"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__photo
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__photo
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__photo
+msgid "Image 128"
+msgstr "Зображення 128"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard____last_update
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality____last_update
+msgid "Last Modified on"
+msgstr "Останні Зміни"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__LastName
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__LastName
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__LastName
+msgid "Last Name"
+msgstr "Прізвище"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__write_uid
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновлено"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__write_date
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.logo_template
+msgid "Logo"
+msgstr "Логотип"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_appointment_form
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_form
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.patient_form
+msgid "Main"
+msgstr "Основне"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__name
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__name
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_type__parent_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_speciality__parent_id
+msgid "Parent Category"
+msgstr "Батьківська категорія"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__passport_issued_when
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__passport_issued_when
+msgid "Passport Issued When"
+msgstr "Паспорт виданий коли"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__passport_issued_whom
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__passport_issued_whom
+msgid "Passport Issued Whom"
+msgstr "Паспорт виданий ким"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_passport_data_mixin
+msgid "Passport data mixin"
+msgstr "Паспорт дата"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_patient
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__patient_id
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.maine_data
+msgid "Patient"
+msgstr "Пацієнт"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_patients
+#: model:ir.ui.menu,name:cgu_hospital.patients
+msgid "Patients"
+msgstr "Пацієнти"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__personal_doctor_id
+msgid "Personal doctor"
+msgstr "Особистий лікар"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__resalt
+msgid "Resalt"
+msgstr "Результат"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.set_doctor_for_patients_wizard_view_form
+msgid "Set"
+msgstr "Встановити"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_set_doctor_for_patients_wizard
+msgid "Set Doctor"
+msgstr "Встановити доктора"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__sex
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__sex
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__sex
+msgid "Sex"
+msgstr "Пол"
+
+#. module: cgu_hospital
+#: model:ir.actions.act_window,name:cgu_hospital.action_window_specialities
+#: model:ir.ui.menu,name:cgu_hospital.specialities
+msgid "Specialities"
+msgstr "Спеціальності"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__Surname
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__Surname
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__Surname
+msgid "Surname"
+msgstr "По батькові"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor_appointment__time
+msgid "Time"
+msgstr "Час"
+
+#. module: cgu_hospital
+#: model:res.groups,name:cgu_hospital.group_hospital_user
+msgid "User"
+msgstr "Користувач"
+
+#. module: cgu_hospital
+#: model:ir.module.category,description:cgu_hospital.category_hospital
+msgid "User access levels for the cgu_hospital"
+msgstr "Рівні користувацького доступу для cgu_hospital"
+
+#. module: cgu_hospital
+#: model:res.groups,comment:cgu_hospital.group_hospital_user
+msgid "Users of the cgu_hospital"
+msgstr "Користувачі cgu_hospital"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_set_doctor_wizard
+msgid "Wizard to set_doctor_for_patients"
+msgstr "Обробка Встановити доктора"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__age
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__age
+msgid "age"
+msgstr "вік"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__analysis_type_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__analysis_type_id
+msgid "analysis.type"
+msgstr "вид аналізу"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.maine_data
+msgid "analysis_type"
+msgstr "вид аналізу"
+
+#. module: cgu_hospital
+#: model:ir.module.category,name:cgu_hospital.category_hospital
+msgid "cgu_hospital"
+msgstr "cgu_hospital"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.maine_data
+#, fuzzy
+msgid "comment"
+msgstr "Коментар"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__doctor_history_ids
+msgid "doctor_history"
+msgstr "історія лікаря"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__email
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__email
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__email
+msgid "email"
+msgstr "email"
+
+#. module: cgu_hospital
+#: code:addons/cgu_hospital/models/cgu_hospital_contact_mixin.py:0
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_contact_mixin__sex__man
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_doctor__sex__man
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_patient__sex__man
+#, python-format
+msgid "man"
+msgstr "чол"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__passport_number
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__passport_number
+msgid "passport_number"
+msgstr "Паспорт номер"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_passport_data_mixin__passport_series
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__passport_series
+msgid "passport_series"
+msgstr "Паспорт серія"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_direction__patient_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_analysis_result__patient_id
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_personal_doctor_history__patient_id
+#, fuzzy
+msgid "patient"
+msgstr "Пацієнт"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_set_doctor_wizard__patient_ids
+#, fuzzy
+msgid "patients"
+msgstr "Пацієнти"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__personal_patient_ids
+msgid "personal patients"
+msgstr "Особисті пацієнти"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_form
+msgid "personal_patients"
+msgstr "Особисті пацієнти"
+
+#. module: cgu_hospital
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_contact_mixin__phone
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__phone
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_patient__phone
+msgid "phone"
+msgstr "телефон"
+
+#. module: cgu_hospital
+#: model:ir.model,name:cgu_hospital.model_cgu_hospital_speciality
+#: model:ir.model.fields,field_description:cgu_hospital.field_cgu_hospital_doctor__speciality_id
+msgid "speciality"
+msgstr "спеціальність"
+
+#. module: cgu_hospital
+#: model_terms:ir.ui.view,arch_db:cgu_hospital.doctor_appointment_calendar
+msgid "visits"
+msgstr "візити"
+
+#. module: cgu_hospital
+#: code:addons/cgu_hospital/models/cgu_hospital_contact_mixin.py:0
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_contact_mixin__sex__woman
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_doctor__sex__woman
+#: model:ir.model.fields.selection,name:cgu_hospital.selection__cgu_hospital_patient__sex__woman
+#, python-format
+msgid "woman"
+msgstr "жінка"
