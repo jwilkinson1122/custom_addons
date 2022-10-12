@@ -1,0 +1,11 @@
+<odoo>
+  <record id="action_podiatry_account" model="ir.actions.act_window">
+    <field name="name">Podiatry Accounts</field>
+    <field name="res_model">podiatry.account</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_window, deprecated in Odoo 14
+    <act_window id="action_podiatry_account" name="Podiatry Accounts" res_model="podiatry.account" view_mode="tree,form" />
+    -->
+  <menuitem id="menu_podiatry_account" name="Accounts" action="action_podiatry_account" parent="podiatry_app.menu_podiatry" sequence="10"/>
+</odoo>
