@@ -223,7 +223,7 @@
             <field name="perm_unlink" eval="0"/>
         </record>
 
-        <record id="access_create_prescription_invoice" model="ir.model.access">
+        <!-- <record id="access_create_prescription_invoice" model="ir.model.access">
             <field name="name">access.create.prescription.invoice</field>
             <field name="model_id" ref="model_create_prescription_invoice"/>
             <field name="perm_read" eval="1"/>
@@ -231,7 +231,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_unlink" eval="1"/>
         </record>
-
+ -->
 
 
         <!-- access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1 -->

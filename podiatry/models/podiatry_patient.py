@@ -23,10 +23,10 @@ class Patient(models.Model):
         comodel_name='podiatry.practitioner',
         string='Practitioner')
 
-    # identification = fields.Char(string="Identification", index=True)
+    identification = fields.Char(string="Identification", index=True)
 
-    reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
+    # reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
+    #                         default=lambda self: _('New'))
 
     birthdate = fields.Datetime(string="Birthdate")
 
@@ -215,11 +215,11 @@ class Patient(models.Model):
         compute='_compute_same_identification_patient_id',
     )
 
-    @api.depends('reference')
+    @api.depends('identification')
     def _compute_same_identification_patient_id(self):
         for patient in self:
             domain = [
-                ('reference', '=', patient.reference),
+                ('identification', '=', patient.identification),
             ]
 
             origin_id = patient._origin.id
@@ -227,7 +227,7 @@ class Patient(models.Model):
             if origin_id:
                 domain += [('id', '!=', origin_id)]
 
-            patient.same_identification_patient_id = bool(patient.reference) and \
+            patient.same_identification_patient_id = bool(patient.identification) and \
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
 
@@ -243,30 +243,30 @@ class Patient(models.Model):
                            patient.responsible_id.partner_id).ids
             patient.message_subscribe(partner_ids=partner_ids)
 
-    # def _set_number(self):
-    #     for patient in self:
-    #         sequence = self._get_sequence_code()
-    #         patient.number = self.env['ir.sequence'].next_by_code(sequence)
-    #     return
-
-    # @api.model
-    # def create(self, values):
-    #     patient = super(Patient, self).create(values)
-    #     patient._add_followers()
-    #     patient._set_number()
-    #     return patient
+    def _set_number(self):
+        for patient in self:
+            sequence = self._get_sequence_code()
+            patient.number = self.env['ir.sequence'].next_by_code(sequence)
+        return
 
     @api.model
-    def create(self, vals):
-        if not vals.get('notes'):
-            vals['notes'] = 'New Patient'
-        if vals.get('reference', _('New')) == _('New'):
-            vals['reference'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.patient') or _('New')
-        patient = super(Patient, self).create(vals)
+    def create(self, values):
+        patient = super(Patient, self).create(values)
         patient._add_followers()
-        # patient._set_number()
+        patient._set_number()
         return patient
+
+    # @api.model
+    # def create(self, vals):
+    #     if not vals.get('notes'):
+    #         vals['notes'] = 'New Patient'
+    #     if vals.get('reference', _('New')) == _('New'):
+    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.patient') or _('New')
+    #     patient = super(Patient, self).create(vals)
+    #     patient._add_followers()
+
+    #     return patient
 
     def write(self, values):
         result = super(Patient, self).write(values)

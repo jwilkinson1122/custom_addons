@@ -43,18 +43,9 @@
                     <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
                     <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
-                    <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
 
                 </header>
                 <sheet>
-                    <group>
-                        <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                        <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
-
-                    </group>
-                    <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
 
                     <group string="Patient and Doctor Information">
                         <group>

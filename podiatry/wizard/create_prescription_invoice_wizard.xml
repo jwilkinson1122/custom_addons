@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <!-- 
     <record id="create_prescription_invoice_wizard_view" model="ir.ui.view">
         <field name="name">create.prescription.invoice.wizard.view</field>
         <field name="model">create.prescription.invoice</field>
@@ -18,6 +18,6 @@
         </field>
     </record>
 
-    <act_window id="action_create_prescription_invoice1" name="Create Prescription Invoice" res_model="create.prescription.invoice" binding_model="podiatry.prescription" view_mode="form" target="new" />
+    <act_window id="action_create_prescription_invoice1" name="Create Prescription Invoice" res_model="create.prescription.invoice" binding_model="podiatry.prescription" view_mode="form" target="new" /> -->
 
 </odoo>

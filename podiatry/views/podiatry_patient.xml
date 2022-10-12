@@ -9,7 +9,8 @@
                 <field name="name" decoration-bf="1"/>
                 <field name="practitioner_id"/>
                 <field name="practice_id"/>
-                <field name="reference"/>
+                <!-- <field name="reference"/> -->
+                <field name="identification"/>
                 <!-- <field name="identification"/>
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>
@@ -59,11 +60,11 @@
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
                     <div name="title" class="oe_title">
-                        <div name="reference">
+                        <!-- <div name="reference">
                             <h1>
                                 <field name="reference"/>
                             </h1>
-                        </div>
+                        </div> -->
                         <div name="name">
                             <h1>
                                 <field name="name" required="1" placeholder="Patient's Name"/>
@@ -79,7 +80,7 @@
                                 <group name="responsible" string="Administrator">
                                     <field name="practitioner_id"/>
                                     <field name="practice_id"/>
-                                    <!-- <field name="identification" required="1"/> -->
+                                    <field name="identification" required="1"/>
                                 </group>
                                 <!-- Attributes-->
                                 <group name="attributes" string="Attributes">
@@ -198,7 +199,7 @@
                 <field name="active"/>
                 <field name="id"/>
                 <field name="name"/>
-                <field name="reference"/>
+                <!-- <field name="reference"/> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div name="kanban_card" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} o_kanban_record_has_image_fill oe_kanban_global_click">
@@ -240,9 +241,9 @@
                                     <div name="heading" class="o_kanban_record_headings">
                                         <strong name="title" class="o_kanban_record_title">
                                             <!-- <field name="name"/> -->
-                                            <li>
+                                            <!-- <li>
                                                 ID: <field name="reference"/>
-                                            </li>
+                                            </li> -->
                                             <li>
                                                 Name: <field name="name"/>
                                             </li>
@@ -260,11 +261,11 @@
                                             <field name="prescription_count"/> -->
 
                                         </strong>
-                                        <!-- <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
+                                        <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
                                             <small t-if="record.identification.raw_value">
                                                 <field name="identification"/>
                                             </small>
-                                        </span> -->
+                                        </span>
                                     </div>
                                 </div>
 
@@ -353,7 +354,7 @@
                 Fields
                 -->
                 <field name="name"/>
-                <field name="reference" operator="="/>
+                <field name="identification" operator="="/>
                 <separator/>
 
                 <!--
@@ -435,7 +436,7 @@
             <pivot string="Patients" sample="1">
                 <field name="name" invisible="1"/>
                 <field name="color" invisible="1"/>
-                <!-- <field name="identification" invisible="1"/> -->
+                <field name="identification" invisible="1"/>
                 <field name="mobile" invisible="1"/>
                 <field name="phone" invisible="1"/>
                 <field name="email" invisible="1"/>
