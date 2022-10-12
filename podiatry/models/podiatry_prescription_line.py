@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 from datetime import date, datetime
 
 
-class podiatry_prescription_line(models.Model):
+class PrescriptionLine(models.Model):
     _name = "podiatry.prescription.line"
     _description = 'podiatry prescription line'
     _rec_name = 'product_id'
@@ -20,6 +20,8 @@ class podiatry_prescription_line(models.Model):
                 self.price = 0.0
 
     name = fields.Many2one('podiatry.prescription', 'Prescription ID')
+    prescription_id = fields.Many2one("podiatry.prescription", required=True)
+    # book_cover = fields.Binary(related="book_id.image")
     product_id = fields.Many2one('product.product', 'Name')
     price = fields.Float(compute=onchange_product, string='Price', store=True)
     qty_available = fields.Integer(
@@ -44,4 +46,6 @@ BILATERAL :Configuration options for bilateral left and right foot.
         'podiatry.device.quantity', 'Quantity')
     quantity = fields.Integer('Quantity')
     short_comment = fields.Char('Comment', size=128)
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

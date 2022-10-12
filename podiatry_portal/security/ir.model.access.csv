@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prescription_portal,Prescription Portal Access,podiatry_app.model_podiatry_prescription,base.group_portal,1,0,0,0
+access_practitioner_portal,Practitioner Portal Access,podiatry_practitioner.model_podiatry_practitioner,base.group_portal,1,0,0,0
+access_stage_portal,Checkout Stage Portal Access,podiatry_checkout.model_podiatry_checkout_stage,base.group_portal,1,0,0,0
+access_checkout_portal,Checkout Portal Access,podiatry_checkout.model_podiatry_checkout,base.group_portal,1,0,0,0
+access_checkout_line_portal,Checkout Portal Line Access,podiatry_checkout.model_podiatry_checkout_line,base.group_portal,1,0,0,0

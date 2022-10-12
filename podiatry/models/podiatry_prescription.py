@@ -111,17 +111,6 @@ class Prescription(models.Model):
         res = super(Prescription, self).create(vals)
         return res
 
-    # @api.model
-    # def create(self, vals):
-    #     if not vals['description']:
-    #         vals['description'] = "Enter the description here"
-    #     if vals.get('name', _('New')) == _('New'):
-    #         vals['name'] = self.env['ir.sequence'].next_by_code(
-    #             'podiatry.prescription') or _('New')
-
-    #     res = super(Prescription, self).create(vals)
-    #     return res
-
     def prescription_report(self):
         return self.env.ref('podiatry.report_print_prescription').report_action(self)
 
