@@ -271,13 +271,6 @@ class Patient(models.Model):
             patient.number = self.env['ir.sequence'].next_by_code(sequence)
         return
 
-    # @api.model
-    # def create(self, values):
-    #     patient = super(Patient, self).create(values)
-    #     patient._add_followers()
-    #     patient._set_number()
-    #     return patient
-
     @api.model
     def create(self, vals):
         if not vals.get('notes'):

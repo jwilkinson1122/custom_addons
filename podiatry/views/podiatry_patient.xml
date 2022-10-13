@@ -180,10 +180,8 @@
             </form>
         </field>
     </record>
-    <!--
-    Kanban
-    -->
 
+    <!-- Kanban -->
     <record id="view_podiatry_patient_kanban" model="ir.ui.view">
         <field name="name">podiatry.patient.kanban</field>
         <field name="model">podiatry.patient</field>
@@ -272,46 +270,7 @@
         </field>
     </record>
 
-    <!-- <record model="ir.ui.view" id="view_podiatry_patient_kanban">
-        <field name="name">podiatry.patient.kanban</field>
-        <field name="model">podiatry.patient</field>
-        <field name="arch" type="xml">
-            <kanban class="o_res_partner_kanban row" sample="1">
-                <field name="color"/>
-                <field name="active"/>
-                <field name="id"/>
-                <field name="name"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div class="col-lg-3 col-md-4 col-sm-6 p-0 oe_kanban_global_click o_res_partner_kanban">
-                            <div class="profile-card card rounded-lg shadow h-100 p-4 p-xl-5 mb-4 text-center position-relative overflow-hidden">
-                                <div class="banner"></div>
-                                <img t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)" alt="" class="img-circle mx-auto mb-3"/>
-                                <h2 class="mb-4">
-                                    <field name="name"/>
-                                </h2>
-                                <div class="card-details text-left mb-4">
-                                    <p class="mb-2">
-                                        <i class="fa fa-address-card-o mr-3"></i>
-                                        <field name="reference"/>
-                                    </p>
-                                </div>
-                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
-                                <div class="o_row">
-                                    <span class="oe_kanban_partner_links"/>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
- -->
-
-    <!--
-    Activity
-    -->
+    <!-- Activity -->
     <record id="view_podiatry_patient_activity" model="ir.ui.view">
         <field name="name">podiatry.patient.activity</field>
         <field name="model">podiatry.patient</field>
@@ -375,8 +334,8 @@
                 <searchpanel>
                     <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
                     <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
-                    <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
-                    <field name="country_id" icon="fa-globe" enable_counters="1"/>
+                    <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
+                    <field name="country_id" icon="fa-globe" enable_counters="1"/> -->
                 </searchpanel>
 
             </search>
