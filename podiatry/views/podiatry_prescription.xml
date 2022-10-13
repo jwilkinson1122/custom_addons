@@ -103,11 +103,11 @@
                         <field name="notes" nolabel="1" />
                     </group> -->
                     <notebook>
-                        <page string="Prescription Lines">
+                        <page string="Prescription Details">
                             <group>
                                 <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
                             </group>
-                            <group string="Prescription Detail">
+                            <group string="Rx Lines">
                                 <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
                             </group>
                             <group>
