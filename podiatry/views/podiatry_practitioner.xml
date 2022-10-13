@@ -54,6 +54,7 @@
                             <field name="mobile" widget="phone" help="help"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
+                            <!-- <field name="position_type"/> -->
                         </group>
                         <!-- Address Information -->
                         <group name="address_information" string="Address Information">

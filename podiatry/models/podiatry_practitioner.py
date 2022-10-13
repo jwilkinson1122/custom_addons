@@ -34,16 +34,10 @@ class Practitioner(models.Model):
         inverse_name='practitioner_id',
         string='History')
 
-    # practitioner_encounter_ids = fields.One2many(
-    #     comodel_name='podiatry.encounter.with.patient',
-    #     inverse_name='patient_id',
-    #     string='patient_encounter')
-
     @api.model
     def _get_sequence_code(self):
         return 'podiatry.practitioner'
 
-    # active = fields.Boolean(default=True)
     active = fields.Boolean(string="Active", default=True, tracking=True)
     name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
@@ -52,7 +46,6 @@ class Practitioner(models.Model):
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
     birthdate = fields.Datetime(string="Birthdate")
-
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -68,6 +61,10 @@ class Practitioner(models.Model):
         comodel_name='res.country.state', string="State",
         default=lambda self: self.env.company.state_id,
     )
+
+    # position_type = fields.Many2one(
+    #     comodel_name='res.partner.function', string="Job Position",
+    #  )
 
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")

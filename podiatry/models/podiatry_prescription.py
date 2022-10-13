@@ -51,6 +51,10 @@ class Prescription(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Login User', readonly=True, default=lambda self: self.env.user)
 
+    attachment_ids = fields.Many2many('ir.attachment', 'prescription_ir_attachments_rel',
+                                      'manager_id', 'attachment_id', string="Attachments",
+                                      help="Images/attachments before prescription")
+
     inv_state = fields.Selection(
         [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
 

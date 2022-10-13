@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="product_manager_contract_tools_form_view" model="ir.ui.view">
+            <field name="name">product_manager_contract_tools_form_view.form</field>
+            <field name="model">product.tools</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Accessories/Tools">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="price"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_manager_contract_tools_tree_view" model="ir.ui.view">
+            <field name="name">product_manager_contract_tools_tree_view.tree</field>
+            <field name="model">product.tools</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Accessories/Tools">
+                    <field name="name"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_podiatry_product_tools" model="ir.actions.act_window">
+            <field name="name">Products/Accessories</field>
+            <field name="res_model">product.tools</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_product_tools" parent="menu_product_parent" name="Accessories/Tools" action="action_podiatry_product_tools" sequence="3"/>
+    </data>
+</odoo>

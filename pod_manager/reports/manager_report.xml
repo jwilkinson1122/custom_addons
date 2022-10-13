@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <data>
+        <record id="view_report_product_manager" model="ir.ui.view">
+            <field name="name">report.podiatry.manager.pivot</field>
+            <field name="model">report.podiatry.manager</field>
+            <field name="arch" type="xml">
+                <pivot string="Podiatry Manager Analysis" display_quantity="true" disable_linking="True">
+                    <field name="name" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_podiatry_manager_analysis" model="ir.actions.act_window">
+            <field name="name">Podiatry Manager Analysis</field>
+            <field name="res_model">report.podiatry.manager</field>
+            <field name="view_mode">pivot</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="help">This report allows you to analyse the performance of your Podiatry Manager. </field>
+        </record>
+
+        <menuitem name="Podiatry Manager Analysis" action="action_podiatry_manager_analysis" id="menu_podiatry_manager_analysis" parent="podiatry.menu_podiatry_reporting" sequence="1"/>
+    </data>
+
+</odoo>
