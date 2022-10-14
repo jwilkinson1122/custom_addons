@@ -1,6 +1,6 @@
 {
     "name": "Patients",
-    "version": "15.0.1.0",
+    "version": "16.0.1.0",
     "category": "Health Care/Health Care",
 
     "summary": "podiatry practice, practitioner, patient and prescription information",
@@ -60,8 +60,8 @@
 
     'assets': {
         'web.assets_backend': [
-            'podiatry/static/src/scss/podiatry_practice.scss',
-            'podiatry/static/src/scss/card.scss',
+            # 'podiatry/static/src/scss/podiatry_practice.scss',
+            # 'podiatry/static/src/scss/card.scss',
         ],
     },
     "demo": [],

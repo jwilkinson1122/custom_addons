@@ -25,7 +25,8 @@ class Practice(models.Model):
         string="Parent Practice",
         index=True,
         ondelete='cascade',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', ('company_id', '=', False), ('company_id', ' in ', company_id)]",
+        # domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
     @api.model

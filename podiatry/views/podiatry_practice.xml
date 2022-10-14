@@ -56,7 +56,9 @@
                             <field name="email" widget="email"/>
                             <field name="code"/>
                             <!-- <field name="patient_id" invisible="0"/> -->
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <!-- <field name="company_id" groups="base.group_multi_company"/> -->
+                            <field name="company_id"/>
+
 
                         </group>
                         <!-- Address info -->
@@ -141,7 +143,9 @@
                 <field name="sequence" widget="handle"/>
                 <field name="full_name" string="Practice Name"/>
                 <field name="code" decoration-bf="1"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id"/>
+
+                <!-- <field name="company_id" groups="base.group_multi_company"/> -->
             </tree>
         </field>
     </record>
@@ -231,7 +235,9 @@ Unarchive</t>
 
                 <!-- Searchpanel -->
                 <searchpanel>
-                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                    <field name="company_id" icon="fa fa-building" enable_counters="1"/>
+
+                    <!-- <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/> -->
                     <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
                 </searchpanel>
             </search>
