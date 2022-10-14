@@ -24,6 +24,11 @@ class Practitioner(models.Model):
         inverse_name='practitioner_id',
         string='Practice')
 
+    # practice_ids = fields.One2many(
+    #     comodel_name='podiatry.practice',
+    #     inverse_name='practitioner_id',
+    #     string='Practice')
+
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
         inverse_name='practitioner_id',

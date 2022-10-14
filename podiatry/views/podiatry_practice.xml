@@ -90,7 +90,7 @@
                     <notebook>
 
 
-                        <!-- <page name="patients_list" string="Patients">
+                        <!-- <page name="" string="Patients">
 
                         </page> -->
 
@@ -111,7 +111,7 @@
                         </page>
                         <page name="practice_affiliate_list" string="Affiliates">
                             <group>
-                                <!-- <field name="affiliate_ids"/> -->
+                                <field name="child_ids"/>
                             </group>
                         </page>
                         <!-- <page name="perscriptions_list" string="Prescriptions">

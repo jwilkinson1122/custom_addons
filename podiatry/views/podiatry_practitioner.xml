@@ -45,6 +45,7 @@
                             </h1>
                         </div>
                         <div name="practice_id">
+                            <!-- <label for="practice_id" string="Primary Practice"/> -->
                             <field name="practice_id" placeholder="Practice" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
@@ -70,15 +71,17 @@
                         </group>
                     </group>
                     <notebook>
-                        <!--
-                        Personal Information
-                        -->
+
+                        <page name="practice_information" string="Clinics">
+                            <group>
+                                <field name="other_partner_ids" widget="many2many_tags"/>
+
+                                <!-- <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" /> -->
+
+                            </group>
+                        </page>
+
                         <page name="contact_information" string="Contacts">
-
-                            <!-- <field name="practice_id" string="Practice"/> -->
-
-
-
 
                             <!--
                             Additional Contacts
@@ -215,20 +218,7 @@
                                 </div>
                             </div>
                             <!-- Card -->
-                            <!-- <div class="oe_kanban_details d-flex flex-column justify-content-between">
-                                <div name="top" class="o_kanban_record_top">
-                                    <div name="heading" class="o_kanban_record_headings">
-                                        <strong name="title" class="o_kanban_record_title">
-                                            <field name="name"/>
-                                            <field name="practice_id"/>
-                                        </strong>
-                                        <span name="subtitle" class="o_kanban_record_subtitle o_text_overflow">
-                                            <small t-if="record.identification.raw_value">
-                                                <field name="identification"/>
-                                            </small>
-                                        </span>
-                                    </div>
-                                </div> -->
+
                             <div class="oe_kanban_details d-flex flex-column justify-content-between">
 
                                 <div name="top" class="o_kanban_record_top">
@@ -253,25 +243,6 @@
 
                                 <div name="content"/>
 
-
-                                <!-- <div name="details" class="container-fluid">
-                                    <div name="mobile" class="row">
-                                        <div class="col-1 p-0">
-                                            <i class="fa fa-mobile"/>
-                                        </div>
-                                        <div class="col">
-                                            <field name="mobile"/>
-                                        </div>
-                                    </div>
-                                    <div name="phone" class="row">
-                                        <div class="col-1 p-0">
-                                            <i class="fa fa-phone"/>
-                                        </div>
-                                        <div class="col">
-                                            <field name="phone"/>
-                                        </div>
-                                    </div>
-                                </div> -->
 
                                 <div name="footer" class="o_kanban_record_bottom">
                                     <div name="bottom_left" class="oe_kanban_bottom_left"/>
