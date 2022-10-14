@@ -12,4 +12,4 @@ from . import podiatry_prescription_line
 from . import podiatry_practitioner_history
 from . import podiatry_specialty
 from . import podiatry_contact_mixin
-from . import res_partner
+from . import res_partner, ir_actions
