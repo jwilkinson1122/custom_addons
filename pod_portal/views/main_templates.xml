@@ -1,0 +1,42 @@
+<odoo>
+
+  <template id="item_catalog" name="Item List">
+    <t t-call="web.frontend_layout">
+      <t t-set="title">Item Catalog</t>
+      <div class="oe_structure">
+        <div class="container">
+
+          <h1 class="h1-item-catalog">Item Catalog</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Published</th>
+                <th scope="col">Publisher</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <t t-foreach="items" t-as="item">
+                <tr scope="row">
+                  <td>
+                    <span t-field="item.name" />
+                  </td>
+                  <td>
+                    <span t-field="item.date_published" />
+                  </td>
+                  <td>
+                    <span t-field="item.publisher_id" />
+                  </td>
+                </tr>
+              </t>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </t>
+  </template>
+
+</odoo>

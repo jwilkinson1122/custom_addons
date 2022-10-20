@@ -1,0 +1,18 @@
+<odoo>
+    <record id="action_pod_checkout" model="ir.actions.act_window">
+        <field name="name">Checkouts</field>
+        <field name="res_model">pod.checkout</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+    </record>
+
+    <menuitem id="menu_pod_checkout" name="Checkout" action="action_pod_checkout" parent="pod_app.menu_pod" sequence="40"/>
+
+    <record id="action_pod_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">pod.checkout.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_pod_stage" name="Stages" action="action_pod_stage" parent="pod_app.menu_pod_configuration" sequence="10" />
+
+</odoo>

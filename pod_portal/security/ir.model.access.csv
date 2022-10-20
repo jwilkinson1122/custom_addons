@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_item_portal,Item Portal Access,pod_app.model_pod_item,base.group_portal,1,0,0,0
+access_member_portal,Member Portal Access,pod_member.model_pod_member,base.group_portal,1,0,0,0
+access_stage_portal,Checkout Stage Portal Access,pod_checkout.model_pod_checkout_stage,base.group_portal,1,0,0,0
+access_checkout_portal,Checkout Portal Access,pod_checkout.model_pod_checkout,base.group_portal,1,0,0,0
+access_checkout_line_portal,Checkout Portal Line Access,pod_checkout.model_pod_checkout_line,base.group_portal,1,0,0,0

@@ -79,7 +79,13 @@ class Prescription(models.Model):
         'podiatry.prescription', 'patient_id', string="Prescriptions")
 
     prescription_line_ids = fields.One2many(
-        'podiatry.prescription.line', 'name', 'Prescription Line')
+        'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+
+    # line_ids = fields.One2many(
+    #     "library.checkout.line",
+    #     "checkout_id",
+    #     string="Borrowed Books",
+    # )
 
     def _compute_prescription_count(self):
         for rec in self:

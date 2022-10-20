@@ -1,1 +1,0 @@
-from . import test_partner_contact_company_propagation

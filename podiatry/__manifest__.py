@@ -13,6 +13,8 @@
         "base_setup",
         "resource",
         "mail",
+        "base",
+        # "contacts",
     ],
 
     "data": [
@@ -64,7 +66,7 @@
             'podiatry/static/src/scss/card.scss',
         ],
     },
-    "demo": [],
+    "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],
 
     "installable": True,
     "application": True,
