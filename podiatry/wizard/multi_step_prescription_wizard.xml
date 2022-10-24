@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="multi_step_prescription_wizard_form" model="ir.ui.view">
+        <field name="name">multi.step.prescription.wizard.form</field>
+        <field name="model">multi.step.prescription.wizard.mixin</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="state" invisible="1" />
+                <field name="allow_back" invisible="1" />
+                <footer>
+                    <div name="states_buttons">
+                        <button name="open_next" string="Next" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'final')]}" />
+                        <button name="open_previous" string="Go Back" type="object" class="btn btn-default" attrs="{'invisible': [('allow_back', '=', False)]}" />
+                        <button string="Cancel" class="btn btn-default" special="cancel" />
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- <record id="create_prescription_invoice_wizard_view" model="ir.ui.view">
+        <field name="name">create.prescription.invoice.wizard.view</field>
+        <field name="model">create.prescription.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Create prescription invoices">
+                <separator string="Do you want to create the prescription invoice(s) ?" />
+                <newline />
+                <separator string="                  " colspan="6" />
+                <footer>
+                    <button name="create_prescription_invoice" class="oe_highlight" string="Create Prescription Invoices" type="object" />
+                        or
+                    <button special="cancel" string="Cancel" class="oe_highlight" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="action_create_prescription_invoice1" name="Create Prescription Invoice" res_model="create.prescription.invoice" binding_model="podiatry.prescription" view_mode="form" target="new" /> -->
+
+</odoo>

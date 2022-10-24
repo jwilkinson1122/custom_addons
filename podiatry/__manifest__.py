@@ -56,6 +56,7 @@
         # -------
         # Wizards
         # =======
+        "wizard/multi_step_prescription_wizard.xml",
         "wizard/create_prescription_invoice_wizard.xml",
         "wizard/create_prescription_shipment_wizard.xml",
 

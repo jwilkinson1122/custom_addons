@@ -9,7 +9,7 @@
                 <br/>
                 <br/>
                 <h3 class="text-center mb32">
-                    <strong>PRESCRIPTION REPORT</strong>
+                    <strong>PRESCRIPTION FORM</strong>
                 </h3>
                 <br/>
                 <table class="table table-condensed">
@@ -33,7 +33,6 @@
                             <br/>
                             <span style="font-weight:normal;" t-field="doc.patient_id.id"/>
                             <br/>
-                            <span style="font-weight:normal;" t-field="doc.patient_id.patient_id.email"/>
                         </th>
 
                     </tr>
@@ -94,7 +93,7 @@
                                 </tr>
                                 <tr t-if="test.device_quantity_id">
                                     <td>
-                                        <strong>Common Dosage</strong>
+                                        <strong>Qty</strong>
                                     </td>
                                     <td>
                                         <span t-field="test.device_quantity_id"/>
