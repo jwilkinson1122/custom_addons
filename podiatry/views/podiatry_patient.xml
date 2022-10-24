@@ -74,9 +74,18 @@
                                     <field name="practitioner_id"/>
                                     <field name="practice_id"/>
                                     <field name="identification"/>
+
                                 </group>
                                 <!-- Attributes-->
                                 <group name="attributes" string="Attributes">
+                                    <!-- <div name="birthdate">
+                                        <field name="birthdate" widget="date"/>
+                                        <span name="age" attrs="{'invisible': [('age', '=', False)]}"> ·                                            <field name="age" class="oe_inline"/>
+ old
+                                        </span>
+                                    </div> -->
+
+
                                     <field name="gender" required="1"/>
                                     <field name="diagnosis"/>
                                     <field name="shoe_size_id" options="{'no_open': true}"/>
@@ -146,30 +155,6 @@
                             </group>
                         </page>
 
-                        <!-- Page: Internal -->
-                        <!-- <page name="internal" string="Internal">
-                            <group name="internal">
-
-                                <group name="status" string="Status">
-                                    <field name="partner_id" context="{
-                                        'default_type': 'contact',
-                                        'default_name': name,
-                                        'default_street': street,
-                                        'default_street2': street2,
-                                        'default_city': city,
-                                        'default_state_id': state_id,
-                                        'default_zip': zip,
-                                        'default_country_id': country_id,
-                                        'default_phone': phone,
-                                        'default_mobile': mobile,
-                                        'default_email': email,
- 
-                                    }"/>
-                                    <field name="user_id" string="Related User"/>
-                                    <field name="responsible_id"/>
-                                </group>
-                            </group>
-                        </page> -->
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

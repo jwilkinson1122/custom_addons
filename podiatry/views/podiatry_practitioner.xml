@@ -187,14 +187,12 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div name="kanban_card" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} o_kanban_record_has_image_fill oe_kanban_global_click">
-                            <!-- Image -->
                             <t t-if="record.image_128.raw_value">
                                 <field name="image_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
                             </t>
                             <t t-else="">
                                 <div class="o_kanban_image_fill_left" style="background-image: url('/base/static/img/avatar_grey.png')"/>
                             </t>
-                            <!-- Dropdown -->
                             <div name="dropdown" class="o_dropdown_kanban dropdown">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Options" title="Options">
                                     <span class="fa fa-ellipsis-v"/>
@@ -217,8 +215,6 @@
                                     <ul t-if="widget.editable" class="oe_kanban_colorpicker mt8" data-field="color"/>
                                 </div>
                             </div>
-                            <!-- Card -->
-
                             <div class="oe_kanban_details d-flex flex-column justify-content-between">
 
                                 <div name="top" class="o_kanban_record_top">
@@ -259,6 +255,7 @@
             </kanban>
         </field>
     </record>
+
 
     <!--
     Activity
@@ -371,19 +368,6 @@
     -->
     <menuitem id="menu_podiatry_practitioner_root" name="Contacts" action="action_podiatry_practitioner" parent="menu_root" groups="group_user" sequence="10" />
 
-    <!--
-    Submenu: Contacts / All Contacts
-    -->
-    <!--
-    <menuitem id="menu_podiatry_practitioner" name="All Contacts" action="action_podiatry_practitioner" parent="menu_podiatry_practitioner_root" sequence="20" />
-    -->
-
-    <!--
-    Submenu: Contacts / My Contacts
-    -->
-    <!--
-    <menuitem id="menu_podiatry_practitioner_user" name="My Contacts" action="action_podiatry_practitioner_user" parent="menu_podiatry_practitioner_root" sequence="10" />
-    -->
 
     <!--
         =========
@@ -391,9 +375,6 @@
         =========
     -->
 
-    <!--
-    Pivot
-    -->
     <record id="view_podiatry_practitioner_pivot" model="ir.ui.view">
         <field name="name">podiatry.practitioner.pivot</field>
         <field name="model">podiatry.practitioner</field>

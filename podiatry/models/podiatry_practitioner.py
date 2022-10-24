@@ -3,6 +3,16 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
 
+from . import podiatry_practice
+
+# from lxml import etree
+# added import statement in try-except because when server runs on
+# windows operating system issue arise because this library is not in Windows.
+try:
+    from odoo.tools import image_colorize
+except:
+    image_colorize = False
+
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
@@ -38,6 +48,13 @@ class Practitioner(models.Model):
         comodel_name='podiatry.personal.practitioner.history',
         inverse_name='practitioner_id',
         string='History')
+
+    @api.model
+    def _default_image(self):
+        '''Method to get default Image'''
+        image_path = get_module_resource('hr', 'static/src/img',
+                                         'default_image.png')
+        return base64.b64encode(open(image_path, 'rb').read())
 
     @api.model
     def _get_sequence_code(self):

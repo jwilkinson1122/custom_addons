@@ -7,6 +7,9 @@ class Prescription(models.Model):
     _description = 'Prescription'
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
+
+    # name = fields.Char(string='Prescription', required=True, copy=False, readonly=True,
+    #                    default='Draft Prescription Order')
     # readonly = True
     active = fields.Boolean(default=True)
     color = fields.Integer()
@@ -81,11 +84,8 @@ class Prescription(models.Model):
     prescription_line_ids = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
-    # line_ids = fields.One2many(
-    #     "library.checkout.line",
-    #     "checkout_id",
-    #     string="Borrowed Books",
-    # )
+    # prescription_line_ids = fields.One2many(
+    #     'medical.prescription.line', 'name', 'Prescription Line')
 
     def _compute_prescription_count(self):
         for rec in self:

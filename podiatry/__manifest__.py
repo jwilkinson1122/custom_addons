@@ -14,6 +14,7 @@
         "resource",
         "mail",
         "base",
+        "product",
         # "contacts",
     ],
 
@@ -55,8 +56,8 @@
         # -------
         # Wizards
         # =======
-        # "wizard/create_prescription_invoice_wizard.xml",
-        # "wizard/create_prescription_shipment_wizard.xml",
+        "wizard/create_prescription_invoice_wizard.xml",
+        "wizard/create_prescription_shipment_wizard.xml",
 
     ],
 

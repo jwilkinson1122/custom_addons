@@ -21,7 +21,6 @@ class PrescriptionLine(models.Model):
 
     name = fields.Many2one('podiatry.prescription', 'Prescription ID')
     prescription_id = fields.Many2one("podiatry.prescription", required=True)
-    # book_cover = fields.Binary(related="book_id.image")
     product_id = fields.Many2one('product.product', 'Name')
     price = fields.Float(compute=onchange_product, string='Price', store=True)
     qty_available = fields.Integer(

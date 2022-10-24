@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="time"/>
+                <field name="practice_id"/>
                 <field name="practitioner_id"/>
                 <field name="patient_id"/>
                 <field name="user_id" />
@@ -18,7 +19,7 @@
         </field>
     </record>
     <!-- Kanban View -->
-    <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
+    <!-- <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
         <field name="name">podiatry.prescription.kanban.view</field>
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
@@ -57,7 +58,74 @@
                 </templates>
             </kanban>
         </field>
+    </record> -->
+    <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
+        <field name="name">podiatry.prescription.kanban.view</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" quick_create="false" on_create="quick_create">
+                <field name="color" />
+                <!-- <field name="state" /> -->
+                <!-- <field name="currency_id" invisible="1" /> -->
+                <field name="patient_id"/>
+                <field name="practice_id"/>
+                <field name="practitioner_id"/>
+                <field name="practitioner_phone" invisible="1" />
+                <field name="practitioner_email" invisible="1" />
+                <field name="state"/>
+                <field name="prescription_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v" />
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable">
+                                        <a role="menuitem" type="edit" class="dropdown-item">Edit...</a>
+                                    </t>
+                                    <t t-if="widget.deletable">
+                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    </t>
+                                    <ul class="oe_kanban_colorpicker" data-field="color" />
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong>
+                                        <field name="name" />
+                                    </strong>
+                                </div>
+                                <div class="text-muted">
+                                    <a>Practice :</a>
+                                    <field name="practice_id"/>
+                                    <!-- <div style="float: right;">
+                                        <a>ID :</a>
+                                        <field name="chair_id" />
+                                    </div> -->
+                                </div>
+                                <div class="text-muted">
+                                    <a>Practitioner :</a>
+                                    <field name="practitioner_id"/>
+                                </div>
+                                <div class="text-muted">
+                                    <a>Patient :</a>
+                                    <field name="patient_id"/>
+                                </div>
+                                <div class="text-muted">
+                                    <a>Date :</a>
+                                    <field name="prescription_date" />
+                                </div>
+                            </div>
+                            <div class="oe_clear" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
     </record>
+
     <!-- Calendar View -->
     <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
         <field name="name">Practitioner Prescriptions</field>
@@ -88,6 +156,7 @@
                     <group string="Patient and Doctor Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                            <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="prescription_date" required="1" />
                         </group>
                         <group>
@@ -96,12 +165,7 @@
                             <field name="practitioner_id" required="1" />
                         </group>
                     </group>
-                    <!-- <group string="Prescription Detail">
-                        <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
-                    </group>
-                    <group string="Notes">
-                        <field name="notes" nolabel="1" />
-                    </group> -->
+
                     <notebook>
                         <page string="Prescription Details">
                             <group>
@@ -110,21 +174,6 @@
                             <group string="Rx Lines">
                                 <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
                             </group>
-                            <group>
-                                <!-- <group>
-                                    <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
-                                </group> -->
-                                <!-- <group string="Prescription Detail">
-                                    <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
-                                </group> -->
-                                <!-- <group string="Notes">
-                                    <field name="notes" nolabel="1" />
-                                </group> -->
-
-                            </group>
-
-
-
                         </page>
                     </notebook>
 
@@ -245,9 +294,8 @@
     menu: Prescriptons
     -->
     <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription_dashboard" parent="menu_root" sequence="20" />
-    <!--
-    Menu: Patients
-    -->
-    <!-- <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="10" /> -->
+
+
+
 
 </odoo>
