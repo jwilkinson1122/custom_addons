@@ -14,7 +14,7 @@
         "resource",
         "mail",
         "base",
-        "product",
+        # "product",
         # "contacts",
     ],
 
@@ -29,6 +29,11 @@
         # ========
         "security/res_groups_data.xml",
         "security/ir_model_access_data.xml",
+        # -------
+        # Wizards
+        # =======
+        "wizard/create_prescription_invoice_wizard.xml",
+        "wizard/create_prescription_shipment_wizard.xml",
         # -----
         # Views
         # =====
@@ -53,12 +58,6 @@
         "report/report_view.xml",
         "report/patient_card_report.xml",
         "report/prescription_demo_report.xml",
-        # -------
-        # Wizards
-        # =======
-        "wizard/multi_step_prescription_wizard.xml",
-        "wizard/create_prescription_invoice_wizard.xml",
-        "wizard/create_prescription_shipment_wizard.xml",
 
     ],
 

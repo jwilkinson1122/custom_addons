@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import multi_step_prescription_wizard
 from . import create_prescription_invoice_wizard
 from . import create_prescription_shipment_wizard
 
