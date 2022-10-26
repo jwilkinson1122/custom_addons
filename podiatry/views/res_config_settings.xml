@@ -29,7 +29,7 @@
                         </div>
 
                         <!-- podiatry_encounter -->
-                        <div class="col-12 col-lg-6 o_setting_box" id="patient_encounter_setting_box">
+                        <!-- <div class="col-12 col-lg-6 o_setting_box" id="patient_encounter_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_podiatry_encounter"/>
                             </div>
@@ -39,7 +39,7 @@
                                         Capture and organize patient encounters
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- podiatry_patient_tags -->
                         <div class="col-12 col-lg-6 o_setting_box" id="patient_tags_setting_box">
