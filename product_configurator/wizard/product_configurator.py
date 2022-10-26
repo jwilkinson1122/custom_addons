@@ -1,14 +1,22 @@
+import ast
+import logging
+import time
 from lxml import etree
+from lxml.builder import E
+from psycopg2 import IntegrityError
+
+from functools import partial
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError,  UserError, ValidationError
+from odoo.tests import common
+from odoo.tools import mute_logger, view_validation
 
 from odoo.addons.base.models.ir_model import FIELD_TYPES
 from odoo.addons.base.models.ir_ui_view import (
-    transfer_field_to_modifiers,
-    transfer_modifiers_to_node,
-    transfer_node_to_modifiers,
-)
+    transfer_field_to_modifiers, transfer_modifiers_to_node, transfer_node_to_modifiers, simplify_modifiers)
+
+_logger = logging.getLogger(__name__)
 
 
 class FreeSelection(fields.Selection):
@@ -64,7 +72,8 @@ class ProductConfigurator(models.TransientModel):
     def _compute_cfg_image(self):
         # TODO: Update when allowing custom values to influence image
         for configurator in self:
-            cfg_sessions = configurator.config_session_id.with_context(bin_size=False)
+            cfg_sessions = configurator.config_session_id.with_context(
+                bin_size=False)
             image = cfg_sessions.get_config_image()
             configurator.product_img = image
 
@@ -96,7 +105,8 @@ class ProductConfigurator(models.TransientModel):
         open_lines = wiz.config_session_id.get_open_step_lines()
 
         if open_lines:
-            open_steps = open_lines.mapped(lambda x: (str(x.id), x.config_step_id.name))
+            open_steps = open_lines.mapped(
+                lambda x: (str(x.id), x.config_step_id.name))
             steps = open_steps if wiz.product_id else steps + open_steps
         else:
             steps.append(("configure", "Configure"))
@@ -107,7 +117,8 @@ class ProductConfigurator(models.TransientModel):
         """set the preset_id if exist in session"""
         template = self.product_tmpl_id
 
-        self.config_step_ids = template.config_step_line_ids.mapped("config_step_id")
+        self.config_step_ids = template.config_step_line_ids.mapped(
+            "config_step_id")
 
         # Set product preset if exist in session
         if template:
@@ -231,11 +242,13 @@ class ProductConfigurator(models.TransientModel):
 
         final_cfg_val_ids = list(dynamic_fields.values())
 
-        vals.update(self.get_onchange_vals(final_cfg_val_ids, config_session_id))
+        vals.update(self.get_onchange_vals(
+            final_cfg_val_ids, config_session_id))
         # To solve the Multi selection problem removing extra []
         if "value_ids" in vals:
             val_ids = vals["value_ids"][0]
-            vals["value_ids"] = [[val_ids[0], val_ids[1], tools.flatten(val_ids[2])]]
+            vals["value_ids"] = [
+                [val_ids[0], val_ids[1], tools.flatten(val_ids[2])]]
 
         return vals
 
@@ -293,14 +306,16 @@ class ProductConfigurator(models.TransientModel):
         except Exception:
             cfg_step = self.env["product.config.step.line"]
 
-        dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
+        dynamic_fields = {k: v for k,
+                          v in values.items() if k.startswith(field_prefix)}
 
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
             attr_id = int(k.split(field_prefix)[1])
             # if isinstance(v, list):
             #    dynamic_fields[k] = v[0][2]
-            line_attributes = cfg_step.attribute_line_ids.mapped("attribute_id")
+            line_attributes = cfg_step.attribute_line_ids.mapped(
+                "attribute_id")
             if not cfg_step or attr_id in line_attributes.ids:
                 view_attribute_ids.add(attr_id)
             else:
@@ -469,7 +484,8 @@ class ProductConfigurator(models.TransientModel):
             attribute = line.attribute_id
             value_ids = line.value_ids.ids
 
-            value_ids = wiz.config_session_id.values_available(check_val_ids=value_ids)
+            value_ids = wiz.config_session_id.values_available(
+                check_val_ids=value_ids)
 
             # If attribute lines allows custom values add the
             # generic "Custom" attribute.value to the list of options
@@ -649,7 +665,8 @@ class ProductConfigurator(models.TransientModel):
                     if attr_field not in attr_depends:
                         attr_depends[attr_field] = set()
                     if domain_line.condition == "in":
-                        attr_depends[attr_field] |= set(domain_line.value_ids.ids)
+                        attr_depends[attr_field] |= set(
+                            domain_line.value_ids.ids)
                     elif domain_line.condition == "not in":
                         val_ids = attr_lines.filtered(
                             lambda l: l.attribute_id.id == attr_id
@@ -666,7 +683,8 @@ class ProductConfigurator(models.TransientModel):
                         )
 
                     if attr_line.required and not attr_line.custom:
-                        attrs["required"].append((dependee_field, "in", list(val_ids)))
+                        attrs["required"].append(
+                            (dependee_field, "in", list(val_ids)))
         return attrs, field_name, custom_field, config_steps, cfg_step_ids
 
     @api.model
@@ -682,10 +700,13 @@ class ProductConfigurator(models.TransientModel):
             # Search for view container hook and add dynamic view and fields
             xml_view = etree.fromstring(res["arch"])
             xml_static_form = xml_view.xpath("//group[@name='static_form']")[0]
-            xml_dynamic_form = etree.Element("group", colspan="2", name="dynamic_form")
+            xml_dynamic_form = etree.Element(
+                "group", colspan="2", name="dynamic_form")
             xml_parent = xml_static_form.getparent()
-            xml_parent.insert(xml_parent.index(xml_static_form) + 1, xml_dynamic_form)
-            xml_dynamic_form = xml_view.xpath("//group[@name='dynamic_form']")[0]
+            xml_parent.insert(xml_parent.index(
+                xml_static_form) + 1, xml_dynamic_form)
+            xml_dynamic_form = xml_view.xpath(
+                "//group[@name='dynamic_form']")[0]
         except Exception:
             raise UserError(
                 _("There was a problem rendering the view " "(dynamic_form not found)")
@@ -811,7 +832,8 @@ class ProductConfigurator(models.TransientModel):
         custom_field_prefix = self._prefixes.get("custom_field_prefix")
 
         attr_vals = [f for f in fields if f.startswith(field_prefix)]
-        custom_attr_vals = [f for f in fields if f.startswith(custom_field_prefix)]
+        custom_attr_vals = [
+            f for f in fields if f.startswith(custom_field_prefix)]
 
         dynamic_fields = attr_vals + custom_attr_vals
         fields = self._remove_dynamic_fields(fields)
@@ -987,7 +1009,8 @@ class ProductConfigurator(models.TransientModel):
             "name": "Configure Product",
             "views": [
                 [
-                    self.env.ref("product_configurator.product_configurator_form").id,
+                    self.env.ref(
+                        "product_configurator.product_configurator_form").id,
                     "form",
                 ]
             ],
