@@ -34,16 +34,19 @@
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
                     <!-- Title -->
-                    <div name="title" class="oe_title">
 
-                        <!-- <h1>
-                            <field name="number" readonly="1"/>
-                        </h1> -->
+                    <div name="title" class="oe_title">
+                        <div name="reference">
+                            <h1>
+                                <field name="reference"/>
+                            </h1>
+                        </div>
                         <div name="name">
                             <h1>
                                 <field name="name" required="1" placeholder="Contact Name"/>
                             </h1>
                         </div>
+
                         <div name="practice_id">
                             <!-- <label for="practice_id" string="Primary Practice"/> -->
                             <field name="practice_id" placeholder="Practice" readonly="not context.get('can_edit_parent_id', True)"/>
@@ -72,17 +75,7 @@
                     </group>
                     <notebook>
 
-                        <page name="practice_information" string="Clinics">
-                            <group>
-                                <field name="other_partner_ids" widget="many2many_tags"/>
-
-                                <!-- <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" /> -->
-
-                            </group>
-                        </page>
-
                         <page name="contact_information" string="Contacts">
-
                             <!--
                             Additional Contacts
                             -->
@@ -160,6 +153,7 @@
         <field name="arch" type="xml">
             <tree string="Contacts" decoration-muted="not active">
                 <field name="name" decoration-bf="1"/>
+                <field name="reference" optional="hide"/>
                 <field name="identification"/>
                 <field name="birthdate" widget="date" optional="hide"/>
                 <field name="age" optional="hide"/>

@@ -15,6 +15,7 @@
         <record id="sequence_podiatry_practice" model="ir.sequence">
             <field name="name">Practice ID</field>
             <field name="code">podiatry.practice</field>
+            <field name="prefix">ID</field>
             <field name="padding">6</field>
         </record>
 

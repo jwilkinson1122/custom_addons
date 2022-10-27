@@ -34,11 +34,6 @@ class Practitioner(models.Model):
         inverse_name='practitioner_id',
         string='Practice')
 
-    # practice_ids = fields.One2many(
-    #     comodel_name='podiatry.practice',
-    #     inverse_name='practitioner_id',
-    #     string='Practice')
-
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
         inverse_name='practitioner_id',
@@ -261,16 +256,6 @@ class Practitioner(models.Model):
             practitioner.number = self.env['ir.sequence'].next_by_code(
                 sequence)
         return
-
-    # def _get_internal_identifier(self, vals):
-    #     return self.env["ir.sequence"].next_by_code("podiatry.patient") or "PID"
-
-    # @api.model
-    # def create(self, values):
-    #     practitioner = super(Practitioner, self).create(values)
-    #     practitioner._add_followers()
-    #     practitioner._set_number()
-    #     return practitioner
 
     @api.model
     def create(self, vals):
