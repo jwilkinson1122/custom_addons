@@ -21,19 +21,25 @@ class PrescriptionLine(models.Model):
 
     name = fields.Many2one('podiatry.prescription', 'Prescription ID')
     prescription_id = fields.Many2one("podiatry.prescription", required=True)
-
+    patient_id = fields.Many2one("podiatry.patient", required=True)
     product_id = fields.Many2one('product.product', 'Name')
+
+    # right_photo = fields.Image("Right Photo")
+    # left_photo = fields.Image("Left Photo")
+    # left_obj_model = fields.Binary("Left Obj")
+    # left_obj_file_name = fields.Char(string="Left Obj File Name")
+    # right_obj_model = fields.Binary("Right Obj")
+    # right_obj_file_name = fields.Char(string="Right Obj File Name")
+    right_photo = fields.Binary(related="patient_id.right_photo")
+    left_photo = fields.Binary(related="patient_id.left_photo")
+
     price = fields.Float(compute=onchange_product, string='Price', store=True)
     qty_available = fields.Integer(
         compute=onchange_product, string='Quantity Available', store=True)
     pathologies = fields.Text('Pathologies')
     pathology = fields.Char('Pathology')
-    laterality = fields.Selection([('left', 'Left Only'), ('right', 'Right Only'), ('bilateral', 'Bilateral')], help=""""
-    ** Foot Side Options **
-LEFT ONLY :Configuration options for Left foot only.
-RIGHT ONLY :Configuration options for Right foot only. 
-BILATERAL :Configuration options for bilateral left and right foot. 
- """)
+    laterality = fields.Selection(
+        [('left', 'Left Only'), ('right', 'Right Only'), ('bilateral', 'Bilateral')], help="""" """)
     notes = fields.Text('Extra Info')
     allow_substitution = fields.Boolean('Allow Substitution')
     form = fields.Char('Form')

@@ -74,39 +74,25 @@
                         </group>
                     </group>
                     <notebook>
-
-                        <page name="contact_information" string="Contacts">
-                            <!--
-                            Additional Contacts
-                            -->
-                            <separator name="additional_contacts" string="Additional Contacts"/>
-                            <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('other_partner_ids', '!=', ())]}">
-                                No contacts
+                        <page name="patients_list" string="Patient List">
+                            <separator name="patients" string="Patients"/>
+                            <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_id', '!=', ())]}">
+                                No Patients
                             </div>
-                            <field name="other_partner_ids" mode="kanban" context="{'default_type': 'contact'}"/>
+                            <field name="patient_id" mode="kanban" context="{'default_type': 'contact'}"/>
                         </page>
-
-                        <page name="patients_list" string="Patients">
-                            <group>
-                                <field name="patient_id"/>
-                            </group>
+                        <page name="perscriptions_list" string="Prescription List">
+                            <separator name="prescriptions" string="Prescriptions"/>
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_id', '!=', ())]}">
+                                No Prescriptions
+                            </div>
+                            <field name="practitioner_prescription_id" mode="kanban"/>
                         </page>
-
-                        <page name="perscriptions_list" string="Prescriptions">
-                            <group>
-                                <field name="practitioner_prescription_id"/>
-                            </group>
-                        </page>
-                        <page string="History">
-                        </page>
-                        <!--
-                        Page: Notes
-                        -->
                         <page name="notes" string="Notes">
-                            <group name="notes" string="Notes" colspan="4">
-                                <field name="notes" nolabel="1" placeholder="Start typing..."/>
-                            </group>
+                            <separator name="notes" string="Notes"/>
+                            <field name="notes" nolabel="1" placeholder="Start typing..."/>
                         </page>
+
                         <!--
                         Page: Internal
                         -->
@@ -212,14 +198,14 @@
                             <div class="oe_kanban_details d-flex flex-column justify-content-between">
 
                                 <div name="top" class="o_kanban_record_top">
+
                                     <div name="heading" class="o_kanban_record_headings">
                                         <strong name="title" class="o_kanban_record_title">
-
-                                            <li>
-                                                ID: <field name="reference"/>
+                                            <li style="font-size:14px; font-weight:bold;">
+                                                Name: <field name="name"/>
                                             </li>
                                             <li>
-                                                Name: <field name="name"/>
+                                                ID: <field name="reference"/>
                                             </li>
                                             <li>
                                                 Practice: <field name="practice_id"/>
@@ -230,12 +216,13 @@
                                         </strong>
                                     </div>
                                 </div>
-
                                 <div name="content"/>
 
 
                                 <div name="footer" class="o_kanban_record_bottom">
-                                    <div name="bottom_left" class="oe_kanban_bottom_left"/>
+                                    <div name="bottom_left" class="oe_kanban_bottom_left">
+                                        <!-- Prescriptions: <field name="prescription_count"/> -->
+                                    </div>
                                     <div name="bottom_right" class="oe_kanban_bottom_right">
                                         <span class="ml4">
                                             <field name="activity_ids" widget="kanban_activity"/>

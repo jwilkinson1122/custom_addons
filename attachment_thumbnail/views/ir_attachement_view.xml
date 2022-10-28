@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_acespritech_document_file_kanban">
+            <field name="name">ir.attachment kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+            <field name="arch" type="xml">
+                <div class="o_kanban_image" position="replace">
+                    <div class="o_kanban_image" style="width: 200px !important;">
+                        <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                            <div class="o_kanban_image_wrapper" style="height: 200px !important;overflow: auto;">
+                                <t t-set="webpdf" t-value="new RegExp('application/pdf').test(record.mimetype.value)"/>
+                                <t t-set="webimage"
+                                   t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                <div t-if="record.type.raw_value == 'url'"
+                                     class="o_url_image text-muted"/>
+                                <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}"
+                                     style="width: 200px !important;height: 200px !important;" width="200" height="200"
+                                     alt="Document" class="o_attachment_image"/>
+                                <field t-elif="webpdf" name="datas" widget="pdf_viewer"
+                                       style="width: 200px !important;height: 200px !important;overflow: auto;"
+                                       class="popup"/>
+                                <div t-else="!webimage" class="o_image o_image_thumbnail"
+                                     t-att-data-mimetype="record.mimetype.value"/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="o_kanban_record_title" position="replace">
+                    <div t-att-title="record.name.raw_value" class="o_kanban_record_title" style="color: inherit;">
+                        <t t-set="webpdf" t-value="new RegExp('application/pdf').test(record.mimetype.value)"/>
+                        <t t-if="!webpdf">
+                            <field name="name" class="o_text_overflow"/>
+                        </t>
+                        <t t-elif="webpdf">
+                            <a t-attf-href="javascript:void(0);"
+                               t-attf-onclick="window.open('/web/content/#{record.id.value}');" class="popup"
+                               style="color: inherit !important;">
+                                <field name="name" class="o_text_overflow"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

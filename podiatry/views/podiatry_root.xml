@@ -22,7 +22,6 @@
 
     <menuitem id="menu_configuration_practitioner" name="Practitioner" parent="menu_configuration" groups="group_manager" sequence="90" />
 
-
     <!--
     Menu: Settings / Patient
     -->
@@ -34,10 +33,15 @@
     -->
     <menuitem id="menu_configuration_product" name="Product" parent="menu_configuration" groups="group_manager" sequence="100" />
 
+    <!--
+    Menu: Settings / Products
+    -->
+    <menuitem id="menu_configuration_stages" name="Stages" parent="menu_configuration" groups="group_manager" sequence="105" />
+
 
     <!--
     Menu: Settings / Other
     -->
-    <menuitem id="menu_configuration_other" name="Other" parent="menu_configuration" groups="group_manager" sequence="105" />
+    <menuitem id="menu_configuration_other" name="Other" parent="menu_configuration" groups="group_manager" sequence="110" />
 
 </odoo>

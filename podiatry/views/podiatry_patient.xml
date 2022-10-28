@@ -12,9 +12,10 @@
                 <field name="reference"/>
                 <field name="identification" optional="hide"/>
                 <field name="diagnosis" optional="show"/>
-                <field name="diagnosis_id" optional="hide"/>
-                <field name="user_id" widget="many2one_avatar" optional="show"/>
+                <field name="diagnosis_id" invisible="1"/>
+                <field name="user_id" widget="many2one_avatar" invisible="1"/>
                 <field name="active" invisible="1"/>
+                <field name="prescription_count"/>
             </tree>
         </field>
     </record>
@@ -78,14 +79,6 @@
                                 </group>
                                 <!-- Attributes-->
                                 <group name="attributes" string="Attributes">
-                                    <!-- <div name="birthdate">
-                                        <field name="birthdate" widget="date"/>
-                                        <span name="age" attrs="{'invisible': [('age', '=', False)]}"> ·                                            <field name="age" class="oe_inline"/>
- old
-                                        </span>
-                                    </div> -->
-
-
                                     <field name="gender" required="1"/>
                                     <field name="diagnosis"/>
                                     <field name="shoe_size_id" options="{'no_open': true}"/>
@@ -118,21 +111,28 @@
                             </group>
 
                             <!-- Additional Contacts -->
-                            <separator name="additional_contacts" string="Additional Contacts"/>
+                            <!-- <separator name="additional_contacts" string="Additional Contacts"/>
                             <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('other_partner_ids', '!=', ())]}">
                                 No contacts
                             </div>
-                            <field name="other_partner_ids" mode="kanban" context="{'default_type': 'contact'}"/>
+                            <field name="other_partner_ids" mode="kanban" context="{'default_type': 'contact'}"/> -->
                         </page>
 
-                        <page name="patient_images" string="Scans / Images">
+                        <!-- <page string="Prescription Details">
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                                </group>
+                                <group string="Rx Lines">
+                                    <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
+                                </group>
+                            </page>
+                     -->
+                        <!-- <page name="patient_images" string="Attachments">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
-                                    <!--                                    <field widget="image" name="left_photo" string="Left Image"/>-->
                                     <field widget="image" options='{"size": [0, 150]}' name="left_photo" string="Left Image"/>
                                 </group>
                                 <group name="photo_group_tlOo2_right">
-                                    <!--                                    <field widget="image" name="right_photo" string="Right Image"/>-->
                                     <field widget="image" options='{"size": [0, 150]}' name="right_photo" string="Right Image"/>
                                 </group>
                             </group>
@@ -146,7 +146,7 @@
                                     <field invisible="1" name="right_obj_file_name"/>
                                 </group>
                             </group>
-                        </page>
+                        </page> -->
 
                         <!-- Prescriptions -->
                         <page name="perscriptions_list" string="Prescriptions">

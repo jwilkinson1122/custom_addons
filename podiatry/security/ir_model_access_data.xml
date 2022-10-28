@@ -223,6 +223,42 @@
             <field name="perm_unlink" eval="0"/>
         </record>
 
+        <!--
+        podiatry.prescription.stage
+        -->
+        <record id="access_podiatry_prescription_stage_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.stage.group.manager</field>
+            <field name="model_id" ref="model_podiatry_prescription_stage"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_prescription_stage_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.stage.group.user</field>
+            <field name="model_id" ref="model_podiatry_prescription_stage"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        'podiatry.prescription.massmessage'
+        -->
+
+        <record id="access_podiatry_prescription_massmessage_user" model="ir.model.access">
+            <field name="name">access.podiatry.prescription.massmessage.group.user</field>
+            <field name="model_id" ref="model_podiatry_prescription_massmessage"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
 
         <!--
         create.prescription.invoice

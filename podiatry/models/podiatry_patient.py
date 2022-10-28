@@ -161,6 +161,10 @@ class Patient(models.Model):
 
     other_shoe_type = fields.Char('Other Shoe Type')
 
+    attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
+                                      'manager_id', 'attachment_id', string="Attachments",
+                                      help="Patient Image / File Attachments")
+
     right_photo = fields.Image("Right Photo")
     left_photo = fields.Image("Left Photo")
     left_obj_model = fields.Binary("Left Obj")

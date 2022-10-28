@@ -1,16 +1,36 @@
-from odoo import api, fields, models, _
+from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import ValidationError
 
 
 class Prescription(models.Model):
     _name = 'podiatry.prescription'
-    _description = 'Prescription'
+    _description = 'Prescription Request'
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    @api.depends('patient_id')
+    def _compute_request_date_onchange(self):
+        today_date = fields.Date.today()
+        if self.request_date != today_date:
+            self.request_date = today_date
+            return {
+                "warning": {
+                    "title": "Changed Request Date",
+                    "message": "Request date changed to today!",
+                }
+            }
+
+    @api.model
+    def _default_stage(self):
+        Stage = self.env["podiatry.prescription.stage"]
+        return Stage.search([("state", "=", "new")], limit=1)
+
+    @api.model
+    def _group_expand_stage_id(self, stages, domain, order):
+        return stages.search([], order=order)
+
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
 
-    # name = fields.Char(string='Prescription', required=True, copy=False, readonly=True,
-    #                    default='Draft Prescription Order')
-    # readonly = True
     active = fields.Boolean(default=True)
     color = fields.Integer()
     date = fields.Date()
@@ -48,9 +68,6 @@ class Prescription(models.Model):
         comodel_name='podiatry.patient.diagnosis',
         string='diagnosis')
 
-    prescription_date = fields.Datetime(
-        'Prescription Date', default=fields.Datetime.now)
-
     user_id = fields.Many2one(
         'res.users', 'Login User', readonly=True, default=lambda self: self.env.user)
 
@@ -65,17 +82,6 @@ class Prescription(models.Model):
 
     inv_id = fields.Many2one('account.invoice', 'Invoice')
 
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
-                              ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
-                             string="Status", tracking=True)
-
-    prescription_date = fields.Date(string="Date", tracking=True)
-
-    completed_date = fields.Datetime(string="Completed Date")
-
-    prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count')
-
     prescription = fields.Text(string="Prescription")
 
     prescription_ids = fields.One2many(
@@ -84,14 +90,85 @@ class Prescription(models.Model):
     prescription_line_ids = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
-    # prescription_line_ids = fields.One2many(
-    #     'medical.prescription.line', 'name', 'Prescription Line')
+    # state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
+    #                           ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
+    #                          string="Status", tracking=True)
+
+    completed_date = fields.Datetime(string="Completed Date")
+
+    request_date = fields.Date(
+        default=lambda s: fields.Date.today(),
+        compute="_compute_request_date_onchange",
+        store=True,
+        readonly=False,
+    )
+
+    stage_id = fields.Many2one(
+        "podiatry.prescription.stage",
+        default=_default_stage,
+        copy=False,
+        group_expand="_group_expand_stage_id")
+
+    state = fields.Selection(related="stage_id.state")
+
+    kanban_state = fields.Selection(
+        [("normal", "In Progress"),
+         ("blocked", "Blocked"),
+         ("done", "Ready for next stage")],
+        "Kanban State",
+        default="normal")
+
+    color = fields.Integer()
+
+    priority = fields.Selection(
+        [("0", "High"),
+         ("1", "Very High"),
+         ("2", "Critical")],
+        default="0")
+
+    prescription_date = fields.Date(readonly=True)
+
+    close_date = fields.Date(readonly=True)
+
+    prescription_count = fields.Integer(
+        string='Prescription Count', compute='_compute_prescription_count')
+
+    def _compute_prescription_count_DISABLED(self):
+        "Naive version, not performance optimal"
+        for prescription in self:
+            domain = [
+                ("patient_id", "=", prescription.patient_id.id),
+                ("state", "not in", ["done", "cancel"]),
+            ]
+            prescription.prescription_count = self.search_count(domain)
 
     def _compute_prescription_count(self):
         for rec in self:
             prescription_count = self.env['podiatry.prescription'].search_count(
-                [('patient_id', '=', rec.id)])
+                [('patient_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
             rec.prescription_count = prescription_count
+
+    # def _compute_prescription_count(self):
+    #     "Performance optimized, to run a single database query"
+    #     patients = self.mapped("patient_id")
+    #     domain = [
+    #         ("patient_id", "in", patients.ids),
+    #         ("state", "not in", ["done", "cancel"]),
+    #     ]
+    #     raw = self.read_group(domain, ["id:count"], ["patient_id"])
+    #     data = {x["patient_id"][0]: x["patient_id_count"] for x in raw}
+    #     for prescription in self:
+    #         prescription.prescription_count = data.get(
+    #             prescription.patient.id, 0)
+
+    num_prescriptions = fields.Integer(
+        compute="_compute_num_prescriptions", store=True)
+
+    @api.depends("prescription_line_ids")
+    def _compute_num_prescriptions(self):
+        for prescription in self:
+            prescription.num_prescriptions = len(
+                prescription.prescription_line_ids)
 
     invoice_done = fields.Boolean('Invoice Done')
 
@@ -119,14 +196,52 @@ class Prescription(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription') or _('New')
         res = super(Prescription, self).create(vals)
+        if res.stage_id.state in ("open", "close"):
+            raise exceptions.UserError(
+                "State not allowed for new prescriptions."
+            )
         return res
+
+    def write(self, vals):
+        # reset kanban state when changing stage
+        if "stage_id" in vals and "kanban_state" not in vals:
+            vals["kanban_state"] = "normal"
+        # Code before write: `self` has the old values
+        old_state = self.stage_id.state
+        super().write(vals)
+        # Code after write: can use `self` with the updated values
+        new_state = self.stage_id.state
+        if not self.env.context.get("_prescription_write"):
+            if new_state != old_state and new_state == "open":
+                self.with_context(_prescription_write=True).write(
+                    {"prescription_date": fields.Date.today()})
+            if new_state != old_state and new_state == "done":
+                self.with_context(_prescription_write=True).write(
+                    {"close_date": fields.Date.today()})
+        return True
 
     def prescription_report(self):
         return self.env.ref('podiatry.report_print_prescription').report_action(self)
 
-    # @api.onchange('patient_id', 'practitioner_id', 'date')
-    # def _onchange_name(self):
-    #     self.name = f'{self.patient_id.name} | {self.practitioner_id.name} ({self.date})'
+        # Replaced by _compute_request_date_onchange
+    # @api.onchange('patient_id')
+    # def onchange_patient_id(self):
+    #    today_date = fields.Date.today()
+    #    if self.request_date != today_date:
+    #        self.request_date = today_date
+    #        return {
+    #            'warning': {
+    #                'title': 'Changed Request Date',
+    #                'message': 'Request date changed to today!',
+    #            }
+    #        }
+
+    def button_done(self):
+        Stage = self.env["podiatry.prescription.stage"]
+        done_stage = Stage.search([("state", "=", "done")], limit=1)
+        for prescription in self:
+            prescription.stage_id = done_stage
+        return True
 
     @api.onchange('patient_id')
     def onchange_patient_id(self):
@@ -138,13 +253,6 @@ class Prescription(models.Model):
         else:
             self.gender = ''
             self.notes = ''
-    # @api.onchange('patient_id')
-    # def _change_prescription_notes(self):
-    #     if self.patient_id:
-    #         if not self.notes:
-    #             self.notes = "New prescription"
-    #     else:
-    #         self.notes = ""
 
     def unlink(self):
         if self.state == 'done':
@@ -161,13 +269,3 @@ class Prescription(models.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-# for device record in patient prescription
-# class PrescriptionDevice(models.Model):
-#     _name = "podiatry.prescription.device"
-#     _description = "Prescription Device"
-
-#     name = fields.Char(string="Device", required=True)
-#     quantity = fields.Integer(string="Quantity")
-#     prescription_device_id = fields.Many2one(
-#         "podiatry.prescription", string="Prescription device")

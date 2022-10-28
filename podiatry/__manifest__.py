@@ -24,6 +24,7 @@
         # ====
         "data/ir_sequence_data.xml",
         "data/ir_module_category_data.xml",
+        "data/stage_data.xml",
         # --------
         # Security
         # ========
@@ -34,6 +35,7 @@
         # =======
         "wizard/create_prescription_invoice_wizard.xml",
         "wizard/create_prescription_shipment_wizard.xml",
+        "wizard/prescription_mass_message_wizard_view.xml",
         # -----
         # Views
         # =====
