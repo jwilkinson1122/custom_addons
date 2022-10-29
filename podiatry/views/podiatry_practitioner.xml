@@ -81,7 +81,7 @@
                             </div>
                             <field name="patient_id" mode="kanban" context="{'default_type': 'contact'}"/>
                         </page>
-                        <page name="perscriptions_list" string="Prescription List">
+                        <page name="prescriptions_list" string="Prescription List">
                             <separator name="prescriptions" string="Prescriptions"/>
                             <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_id', '!=', ())]}">
                                 No Prescriptions

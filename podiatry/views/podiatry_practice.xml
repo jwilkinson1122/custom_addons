@@ -114,7 +114,7 @@
                                 <field name="child_ids"/>
                             </group>
                         </page>
-                        <!-- <page name="perscriptions_list" string="Prescriptions">
+                        <!-- <page name="prescriptions_list" string="Prescriptions">
                             <group>
                                 <field name="practitioner_prescription_id"/>
                             </group>

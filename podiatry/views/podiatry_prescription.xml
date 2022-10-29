@@ -165,7 +165,9 @@
             -->
                                     <div t-att-class="record.priority.raw_value &lt; '2'
               ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
-                                        <field name="request_date" string="Date:"/>
+                                        <!-- <field name="request_date" /> -->
+                                        <field name="request_date" invisible="1"/>
+
                                     </div>
                                     <div>
                                         <t t-out="'Requested by ' + record.request_date.value" />
