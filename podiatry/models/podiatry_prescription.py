@@ -68,6 +68,8 @@ class Prescription(models.Model):
 
     description = fields.Text(string='Description')
 
+    image = fields.Binary("Foot Image")
+
     diagnosis_id = fields.Many2one(
         comodel_name='podiatry.patient.diagnosis',
         string='diagnosis')
@@ -171,29 +173,29 @@ class Prescription(models.Model):
         "Naive version, not performance optimal"
         for prescription in self:
             domain = [
-                ("patient_id", "=", prescription.patient_id.id),
+                ("practitioner_id", "=", prescription.practitioner_id.id),
                 ("state", "not in", ["done", "cancel"]),
             ]
             prescription.prescription_count = self.search_count(domain)
 
-    # def _compute_prescription_count(self):
-    #     for rec in self:
-    #         prescription_count = self.env['podiatry.prescription'].search_count(
-    #             [('patient_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
-    #         rec.prescription_count = prescription_count
-
     def _compute_prescription_count(self):
-        "Performance optimized, to run a single database query"
-        practitioners = self.mapped("practitioner_id")
-        domain = [
-            ("practitioner_id", "in", practitioners.ids),
-            ("state", "not in", ["done", "cancel"]),
-        ]
-        raw = self.read_group(domain, ["id:count"], ["practitioner_id"])
-        data = {x["practitioner_id"][0]: x["practitioner_id"] for x in raw}
-        for prescription in self:
-            prescription.prescription_count = data.get(
-                prescription.practitioner_id.id, 0)
+        for rec in self:
+            prescription_count = self.env['podiatry.prescription'].search_count(
+                [('practitioner_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
+            rec.prescription_count = prescription_count
+
+    # def _compute_prescription_count(self):
+    #     "Performance optimized, to run a single database query"
+    #     practitioners = self.mapped("practitioner_id")
+    #     domain = [
+    #         ("practitioner_id", "in", practitioners.ids),
+    #         ("state", "not in", ["done", "cancel"]),
+    #     ]
+    #     raw = self.read_group(domain, ["id:count"], ["practitioner_id"])
+    #     data = {x["practitioner_id"][0]: x["practitioner_id"] for x in raw}
+    #     for prescription in self:
+    #         prescription.prescription_count = data.get(
+    #             prescription.practitioner_id.id, 0)
 
     num_prescriptions = fields.Integer(
         compute="_compute_num_prescriptions", store=True)

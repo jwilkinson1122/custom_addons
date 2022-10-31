@@ -30,8 +30,9 @@ class PrescriptionLine(models.Model):
     # left_obj_file_name = fields.Char(string="Left Obj File Name")
     # right_obj_model = fields.Binary("Right Obj")
     # right_obj_file_name = fields.Char(string="Right Obj File Name")
-    right_photo = fields.Binary(related="patient_id.right_photo")
-    left_photo = fields.Binary(related="patient_id.left_photo")
+    # right_photo = fields.Binary(related="patient_id.right_photo")
+    # left_photo = fields.Binary(related="patient_id.left_photo")
+    foot_image = fields.Binary(related="prescription_id.image")
 
     price = fields.Float(compute=onchange_product, string='Price', store=True)
     qty_available = fields.Integer(

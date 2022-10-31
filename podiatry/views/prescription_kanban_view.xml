@@ -31,12 +31,11 @@
 
                 <templates>
 
-                    <t t-name="prescriptions_images">
+                    <t t-name="foot_images">
                         <!-- "limit" is a variable set on the t-call -->
                         <div>
                             <t t-foreach="record.prescription_line_ids.raw_value.slice(0, limit)" t-as="line">
-                                <img t-att-src="kanban_image(
-            'podiatry.prescription.line', 'prescription_cover', line)" class="oe_avatar" height="60" alt="Cover" />
+                                <img t-att-src="kanban_image('podiatry.prescription.line', 'foot_image', line)" class="oe_avatar" height="60" alt="Image" />
                             </t>
                         </div>
                     </t>
@@ -107,27 +106,22 @@
                                         <t t-out="calendar_sign" />
                                     </div>
 
-                                    <div t-if="record.num_prescriptions.raw_value == 0">
-              No prescriptions!
-                                    </div>
-                                    <div t-elif="record.num_prescriptions.raw_value == 1">
-              One prescription
-                                    </div>
+                                    <div t-if="record.num_prescriptions.raw_value == 0">No items!</div>
+                                    <div t-elif="record.num_prescriptions.raw_value == 1">One item</div>
                                     <div t-else="">
                                         <field name="num_prescriptions"/>
- prescriptions
-                                    </div>
+items</div>
 
                                     <!--
             <div>
               <t t-foreach="record.prescription_line_ids.raw_value.slice(0, 5)" t-as="line">
                 <img t-att-src="kanban_image(
-                  'podiatry.prescription.line', 'prescription_cover', line)" class="oe_avatar" height="60" alt="Cover" />
+                  'podiatry.prescription.line', 'prescription_image', line)" class="oe_avatar" height="60" alt="Cover" />
                 </t>
             </div>
             -->
-                                    <t t-call="prescription_images">
-                                        <t t-set="limit" t-value="3" />
+                                    <t t-call="foot_images">
+                                        <t t-set="limit" t-value="4" />
                                     </t>
 
                                     <div>
