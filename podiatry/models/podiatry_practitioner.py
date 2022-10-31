@@ -80,10 +80,6 @@ class Practitioner(models.Model):
         default=lambda self: self.env.company.state_id,
     )
 
-    # position_type = fields.Many2one(
-    #     comodel_name='res.partner.function', string="Job Position",
-    #  )
-
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")
 
@@ -135,6 +131,9 @@ class Practitioner(models.Model):
             prescription_count = self.env['podiatry.prescription'].search_count(
                 [('practitioner_id', '=', rec.id)])
             rec.prescription_count = prescription_count
+
+    prescription_date = fields.Datetime(
+        'Prescription Date', default=fields.Datetime.now)
 
     user_id = fields.Many2one(
         comodel_name='res.users', string="User",

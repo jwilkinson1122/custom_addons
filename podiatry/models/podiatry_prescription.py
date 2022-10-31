@@ -1,5 +1,9 @@
-from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import ValidationError
+import time
+from datetime import timedelta
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import get_lang
 
 
 class Prescription(models.Model):
@@ -126,9 +130,39 @@ class Prescription(models.Model):
          ("2", "Critical")],
         default="0")
 
+    @api.model
+    def _get_bookin_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        checkin_date = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now())
+        return fields.Datetime.to_string(checkin_date)
+
+    @api.model
+    def _get_bookout_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        checkout_date = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now() + timedelta(days=1)
+        )
+        return fields.Datetime.to_string(checkout_date)
+
     prescription_date = fields.Date(readonly=True)
 
     close_date = fields.Date(readonly=True)
+
+    bookin_date = fields.Datetime(
+        "Book In",
+        required=True,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+        default=_get_bookin_date,
+    )
+    bookout_date = fields.Datetime(
+        "Book Out",
+        required=True,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+        default=_get_bookout_date,
+    )
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
@@ -267,5 +301,74 @@ class Prescription(models.Model):
             'url': 'https://nwpodiatric.com' % self.prescription,
         }
 
+
+class PrescriptionLine(models.Model):
+    _name = "podiatry.prescription.line"
+    _description = 'podiatry prescription line'
+    _rec_name = 'product_id'
+
+    @api.depends('product_id')
+    def onchange_product(self):
+        for each in self:
+            if each:
+                self.qty_available = self.product_id.qty_available
+                self.price = self.product_id.lst_price
+            else:
+                self.qty_available = 0
+                self.price = 0.0
+
+    name = fields.Many2one('podiatry.prescription', 'Prescription ID')
+    prescription_id = fields.Many2one("podiatry.prescription", required=True)
+    patient_id = fields.Many2one("podiatry.patient", required=True)
+    product_id = fields.Many2one('product.product', 'Name')
+
+    # right_photo = fields.Image("Right Photo")
+    # left_photo = fields.Image("Left Photo")
+    # left_obj_model = fields.Binary("Left Obj")
+    # left_obj_file_name = fields.Char(string="Left Obj File Name")
+    # right_obj_model = fields.Binary("Right Obj")
+    # right_obj_file_name = fields.Char(string="Right Obj File Name")
+    right_photo = fields.Binary(related="patient_id.right_photo")
+    left_photo = fields.Binary(related="patient_id.left_photo")
+
+    price = fields.Float(compute=onchange_product, string='Price', store=True)
+    qty_available = fields.Integer(
+        compute=onchange_product, string='Quantity Available', store=True)
+    pathologies = fields.Text('Pathologies')
+    pathology = fields.Char('Pathology')
+    laterality = fields.Selection(
+        [('left', 'Left Only'), ('right', 'Right Only'), ('bilateral', 'Bilateral')], help="""" """)
+    notes = fields.Text('Extra Info')
+    allow_substitution = fields.Boolean('Allow Substitution')
+    form = fields.Char('Form')
+    prnt = fields.Boolean('Print')
+    quantity = fields.Float('Quantity')
+    quantity_unit_id = fields.Many2one(
+        'podiatry.quantity.unit', 'Quantity Unit')
+    qty = fields.Integer('x')
+    device_quantity_id = fields.Many2one(
+        'podiatry.device.quantity', 'Quantity')
+    quantity = fields.Integer('Quantity')
+    short_comment = fields.Char('Comment', size=128)
+
+
+class PrescriptionStage(models.Model):
+    _name = "podiatry.prescription.stage"
+    _description = "Prescription Stage"
+    _order = "sequence"
+
+    name = fields.Char()
+    sequence = fields.Integer(default=10)
+    fold = fields.Boolean()
+    active = fields.Boolean(default=True)
+    state = fields.Selection(
+        [
+            ("new", "Requested"),
+            ("open", "Open"),
+            ("done", "Complete"),
+            ("cancel", "Canceled"),
+        ],
+        default="new",
+    )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -5,87 +5,20 @@
         <field name="name">Practitioner Prescriptions</field>
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='open'">
-                <header>
-                    <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
-                </header>
-                <field name="state" invisible="True" />
+            <tree>
                 <field name="name"/>
                 <field name="date"/>
-                <field name="request_date" />
+                <field name="time"/>
                 <field name="practice_id"/>
                 <field name="practitioner_id"/>
                 <field name="patient_id"/>
                 <field name="user_id" />
-                <field name="num_prescriptions" sum="Num. Prescriptions" />
-                <!-- <field name="diagnosis_id"/> -->
-                <!-- <field name="description"/> -->
-                <field name="description" optional="hide"/>
-
+                <field name="diagnosis_id"/>
+                <field name="description"/>
             </tree>
         </field>
     </record>
     <!-- Kanban View -->
-    <!-- <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
-        <field name="name">podiatry.prescription.kanban.view</field>
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <kanban default_group_by="state" class="o_kanban_small_column" quick_create="false" on_create="quick_create">
-                <field name="color" />
-                <field name="patient_id"/>
-                <field name="practice_id"/>
-                <field name="practitioner_id"/>
-                <field name="practitioner_phone" invisible="1" />
-                <field name="practitioner_email" invisible="1" />
-                <field name="state"/>
-                <field name="prescription_date"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown">
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v" />
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable">
-                                        <a role="menuitem" type="edit" class="dropdown-item">Edit...</a>
-                                    </t>
-                                    <t t-if="widget.deletable">
-                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    </t>
-                                    <ul class="oe_kanban_colorpicker" data-field="color" />
-                                </div>
-                            </div>
-                            <div class="oe_kanban_content">
-                                <div>
-                                    <strong>
-                                        <field name="name" />
-                                    </strong>
-                                </div>
-                                <div class="text-muted">
-                                    <a>Practice :</a>
-                                    <field name="practice_id"/>
-                                </div>
-                                <div class="text-muted">
-                                    <a>Practitioner :</a>
-                                    <field name="practitioner_id"/>
-                                </div>
-                                <div class="text-muted">
-                                    <a>Patient :</a>
-                                    <field name="patient_id"/>
-                                </div>
-                                <div class="text-muted">
-                                    <a>Date :</a>
-                                    <field name="prescription_date" />
-                                </div>
-                            </div>
-                            <div class="oe_clear" />
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record> -->
     <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
@@ -237,6 +170,19 @@
             </xpath>
         </field>
     </record>
+    <!-- Calendar View -->
+    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.prescription</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date" string="orders" mode="month" color="color">
+                <field name="patient_id"/>
+                <field name="practitioner_id"/>
+                <field name="date"/>
+            </calendar>
+        </field>
+    </record>
     <!-- Form View -->
     <record id="view_podiatry_prescription_form" model="ir.ui.view">
         <field name="name">Prescription</field>
@@ -244,33 +190,26 @@
         <field name="arch" type="xml">
             <form string="Prescription">
                 <header>
-                    <!-- To add buttons and status widget -->
-                    <field name="state" invisible="True" />
-                    <button name="button_done" type="object" string="Complete Prescription" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
-                    <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-
-                    <!-- <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
+                    <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
                     <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
-                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/> -->
-                    <!-- <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/> -->
+                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
                 </header>
                 <sheet>
-                    <div name="button_box" class="oe_button_box">
-                        <button type="action" name="%(action_podiatry_prescription_dashboard)d" class="oe_stat_button" icon="fa-file-text-o" domain="[('patient_id', '=', patient_id)]" context="{'default_patient_id': patient_id}">
-                            <field name="prescription_count" string="Prescriptions" widget="statinfo" />
-                        </button>
-                    </div>
                     <group string="Patient and Doctor Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
-                            <field name="practitioner_id" required="1" options="{&quot;always_reload&quot;: 1}"/>
+                            <!-- <field name="prescription_date" required="1" /> -->
+
+                            <field name="bookin_date" />
+                            <!-- <field name="bookout_date" /> -->
+
                         </group>
                         <group>
                             <field name="name" readonly="1" />
                             <field name="user_id" />
-                            <field name="prescription_date" required="1" />
-                            <field name="request_date"/>
+                            <field name="practitioner_id" required="1" />
                         </group>
                     </group>
 
@@ -290,6 +229,7 @@
             </form>
         </field>
     </record>
+
     <!-- Search -->
     <record id="view_podiatry_prescription_search" model="ir.ui.view">
         <field name="name">podiatry.prescription.search</field>
@@ -298,56 +238,26 @@
             <search string="Prescription">
                 <field name="name"/>
                 <field name="patient_id"/>
+                <!-- <field name="gender"/> -->
+                <!-- <field name="phone" groups="km_hospital.group_hospital_admin"/> -->
+                <!-- <field name="age"/> -->
                 <field name="state"/>
                 <field name="practitioner_id"/>
                 <separator/>
+                <!-- <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/> -->
                 <group expand="1" string="Group By">
                     <filter string="State" name="state" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
     </record>
-    <!-- Calendar View -->
-    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="model">podiatry.prescription</field>
-        <field eval="2" name="priority"/>
-        <field name="arch" type="xml">
-            <calendar date_start="request_date" string="orders" mode="month" color="user_id">
-                <field name="patient_id"/>
-                <field name="practitioner_id"/>
-                <!-- <field name="request_date"/> -->
-            </calendar>
-        </field>
-    </record>
-    <!-- Pivot View -->
-    <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <pivot>
-                <field name="stage_id" type="col" />
-                <field name="patient_id" />
-                <field name="request_date" interval="week" />
-                <field name="num_prescriptions" type="measure" />
-            </pivot>
-        </field>
-    </record>
-    <!-- =Graph View -->
-    <record id="view_podiatry_prescription_graph" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <graph type="bar">
-                <field name="stage_id" />
-                <field name="num_prescriptions" type="measure" />
-            </graph>
-        </field>
-    </record>
 
-    <!-- action window for prescription dashboard -->
+    <!-- Action: Prescriptions (Dashboard) -->
     <record id="action_podiatry_prescription_dashboard" model="ir.actions.act_window">
         <field name="name">Prescriptions</field>
         <field name="res_model">podiatry.prescription</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="view_podiatry_prescription_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -358,66 +268,82 @@
             </p>
         </field>
     </record>
-    <!-- action window for prescription -->
-    <record id="action_podiatry_prescription" model="ir.actions.act_window">
+
+    <!-- calender view -->
+    <record id="prescription_view_calendar" model="ir.ui.view">
+        <field name="name">podiatry.prescription.calendar</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <calendar string="Prescriptions" date_start="bookin_date" date_stop="bookout_date" event_open_popup="true" mode="month" color="name" quick_add="False">
+                <field name="patient_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- pivot view -->
+    <record id="prescription_pivot" model="ir.ui.view">
+        <field name="name">podiatry.prescription.pivot</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <pivot string="Prescriptions Pivot View">
+                <field name="patient_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="prescription_action" model="ir.actions.act_window">
         <field name="name">Prescriptions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.prescription</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">tree,form,search,kanban,calendar,pivot</field>
         <field name="context">{}</field>
+        <!--for default group & filter => {'search_default_state': 1, 'search_default_male': 1}-->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create New Prescription
             </p>
         </field>
     </record>
+
     <!-- action server for changing the state to confirmed -->
     <record id="action_prescription_confirm" model="ir.actions.server">
         <field name="name">Confirm prescription</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_podiatry_prescription"/>
         <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">kanban,list,form</field>
+        <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">records.action_confirm()</field>
     </record>
+
     <!-- action server for changing the state to done -->
     <record id="action_prescription_done" model="ir.actions.server">
         <field name="name">Done prescription</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_podiatry_prescription"/>
         <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">kanban,list,form</field>
+        <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">records.action_done()</field>
     </record>
+
     <!-- action server for changing the staete to canceled -->
     <record id="action_prescription_cancel" model="ir.actions.server">
         <field name="name">Cancel prescription</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_podiatry_prescription"/>
         <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">kanban,list,form</field>
+        <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">records.action_cancel()</field>
     </record>
+
     <!--
     menu: Prescriptons
     -->
     <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription_dashboard" parent="menu_root" sequence="20" />
 
 
-    <!-- action window for prescription stages -->
 
-    <record id="action_podiatry_prescription_stages" model="ir.actions.act_window">
-        <field name="name">Stages</field>
-        <field name="res_model">podiatry.prescription.stage</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <!--
-      Settings / Stages
-    -->
-    <menuitem id="menu_podiatry_prescription_stages" name="Stages" action="action_podiatry_prescription_stages" groups="group_manager" parent="menu_configuration" sequence="20" />
 
 </odoo>
