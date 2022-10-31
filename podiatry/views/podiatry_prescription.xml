@@ -57,7 +57,7 @@
                             <field name="name"/>
                         </h1>
                         <h3>
-                            <span class="oe_read_only">Submitted By </span>
+                            <span class="oe_read_only">Submitted By</span>
                             <label for="practitioner_id" class="oe_edit_only"/>
                             <field name="practitioner_id" class="oe_inline" />
                         </h3>
@@ -67,7 +67,7 @@
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <!-- <field name="prescription_date" required="1" /> -->
-                            <field name="bookin_date" />
+                            <field name="bookin_date"/>
                         </group>
                         <group>
                             <field name="name" readonly="1" />
