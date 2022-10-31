@@ -50,8 +50,11 @@
         "views/podiatry_practice.xml",
         "views/podiatry_type.xml",
         "views/podiatry_practitioner.xml",
+        "views/podiatry_menu.xml",
         "views/podiatry_prescription.xml",
         "views/podiatry_prescription_line.xml",
+        "views/prescription_kanban_view.xml",
+        "data/stage_data.xml",
         "views/podiatry_specialty.xml",
         "views/res_partner.xml",
         # -------

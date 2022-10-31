@@ -5,184 +5,26 @@
         <field name="name">Practitioner Prescriptions</field>
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='open'">
+                <header>
+                    <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
+                </header>
                 <field name="name"/>
-                <field name="date"/>
-                <field name="time"/>
+                <field name="state" invisible="True" />
+                <field name="bookin_date"/>
+                <field name="request_date" />
                 <field name="practice_id"/>
                 <field name="practitioner_id"/>
                 <field name="patient_id"/>
                 <field name="user_id" />
-                <field name="diagnosis_id"/>
+                <field name="stage_id" />
+                <field name="num_prescriptions" sum="Num. Prescriptions" />
+                <!-- <field name="diagnosis_id"/> -->
                 <field name="description"/>
             </tree>
         </field>
     </record>
-    <!-- Kanban View -->
-    <record id="podiatry_prescription_kanban_view" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" quick_create="true">
-                <!-- Field list to ensure is loaded ... -->
-                <field name="color" />
-                <field name="prescription_line_ids" />
-                <field name="num_prescriptions" />
-                <field name="state" />
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger","normal": "muted"}' sum_field="num_prescriptions" />
-                <templates>
-                    <t t-name="patient_photos">
-                        <!-- "limit" is a variable set on the t-call -->
-                        <div>
-                            <t t-foreach="record.prescription_line_ids.raw_value.slice(0, limit)" t-as="line">
-                                <group>
-                                    <img t-att-src="kanban_image('podiatry.prescription.line', 'left_photo', line)" class="oe_avatar" height="60" alt="Photo" />
-                                    <img t-att-src="kanban_image('podiatry.prescription.line', 'right_photo', line)" class="oe_avatar" height="60" alt="Photo" />
-                                </group>
-                            </t>
-                        </div>
-                    </t>
 
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click
-         {{!selection_mode ? 'oe_kanban_color_' +
-           kanban_getcolor(record.color.raw_value) : ''}}">
-
-                            <div class="o_dropdown_kanban dropdown">
-                                <!-- Top-right drop down menu ... -->
-                                <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" title="Dropdown menu" href="#">
-                                    <span class="fa fa-ellipsis-v" />
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-
-                                    <!-- Edit menu option -->
-                                    <t t-if="widget.editable">
-                                        <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                    </t>
-                                    <!-- Delete menu option -->
-                                    <t t-if="widget.deletable">
-                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    </t>
-
-                                    <!-- Separator line -->
-                                    <div role="separator" class="dropdown-divider" />
-
-                                    <!-- Color picker option: -->
-                                    <ul class="oe_kanban_colorpicker" data-field="color" />
-
-                                    <!-- Set as Done menu option -->
-                                    <a t-if="widget.editable and record.state != 'done'" role="menuitem" class="dropdown-item" name="button_done" type="object">Set as Done</a>
-
-                                </div>
-
-                            </div>
-
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_title">
-                                    <!-- Title area ... -->
-                                    <!--
-            <strong><field name="name" /></strong>
-            -->
-                                    <t t-set="red_or_black" t-value="record.num_prescriptions == 0 ? '' : 'oe_kanban_text_red'" />
-                                    <strong t-att-class="red_or_black">
-                                        <field name="name" />
-                                    </strong>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <!-- Other content area  ... -->
-                                    <!-- Using t-att-f example
-            <div t-attf-class="oe_kanban_text_{{
-              record.priority.raw_value &lt; '2'
-              ? 'black' : 'red' }}">
-              <field name="request_date"/>
-            </div>
-            -->
-                                    <div t-att-class="record.priority.raw_value &lt; '2'
-              ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
-                                        <field name="request_date" string="Date:"/>
-                                    </div>
-                                    <div>
-                                        <t t-out="'Requested by ' + record.request_date.value" />
-                                        <t t-set="calendar_sign">
-                                            <i class="fa fa-calendar" title="Calendar" />
-                                        </t>
-                                        <t t-out="calendar_sign" />
-                                    </div>
-
-                                    <div t-if="record.num_prescriptions.raw_value == 0">
-              No items!
-                                    </div>
-                                    <div t-elif="record.num_prescriptions.raw_value == 1">
-              One item
-                                    </div>
-                                    <div t-else="">
-                                        <field name="num_prescriptions"/>
- items
-                                    </div>
-
-                                    <!--
-            <div>
-              <t t-foreach="record.prescription_line_ids.raw_value.slice(0, 5)" t-as="line">
-                <img t-att-src="kanban_image(
-                  'podiatry.prescription.line', 'book_cover', line)" class="oe_avatar" height="60" alt="Cover" />
-                </t>
-            </div>
-            -->
-                                    <t t-call="patient_photos">
-                                        <t t-set="limit" t-value="3" />
-                                    </t>
-
-                                    <div>
-                                        <field name="patient_id" widget="many2one_avatar"/>
-                                    </div>
-                                </div>
-
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <!-- Left side footer... -->
-                                        <field name="priority" widget="priority"/>
-                                        <field name="activity_ids" widget="kanban_activity"/>
-
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <!-- Right side footer... -->
-                                        <field name="kanban_state" widget="kanban_state_selection"/>
-
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>                                <!-- o_kanban_record_bottom -->
-
-                                <div class="oe_clear"/>
-                            </div>                            <!-- oe_kanban_content -->
-                        </div>                        <!-- oe_kanban_global_click -->
-                    </t>
-                </templates>
-            </kanban>
-
-        </field>
-    </record>
-    <record id="res_partner_kanban_inherit" model="ir.ui.view">
-        <field name="name">Contact Kanban modification</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.res_partner_kanban_view" />
-        <field name="arch" type="xml">
-            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="before">
-                <span>Name: </span>
-            </xpath>
-        </field>
-    </record>
-    <!-- Calendar View -->
-    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="model">podiatry.prescription</field>
-        <field eval="2" name="priority"/>
-        <field name="arch" type="xml">
-            <calendar date_start="date" string="orders" mode="month" color="color">
-                <field name="patient_id"/>
-                <field name="practitioner_id"/>
-                <field name="date"/>
-            </calendar>
-        </field>
-    </record>
     <!-- Form View -->
     <record id="view_podiatry_prescription_form" model="ir.ui.view">
         <field name="name">Prescription</field>
@@ -190,21 +32,42 @@
         <field name="arch" type="xml">
             <form string="Prescription">
                 <header>
+                    <!-- To add buttons and status widget -->
+                    <field name="state" invisible="True" />
+                    <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
+                    <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
+                </header>
+                <!-- <header>
                     <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
                     <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
                     <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
-                </header>
+                </header> -->
                 <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
+                            <field name="prescription_count" string="Prescriptions" widget="statinfo" />
+                        </button>
+                    </div>
+
+                    <!-- <field name="member_image" widget="image" class="oe_avatar" /> -->
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h3>
+                            <span class="oe_read_only">Submitted By </span>
+                            <label for="practitioner_id" class="oe_edit_only"/>
+                            <field name="practitioner_id" class="oe_inline" />
+                        </h3>
+                    </div>
                     <group string="Patient and Doctor Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <!-- <field name="prescription_date" required="1" /> -->
-
                             <field name="bookin_date" />
-                            <!-- <field name="bookout_date" /> -->
-
                         </group>
                         <group>
                             <field name="name" readonly="1" />
@@ -226,124 +89,94 @@
                     <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
                     <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
                 </sheet>
+                <!-- Discuss widgets -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
             </form>
         </field>
     </record>
 
     <!-- Search -->
-    <record id="view_podiatry_prescription_search" model="ir.ui.view">
-        <field name="name">podiatry.prescription.search</field>
+    <record id="view_podiatry_prescription_filter" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <search string="Prescription">
+            <search>
                 <field name="name"/>
-                <field name="patient_id"/>
-                <!-- <field name="gender"/> -->
-                <!-- <field name="phone" groups="km_hospital.group_hospital_admin"/> -->
-                <!-- <field name="age"/> -->
-                <field name="state"/>
-                <field name="practitioner_id"/>
-                <separator/>
-                <!-- <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
-                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/> -->
-                <group expand="1" string="Group By">
-                    <filter string="State" name="state" context="{'group_by':'state'}"/>
-                </group>
+                <field name="practitioner_id" />
+                <field name="user_id" />
+
+                <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]"/>
+                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]"/>
+                <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}"/>
+
+                <searchpanel>
+                    <field name="practitioner_id" enable_counters="1" />
+                    <field name="stage_id" select="multi" />
+                </searchpanel>
+
             </search>
+
         </field>
     </record>
 
-    <!-- Action: Prescriptions (Dashboard) -->
-    <record id="action_podiatry_prescription_dashboard" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
-        <field name="res_model">podiatry.prescription</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="search_view_id" ref="view_podiatry_prescription_search"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new prescription
-            </p>
-            <p>
-                Organize and manage prescriptions at a glance.
-            </p>
-        </field>
-    </record>
-
-    <!-- calender view -->
-    <record id="prescription_view_calendar" model="ir.ui.view">
-        <field name="name">podiatry.prescription.calendar</field>
+    <!-- Activity View -->
+    <record id="view_podiatry_prescription_activity" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <calendar string="Prescriptions" date_start="bookin_date" date_stop="bookout_date" event_open_popup="true" mode="month" color="name" quick_add="False">
+            <activity string="Prescriptions">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" />
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.prescription</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date" string="orders" mode="month" color="color">
+                <field name="stage_id" type="col" />
                 <field name="patient_id"/>
+                <field name="practitioner_id"/>
+                <field name="date"/>
             </calendar>
         </field>
     </record>
 
-    <!-- pivot view -->
-    <record id="prescription_pivot" model="ir.ui.view">
-        <field name="name">podiatry.prescription.pivot</field>
+    <!-- Pivot View -->
+    <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <pivot string="Prescriptions Pivot View">
-                <field name="patient_id" type="row"/>
+            <pivot>
+                <field name="stage_id" type="col" />
+                <field name="practitioner_id" />
+                <field name="request_date" interval="week" />
+                <field name="num_prescriptions" type="measure" />
             </pivot>
         </field>
     </record>
 
-    <record id="prescription_action" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">podiatry.prescription</field>
-        <field name="view_mode">tree,form,search,kanban,calendar,pivot</field>
-        <field name="context">{}</field>
-        <!--for default group & filter => {'search_default_state': 1, 'search_default_male': 1}-->
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create New Prescription
-            </p>
+    <!-- Graph View -->
+    <record id="view_podiatry_prescription_graph" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="stage_id" />
+                <field name="num_prescriptions" type="measure" />
+            </graph>
         </field>
     </record>
 
-    <!-- action server for changing the state to confirmed -->
-    <record id="action_prescription_confirm" model="ir.actions.server">
-        <field name="name">Confirm prescription</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="code">records.action_confirm()</field>
-    </record>
-
-    <!-- action server for changing the state to done -->
-    <record id="action_prescription_done" model="ir.actions.server">
-        <field name="name">Done prescription</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="code">records.action_done()</field>
-    </record>
-
-    <!-- action server for changing the staete to canceled -->
-    <record id="action_prescription_cancel" model="ir.actions.server">
-        <field name="name">Cancel prescription</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_model_id" ref="model_podiatry_prescription"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="state">code</field>
-        <field name="code">records.action_cancel()</field>
-    </record>
-
-    <!--
-    menu: Prescriptons
-    -->
-    <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription_dashboard" parent="menu_root" sequence="20" />
-
-
-
-
 </odoo>
+
+ 
