@@ -292,13 +292,6 @@
             </kanban>
         </field>
     </record>
-    <!-- <record id="action_patient_window" model="ir.actions.act_window">
-        <field name="name">Patient</field>
-        <field name="res_model">podiatry.patient</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">kanban,tree,form</field>
-    </record> -->
-
 
 </data>
 </odoo>
