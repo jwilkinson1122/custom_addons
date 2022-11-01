@@ -47,14 +47,14 @@
                         <group>
                             <group>
                                 <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
-                                <group for="" name="address_name">
+                                <span class="o_form_label o_td_label" name="address_name">
                                     <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                     <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
                                     <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
                                     <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
                                     <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
                                     <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
-                                </group>
+                                </span>
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
