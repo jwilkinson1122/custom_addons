@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Action of doctor -->
+    <record id="action_doctor_window" model="ir.actions.act_window">
+        <field name="name">Podiatrist</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.dr</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Action of patient -->
+    <record id="action_patient_window" model="ir.actions.act_window">
+        <field name="name">Patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Action of prescription -->
+    <record id="action_prescription_window" model="ir.actions.act_window">
+        <field name="name">Prescription</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dr.prescription</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Action of settings -->
+    <record id="action_settings_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <!-- <field name="view_id" ref="podiatry_erp_settings_view_form"/> -->
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module':'podiatry_erp', 'bin_size': False}</field>
+    </record>
+
+    <!-- Action of accommodation config -->
+    <record id="action_accomm_config" model="ir.actions.act_window">
+        <field name="name">Accommodation Test Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">accomm.test.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>
