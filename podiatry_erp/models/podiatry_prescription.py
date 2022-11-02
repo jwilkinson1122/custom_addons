@@ -345,7 +345,7 @@ class Prescription(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_ticket_size2").report_action(self)
 
-    # def print_ophtalmologic_prescription_report(self):
+    # def print_podiatry_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
     #         'report_name': "podiatry_erp.doctor_podology_prescription_template",
@@ -353,5 +353,5 @@ class Prescription(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
+    def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_podology_ticket_size2").report_action(self)
