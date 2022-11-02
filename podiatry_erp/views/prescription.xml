@@ -23,7 +23,7 @@
                             <field name="doctor" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                             <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                             <field name="company_id"/>
-                            <field name="pod_accommodation_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
+                            <field name="accommodation_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
 
                         </group>
                         <group>

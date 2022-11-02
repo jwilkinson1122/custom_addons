@@ -39,7 +39,7 @@
                 <!--                />-->
 
                 <record id="podiatry_prescription_podology_ticket_size2" model="ir.actions.report">
-                        <field name="name">Ophtalmological Prescription | Ticket</field>
+                        <field name="name">Prescription | Ticket</field>
                         <field name="report_name">podiatry_erp.doctor_podology_prescription_template_ticket_size</field>
                         <field name="model">podiatry.prescription</field>
                         <field name="report_type">qweb-pdf</field>

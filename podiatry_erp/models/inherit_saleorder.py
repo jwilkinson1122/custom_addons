@@ -46,7 +46,7 @@ class InheritedSaleOrder(models.Model):
     def test(self):
         product = self.env.ref('podiatry_erp.podiatry_erp_product')
         self.order_line = None
-        if self.prescription_id.pod_accommodation_chargeable == True:
+        if self.prescription_id.accommodation_chargeable == True:
             self.order_line |= self.order_line.new({
                 'name': '',
                 'product_id': product.id,

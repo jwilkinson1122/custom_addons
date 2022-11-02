@@ -15,7 +15,7 @@ class Prescription(models.Model):
     doctor = fields.Many2one(
         'podiatry.doctor', string='Podiatrist', readonly=True)
     customer = fields.Many2one(
-        'res.partner', string='Customer', readonly=False)
+        'res.partner', string='Patient', readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('accomm.test.type')
@@ -29,13 +29,13 @@ class Prescription(models.Model):
         for rec in self:
             rec.state = 'Confirm'
 
-    def default_pod_accommodation_chargeable(self):
-        settings_pod_accommodation_chargeable = self.env['ir.config_parameter'].sudo().get_param(
-            'pod_accommodation_chargeable')
-        return settings_pod_accommodation_chargeable
+    def default_accommodation_chargeable(self):
+        settings_accommodation_chargeable = self.env['ir.config_parameter'].sudo().get_param(
+            'accommodation_chargeable')
+        return settings_accommodation_chargeable
 
-    pod_accommodation_chargeable = fields.Boolean(
-        default=default_pod_accommodation_chargeable, readonly=1)
+    accommodation_chargeable = fields.Boolean(
+        default=default_accommodation_chargeable, readonly=1)
 
     prescription_type = fields.Selection(
         [('Internal', 'Internal'), ('External', 'External')], default='internal')
