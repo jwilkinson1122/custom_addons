@@ -13,12 +13,18 @@
                         (                    <field name="same_vat_partner_id"/>
 ), are you sure to create a new one?
                 </div>
-                <button style="margin-left:10px;" name="create_patient" string="Create User" class="btn btn-success" type="object"/>
+                <button style="margin-left:10px;" name="create" string="Create User" class="btn btn-success" type="object"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="patient_id" />
+                        </div>
+                        <h1>
+                            <field style="width: 30%%" name="patient_id" default_focus="1" placeholder="Patient Name" context="{'default_is_patient': 1,'default_is_person': 1}" />
+                        </h1>
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="active" invisible="1"/>
@@ -29,10 +35,6 @@
                         <div class="o_row">
                             <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                             <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                            <!-- <button name="create_company" type="object" class="oe_edit_only btn-link" attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
-                                    <span class="fa fa-plus-square"/>
-                                    Create company
-                                </button> -->
                         </div>
                     </div>
 
@@ -60,8 +62,8 @@
                         <group>
                             <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
 
-                            <field name="dob" string="Birthdate"/>
-                            <field name="patient_age" string="Age"/>
+                            <field name="date_of_birth" string="Birthdate"/>
+                            <field name="age" string="Age"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>

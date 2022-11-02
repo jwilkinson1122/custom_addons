@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <record id="doctor_doctor" model="ir.ui.view">
             <field name="name">Doctor</field>
             <field name="model">podiatry.doctor</field>
@@ -16,7 +17,7 @@
 ), are you sure to create a new one?
                     </div>
                     <header>
-                        <button style="margin-left:10px;" name="create_doctors" string="Create User" class="btn btn-success" type="object"/>
+                        <button style="margin-left:10px;" name="create" string="Create User" class="btn btn-success" type="object"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -26,7 +27,30 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_1920"}'/>
+
                         <div class="oe_title">
+                            <group>
+                                <field name="name" required="1" placeholder="Contact Name"/>
+
+                                <field name="partner_id" required="1" context="{'default_is_doctor': 1, 'search_default_is_doctor': 1}" />
+                                <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                            </group>
+                            <!-- <div name="name">
+                                <h1>
+                                    <field name="name" required="1" placeholder="Contact Name"/>
+                                </h1>
+                            </div> -->
+                            <!-- <field name="partner_id" required="1" context="{'default_is_doctor': 1, 'search_default_is_doctor': 1}" />
+
+                            <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" /> -->
+                            <!-- <field name="code" /> -->
+
+                            <!-- <div class="oe_edit_only">
+                                <label for="partner_id" />
+                            </div>
+                            <field name="partner_id" required="1" invisible="1" context="{'default_is_doctor': 1, 'search_default_is_doctor': 1}" />
+                            <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                            <field name="code" /> -->
                             <field name="is_company" invisible="1"/>
                             <field name="commercial_partner_id" invisible="1"/>
                             <field name="active" invisible="1"/>
@@ -37,13 +61,12 @@
                             <div class="o_row">
                                 <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <!--                                <button name="create_company" type="object" class="oe_edit_only btn-link"-->
-                                <!-- attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">-->
-                                <!--                                    <span class="fa fa-plus-square"/>-->
-                                <!--                                    Create company-->
-                                <!--                                </button>-->
                             </div>
                         </div>
+                        <!-- <div name="title" class="oe_title">
+                            <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+
+                        </div> -->
                         <group>
                             <group>
                                 <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
@@ -209,15 +232,39 @@
                 </form>
             </field>
         </record>
+
         <record id="doctor_doctor_tree" model="ir.ui.view">
             <field name="name">Podiatrist Tree View</field>
             <field name="model">podiatry.doctor</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="partner_id" />
+                    <field name="code" />
+                    <field name="practice_partner_id" />
+
                 </tree>
             </field>
         </record>
+
+        <record id="doctor_doctor_search" model="ir.ui.view">
+            <field name="name">Podiatrist Search View</field>
+            <field name="model">podiatry.doctor</field>
+            <field name="arch" type="xml">
+                <search string="Search Doctor">
+                    <separator orientation="vertical" />
+                    <field name="partner_id" select="1" />
+                    <field name="code" select="1" />
+                    <field name="practice_partner_id" select="1" />
+                    <newline />
+                    <group expand="1" string="Group By">
+                        <filter string="Doctor" name='by_user' context="{'group_by':'partner_id'}"/>
+                        <filter string="Practice" name='by_practice' context="{'group_by':'practice_partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="res_doctor_kanban_view">
             <field name="name">podiatry.doctor</field>
             <field name="model">podiatry.doctor</field>
@@ -281,5 +328,6 @@
                 </kanban>
             </field>
         </record>
+
     </data>
 </odoo>

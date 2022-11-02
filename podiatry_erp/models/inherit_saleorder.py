@@ -15,7 +15,7 @@ class InheritedSaleOrder(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_ticket_size2").report_action(self.prescription_id)
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
+    def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_podology_ticket_size2").report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
@@ -69,7 +69,7 @@ class InheritedSaleOrder(models.Model):
     #     result = super(InheritedSaleOrder,self).create(vals)
     #     return result
 
-    def print_ophtalmologic_prescription_report(self):
+    def print_podiatry_prescription_report(self):
         pass
 
     def print_prescription_report(self):

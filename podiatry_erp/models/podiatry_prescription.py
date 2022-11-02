@@ -16,14 +16,33 @@ class Prescription(models.Model):
         'podiatry.doctor', string='Podiatrist', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
-    customer_age = fields.Integer(related='customer.age')
+    # customer_age = fields.Integer(related='customer.age')
+    patient_id = fields.Many2one('podiatry.patient', 'Patient ID')
+    doctor_id = fields.Many2one('podiatry.doctor', 'Prescribing Doctor')
+
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('accomm.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     Podiatrist_observation = fields.Text()
+    prescription_date = fields.Datetime(
+        'Prescription Date', default=fields.Datetime.now)
+    user_id = fields.Many2one(
+        'res.users', 'Login User', readonly=True, default=lambda self: self.env.user)
+    no_invoice = fields.Boolean('Invoice exempt')
+    inv_id = fields.Many2one('account.invoice', 'Invoice')
+    # state = fields.Selection(
+    #     [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
+    # prescription_line_ids = fields.One2many(
+    #     'podiatry.prescription.line', 'name', 'Prescription Line')
+    invoice_done = fields.Boolean('Invoice Done')
+    notes = fields.Text('Prescription Note')
+
+    is_invoiced = fields.Boolean(copy=False, default=False)
+
+    is_shipped = fields.Boolean(default=False, copy=False)
     state = fields.Selection(
-        [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+        [('Draft', 'Draft'), ('Confirm', 'Confirm'), ('Invoiced', 'To Invoiced'), ('ToBe', 'To Be Invoiced')], default='Draft')
 
     def confirm_request(self):
         for rec in self:
@@ -345,7 +364,7 @@ class Prescription(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_ticket_size2").report_action(self)
 
-    # def print_ophtalmologic_prescription_report(self):
+    # def print_podiatry_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
     #         'report_name': "podiatry_erp.doctor_podology_prescription_template",
@@ -353,5 +372,5 @@ class Prescription(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
+    def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.podiatry_prescription_podology_ticket_size2").report_action(self)

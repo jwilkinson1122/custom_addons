@@ -11,7 +11,7 @@
     'license': 'AGPL-3',
     'images': ['static/description/background.jpg'],
     "depends": [
-        'base', 'sale', 'point_of_sale', 'purchase',
+        'base', 'sale', 'point_of_sale', 'purchase', 'account',
     ],
     "data": [
         'security/groups.xml',
@@ -22,6 +22,7 @@
         "report/reports.xml",
         "report/ticket_report_format.xml",
         "report/prescription_report.xml",
+        'report/patient_card_report.xml',
         'report/podology_prescription_report.xml',
         'report/purchase_order_report.xml',
         'report/sale_order_report.xml',

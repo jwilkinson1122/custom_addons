@@ -26,6 +26,15 @@
                         <field name="report_type">qweb-pdf</field>
                 </record>
 
+                <record id="report_print_patient_card" model="ir.actions.report">
+                        <field name="name">Patient Card</field>
+                        <field name="model">podiatry.patient</field>
+                        <field name="report_type">qweb-pdf</field>
+                        <field name="report_name">podiatry_erp.report_patient_card</field>
+                        <field name="report_file">podiatry_erp.report_patient_card</field>
+                </record>
+
+
                 <report id="podiatry_prescription_podology" string="podology Prescription" model="podiatry.prescription" report_type="qweb-pdf" file="podiatry_erp.doctor_podology_prescription_template" name="podiatry_erp.doctor_podology_prescription_template" />
 
                 <!--        <report-->
@@ -39,7 +48,7 @@
                 <!--                />-->
 
                 <record id="podiatry_prescription_podology_ticket_size2" model="ir.actions.report">
-                        <field name="name">Ophtalmological Prescription | Ticket</field>
+                        <field name="name">Prescription | Ticket</field>
                         <field name="report_name">podiatry_erp.doctor_podology_prescription_template_ticket_size</field>
                         <field name="model">podiatry.prescription</field>
                         <field name="report_type">qweb-pdf</field>
