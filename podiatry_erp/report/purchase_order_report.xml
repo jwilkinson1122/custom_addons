@@ -52,7 +52,7 @@
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Podiatrist :</strong>
-                                        <span t-esc="doc.prescription_id.dr.name"></span>
+                                        <span t-esc="doc.prescription_id.doctor.name"></span>
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Vendor :</strong>

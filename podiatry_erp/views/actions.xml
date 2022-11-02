@@ -5,7 +5,7 @@
     <record id="action_doctor_window" model="ir.actions.act_window">
         <field name="name">Podiatrists</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">podiatry.dr</field>
+        <field name="res_model">podiatry.doctor</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
 
@@ -21,7 +21,7 @@
     <record id="action_prescription_window" model="ir.actions.act_window">
         <field name="name">Prescriptions</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">dr.prescription</field>
+        <field name="res_model">podiatry.prescription</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
 

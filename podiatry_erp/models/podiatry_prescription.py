@@ -2,8 +2,8 @@ from odoo import api, fields, models, _
 from odoo.tools import datetime
 
 
-class DrPrescription(models.Model):
-    _name = 'dr.prescription'
+class Prescription(models.Model):
+    _name = 'podiatry.prescription'
     _description = 'Doctor Prescription'
     _rec_name = 'name'
 
@@ -12,7 +12,8 @@ class DrPrescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    dr = fields.Many2one('podiatry.dr', string='Podiatrist', readonly=True)
+    doctor = fields.Many2one(
+        'podiatry.doctor', string='Podiatrist', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
@@ -187,7 +188,7 @@ class DrPrescription(models.Model):
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
 
-    dr_notes = fields.Text('Notes')
+    doctor_notes = fields.Text('Notes')
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
     family_pod_history = fields.Text()
@@ -310,7 +311,7 @@ class DrPrescription(models.Model):
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                # 'context':{'default_dr':self.id},
+                # 'context':{'default_doctor':self.id},
                 'type': 'ir.actions.act_window',
             }
 
@@ -330,19 +331,19 @@ class DrPrescription(models.Model):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription.sequence')
-        result = super(DrPrescription, self).create(vals)
+        result = super(Prescription, self).create(vals)
         return result
 
     # def print_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry_erp.doctor_prescription_template",
-    #         'report_file': "podiatry_erp.doctor_prescription_template",
+    #         'report_name': "podiatry_erp.podiatry_prescription_template",
+    #         'report_file': "podiatry_erp.podiatry_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry_erp.doctor_prescription_ticket_size2").report_action(self)
+        return self.env.ref("podiatry_erp.podiatry_prescription_ticket_size2").report_action(self)
 
     # def print_ophtalmologic_prescription_report(self):
     #     return {
@@ -353,4 +354,4 @@ class DrPrescription(models.Model):
     #     }
 
     def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry_erp.doctor_prescription_podology_ticket_size2").report_action(self)
+        return self.env.ref("podiatry_erp.podiatry_prescription_podology_ticket_size2").report_action(self)

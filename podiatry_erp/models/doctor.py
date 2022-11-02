@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class Doctor(models.Model):
-    _name = "podiatry.dr"
+    _name = "podiatry.doctor"
     _inherits = {
         'res.partner': 'partner_id',
     }
@@ -14,22 +14,23 @@ class Doctor(models.Model):
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
 
-    def open_doctor_prescriptions(self):
+    def open_podiatry_prescriptions(self):
         for records in self:
             return {
                 'name': _('Doctor Prescription'),
                 'view_type': 'form',
-                'domain': [('dr', '=', records.id)],
-                'res_model': 'dr.prescription',
+                'domain': [('doctor', '=', records.id)],
+                'res_model': 'podiatry.prescription',
                 'view_id': False,
                 'view_mode': 'tree,form',
-                'context': {'default_dr': self.id},
+                'context': {'default_doctor': self.id},
                 'type': 'ir.actions.act_window',
             }
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['dr.prescription'].search_count([('dr', '=', records.id)])
+            count = self.env['podiatry.prescription'].search_count(
+                [('doctor', '=', records.id)])
             records.prescription_count = count
 
     def create_doctors(self):
@@ -40,8 +41,10 @@ class Doctor(models.Model):
         else:
             self.create_users_button = False
         doctor_id = []
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Doctors')]).id)
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Doctors')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Internal User')]).id)
 
         return {
             'type': 'ir.actions.act_window',
@@ -53,6 +56,3 @@ class Doctor(models.Model):
             'context': {'default_partner_id': self.partner_id.id, 'default_is_doctor': True,
                         'default_groups_id': [(6, 0, doctor_id)]}
         }
-
-
-

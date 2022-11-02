@@ -1,4 +1,4 @@
-from . import dr_prescription
+from . import podiatry_prescription
 from . import doctor
 from . import patient
 from . import test_type

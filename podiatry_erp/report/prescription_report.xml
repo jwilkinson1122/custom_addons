@@ -2,7 +2,7 @@
 
 <odoo>
     <data>
-        <template id="doctor_prescription_template">
+        <template id="podiatry_prescription_template">
             <t t-call="web.html_container">
                 <t t-call="web.external_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -23,7 +23,7 @@
                                 <tr>
                                     <td class="headings">Doctor Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.dr"></span>
+                                        <span t-field="doc.doctor"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -354,7 +354,7 @@
 30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.dr_notes"></span>
+                                    <span t-field="doc.doctor_notes"></span>
                                 </div>
                             </div>
 
@@ -402,7 +402,7 @@
             </t>
         </template>
 
-        <template id="doctor_prescription_template_ticket_size">
+        <template id="podiatry_prescription_template_ticket_size">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -452,7 +452,7 @@
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Podiatrist :</strong>
-                                        <span t-esc="doc.dr.name"></span>
+                                        <span t-esc="doc.doctor.name"></span>
                                     </h6>
                                     <hr style="border:1px solid;"/>
                                 </center>
@@ -718,7 +718,7 @@
                                 <tr>
                                     <td class="headings">Doctor Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.dr"></span>
+                                        <span t-field="doc.prescription_id.doctor"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1030,7 +1030,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.dr_notes"></span>
+                                <span t-field="doc.prescription_id.doctor_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>

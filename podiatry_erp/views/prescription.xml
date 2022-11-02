@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="dr_prescription" model="ir.ui.view">
+        <record id="podiatry_prescription" model="ir.ui.view">
             <field name="name">Doctor Prescription</field>
-            <field name="model">dr.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <form string="Doctor Prescription">
                     <header>
@@ -20,7 +20,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="dr" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                            <field name="doctor" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                             <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                             <field name="company_id"/>
                             <field name="pod_accommodation_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
@@ -240,7 +240,7 @@
                                 <group>
                                     <field attrs="{'readonly': [('state','=','confirm')]}" name="diagnosis_client"></field>
                                     <field attrs="{'readonly': [('state','=','confirm')]}" name="notes_laboratory"></field>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="dr_notes" placeholder="Note"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="doctor_notes" placeholder="Note"></field>
                                 </group>
                             </group>
                         </page>
@@ -380,12 +380,12 @@
         </record>
 
 
-        <record id="dr_prescription_tree" model="ir.ui.view">
+        <record id="podiatry_prescription_tree" model="ir.ui.view">
             <field name="name">Doctor Prescription Tree View</field>
-            <field name="model">dr.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="dr"/>
+                    <field name="doctor"/>
                     <field name="customer"/>
                     <field name="checkup_date" string="Prescription Date"/>
                     <field name="test_type"/>
@@ -399,7 +399,7 @@
         <!-- <record id="action_prescription_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">dr.prescription</field>
+            <field name="res_model">podiatry.prescription</field>
             <field name="view_mode">kanban,tree,form</field>
         </record> -->
 
