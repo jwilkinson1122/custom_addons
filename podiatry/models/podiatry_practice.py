@@ -130,7 +130,7 @@ class Practice(models.Model):
     child_ids = fields.One2many(
         comodel_name='podiatry.practice',
         inverse_name='parent_id',
-        string="Subpractices",
+        string="Practices",
     )
     child_count = fields.Integer(
         string="Subpractice Count",
@@ -142,7 +142,6 @@ class Practice(models.Model):
         for practice in self:
             practice.child_count = len(practice.child_ids)
         return
-
 
     same_reference_practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
