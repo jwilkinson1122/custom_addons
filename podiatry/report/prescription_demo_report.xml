@@ -14,7 +14,7 @@
                 <br/>
                 <table class="table table-condensed">
                     <tr>
-                        <th style="border: 0px ;" class="text-left">Prescription ID : 
+                        <th style="border: 0px ;" class="text-left">Rx ID : 
                             <span style="font-weight:normal;" t-field="doc.name"/>
                         </th>
 
@@ -22,7 +22,7 @@
                             <span style="font-weight:normal;" t-field="doc.prescription_date"/>
                         </th>
 
-                        <th style="border: 0px ;" class="text-left">Prescribing Doctor : 
+                        <th style="border: 0px ;" class="text-left">Prescribing Practitioner : 
                             <span style="font-weight:normal;" t-field="doc.practitioner_id.partner_id.name"/>
                         </th>
 
@@ -124,7 +124,7 @@
                         <span t-field="doc.notes"/>
                     </div>
                     <div class="text-right mb32">
-                        <strong>Doctor Signature:</strong>
+                        <strong>Practitioner Signature:</strong>
                     </div>
                 </div>
             </div>

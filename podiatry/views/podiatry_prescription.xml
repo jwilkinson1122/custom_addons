@@ -36,21 +36,23 @@
                     <field name="state" invisible="True" />
                     <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
+                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
+                    <button name="open_customer" class="btn btn-success" states="Confirm" string="Create Orders" type="object"></button>
+                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
+                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
+
                 </header>
                 <!-- <header>
                     <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-warning" type="object" confirm="Are you sure you want to confirm?"/>
                     <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
                     <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
-                
-                            domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/> domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
 
                                         <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                 </header> -->
                 <sheet>
                     <div name="button_box" class="oe_button_box">
-                        <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" 
-                        domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
+                        <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
                             <field name="prescription_count" string="Prescriptions" widget="statinfo" />
                         </button>
                     </div>
@@ -67,7 +69,7 @@
                             <field name="practitioner_id" class="oe_inline" />
                         </h3>
                     </div>
-                    <group string="Patient and Doctor Information">
+                    <group string="Patient and Practitioner Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
@@ -94,8 +96,8 @@
                         <page string="Images / Attachments">
                             <!-- <field name="left_images"/>
                              <field name="right_images"/> -->
-                    
-                           <group name="photo_group_tlOo2">
+
+                            <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
                                     <field widget="image" options='{"size": [0, 150]}' name="left_photo" string="Left Image"/>
                                 </group>
@@ -106,14 +108,14 @@
                             <group name="obj_group_DPydw">
                                 <group name="obj_group_DPydw_left">
                                     <field name="left_obj_model" string="Left Scan"/>
-                             
+
                                 </group>
                                 <group name="obj_group_DPydw_right">
                                     <field name="right_obj_model" string="Right Scan"/>
-                  
+
                                 </group>
                             </group>
- 
+
                         </page>
                     </notebook>
                     <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />

@@ -228,7 +228,7 @@
                                                 Practice: <field name="practice_id"/>
                                             </li>
                                             <li>
-                                                Doctor: <field name="practitioner_id"/>
+                                                Practitioner: <field name="practitioner_id"/>
                                             </li>
                                             <li>
                                                 Prescriptions: <field name="prescription_count"/>

@@ -8,6 +8,8 @@ class ResConfigSettings(models.TransientModel):
         string="Prescriptions for Patients")
     module_podiatry_encounter = fields.Boolean(
         string="Encounters for Patients")
+    # module_podiatry_product = fields.Boolean(
+    #     string="Product Configuration")
     module_podiatry_patient_tags = fields.Boolean(string="Tags for Patients")
     module_podiatry_phone_validation = fields.Boolean(
         string="Phone Number Validation for Patients")

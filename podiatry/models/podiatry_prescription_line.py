@@ -19,7 +19,7 @@ class PrescriptionLine(models.Model):
                 self.qty_available = 0
                 self.price = 0.0
 
-    name = fields.Many2one('podiatry.prescription', 'Prescription ID')
+    name = fields.Many2one('podiatry.prescription', 'Rx ID')
     prescription_id = fields.Many2one("podiatry.prescription", required=True)
     patient_id = fields.Many2one("podiatry.patient", required=True)
     product_id = fields.Many2one('product.product', 'Name')

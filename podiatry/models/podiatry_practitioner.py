@@ -92,7 +92,7 @@ class Practitioner(models.Model):
     ], string="Gender")
 
     salutation = fields.Selection(selection=[
-        ('doctor', 'Practitioner'),
+        ('practitioner', 'Practitioner'),
         ('mr', 'Mr.'),
         ('ms', 'Ms.'),
         ('mrs', 'Mrs.'),

@@ -14,7 +14,10 @@
         "resource",
         "mail",
         "base",
+        'sale',
         "product",
+        'purchase',
+
         # "contacts",
     ],
 
@@ -63,6 +66,16 @@
         "report/report_view.xml",
         "report/patient_card_report.xml",
         "report/prescription_demo_report.xml",
+        "report/ticket_report_format.xml",
+        "report/prescription_report.xml",
+        'report/pod_prescription_report.xml',
+        'report/purchase_order_report.xml',
+        'report/sale_order_report.xml',
+        'report/invoice_report.xml',
+        'views/inherit_sale_order.xml',
+        'views/inherit_invoice.xml',
+
+
 
     ],
 

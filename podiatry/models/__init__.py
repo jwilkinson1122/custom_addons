@@ -13,4 +13,9 @@ from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
 from . import podiatry_specialty
 from . import podiatry_contact_mixin
-from . import res_partner, ir_actions
+from . import res_partner
+from . import inherit_saleorder
+from . import inherit_purchase_order
+from . import inherit_invoice
+from . import product_attribute
+from . import ir_actions
