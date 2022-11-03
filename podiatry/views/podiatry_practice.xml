@@ -34,7 +34,7 @@
                     <div class="oe_button_box" name="button_box">
                         <field name="child_ids" invisible="1"/>
                         <button type="action" name="%(action_podiatry_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
-                            <field name="child_count" string="Subpractices" widget="statinfo"/>
+                            <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
                     </div>
 
