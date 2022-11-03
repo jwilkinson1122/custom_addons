@@ -17,7 +17,7 @@ class Patient(models.Model):
     name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
 
-    number = fields.Char(string="Patient Number")
+    code = fields.Char(string="Code", copy=False)
 
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
@@ -283,7 +283,7 @@ class Patient(models.Model):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.patient') or _('New')
         patient = super(Patient, self).create(vals)
-        patient._set_number()
+        patient._set_code()
         patient._add_followers()
         return patient
 

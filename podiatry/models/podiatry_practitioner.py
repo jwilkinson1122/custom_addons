@@ -59,7 +59,7 @@ class Practitioner(models.Model):
     active = fields.Boolean(string="Active", default=True, tracking=True)
     name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
-    number = fields.Char(string="Number")
+    code = fields.Char(string="Code", copy=False)
     identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
@@ -250,10 +250,10 @@ class Practitioner(models.Model):
                            practitioner.responsible_id.partner_id).ids
             practitioner.message_subscribe(partner_ids=partner_ids)
 
-    def _set_number(self):
+    def _set_code(self):
         for practitioner in self:
             sequence = self._get_sequence_code()
-            practitioner.number = self.env['ir.sequence'].next_by_code(
+            practitioner.code = self.env['ir.sequence'].next_by_code(
                 sequence)
         return
 
@@ -265,7 +265,7 @@ class Practitioner(models.Model):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.practitioner') or _('New')
         practitioner = super(Practitioner, self).create(vals)
-        practitioner._set_number()
+        practitioner._set_code()
         practitioner._add_followers()
         return practitioner
 
