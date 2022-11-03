@@ -127,7 +127,7 @@
                                 </group>
                             </page>
                      -->
-                        <!-- <page name="patient_images" string="Attachments">
+                        <page name="patient_images" string="Attachments">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
                                     <field widget="image" options='{"size": [0, 150]}' name="left_photo" string="Left Image"/>
@@ -146,7 +146,7 @@
                                     <field invisible="1" name="right_obj_file_name"/>
                                 </group>
                             </group>
-                        </page> -->
+                        </page>
 
                         <!-- Prescriptions -->
                         <page name="perscriptions_list" string="Prescriptions">

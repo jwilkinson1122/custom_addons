@@ -42,10 +42,15 @@
                     <button id="button_done" name="action_done" string="Done" class="btn-success" type="object" confirm="Are you sure you want to set done?"/>
                     <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-danger" type="object" confirm="Are you sure you want to cancel?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel" options="{'clickable':'1'}"/>
+                
+                            domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
+
+                                        <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                 </header> -->
                 <sheet>
                     <div name="button_box" class="oe_button_box">
-                        <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
+                        <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" 
+                        domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
                             <field name="prescription_count" string="Prescriptions" widget="statinfo" />
                         </button>
                     </div>
@@ -78,12 +83,37 @@
 
                     <notebook>
                         <page string="Prescription Details">
-                            <group>
+
+                            <!-- <group>
                                 <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
-                            </group>
+                            </group> -->
                             <group string="Rx Lines">
                                 <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
                             </group>
+                        </page>
+                        <page string="Images / Attachments">
+                            <!-- <field name="left_images"/>
+                             <field name="right_images"/> -->
+                    
+                           <group name="photo_group_tlOo2">
+                                <group name="photo_group_tlOo2_left">
+                                    <field widget="image" options='{"size": [0, 150]}' name="left_photo" string="Left Image"/>
+                                </group>
+                                <group name="photo_group_tlOo2_right">
+                                    <field widget="image" options='{"size": [0, 150]}' name="right_photo" string="Right Image"/>
+                                </group>
+                            </group>
+                            <group name="obj_group_DPydw">
+                                <group name="obj_group_DPydw_left">
+                                    <field name="left_obj_model" string="Left Scan"/>
+                             
+                                </group>
+                                <group name="obj_group_DPydw_right">
+                                    <field name="right_obj_model" string="Right Scan"/>
+                  
+                                </group>
+                            </group>
+ 
                         </page>
                     </notebook>
                     <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />

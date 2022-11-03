@@ -50,12 +50,31 @@ class Prescription(models.Model):
 
     practitioner_phone = fields.Char(
         string='Phone', related='practitioner_id.phone')
+        
     practitioner_email = fields.Char(
         string='Email', related='practitioner_id.email')
 
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
+
+#    right_photo = fields.Image("Right Photo")
+#     left_photo = fields.Image("Left Photo")
+
+
+    # right_photo = fields.Image("Right Photo")
+    # left_photo = fields.Image("Left Photo")
+    # left_obj_model = fields.Binary("Left Obj")
+    # left_obj_file_name = fields.Char(string="Left Obj File Name")
+    # right_obj_model = fields.Binary("Right Obj")
+    # right_obj_file_name = fields.Char(string="Right Obj File Name")
+
+
+    left_photo = fields.Image(related="patient_id.left_photo")
+    right_photo = fields.Image(related="patient_id.right_photo")
+    left_obj_model = fields.Binary(related="patient_id.left_obj_model")
+    right_obj_model = fields.Binary(related="patient_id.right_obj_model")
+
 
     gender = fields.Selection([
         ('male', 'Male'),
@@ -95,6 +114,8 @@ class Prescription(models.Model):
 
     prescription_line_ids = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+
+     
 
     # state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
     #                           ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
