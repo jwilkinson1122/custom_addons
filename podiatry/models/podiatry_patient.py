@@ -269,10 +269,10 @@ class Patient(models.Model):
                            patient.responsible_id.partner_id).ids
             patient.message_subscribe(partner_ids=partner_ids)
 
-    def _set_number(self):
+    def _set_code(self):
         for patient in self:
             sequence = self._get_sequence_code()
-            patient.number = self.env['ir.sequence'].next_by_code(sequence)
+            patient.code = self.env['ir.sequence'].next_by_code(sequence)
         return
 
     @api.model

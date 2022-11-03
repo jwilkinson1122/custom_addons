@@ -50,6 +50,8 @@ class Practice(models.Model):
     )
 
     identification = fields.Char(string="Identification", index=True)
+    reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
+                            default=lambda self: _('New'))
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -141,22 +143,87 @@ class Practice(models.Model):
             practice.child_count = len(practice.child_ids)
         return
 
-    @api.model_create_multi
-    def create(self, values):
-        return super(Practice, self.with_context(default_resource_type='material')).create(values)
 
-    def name_get(self):
-        if not self.env.context.get('hierarchical_naming', True):
-            return [(record.id, record.name) for record in self]
-        return super(Practice, self).name_get()
+    same_reference_practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice with same Identity',
+        compute='_compute_same_reference_practice_id',
+    )
+
+    @api.depends('reference')
+    def _compute_same_reference_practice_id(self):
+        for practice in self:
+            domain = [
+                ('reference', '=', practice.reference),
+            ]
+
+            origin_id = practice._origin.id
+
+            if origin_id:
+                domain += [('id', '!=', origin_id)]
+
+            practice.same_reference_practice_id = bool(practice.reference) and \
+                self.with_context(active_test=False).sudo().search(
+                    domain, limit=1)
+
+    # @api.model_create_multi
+    # def create(self, values):
+    #     return super(Practice, self.with_context(default_resource_type='material')).create(values)
+
+    # def name_get(self):
+    #     if not self.env.context.get('hierarchical_naming', True):
+    #         return [(record.id, record.name) for record in self]
+    #     return super(Practice, self).name_get()
+
+    # @api.model
+    # def _set_code(self):
+    #     for practice in self:
+    #         sequence = self._get_sequence_code()
+    #         practice.code = self.env['ir.sequence'].next_by_code(sequence)
+    #     return
 
     @api.model
-    # def _default_image(self):
-    #     image_path = get_module_resource(
-    #         'podiatry', 'static/src/img', 'default_image.png')
-    #     return base64.b64encode(open(image_path, 'rb').read())
+    def _default_image(self):
+        image_path = get_module_resource(
+            'podiatry', 'static/src/img', 'company_image.png')
+        return base64.b64encode(open(image_path, 'rb').read())
+
     def _set_code(self):
         for practice in self:
             sequence = self._get_sequence_code()
-            practice.code = self.env['ir.sequence'].next_by_code(sequence)
+            practice.code = self.env['ir.sequence'].next_by_code(
+                sequence)
         return
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('notes'):
+            vals['notes'] = 'New Practice'
+        if vals.get('reference', _('New')) == _('New'):
+            vals['reference'] = self.env['ir.sequence'].next_by_code(
+                'podiatry.practice') or _('New')
+        practice = super(Practice, self).create(vals)
+        practice._set_code()
+        return practice
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = '[' + rec.reference + '] ' + rec.name
+            result.append((rec.id, name))
+        return result
+
+    def write(self, values):
+        result = super(Practice, self).write(values)
+        return result
+
+    def action_open_prescriptions(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'podiatry.prescription',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
