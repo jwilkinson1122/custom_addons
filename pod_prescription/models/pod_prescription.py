@@ -36,7 +36,7 @@ class Prescription(models.Model):
     line_ids = fields.One2many(
         "pod.prescription.line",
         "prescription_id",
-        string="Borrowed Patients",
+        string="Patient Prescriptions",
     )
 
     request_date = fields.Date(

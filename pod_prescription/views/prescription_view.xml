@@ -111,7 +111,7 @@
           </group>
 
           <notebook>
-            <page name="page_lines" string="Borrowed Patients">
+            <page name="page_lines" string="Patient Prescriptions">
               <field name="line_ids">
                 <tree>
                   <field name="patient_id" />
