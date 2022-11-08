@@ -5,43 +5,43 @@ from odoo.addons.portal.controllers import portal
 class CustomerPortal(portal.CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
-        if "book_checkout_count" in counters:
-            count = request.env["library.checkout"].search_count([])
-            values["book_checkout_count"] = count
+        if "patient_prescription_count" in counters:
+            count = request.env["pod.prescription"].search_count([])
+            values["patient_prescription_count"] = count
         return values
 
     @route(
-        ["/my/book-checkouts", "/my/book-checkouts/page/<int:page>"],
+        ["/my/patient-prescriptions", "/my/patient-prescriptions/page/<int:page>"],
         auth="user",
         website=True,
     )
-    def my_book_checkouts(self, page=1, **kw):
-        Checkout = request.env["library.checkout"]
+    def my_patient_prescriptions(self, page=1, **kw):
+        Prescription = request.env["pod.prescription"]
         domain = []
         # Prepare pager data
-        checkout_count = Checkout.search_count(domain)
+        prescription_count = Prescription.search_count(domain)
         pager_data = portal.pager(
-            url="/my/book_checkouts",
-            total=checkout_count,
+            url="/my/patient_prescriptions",
+            total=prescription_count,
             page=page,
             step=self._items_per_page,
         )
         # Recordset according to pager and domain filter
-        checkouts = Checkout.search(
+        prescriptions = Prescription.search(
             domain, limit=self._items_per_page, offset=pager_data["offset"]
         )
         # Prepare template values
         values = self._prepare_portal_layout_values()
         values.update(
             {
-                "checkouts": checkouts,
-                "page_name": "book-checkouts",
-                "default_url": "/my/book-checkouts",
+                "prescriptions": prescriptions,
+                "page_name": "patient-prescriptions",
+                "default_url": "/my/patient-prescriptions",
                 "pager": pager_data,
             }
         )
-        return request.render("library_portal.my_book_checkouts", values)
+        return request.render("pod_portal.my_patient_prescriptions", values)
 
-    @route(["/my/book-checkout/<model('library.checkout'):doc>"], auth="user", website=True)
+    @route(["/my/patient-prescription/<model('pod.prescription'):doc>"], auth="user", website=True)
     def portal_my_project(self, doc=None, **kw):
-        return request.render("library_portal.book_checkout", {"doc": doc})
+        return request.render("pod_portal.patient_prescription", {"doc": doc})

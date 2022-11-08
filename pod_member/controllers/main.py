@@ -1,14 +1,14 @@
 from odoo import http
-from odoo.addons.library_app.controllers.main import Books
+from odoo.addons.pod_app.controllers.main import Patients
 
 
-class BooksExtended(Books):
+class PatientsExtended(Patients):
 
     @http.route()
     def list(self, **kwargs):
         response = super().list(**kwargs)
         if kwargs.get("available"):
-            all_books = response.qcontext["books"]
-            available_books = all_books.filtered("is_available")
-            response.qcontext["books"] = available_books
+            all_patients = response.qcontext["patients"]
+            available_patients = all_patients.filtered("is_available")
+            response.qcontext["patients"] = available_patients
         return response

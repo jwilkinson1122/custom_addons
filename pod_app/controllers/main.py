@@ -1,12 +1,13 @@
 from odoo import http
 
-class Books(http.Controller):
 
-    @http.route("/library/books")
+class Patients(http.Controller):
+
+    @http.route("/pod/patients")
     def list(self, **kwargs):
-        Book = http.request.env["library.book"]
-        books = Book.search([])
+        Patient = http.request.env["pod.patient"]
+        patients = Patient.search([])
         return http.request.render(
-            "library_app.book_list_template",
-            {"books": books}
+            "pod_app.patient_list_template",
+            {"patients": patients}
         )

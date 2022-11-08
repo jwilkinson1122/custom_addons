@@ -1,0 +1,18 @@
+<odoo>
+
+  <template id="patient_list_template" name="Patient List">
+    <div id="wrap" class="container">
+      <h1>Patients</h1>
+      <t t-foreach="patients" t-as="patient">
+        <div class="row">
+          <span t-field="patient.name" />
+,
+          <span t-field="patient.date_published" />
+,
+          <span t-field="patient.publisher_id" />
+        </div>
+      </t>
+    </div>
+  </template>
+
+</odoo>

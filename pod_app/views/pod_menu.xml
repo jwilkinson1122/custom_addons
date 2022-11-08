@@ -1,0 +1,20 @@
+<odoo>
+
+  <!-- Podiatry App Menu -->
+  <menuitem id="menu_pod" name="Podiatry" />
+
+  <!-- Action to open the Patient list -->
+  <record id="action_pod_patient" model="ir.actions.act_window">
+    <field name="name">Podiatry Patients</field>
+    <field name="res_model">pod.patient</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <!-- Old act_wndow, deprecated
+  <act_window id="action_pod_patient" name="Podiatry Patients" res_model="pod.patient" view_mode="tree,form" />
+  -->
+  <!-- Menu item to open the Patient list -->
+  <menuitem id="menu_pod_patient" name="Patients" parent="menu_pod" action="action_pod_patient" />
+
+  <menuitem id="menu_pod_configuration" name="Configuration" parent="menu_pod" />
+
+</odoo>

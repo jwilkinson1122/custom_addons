@@ -1,2 +1,2 @@
-from . import library_book
-from . import library_book_category
+from . import pod_patient
+from . import pod_patient_category
