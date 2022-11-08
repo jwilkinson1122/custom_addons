@@ -65,19 +65,16 @@
                             </h1>
                         </div>
                     </div>
-                    <group name="personal_information">
-                        <group name="responsible" string="Administrator">
+
+                    <group name="responsible" string="Responsible">
+                        <group name="practitioner_information">
                             <field name="practitioner_id"/>
+                        </group>
+                        <group name="practice_information">
                             <field name="practice_id"/>
-                            <field name="reference"/>
                         </group>
                     </group>
                     <group name="personal_contact">
-                        <group name="contact_information" string="Contact Information">
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                        </group>
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
                             <div class="o_address_format">
@@ -89,6 +86,12 @@
                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                             </div>
                         </group>
+                        <group name="contact_information" string="Contact Information">
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                        </group>
+
                     </group>
                     <notebook>
                         <page name="patient_attributes" string="Attributes">
@@ -122,15 +125,16 @@
                         </page>
                         <page name='internal_notes' string="Patient Notes">
                             <field name="notes" placeholder="Add note..."/>
-                            <!-- <group name="notes" string="Patient Notes" colspan="4">
-                                <field name="notes" nolabel="1" placeholder="Start typing..."/>
-                            </group> -->
                         </page>
+
                         <page name="perscriptions_list" string="Prescriptions">
-                            <group>
-                                <field name="patient_prescription_id"/>
-                            </group>
+                            <separator name="prescriptions" string="Prescriptions List"/>
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_prescription_id', '!=', ())]}">
+                                No Prescriptions
+                            </div>
+                            <field name="patient_prescription_id" mode="kanban"/>
                         </page>
+
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

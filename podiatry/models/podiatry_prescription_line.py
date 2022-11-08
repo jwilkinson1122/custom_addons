@@ -32,8 +32,11 @@ class PrescriptionLine(models.Model):
     # right_obj_file_name = fields.Char(string="Right Obj File Name")
     # right_photo = fields.Binary(related="patient_id.right_photo")
     # left_photo = fields.Binary(related="patient_id.left_photo")
-    patient_left_photo = fields.Binary(related="patient_id.left_photo")
-    patient_right_photo = fields.Binary(related="patient_id.right_photo")
+
+    # foot_image1 = fields.Binary(related="patient_id.left_photo")
+    # foot_image2 = fields.Binary(related="patient_id.right_photo")
+    foot_image1 = fields.Binary(related="prescription_id.foot_image1")
+    foot_image2 = fields.Binary(related="prescription_id.foot_image2")
 
     l_foot_only = fields.Boolean('Left Only')
     r_foot_only = fields.Boolean('Right Only')

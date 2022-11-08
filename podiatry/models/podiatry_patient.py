@@ -123,7 +123,7 @@ class Patient(models.Model):
     patient_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
         inverse_name='patient_id',
-        string="Prescriptions",
+        # string="Prescriptions",
     )
 
     prescription_line_ids = fields.One2many(
@@ -170,8 +170,12 @@ class Patient(models.Model):
                                       'manager_id', 'attachment_id', string="Attachments",
                                       help="Patient Image / File Attachments")
 
-    right_photo = fields.Image("Right Photo")
-    left_photo = fields.Image("Left Photo")
+    right_photo = fields.Binary("Right photo")
+    left_photo = fields.Binary("Left photo")
+    # image1 = fields.Binary("Cover")
+    # image2 = fields.Binary("Cover2")
+    # right_photo = fields.Image("Right Photo")
+    # left_photo = fields.Image("Left Photo")
     left_obj_model = fields.Binary("Left Obj")
     left_obj_file_name = fields.Char(string="Left Obj File Name")
     right_obj_model = fields.Binary("Right Obj")

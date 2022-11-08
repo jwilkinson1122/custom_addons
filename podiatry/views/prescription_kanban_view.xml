@@ -35,7 +35,8 @@
                         <!-- "limit" is a variable set on the t-call -->
                         <div>
                             <t t-foreach="record.prescription_line_ids.raw_value.slice(0, limit)" t-as="line">
-                                <img t-att-src="kanban_image('podiatry.prescription.line', 'foot_image', line)" class="oe_avatar" height="60" alt="Image" />
+                                <img t-att-src="kanban_image('podiatry.prescription.line', 'foot_image1', line)" class="oe_avatar" height="60" alt="Left Foot Image" />
+                                <img t-att-src="kanban_image('podiatry.prescription.line', 'foot_image2', line)" class="oe_avatar" height="60" alt="Right Foot Image" />
                             </t>
                         </div>
                     </t>
@@ -121,7 +122,7 @@ items</div>
             </div>
             -->
                                     <t t-call="foot_images">
-                                        <t t-set="limit" t-value="4" />
+                                        <t t-set="limit" t-value="3" />
                                     </t>
 
                                     <div>
