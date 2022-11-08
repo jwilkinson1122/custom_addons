@@ -86,6 +86,29 @@
         </record>
 
         <!--
+        podiatry.patient.shoe_width
+        -->
+        <record id="access_podiatry_patient_shoe_width_group_manager" model="ir.model.access">
+            <field name="name">access.podiatry.patient.shoe_width.group.manager</field>
+            <field name="model_id" ref="model_podiatry_patient_shoe_width"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_podiatry_patient_shoe_width_group_user" model="ir.model.access">
+            <field name="name">access.podiatry.patient.shoe_width.group.user</field>
+            <field name="model_id" ref="model_podiatry_patient_shoe_width"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
         podiatry.patient.diagnosis
         -->
         <record id="access_podiatry_patient_diagnosis_group_manager" model="ir.model.access">

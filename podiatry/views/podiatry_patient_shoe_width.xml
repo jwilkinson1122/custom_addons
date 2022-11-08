@@ -105,6 +105,7 @@
     <!--
     Submenu: Settings / Shoe Widths
     -->
-    <menuitem id="menu_podiatry_patient_shoe_width" name="Shoe Widths" parent="menu_configuration_patient" action="action_podiatry_patient_shoe_width" groups="group_manager" sequence="20" />
+
+    <menuitem id="menu_podiatry_patient_shoe_width" name="Shoe Widths" parent="menu_configuration_patient" action="action_podiatry_patient_shoe_width" groups="group_manager" sequence="10" />
 
 </odoo>

@@ -35,6 +35,16 @@ class PrescriptionLine(models.Model):
     patient_left_photo = fields.Binary(related="patient_id.left_photo")
     patient_right_photo = fields.Binary(related="patient_id.right_photo")
 
+    l_foot_only = fields.Boolean('Left Only')
+    r_foot_only = fields.Boolean('Right Only')
+    b_l_pair = fields.Boolean('Bilateral')
+    l_r_mirror = fields.Boolean('Mirror Options', default=True)
+    # left_only = fields.Boolean('Left Only')
+    # right_only = fields.Boolean('Right Only')
+    # field_name = fields.Boolean(string="check box", default=False)
+    # bilateral = fields.Boolean('Bilateral', default=True)
+    # mirror_options = fields.Boolean('Mirror Options', default=True)
+
     price = fields.Float(compute=onchange_product, string='Price', store=True)
     qty_available = fields.Integer(
         compute=onchange_product, string='Quantity Available', store=True)

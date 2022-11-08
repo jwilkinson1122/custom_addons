@@ -5,7 +5,6 @@
         <field name="sequence">10</field>
         <field name="state">new</field>
     </record>
-
     <record id="stage_open" model="podiatry.prescription.stage">
         <field name="name">Open</field>
         <field name="sequence">20</field>

@@ -62,6 +62,10 @@
             <tree string="Shoe Sizes" editable="top" decoration-muted="not active">
                 <field name="sequence" widget="handle"/>
                 <field name="name" decoration-bf="1"/>
+                <field name="mens" decoration-bf="1"/>
+                <field name="womens" decoration-bf="1"/>
+                <field name="uk" decoration-bf="1"/>
+                <field name="euro" decoration-bf="1"/>
                 <field name="code"/>
                 <field name="notes" optional="hide"/>
                 <field name="active" invisible="1"/>

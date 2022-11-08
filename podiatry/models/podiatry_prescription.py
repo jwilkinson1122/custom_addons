@@ -62,6 +62,13 @@ class Prescription(models.Model):
     right_photo = fields.Image(related="patient_id.right_photo")
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
     right_obj_model = fields.Binary(related="patient_id.right_obj_model")
+    l_foot_only = fields.Boolean('Left Only')
+    r_foot_only = fields.Boolean('Right Only')
+    b_l_pair = fields.Boolean('Bilateral')
+    rush_order = fields.Boolean('3-day rush')
+    make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
+    qty = fields.Integer('pairs to make')
+    ship_to_patient = fields.Boolean('Ship to patient')
 
     gender = fields.Selection([
         ('male', 'Male'),
@@ -81,7 +88,7 @@ class Prescription(models.Model):
         string='diagnosis')
 
     user_id = fields.Many2one(
-        'res.users', 'Login User', readonly=True, default=lambda self: self.env.user)
+        'res.users', 'User', readonly=True, default=lambda self: self.env.user)
 
     attachment_ids = fields.Many2many('ir.attachment', 'prescription_ir_attachments_rel',
                                       'manager_id', 'attachment_id', string="Attachments",
@@ -364,6 +371,9 @@ class Prescription(models.Model):
     treatment = fields.Text('Treatment')
     other_exams = fields.Text('Other Exams')
     observations = fields.Text('Observations')
+    podiatry_history = fields.Text()
+    ocular_history = fields.Text()
+    consultation = fields.Text()
 
     # pdl = fields.Selection(
     #     [
@@ -640,8 +650,8 @@ class Prescription(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
+    # def print_prescription_report_ticket_size(self):
+    #     return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

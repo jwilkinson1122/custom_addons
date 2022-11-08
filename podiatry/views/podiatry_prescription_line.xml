@@ -23,19 +23,22 @@
         <field name="model">podiatry.prescription.line</field>
         <field name="arch" type="xml">
             <form string="Prescription">
-                <group colspan="4" col="4">
-                    <field name="product_id" required="1" />
-                </group>
-                <!-- <group colspan="4" string="Quantity">
+                <group colspan="4" string="Laterality">
                     <group colspan="6" col="6">
-                        <field name="quantity" />
-
+                        <field name="b_l_pair" />
+                        <field name="l_foot_only" />
+                        <field name="r_foot_only" />
+                    </group>
+                </group>
+                <group colspan="4">
+                    <group colspan="6" col="6">
+                        <field name="l_r_mirror" />
                     </group>
                 </group>
                 <group colspan="4" col="4">
-                    <field name="quantity" />
-                    <field name="short_comment" />
-                </group> -->
+                    <field name="product_id" required="1" />
+                </group>
+
             </form>
         </field>
     </record>

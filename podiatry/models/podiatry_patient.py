@@ -81,6 +81,11 @@ class Patient(models.Model):
         string="Shoe Size",
     )
 
+    shoe_width_id = fields.Many2one(
+        comodel_name='podiatry.patient.shoe_width',
+        string="Shoe Width",
+    )
+
     diagnosis_id = fields.Many2one(
         comodel_name='podiatry.patient.diagnosis',
         string="Diagnosis",
@@ -153,8 +158,8 @@ class Patient(models.Model):
     photo = fields.Binary(string="Picture")
 
     # shoe_size = fields.Float('Shoe Size')
-    shoe_width = fields.Selection(
-        [('narrow', 'Narrow'), ('wide', 'Wide'), ('xwide', 'Extra Wide')], string='Shoe Width')
+    # shoe_width = fields.Selection(
+    #     [('narrow', 'Narrow'), ('wide', 'Wide'), ('xwide', 'Extra Wide')], string='Shoe Width')
 
     shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
         'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')

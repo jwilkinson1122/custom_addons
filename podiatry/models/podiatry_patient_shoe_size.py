@@ -12,9 +12,40 @@ class ShoeSize(models.Model):
     )
     name = fields.Char(
         string="Shoe Size",
+        # required=True,
+        index=True, translate=True,
+    )
+
+    mens = fields.Char(
+        string="Men / Youth",
         required=True,
         index=True, translate=True,
     )
+
+    womens = fields.Char(
+        string="Women's",
+        # required=True,
+        index=True, translate=True,
+    )
+
+    uk = fields.Char(
+        string="UK",
+        # required=True,
+        index=True, translate=True,
+    )
+
+    euro = fields.Char(
+        string="Euro",
+        # required=True,
+        index=True, translate=True,
+    )
+
+    # childrens = fields.Char(
+    #     string="Child Size",
+    #     required=True,
+    #     index=True, translate=True,
+    # )
+
     code = fields.Char(
         string="Code",
         copy=False,
