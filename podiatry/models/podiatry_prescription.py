@@ -58,10 +58,9 @@ class Prescription(models.Model):
         comodel_name='podiatry.patient',
         string='Patient')
 
-    foot_image1 = fields.Binary(related="patient_id.left_photo")
-    foot_image2 = fields.Binary(related="patient_id.right_photo")
-    # left_photo = fields.Image(related="patient_id.left_photo")
-    # right_photo = fields.Image(related="patient_id.right_photo")
+    foot_image1 = fields.Binary(related="patient_id.image1")
+    foot_image2 = fields.Binary(related="patient_id.image2")
+
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
     right_obj_model = fields.Binary(related="patient_id.right_obj_model")
     l_foot_only = fields.Boolean('Left Only')
@@ -82,8 +81,6 @@ class Prescription(models.Model):
     # patient_age = fields.Integer(string='Age', related='patient_id.age')
 
     description = fields.Text(string='Description')
-
-    image = fields.Binary("Foot Image")
 
     diagnosis_id = fields.Many2one(
         comodel_name='podiatry.patient.diagnosis',

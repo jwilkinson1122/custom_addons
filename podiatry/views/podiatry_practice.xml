@@ -2,25 +2,6 @@
 <odoo>
 
     <!--
-    Action: Sub-practices
-    -->
-    <record id="action_podiatry_practice_by_parent" model="ir.actions.act_window">
-        <field name="name">Practices</field>
-        <field name="res_model">podiatry.practice</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('parent_id', '=', active_id)]</field>
-        <field name="context">{'can_edit_parent_id': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new practice
-            </p>
-            <p>
-                Organize and manage practices at a glance.
-            </p>
-        </field>
-    </record>
-
-    <!--
     Form
     -->
     <record id="view_podiatry_practice_form" model="ir.ui.view">
@@ -254,6 +235,26 @@ Unarchive</t>
             </search>
         </field>
     </record>
+
+    <!--
+    Action: Sub-practices
+    -->
+    <record id="action_podiatry_practice_by_parent" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="context">{'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
 
     <!--
     Action: Practices (Dashboard)
