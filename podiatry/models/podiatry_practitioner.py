@@ -123,7 +123,7 @@ class Practitioner(models.Model):
         string="Prescriptions",
     )
 
-    prescription_line_ids = fields.One2many(
+    prescription_line = fields.One2many(
         'podiatry.prescription.line', 'name', 'Prescription Line')
 
     def _compute_prescription_count(self):

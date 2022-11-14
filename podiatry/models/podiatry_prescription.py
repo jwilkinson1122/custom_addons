@@ -1,4 +1,5 @@
 import time
+import json
 from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -10,6 +11,16 @@ class Prescription(models.Model):
     _name = 'podiatry.prescription'
     _description = 'Prescription Request'
     _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+
+
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company', required=True, readonly=True,
+        default=lambda self: self.env.company)
+    
+   
 
     @api.depends('patient_id')
     def _compute_request_date_onchange(self):
@@ -105,7 +116,7 @@ class Prescription(models.Model):
     prescription_ids = fields.One2many(
         'podiatry.prescription', 'patient_id', string="Prescriptions")
 
-    prescription_line_ids = fields.One2many(
+    prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
     # state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
@@ -199,11 +210,11 @@ class Prescription(models.Model):
     num_prescriptions = fields.Integer(
         compute="_compute_num_prescriptions", store=True)
 
-    @api.depends("prescription_line_ids")
+    @api.depends("prescription_line")
     def _compute_num_prescriptions(self):
         for prescription in self:
             prescription.num_prescriptions = len(
-                prescription.prescription_line_ids)
+                prescription.prescription_line)
 
     invoice_done = fields.Boolean('Invoice Done')
 
@@ -276,164 +287,13 @@ class Prescription(models.Model):
     left_low_profile = fields.Boolean()
     right_low_profile = fields.Boolean()
 
-    # OD
-    od_sph_distance = fields.Char(
-    )
-    od_sph_near = fields.Char(
-    )
-    od_cyl_distance = fields.Char(
-    )
-    od_cyl_near = fields.Char(
-    )
-    od_av_near = fields.Char(
-    )
-    os_av_near = fields.Char(
-    )
-    od_ax_distance = fields.Char(
-    )
-    od_av_distance = fields.Char(
-    )
-    os_av_distance = fields.Char(
-    )
-    os_pupillary_distance = fields.Char()
-    od_pupillary_distance = fields.Char()
-    os_pupillary_near = fields.Char()
-    od_pupillary_near = fields.Char()
-    od_ax_near = fields.Char(
-    )
-    od_add_distance = fields.Char(
-    )
-    od_add_near = fields.Char(
-    )
-    od_prism_distance = fields.Char(
-    )
-    od_prism_near = fields.Char(
-    )
-    od_base_distance = fields.Char(
-    )
-    od_base_near = fields.Char(
-    )
-    os_sph_distance = fields.Char(
-    )
-    os_sph_near = fields.Char(
-    )
-    os_cyl_distance = fields.Char(
-    )
-    os_cyl_near = fields.Char(
-    )
-    os_ax_distance = fields.Char(
-    )
-    os_ax_near = fields.Char(
-    )
-    os_add_distance = fields.Char(
-    )
-    os_add_near = fields.Char(
-    )
-    os_prism_distance = fields.Char(
-    )
-    os_prism_near = fields.Char(
-    )
-    os_base_distance = fields.Char(
-    )
-    os_base_near = fields.Char(
-    )
-
-    # Extras
-    ipd = fields.Char(string="ipd")
-    cl_right = fields.Char(string="Cl Right")
-    cl_left = fields.Char(string="Cl Left")
-    base_curve = fields.Char(string="Base Curve")
-    dim = fields.Char(string="Dim")
-
-    # ophthalmological
-    r_wc_close = fields.Char()
-    r_wc_far = fields.Char()
-    r_woc_close = fields.Char()
-    r_woc_far = fields.Char()
-    r_tonometria = fields.Char()
-    l_wc_close = fields.Char()
-    l_wc_far = fields.Char()
-    l_woc_close = fields.Char()
-    l_woc_far = fields.Char()
-    l_tonometria = fields.Char()
-    ad_wc_close = fields.Char()
-    ad_wc_far = fields.Char()
-    ad_woc_close = fields.Char()
-    ad_woc_far = fields.Char()
-    ad_tonometria = fields.Char()
-    ph = fields.Text('P.H')
-    cie_10 = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
+    shell_foundation = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
         'laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'), ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
-    main_symptoms = fields.Text('Main Symptoms')
-    background = fields.Text('Background')
-    opthalmological_exam = fields.Text('Opthalmological Exam')
-    treatment = fields.Text('Treatment')
-    other_exams = fields.Text('Other Exams')
-    observations = fields.Text('Observations')
-    podiatry_history = fields.Text()
-    ocular_history = fields.Text()
-    consultation = fields.Text()
-
-    # pdl = fields.Selection(
-    #     [
-    #         ('25', '25'), ('25.5', '25.5'), ('26', '26'), ('26.5', '26.5'), ('27', '27'),
-    #         ('27.5', '27.5'),
-    #         ('28', '28'), ('28.5', '28.5'), ('29', '29'), ('29.5', '29.5'),
-    #         ('30', '30'), ('30.5', '30.5'), ('31', '31'), ('31.5', '31.5'), ('32', '32'),
-    #         ('32.5', '32.5'),
-    #         ('33', '33'), ('33.5', '33.5'), ('34', '34'), ('34.5', '34.5'), ('35', '35'),
-    #         ('35.5', '35.5'), ('36', '36'), ('36.5', '36.5'), ('37', '37'), ('37.5', '37.5'),
-    #         ('38', '38'), ('38.5', '38.5'), ('39', '39'),
-    #         ('39.5', '39.5'), ('40', '40')
-    #
-    #
-    #      ],default='25')
-    # pdr = fields.Selection(
-    #     [
-    #         ('25', '25'), ('25.5', '25.5'), ('26', '26'),('26.5', '26.5'), ('27', '27'),('27.5', '27.5'),
-    #         ('28', '28'),('28.5', '28.5'),('29', '29'),('29.5', '29.5'),
-    #         ('30', '30'),('30.5', '30.5'), ('31', '31'),('31.5', '31.5'), ('32', '32'),
-    #         ('32.5', '32.5'),
-    #         ('33', '33'),('33.5','33.5'), ('34', '34'),('34.5', '34.5'), ('35', '35'),('35.5', '35.5'), ('36', '36'),('36.5', '36.5'), ('37', '37'),('37.5', '37.5'),('38','38'),('38.5','38.5'), ('39','39'),
-    #         ('39.5','39.5'),('40','40')
-    #
-    #
-    #      ],default='25')
-    # Not required
-    # prism = fields.Boolean('Prism')
-    # prisml = fields.Float('Prism')
-    # dim = fields.Float('Dim')
-    # diml = fields.Float('Dim')
-    # height = fields.Float('Height')
-    # heightl = fields.Float('Height')
-    # basel = fields.Selection(
-    #     [('Select', 'Select'), ('IN', 'IN'), ('OUT', 'OUT'), ('UP', 'UP'), ('DOWN', 'DOWN'),
-    #      ], 'basel')
-    # prism_vall = fields.Selection(
-    #     [('0.25', '0.25'), ('0.5', '0.5'), ('0.75', '0.75'), ('1', '1'),
-    #      ('1.25', '1.25'), ('1.5', '1.5'),
-    #      ('1.75', '1.75'), ('2', '2'), ('2.25', '2.25'), ('2.5', '2.5'), ('2.75', '2.75'),
-    #      ('3', '3'), ('3.25', '3.25'), ('3.5', '3.5'), ('3.75', '3.75'), ('4', '4'), ('4.25', '4.25'),
-    #      ('4.5', '4.5'), ('4.75', '4.75'),
-    #      ('5', '5')], 'PrismL')
-    # lpd = fields.Float('lpd')
-    # lpdl = fields.Float('lpd')
-    # dual_pd = fields.Boolean('I have Dual PD')
-    # pd_distance = fields.Selection(
-    #     [('47', '47'), ('48', '48'), ('49', '49'), ('50', '50'),
-    #      ('60', '60'), ('70', '70')
-    #         , ('79', '79')], 'PD')
-    # pd_near = fields.Selection(
-    #     [('47', '47'), ('48', '48'), ('49', '49'), ('50', '50'),
-    #      ('60', '60'), ('70', '70')
-    #         , ('79', '79')], 'PD')
 
     dr_notes = fields.Text('Notes')
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
-    family_history = fields.Text()
-    ocular_history = fields.Text()
-    consultation = fields.Text()
+    podiatric_history = fields.Text()
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):

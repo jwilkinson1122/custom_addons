@@ -9,15 +9,15 @@
                 <header>
                     <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
                 </header>
-                <field name="name"/>
+                <field name="name" />
                 <field name="state" invisible="True" />
                 <!-- <field name="device_type"/> -->
 
-                <field name="bookin_date"/>
+                <field name="bookin_date" />
                 <field name="request_date" />
-                <field name="practice_id"/>
-                <field name="practitioner_id"/>
-                <field name="patient_id"/>
+                <field name="practice_id" />
+                <field name="practitioner_id" />
+                <field name="patient_id" />
                 <!-- <field name="user_id" /> -->
                 <field name="stage_id" />
                 <!-- <field name="num_prescriptions" sum="Num. Prescriptions" /> -->
@@ -55,7 +55,7 @@
                     <field name="state" invisible="True" />
                     <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
+                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
                     <button name="open_customer" class="btn btn-success" states="Confirm" string="Create Orders" type="object"></button>
                     <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
                     <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
@@ -73,13 +73,13 @@
                     <!-- <field name="member_image" widget="image" class="oe_avatar" /> -->
                     <div class="oe_title">
 
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name" class="oe_edit_only" />
                         <h1>
                             <field name="name" readonly="1" />
                         </h1>
                         <h3>
                             <span class="oe_read_only">Submitted By</span>
-                            <label for="practitioner_id" class="oe_edit_only"/>
+                            <label for="practitioner_id" class="oe_edit_only" />
                             <field name="practitioner_id" class="oe_inline" />
                         </h3>
                     </div>
@@ -94,231 +94,56 @@
                     </group>
                     <group string="Order Info">
                         <group>
-                            <field name="bookin_date"/>
+                            <field name="bookin_date" />
                             <field name="user_id" />
                             <field name="rush_order" />
-                            <field name="ship_to_patient"/>
+                            <field name="ship_to_patient" />
 
                         </group>
                     </group>
                     <notebook>
-                        <!-- <page string="Prescription Details"> -->
-                        <!-- <group string="Rx Lines">
-                                <field name="prescription_line_ids" nolabel="1" widget="one2many_list" />
-                            </group> -->
-                        <!-- </page> -->
                         <page string="Prescription">
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
+                            <table style="border:1px solid; width:100%" border="1">
+                                SHELL / FOUNDATION
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
-                                    <td style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        FAIR VISION
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        <table width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid; width:10%">SPH</td>
-                                                <td style="border-right:1px solid; width:10%">CYL</td>
-                                                <td style="border-right:1px solid; width:10%">AXIS</td>
-                                                <td style="border-right:1px solid; width:10%">A.V</td>
-                                                <td style="border-right:1px solid; width:10%">PUPILLARY DISTANCE</td>
-                                                <td style="border-right:1px solid; width:10%">PRISM</td>
-                                                <td style="border-right:1px solid; width:10%">ADD</td>
-                                                <td style="width:10%">MEDIUM ADDITION</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align:center; font-size:12px; font-weight:bold; width:5%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        RIGHT EYE
-                                    </td>
-                                    <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%;">
-                                        <table width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid; border-bottom:1px solid; height:25px; width:10%">
-                                                    <span>
-                                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_sph_distance"/>
-                                                    </span>
-                                                </td>
-                                                <td t-if="od_cyl_distance" style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_cyl_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_av_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_pupillary_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_prism_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_add_distance"/>
-                                                </td>
-                                                <td style=" width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_base_distance"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                                    <th style="text-align:center">DEVICE</th>
+                                    <th style="text-align:center">B/L</th>
+                                    <th style="text-align:center">LEFT</th>
+                                    <th style="text-align:center">RIGHT</th>
                                 </tr>
 
                                 <tr>
-                                    <td style="text-align:center; font-size:12px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        LEFT EYE
-                                    </td>
-                                    <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        <table width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid;  height:25px; width:10%">
-                                                    <span>
-                                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_distance"/>
-                                                    </span>
-                                                </td>
-                                                <td t-if="od_cyl_distance" style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_ax_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_av_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_prism_distance"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_add_distance"/>
-                                                </td>
-                                                <td style=" width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_base_distance"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-
-                                </tr>
-                            </table>
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:10px; ">
-                                <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:12px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
-                                    <td style="text-align:center; padding:5px; font-size:12px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        CLOSE VISION
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align:center;font-size:12px; font-weight:bold; width:5%; border-right:1px solid black;">
-                                        <table width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">SPH</td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">CYL</td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">AXIS</td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">A.V</td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">PUPILLARY DISTANCE</td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">PRISM</td>
-                                                <td style="border-right:1px solid; width:10%;"></td>
-                                                <td style="width:10%; border-bottom:1px solid black;">MEDIUM ADDITION</td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="text-align:center; font-size:12px; font-weight:bold; width:5%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        RIGHT EYE
-                                    </td>
-                                    <td style="text-align:center;  font-size:12px; font-weight:bold; width:40%;">
-                                        <table cellspacing="0" cellpadding="0" width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid; border-bottom:1px solid; height:25px; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_sph_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_cyl_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_av_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_pupillary_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%; border-bottom:1px solid;">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="od_prism_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%;">
-
-                                                </td>
-                                                <td style="width:10%; border-bottom:1px solid;">
-                                                    <field name="od_base_near"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align:center; font-size:12px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        LEFT EYE
-                                    </td>
-                                    <td style="text-align:center;  font-size:12px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;">
-                                        <table width="100%">
-                                            <tr>
-                                                <td style="border-right:1px solid;  height:25px; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <span>
-                                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_ax_near"/>
-                                                    </span>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_av_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_pupillary_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_prism_near"/>
-                                                </td>
-                                                <td style="border-right:1px solid; width:10%">
-
-                                                </td>
-                                                <td style="width:10%">
-                                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="os_base_near"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
+                                    <td align="center">Test</td>
                                 </tr>
                             </table>
                             <group>
                                 <group>
-                                    <field name="podiatry_history" attrs="{'readonly': [('state','=','confirm')]}" string="Podiatry History"/>
-                                    <field name="ocular_history" attrs="{'readonly': [('state','=','confirm')]}" string="Ocular History"/>
-                                    <field name="consultation" attrs="{'readonly': [('state','=','confirm')]}" string="Consultation Reason"/>
-
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="dr_notes" placeholder="Note"></field>
                                 </group>
                                 <group>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="diagnosis_client"></field>
                                     <field attrs="{'readonly': [('state','=','confirm')]}" name="notes_laboratory"></field>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="dr_notes" placeholder="Note"></field>
                                 </group>
                             </group>
                         </page>
-                        <page string="Measures">
+                        <page string="Prescription Testing">           
+                            <group string="Rx Lines">
+                                <field name="prescription_line" nolabel="1" widget="one2many_list" />
+                            </group>
+                        </page>
+              
+               
+                     
+                        <!-- <page string="Measures">
                             <div class="row">
                                 <div class="col-8">
                                     <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
@@ -423,7 +248,7 @@
                                                     <field name="ph"/>
                                                 </td>
                                                 <td style="text-align:center; border:1px solid black; width:50%;">
-                                                    <field name="cie_10"/>
+                                                    <field name="shell_foundation"/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -442,23 +267,23 @@
                                     <field name="observations"/>
                                 </group>
                             </group>
-                        </page>
+                        </page> -->
                         <page string="Images / Attachments">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image"/>
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
                                 </group>
                                 <group name="photo_group_tlOo2_right">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image"/>
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image" />
                                 </group>
                             </group>
                             <group name="obj_group_DPydw">
                                 <group name="obj_group_DPydw_left">
-                                    <field name="left_obj_model" string="Left Scan"/>
+                                    <field name="left_obj_model" string="Left Scan" />
 
                                 </group>
                                 <group name="obj_group_DPydw_right">
-                                    <field name="right_obj_model" string="Right Scan"/>
+                                    <field name="right_obj_model" string="Right Scan" />
 
                                 </group>
                             </group>
@@ -483,13 +308,13 @@
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
+                <field name="name" />
                 <field name="practitioner_id" />
                 <field name="user_id" />
 
-                <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]"/>
-                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]"/>
-                <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}"/>
+                <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]" />
+                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
+                <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" />
 
                 <searchpanel>
                     <field name="practitioner_id" enable_counters="1" />
@@ -521,13 +346,13 @@
     <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
         <field name="name">Practitioner Prescriptions</field>
         <field name="model">podiatry.prescription</field>
-        <field eval="2" name="priority"/>
+        <field eval="2" name="priority" />
         <field name="arch" type="xml">
             <calendar date_start="date" string="orders" mode="month" color="color">
                 <field name="stage_id" type="col" />
-                <field name="patient_id"/>
-                <field name="practitioner_id"/>
-                <field name="date"/>
+                <field name="patient_id" />
+                <field name="practitioner_id" />
+                <field name="date" />
             </calendar>
         </field>
     </record>

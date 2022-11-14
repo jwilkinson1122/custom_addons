@@ -48,7 +48,7 @@
                             </div>
                         </thead>
                         <tbody class="sale_tbody">
-                            <t t-foreach="doc.prescription_line_ids" t-as="test">
+                            <t t-foreach="doc.prescription_line" t-as="test">
                                 <tr t-if="test.quantity">
                                     <td>
                                         <strong>Quantity</strong>

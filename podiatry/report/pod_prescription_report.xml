@@ -185,7 +185,7 @@
 
                                                 </td>
                                                 <td style="text-align:center; border:1px solid black; width:50%;">
-                                                    <span t-field="doc.cie_10"></span>
+                                                    <span t-field="doc.shell_foundation"></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -225,36 +225,16 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
                             <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Treatment
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.family_history"></span>
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
-
-                            <table style="margin-top:10px;">
                                 <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Observation
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.ocular_history"></span>
+                                    <span t-field="doc.podiatric_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             </table>
 
-                            <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Consultation
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.consultation"></span>
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
-
-
+                            
                         </div>
 
 
@@ -421,7 +401,7 @@
 
                                             </td>
                                             <td style="text-align:center; border:1px solid black; width:50%;">
-                                                <span t-field="doc.cie_10"></span>
+                                                <span t-field="doc.shell_foundation"></span>
                                             </td>
                                         </tr>
                                     </tbody>

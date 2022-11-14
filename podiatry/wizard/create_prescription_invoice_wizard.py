@@ -20,7 +20,7 @@ class create_prescription_invoice(models.TransientModel):
         inv_list = []
         lab_reqs = lab_req_obj.browse(active_ids)
         for lab_req in lab_reqs:
-            if len(lab_req.prescription_line_ids) < 1:
+            if len(lab_req.prescription_line) < 1:
                 raise Warning('At least one prescription line is required.')
 
             if lab_req.is_invoiced == True:
@@ -44,7 +44,7 @@ class create_prescription_invoice(models.TransientModel):
 
             res = account_invoice_obj.create(invoice_vals)
             list_of_vals = []
-            for p_line in lab_req.prescription_line_ids:
+            for p_line in lab_req.prescription_line:
 
                 invoice_line_account_id = False
                 if p_line.product_id.id:

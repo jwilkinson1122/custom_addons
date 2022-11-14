@@ -21,8 +21,8 @@ class create_prescription_shipment(models.TransientModel):
 
         res = sale_order_obj.create({'partner_id': priscription_record.patient_id.patient_id.id,
                                      })
-        if priscription_record.prescription_line_ids:
-            for p_line in priscription_record.prescription_line_ids:
+        if priscription_record.prescription_line:
+            for p_line in priscription_record.prescription_line:
 
                 res1 = sale_order_line_obj.create({'product_id': p_line.product_id.id,
                                                    'product_uom': p_line.product_id.uom_id.id,
