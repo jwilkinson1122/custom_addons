@@ -135,14 +135,14 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Prescription Testing">           
+                        <page string="Prescription Testing">
                             <group string="Rx Lines">
                                 <field name="prescription_line" nolabel="1" widget="one2many_list" />
                             </group>
                         </page>
-              
-               
-                     
+
+
+
                         <!-- <page string="Measures">
                             <div class="row">
                                 <div class="col-8">
@@ -268,7 +268,7 @@
                                 </group>
                             </group>
                         </page> -->
-                        <page string="Images / Attachments">
+                        <page string="Documents">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
                                     <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
@@ -284,11 +284,22 @@
                                 </group>
                                 <group name="obj_group_DPydw_right">
                                     <field name="right_obj_model" string="Right Scan" />
-
                                 </group>
                             </group>
+                            <group string="Rx Attachement">
+                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                            </group>
+                        </page>
+                        <page string="Special Instructions">
 
                         </page>
+                        <page string="Casting">
+
+                        </page>
+                        <page string="Process">
+
+                        </page>
+
                     </notebook>
                     <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
                     <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
