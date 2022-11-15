@@ -11,10 +11,13 @@ from . import podiatry_prescription
 from . import podiatry_prescription_line
 from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
+from . import pos_variants
+from . import pos_config
 from . import podiatry_specialty
 from . import podiatry_contact_mixin
 from . import res_partner
 from . import inherit_saleorder
+from . import inherit_saleorder_line
 from . import inherit_purchase_order
 from . import inherit_invoice
 from . import product_attribute

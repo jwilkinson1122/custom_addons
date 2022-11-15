@@ -15,6 +15,7 @@
         "mail",
         "base",
         'sale',
+        'point_of_sale',
         "product",
         'purchase',
 
@@ -46,6 +47,8 @@
         "views/res_config_settings.xml",
         "views/mail_activity_type.xml",
         "views/podiatry_patient.xml",
+        "views/pos_variants.xml",
+        "views/pos_config.xml",
         "views/podiatry_patient_shoe_size.xml",
         "views/podiatry_patient_shoe_width.xml",
         "views/podiatry_patient_diagnosis.xml",
@@ -75,14 +78,21 @@
         'views/inherit_sale_order.xml',
         'views/inherit_invoice.xml',
 
-
-
     ],
 
     'assets': {
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
             'podiatry/static/src/scss/card.scss',
+            'podiatry/static/src/css/label.css',
+            'podiatry/static/src/js/models.js',
+            'podiatry/static/src/js/ProductPopup.js',
+            'podiatry/static/src/js/ProductScreen.js',
+        ],
+        'web.assets_qweb': [
+            'podiatry/static/src/xml/label.xml',
+            'podiatry/static/src/xml/popup.xml',
+            'podiatry/static/src/xml/pos_order_to_sale_order.xml',
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],

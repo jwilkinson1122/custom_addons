@@ -38,3 +38,4 @@ access_product_product_product_config_user,product.product Product Config user,p
 access_product_product_product_config_manager,product.product Product Config Manager,product.model_product_product,podiatry.group_podiatry_manager,1,1,1,1
 access_product_attribute_line_product_config_manager,product.attribute line Product Config Manager,product.model_product_template_attribute_line,podiatry.group_podiatry_manager,1,1,1,1
 access_podiatry_group,podiatry,model_podiatry,podiatry.group_podiatry,1,1,1,1
+access_variants_tree,access.variants.tree,model_variants_tree,base.group_user,1,1,1,1
