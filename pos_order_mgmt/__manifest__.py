@@ -12,11 +12,21 @@
     "license": "AGPL-3",
     "depends": ["point_of_sale"],
     "data": [
-        "views/assets.xml",
         "views/view_pos_config.xml",
         "views/view_pos_order.xml",
     ],
-    "qweb": ["static/src/xml/pos.xml"],
+    'assets': {
+        'web.assets_backend': [
+            'pos_order_mgmt/static/src/css/pos.css',
+            'pos_order_mgmt/static/src/js/models.js',
+            'pos_order_mgmt/static/src/js/widgets.js',
+        ],
+        'web.assets_qweb': [
+            'pos_order_mgmt/static/src/xml/pos.xml',
+
+        ],
+    },
+    # "qweb": ["static/src/xml/pos.xml"],
     "application": False,
     "installable": True,
 }

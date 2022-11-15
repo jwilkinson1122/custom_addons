@@ -48,7 +48,6 @@
         "views/mail_activity_type.xml",
         "views/podiatry_patient.xml",
         "views/pos_variants.xml",
-        "views/pos_config.xml",
         "views/podiatry_patient_shoe_size.xml",
         "views/podiatry_patient_shoe_width.xml",
         "views/podiatry_patient_diagnosis.xml",
@@ -92,7 +91,6 @@
         'web.assets_qweb': [
             'podiatry/static/src/xml/label.xml',
             'podiatry/static/src/xml/popup.xml',
-            'podiatry/static/src/xml/pos_order_to_sale_order.xml',
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],
