@@ -1,5 +1,5 @@
 {
-    "name": "Patients",
+    "name": "Podiatry Manager",
     "version": "15.0.1.0",
     "category": "Health Care/Health Care",
 

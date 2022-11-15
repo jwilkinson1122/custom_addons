@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_patient_user,PatientUser,model_pod_patient,pod_group_user,1,1,1,0
-access_patient_manager,PatientManager,model_pod_patient,pod_group_manager,1,1,1,1
-access_categ_user,PatientCategoryUser,model_pod_patient_category,pod_group_user,1,1,1,1

@@ -1,9 +1,0 @@
-<odoo>
-  <template id="assets_backend" inherit_id="web.assets_backend" name="Podiatry Prescription Kanban Assets">
-    <xpath expr="." position="inside">
-      <link rel="stylesheet" href="/pod_prescription/static/src/css/prescription.css"/>
-      <script type="text/javascript" src="/pod_prescription/static/src/js/prescription.js">
-      </script>
-    </xpath>
-  </template>
-</odoo>

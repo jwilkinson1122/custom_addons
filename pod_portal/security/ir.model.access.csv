@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_patient_portal,Patient Portal Access,pod_app.model_pod_patient,base.group_portal,1,0,0,0
-access_member_portal,Member Portal Access,pod_member.model_pod_member,base.group_portal,1,0,0,0
-access_stage_portal,Prescription Stage Portal Access,pod_prescription.model_pod_prescription_stage,base.group_portal,1,0,0,0
-access_prescription_portal,Prescription Portal Access,pod_prescription.model_pod_prescription,base.group_portal,1,0,0,0
-access_prescription_line_portal,Prescription Portal Line Access,pod_prescription.model_pod_prescription_line,base.group_portal,1,0,0,0

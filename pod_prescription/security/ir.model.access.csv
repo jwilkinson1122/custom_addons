@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-prescription_user,Prescription User,model_pod_prescription,pod_app.pod_group_user,1,1,1,1
-prescription_line_user,Prescription Line User,model_pod_prescription_line,pod_app.pod_group_user,1,1,1,1
-prescription_stage_user,Prescription Stage User,model_pod_prescription_stage,pod_app.pod_group_user,1,0,0,0
-prescription_stage_manager,Prescription Stage Manager,model_pod_prescription_stage,pod_app.pod_group_manager,1,1,1,1
-prescription_massmessage_user,Prescription Mass Message User,model_pod_prescription_massmessage,pod_app.pod_group_user,1,1,1,1
