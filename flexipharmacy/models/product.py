@@ -13,6 +13,7 @@ from odoo import models, api, fields, _
 from datetime import datetime, date, timedelta
 from itertools import groupby
 import copy
+from odoo.tools.translate import _
 
 
 class ProductTemplate(models.Model):
@@ -50,9 +51,53 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    image_variant = fields.Binary(
+        "Variant Image", attachment=True, help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
+    image_variant2 = fields.Binary(
+        "Variant Image", attachment=True, help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
+    image_variant3 = fields.Binary(
+        "Variant Image", attachment=True, help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
+    image = fields.Binary(
+        "Big-sized image", compute='_compute_images', inverse='_set_image', help="Image of the product variant (Big-sized image of product template if false). It is automatically "
+        "resized as a 1024x1024px image, with aspect ratio preserved.")
+    image_small = fields.Binary(
+        "Small-sized image", compute='_compute_images', help="Image of the product variant (Small-sized image of product template if false).")
+    image_medium = fields.Binary(
+        "Medium-sized image", compute='_compute_images', inverse='_set_image_medium', help="Image of the product variant (Medium-sized image of product template if false).")
+    image_variant_raw = fields.Binary()
+
     near_expire = fields.Integer(
         string='Near Expire', compute='check_near_expiry')
     expired = fields.Integer(string='Expired', compute='check_expiry')
+
+    @api.depends('image_variant')
+    def _compute_images(self):
+        if self._context.get('bin_size'):
+            self.image_medium = self.image_variant
+            self.image_small = self.image_variant
+            self.image = self.image_variant
+        else:
+            resized_images = tools.image_get_resized_images(
+                self.image_variant, return_big=True, avoid_resize_medium=True)
+            self.image_medium = resized_images['image_medium']
+            self.image_small = resized_images['image_small']
+            self.image = resized_images['image']
+
+    def _set_image(self):
+        self.image_variant = self.image_medium
+        self.image_variant2 = self.image_small
+        self.image_variant3 = self.image
+
+    def _set_image_medium(self):
+        self.image_variant = self.image_medium
+        self.image_variant2 = self.image_small
+        self.image_variant3 = self.image
+
+    def _set_image_small(self):
+        self._set_image_value(self.image_small)
+
+    def _set_image_value(self, value):
+        self.image_variant = value
 
     @api.model
     def create(self, vals):

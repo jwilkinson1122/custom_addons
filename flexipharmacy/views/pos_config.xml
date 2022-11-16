@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="row mt16">
                                     <label for="rounding_journal_id" string="Rounding Journal" class="col-md-3 o_light_label"/>
-                                    <field name="rounding_journal_id" domain="[('jr_use_for', '=', 'rounding')]" context="{'journal_ids': journal_ids, 'config_jr': True}"/>
+                                    <field name="rounding_journal_id" domain="[('jr_use_for', '=', 'rounding')]" context="{'journal_id': journal_id, 'config_jr': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -393,7 +393,7 @@
                                 </div>
                                 <div class="row mt16">
                                     <label for="cash_method" string="Cash Payment Method" class="col-md-3 o_light_label"/>
-                                    <field name="cash_method" domain="[('type', '=', 'cash')]" attrs="{'required':[('enable_quick_cash_payment','=',True)]}" context="{'journal_ids': journal_ids, 'config_jr': True}" />
+                                    <field name="cash_method" domain="[('type', '=', 'cash')]" attrs="{'required':[('enable_quick_cash_payment','=',True)]}" context="{'journal_id': journal_id, 'config_jr': True}" />
                                 </div>
                             </div>
                         </div>
@@ -410,7 +410,7 @@
                             <div class="content-group" attrs="{'invisible' : [('enable_pos_loyalty', '=', False)]}">
                                 <div class="row mt16">
                                     <label for="loyalty_journal_id" string="Loyalty Journal" class="col-md-3 o_light_label"/>
-                                    <field name="loyalty_journal_id" domain="[('jr_use_for', '=', 'loyalty')]" attrs="{'invisible': [('enable_pos_loyalty', '=', False)], 'required': [('enable_pos_loyalty', '=', True)]}" context="{'journal_ids': journal_ids, 'config_jr': True}" options="{'no_create':True}" />
+                                    <field name="loyalty_journal_id" domain="[('jr_use_for', '=', 'loyalty')]" attrs="{'invisible': [('enable_pos_loyalty', '=', False)], 'required': [('enable_pos_loyalty', '=', True)]}" context="{'journal_id': journal_id, 'config_jr': True}" options="{'no_create':True}" />
                                 </div>
                             </div>
                         </div>
@@ -431,7 +431,7 @@
                                 </div>
                                 <div class="row mt16">
                                     <label for="enable_journal_id" string="Journal" class="col-md-3 o_light_label"/>
-                                    <field name="enable_journal_id" domain="[('jr_use_for', '=', 'gift_card')]" attrs="{'invisible':[('enable_gift_card','=',False)],'required':[('enable_gift_card','=',True)]}" context="{'journal_ids': journal_ids, 'config_jr': True}" options="{'no_create':True}"/>
+                                    <field name="enable_journal_id" domain="[('jr_use_for', '=', 'gift_card')]" attrs="{'invisible':[('enable_gift_card','=',False)],'required':[('enable_gift_card','=',True)]}" context="{'journal_id': journal_id, 'config_jr': True}" options="{'no_create':True}"/>
                                 </div>
                                 <div class="row mt16">
                                     <label for="manual_card_number" string="Manual Card Number" class="col-md-3 o_light_label"/>
@@ -460,7 +460,7 @@
                             <div class="content-group" attrs="{'invisible' : [('enable_gift_voucher', '=', False)]}">
                                 <div class="row mt16">
                                     <label for="gift_voucher_journal_id" string="Voucher Journal" class="col-md-3 o_light_label"/>
-                                    <field name="gift_voucher_journal_id" domain="[('jr_use_for', '=', 'gift_voucher')]" attrs="{'invisible' : [('enable_gift_voucher', '=', False)],'required':[('enable_gift_voucher', '=', True)]}" context="{'journal_ids': journal_ids, 'config_jr': True}" options="{'no_create':True}" />
+                                    <field name="gift_voucher_journal_id" domain="[('jr_use_for', '=', 'gift_voucher')]" attrs="{'invisible' : [('enable_gift_voucher', '=', False)],'required':[('enable_gift_voucher', '=', True)]}" context="{'journal_id': journal_id, 'config_jr': True}" options="{'no_create':True}" />
                                 </div>
                             </div>
                         </div>
@@ -719,7 +719,7 @@
                             <div class="content-group mt16" attrs="{'invisible' : [('enable_credit', '=', False)]}">
                                 <div class="row mt16">
                                     <label for="pos_journal_id" string="Select Journal" class="col-md-3 o_light_label"/>
-                                    <field name="pos_journal_id" context="{'journal_ids': journal_ids,'config_jr': True}" attrs="{'invisible' : [('enable_credit', '=', False)],'required':[('enable_credit','==',True)]}"/>
+                                    <field name="pos_journal_id" context="{'journal_id': journal_id,'config_jr': True}" attrs="{'invisible' : [('enable_credit', '=', False)],'required':[('enable_credit','==',True)]}"/>
                                 </div>
                             </div>
                             <div class="content-group mt16" attrs="{'invisible' : [('enable_credit', '=', False)]}">

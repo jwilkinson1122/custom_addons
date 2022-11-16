@@ -933,12 +933,12 @@ class pos_order(models.Model):
             if not float_is_zero(order['amount_return'], self.env['decimal.precision'].precision_get('Account')):
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
-                    cash_journal_ids = session.statement_ids.filtered(
+                    cash_journal_id = session.statement_ids.filtered(
                         lambda st: st.journal_id.type == 'cash')
-                    if not len(cash_journal_ids):
+                    if not len(cash_journal_id):
                         raise Warning(_('error!'),
                                       _("No cash statement found for this session. Unable to record returned cash."))
-                    cash_journal = cash_journal_ids[0].journal_id
+                    cash_journal = cash_journal_id[0].journal_id
                 order_obj.with_context({'from_pos': True}).add_payment({
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),

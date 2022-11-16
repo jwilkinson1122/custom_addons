@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-             <!--  GIFT Voucher -->
+        <!--  GIFT Voucher -->
         <record id="aspl_voucher_form" model="ir.ui.view">
             <field name="name">aspl voucher form</field>
             <field name="model">aspl.gift.voucher</field>
@@ -51,7 +51,7 @@
             </field>
         </record>
 
-             <!--  REDEEM VOUCHER -->
+        <!--  REDEEM VOUCHER -->
         <record id="aspl_redeem_tree" model="ir.ui.view">
             <field name="name">aspl redeem tree</field>
             <field name="model">aspl.gift.voucher.redeem</field>
@@ -88,19 +88,19 @@
             </field>
         </record>
 
-                <!--  GIFT VOUCHER ACTION -->
+        <!--  GIFT VOUCHER ACTION -->
         <record id="action_aspl_voucher_form" model="ir.actions.act_window">
             <field name="name">Voucher</field>
             <field name="res_model">aspl.gift.voucher</field>
-            <field name="view_type">form</field>
+
             <field name="view_mode">tree,form</field>
         </record>
 
-                <!--  REDEEM VOUCHER ACTION -->
+        <!--  REDEEM VOUCHER ACTION -->
         <record id="action_aspl_redeem_form" model="ir.actions.act_window">
             <field name="name">Redeem voucher</field>
             <field name="res_model">aspl.gift.voucher.redeem</field>
-            <field name="view_type">form</field>
+
             <field name="view_mode">tree</field>
         </record>
 
@@ -108,11 +108,9 @@
 
         <menuitem id="aspl_voucher_main_menu" name="Gift Voucher" parent="point_of_sale.menu_point_root" sequence="98" groups="point_of_sale.group_pos_manager"/>
 
-        <menuitem id="aspl_voucher_details" name="Voucher" parent="aspl_voucher_main_menu" sequence="98" groups="point_of_sale.group_pos_manager"
-            action="action_aspl_voucher_form"/>
+        <menuitem id="aspl_voucher_details" name="Voucher" parent="aspl_voucher_main_menu" sequence="98" groups="point_of_sale.group_pos_manager" action="action_aspl_voucher_form"/>
 
-        <menuitem id="aspl_redeem_details" name="Redeem Voucher" parent="aspl_voucher_main_menu" sequence="99" groups="point_of_sale.group_pos_manager"
-            action="action_aspl_redeem_form"/>
+        <menuitem id="aspl_redeem_details" name="Redeem Voucher" parent="aspl_voucher_main_menu" sequence="99" groups="point_of_sale.group_pos_manager" action="action_aspl_redeem_form"/>
 
     </data>
 </odoo>

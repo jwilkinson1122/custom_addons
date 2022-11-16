@@ -20,10 +20,10 @@ class account_journal(models.Model):
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         if self._context.get('config_jr'):
-            if self._context.get('journal_ids') and \
-               self._context.get('journal_ids')[0] and \
-               self._context.get('journal_ids')[0][2]:
-                args += [['id', 'in', self._context.get('journal_ids')[0][2]]]
+            if self._context.get('journal_id') and \
+               self._context.get('journal_id')[0] and \
+               self._context.get('journal_id')[0][2]:
+                args += [['id', 'in', self._context.get('journal_id')[0][2]]]
             else:
                 return False
         return super(account_journal, self).name_search(name, args=args, operator=operator, limit=limit)
