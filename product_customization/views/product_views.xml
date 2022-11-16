@@ -1,0 +1,183 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_view_customize">
+            <field name="name">product.product.customize</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Amazon">
+                        <group>
+                            <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}"/>
+                            <label for="lst_price" string="Sales Price"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="lst_price" widget='monetary'
+                                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                            </div>
+                            <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                            <label for="weight"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="weight"/>
+                                <span>
+                                    <field name="weight_uom_name"/>
+                                </span>
+                            </div>
+                        </group>
+                    </page>
+                    <page string="Ebay">
+                        <group name="ebay_group">
+                            <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}"/>
+                            <label for="lst_price" string="Sales Price"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="lst_price" widget='monetary'
+                                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                            </div>
+                            <field name="product_template_variant_value_ids" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                    <page string="LT">
+                        <group name="lt_group">
+                            <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}"/>
+                            <label for="lst_price" string="Sales Price"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="lst_price" widget='monetary'
+                                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                            </div>
+                            <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                        </group>
+                    </page>
+                    <page string="LV">
+                        <group>
+                            <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}"/>
+                            <label for="lst_price" string="Sales Price"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="lst_price" widget='monetary'
+                                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                            </div>
+                            <label for="volume"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="volume"/>
+                                <span>
+                                    <field name="volume_uom_name"/>
+                                </span>
+                            </div>
+                            <label for="weight"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="weight"/>
+                                <span>
+                                    <field name="weight_uom_name"/>
+                                </span>
+                            </div>
+                        </group>
+                    </page>
+                    <page string="EE">
+                        <group name="ee_group">
+                            <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}"/>
+                            <label for="lst_price" string="Sales Price"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="lst_price" widget='monetary'
+                                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                            </div>
+                            <label for="volume"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="volume"/>
+                                <span>
+                                    <field name="volume_uom_name"/>
+                                </span>
+                            </div>
+                            <label for="weight"/>
+                            <div class="o_row col-5 pl-0">
+                                <field name="weight"/>
+                                <span>
+                                    <field name="weight_uom_name"/>
+                                </span>
+                            </div>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="product_view_customize_ebay" model="ir.ui.view">
+            <field name="name">product.product.customize.ebay</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product_customization.product_view_customize"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='ebay_group']" position="inside">
+                    <label for="allow_out_of_stock_order" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"
+                           string="Out-of-Stock"/>
+                    <div attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}">
+                        <field name="allow_out_of_stock_order" class="oe_inline"/>
+                        Continue Selling
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_view_customize_alternative_product" model="ir.ui.view">
+            <field name="name">product.product.customize.lt</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product_customization.product_view_customize"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='lt_group']" position="inside">
+                    <field name="alternative_product_ids" widget="many2many_tags"
+                           domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                           attrs="{'invisible': [('sale_ok','=',False)]}"
+                           placeholder="Displayed in bottom of product pages"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_view_customize_accessory_product" model="ir.ui.view">
+            <field name="name">product.product.customize.ee</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product_customization.product_view_customize"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='ee_group']" position="inside">
+                    <field name="accessory_product_ids" widget="many2many_tags"
+                           attrs="{'invisible': [('sale_ok','=',False)]}"
+                           placeholder="Suggested accessories in the eCommerce cart"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_view_customize_progress">
+            <field name="name">product.product.customize.progress</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="after">
+                    <group string="Progress of sales channels">
+                        <div>
+                            <field name="amazon_progress" widget="percentpie" class="oe_inline"/>
+                            <field name="ebay_progress" widget="percentpie" class="oe_inline"/>
+                            <field name="lt_progress" widget="percentpie" class="oe_inline"/>
+                            <field name="lv_progress" widget="percentpie" class="oe_inline"/>
+                            <field name="ee_progress" widget="percentpie" class="oe_inline"/>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_view_customize_tree" model="ir.ui.view">
+            <field name="name">product.product.customize.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="uom_id" position="before">
+                    <field name="amazon_progress" optional="hide" readonly="1" widget="progressbar"/>
+                    <field name="ebay_progress" optional="hide" readonly="1" widget="progressbar"/>
+                    <field name="lt_progress" optional="hide" readonly="1" widget="progressbar"/>
+                    <field name="lv_progress" optional="hide" readonly="1" widget="progressbar"/>
+                    <field name="ee_progress" optional="hide" readonly="1" widget="progressbar"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
