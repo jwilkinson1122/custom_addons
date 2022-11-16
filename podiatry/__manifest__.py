@@ -48,6 +48,7 @@
         "views/mail_activity_type.xml",
         "views/podiatry_patient.xml",
         "views/pos_variants.xml",
+        'views/pos_config_image_view.xml',
         "views/podiatry_patient_shoe_size.xml",
         "views/podiatry_patient_shoe_width.xml",
         "views/podiatry_patient_diagnosis.xml",
@@ -80,6 +81,10 @@
     ],
 
     'assets': {
+        'point_of_sale.assets': [
+            'podiatry/static/src/js/pos_image_field.js',
+            'podiatry/static/src/js/pos_receipt_image.js',
+        ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
             'podiatry/static/src/scss/card.scss',
@@ -91,6 +96,8 @@
         'web.assets_qweb': [
             'podiatry/static/src/xml/label.xml',
             'podiatry/static/src/xml/popup.xml',
+            'podiatry/static/src/xml/pos_screen_image_view.xml',
+            'podiatry/static/src/xml/pos_ticket_view.xml',
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],

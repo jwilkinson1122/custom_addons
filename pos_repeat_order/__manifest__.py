@@ -31,7 +31,17 @@
     'images': ['static/description/banner.png'],
     'website': 'https://www.cybrosys.com',
     'depends': ['point_of_sale'],
-    'data': ['views/pos_template.xml'],
+    'data': [],
+
+    'assets': {
+        'web.assets_backend': [
+            'pos_repeat_order/static/src/css/repeat_order.css',
+            'pos_repeat_order/static/src/js/pos_repeat.js',
+        ],
+        'web.assets_qweb': [
+            'pos_repeat_order/static/src/xml/pos_repeat.xml',
+        ],
+    },
     'qweb': ['static/src/xml/pos_repeat.xml'],
     'license': 'AGPL-3',
     'installable': True,

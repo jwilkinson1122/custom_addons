@@ -12,6 +12,7 @@ from . import podiatry_prescription_line
 from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
 from . import pos_variants
+from . import pos_config
 from . import podiatry_specialty
 from . import podiatry_contact_mixin
 from . import res_partner
