@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 
 from odoo import api, fields, models, _
 from odoo.tools import float_is_zero
@@ -29,11 +29,14 @@ class PosMakePayment(models.TransientModel):
             return order_id.session_id.payment_method_ids.sorted(lambda pm: pm.is_cash_count, reverse=True)[:1]
         return False
 
-    config_id = fields.Many2one('pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
+    config_id = fields.Many2one(
+        'pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
     amount = fields.Float(digits=0, required=True, default=_default_amount)
-    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)
+    payment_method_id = fields.Many2one(
+        'pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)
     payment_name = fields.Char(string='Payment Reference')
-    payment_date = fields.Datetime(string='Payment Date', required=True, default=lambda self: fields.Datetime.now())
+    payment_date = fields.Datetime(
+        string='Payment Date', required=True, default=lambda self: fields.Datetime.now())
 
     def check(self):
         """Check the order:
@@ -42,7 +45,8 @@ class PosMakePayment(models.TransientModel):
         """
         self.ensure_one()
 
-        order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
+        order = self.env['pos.order'].browse(
+            self.env.context.get('active_id', False))
         currency = order.currency_id
 
         init_data = self.read()[0]

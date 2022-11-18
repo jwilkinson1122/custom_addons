@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 
 {
-    'name': 'Point of Sale',
-    'version': '1.0.1',
-    'category': 'Sales/Point of Sale',
+    'name': 'Podiatry Manger',
+    'version': '15.0.1.0',
+    'category': 'Medical',
     'sequence': 40,
-    'summary': 'User-friendly PoS interface for shops and restaurants',
+    'summary': 'User-friendly Podiatry clinic manager',
     'description': "",
     'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
     'data': [
@@ -49,7 +49,7 @@
     ],
     'installable': True,
     'application': True,
-    'website': 'https://www.odoo.com/app/point-of-sale-shop',
+    'website': 'https://www.nwpodiatric.com',
     'assets': {
         'web.assets_tests': [
             'podiatry_manager/static/tests/tours/**/*',

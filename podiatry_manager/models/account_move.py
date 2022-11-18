@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 
 from odoo import fields, models, api
 
@@ -11,13 +11,15 @@ class AccountMove(models.Model):
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
 
     def _stock_account_get_last_step_stock_moves(self):
-        stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
+        stock_moves = super(
+            AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
-            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(
+                lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
         for invoice in self.filtered(lambda x: x.move_type == 'out_refund'):
-            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+            stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(
+                lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return stock_moves
-
 
     def _get_invoiced_lot_values(self):
         self.ensure_one()
@@ -51,6 +53,7 @@ class AccountMove(models.Model):
             result['pos_payment_name'] = pos_payment.payment_method_id.name
         return result
 
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
@@ -58,8 +61,10 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
+        price_unit = super(
+            AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
         order = self.move_id.pos_order_ids
         if order:
-            price_unit = order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
+            price_unit = order._get_pos_anglo_saxon_price_unit(
+                self.product_id, self.move_id.partner_id.id, self.quantity)
         return price_unit

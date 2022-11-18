@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from itertools import groupby
@@ -10,8 +10,10 @@ from datetime import date
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
-    to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
+    available_in_pos = fields.Boolean(
+        string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
+    to_weight = fields.Boolean(string='To Weigh With Scale',
+                               help="Check if the product should be weighted using the hardware scale integration.")
     pos_categ_id = fields.Many2one(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
@@ -21,7 +23,8 @@ class ProductTemplate(models.Model):
         product_ctx = dict(self.env.context or {}, active_test=False)
         if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('available_in_pos', '=', True)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_('You cannot delete a product saleable in point of sale while a session is still opened.'))
+                raise UserError(
+                    _('You cannot delete a product saleable in point of sale while a session is still opened.'))
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
@@ -37,21 +40,23 @@ class ProductProduct(models.Model):
         product_ctx = dict(self.env.context or {}, active_test=False)
         if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
             if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('product_tmpl_id.available_in_pos', '=', True)]):
-                raise UserError(_('You cannot delete a product saleable in point of sale while a session is still opened.'))
+                raise UserError(
+                    _('You cannot delete a product saleable in point of sale while a session is still opened.'))
 
     def get_product_info_pos(self, price, quantity, pos_config_id):
         self.ensure_one()
         config = self.env['pos.config'].browse(pos_config_id)
 
         # Tax related
-        taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, self)
+        taxes = self.taxes_id.compute_all(
+            price, config.currency_id, quantity, self)
         all_prices = {
             'price_without_tax': taxes['total_excluded']/quantity if quantity else 0,
             'price_with_tax': taxes['total_included']/quantity if quantity else 0,
             'tax_details': [{
-                    'name': tax['name'],
-                    'amount': tax['amount']/quantity if quantity else 0
-                } for tax in taxes['taxes']],
+                'name': tax['name'],
+                'amount': tax['amount']/quantity if quantity else 0
+            } for tax in taxes['taxes']],
         }
 
         # Pricelists
@@ -60,14 +65,15 @@ class ProductProduct(models.Model):
         else:
             pricelists = config.pricelist_id
         price_per_pricelist_id = pricelists.price_get(self.id, quantity)
-        pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
+        pricelist_list = [
+            {'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
 
         # Warehouses
         warehouse_list = [
             {'name': w.name,
-            'available_quantity': self.with_context({'warehouse': w.id}).qty_available,
-            'forecasted_quantity': self.with_context({'warehouse': w.id}).virtual_available,
-            'uom': self.uom_name}
+             'available_quantity': self.with_context({'warehouse': w.id}).qty_available,
+             'forecasted_quantity': self.with_context({'warehouse': w.id}).virtual_available,
+             'uom': self.uom_name}
             for w in self.env['stock.warehouse'].search([])]
 
         # Suppliers
@@ -101,10 +107,11 @@ class UomCateg(models.Model):
     _inherit = 'uom.category'
 
     is_pos_groupable = fields.Boolean(string='Group Products in POS',
-        help="Check if you want to group products of this category in point of sale orders")
+                                      help="Check if you want to group products of this category in point of sale orders")
 
 
 class Uom(models.Model):
     _inherit = 'uom.uom'
 
-    is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)
+    is_pos_groupable = fields.Boolean(
+        related='category_id.is_pos_groupable', readonly=False)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Top menu item -->
-    <menuitem id="menu_point_root" name="Point of Sale" groups="group_pos_manager,group_pos_user" web_icon="podiatry_manager,static/description/icon.png" sequence="50"/>
+    <menuitem id="menu_point_root" name="Podiatry Manager" groups="group_pos_manager,group_pos_user" web_icon="podiatry_manager,static/description/icon.png" sequence="50"/>
 
     <!-- Orders menu -->
     <menuitem id="menu_podiatry_manager" name="Orders" parent="menu_point_root" sequence="10"/>
