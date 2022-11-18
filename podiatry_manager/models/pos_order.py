@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _description = "Point of Sale Orders"
+    _description = "Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
     @api.model
@@ -279,7 +279,7 @@ class PosOrder(models.Model):
         domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
         readonly=True)
     config_id = fields.Many2one(
-        'pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
+        'pos.config', related='session_id.config_id', string="Podiatry Manager", readonly=False)
     currency_id = fields.Many2one(
         'res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
@@ -960,7 +960,7 @@ class PosOrder(models.Model):
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
-    _description = "Point of Sale Order Lines"
+    _description = "Sale Order Lines"
     _rec_name = "product_id"
 
     def _order_line_fields(self, line, session_id=None):
@@ -1286,7 +1286,7 @@ class PosOrderLineLot(models.Model):
 class ReportSaleDetails(models.AbstractModel):
 
     _name = 'report.podiatry_manager.report_saledetails'
-    _description = 'Point of Sale Details'
+    _description = 'Sale Details'
 
     @api.model
     def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):

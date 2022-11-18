@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError, UserError
 
 class PosConfig(models.Model):
     _name = 'pos.config'
-    _description = 'Point of Sale Configuration'
+    _description = 'Sale Configuration'
 
     def _default_warehouse_id(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).id
@@ -37,7 +37,7 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('podiatry_manager.group_pos_user')
 
-    name = fields.Char(string='Point of Sale', index=True, required=True,
+    name = fields.Char(string='Sale', index=True, required=True,
                        help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
                                                      compute="_compute_is_installed_account_accountant")
@@ -49,7 +49,7 @@ class PosConfig(models.Model):
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
         ondelete='restrict')
     journal_id = fields.Many2one(
-        'account.journal', string='Point of Sale Journal',
+        'account.journal', string='Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
         help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_sale_journal,
@@ -129,7 +129,7 @@ class PosConfig(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
                                    help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
-                                               help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
+                                               help="Make several pricelists available in the Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     allowed_pricelist_ids = fields.Many2many(
         'product.pricelist',
         string='Allowed Pricelists',
@@ -141,9 +141,9 @@ class PosConfig(models.Model):
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
                                               help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
                                               default=lambda self: self.env.company.nomenclature_id, required=True)
-    group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
+    group_pos_manager_id = fields.Many2one('res.groups', string='Sale Manager Group', default=_get_group_pos_manager,
                                            help='This field is there to pass the id of the pos manager group to the point of sale client.')
-    group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
+    group_pos_user_id = fields.Many2one('res.groups', string='Sale User Group', default=_get_group_pos_user,
                                         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one('product.product', string='Tip Product',
@@ -159,7 +159,7 @@ class PosConfig(models.Model):
     start_category = fields.Boolean("Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Product Categories")
     module_account = fields.Boolean(
-        string='Invoicing', default=True, help='Enables invoice generation from the Point of Sale.')
+        string='Invoicing', default=True, help='Enables invoice generation from the Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -732,7 +732,7 @@ class PosConfig(models.Model):
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
                     'type': 'general',
-                    'name': 'Point of Sale',
+                    'name': 'Sale',
                     'code': 'POSS',
                     'company_id': company.id,
                     'sequence': 20

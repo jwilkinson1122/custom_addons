@@ -12,7 +12,7 @@ from odoo.tools import float_is_zero, float_compare
 class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
-    _description = 'Point of Sale Session'
+    _description = 'Sale Session'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
@@ -29,7 +29,7 @@ class PosSession(models.Model):
         'res.company', related='config_id.company_id', string="Company", readonly=True)
 
     config_id = fields.Many2one(
-        'pos.config', string='Point of Sale',
+        'pos.config', string='Sale',
         help="The physical point of sale you will use.",
         required=True,
         index=True)
@@ -242,7 +242,7 @@ class PosSession(models.Model):
             'default_config_id')
         if not config_id:
             raise UserError(
-                _("You should assign a Point of Sale to your session."))
+                _("You should assign a Sale to your session."))
 
         # journal_id is not required on the pos_config because it does not
         # exists at the installation. If nothing is configured at the
@@ -484,7 +484,7 @@ class PosSession(models.Model):
                 'redirect': True
             }
 
-        self.message_post(body='Point of Sale Session ended')
+        self.message_post(body='Sale Session ended')
 
         return {'successful': True}
 

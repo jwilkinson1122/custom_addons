@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 function runPoSJSTests({ env }) {
     return {
         type: "item",
-        description: env._t("Run Point of Sale JS Tests"),
+        description: env._t("Run Sale JS Tests"),
         callback: () => {
             env.services.action.doAction({
                 name: env._t("JS Tests"),

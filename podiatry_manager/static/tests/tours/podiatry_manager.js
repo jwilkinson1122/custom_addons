@@ -211,7 +211,7 @@ odoo.define('podiatry_manager.tour.pricelist', function (require) {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
     }, {
-        content: "close the Point of Sale frontend",
+        content: "close the Sale frontend",
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
@@ -426,10 +426,10 @@ odoo.define('podiatry_manager.tour.acceptance', function (require) {
     steps = steps.concat(verify_order_total('5.52'));
 
     steps = steps.concat([{
-        content: "open closing the Point of Sale frontend popup",
+        content: "open closing the Sale frontend popup",
         trigger: ".header-button",
     }, {
-        content: "close the Point of Sale frontend",
+        content: "close the Sale frontend",
         trigger: ".close-pos-popup .button:contains('Continue Selling')",
         run: function() {}, //it's a check,
     }]);

@@ -18,7 +18,7 @@ odoo.define('podiatry_manager.ErrorBarcodePopup', function(require) {
         title: _lt('Error'),
         body: '',
         message:
-            _lt('The Point of Sale could not find any product, client, employee or action associated with the scanned barcode.'),
+            _lt('The Sale could not find any product, client, employee or action associated with the scanned barcode.'),
     };
 
     Registries.Component.add(ErrorBarcodePopup);

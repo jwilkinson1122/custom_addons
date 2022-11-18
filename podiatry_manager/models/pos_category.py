@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError, UserError
 
 class PosCategory(models.Model):
     _name = "pos.category"
-    _description = "Point of Sale Category"
+    _description = "Sale Category"
     _order = "sequence, name"
 
     @api.constrains('parent_id')

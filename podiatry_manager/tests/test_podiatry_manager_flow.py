@@ -194,7 +194,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_order_to_picking(self):
         """
-            In order to test the Point of Sale in module, I will do three orders from the sale to the payment,
+            In order to test the Sale in module, I will do three orders from the sale to the payment,
             invoicing + picking, but will only check the picking consistency in the end.
 
             TODO: Check the negative picking after changing the picking relation to One2many (also for a mixed use case),
@@ -764,7 +764,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_order_to_payment_currency(self):
         """
-            In order to test the Point of Sale in module, I will do a full flow from the sale to the payment and invoicing.
+            In order to test the Sale in module, I will do a full flow from the sale to the payment and invoicing.
             I will use two products, one with price including a 10% tax, the other one with 5% tax excluded from the price.
             The order will be in a different currency than the company currency.
         """

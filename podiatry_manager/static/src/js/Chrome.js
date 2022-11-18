@@ -184,7 +184,7 @@ odoo.define('podiatry_manager.Chrome', function(require) {
                     if (error.message.code === -32098) {
                         title = 'Network Failure (XmlHttpRequestError)';
                         body =
-                            'The Point of Sale could not be loaded due to a network problem.\n' +
+                            'The Sale could not be loaded due to a network problem.\n' +
                             'Please check your internet connection.';
                     } else if (error.message.code === 200) {
                         title = error.message.data.message || this.env._t('Server Error');
@@ -296,14 +296,14 @@ odoo.define('podiatry_manager.Chrome', function(require) {
                         ? this.env._t(
                               'Some orders could not be submitted to ' +
                                   'the server due to configuration errors. ' +
-                                  'You can exit the Point of Sale, but do ' +
+                                  'You can exit the Sale, but do ' +
                                   'not close the session before the issue ' +
                                   'has been resolved.'
                           )
                         : this.env._t(
                               'Some orders could not be submitted to ' +
                                   'the server due to internet connection issues. ' +
-                                  'You can exit the Point of Sale, but do ' +
+                                  'You can exit the Sale, but do ' +
                                   'not close the session before the issue ' +
                                   'has been resolved.'
                           );

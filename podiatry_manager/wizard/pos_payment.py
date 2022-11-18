@@ -7,7 +7,7 @@ from odoo.tools import float_is_zero
 
 class PosMakePayment(models.TransientModel):
     _name = 'pos.make.payment'
-    _description = 'Point of Sale Make Payment Wizard'
+    _description = 'Sale Make Payment Wizard'
 
     def _default_config(self):
         active_id = self.env.context.get('active_id')
@@ -30,7 +30,7 @@ class PosMakePayment(models.TransientModel):
         return False
 
     config_id = fields.Many2one(
-        'pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
+        'pos.config', string='Sale Configuration', required=True, default=_default_config)
     amount = fields.Float(digits=0, required=True, default=_default_amount)
     payment_method_id = fields.Many2one(
         'pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)

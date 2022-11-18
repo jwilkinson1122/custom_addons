@@ -4,7 +4,7 @@
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Session" create="0" edit="0">
+            <form string="Sale  Session" create="0" edit="0">
                 <header>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" attrs="{'invisible' : ['|', ('rescue', '=', True), ('state', 'not in', ['opening_control', 'opened'])]}"/>
                     <button id="validate_closing_control" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries" states="closing_control" attrs="{'invisible': [ '|', '&amp;',('state', '!=', 'closing_control'), ('rescue', '=', False),
@@ -56,7 +56,7 @@
         <field name="name">pos.session.tree.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Session" create="0" sample="1">
+            <tree string="Sale  Session" create="0" sample="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
                 <field name="user_id" widget="many2one_avatar_user"/>
@@ -115,7 +115,7 @@
         <field name="name">pos.session.search.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <search string="Point of Sale Session">
+            <search string="Sale  Session">
                 <field name="name"/>
                 <field name="config_id" />
                 <field name="user_id" />
@@ -126,7 +126,7 @@
                 <filter string="Opening Date" name="start_date" date="start_at" />
                 <group expand="0" string="Group By">
                     <filter string="Opened By" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
-                    <filter string="Point of Sale" name="podiatry_manager" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Podiatry Manager" name="podiatry_manager" domain="[]" context="{'group_by': 'config_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Opening Date" name="opening_date" domain="[]" context="{'group_by': 'start_at'}"/>
                     <filter string="Closing Date" name="closing_date" domain="[]" context="{'group_by': 'stop_at'}"/>
@@ -146,7 +146,7 @@
                 No sessions found
             </p>
             <p>
-                A session is a period of time, usually one day, during which you sell through the Point of Sale.
+                A session is a period of time, usually one day, during which you sell through the Sale .
             </p>
         </field>
     </record>

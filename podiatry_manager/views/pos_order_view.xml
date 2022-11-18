@@ -4,7 +4,7 @@
         <field name="name">pos.order.form</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Orders" create="0">
+            <form string="Podiatry Manager Orders" create="0">
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object" attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
@@ -265,7 +265,7 @@
         <field name="name">pos.order.search.view</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <search string="Point of Sale Orders">
+            <search string="Podiatry Manager Orders">
                 <field name="name"/>
                 <field name="config_id"/>
             </search>
@@ -387,7 +387,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div class="o_notification_alert alert alert-warning" role="alert">
-                  The Point of Sale only supports the "add a rounding line" rounding strategy.
+                  The Podiatry Manager only supports the "add a rounding line" rounding strategy.
                 </div>
             </xpath>
         </field>

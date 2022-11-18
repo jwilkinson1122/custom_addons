@@ -96,7 +96,7 @@ var JobQueue = function(){
 
 
 // this object interfaces with the local proxy to communicate to the various hardware devices
-// connected to the Point of Sale. As the communication only goes from the POS to the proxy,
+// connected to the Sale. As the communication only goes from the POS to the proxy,
 // methods are used both to signal an event, and to fetch information.
 
 var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{

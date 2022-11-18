@@ -26,7 +26,7 @@
     <template id="podiatry_manager.qunit_suite">
         <t t-call="web.layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-            <t t-set="title">Point of Sale Tests</t>
+            <t t-set="title">Sale Tests</t>
             <t t-set="head">
                 <!-- we need session_info in order to properly instantiate PosModel -->
                 <script type="text/javascript">

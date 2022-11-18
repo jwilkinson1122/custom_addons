@@ -83,7 +83,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         # Create POS journal
         cls.pos_config.journal_id = cls.env['account.journal'].create({
             'type': 'general',
-            'name': 'Point of Sale - Test',
+            'name': 'Sale - Test',
             'code': 'POSS - Test',
             'company_id': cls.env.company.id,
             'sequence': 20
@@ -162,7 +162,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.company = cls.company_data['company']
         cls.pos_sale_journal = cls.env['account.journal'].create({
             'type': 'general',
-            'name': 'Point of Sale Test',
+            'name': 'Sale Test',
             'code': 'POSS',
             'company_id': cls.company.id,
             'sequence': 20
@@ -204,7 +204,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Public Pricelist',
             'currency_id': cls.company_currency.id,
         })
-        # Set Point of Sale configurations
+        # Set Sale configurations
         # basic_config
         #   - derived from 'podiatry_manager.pos_config_main' with added invoice_journal_id and credit payment method.
         # other_currency_config

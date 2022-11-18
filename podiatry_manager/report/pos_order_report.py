@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 class PosOrderReport(models.Model):
     _name = "report.pos.order"
-    _description = "Point of Sale Orders Report"
+    _description = "Sale Orders Report"
     _auto = False
     _order = 'date desc'
 
@@ -39,7 +39,7 @@ class PosOrderReport(models.Model):
         'product.category', string='Product Category', readonly=True)
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one(
-        'pos.config', string='Point of Sale', readonly=True)
+        'pos.config', string='Sale', readonly=True)
     pos_categ_id = fields.Many2one(
         'pos.category', string='PoS Category', readonly=True)
     pricelist_id = fields.Many2one(

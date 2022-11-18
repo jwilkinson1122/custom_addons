@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class PosOpenStatement(models.TransientModel):
     _name = 'pos.open.statement'
-    _description = 'Point of Sale Open Statement'
+    _description = 'Sale Open Statement'
 
     def open_statement(self):
         self.ensure_one()
@@ -15,7 +15,7 @@ class PosOpenStatement(models.TransientModel):
         journals = self.env['account.journal'].search(
             [('journal_user', '=', True)])
         if not journals:
-            raise UserError(_('You have to define which payment method must be available in the point of sale by reusing existing bank and cash through "Accounting / Configuration / Journals / Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend / Configuration / Payment Methods".'))
+            raise UserError(_('You have to define which payment method must be available in the point of sale by reusing existing bank and cash through "Accounting / Configuration / Journals / Journals". Select a journal and check the field "PoS Payment Method" from the "Sale" tab. You can also create new payment methods directly from menu "PoS Backend / Configuration / Payment Methods".'))
 
         for journal in journals:
             if journal.sequence_id:

@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook[last()]" position="inside">
-                <page string="Point of Sale" name="podiatry_manager" invisible="1"/>
+                <page string="Podiatry Manager" name="podiatry_manager" invisible="1"/>
             </xpath>
         </field>
     </record>
