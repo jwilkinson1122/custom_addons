@@ -680,7 +680,7 @@ How to manage tax-included prices</a>
     <menuitem id="menu_pos_config_pos" name="Sale" parent="menu_point_config_product" sequence="1" action="action_pos_config_pos" groups="group_pos_manager"/>
 
     <record id="action_pos_config_kanban" model="ir.actions.act_window">
-        <field name="name">Sale</field>
+        <field name="name">Dashboard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.config</field>
         <field name="view_mode">kanban,tree,form</field>
