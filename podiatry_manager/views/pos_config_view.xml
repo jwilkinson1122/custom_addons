@@ -125,7 +125,7 @@
                                     Display pictures of product categories
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('iface_display_categ_images', '=', False)]}">
-                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="Product Categories" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
                                     <field name="iface_available_categ_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
-                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="Product Categories" class="btn-link"/>
                                 </div>
                             </div>
                         </div>

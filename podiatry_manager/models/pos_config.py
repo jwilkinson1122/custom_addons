@@ -87,7 +87,7 @@ class PosConfig(models.Model):
         [('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
                                            help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
-    iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Product Categories',
                                                  help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
     selectable_categ_ids = fields.Many2many(
         'pos.category', compute='_compute_selectable_categories')
