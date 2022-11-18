@@ -8,7 +8,7 @@
     'sequence': 40,
     'summary': 'User-friendly Podiatry clinic manager',
     'description': "",
-    'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
+    'depends': ['stock_account', 'sale_management', 'barcodes', 'web_editor', 'digest'],
     'data': [
         'security/podiatry_manager_security.xml',
         'security/ir.model.access.csv',

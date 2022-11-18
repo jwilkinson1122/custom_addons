@@ -408,7 +408,7 @@ How to manage tax-included prices</a>
                             </div>
                         </div>
                     </div>
-                    <!-- <h2>Payments</h2>
+                    <h2>Payments</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box" id="payment_methods_new">
                             <div class="o_setting_right_pane">
@@ -472,7 +472,7 @@ How to manage tax-included prices</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="iface_tipproduct" title="This product is used as reference on customer receipts.">
+                        <!-- <div class="col-12 col-lg-6 o_setting_box" id="iface_tipproduct" title="This product is used as reference on customer receipts.">
                             <div class="o_setting_left_pane">
                                 <field name="iface_tipproduct" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
@@ -488,8 +488,8 @@ How to manage tax-included prices</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div> -->
+                        </div> -->
+                    </div>
                     <h2>Bills &amp; Receipts</h2>
                     <div class="row mt16 o_settings_container" id="receipt">
                         <div id="order_reference" class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
