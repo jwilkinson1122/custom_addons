@@ -12,12 +12,12 @@
                         <div class="overview-info">
                             <div class="info-title column-left">
                                 <span>Total <t t-esc="ordersDetails.quantity"/> orders</span>
-                                <span>Payments</span>
+                                <!-- <span>Payments</span> -->
                                 <span>Customer Account</span>
                             </div>
                             <div class="info-value column-left">
                                 <span t-esc="env.pos.format_currency(ordersDetails.amount)"/>
-                                <span t-esc="env.pos.format_currency(paymentsAmount)"/>
+                                <!-- <span t-esc="env.pos.format_currency(paymentsAmount)"/> -->
                                 <span t-esc="env.pos.format_currency(payLaterAmount)"/>
                             </div>
                         </div>
@@ -25,7 +25,7 @@
                             <t t-esc="openingNotes"/>
                         </div>
                     </div>
-                    <div class="payment-methods-overview">
+                    <!-- <div class="payment-methods-overview">
                         <table>
                             <thead>
                                 <tr>
@@ -84,7 +84,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
                     <textarea placeholder="Notes" class="closing-notes" t-model="state.notes"/>
                     <div class="accept-closing" t-att-class="{invisible: !hasDifference()}">
                         <t t-set="_hasUserAuthority" t-value="hasUserAuthority()" />
@@ -94,9 +94,9 @@
                     </div>
                 </main>
                 <footer class="footer">
-                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup()">Continue Selling</div>
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup()">Continue</div>
                     <div class="button" t-on-click="closePos()">Keep Session Open</div>
-                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="closeSession()">Close Session</div>
+                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="closeSession()">Close</div>
                 </footer>
             </div>
             <MoneyDetailsPopup t-ref="moneyDetails" t-on-money-details-validated="updateCountedCash"/>
