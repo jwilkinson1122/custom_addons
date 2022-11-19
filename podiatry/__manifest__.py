@@ -15,6 +15,7 @@
         "mail",
         "base",
         'sale',
+        'sale_management',
         'point_of_sale',
         "product",
         'purchase',
@@ -49,6 +50,7 @@
         "views/podiatry_patient.xml",
         "views/pos_variants.xml",
         'views/pos_config_image_view.xml',
+        'views/pos_customer_favorites_view.xml',
         "views/podiatry_patient_shoe_size.xml",
         "views/podiatry_patient_shoe_width.xml",
         "views/podiatry_patient_diagnosis.xml",
@@ -84,11 +86,13 @@
         'point_of_sale.assets': [
             'podiatry/static/src/js/pos_image_field.js',
             'podiatry/static/src/js/pos_receipt_image.js',
+            'podiatry/static/static/src/js/main.js',
         ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
             'podiatry/static/src/scss/card.scss',
             'podiatry/static/src/css/label.css',
+            'podiatry/static/src/css/main.css',
             'podiatry/static/src/js/models.js',
             'podiatry/static/src/js/ProductPopup.js',
             'podiatry/static/src/js/ProductScreen.js',
@@ -98,10 +102,18 @@
             'podiatry/static/src/xml/popup.xml',
             'podiatry/static/src/xml/pos_screen_image_view.xml',
             'podiatry/static/src/xml/pos_ticket_view.xml',
+            'podiatry/static/src/xml/pos_customer_favorites.xml',
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],
-
+    "demo": ['data/pos_customer_favorites_demo.xml'],
     "installable": True,
     "application": True,
 }
+
+	# <template id="assets" inherit_id="point_of_sale.assets">
+	# 		<xpath expr="." position="inside">
+	# 			<script type="text/javascript" src="/pos_customer_favorites/static/src/js/main.js"></script>
+	# 			<link rel="stylesheet" href="/pos_customer_favorites/static/src/css/main.css" />
+	# 		</xpath>
+	# 	</template>
