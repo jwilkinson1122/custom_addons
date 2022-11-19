@@ -2,6 +2,7 @@ odoo.define('podiatry_manager.Gui', function (require) {
     'use strict';
 
     /**
+     * Test
      * This module bridges the data classes (such as those defined in
      * models.js) to the view (owl.Component) but not vice versa.
      *
