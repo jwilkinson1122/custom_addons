@@ -1,4 +1,4 @@
-odoo.define('pos_multi_variant.model', function (require) {
+odoo.define('podiatry.model', function (require) {
     'use strict';
 
     var ProductScreen = require('point_of_sale.ProductScreen');

@@ -1,5 +1,5 @@
 
-odoo.define('pos_customer_favorites.pos_customer_favorites', function(require) {
+odoo.define('podiatry.pos_customer_favorites', function(require) {
 	"use strict";
 	var models = require('point_of_sale.models');
 	var SuperOrder = models.Order;

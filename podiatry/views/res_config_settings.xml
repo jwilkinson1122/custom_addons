@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Patients" string="Patients" data-key="podiatry" groups="podiatry.group_manager">
+                <div class="app_settings_block" data-string="Podiatry" string="Podiatry" data-key="podiatry" groups="podiatry.group_manager">
                     <h2>Patients</h2>
 
                     <div class="row mt16 o_settings_container" name="patients_settings_container">
