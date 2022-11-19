@@ -153,7 +153,7 @@
             'podiatry_manager/static/src/js/Popups/OfflineErrorPopup.js',
             'podiatry_manager/static/src/js/Popups/OrderImportPopup.js',
             'podiatry_manager/static/src/js/Popups/ProductConfiguratorPopup.js',
-            'podiatry_manager/static/src/js/Popups/CashOpeningPopup.js',
+            # 'podiatry_manager/static/src/js/Popups/CashOpeningPopup.js',
             'podiatry_manager/static/src/js/Popups/ProductInfoPopup.js',
             'podiatry_manager/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js',
             'podiatry_manager/static/src/js/Popups/ClosePosPopup.js',

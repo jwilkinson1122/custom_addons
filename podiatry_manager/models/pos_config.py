@@ -213,9 +213,12 @@ class PosConfig(models.Model):
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
-        for config in self:
-            config.cash_control = bool(
-                config.payment_method_ids.filtered('is_cash_count'))
+         for rec in self:
+             rec.cash_control = False
+    # def _compute_cash_control(self):
+    #     for config in self:
+    #         config.cash_control = bool(
+    #             config.payment_method_ids.filtered('is_cash_count'))
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
