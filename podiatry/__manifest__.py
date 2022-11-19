@@ -86,7 +86,7 @@
         'point_of_sale.assets': [
             'podiatry/static/src/js/pos_image_field.js',
             'podiatry/static/src/js/pos_receipt_image.js',
-            'podiatry/static/static/src/js/main.js',
+            'podiatry/static/src/js/main.js',
         ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
