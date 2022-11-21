@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'Inconsolata';
+    src: url(../fonts/Poppins-Regular.otf);
+}
+
+
+/* ===========v14============*/
+.default-view {
+    flex-direction: column;
+}
+
+.default-view .pos-receipt-container {
+    order: 2;
+}
+
+.default-view .actions {
+    order: 1;
+}
+
+.receipt-screen .default-view .pos-receipt-container {
+    flex: 0 1 100%;
+}
+
+/* ============================= */
+.screen .top-content .button.print-a4 {
+    left: 0px;
+    margin-left: 16px;
+}
+
+hr.separator {
+    height: 1px;
+    background: #d2cece;
+    border: none;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.screen .centered-content {
+    right: 0;
+    left: 0;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.content.order-info, .content.company-info {
+    font-family: Poppins, Lato, Serif;
+}
+
+.content.subtotal {
+    display: flex;
+    align-items: center;
+    text-align: right;
+}
+
+
+.pos-receipt-container {
+    width: 100%;
+}
+
+.pos-receipt.a4 {
+    width: 210mm !important;
+    /*height: 297mm;*/
+}
+
+.pos-receipt.a4 .header {
+    padding-bottom: 10px;
+}
+
+.company-logo {
+    height: 110px;
+    max-height: 110px;
+    /*padding: 5px;*/
+    display: flex;
+    justify-content: end;
+}
+
+.pos-receipt.a4 .pos-receipt-logo {
+    width: 35%;
+    object-fit: contain;
+    height: 100%;
+    margin: 0;
+    margin-left: auto;
+}
+
+.pos-receipt.a4 .pos-receipt-contact {
+    text-align: right !important;
+    font-size: 16px;
+}
+
+.pos-section {
+    border-top: 1px solid #d2cece;
+    padding: 15px 0;
+    display: flex;
+}
+
+.table-el {
+    width: 100%;
+}
+
+.table-el th {
+    letter-spacing: 2px;
+    color: #8d8d8d;
+    font-weight: bold;
+    font-family: Poppins, Lato, Serif;
+    text-transform: uppercase;
+}
+
+.table-el th, .table-el td {
+    padding: 6px 5px;
+}
+
+#barcode {
+    height: 90px;
+    width: 300px;
+}
+
+#amount-to-text {
+    justify-content: center;
+}
+
+@media print {
+    .pos .pos-receipt.a4 {
+        width: 201mm !important;
+        /*height: 297mm;*/
+    }
+}

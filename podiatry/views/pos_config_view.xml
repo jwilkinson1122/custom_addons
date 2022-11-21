@@ -6,9 +6,35 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
             <field name="arch" type="xml">
-                <field name="name" position="before">
+                <!-- <field name="name" position="before">
                     <field name="image" widget='image' class="oe_avatar"/>
-                </field>
+                </field> -->
+
+                <xpath expr="//div[@id='receipt']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box" id="pos_a4">
+                        <div class="o_setting_left_pane">
+                            <field name="use_a4_receipt"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">A4 Receipt</span>
+                            <div class="text-muted">
+                            Enable A4 receipt inside POS
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="use_a4_receipt_as_default" class="col-lg-3 o_light_label" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                    <field name="use_a4_receipt_as_default" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                    <label for="show_taxes" class="col-lg-3 o_light_label" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                    <field name="show_taxes" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                    <label for="tracking" class="col-lg-3 o_light_label" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                    <field name="tracking" attrs="{'invisible': [('use_a4_receipt', '=', False)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+
             </field>
         </record>
     </data>
