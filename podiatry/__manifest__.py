@@ -49,7 +49,7 @@
         "views/mail_activity_type.xml",
         "views/podiatry_patient.xml",
         "views/pos_variants.xml",
-        'views/pos_config_image_view.xml',
+        'views/pos_config_view.xml',
         'views/pos_customer_favorites_view.xml',
         "views/podiatry_patient_shoe_size.xml",
         "views/podiatry_patient_shoe_width.xml",
@@ -111,9 +111,9 @@
     "application": True,
 }
 
-	# <template id="assets" inherit_id="point_of_sale.assets">
-	# 		<xpath expr="." position="inside">
-	# 			<script type="text/javascript" src="/pos_customer_favorites/static/src/js/main.js"></script>
-	# 			<link rel="stylesheet" href="/pos_customer_favorites/static/src/css/main.css" />
-	# 		</xpath>
-	# 	</template>
+# <template id="assets" inherit_id="point_of_sale.assets">
+# 		<xpath expr="." position="inside">
+# 			<script type="text/javascript" src="/pos_customer_favorites/static/src/js/main.js"></script>
+# 			<link rel="stylesheet" href="/pos_customer_favorites/static/src/css/main.css" />
+# 		</xpath>
+# 	</template>
