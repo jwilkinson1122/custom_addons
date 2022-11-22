@@ -1,13 +1,17 @@
-from odoo import _, models, fields, api
+# -*- coding: utf-8 -*-
+
+from odoo import _, api, fields, models, tools
 
 
 class Partner(models.Model):
+    _name = 'res.partner'
     _inherit = 'res.partner'
     
     info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
 
+    name = fields.Char(index=True)
     #  Patient
-    patient_id = fields.One2many(
+    patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='partner_id',
         string="Patients",
@@ -18,10 +22,10 @@ class Partner(models.Model):
         compute='_compute_patient_count',
     )
 
-    @api.depends('patient_id')
+    @api.depends('patient_ids')
     def _compute_patient_count(self):
         for partner in self:
-            partner.patient_count = partner.patient_id
+            partner.patient_count = partner.patient_ids
         return
 
     is_patient = fields.Boolean(
@@ -36,14 +40,7 @@ class Partner(models.Model):
             search_operator = '!='
         else:
             search_operator = '='
-        return [('patient_id', search_operator, False)]
-
-    # Practitioner
-    # practitioner_id = fields.One2many(
-    #     comodel_name='podiatry.practitioner',
-    #     inverse_name='partner_id',
-    #     string="Practitioners",
-    # )
+        return [('patient_ids', search_operator, False)]
 
     practitioner_id = fields.Many2one(
         "res.partner",
@@ -94,19 +91,6 @@ class Partner(models.Model):
         default="standalone",
     )
 
-    # practitioner_id = fields.Many2one(
-    #  "res.partner",
-    #   string="Main Practitioner",
-    #   domain=[("is_company", "=", False),
-    #           ("practitioner_type", "=", "standalone")],
-    #  )
-
-    # other_practitioner_ids = fields.One2many(
-    #   "res.partner",
-    #   "practitioner_id",
-    #     string="Others Positions",
-    #   )
-
     @api.depends("practitioner_id")
     def _compute_practitioner_type(self):
         for rec in self:
@@ -127,32 +111,40 @@ class Partner(models.Model):
             result = self
         return result
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        """Display only standalone practitioner matching ``args`` or having
-        attached practitioner matching ``args``"""
-        ctx = self.env.context
-        if (
-            ctx.get("search_show_all_positions", {}).get("is_set")
-            and not ctx["search_show_all_positions"]["set_value"]
-        ):
-            args = expression.normalize_domain(args)
-            attached_practitioner_args = expression.AND(
-                (args, [("practitioner_type", "=", "attached")])
-            )
-            attached_practitioners = super(
-                Partner, self).search(attached_practitioner_args)
-            args = expression.OR(
-                (
-                    expression.AND(
-                        ([("practitioner_type", "=", "standalone")], args)),
-                    [("other_practitioner_ids", "in", attached_practitioners.ids)],
-                )
-            )
-        return super(Partner, self).search(
-            args, offset=offset, limit=limit, order=order, count=count
-        )
-
+    # @api.model
+    # def search(self, args, offset=0, limit=None, order=None, count=False):
+    #     """Display only standalone practitioner matching ``args`` or having
+    #     attached practitioner matching ``args``"""
+    #     ctx = self.env.context
+    #     if (
+    #         ctx.get("search_show_all_positions", {}).get("is_set")
+    #         and not ctx["search_show_all_positions"]["set_value"]
+    #     ):
+    #         args = expression.normalize_domain(args)
+    #         attached_practitioner_args = expression.AND(
+    #             (args, [("practitioner_type", "=", "attached")])
+    #         )
+    #         attached_practitioners = super(
+    #             Partner, self).search(attached_practitioner_args)
+    #         args = expression.OR(
+    #             (
+    #                 expression.AND(
+    #                     ([("practitioner_type", "=", "standalone")], args)),
+    #                 [("other_practitioner_ids", "in", attached_practitioners.ids)],
+    #             )
+    #         )
+    #     return super(Partner, self).search(
+    #         args, offset=offset, limit=limit, order=order, count=count
+    #     )
+    
+    # @api.model
+    # def _name_search(self, name='', args=None, offset=0, operator='ilike', limit=100, name_get_uid=None):
+    #     args = list(args or [])
+    #     if name:
+    #         args += ['|', ('name', operator, name),
+    #                  ('department_code', operator, name)]
+    #     return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+    
     @api.model
     def create(self, vals):
         """When creating, use a modified self to alter the context (see

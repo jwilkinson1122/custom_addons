@@ -76,10 +76,10 @@
                     <notebook>
                         <page name="patients_list" string="Patient List">
                             <separator name="patients" string="Patients"/>
-                            <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_id', '!=', ())]}">
+                            <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">
                                 No Patients
                             </div>
-                            <field name="patient_id" mode="kanban" context="{'default_type': 'contact'}"/>
+                            <field name="patient_ids" mode="kanban" context="{'default_type': 'contact'}"/>
                         </page>
                         <page name="perscriptions_list" string="Prescriptions">
                             <separator name="prescriptions" string="Prescriptions"/>

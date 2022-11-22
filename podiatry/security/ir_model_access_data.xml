@@ -15,6 +15,26 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
+        <!-- <record id="access_res_partner_group_user" model="ir.model.access">
+            <field name="name">access.res.partner.group.user</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="access_res_partner_group_manager" model="ir.model.access">
+            <field name="name">access.res.partner.group.manager</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record> -->
+
         <!--
         podiatry.practitioner
         -->
