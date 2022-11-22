@@ -39,3 +39,4 @@ access_product_product_product_config_manager,product.product Product Config Man
 access_product_attribute_line_product_config_manager,product.attribute line Product Config Manager,product.model_product_template_attribute_line,podiatry.group_podiatry_manager,1,1,1,1
 access_podiatry_group,podiatry,model_podiatry,podiatry.group_podiatry,1,1,1,1
 access_variants_tree,access.variants.tree,model_variants_tree,base.group_user,1,1,1,1
+access_pos_create_sales_order,access_pos_create_sales_order,pos_create_sales_order.model_pos_create_sales_order,base.group_user,1,1,1,0

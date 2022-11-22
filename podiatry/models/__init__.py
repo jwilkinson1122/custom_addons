@@ -20,6 +20,7 @@ from . import res_partner
 from . import inherit_saleorder
 from . import inherit_saleorder_line
 from . import inherit_purchase_order
+from . import pos_create_sales_order
 from . import inherit_invoice
 from . import product_attribute
 from . import ir_actions

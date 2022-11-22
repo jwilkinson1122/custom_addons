@@ -35,6 +35,7 @@
         # ========
         "security/res_groups_data.xml",
         "security/ir_model_access_data.xml",
+        # 'security/ir.model.access.csv',
         # -------
         # Wizards
         # =======
@@ -92,6 +93,7 @@
             'podiatry/static/src/js/AmountInWords.js',
             'podiatry/static/src/js/OrderReceiptA4.js',
             'podiatry/static/src/js/ReceiptScreen.js',
+            'podiatry/static/src/js/CreateSalesOrderButton.js',
             # 'podiatry/static/src/js/pos_image_field.js',
             # 'podiatry/static/src/js/pos_receipt_image.js',
             'podiatry/static/src/js/main.js',
@@ -110,7 +112,7 @@
             # 'podiatry/static/src/js/ProductScreen.js',
         ],
         'web.assets_qweb': [
-            'podiatry/static/src/xml/*'
+            'podiatry/static/src/xml/**/*',
             # 'podiatry/static/src/xml/label.xml',
             # 'podiatry/static/src/xml/popup.xml',
             # 'podiatry/static/src/xml/pos_screen_image_view.xml',
