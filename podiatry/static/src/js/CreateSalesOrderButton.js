@@ -1,4 +1,4 @@
-odoo.define('podiatry.CreateSalesOrderButton', function(require) {
+odoo.define('podiatry.CreateSalesOrderButton', function (require) {
 	'use strict';
 
 	const PosComponent = require('point_of_sale.PosComponent');
@@ -14,8 +14,8 @@ odoo.define('podiatry.CreateSalesOrderButton', function(require) {
 			super(...arguments);
 			useListener('click', this.onClick);
 		}
-			
-		async onClick(){
+
+		async onClick() {
 			var self = this;
 			var order = self.env.pos.get_order();
 			var orderlines = order.orderlines;
@@ -25,11 +25,11 @@ odoo.define('podiatry.CreateSalesOrderButton', function(require) {
 
 			if (order.get_client() != null)
 				partner_id = order.get_client().id;
-			
+
 			if (!partner_id) {
 				return self.showPopup('ErrorPopup', {
 					title: self.env._t('Unknown customer'),
-					body: self.env._t('You cannot Create Sales Order. Select customer first.'),
+					body: self.env._t('You cannot Create Draft Order. Select customer first.'),
 				});
 			}
 
@@ -39,7 +39,7 @@ odoo.define('podiatry.CreateSalesOrderButton', function(require) {
 					body: self.env._t('There must be at least one product in your order before Add a note.'),
 				});
 			}
-			
+
 			for (var i = 0; i < orderlines.length; i++) {
 				var product_items = {
 					'id': orderlines.models[i].product.id,
@@ -48,18 +48,17 @@ odoo.define('podiatry.CreateSalesOrderButton', function(require) {
 					'price': orderlines.models[i].price,
 					'discount': orderlines.models[i].discount,
 				};
-				pos_product_list.push({'product': product_items });
+				pos_product_list.push({ 'product': product_items });
 			}
-			
+
 			self.rpc({
 				model: 'pos.create.sales.order',
 				method: 'create_sales_order',
 				args: [partner_id, partner_id, pos_product_list, cashier_id],
-			}).then(function(output) {
+			}).then(function (output) {
 				alert('Sales Order Created !!!!');
-				if(orderlines.length > 0){
-					for (var line in orderlines)
-					{
+				if (orderlines.length > 0) {
+					for (var line in orderlines) {
 						order.remove_orderline(order.get_orderlines());
 					}
 				}
@@ -71,7 +70,7 @@ odoo.define('podiatry.CreateSalesOrderButton', function(require) {
 	CreateSalesOrderButton.template = 'CreateSalesOrderButton';
 	ProductScreen.addControlButton({
 		component: CreateSalesOrderButton,
-		condition: function() {
+		condition: function () {
 			return true;
 		},
 	});

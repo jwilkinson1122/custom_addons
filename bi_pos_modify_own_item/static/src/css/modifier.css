@@ -1,0 +1,30 @@
+/*.pos .modifier-full-content .window button:hover {
+    background: #efefef;
+}*/
+
+.screen .modifier-full-content .modiButton:hover {
+    background: #efefef;
+}
+
+
+.screen .modifier-full-content .hiddenradio [type=radio] { 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* IMAGE STYLES */
+.screen .modifier-full-content .hiddenradio [type=radio] + img {
+    cursor: pointer;
+}
+
+/* CHECKED STYLES */
+.screen .modifier-full-content .hiddenradio [type=radio]:checked + img {
+    box-shadow: 0 0 13px 8px rgb(210 11 25 / 50%);
+}
+
+
+.screen .side-prod-list
+#container:hover + #cube { background-color: yellow; }
+

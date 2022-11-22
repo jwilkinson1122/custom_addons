@@ -97,8 +97,8 @@
             "podiatry/static/src/js/ClientDetailsEdit.js",
             "podiatry/static/src/js/ClientListScreen.js",
             "podiatry/static/src/js/models.js",
-            # 'podiatry/static/src/js/pos_image_field.js',
-            # 'podiatry/static/src/js/pos_receipt_image.js',
+            'podiatry/static/src/js/PosImageField.js',
+            'podiatry/static/src/js/PosReceiptImage.js',
             'podiatry/static/src/js/main.js',
             'podiatry/static/src/css/label.css',
             'podiatry/static/src/js/models.js',
@@ -111,17 +111,9 @@
             'podiatry/static/src/css/customerscreen.css',
             # 'podiatry/static/src/css/label.css',
             'podiatry/static/src/css/main.css',
-            # 'podiatry/static/src/js/models.js',
-            # 'podiatry/static/src/js/ProductPopup.js',
-            # 'podiatry/static/src/js/ProductScreen.js',
         ],
         'web.assets_qweb': [
             'podiatry/static/src/xml/**/*',
-            # 'podiatry/static/src/xml/label.xml',
-            # 'podiatry/static/src/xml/popup.xml',
-            # 'podiatry/static/src/xml/pos_screen_image_view.xml',
-            # 'podiatry/static/src/xml/pos_ticket_view.xml',
-            # 'podiatry/static/src/xml/pos_customer_favorites.xml',
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],
@@ -129,10 +121,3 @@
     "installable": True,
     "application": True,
 }
-
-# <template id="assets" inherit_id="point_of_sale.assets">
-# 		<xpath expr="." position="inside">
-# 			<script type="text/javascript" src="/pos_customer_favorites/static/src/js/main.js"></script>
-# 			<link rel="stylesheet" href="/pos_customer_favorites/static/src/css/main.css" />
-# 		</xpath>
-# 	</template>
