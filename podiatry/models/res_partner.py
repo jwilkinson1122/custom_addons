@@ -1,8 +1,10 @@
-from odoo import models, fields, api
+from odoo import _, models, fields, api
 
 
 class Partner(models.Model):
     _inherit = 'res.partner'
+    
+    info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
 
     #  Patient
     patient_id = fields.One2many(
@@ -239,3 +241,50 @@ class Partner(models.Model):
     def _onchange_practitioner_type(self):
         if self.practitioner_type == "standalone":
             self.practitioner_id = False
+ 
+    @api.model
+    def create_partner_from_ui(self, partner, extraPartner):
+        """ create or modify a partner from the point of sale ui.
+            partner contains the partner's fields. """
+        # image is a dataurl, get the data after the comma
+        extraPartner_id = partner.pop('id', False)
+        if extraPartner:
+            if extraPartner.get('image_1920'):
+                extraPartner['image_1920'] = extraPartner['image_1920'].split(',')[1]
+            if extraPartner_id:  # Modifying existing extraPartner
+                custom_info = self.env['custom.partner.field'].search([])
+                for i in custom_info:
+                    if i.name in extraPartner.keys():
+                        info_data = self.env['res.partner.info'].search(
+                            [('partner_id', '=', extraPartner_id), ('name', '=', i.name)])
+                        if info_data:
+                            info_data.write({'info_name': extraPartner[i.name], 'partner_id': extraPartner_id})
+                        else:
+                            self.browse(extraPartner_id).write(
+                                {'info_ids': [(0, 0, {'name': i.name, 'info_name': extraPartner[i.name]})]})
+            else:
+                extraPartner_id = self.create(extraPartner).id
+
+        if partner:
+            if partner.get('image_1920'):
+                partner['image_1920'] = partner['image_1920'].split(',')[1]
+            if extraPartner_id:  # Modifying existing partner
+
+                self.browse(extraPartner_id).write(partner)
+            else:
+                extraPartner_id = self.create(partner).id
+        return extraPartner_id
+
+class CustomPartnerField(models.Model):
+    _name = "custom.partner.field"
+
+    name = fields.Char(string="Custom Partner Fields")
+    config_id = fields.Many2one("pos.config", string="Pos Config")
+
+class ResPartnerInfo(models.Model):
+    _name = "res.partner.info"
+
+    name = fields.Char(string="Extra Info", required=True)
+    info_name = fields.Char(string="Info Name")
+    partner_id = fields.Many2one("res.partner", string="Partner Info")
+    field_id = fields.Many2one("custom.partner.field", string="Custom Filed")

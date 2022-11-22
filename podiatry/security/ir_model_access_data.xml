@@ -403,5 +403,29 @@ manager_access_pos_customer_favorites,manager.access.customer.favorite.product,m
             <field name="perm_unlink" eval="0"/>
         </record>
 
+        <!-- access_res_partner_info,res.partner.info,model_res_partner_info,,1,1,1,1
+access_custom_field,custom.partner.field,model_custom_field,,1,1,1,1 -->
+
+        <record id="access_res_partner_info_group_user" model="ir.model.access">
+            <field name="name">access.res.partner.info.group.user</field>
+            <field name="model_id" ref="model_res_partner_info"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="access_custom_partner_field_group_user" model="ir.model.access">
+            <field name="name">access.custom.partner.field.group.user</field>
+            <field name="model_id" ref="model_custom_partner_field"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
     </data>
 </odoo>

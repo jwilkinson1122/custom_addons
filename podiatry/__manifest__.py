@@ -94,6 +94,9 @@
             'podiatry/static/src/js/OrderReceiptA4.js',
             'podiatry/static/src/js/ReceiptScreen.js',
             'podiatry/static/src/js/CreateSalesOrderButton.js',
+            "podiatry/static/src/js/ClientDetailsEdit.js",
+            "podiatry/static/src/js/ClientListScreen.js",
+            "podiatry/static/src/js/models.js",
             # 'podiatry/static/src/js/pos_image_field.js',
             # 'podiatry/static/src/js/pos_receipt_image.js',
             'podiatry/static/src/js/main.js',
@@ -105,6 +108,7 @@
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
             'podiatry/static/src/scss/card.scss',
+            'podiatry/static/src/css/customerscreen.css',
             # 'podiatry/static/src/css/label.css',
             'podiatry/static/src/css/main.css',
             # 'podiatry/static/src/js/models.js',

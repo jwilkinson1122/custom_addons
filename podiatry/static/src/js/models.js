@@ -4,8 +4,30 @@ odoo.define('podiatry.model', function (require) {
     var ProductScreen = require('point_of_sale.ProductScreen');
     const Registries = require('point_of_sale.Registries');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    var models = require('point_of_sale.models');
     var rpc = require('web.rpc');
+    var models = require('point_of_sale.models');
+    models.load_fields('res.partner',['info_ids'])
+
+    models.load_models({
+		model: 'res.partner.info',
+		fields: ['name','info_name','partner_id','field_id'],
+		domain: null,
+		loaded: function(self, info) {
+			self.more_info = info;
+		},
+	});
+	models.load_models({
+		model: 'custom.partner.field',
+		fields: [],
+		domain: function(self) {
+			return [
+				['id', 'in', self.config.show_custom_partner_field]
+			];
+		},
+		loaded: function(self, field) {
+			self.custom_field = field;
+		},
+	});
 
     var _super_orderline = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend

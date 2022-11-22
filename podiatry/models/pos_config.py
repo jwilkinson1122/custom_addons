@@ -6,6 +6,9 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     image = fields.Binary(string='Image')
+    allow_custom_partner_fields = fields.Boolean(string='Show Custom Partner Information')
+    show_custom_partner_field = fields.Many2many('custom.partner.field', string='Show Custom Partner Information')
+
 
     create_so = fields.Boolean(
         "Create Sales Order", help="Allow to create Sales Order in POS", default=True)
@@ -21,3 +24,8 @@ class PosConfig(models.Model):
     tracking = fields.Selection(
         [('barcode', 'Barcode'), ('qrcode', 'Qrcode')], string="Tracking", default='barcode')
     show_taxes = fields.Boolean("Show Taxes?", default=True)
+    
+    @api.onchange('allow_custom_partner_fields')
+    def _onchange_allow_custom_partner_fields(self):
+        if not self.allow_custom_partner_fields:
+            self.show_custom_partner_field = False
