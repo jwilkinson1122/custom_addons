@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_podiatry_practice_by_parent" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">medical.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="context">{'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="medical_practice_form_view" model="ir.ui.view">
+            <field name="name">medical.practice.form.view</field>
+            <field name="model">medical.practice</field>
+            <field name="arch" type="xml">
+                <form string="practice">
+                    <field name="active" invisible="1"/>
+                    <sheet>
+                             <!-- Button Box -->
+                    <div class="oe_button_box" name="button_box">
+                        <field name="child_ids" invisible="1"/>
+                        <button type="action" name="%(action_podiatry_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                            <field name="child_count" string="Practices" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <!-- Ribbon -->
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+
+                    <div name="title" class="oe_title">
+                        <div name="reference">
+                            <h1>
+                                <field name="reference"/>
+                            </h1>
+                        </div>
+                        <div name="practice_name">
+                            <h1>
+                                <field name="practice_name" required="1" placeholder="Practice Name"/>
+                            </h1>
+                        </div>
+
+                        <div name="parent_practice_id">
+                            <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
+                        </div>
+                    </div>
+                    <group name="practice_contact">
+                        <!-- Practice info -->
+                        <group name="contact_information" string="Contact Information">
+                            
+                            <field name="code"/>
+                            <!-- <field name="patient_ids" invisible="0"/> -->
+                            <field name="company_id"/>
+
+                        </group>
+                        <!-- Address info -->
+                        <!-- <group name="address_information" string="Address Information">
+                            <span class="o_form_label o_td_label" name="address">Address</span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" placeholder="State" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
+                            </div>
+                        </group> -->
+                    </group>
+
+
+                        <notebook>
+                            <page string="Main Info">
+                                <group colspan="4" col="4">
+                                    <field name="practice_id"
+                                        context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    <record id="medical_practice_search_view" model="ir.ui.view">
+            <field name="name">medical.practice.search.view</field>
+            <field name="model">medical.practice</field>
+            <field name="arch" type="xml">
+                <search string="Search practice">
+                    <separator orientation="vertical" />
+                    <!-- <field name="partner_id" select="1" /> -->
+                    <!-- <field name="code" select="1" /> -->
+                    <field name="practice_id" select="1" />
+                    <newline />                    
+                    <group expand="1" string="Group By">
+                        <!-- <filter string="Doctor" name='by_user' context="{'group_by':'partner_id'}"/> -->
+                        <filter string="Practice" name='by_practice' context="{'group_by':'practice_id'}"/>
+                    </group> 
+                </search>
+            </field>
+    </record>
+
+    <record id="medical_practice_tree_view" model="ir.ui.view">
+            <field name="name">medical.practice.tree.view</field>
+            <field name="model">medical.practice</field>
+            <field name="arch" type="xml">
+                <tree string="Practices" decoration-muted="not active">
+                    <field name="active" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
+                    <field name="full_name" string="Practice Name"/>
+                    <field name="code" decoration-bf="1"/>
+                    <field name="practice_id"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+    </record>
+
+        <!-- <record id="action_medical_practice" model="ir.actions.act_window">
+            <field name="name">Medical Clinics</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">medical.practice</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record> -->
+
+        <record id="action_medical_practice" model="ir.actions.act_window">
+            <field name="name">Clinics</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">medical.practice</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_medical_practice" action="action_medical_practice" parent="basic_hms.main_menu_hospital_management" sequence="1" />
+
+
+        <!-- <menuitem id="menu_medical_practice_code" action="action_medical_practice"
+            parent="basic_hms.menu_medical_clinics" sequence="1" groups="base.group_user"/> -->
+
+            <!-- <menuitem id="asset_complaint_menu" 
+name="Complaints" action="asset_complaint_action" 
+parent="asset.menu_maintenance_assets" groups="base.group_user"/> -->
+
+</odoo>

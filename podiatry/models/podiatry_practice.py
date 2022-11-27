@@ -80,7 +80,7 @@ class Practice(models.Model):
                 practice.full_name = practice.name
         return
 
-    notes = fields.Text(string="Notes")
+    
 
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',

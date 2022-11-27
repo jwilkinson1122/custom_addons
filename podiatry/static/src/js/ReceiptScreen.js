@@ -1,4 +1,4 @@
-odoo.define('pos_receipt_a4_ld.main', function (require) {
+odoo.define('podiatry.main', function (require) {
     "use strict";
 
     const {useRef, onMounted} = owl.hooks;

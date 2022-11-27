@@ -107,7 +107,7 @@
         ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
-            'podiatry/static/src/scss/card.scss',
+            # 'podiatry/static/src/scss/card.scss',
             'podiatry/static/src/css/customerscreen.css',
             # 'podiatry/static/src/css/label.css',
             'podiatry/static/src/css/main.css',
