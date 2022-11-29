@@ -17,34 +17,35 @@
     </record>
 
     <record id="pod_practice_form_view" model="ir.ui.view">
-            <field name="name">pod.practice.form.view</field>
-            <field name="model">pod.practice</field>
-            <field name="arch" type="xml">
-                <form string="practice">
-                    <field name="active" invisible="1"/>
-                    <sheet>
-                             <!-- Button Box -->
+        <field name="name">pod.practice.form.view</field>
+        <field name="model">pod.practice</field>
+        <field name="arch" type="xml">
+            <form string="practice">
+
+                <header>
+                    <!-- <button style="margin-left:10px;" name="create_doctors" string="Create User" class="btn btn-success" type="object"/> -->
+                </header>
+                <field name="active" invisible="1"/>
+                <sheet>
                     <div class="oe_button_box" name="button_box">
                         <field name="child_ids" invisible="1"/>
                         <button type="action" name="%(action_pod_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
                     </div>
-                    <!-- Ribbon -->
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
 
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="title" class="oe_title">
                         <div name="reference">
                             <h1>
                                 <field name="reference"/>
                             </h1>
                         </div>
-                        <div name="practice_name">
+                        <div name="name">
                             <h1>
-                                <field name="practice_name" required="1" placeholder="Practice Name"/>
+                                <field name="name" required="1" placeholder="Practice Name"/>
                             </h1>
                         </div>
-
                         <div name="parent_practice_id">
                             <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
@@ -52,14 +53,14 @@
                     <group name="practice_contact">
                         <!-- Practice info -->
                         <group name="contact_information" string="Contact Information">
-                            
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
                             <field name="code"/>
-                            <!-- <field name="patient_ids" invisible="0"/> -->
-                            <field name="company_id"/>
-
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <!-- Address info -->
-                        <!-- <group name="address_information" string="Address Information">
+                        <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -69,73 +70,82 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                             </div>
-                        </group> -->
+                        </group>
                     </group>
 
-
-                        <notebook>
-                            <page string="Main Info">
-                                <group colspan="4" col="4">
-                                    <field name="practice_id"
-                                        context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                    <notebook>
+                        <!-- <page string="Main Info">
+                            <group colspan="4" col="4">
+                                <field name="practice_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                            </group>
+                        </page> -->
+                        <page name="practitioners_list" string="Contacts">
+                            <group>
+                                <field name="doctor_ids"/>
+                            </group>
+                        </page>
+                        <page name="practice_patients_list" string="Patients">
+                            <group>
+                                <field name="patient_ids"/>
+                            </group>
+                        </page>
+                        <page name="practice_prescriptions_list" string="Prescriptions">
+                            <group>
+                                <field name="prescription_ids"/>
+                            </group>
+                        </page>
+                        <page name="practice_affiliate_list" string="Related Clinics">
+                            <group>
+                                <field name="child_ids"/>
+                            </group>
+                        </page>
+                        <page name="notes" string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
     <record id="pod_practice_search_view" model="ir.ui.view">
-            <field name="name">pod.practice.search.view</field>
-            <field name="model">pod.practice</field>
-            <field name="arch" type="xml">
-                <search string="Search practice">
-                    <separator orientation="vertical" />
-                    <!-- <field name="partner_id" select="1" /> -->
-                    <!-- <field name="code" select="1" /> -->
-                    <field name="practice_id" select="1" />
-                    <newline />                    
-                    <group expand="1" string="Group By">
-                        <!-- <filter string="Doctor" name='by_user' context="{'group_by':'partner_id'}"/> -->
-                        <filter string="Practice" name='by_practice' context="{'group_by':'practice_id'}"/>
-                    </group> 
-                </search>
-            </field>
+        <field name="name">pod.practice.search.view</field>
+        <field name="model">pod.practice</field>
+        <field name="arch" type="xml">
+            <search string="Search practice">
+                <separator orientation="vertical" />
+
+                <field name="practice_id" select="1" />
+                <newline />
+                <group expand="1" string="Group By">
+
+                    <filter string="Practice" name='by_practice' context="{'group_by':'practice_id'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
     <record id="pod_practice_tree_view" model="ir.ui.view">
-            <field name="name">pod.practice.tree.view</field>
-            <field name="model">pod.practice</field>
-            <field name="arch" type="xml">
-                <tree string="Practices" decoration-muted="not active">
-                    <field name="active" invisible="1"/>
-                    <field name="sequence" widget="handle"/>
-                    <field name="full_name" string="Practice Name"/>
-                    <field name="code" decoration-bf="1"/>
-                    <field name="practice_id"/>
-                    <field name="company_id"/>
-                </tree>
-            </field>
+        <field name="name">pod.practice.tree.view</field>
+        <field name="model">pod.practice</field>
+        <field name="arch" type="xml">
+            <tree string="Practices" decoration-muted="not active">
+                <field name="active" invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="full_name" string="Practice Name"/>
+                <field name="code" decoration-bf="1"/>
+                <field name="practice_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
     </record>
 
-        <!-- <record id="action_pod_practice" model="ir.actions.act_window">
-            <field name="name">Medical Clinics</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pod.practice</field>
-            <field name="binding_view_types">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record> -->
-
-        <record id="action_practice_windows" model="ir.actions.act_window">
-            <field name="name">Clinics</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pod.practice</field>
-            <field name="binding_view_types">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!-- <menuitem id="menu_pod_practice" action="action_pod_practice" parent="pod_erp.main_menu_pod_management" sequence="1" /> -->
-
+    <record id="action_practice_windows" model="ir.actions.act_window">
+        <field name="name">Clinics</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.practice</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
 </odoo>

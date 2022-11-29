@@ -2,7 +2,7 @@
 
 import base64
 from odoo import api, fields, models, _
-from datetime import date,datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
@@ -11,12 +11,16 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class Practice(models.Model):
-    
     _name = 'pod.practice'
     _description = 'pod.practice'
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
+
     _rec_name = 'practice_id'
-    
+
     _parent_name = 'parent_id'
     _parent_store = True
 
@@ -29,7 +33,7 @@ class Practice(models.Model):
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
-    
+
     company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company",
@@ -42,7 +46,7 @@ class Practice(models.Model):
         inverse_name='parent_id',
         string="Practices",
     )
-    
+
     child_count = fields.Integer(
         string="Subpractice Count",
         compute='_compute_child_count',
@@ -53,7 +57,7 @@ class Practice(models.Model):
         for practice in self:
             practice.child_count = len(practice.child_ids)
         return
-    
+
     sequence = fields.Integer(
         string="Sequence", required=True,
         default=5,
@@ -61,7 +65,7 @@ class Practice(models.Model):
 
     code = fields.Char(string="Code", copy=False)
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    
+
     @api.onchange('practice_id')
     def _onchange_practice(self):
         '''
@@ -71,49 +75,63 @@ class Practice(models.Model):
         address_id = self.practice_id
         self.practice_address_id = address_id
 
-    partner_id = fields.Many2one('res.partner','Medical Practice', required=True)
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+                                 help='Partner-related data of the Practice')
 
-    # partner_id = fields.Many2one('res.partner','Physician',required=True)
-    # practice_partner_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string='Practice')
-    # code = fields.Char('Id')
-    # info = fields.Text('Extra Info')
     notes = fields.Text(string="Notes")
-    practice_id = fields.Many2many('res.partner',domain=[('is_practice','=',True)],string="practice", required= True)
-    practice_name = fields.Char(string="Practice Name", index=True, translate=True)
-    name = fields.Char(string='ID', readonly=True)
+    practice_id = fields.Many2many('res.partner', domain=[(
+        'is_practice', '=', True)], string="practice", required=True)
+    email = fields.Char(string="E-mail")
+    phone = fields.Char(string="Telephone")
+    mobile = fields.Char(string="Mobile")
     practice_address_id = fields.Many2one('res.partner', string="Address", )
     street = fields.Char(related='practice_id.street', readonly=False)
     street2 = fields.Char(related='practice_id.street2', readonly=False)
     zip_code = fields.Char(related='practice_id.zip', readonly=False)
     city = fields.Char(related='practice_id.city', readonly=False)
-    state_id = fields.Many2one("res.country.state", related='practice_id.state_id', readonly=False)
-    country_id = fields.Many2one('res.country', related='practice_id.country_id', readonly=False)
-    doctor_ids = fields.Many2many('pod.physician', string="Doctors")
-    patient_ids = fields.Many2many('pod.patient', string="Patients")
+    zip = fields.Char(string="ZIP Code")
+    state_id = fields.Many2one(
+        "res.country.state", related='practice_id.state_id', readonly=False)
+    country_id = fields.Many2one(
+        'res.country', related='practice_id.country_id', readonly=False)
+    doctor_ids = fields.Many2many('pod.doctor', string="Doctors")
+    # patient_ids = fields.One2many('pod.patient', string="Patients")
+    # prescription_ids = fields.One2many(
+    #     'doctor.prescription', string="Prescriptions")
+    patient_ids = fields.One2many(
+        comodel_name='pod.patient',
+        inverse_name='practice_id',
+        string="Patients",
+    )
+    prescription_ids = fields.One2many(
+        comodel_name='doctor.prescription',
+        inverse_name='practice_id',
+        string="Prescriptions",
+    )
     identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    
+
     @api.model
     def _get_sequence_code(self):
         return 'pod.practice'
-    
+
     full_name = fields.Char(
         string="Full Name",
         compute='_compute_full_name',
         store=True,
     )
 
-    @api.depends('practice_name', 'parent_id.full_name')
+    @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
         for practice in self:
             if practice.parent_id:
                 practice.full_name = "%s / %s" % (
-                    practice.parent_id.full_name, practice.practice_name)
+                    practice.parent_id.full_name, practice.name)
             else:
-                practice.full_name = practice.practice_name
+                practice.full_name = practice.name
         return
-    
+
     same_reference_practice_id = fields.Many2one(
         comodel_name='pod.practice',
         string='Practice with same Identity',
@@ -135,11 +153,11 @@ class Practice(models.Model):
             practice.same_reference_practice_id = bool(practice.reference) and \
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
- 
+
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
-            'basic_hms', 'static/src/img', 'company_image.png')
+            'pod_erp', 'static/src/description', 'company_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _set_code(self):
@@ -151,6 +169,14 @@ class Practice(models.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
+
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('name', _('New')) == _('New'):
+    #         vals['name'] = self.env['ir.sequence'].next_by_code(
+    #             'pod.prescription.sequence')
+    #     result = super(DoctorPrescription, self).create(vals)
+    #     return result
 
     @api.model
     def create(self, vals):
@@ -166,8 +192,8 @@ class Practice(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            practice_name = '[' + rec.reference + '] ' + rec.practice_name
-            result.append((rec.id, practice_name))
+            name = '[' + rec.reference + '] ' + rec.name
+            result.append((rec.id, name))
         return result
 
     def write(self, values):
@@ -184,9 +210,8 @@ class Practice(models.Model):
 
     def copy(self, default=None):
         for rec in self:
-            raise UserError(_('You Can Not Duplicate practice.' ))
-        
-        
+            raise UserError(_('You Can Not Duplicate practice.'))
+
     # def action_open_prescriptions(self):
     #     return {
     #         'type': 'ir.actions.act_window',
@@ -198,7 +223,5 @@ class Practice(models.Model):
     #         'target': 'current',
     #     }
 
-        
-        
 
 # vim=expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

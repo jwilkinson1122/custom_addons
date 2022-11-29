@@ -1,3 +1,4 @@
+from . import abstract
 from . import doctor_prescription
 from . import practice
 from . import doctor

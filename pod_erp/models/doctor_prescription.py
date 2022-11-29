@@ -13,14 +13,18 @@ class DoctorPrescription(models.Model):
         store=True,
     )
     doctor = fields.Many2one('pod.doctor', string='Podiatrist', readonly=True)
-    customer = fields.Many2one('res.partner', string='Customer', readonly=False)
+    customer = fields.Many2one(
+        'res.partner', string='Customer', readonly=False)
+    practice_id = fields.Many2one(
+        comodel_name='pod.practice', string='Practice')
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     podiatrist_observation = fields.Text()
-    state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+    state = fields.Selection(
+        [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
     def confirm_request(self):
         for rec in self:
@@ -31,7 +35,8 @@ class DoctorPrescription(models.Model):
             'eye_examination_chargeable')
         return settings_eye_examination_chargeable
 
-    eye_examination_chargeable = fields.Boolean(default=default_eye_examination_chargeable, readonly=1)
+    eye_examination_chargeable = fields.Boolean(
+        default=default_eye_examination_chargeable, readonly=1)
 
     prescription_type = fields.Selection([('Internal', 'Internal'), ('External', 'External')], default='Internal',
                                          Required=True)
@@ -123,7 +128,8 @@ class DoctorPrescription(models.Model):
     ph = fields.Text('P.H')
     cie_10 = fields.Selection(
         [('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'),
-         ('detachment', 'Detachment'), ('laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'),
+         ('detachment', 'Detachment'), ('laser_myopia',
+                                        'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'),
          ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
     main_symptoms = fields.Text('Main Symptoms')
     background = fields.Text('Background')
@@ -187,7 +193,8 @@ class DoctorPrescription(models.Model):
     #         , ('79', '79')], 'PD')
 
     doctor_notes = fields.Text('Notes')
-    name = fields.Char(required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
+    name = fields.Char(required=True, copy=False, readonly=True,
+                       index=True, default=lambda self: _('New'))
     family_eye_history = fields.Text()
     ocular_history = fields.Text()
     consultation = fields.Text()
@@ -195,15 +202,19 @@ class DoctorPrescription(models.Model):
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):
         if self.os_sph_distance and self.os_sph_distance.isdigit():
-            self.os_sph_distance = "+" + "{:.2f}".format(float(self.os_sph_distance))
+            self.os_sph_distance = "+" + \
+                "{:.2f}".format(float(self.os_sph_distance))
         elif self.os_sph_distance:
             if '-' in self.os_sph_distance:
-                self.os_sph_distance = "{:.2f}".format(float(self.os_sph_distance))
+                self.os_sph_distance = "{:.2f}".format(
+                    float(self.os_sph_distance))
         if self.od_sph_distance and self.od_sph_distance.isdigit():
-            self.od_sph_distance = "+" + "{:.2f}".format(float(self.od_sph_distance))
+            self.od_sph_distance = "+" + \
+                "{:.2f}".format(float(self.od_sph_distance))
         elif self.od_sph_distance:
             if '-' in self.od_sph_distance:
-                self.od_sph_distance = "{:.2f}".format(float(self.od_sph_distance))
+                self.od_sph_distance = "{:.2f}".format(
+                    float(self.od_sph_distance))
 
     @api.onchange('os_sph_near', 'od_sph_near')
     def onchange_sph_near(self):
@@ -221,15 +232,19 @@ class DoctorPrescription(models.Model):
     @api.onchange('od_cyl_distance', 'os_cyl_distance')
     def onchange_cyl_distance(self):
         if self.od_cyl_distance and self.od_cyl_distance.isdigit():
-            self.od_cyl_distance = "+" + "{:.2f}".format(float(self.od_cyl_distance))
+            self.od_cyl_distance = "+" + \
+                "{:.2f}".format(float(self.od_cyl_distance))
         elif self.od_cyl_distance:
             if '-' in self.od_cyl_distance:
-                self.od_cyl_distance = "{:.2f}".format(float(self.od_cyl_distance))
+                self.od_cyl_distance = "{:.2f}".format(
+                    float(self.od_cyl_distance))
         if self.os_cyl_distance and self.os_cyl_distance.isdigit():
-            self.os_cyl_distance = "+" + "{:.2f}".format(float(self.os_cyl_distance))
+            self.os_cyl_distance = "+" + \
+                "{:.2f}".format(float(self.os_cyl_distance))
         elif self.os_cyl_distance:
             if '-' in self.os_cyl_distance:
-                self.os_cyl_distance = "{:.2f}".format(float(self.os_cyl_distance))
+                self.os_cyl_distance = "{:.2f}".format(
+                    float(self.os_cyl_distance))
 
     @api.onchange('od_cyl_near', 'os_cyl_near')
     def onchange_cyl_near(self):
@@ -247,28 +262,36 @@ class DoctorPrescription(models.Model):
     @api.onchange('od_add_distance', 'os_add_distance')
     def onchange_add_distance(self):
         if self.od_add_distance and self.od_add_distance.isdigit():
-            self.od_add_distance = "+" + "{:.2f}".format(float(self.od_add_distance))
-            value = "{:.2f}".format(float(self.od_sph_distance) + float(self.od_add_distance))
+            self.od_add_distance = "+" + \
+                "{:.2f}".format(float(self.od_add_distance))
+            value = "{:.2f}".format(
+                float(self.od_sph_distance) + float(self.od_add_distance))
             self.od_sph_near = value if '-' in value else "+" + value
             self.od_cyl_near = self.od_cyl_distance
             self.od_ax_near = self.od_ax_distance
         if self.od_add_distance:
             if '-' in self.od_add_distance:
-                self.od_add_distance = "{:.2f}".format(float(self.od_add_distance))
-                value = "{:.2f}".format(float(self.od_sph_distance) + float(self.od_add_distance))
+                self.od_add_distance = "{:.2f}".format(
+                    float(self.od_add_distance))
+                value = "{:.2f}".format(
+                    float(self.od_sph_distance) + float(self.od_add_distance))
                 self.od_sph_near = value if '-' in value else "+" + value
                 self.od_cyl_near = self.od_cyl_distance
                 self.od_ax_near = self.od_ax_distance
         if self.os_add_distance and self.os_add_distance.isdigit():
-            self.os_add_distance = "+" + "{:.2f}".format(float(self.os_add_distance))
-            value = "{:.2f}".format(float(self.os_sph_distance) + float(self.os_add_distance))
+            self.os_add_distance = "+" + \
+                "{:.2f}".format(float(self.os_add_distance))
+            value = "{:.2f}".format(
+                float(self.os_sph_distance) + float(self.os_add_distance))
             self.os_sph_near = value if '-' in value else "+" + value
             self.os_cyl_near = self.os_cyl_distance
             self.os_ax_near = self.os_ax_distance
         if self.os_add_distance:
             if '-' in self.os_add_distance:
-                self.os_add_distance = "{:.2f}".format(float(self.os_add_distance))
-                value = "{:.2f}".format(float(self.os_sph_distance) + float(self.os_add_distance))
+                self.os_add_distance = "{:.2f}".format(
+                    float(self.os_add_distance))
+                value = "{:.2f}".format(
+                    float(self.os_sph_distance) + float(self.os_add_distance))
                 self.os_sph_near = value if '-' in value else "+" + value
                 self.os_cyl_near = self.os_cyl_distance
                 self.os_ax_near = self.os_ax_distance
@@ -281,7 +304,8 @@ class DoctorPrescription(models.Model):
             self.os_av_distance = "20/" + self.os_av_distance
 
     def open_customer(self):
-        sale_order = self.env['sale.order'].search([('prescription_id', '=', self.id)], limit=1)
+        sale_order = self.env['sale.order'].search(
+            [('prescription_id', '=', self.id)], limit=1)
         print('fire', sale_order)
         if sale_order:
             return {
@@ -294,8 +318,6 @@ class DoctorPrescription(models.Model):
                 # 'context':{'default_doctor':self.id},
                 'type': 'ir.actions.act_window',
             }
-
-
 
         else:
             return {
@@ -311,7 +333,8 @@ class DoctorPrescription(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('pod.prescription.sequence')
+            vals['name'] = self.env['ir.sequence'].next_by_code(
+                'pod.prescription.sequence')
         result = super(DoctorPrescription, self).create(vals)
         return result
 
@@ -326,13 +349,13 @@ class DoctorPrescription(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("pod_erp.doctor_prescription_ticket_size2").report_action(self)
 
-    # def print_ophtalmologic_prescription_report(self):
+    # def print_medical_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "pod_erp.doctor_ophtalmological_prescription_template",
-    #         'report_file': "pod_erp.doctor_ophtalmological_prescription_template",
+    #         'report_name': "pod_erp.doctor_medical_prescription_template",
+    #         'report_file': "pod_erp.doctor_medical_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_ophtalmological_ticket_size2").report_action(self)
+    def print_medical_prescription_report_ticket_size(self):
+        return self.env.ref("pod_erp.doctor_prescription_medical_ticket_size2").report_action(self)

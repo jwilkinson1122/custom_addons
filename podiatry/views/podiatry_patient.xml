@@ -103,6 +103,9 @@
                                 <field name="weight_id" options="{'no_open': true}"/>
                             </group>
                         </page>
+                        <page name="patient_measures" string="Measures">
+
+                        </page>
                         <page name="patient_images" string="File Attachments">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
