@@ -8,6 +8,8 @@ class Partner(models.Model):
     _inherit = 'res.partner'
     
     info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
+    is_practice = fields.Boolean('Practice')
+    reference = fields.Char('ID Number')
 
     name = fields.Char(index=True)
     #  Patient

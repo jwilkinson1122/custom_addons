@@ -1,6 +1,7 @@
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
 import logging
@@ -10,9 +11,14 @@ _logger = logging.getLogger(__name__)
 
 class Practice(models.Model):
     _name = 'podiatry.practice'
-    _description = "Care Practice"
-    _inherit = ['resource.mixin', 'mail.thread',
+    _description = "Medical Practice"
+    _inherit = ['mail.thread',
                 'mail.activity.mixin', 'image.mixin']
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
+
+    _rec_name = 'practice_id'
     _order = 'sequence,id'
 
     _parent_name = 'parent_id'
@@ -33,7 +39,7 @@ class Practice(models.Model):
         return 'podiatry.practice'
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    name = fields.Char(string="Practice Name", index=True, translate=True)
+    # name = fields.Char(string="Practice Name", index=True, translate=True)
     color = fields.Integer(string="Color Index (0-15)")
 
     sequence = fields.Integer(
@@ -87,6 +93,9 @@ class Practice(models.Model):
         inverse_name='practice_id',
         string="Patients",
     )
+    
+    practice_id = fields.Many2many('res.partner', domain=[(
+        'is_practice', '=', True)], string="practice", required=True)
 
     practitioner_id = fields.One2many(
         comodel_name='podiatry.practitioner',
@@ -105,9 +114,18 @@ class Practice(models.Model):
         string="Prescriptions",
     )
 
-    partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Contact",
-    )
+    @api.onchange('practice_id')
+    def _onchange_practice(self):
+        '''
+        The purpose of the method is to define a domain for the available
+        purchase orders.
+        '''
+        address_id = self.practice_id
+        self.practice_address_id = address_id
+
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+                                 help='Partner-related data of the Practice')
+
 
     speciality_id = fields.Many2one(
         comodel_name='podiatry.speciality',
@@ -126,6 +144,8 @@ class Practice(models.Model):
         index=True,
         default=lambda self: self.env.company,
     )
+    
+    practice_address_id = fields.Many2one('res.partner', string="Address", )
 
     child_ids = fields.One2many(
         comodel_name='podiatry.practice',
@@ -165,22 +185,6 @@ class Practice(models.Model):
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
 
-    # @api.model_create_multi
-    # def create(self, values):
-    #     return super(Practice, self.with_context(default_resource_type='material')).create(values)
-
-    # def name_get(self):
-    #     if not self.env.context.get('hierarchical_naming', True):
-    #         return [(record.id, record.name) for record in self]
-    #     return super(Practice, self).name_get()
-
-    # @api.model
-    # def _set_code(self):
-    #     for practice in self:
-    #         sequence = self._get_sequence_code()
-    #         practice.code = self.env['ir.sequence'].next_by_code(sequence)
-    #     return
-
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
@@ -193,6 +197,10 @@ class Practice(models.Model):
             practice.code = self.env['ir.sequence'].next_by_code(
                 sequence)
         return
+    
+    def _valid_field_parameter(self, field, name):
+        return name == 'sort' or super()._valid_field_parameter(field, name)
+
 
     @api.model
     def create(self, vals):
@@ -215,6 +223,10 @@ class Practice(models.Model):
     def write(self, values):
         result = super(Practice, self).write(values)
         return result
+    
+    def copy(self, default=None):
+        for rec in self:
+            raise UserError(_('You Can Not Duplicate practice.'))
 
     def action_open_prescriptions(self):
         return {

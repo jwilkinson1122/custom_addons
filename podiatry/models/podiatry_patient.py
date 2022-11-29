@@ -107,13 +107,11 @@ class Patient(models.Model):
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
-        inverse_name='patient_id',
         string="Practice",
     )
 
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
-        inverse_name='patient_id',
         string="Practitioner",
     )
 
