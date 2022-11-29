@@ -9,10 +9,15 @@ class Partner(models.Model):
     
     info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
     is_practice = fields.Boolean('Practice')
+    is_practitioner = fields.Boolean('Practitioner')
     reference = fields.Char('ID Number')
+    
+    # is_practitioner = fields.Boolean(
+    #     string="Practitioner", search='_search_is_practitioner',
+    # )
 
     name = fields.Char(index=True)
-    #  Patient
+    
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='partner_id',
@@ -68,10 +73,10 @@ class Partner(models.Model):
             partner.practitioner_count = partner.practitioner_id
         return
 
-    is_practitioner = fields.Boolean(
-        string="Practitioner", store=False,
-        search='_search_is_practitioner',
-    )
+    # is_practitioner = fields.Boolean(
+    #     string="Practitioner", store=False,
+    #     search='_search_is_practitioner',
+    # )
 
     def _search_is_practitioner(self, operator, value):
         assert operator in ('=', '!=', '<>') and value in (

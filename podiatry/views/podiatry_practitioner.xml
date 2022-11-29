@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!--
-        ========
-        Contacts
-        ========
-    -->
-
     <!-- Form -->
     <record id="view_podiatry_practitioner_form" model="ir.ui.view">
         <field name="name">podiatry.practitioner.form</field>
@@ -15,10 +8,10 @@
             <form string="Practitioner">
                 <field name="active" invisible="1"/>
                 <header/>
-                <div name="alert_practitioner_identification_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_identification_practitioner_id', '=', False)]}">
-                    A practitioner with the same identification already exists, are you sure you want to create a new one?
+                <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_practitioner_id', '=', False)]}">
+                    A practitioner with the same reference already exists, are you sure you want to create a new one?
                     <br/>
-                    •                    <field name="same_identification_practitioner_id"/>
+                    •                    <field name="same_reference_practitioner_id"/>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -92,33 +85,6 @@
                             <separator name="notes" string="Notes"/>
                             <field name="notes" nolabel="1" placeholder="Start typing..."/>
                         </page>
-
-                        <!--
-                        Page: Internal
-                        -->
-                        <page name="internal" string="Internal">
-                            <group name="internal">
-
-                                <group name="status" string="Status">
-                                    <field name="partner_id" context="{
-                                        'default_type': 'contact',
-                                        'default_name': name,
-                                        'default_street': street,
-                                        'default_street2': street2,
-                                        'default_city': city,
-                                        'default_state_id': state_id,
-                                        'default_zip': zip,
-                                        'default_country_id': country_id,
-                                        'default_phone': phone,
-                                        'default_mobile': mobile,
-                                        'default_email': email,
-                                    }"/>
-                                    <!-- <field name="user_id" string="Related User"/> -->
-                                    <field name="responsible_id"/>
-                                </group>
-                            </group>
-                        </page>
-
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -140,13 +106,6 @@
             <tree string="Contacts" decoration-muted="not active">
                 <field name="name" decoration-bf="1"/>
                 <field name="reference" optional="hide"/>
-                <field name="identification"/>
-                <field name="birthdate" widget="date" optional="hide"/>
-                <field name="age" optional="hide"/>
-                <field name="gender" optional="hide"/>
-                <field name="nationality_id" optional="hide"/>
-                <field name="birth_country_id" optional="hide"/>
-                <field name="birth_state_id" optional="hide"/>
                 <field name="mobile" widget="phone" optional="show"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
@@ -271,7 +230,6 @@
                 Fields
                 -->
                 <field name="name"/>
-                <field name="identification" operator="="/>
                 <separator/>
 
                 <!--
@@ -286,23 +244,9 @@
                 Groups
                 -->
                 <group name="group_by" string="Group By">
-
-                    <separator/>
-                    <filter string="Nationality" name="nationality_id" context="{'group_by': 'nationality_id'}"/>
-                    <filter string="Birthplace" name="birth_state_id" context="{'group_by': 'birth_state_id'}"/>
-                    <separator/>
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
                 </group>
-
-                <!--
-                Search panel
-                -->
-
-                <searchpanel>
-                    <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
-                    <field name="country_id" icon="fa-globe" enable_counters="1"/>
-                </searchpanel>
 
             </search>
         </field>
@@ -363,7 +307,7 @@
             <pivot string="Contacts" sample="1">
                 <field name="name" invisible="1"/>
                 <field name="color" invisible="1"/>
-                <field name="identification" invisible="1"/>
+                <field name="reference"/>
                 <field name="mobile" invisible="1"/>
                 <field name="phone" invisible="1"/>
                 <field name="email" invisible="1"/>

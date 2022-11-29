@@ -1,6 +1,7 @@
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
 from . import podiatry_practice
@@ -18,6 +19,13 @@ class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
     _inherit = ['mail.thread',
                 'mail.activity.mixin', 'image.mixin']
+    
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
+    
+    _rec_name = 'practitioner_id'
+
     _description = 'practitioner'
 
     speciality_id = fields.Many2one(
@@ -29,6 +37,9 @@ class Practitioner(models.Model):
         inverse_name='practitioner_id',
         string='Patients'
     )
+    
+    practitioner_id = fields.Many2many('res.partner', domain=[(
+        'is_practitioner', '=', True)], string="practitioner", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
@@ -56,13 +67,11 @@ class Practitioner(models.Model):
         return 'podiatry.practitioner'
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    name = fields.Char(string="Name", index=True)
+    # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
-    identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    birthdate = fields.Datetime(string="Birthdate")
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -84,12 +93,6 @@ class Practitioner(models.Model):
 
     notes = fields.Text(string="Notes")
 
-    gender = fields.Selection(selection=[
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
-    ], string="Gender")
-
     salutation = fields.Selection(selection=[
         ('practitioner', 'Practitioner'),
         ('mr', 'Mr.'),
@@ -98,21 +101,7 @@ class Practitioner(models.Model):
     ], string="Salutation")
 
     signature = fields.Binary(string="Signature")
-
-    birth_country_id = fields.Many2one(
-        comodel_name='res.country', string="Country of Birth",
-        default=lambda self: self.env.company.country_id,
-    )
-    birth_state_id = fields.Many2one(
-        comodel_name='res.country.state', string="Birthplace",
-        default=lambda self: self.env.company.state_id,
-        domain="[('country_id', '=', birth_country_id)]",
-    )
-    nationality_id = fields.Many2one(
-        comodel_name='res.country', string="Nationality",
-        default=lambda self: self.env.company.country_id,
-    )
-
+    
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
 
@@ -137,13 +126,25 @@ class Practitioner(models.Model):
     user_id = fields.Many2one(
         comodel_name='res.users', string="User",
     )
+    
     responsible_id = fields.Many2one(
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
-    partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Contact",
-    )
+    
+    @api.onchange('practitioner_id')
+    def _onchange_practitioner(self):
+        '''
+        The purpose of the method is to define a domain for the available
+        purchase orders.
+        '''
+        address_id = self.practitioner_id
+        self.practitioner_address_id = address_id
+    
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+                                 help='Partner-related data')
+
+    practitioner_address_id = fields.Many2one('res.partner', string="Address", )
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
@@ -152,8 +153,6 @@ class Practitioner(models.Model):
         string="Other Contacts",
     )
 
-    age = fields.Char(compute='_compute_age')
-
     @api.model
     def _relativedelta_to_text(self, delta):
         result = []
@@ -161,59 +160,28 @@ class Practitioner(models.Model):
         if delta:
             if delta.years > 0:
                 result.append(
-                    "{years} {practice}".format(
+                    "{years} {practitioner}".format(
                         years=delta.years,
-                        practice=_("year") if delta.years == 1 else _("years"),
+                        practitioner=_("year") if delta.years == 1 else _("years"),
                     )
                 )
             if delta.months > 0 and delta.years < 9:
                 result.append(
-                    "{months} {practice}".format(
+                    "{months} {practitioner}".format(
                         months=delta.months,
-                        practice=_("month") if delta.months == 1 else _(
+                        practitioner=_("month") if delta.months == 1 else _(
                             "months"),
                     )
                 )
             if delta.days > 0 and not delta.years:
                 result.append(
-                    "{days} {practice}".format(
+                    "{days} {practitioner}".format(
                         days=delta.days,
-                        practice=_("day") if delta.days == 1 else _("days"),
+                        practitioner=_("day") if delta.days == 1 else _("days"),
                     )
                 )
 
         return bool(result) and " ".join(result)
-
-    @api.depends('birthdate')
-    def _compute_age(self):
-        now = fields.Datetime.now()
-        for practitioner in self:
-            delta = relativedelta(now, practitioner.birthdate)
-            practitioner.age = self._relativedelta_to_text(delta)
-
-        return
-
-    same_identification_practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        string='Practitioner with same Identity',
-        compute='_compute_same_identification_practitioner_id',
-    )
-
-    @api.depends('identification')
-    def _compute_same_identification_practitioner_id(self):
-        for practitioner in self:
-            domain = [
-                ('identification', '=', practitioner.identification),
-            ]
-
-            origin_id = practitioner._origin.id
-
-            if origin_id:
-                domain += [('id', '!=', origin_id)]
-
-            practitioner.same_identification_practitioner_id = bool(practitioner.identification) and \
-                self.with_context(active_test=False).sudo().search(
-                    domain, limit=1)
 
     same_reference_practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
@@ -255,6 +223,10 @@ class Practitioner(models.Model):
             practitioner.code = self.env['ir.sequence'].next_by_code(
                 sequence)
         return
+    
+    def _valid_field_parameter(self, field, name):
+        return name == 'sort' or super()._valid_field_parameter(field, name)
+
 
     @api.model
     def create(self, vals):
@@ -280,6 +252,10 @@ class Practitioner(models.Model):
         if 'user_id' in values or 'other_partner_ids' in values:
             self._add_followers()
         return result
+    
+    def copy(self, default=None):
+        for rec in self:
+            raise UserError(_('You Can Not Duplicate practitioner.'))
 
     def action_open_prescriptions(self):
         return {
