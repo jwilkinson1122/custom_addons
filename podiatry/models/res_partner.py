@@ -6,18 +6,19 @@ from odoo import _, api, fields, models, tools
 class Partner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
-    
-    info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
-    is_practice = fields.Boolean('Practice')
+
+    info_ids = fields.One2many(
+        'res.partner.info', 'partner_id', string="More Info")
+    is_location = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
     reference = fields.Char('ID Number')
-    
+
     # is_practitioner = fields.Boolean(
     #     string="Practitioner", search='_search_is_practitioner',
     # )
 
     name = fields.Char(index=True)
-    
+
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='partner_id',
@@ -143,7 +144,7 @@ class Partner(models.Model):
     #     return super(Partner, self).search(
     #         args, offset=offset, limit=limit, order=order, count=count
     #     )
-    
+
     # @api.model
     # def _name_search(self, name='', args=None, offset=0, operator='ilike', limit=100, name_get_uid=None):
     #     args = list(args or [])
@@ -151,7 +152,7 @@ class Partner(models.Model):
     #         args += ['|', ('name', operator, name),
     #                  ('department_code', operator, name)]
     #     return self._search(args, limit=limit, access_rights_uid=name_get_uid)
-    
+
     @api.model
     def create(self, vals):
         """When creating, use a modified self to alter the context (see
@@ -240,7 +241,7 @@ class Partner(models.Model):
     def _onchange_practitioner_type(self):
         if self.practitioner_type == "standalone":
             self.practitioner_id = False
- 
+
     @api.model
     def create_partner_from_ui(self, partner, extraPartner):
         """ create or modify a partner from the point of sale ui.
@@ -249,7 +250,8 @@ class Partner(models.Model):
         extraPartner_id = partner.pop('id', False)
         if extraPartner:
             if extraPartner.get('image_1920'):
-                extraPartner['image_1920'] = extraPartner['image_1920'].split(',')[1]
+                extraPartner['image_1920'] = extraPartner['image_1920'].split(',')[
+                    1]
             if extraPartner_id:  # Modifying existing extraPartner
                 custom_info = self.env['custom.partner.field'].search([])
                 for i in custom_info:
@@ -257,7 +259,8 @@ class Partner(models.Model):
                         info_data = self.env['res.partner.info'].search(
                             [('partner_id', '=', extraPartner_id), ('name', '=', i.name)])
                         if info_data:
-                            info_data.write({'info_name': extraPartner[i.name], 'partner_id': extraPartner_id})
+                            info_data.write(
+                                {'info_name': extraPartner[i.name], 'partner_id': extraPartner_id})
                         else:
                             self.browse(extraPartner_id).write(
                                 {'info_ids': [(0, 0, {'name': i.name, 'info_name': extraPartner[i.name]})]})
@@ -274,11 +277,13 @@ class Partner(models.Model):
                 extraPartner_id = self.create(partner).id
         return extraPartner_id
 
+
 class CustomPartnerField(models.Model):
     _name = "custom.partner.field"
 
     name = fields.Char(string="Custom Partner Fields")
     config_id = fields.Many2one("pos.config", string="Pos Config")
+
 
 class ResPartnerInfo(models.Model):
     _name = "res.partner.info"

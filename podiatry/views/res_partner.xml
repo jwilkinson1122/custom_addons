@@ -9,6 +9,7 @@
         <field name="domain">[('partner_id', '=', active_id)]</field>
     </record>
 
+
     <!-- Form -->
     <record id="view_res_partner_form_inherit_podiatry" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.podiatry</field>
@@ -21,7 +22,7 @@
                     <group colspan="6" col="6">
                         <field name="is_patient" />
                         <field name="is_practitioner" />
-                        <field name="is_practice" />
+                        <field name="is_location" />
                         <!-- <field name="is_person" /> -->
                     </group>
                 </page>
@@ -66,6 +67,6 @@
         <field name="context">{'search_default_is_patient': True}</field>
     </record>
 
-    <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_other" sequence="20"/>
+    <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_other" sequence="20"/> -->
 
 </odoo>

@@ -86,16 +86,14 @@ class Practice(models.Model):
                 practice.full_name = practice.name
         return
 
-    
-
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='practice_id',
         string="Patients",
     )
-    
+
     practice_id = fields.Many2many('res.partner', domain=[(
-        'is_practice', '=', True)], string="practice", required=True)
+        'is_company', '=', True)], string="Practice", required=True)
 
     practitioner_id = fields.One2many(
         comodel_name='podiatry.practitioner',
@@ -126,7 +124,6 @@ class Practice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
                                  help='Partner-related data of the Practice')
 
-
     speciality_id = fields.Many2one(
         comodel_name='podiatry.speciality',
         string='speciality')
@@ -144,7 +141,7 @@ class Practice(models.Model):
         index=True,
         default=lambda self: self.env.company,
     )
-    
+
     practice_address_id = fields.Many2one('res.partner', string="Address", )
 
     child_ids = fields.One2many(
@@ -197,10 +194,9 @@ class Practice(models.Model):
             practice.code = self.env['ir.sequence'].next_by_code(
                 sequence)
         return
-    
+
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
-
 
     @api.model
     def create(self, vals):
@@ -223,7 +219,7 @@ class Practice(models.Model):
     def write(self, values):
         result = super(Practice, self).write(values)
         return result
-    
+
     def copy(self, default=None):
         for rec in self:
             raise UserError(_('You Can Not Duplicate practice.'))
