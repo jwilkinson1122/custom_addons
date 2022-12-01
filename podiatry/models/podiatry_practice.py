@@ -34,10 +34,6 @@ class Practice(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
-    @api.model
-    def _get_sequence_code(self):
-        return 'podiatry.practice'
-
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Practice Name", index=True, translate=True)
     color = fields.Integer(string="Color Index (0-15)")
@@ -188,13 +184,6 @@ class Practice(models.Model):
             'podiatry', 'static/src/img', 'company_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
-    def _set_code(self):
-        for practice in self:
-            sequence = self._get_sequence_code()
-            practice.code = self.env['ir.sequence'].next_by_code(
-                sequence)
-        return
-
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
 
@@ -206,7 +195,6 @@ class Practice(models.Model):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.practice') or _('New')
         practice = super(Practice, self).create(vals)
-        practice._set_code()
         return practice
 
     def name_get(self):

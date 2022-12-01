@@ -42,7 +42,7 @@
 
                         <div name="practice_id">
                             <!-- <label for="practice_id" string="Primary Practice"/> -->
-                            <field name="practice_id" placeholder="Practice" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
                     <group name="practitioner_contact">

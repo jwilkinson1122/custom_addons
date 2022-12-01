@@ -262,7 +262,10 @@
                 <field name="parent_id" invisible="1"/>
 
                 <!-- Fields -->
-                <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/>
+                <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/> -->
+                <field name="name"/>
+                <field name="display_name"/>
+                <field name="reference"/>
                 <field name="parent_id" operator="child_of"/>
                 <separator/>
 

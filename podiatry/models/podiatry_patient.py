@@ -12,10 +12,6 @@ class Patient(models.Model):
         'res.partner': 'partner_id',
     }
 
-    @api.model
-    def _get_sequence_code(self):
-        return 'podiatry.patient'
-
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
@@ -276,12 +272,6 @@ class Patient(models.Model):
                            patient.responsible_id.partner_id).ids
             patient.message_subscribe(partner_ids=partner_ids)
 
-    def _set_code(self):
-        for patient in self:
-            sequence = self._get_sequence_code()
-            patient.code = self.env['ir.sequence'].next_by_code(sequence)
-        return
-
     @api.model
     def create(self, vals):
         if not vals.get('notes'):
@@ -290,7 +280,6 @@ class Patient(models.Model):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.patient') or _('New')
         patient = super(Patient, self).create(vals)
-        patient._set_code()
         patient._add_followers()
         return patient
 

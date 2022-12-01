@@ -19,11 +19,11 @@ class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
     _inherit = ['mail.thread',
                 'mail.activity.mixin', 'image.mixin']
-    
+
     _inherits = {
         'res.partner': 'partner_id',
     }
-    
+
     _rec_name = 'practitioner_id'
 
     _description = 'practitioner'
@@ -37,7 +37,7 @@ class Practitioner(models.Model):
         inverse_name='practitioner_id',
         string='Patients'
     )
-    
+
     practitioner_id = fields.Many2many('res.partner', domain=[(
         'is_practitioner', '=', True)], string="practitioner", required=True)
 
@@ -61,10 +61,6 @@ class Practitioner(models.Model):
         image_path = get_module_resource('hr', 'static/src/img',
                                          'default_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
-
-    @api.model
-    def _get_sequence_code(self):
-        return 'podiatry.practitioner'
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Name", index=True)
@@ -101,7 +97,7 @@ class Practitioner(models.Model):
     ], string="Salutation")
 
     signature = fields.Binary(string="Signature")
-    
+
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
 
@@ -126,12 +122,12 @@ class Practitioner(models.Model):
     user_id = fields.Many2one(
         comodel_name='res.users', string="User",
     )
-    
+
     responsible_id = fields.Many2one(
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
-    
+
     @api.onchange('practitioner_id')
     def _onchange_practitioner(self):
         '''
@@ -140,11 +136,12 @@ class Practitioner(models.Model):
         '''
         address_id = self.practitioner_id
         self.practitioner_address_id = address_id
-    
+
     partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
                                  help='Partner-related data')
 
-    practitioner_address_id = fields.Many2one('res.partner', string="Address", )
+    practitioner_address_id = fields.Many2one(
+        'res.partner', string="Address", )
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
@@ -162,7 +159,8 @@ class Practitioner(models.Model):
                 result.append(
                     "{years} {practitioner}".format(
                         years=delta.years,
-                        practitioner=_("year") if delta.years == 1 else _("years"),
+                        practitioner=_(
+                            "year") if delta.years == 1 else _("years"),
                     )
                 )
             if delta.months > 0 and delta.years < 9:
@@ -177,7 +175,8 @@ class Practitioner(models.Model):
                 result.append(
                     "{days} {practitioner}".format(
                         days=delta.days,
-                        practitioner=_("day") if delta.days == 1 else _("days"),
+                        practitioner=_(
+                            "day") if delta.days == 1 else _("days"),
                     )
                 )
 
@@ -217,16 +216,8 @@ class Practitioner(models.Model):
                            practitioner.responsible_id.partner_id).ids
             practitioner.message_subscribe(partner_ids=partner_ids)
 
-    def _set_code(self):
-        for practitioner in self:
-            sequence = self._get_sequence_code()
-            practitioner.code = self.env['ir.sequence'].next_by_code(
-                sequence)
-        return
-    
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
-
 
     @api.model
     def create(self, vals):
@@ -236,7 +227,6 @@ class Practitioner(models.Model):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.practitioner') or _('New')
         practitioner = super(Practitioner, self).create(vals)
-        practitioner._set_code()
         practitioner._add_followers()
         return practitioner
 
@@ -252,7 +242,7 @@ class Practitioner(models.Model):
         if 'user_id' in values or 'other_partner_ids' in values:
             self._add_followers()
         return result
-    
+
     def copy(self, default=None):
         for rec in self:
             raise UserError(_('You Can Not Duplicate practitioner.'))
