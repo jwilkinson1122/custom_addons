@@ -8,13 +8,16 @@ class Patient(models.Model):
     _name = 'podiatry.patient'
     _description = "Patient"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
 
     @api.model
     def _get_sequence_code(self):
         return 'podiatry.patient'
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    name = fields.Char(string="Patient Name", index=True)
+    # name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
 
     code = fields.Char(string="Code", copy=False)
