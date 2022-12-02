@@ -3,14 +3,14 @@ odoo.define('podiatry_erp.models', function (require) {
     var models = require('point_of_sale.models');
 
     models.load_models([{
-        model: 'podiatry.dr',
+        model: 'podiatry.doctor',
         fields: ['name'],
         loaded: function (self, doctors) {
             self.podiatry = {};
             self.podiatry.doctors = doctors;
         },
     }, {
-        model: 'dr.prescription',
+        model: 'doctor.prescription',
         loaded: function (self, podiatry_orders) {
             self.podiatry.all_orders = podiatry_orders;
             self.podiatry.order_by_id = {};

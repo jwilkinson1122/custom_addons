@@ -4,15 +4,20 @@ from odoo import models, api, fields
 class CompletePairOrder(models.TransientModel):
     _name = 'complete.pair.order'
 
-    sal = fields.Many2one('sale.order', default=lambda self: self.env.context.get('active_id'))
+    sal = fields.Many2one(
+        'sale.order', default=lambda self: self.env.context.get('active_id'))
     customer_id = fields.Many2one(related='sal.partner_id')
-    prescription = fields.Many2one('dr.prescription', string='Prescription(Rx)', required=True)
-    frame = fields.Many2one('product.product', string='Frames', domain="[('categ_id', '=', 'Frames')]", required=True)
-    lens = fields.Many2one('product.product', string='Lens', domain="[('categ_id', '=', 'Lens')]", required=True)
+    prescription = fields.Many2one(
+        'doctor.prescription', string='Prescription(Rx)', required=True)
+    frame = fields.Many2one('product.product', string='Frames',
+                            domain="[('categ_id', '=', 'Frames')]", required=True)
+    lens = fields.Many2one('product.product', string='Lens',
+                           domain="[('categ_id', '=', 'Lens')]", required=True)
 
     # sale_order_id = fields.Many2one('sale.order')
     def show_btn(self):
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line'].with_context(
+            tracking_disable=True)
         SaleOrderLine.create({
             'name': 'Complete Pair Order',
             'display_type': 'line_section',

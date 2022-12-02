@@ -29,7 +29,7 @@
         <!--sequence for practitioner-->
         <record id="sequence_podiatry_doctor" model="ir.sequence">
             <field name="name">Practitioner ID</field>
-            <field name="code">podiatry.dr</field>
+            <field name="code">podiatry.doctor</field>
             <field name="prefix">ID</field>
             <field name="padding">6</field>
         </record>

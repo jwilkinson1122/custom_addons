@@ -19,6 +19,14 @@ class Patient(models.Model):
         comodel_name='podiatry.practice',
         string="Practice",
     )
+    doctor_id = fields.Many2one(
+        comodel_name='podiatry.doctor',
+        string='Practitioner')
+    prescription_id = fields.One2many(
+        comodel_name='doctor.prescription',
+        inverse_name='patient_id',
+        # string="Prescriptions",
+    )
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)

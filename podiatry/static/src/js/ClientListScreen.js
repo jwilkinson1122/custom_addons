@@ -1,4 +1,4 @@
-odoo.define('podiatry.ClientListScreen', function(require) {
+odoo.define('podiatry.ClientListScreen', function (require) {
     'use strict';
 
     const ClientListScreen = require('point_of_sale.ClientListScreen');
@@ -6,8 +6,21 @@ odoo.define('podiatry.ClientListScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
     const { useState } = owl.hooks;
 
-    const BiClientListScreen = ClientListScreen =>
+    const PodiatryClientListScreen = ClientListScreen =>
         class extends ClientListScreen {
+            get prescription_count() {
+                self = this;
+                if (this.state.selectedClient)
+                    return self.env.pos.podiatry.all_orders.filter(function (el) { return el.customer[0] === self.state.selectedClient.id }).length
+                else
+                    return 0
+            }
+
+            prescription_count_click(data) {
+                var podiatry_orders = this.env.pos.podiatry.all_orders.filter(function (el) { return el.customer[0] === data.id })
+                this.trigger('close-temp-screen');
+                this.showScreen('PrescriptionListScreenWidget', { all_orders: podiatry_orders });
+            }
             /**
              * @override
              */
@@ -16,7 +29,7 @@ odoo.define('podiatry.ClientListScreen', function(require) {
                     let partnerId = await this.rpc({
                         model: 'res.partner',
                         method: 'create_partner_from_ui',
-                        args: [event.detail.processedChanges,event.detail.extraprocessedChanges],
+                        args: [event.detail.processedChanges, event.detail.extraprocessedChanges],
                     });
                     await this.env.pos.load_new_partners();
                     this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
@@ -36,6 +49,6 @@ odoo.define('podiatry.ClientListScreen', function(require) {
             }
         }
 
-    Registries.Component.extend(ClientListScreen, BiClientListScreen);
+    Registries.Component.extend(ClientListScreen, PodiatryClientListScreen);
     return ClientListScreen;
 });

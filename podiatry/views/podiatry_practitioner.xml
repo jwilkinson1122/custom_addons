@@ -337,6 +337,6 @@
     <!--
     Submenu: Reports / Contacts
     -->
-    <menuitem id="menu_podiatry_practitioner_dashboard" name="Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" />
+    <!-- <menuitem id="menu_podiatry_practitioner_dashboard" name="Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" /> -->
 
 </odoo>

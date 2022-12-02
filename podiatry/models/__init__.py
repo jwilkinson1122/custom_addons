@@ -13,6 +13,7 @@ from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
 from . import pos_variants
 from . import pos_config
+from . import pos_order
 from . import pos_customer_favorites
 from . import podiatry_specialty
 from . import podiatry_contact_mixin
@@ -20,7 +21,12 @@ from . import res_partner
 from . import inherit_saleorder
 from . import inherit_saleorder_line
 from . import inherit_purchase_order
+from . import inherit_product_template
 from . import pos_create_sales_order
 from . import inherit_invoice
 from . import product_attribute
+from . import product_pos
+from . import frame_elements
+from . import lens_elements
+from . import contact_lens_elements
 from . import ir_actions

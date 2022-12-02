@@ -93,6 +93,20 @@ odoo.define('podiatry.pos_customer_favorites', function (require) {
 			self.show_customer_favorite_list = false;
 			SuperOrder.prototype.initialize.call(this, attributes, options);
 		},
+		export_for_printing: function () {
+			var result = SuperOrder.export_for_printing.apply(this, arguments);
+
+			if (this.podiatry_reference) {
+				if (this.podiatry_reference.id)
+					result.podiatry_order = this.pos.podiatry.order_by_id[this.podiatry_reference.id]
+				else
+					result.podiatry_order = this.pos.podiatry.order_by_id[this.podiatry_reference]
+			}
+			return result;
+		},
+
+		saved_amount: function () {
+		}
 	});
 
 	// Inherit ProductsWidgetControlPanel----------------

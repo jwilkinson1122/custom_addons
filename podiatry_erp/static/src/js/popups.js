@@ -37,7 +37,7 @@ odoo.define('podiatry_erp.popups', function (require) {
             var self = this;
             var order = this.env.pos.get_order();
             var vals = $("#prescription_form").serializeObject();
-            vals["dr"] = $('option:selected', $('[name=dr]')).data('id');
+            vals["doctor_id"] = $('option:selected', $('[name=doctor]')).data('id');
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
             vals = JSON.stringify(vals);
@@ -66,7 +66,7 @@ odoo.define('podiatry_erp.popups', function (require) {
                 if (confirmed) {
                     this.env.pos.podiatry.ProductCreationScreen = undefined;
                     rpc.query({
-                        model: 'dr.prescription',
+                        model: 'doctor.prescription',
                         method: 'create_product_pos',
                         args: [vals],
                     }).then(function (products) {

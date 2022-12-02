@@ -453,6 +453,6 @@
     <!--
     Submenu: Reports / Patients
     -->
-    <menuitem id="menu_podiatry_patient_dashboard" name="Patients" parent="menu_report" action="action_podiatry_patient_report" sequence="35" />
+    <!-- <menuitem id="menu_podiatry_patient_dashboard" name="Patients" parent="menu_report" action="action_podiatry_patient_report" sequence="35" /> -->
 
 </odoo>

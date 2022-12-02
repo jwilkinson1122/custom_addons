@@ -120,7 +120,7 @@
                         <notebook colspan="4">
                             <page name="contacts_list" string="Contacts">
                                 <group>
-                                    <field name="dr"/>
+                                    <field name="doctor_id"/>
                                 </group>
                             </page>
                             <page name="practice_patients_list" string="Patients">

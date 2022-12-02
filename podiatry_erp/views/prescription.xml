@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="dr_prescription" model="ir.ui.view">
+        <record id="doctor_prescription" model="ir.ui.view">
             <field name="name">Doctor Prescription</field>
-            <field name="model">dr.prescription</field>
+            <field name="model">doctor.prescription</field>
             <field name="arch" type="xml">
                 <form string="Doctor Prescription">
                     <header>
@@ -20,7 +20,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="dr" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                            <field name="doctor_id" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                             <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                             <field name="company_id"/>
                             <field name="eye_examination_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
@@ -253,7 +253,7 @@
                                 <group>
                                     <field attrs="{'readonly': [('state','=','confirm')]}" name="diagnosis_client"></field>
                                     <field attrs="{'readonly': [('state','=','confirm')]}" name="notes_laboratory"></field>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="dr_notes" placeholder="Note"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="doctor_notes" placeholder="Note"></field>
                                 </group>
                             </group>
                         </page>
@@ -393,12 +393,12 @@
         </record>
 
 
-        <record id="dr_prescription_tree" model="ir.ui.view">
+        <record id="doctor_prescription_tree" model="ir.ui.view">
             <field name="name">Doctor Prescription Tree View</field>
-            <field name="model">dr.prescription</field>
+            <field name="model">doctor.prescription</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="dr"/>
+                    <field name="doctor_id"/>
                     <field name="customer"/>
                     <field name="checkup_date" string="Prescription Date"/>
                     <field name="test_type"/>
@@ -412,11 +412,11 @@
         <record id="action_prescription_history_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">dr.prescription</field>
+            <field name="res_model">doctor.prescription</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="podiatry_erp_root" name="Podiatry Erp" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
+        <menuitem id="podiatry_erp_root" name="Podiatry ERP" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
         <menuitem id="podiatry_erp_practice" name="Accounts" parent="podiatry_erp_root" action="action_practice_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
         <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
         <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>

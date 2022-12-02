@@ -1,10 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dr_prescription,access_dr_prescription,model_dr_prescription,group_podiatry_erp_doctors,1,1,1,1
-access_admin_prescription,access_admin_prescription,model_dr_prescription,base.group_system,1,1,1,1
+access_doctor_prescription,access_doctor_prescription,model_doctor_prescription,group_podiatry_erp_doctors,1,1,1,1
+access_admin_prescription,access_admin_prescription,model_doctor_prescription,base.group_system,1,1,1,1
 access_admin_config,access_admin_config,model_eye_test_type,base.group_system,1,1,1,1
 access_doctor_eye_test,access_doctor_eye_test,model_eye_test_type,group_podiatry_erp_doctors,1,0,0,0
-access_doctor,access_doctor,model_podiatry_dr,group_podiatry_erp_doctors,1,0,0,0
-access_admin_doctor,access_admin_doctor,model_podiatry_dr,base.group_system,1,1,1,1
+access_doctor,access_doctor,model_podiatry_doctor,group_podiatry_erp_doctors,1,0,0,0
+access_admin_doctor,access_admin_doctor,model_podiatry_doctor,base.group_system,1,1,1,1
 access_frame_material,access_frame_material,model_frame_material,base.group_system,1,1,1,1
 access_frame_shape,access_frame_shape,model_frame_shape,base.group_system,1,1,1,1
 access_frame_type,access_frame_type,model_frame_type,base.group_system,1,1,1,1
@@ -18,11 +18,12 @@ access_lens_material,access_lens_material,model_lens_material,base.group_system,
 access_contact_lens_manufacturer,access_contact_lens_manufacturer,model_contact_lens_manufacturer,base.group_system,1,1,1,1
 access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
 
+access_admin_practice,access_admin_practice,model_podiatry_practice,base.group_system,1,1,1,1
 access_practice_doctor,access_practice_doctor,model_podiatry_practice,group_podiatry_erp_doctors,1,1,1,1
-access_practice_group,access_practice_group,model_podiatry_practice,group_podiatry_erp_group,1,0,0,0
+access_practice_group,access_practice_group,model_podiatry_practice,group_podiatry_erp_group,1,1,1,1
 
 access_patient_doctor,access_patient_doctor,model_podiatry_patient,group_podiatry_erp_doctors,1,1,1,1
-access_patient_group,access_patient_group,model_podiatry_patient,group_podiatry_erp_group,1,0,0,0
+access_patient_group,access_patient_group,model_podiatry_patient,group_podiatry_erp_group,1,1,1,1
 
 
 

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 
+from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models, tools
 
 
@@ -16,6 +18,9 @@ class Partner(models.Model):
     # is_practitioner = fields.Boolean(
     #     string="Practitioner", search='_search_is_practitioner',
     # )
+    dob = fields.Date()
+    age = fields.Integer(compute='_cal_age', store=True, readonly=True)
+    prescription_count = fields.Integer(compute='get_prescription_count')
 
     name = fields.Char(index=True)
 
@@ -49,6 +54,34 @@ class Partner(models.Model):
         else:
             search_operator = '='
         return [('patient_ids', search_operator, False)]
+
+    def open_customer_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Prescription'),
+                'view_type': 'form',
+                'domain': [('customer', '=', records.id)],
+                'res_model': 'podiatry.prescription',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'context': {'default_customer': self.id},
+                'type': 'ir.actions.act_window',
+            }
+
+    def get_prescription_count(self):
+        for records in self:
+            count = self.env['podiatry.prescription'].search_count(
+                [('customer', '=', records.id)])
+            records.prescription_count = count
+
+    @api.depends('dob')
+    def _cal_age(self):
+        for record in self:
+            if record.dob:
+                years = relativedelta(date.today(), record.dob).years
+                record.age = str(int(years))
+            else:
+                record.age = 0
 
     practitioner_id = fields.Many2one(
         "res.partner",

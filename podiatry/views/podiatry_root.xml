@@ -9,7 +9,7 @@
     <!--
     Menu: Reports
     -->
-    <menuitem id="menu_report" name="Reporting" parent="menu_root" groups="group_user" sequence="95" />
+    <!-- <menuitem id="menu_report" name="Reporting" parent="menu_root" groups="group_user" sequence="95" /> -->
 
     <!--
     Menu: Settings
@@ -20,7 +20,7 @@
     Menu: Settings / Practitioner
     -->
 
-    <menuitem id="menu_configuration_practitioner" name="Practitioner" parent="menu_configuration" groups="group_manager" sequence="90" />
+    <!-- <menuitem id="menu_configuration_practitioner" name="Practitioner" parent="menu_configuration" groups="group_manager" sequence="90" /> -->
 
     <!--
     Menu: Settings / Patient
@@ -31,7 +31,9 @@
     <!--
     Menu: Settings / Products
     -->
-    <menuitem id="menu_configuration_product" name="Product" parent="menu_configuration" groups="group_manager" sequence="100" />
+    <menuitem id="menu_configuration_product" name="Products" parent="menu_configuration" groups="group_manager" sequence="100" />
+
+
 
     <!--
     Menu: Settings / Products

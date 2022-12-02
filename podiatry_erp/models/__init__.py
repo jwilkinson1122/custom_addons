@@ -1,4 +1,4 @@
-from . import dr_prescription
+from . import doctor_prescription
 from . import doctor
 from . import practice
 from . import patient

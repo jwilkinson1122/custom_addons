@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="dr_patient" model="ir.ui.view">
+        <record id="doctor_patient" model="ir.ui.view">
             <field name="name">Patient</field>
             <field name="model">podiatry.patient</field>
             <field name="arch" type="xml">
@@ -202,7 +202,7 @@
             </form>
         </field>
     </record>
-    <record id="dr_patient_tree" model="ir.ui.view">
+    <record id="doctor_patient_tree" model="ir.ui.view">
         <field name="name">Patient Tree View</field>
         <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">

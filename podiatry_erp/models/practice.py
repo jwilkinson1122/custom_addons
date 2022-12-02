@@ -34,6 +34,9 @@ class Practice(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
+    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+                                 help='Partner-related data of the Practice')
+
     active = fields.Boolean(string="Active", default=True, tracking=True)
     color = fields.Integer(string="Color Index (0-15)")
 
@@ -92,8 +95,8 @@ class Practice(models.Model):
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_company', '=', True)], string="Practice", required=True)
 
-    dr = fields.One2many(
-        comodel_name='podiatry.dr',
+    doctor_id = fields.One2many(
+        comodel_name='podiatry.doctor',
         inverse_name='practice_id',
         string="Contacts",
     )
@@ -104,7 +107,7 @@ class Practice(models.Model):
     )
 
     prescription_id = fields.One2many(
-        comodel_name='dr.prescription',
+        comodel_name='doctor.prescription',
         inverse_name='practice_id',
         string="Prescriptions",
     )
@@ -117,9 +120,6 @@ class Practice(models.Model):
         '''
         address_id = self.practice_id
         self.practice_address_id = address_id
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
-                                 help='Partner-related data of the Practice')
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
@@ -211,15 +211,15 @@ class Practice(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['dr.prescription'].search_count(
-                [('dr', '=', records.id)])
+            count = self.env['doctor.prescription'].search_count(
+                [('doctor', '=', records.id)])
             records.prescription_count = count
 
     def action_open_prescriptions(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'dr.prescription',
+            'res_model': 'doctor.prescription',
             'domain': [('practice_id', '=', self.id)],
             'context': {'default_practice_id': self.id},
             'view_mode': 'kanban,tree,form',

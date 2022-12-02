@@ -2,8 +2,8 @@ from odoo import api, fields, models, _
 from odoo.tools import datetime
 
 
-class DrPrescription(models.Model):
-    _name = 'dr.prescription'
+class DoctorPrescription(models.Model):
+    _name = 'doctor.prescription'
     _description = 'Doctor Prescription'
     _rec_name = 'name'
 
@@ -12,12 +12,16 @@ class DrPrescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    dr = fields.Many2one('podiatry.dr', string='Practitioner', readonly=True)
+    doctor_id = fields.Many2one(
+        'podiatry.doctor', string='Practitioner', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
         string='Practice')
+    patient_id = fields.Many2one(
+        comodel_name='podiatry.patient',
+        string='Patient')
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -153,7 +157,7 @@ class DrPrescription(models.Model):
     #
     #
     #      ],default='25')
-    # pdr = fields.Selection(
+    # .doctor = fields.Selection(
     #     [
     #         ('25', '25'), ('25.5', '25.5'), ('26', '26'),('26.5', '26.5'), ('27', '27'),('27.5', '27.5'),
     #         ('28', '28'),('28.5', '28.5'),('29', '29'),('29.5', '29.5'),
@@ -193,7 +197,7 @@ class DrPrescription(models.Model):
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
 
-    dr_notes = fields.Text('Notes')
+    doctor_notes = fields.Text('Notes')
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
     family_eye_history = fields.Text()
@@ -316,7 +320,7 @@ class DrPrescription(models.Model):
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                # 'context':{'default_dr':self.id},
+                # 'context':{'default_doctor':self.id},
                 'type': 'ir.actions.act_window',
             }
 
@@ -336,7 +340,7 @@ class DrPrescription(models.Model):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription.sequence')
-        result = super(DrPrescription, self).create(vals)
+        result = super(DoctorPrescription, self).create(vals)
         return result
 
     # def print_prescription_report(self):

@@ -1,7 +1,7 @@
 odoo.define('podiatry.main', function (require) {
     "use strict";
 
-    const {useRef, onMounted} = owl.hooks;
+    const { useRef, onMounted } = owl.hooks;
 
     const ReceiptScreen = require('point_of_sale.ReceiptScreen');
     const Registries = require('point_of_sale.Registries');
@@ -28,7 +28,7 @@ odoo.define('podiatry.main', function (require) {
                 const $currentTarget = $(ev.currentTarget);
                 $currentTarget.toggleClass("highlight");
                 let mountComponent = $currentTarget.hasClass("highlight") ? 'OrderReceiptA4' : 'OrderReceipt';
-                const orderReceipt = new (Registries.Component.get(mountComponent))(this, {order});
+                const orderReceipt = new (Registries.Component.get(mountComponent))(this, { order });
 
                 let receiptToRemove = this.posReceiptContainer.el ? this.posReceiptContainer.el.querySelectorAll('.pos-receipt') : [];
                 receiptToRemove.forEach(el => el.parentNode.removeChild(el));

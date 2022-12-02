@@ -626,7 +626,7 @@ Description
                     <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Right</th>
                         <td>
-                            <t t-esc="podiatry_order.pdr"/>
+                            <t t-esc="podiatry_order..doctor"/>
                         </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
@@ -675,7 +675,7 @@ Description
                         <tr>
                             <th>Practitioner:</th>
                             <td>
-                                <select name="dr">
+                                <select name="doctor_id">
                                     <t t-foreach="doctors || []" t-as="item" t-key="item.id">
                                         <option t-attf-data-id="{{ item.id }}">
                                             <t t-esc='item.name'/>
@@ -1381,7 +1381,7 @@ Glass left</td>
                                                         <t t-esc='product.checkup_date' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.dr[1]' />
+                                                        <t t-esc='product.doctor[1]' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.test_type[1]' />
