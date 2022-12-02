@@ -18,7 +18,8 @@ access_lens_material,access_lens_material,model_lens_material,base.group_system,
 access_contact_lens_manufacturer,access_contact_lens_manufacturer,model_contact_lens_manufacturer,base.group_system,1,1,1,1
 access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
 
-
+access_patient_doctor,access_patient_doctor,model_optical_patient,group_optical_erp_doctors,1,1,1,1
+access_patient_group,access_patient_group,model_optical_patient,group_optical_erp_group,1,0,0,0
 
 
 
