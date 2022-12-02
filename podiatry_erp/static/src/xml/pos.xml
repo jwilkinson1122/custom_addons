@@ -466,9 +466,9 @@ Description
 
     <t t-name="PrescriptionOrderReceiptTable" owl="1">
         <t t-if="receipt">
-            <t t-set="optical_order" t-value="receipt.optical_order"/>
+            <t t-set="podiatry_order" t-value="receipt.podiatry_order"/>
         </t>
-        <t t-if="optical_order !== 0 and optical_order !== undefined">
+        <t t-if="podiatry_order !== 0 and podiatry_order !== undefined">
             <div style="font-weight:bold;padding-bottom:5pt;padding-top:4pt; border-bottom:1pt dashed black;text-align: center;font-size: 75%;border-top: 1pt dashed black;">Prescription    فحص النظر</div>
             <table style="border-bottom:1pt dashed black;margin-top:3pt;padding:5pt;font-size:9pt;margin-bottom: 10pt;">
                 <colgroup>
@@ -484,7 +484,7 @@ Description
                     </td>
                     <td style="vertical-align:bottom;padding-left:3pt;padding-bottom: 3pt;">:</td>
                     <td style="text-align:center;vertical-align:bottom;padding-right:5pt;padding-bottom: 3pt;">
-                        <t t-esc="optical_order.name"/>
+                        <t t-esc="podiatry_order.name"/>
                     </td>
                     <td style="vertical-align:bottom;padding-right:3pt;padding-bottom: 3pt;">:</td>
                     <td style="text-align:right;vertical-align:bottom;text-size:7pt;padding-bottom: 3pt;">
@@ -509,43 +509,43 @@ Description
                     <tr>
                         <th>Distance</th>
                         <td>
-                            <t t-esc="optical_order.od_sph_distance"/>
+                            <t t-esc="podiatry_order.od_sph_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_cyl_distance"/>
+                            <t t-esc="podiatry_order.od_cyl_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_ax_distance"/>
+                            <t t-esc="podiatry_order.od_ax_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_add_distance"/>
+                            <t t-esc="podiatry_order.od_add_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_prism_distance"/>
+                            <t t-esc="podiatry_order.od_prism_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_base_distance"/>
+                            <t t-esc="podiatry_order.od_base_distance"/>
                         </td>
                     </tr>
                     <tr>
                         <th>Near</th>
                         <td>
-                            <t t-esc="optical_order.od_sph_near"/>
+                            <t t-esc="podiatry_order.od_sph_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_cyl_near"/>
+                            <t t-esc="podiatry_order.od_cyl_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_ax_near"/>
+                            <t t-esc="podiatry_order.od_ax_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_add_near"/>
+                            <t t-esc="podiatry_order.od_add_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_prism_near"/>
+                            <t t-esc="podiatry_order.od_prism_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_base_near"/>
+                            <t t-esc="podiatry_order.od_base_near"/>
                         </td>
                     </tr>
                     <tr class="nbsp">
@@ -566,67 +566,67 @@ Description
                     <tr>
                         <th>Distance</th>
                         <td>
-                            <t t-esc="optical_order.os_sph_distance"/>
+                            <t t-esc="podiatry_order.os_sph_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_cyl_distance"/>
+                            <t t-esc="podiatry_order.os_cyl_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_ax_distance"/>
+                            <t t-esc="podiatry_order.os_ax_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_add_distance"/>
+                            <t t-esc="podiatry_order.os_add_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_prism_distance"/>
+                            <t t-esc="podiatry_order.os_prism_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_base_distance"/>
+                            <t t-esc="podiatry_order.os_base_distance"/>
                         </td>
                     </tr>
                     <tr>
                         <th>Near</th>
                         <td>
-                            <t t-esc="optical_order.os_sph_near"/>
+                            <t t-esc="podiatry_order.os_sph_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_cyl_near"/>
+                            <t t-esc="podiatry_order.os_cyl_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_ax_near"/>
+                            <t t-esc="podiatry_order.os_ax_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_add_near"/>
+                            <t t-esc="podiatry_order.os_add_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_prism_near"/>
+                            <t t-esc="podiatry_order.os_prism_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_base_near"/>
+                            <t t-esc="podiatry_order.os_base_near"/>
                         </td>
                     </tr>
                     <tr class="nbsp">
                         <th colspan="2" class="nbsp"></th>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
-                    <tr t-if="!optical_order.dual_pd" class="nbsp">
+                    <tr t-if="!podiatry_order.dual_pd" class="nbsp">
                         <th>PD</th>
                         <td>
-                            <t t-esc="optical_order.pd"/>
+                            <t t-esc="podiatry_order.pd"/>
                         </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
-                    <tr t-if="optical_order.dual_pd" class="nbsp">
+                    <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Left</th>
                         <td>
-                            <t t-esc="optical_order.pdl"/>
+                            <t t-esc="podiatry_order.pdl"/>
                         </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
-                    <tr t-if="optical_order.dual_pd" class="nbsp">
+                    <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Right</th>
                         <td>
-                            <t t-esc="optical_order.pdr"/>
+                            <t t-esc="podiatry_order.pdr"/>
                         </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
@@ -643,11 +643,11 @@ Description
     <t t-name="PrescriptionButton" owl="1">
         <div class='control-button button confirm'>
             <i class='fa-prescription' />
-            <span class="label optical_prescription">
-                <t t-if="env.pos.get_optical_reference()">
-                    <t t-esc="env.pos.get_optical_reference().name" />
+            <span class="label podiatry_prescription">
+                <t t-if="env.pos.get_podiatry_reference()">
+                    <t t-esc="env.pos.get_podiatry_reference().name" />
                 </t>
-                <t t-if="!env.pos.get_optical_reference()">
+                <t t-if="!env.pos.get_podiatry_reference()">
                     Prescription
                 </t>
             </span>
@@ -1201,7 +1201,7 @@ Description
                         <tr>
                             <th>Prescription:</th>
                             <td colspan="3">
-                                <t t-esc="optical_reference"/>
+                                <t t-esc="podiatry_reference"/>
                             </td>
                         </tr>
                         <tr>
@@ -1346,7 +1346,7 @@ Glass left</td>
                     <div class='window'>
                         <section class='subwindow collapsed'>
                             <div class='subwindow-container collapsed'>
-                                <div class='subwindow-container-fix optical_order-details-content'>
+                                <div class='subwindow-container-fix podiatry_order-details-content'>
                                     <t t-call="PrescriptionDetails"/>
                                 </div>
                             </div>
@@ -1369,8 +1369,8 @@ Glass left</td>
                                             </tr>
                                         </thead>
                                         <tbody class='products-list-contents'>
-                                            <t t-foreach="optical_orders" t-as="product" t-key="product.id">
-                                                <tr t-attf-class="productlines {{(optical_order.id == product.id) ? 'highlight' : ''}}" t-att-data-id='product.id' t-on-click="prescription_line_click(product)">
+                                            <t t-foreach="podiatry_orders" t-as="product" t-key="product.id">
+                                                <tr t-attf-class="productlines {{(podiatry_order.id == product.id) ? 'highlight' : ''}}" t-att-data-id='product.id' t-on-click="prescription_line_click(product)">
                                                     <td>
                                                         <t t-esc='product.name' />
                                                     </td>
@@ -1392,13 +1392,13 @@ Glass left</td>
                                                     <td>
                                                         <t t-esc='product.state' />
                                                     </td>
-                                                    <td name="td_pos_optical_copy" t-att-data-order-id="product.id">
-                                                        <button class="button pos_optical_copy" t-att-data-order-id="product.id" t-on-click="prescription_line_button(product)">
+                                                    <td name="td_pos_podiatry_copy" t-att-data-order-id="product.id">
+                                                        <button class="button pos_podiatry_copy" t-att-data-order-id="product.id" t-on-click="prescription_line_button(product)">
                                                             Copy Measures
                                                         </button>
                                                     </td>
                                                     <td>
-                                                        <i class="fa fa-print pos_optical_print" t-att-data-order-id="product.id" t-on-click="print_receipt(product)"/>
+                                                        <i class="fa fa-print pos_podiatry_print" t-att-data-order-id="product.id" t-on-click="print_receipt(product)"/>
                                                     </td>
                                                 </tr>
                                             </t>
@@ -1414,27 +1414,27 @@ Glass left</td>
     </t>
 
     <t t-name="PrescriptionDetails" owl="1">
-        <t t-if="optical_order !== 0 ">
-            <div class="prescription_receipt_details" t-att-data-id='optical_order.id'>
+        <t t-if="podiatry_order !== 0 ">
+            <div class="prescription_receipt_details" t-att-data-id='podiatry_order.id'>
                 <table>
                     <tr>
                         <td>
                             <span>Reference:</span>
-                            <t t-esc="optical_order.name"/>
+                            <t t-esc="podiatry_order.name"/>
                         </td>
                         <td>
                             <span>Client Name:</span>
-                            <t t-esc="optical_order.customer[1]"/>
+                            <t t-esc="podiatry_order.customer[1]"/>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <span>Prescription Date:</span>
-                            <t t-esc="optical_order.checkup_date"/>
+                            <t t-esc="podiatry_order.checkup_date"/>
                         </td>
                         <td>
                             <span>Test Type:</span>
-                            <t t-esc="optical_order.test_type[1]"/>
+                            <t t-esc="podiatry_order.test_type[1]"/>
                         </td>
                     </tr>
                 </table>
@@ -1464,81 +1464,81 @@ Glass left</td>
                     <tr>
                         <th>Distance</th>
                         <td>
-                            <t t-esc="optical_order.od_sph_distance"/>
+                            <t t-esc="podiatry_order.od_sph_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_cyl_distance"/>
+                            <t t-esc="podiatry_order.od_cyl_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_ax_distance"/>
+                            <t t-esc="podiatry_order.od_ax_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_add_distance"/>
+                            <t t-esc="podiatry_order.od_add_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_prism_distance"/>
+                            <t t-esc="podiatry_order.od_prism_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_base_distance"/>
+                            <t t-esc="podiatry_order.od_base_distance"/>
                         </td>
                         <th>Distance</th>
                         <td>
-                            <t t-esc="optical_order.os_sph_distance"/>
+                            <t t-esc="podiatry_order.os_sph_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_cyl_distance"/>
+                            <t t-esc="podiatry_order.os_cyl_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_ax_distance"/>
+                            <t t-esc="podiatry_order.os_ax_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_add_distance"/>
+                            <t t-esc="podiatry_order.os_add_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_prism_distance"/>
+                            <t t-esc="podiatry_order.os_prism_distance"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_base_distance"/>
+                            <t t-esc="podiatry_order.os_base_distance"/>
                         </td>
                     </tr>
                     <tr>
                         <th>Near</th>
                         <td>
-                            <t t-esc="optical_order.od_sph_near"/>
+                            <t t-esc="podiatry_order.od_sph_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_cyl_near"/>
+                            <t t-esc="podiatry_order.od_cyl_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_ax_near"/>
+                            <t t-esc="podiatry_order.od_ax_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_add_near"/>
+                            <t t-esc="podiatry_order.od_add_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_prism_near"/>
+                            <t t-esc="podiatry_order.od_prism_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.od_base_near"/>
+                            <t t-esc="podiatry_order.od_base_near"/>
                         </td>
                         <th>Near</th>
                         <td>
-                            <t t-esc="optical_order.os_sph_near"/>
+                            <t t-esc="podiatry_order.os_sph_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_cyl_near"/>
+                            <t t-esc="podiatry_order.os_cyl_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_ax_near"/>
+                            <t t-esc="podiatry_order.os_ax_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_add_near"/>
+                            <t t-esc="podiatry_order.os_add_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_prism_near"/>
+                            <t t-esc="podiatry_order.os_prism_near"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.os_base_near"/>
+                            <t t-esc="podiatry_order.os_base_near"/>
                         </td>
                     </tr>
                     <tr class="nbsp">
@@ -1553,19 +1553,19 @@ Glass left</td>
                     </tr>
                     <tr>
                         <td>
-                            <t t-esc="optical_order.ipd"/>
+                            <t t-esc="podiatry_order.ipd"/>
                         </td>
                         <td colspan="2">
-                            <t t-esc="optical_order.cl_right"/>
+                            <t t-esc="podiatry_order.cl_right"/>
                         </td>
                         <td colspan="2">
-                            <t t-esc="optical_order.cl_left"/>
+                            <t t-esc="podiatry_order.cl_left"/>
                         </td>
                         <td colspan="2">
-                            <t t-esc="optical_order.base_curve"/>
+                            <t t-esc="podiatry_order.base_curve"/>
                         </td>
                         <td>
-                            <t t-esc="optical_order.dim"/>
+                            <t t-esc="podiatry_order.dim"/>
                         </td>
                     </tr>
                 </table>

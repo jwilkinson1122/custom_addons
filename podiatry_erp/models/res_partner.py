@@ -8,6 +8,11 @@ from odoo import api, fields, models, _
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
 
+    is_location = fields.Boolean('Practice')
+    is_doctor = fields.Boolean('Doctor')
+    is_patient = fields.Boolean('Patient')
+    reference = fields.Char('ID Number')
+
     dob = fields.Date()
     age = fields.Integer(compute='_cal_age', store=True, readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')

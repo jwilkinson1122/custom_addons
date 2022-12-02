@@ -3,11 +3,11 @@
 	<data>
 		<record id="doctor_view_form" model="ir.ui.view">
 			<field name="name">doctor.view.form</field>
-			<field name="model">optical.dr</field>
+			<field name="model">podiatry.dr</field>
 			<field name="inherit_id" ref="dr_doctor"/>
 			<field name="arch" type="xml">
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button name="open_doctor_prescriptions" class="oe_stat_button" type="object"  icon="fa-tasks">
+					<button name="open_doctor_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>

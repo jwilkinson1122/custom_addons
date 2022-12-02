@@ -8,18 +8,25 @@
 			<field name="arch" type="xml">
 				<xpath expr="//group" position="inside">
 					<group>
-						<field name="dob" string="Dob" ></field>
-						<field name="age" string="Age" ></field>
+						<field name="dob" string="Dob"></field>
+						<field name="age" string="Age"></field>
 					</group>
 				</xpath>
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button name="open_customer_prescriptions"
-							class="oe_stat_button"
-							type="object"
-							icon="fa-tasks">
+					<button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>
+				<notebook>
+					<page string="Medical">
+						<group colspan="6" col="6">
+							<field name="is_patient" />
+							<field name="is_doctor" />
+							<field name="is_location" />
+							<!-- <field name="is_person" /> -->
+						</group>
+					</page>
+				</notebook>
 			</field>
 		</record>
 	</data>

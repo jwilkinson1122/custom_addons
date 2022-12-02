@@ -1,4 +1,4 @@
-odoo.define('podiatry_erp.ReceiptScreen', function(require) {
+odoo.define('podiatry_erp.ReceiptScreen', function (require) {
     'use strict';
 
     const Registries = require('point_of_sale.Registries');
@@ -10,16 +10,16 @@ odoo.define('podiatry_erp.ReceiptScreen', function(require) {
         export_for_printing: function () {
             var result = _super_order.export_for_printing.apply(this, arguments);
 
-            if (this.optical_reference){
-                if (this.optical_reference.id)
-                    result.optical_order = this.pos.optical.order_by_id[this.optical_reference.id]
+            if (this.podiatry_reference) {
+                if (this.podiatry_reference.id)
+                    result.podiatry_order = this.pos.podiatry.order_by_id[this.podiatry_reference.id]
                 else
-                    result.optical_order = this.pos.optical.order_by_id[this.optical_reference]
+                    result.podiatry_order = this.pos.podiatry.order_by_id[this.podiatry_reference]
             }
             return result;
         },
 
-        saved_amount: function() {
+        saved_amount: function () {
         }
     });
 

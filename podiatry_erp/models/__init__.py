@@ -1,5 +1,6 @@
 from . import dr_prescription
 from . import doctor
+from . import practice
 from . import patient
 from . import test_type
 from . import res_partner

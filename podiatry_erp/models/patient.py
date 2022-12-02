@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 
 class Patient(models.Model):
-    _name = "optical.patient"
+    _name = "podiatry.patient"
     _inherits = {
         'res.partner': 'partner_id',
     }
@@ -15,6 +15,10 @@ class Patient(models.Model):
     # user_id = fields.Many2one('res.users')
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string="Practice",
+    )
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)

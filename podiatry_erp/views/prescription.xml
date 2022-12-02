@@ -417,15 +417,12 @@
         </record>
 
         <menuitem id="podiatry_erp_root" name="Podiatry Erp" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
+        <menuitem id="podiatry_erp_practice" name="Accounts" parent="podiatry_erp_root" action="action_practice_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
         <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
-
         <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
-
-
         <menuitem id="podiatry_erp_sale_order" name="Sale Order" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
         <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
         <menuitem id="podiatry_erp_config" name="Configuration" parent="podiatry_erp_root" sequence="7"/>
-
         <menuitem id="podiatry_erp_prescription_history" name="Prescription" parent="podiatry_erp_root" action="action_prescription_history_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
 
     </data>

@@ -12,9 +12,12 @@ class DrPrescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    dr = fields.Many2one('optical.dr', string='Practitioner', readonly=True)
+    dr = fields.Many2one('podiatry.dr', string='Practitioner', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice')
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -332,7 +335,7 @@ class DrPrescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'optical.prescription.sequence')
+                'podiatry.prescription.sequence')
         result = super(DrPrescription, self).create(vals)
         return result
 

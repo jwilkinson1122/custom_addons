@@ -29,17 +29,17 @@
 .prescription_receipt_details .padding{
     padding-left: 20px
 }
-.optical_order-details-content .prescription_receipt_table table tr td,.optical_order-details-content .prescription_receipt_table table tr th,.optical_order-details-content .prescription_receipt_table table tr{
+.podiatry_order-details-content .prescription_receipt_table table tr td,.podiatry_order-details-content .prescription_receipt_table table tr th,.podiatry_order-details-content .prescription_receipt_table table tr{
     border: 1px solid green;
 }
-.optical_order-details-content .prescription_receipt_table table{
+.podiatry_order-details-content .prescription_receipt_table table{
     width: 100%;
     text-align: center;
     line-height: 24px;
     font-size: 16px;
     padding-bottom: 16px;
 }
-.optical_order-details-content .prescription_receipt_details{
+.podiatry_order-details-content .prescription_receipt_details{
     width: 100%;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -47,17 +47,17 @@
     font-size: 16px;
     padding-bottom: 16px;
 }
-.optical_order-details-content .prescription_receipt_details table tr td span{
+.podiatry_order-details-content .prescription_receipt_details table tr td span{
     color: green;
     padding-right: 10px;
 }
-.optical_order-details-content .prescription_receipt_details table{
+.podiatry_order-details-content .prescription_receipt_details table{
     width: 100%;
 }
-.optical_order-details-content .prescription_receipt_table{
+.podiatry_order-details-content .prescription_receipt_table{
     padding-bottom: 16px;
 }
-.optical_order-details-content .prescription_receipt_details table{
+.podiatry_order-details-content .prescription_receipt_details table{
     table-layout: fixed;
 }
 .prescription_form_div{

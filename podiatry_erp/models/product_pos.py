@@ -1,6 +1,7 @@
 from odoo import models, api
 import json
 
+
 class ProductFromPos(models.Model):
     _inherit = 'dr.prescription'
 
@@ -9,15 +10,17 @@ class ProductFromPos(models.Model):
         vals = json.loads(vals)
         vals["state"] = "Confirm"
         rec = self.env['dr.prescription'].create(vals)
-        new_vals = self.env['optical.dr'].search([('id', '=', vals["dr"])])
+        new_vals = self.env['podiatry.dr'].search([('id', '=', vals["dr"])])
         vals["dr"] = {}
         vals["dr"][0] = new_vals.id
         vals["dr"][1] = new_vals.name
-        new_vals = self.env['eye.test.type'].search([('id', '=', vals["test_type"])])
+        new_vals = self.env['eye.test.type'].search(
+            [('id', '=', vals["test_type"])])
         vals["test_type"] = {}
         vals["test_type"][0] = new_vals.id
         vals["test_type"][1] = new_vals.name
-        new_vals = self.env['res.partner'].search([('id', '=', vals["customer"])])
+        new_vals = self.env['res.partner'].search(
+            [('id', '=', vals["customer"])])
         vals["customer"] = {}
         vals["customer"][0] = new_vals.id
         vals["customer"][1] = new_vals.name

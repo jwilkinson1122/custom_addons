@@ -3,13 +3,16 @@ from odoo.exceptions import UserError
 
 
 class Doctor(models.Model):
-    _name = "optical.dr"
+    _name = "podiatry.dr"
     _inherits = {
         'res.partner': 'partner_id',
     }
     create_users_button = fields.Boolean()
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice')
     is_doctor = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
@@ -29,7 +32,8 @@ class Doctor(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['dr.prescription'].search_count([('dr', '=', records.id)])
+            count = self.env['dr.prescription'].search_count(
+                [('dr', '=', records.id)])
             records.prescription_count = count
 
     def create_doctors(self):
@@ -40,8 +44,10 @@ class Doctor(models.Model):
         else:
             self.create_users_button = False
         doctor_id = []
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Doctors')]).id)
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Doctors')]).id)
+        doctor_id.append(self.env['res.groups'].search(
+            [('name', '=', 'Internal User')]).id)
 
         return {
             'type': 'ir.actions.act_window',
@@ -53,6 +59,3 @@ class Doctor(models.Model):
             'context': {'default_partner_id': self.partner_id.id, 'default_is_doctor': True,
                         'default_groups_id': [(6, 0, doctor_id)]}
         }
-
-
-
