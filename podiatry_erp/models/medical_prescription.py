@@ -2,9 +2,9 @@ from odoo import api, fields, models, _
 from odoo.tools import datetime
 
 
-class DoctorPrescription(models.Model):
-    _name = 'doctor.prescription'
-    _description = 'Doctor Prescription'
+class Prescription(models.Model):
+    _name = 'medical.prescription'
+    _description = 'Medical Prescription'
     _rec_name = 'name'
 
     company_id = fields.Many2one(
@@ -326,7 +326,7 @@ class DoctorPrescription(models.Model):
 
         else:
             return {
-                'name': _('Doctor Prescription'),
+                'name': _('Medical Prescription'),
                 'view_type': 'form',
                 'res_model': 'sale.order',
                 'view_id': False,
@@ -340,19 +340,19 @@ class DoctorPrescription(models.Model):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription.sequence')
-        result = super(DoctorPrescription, self).create(vals)
+        result = super(Prescription, self).create(vals)
         return result
 
     # def print_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry_erp.doctor_prescription_template",
-    #         'report_file': "podiatry_erp.doctor_prescription_template",
+    #         'report_name': "podiatry_erp.medical_prescription_template",
+    #         'report_file': "podiatry_erp.medical_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry_erp.doctor_prescription_ticket_size2").report_action(self)
+        return self.env.ref("podiatry_erp.medical_prescription_ticket_size2").report_action(self)
 
     # def print_ophtalmologic_prescription_report(self):
     #     return {
@@ -363,4 +363,4 @@ class DoctorPrescription(models.Model):
     #     }
 
     def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry_erp.doctor_prescription_ophtalmological_ticket_size2").report_action(self)
+        return self.env.ref("podiatry_erp.medical_prescription_ophtalmological_ticket_size2").report_action(self)

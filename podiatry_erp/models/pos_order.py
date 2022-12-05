@@ -6,7 +6,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     podiatry_reference = fields.Many2one(
-        'doctor.prescription', string='Podiatry Reference')
+        'medical.prescription', string='Podiatry Reference')
 
     @api.model
     def _order_fields(self, ui_order):

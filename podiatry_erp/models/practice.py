@@ -107,7 +107,7 @@ class Practice(models.Model):
     )
 
     prescription_id = fields.One2many(
-        comodel_name='doctor.prescription',
+        comodel_name='medical.prescription',
         inverse_name='practice_id',
         string="Prescriptions",
     )
@@ -211,7 +211,7 @@ class Practice(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['doctor.prescription'].search_count(
+            count = self.env['medical.prescription'].search_count(
                 [('doctor', '=', records.id)])
             records.prescription_count = count
 
@@ -219,7 +219,7 @@ class Practice(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'doctor.prescription',
+            'res_model': 'medical.prescription',
             'domain': [('practice_id', '=', self.id)],
             'context': {'default_practice_id': self.id},
             'view_mode': 'kanban,tree,form',

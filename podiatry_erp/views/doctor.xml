@@ -20,7 +20,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="open_doctor_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
+                            <button name="open_medical_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
                                 <field string="Prescription" name="prescription_count" widget="statinfo"/>
                             </button>
                         </div>

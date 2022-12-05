@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="doctor_prescription" model="ir.ui.view">
-            <field name="name">Doctor Prescription</field>
-            <field name="model">doctor.prescription</field>
+        <record id="medical_prescription" model="ir.ui.view">
+            <field name="name">Medical Prescription</field>
+            <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
-                <form string="Doctor Prescription">
+                <form string="Medical Prescription">
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
                         <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
@@ -393,9 +393,9 @@
         </record>
 
 
-        <record id="doctor_prescription_tree" model="ir.ui.view">
+        <record id="medical_prescription_tree" model="ir.ui.view">
             <field name="name">Doctor Prescription Tree View</field>
-            <field name="model">doctor.prescription</field>
+            <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="doctor_id"/>
@@ -412,7 +412,7 @@
         <record id="action_prescription_history_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">doctor.prescription</field>
+            <field name="res_model">medical.prescription</field>
             <field name="view_mode">tree,form</field>
         </record>
 

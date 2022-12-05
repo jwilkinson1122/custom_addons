@@ -46,7 +46,7 @@ class Doctor(models.Model):
         string='Practice')
 
     prescription_id = fields.One2many(
-        comodel_name='doctor.prescription',
+        comodel_name='medical.prescription',
         inverse_name='doctor',
         string='Prescriptions')
 
@@ -79,14 +79,14 @@ class Doctor(models.Model):
         string='Prescription Count', compute='get_prescription_count')
 
     prescription_id = fields.One2many(
-        comodel_name='doctor.prescription',
+        comodel_name='medical.prescription',
         inverse_name='doctor_id',
         string="Prescriptions",
     )
 
     def get_prescription_count(self):
         for rec in self:
-            prescription_count = self.env['doctor.prescription'].search_count(
+            prescription_count = self.env['medical.prescription'].search_count(
                 [('doctor_id', '=', rec.id)])
             rec.prescription_count = prescription_count
 
@@ -218,11 +218,11 @@ class Doctor(models.Model):
         for rec in self:
             raise UserError(_('You Can Not Duplicate doctor.'))
 
-    def open_doctor_prescriptions(self):
+    def open_medical_prescriptions(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'doctor.prescription',
+            'res_model': 'medical.prescription',
             'domain': [('doctor', '=', self.id)],
             'context': {'default_doctor': self.id},
             'view_mode': 'kanban,tree,form',

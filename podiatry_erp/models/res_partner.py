@@ -23,7 +23,7 @@ class InheritedResPartner(models.Model):
                 'name': _('Prescription'),
                 'view_type': 'form',
                 'domain': [('customer', '=', records.id)],
-                'res_model': 'doctor.prescription',
+                'res_model': 'medical.prescription',
                 'view_id': False,
                 'view_mode': 'tree,form',
                 'context': {'default_customer': self.id},
@@ -32,7 +32,7 @@ class InheritedResPartner(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['doctor.prescription'].search_count(
+            count = self.env['medical.prescription'].search_count(
                 [('customer', '=', records.id)])
             records.prescription_count = count
 

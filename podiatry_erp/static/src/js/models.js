@@ -10,7 +10,7 @@ odoo.define('podiatry_erp.models', function (require) {
             self.podiatry.doctors = doctors;
         },
     }, {
-        model: 'doctor.prescription',
+        model: 'medical.prescription',
         loaded: function (self, podiatry_orders) {
             self.podiatry.all_orders = podiatry_orders;
             self.podiatry.order_by_id = {};

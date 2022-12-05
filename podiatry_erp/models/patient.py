@@ -23,7 +23,7 @@ class Patient(models.Model):
         comodel_name='podiatry.doctor',
         string='Practitioner')
     prescription_id = fields.One2many(
-        comodel_name='doctor.prescription',
+        comodel_name='medical.prescription',
         inverse_name='patient_id',
         # string="Prescriptions",
     )

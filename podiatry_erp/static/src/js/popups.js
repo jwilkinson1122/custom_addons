@@ -66,7 +66,7 @@ odoo.define('podiatry_erp.popups', function (require) {
                 if (confirmed) {
                     this.env.pos.podiatry.ProductCreationScreen = undefined;
                     rpc.query({
-                        model: 'doctor.prescription',
+                        model: 'medical.prescription',
                         method: 'create_product_pos',
                         args: [vals],
                     }).then(function (products) {
