@@ -39,8 +39,11 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_open_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
-                                <field string="Prescription" name="prescription_count" widget="statinfo"/>
+                            <button name="open_medical_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                                <div class="o_stat_info">
+                                    <field name="prescription_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Prescriptions</span>
+                                </div>
                             </button>
                             <field name="child_ids" invisible="1"/>
                             <button type="action" name="%(action_podiatry_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">

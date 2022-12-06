@@ -22,7 +22,7 @@ class Prescription(models.Model):
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
-    customer_age = fields.Integer(related='customer.age')
+    # patient_age = fields.Integer(related='patient.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()

@@ -12,7 +12,15 @@
     'license': 'AGPL-3',
     'images': ['static/description/company_logo.png'],
     "depends": [
-        'base', 'sale', 'sale_management', 'product', 'point_of_sale', 'purchase',
+        "base_setup",
+        "resource",
+        "mail",
+        "base",
+        'sale',
+        'sale_management',
+        'point_of_sale',
+        "product",
+        'purchase',
     ],
     "data": [
         'security/groups.xml',

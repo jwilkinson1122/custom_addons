@@ -212,16 +212,16 @@ class Practice(models.Model):
     def get_prescription_count(self):
         for records in self:
             count = self.env['medical.prescription'].search_count(
-                [('doctor', '=', records.id)])
+                [('practice_id', '=', records.id)])
             records.prescription_count = count
 
-    def action_open_prescriptions(self):
+    def open_medical_prescriptions(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
             'res_model': 'medical.prescription',
             'domain': [('practice_id', '=', self.id)],
-            'context': {'default_practice_id': self.id},
+            'context': {'default_practice': self.id},
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }

@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
-# from . import practice
+from . import practice
 
 # from lxml import etree
 # added import statement in try-except because when server runs on
@@ -19,18 +19,14 @@ class Doctor(models.Model):
     _name = 'podiatry.doctor'
     _inherit = ['mail.thread',
                 'mail.activity.mixin', 'image.mixin']
+
     _inherits = {
         'res.partner': 'partner_id',
     }
 
     _rec_name = 'doctor_id'
+
     _description = 'doctor'
-
-    create_users_button = fields.Boolean()
-    related_user_id = fields.Many2one(related='partner_id.user_id')
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Doctor')
 
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
@@ -39,7 +35,7 @@ class Doctor(models.Model):
     )
 
     doctor_id = fields.Many2many('res.partner', domain=[(
-        'is_doctor', '=', True)], string="doctor", required=True)
+        'is_practitioner', '=', True)], string="doctor", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
@@ -47,7 +43,7 @@ class Doctor(models.Model):
 
     prescription_id = fields.One2many(
         comodel_name='medical.prescription',
-        inverse_name='doctor',
+        inverse_name='doctor_id',
         string='Prescriptions')
 
     @api.model
@@ -61,13 +57,17 @@ class Doctor(models.Model):
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
-    reference = fields.Char(string='Doctor Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
+
+    email = fields.Char(string="E-mail")
+    phone = fields.Char(string="Telephone")
+    mobile = fields.Char(string="Mobile")
 
     notes = fields.Text(string="Notes")
 
     salutation = fields.Selection(selection=[
-        ('doctor', 'Doctor'),
+        ('doctor', 'Practitioner'),
         ('mr', 'Mr.'),
         ('ms', 'Ms.'),
         ('mrs', 'Mrs.'),
@@ -76,7 +76,7 @@ class Doctor(models.Model):
     signature = fields.Binary(string="Signature")
 
     prescription_count = fields.Integer(
-        string='Prescription Count', compute='get_prescription_count')
+        string='Prescription Count', compute='_compute_prescription_count')
 
     prescription_id = fields.One2many(
         comodel_name='medical.prescription',
@@ -84,7 +84,7 @@ class Doctor(models.Model):
         string="Prescriptions",
     )
 
-    def get_prescription_count(self):
+    def _compute_prescription_count(self):
         for rec in self:
             prescription_count = self.env['medical.prescription'].search_count(
                 [('doctor_id', '=', rec.id)])
@@ -110,6 +110,9 @@ class Doctor(models.Model):
         '''
         address_id = self.doctor_id
         self.doctor_address_id = address_id
+
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+                                 help='Partner-related data')
 
     doctor_address_id = fields.Many2one(
         'res.partner', string="Address", )
@@ -155,7 +158,7 @@ class Doctor(models.Model):
 
     same_reference_doctor_id = fields.Many2one(
         comodel_name='podiatry.doctor',
-        string='Doctor with same Identity',
+        string='Practitioner with same Identity',
         compute='_compute_same_reference_doctor_id',
     )
 
@@ -178,7 +181,7 @@ class Doctor(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
-            'podiatry_erp', 'static/src/default', 'default_image.png')
+            'podiatry_erp', 'static/src/description', 'default_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _add_followers(self):
@@ -190,16 +193,24 @@ class Doctor(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
 
+    # @api.model
+    # def create_doctors(self, vals):
+    #     if not vals.get('notes'):
+    #         vals['notes'] = 'New Practitioner'
+    #     if vals.get('reference', _('New')) == _('New'):
+    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.doctor') or _('New')
+    #     doctor = super(Doctor, self).create(vals)
+    #     doctor._add_followers()
+    #     return doctor
+
     @api.model
-    def create_doctors(self, vals):
-        if not vals.get('notes'):
-            vals['notes'] = 'New Doctor'
+    def create(self, vals):
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.doctor') or _('New')
-        doctor = super(Doctor, self).create(vals)
-        doctor._add_followers()
-        return doctor
+        res = super(Doctor, self).create(vals)
+        return res
 
     def name_get(self):
         result = []
@@ -218,13 +229,13 @@ class Doctor(models.Model):
         for rec in self:
             raise UserError(_('You Can Not Duplicate doctor.'))
 
-    def open_medical_prescriptions(self):
+    def action_open_prescriptions(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
             'res_model': 'medical.prescription',
-            'domain': [('doctor', '=', self.id)],
-            'context': {'default_doctor': self.id},
+            'domain': [('doctor_id', '=', self.id)],
+            'context': {'default_doctor_id': self.id},
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
