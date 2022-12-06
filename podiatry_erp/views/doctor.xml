@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Form -->
-    <record id="doctor_doctor" model="ir.ui.view">
-        <field name="name">Doctor</field>
+    <record id="view_podiatry_doctor_form" model="ir.ui.view">
+        <field name="name">podiatry.doctor.form</field>
         <field name="model">podiatry.doctor</field>
         <field name="arch" type="xml">
             <form string="Practitioner">
                 <field name="active" invisible="1"/>
                 <header/>
-                <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_doctor_id', '=', False)]}">
-                    A practitioner with the same reference already exists, are you sure you want to create a new one?
+                <div name="alert_doctor_ref_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_doctor_id', '=', False)]}">
+                    A doctor with the same ref already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_doctor_id"/>
                 </div>
@@ -23,17 +23,13 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <!-- <div name="avatar">
+                    <div name="avatar">
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
-                    </div> -->
+                    </div>
                     <!-- Title -->
 
                     <div name="title" class="oe_title">
-                        <div name="reference">
-                            <h1>
-                                <field name="reference"/>
-                            </h1>
-                        </div>
+
                         <div name="name">
                             <h1>
                                 <field name="name" required="1" placeholder="Contact Name"/>
@@ -44,13 +40,21 @@
                             <!-- <label for="practice_id" string="Primary Practice"/> -->
                             <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
+                        <div name="ref">
+                            <h2>
+                                <field name="ref" string="Reference" readonly="1"/>
+                            </h2>
+                        </div>
                     </div>
-                    <group name="practitioner_contact">
+                    <group name="doctor_contact">
+                        <!-- Contact Information -->
                         <group name="contact_information" string="Contact Information">
                             <field name="mobile" widget="phone" help="help"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
+                            <!-- <field name="position_type"/> -->
                         </group>
+                        <!-- Address Information -->
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
                             <div class="o_address_format">
@@ -96,35 +100,36 @@
     <!--
     Tree
     -->
-    <record id="doctor_doctor_tree" model="ir.ui.view">
-        <field name="name">Practitioner Tree View</field>
+    <record id="view_podiatry_doctor_tree" model="ir.ui.view">
+        <field name="name">podiatry.doctor.tree</field>
         <field name="model">podiatry.doctor</field>
         <field name="arch" type="xml">
             <tree string="Contacts" decoration-muted="not active">
                 <field name="name" decoration-bf="1"/>
-                <field name="reference" optional="hide"/>
+                <field name="active" invisible="1"/>
+                <!-- <field name="sequence" widget="handle"/> -->
+                <field name="ref"/>
                 <field name="mobile" widget="phone" optional="show"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
                 <field name="user_id" widget="many2one_avatar" optional="show"/>
-                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
 
     <!-- Kanban -->
-    <record id="res_doctor_kanban_view" model="ir.ui.view">
-        <field name="name">podiatry.doctor</field>
+    <record id="view_podiatry_doctor_kanban" model="ir.ui.view">
+        <field name="name">podiatry.doctor.kanban</field>
         <field name="model">podiatry.doctor</field>
         <field name="arch" type="xml">
             <kanban string="Contacts" class="o_res_partner_kanban">
                 <field name="id"/>
                 <field name="color"/>
-                <field name="reference"/>
+                <field name="ref"/>
                 <field name="name"/>
                 <field name="title"/>
                 <field name="email"/>
-                <field name="is_practitioner"/>
+                <field name="is_doctor"/>
                 <field name="practice_id"/>
                 <field name="phone"/>
                 <field name="street"/>
@@ -140,7 +145,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
-                            <t t-if="!record.is_practitioner.raw_value">
+                            <t t-if="!record.is_doctor.raw_value">
                                 <t t-set="background_image" t-value="kanban_image('podiatry.doctor', 'avatar_128', record.id.raw_value)"/>
                                 <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
                                     <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('podiatry.doctor', 'avatar_128', record.raw_value)"/>
@@ -158,8 +163,8 @@
                                 </strong>
                                 <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                 <ul>
-                                    <li>ID : 
-                                        <field name="reference"/>
+                                    <li>
+                                        <field name="ref"/>
                                     </li>
                                     <li>Practice : 
                                         <field name="practice_id"/>
@@ -191,22 +196,108 @@
         </field>
     </record>
 
+
+    <!--
+    Activity
+    -->
+    <record id="view_podiatry_doctor_activity" model="ir.ui.view">
+        <field name="name">podiatry.doctor.activity</field>
+        <field name="model">podiatry.doctor</field>
+        <field name="arch" type="xml">
+            <activity string="Contacts">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('podiatry.doctor', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="name" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_podiatry_doctor_search" model="ir.ui.view">
+        <field name="name">podiatry.doctor.search</field>
+        <field name="model">podiatry.doctor</field>
+        <field name="arch" type="xml">
+            <search string="Contacts">
+                <!--
+                Fields
+                -->
+                <field name="name"/>
+                <field name="ref" operator="="/>
+
+                <separator/>
+
+                <!--
+                Filters
+                -->
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+
+                <!--
+                Groups
+                -->
+                <group name="group_by" string="Group By">
+                    <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
+                    <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
+                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                </group>
+
+                <!--
+                Search panel
+                -->
+
+                <searchpanel>
+                    <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
+                    <field name="country_id" icon="fa-globe" enable_counters="1"/>
+                </searchpanel>
+
+            </search>
+        </field>
+    </record>
+
     <!--
     Action: Contacts
     -->
     <record id="action_doctor_window" model="ir.actions.act_window">
-        <field name="name">Doctors</field>
+        <field name="name">Practitioner</field>
         <field name="res_model">podiatry.doctor</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_practitioner', '=', True)]</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <!-- <field name="domain">[('is_doctor', '=', True)]</field> -->
+        <!-- <field name="search_view_id" ref="view_podiatry_practice_search"/> -->
+        <!-- <field name="context">{'default_is_doctor':True}</field> -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new practitioner
+                Create a new practice
             </p>
             <p>
-                Schedule and organize your practitioners efficiently.
+                Organize and manage practices at a glance.
             </p>
         </field>
     </record>
+    <!-- <record id="action_doctor_window" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">podiatry.doctor</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_doctor', '=', True)]</field>
+        <field name="search_view_id" ref="view_podiatry_doctor_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new doctor
+            </p>
+            <p>
+                Schedule and organize your doctors efficiently.
+            </p>
+        </field>
+    </record> -->
+
 
 </odoo>

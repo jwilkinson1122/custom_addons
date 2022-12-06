@@ -643,7 +643,7 @@ Description
     <t t-name="PrescriptionButton" owl="1">
         <div class='control-button button confirm'>
             <i class='fa-prescription' />
-            <span class="label podiatry_prescription">
+            <span class="label medical.prescription">
                 <t t-if="env.pos.get_podiatry_reference()">
                     <t t-esc="env.pos.get_podiatry_reference().name" />
                 </t>
@@ -1169,7 +1169,7 @@ Description
                         <tr>
                             <th>Practitioner internal observations:</th>
                             <td colspan="3">
-                                <input name="optometrist_observation" type="text"/>
+                                <input name="doctor_observation" type="text"/>
                             </td>
                         </tr>
                     </table>

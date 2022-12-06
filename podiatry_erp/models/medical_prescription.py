@@ -27,7 +27,7 @@ class Prescription(models.Model):
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
-    optometrist_observation = fields.Text()
+    doctor_observation = fields.Text()
     state = fields.Selection(
         [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
@@ -339,7 +339,7 @@ class Prescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.prescription.sequence')
+                'medical.prescription.sequence')
         result = super(Prescription, self).create(vals)
         return result
 

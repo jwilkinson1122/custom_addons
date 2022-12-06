@@ -13,7 +13,11 @@
 			<field name="name">partner.view.user</field>
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="groups_id" eval="[(4, ref('group_podiatry_erp_group'))]"/>
 			<field name="arch" type="xml">
+				<field name="ref" position="attributes">
+					<attribute name="attrs">{'readonly': [('is_company', '=', False), ('parent_id', '!=', False)]}</attribute>
+				</field>
 				<xpath expr="//group" position="inside">
 					<group>
 						<field name="dob" string="Dob"></field>
@@ -32,7 +36,7 @@
 					<page string="Medical">
 						<group colspan="6" col="6">
 							<field name="is_patient" />
-							<field name="is_practitioner" />
+							<field name="is_doctor" />
 							<field name="is_location" />
 							<!-- <field name="is_person" /> -->
 						</group>

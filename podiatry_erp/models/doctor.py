@@ -35,7 +35,7 @@ class Doctor(models.Model):
     )
 
     doctor_id = fields.Many2many('res.partner', domain=[(
-        'is_practitioner', '=', True)], string="doctor", required=True)
+        'is_doctor', '=', True)], string="Doctor", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
@@ -56,6 +56,12 @@ class Doctor(models.Model):
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
+
+    sequence = fields.Integer(
+        string="Sequence", required=True,
+        default=5,
+    )
+
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
@@ -162,11 +168,11 @@ class Doctor(models.Model):
         compute='_compute_same_reference_doctor_id',
     )
 
-    @api.depends('reference')
+    @api.depends('ref')
     def _compute_same_reference_doctor_id(self):
         for doctor in self:
             domain = [
-                ('reference', '=', doctor.reference),
+                ('ref', '=', doctor.reference),
             ]
 
             origin_id = doctor._origin.id
@@ -184,33 +190,26 @@ class Doctor(models.Model):
             'podiatry_erp', 'static/src/description', 'default_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
-    def _add_followers(self):
-        for doctor in self:
-            partner_ids = (doctor.user_id.partner_id |
-                           doctor.responsible_id.partner_id).ids
-            doctor.message_subscribe(partner_ids=partner_ids)
-
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
 
-    # @api.model
-    # def create_doctors(self, vals):
-    #     if not vals.get('notes'):
-    #         vals['notes'] = 'New Practitioner'
-    #     if vals.get('reference', _('New')) == _('New'):
-    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
-    #             'podiatry.doctor') or _('New')
-    #     doctor = super(Doctor, self).create(vals)
-    #     doctor._add_followers()
-    #     return doctor
-
     @api.model
-    def create(self, vals):
+    def create_doctors(self, vals):
+        if not vals.get('notes'):
+            vals['notes'] = 'New Practitioner'
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.doctor') or _('New')
-        res = super(Doctor, self).create(vals)
-        return res
+        doctor_id = super(Doctor, self).create(vals)
+        return doctor_id
+
+    # @api.model
+    # def create_doctors(self, vals):
+    #     if vals.get('reference', _('New')) == _('New'):
+    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.doctor') or _('New')
+    #     res = super(Doctor, self).create(vals)
+    #     return res
 
     def name_get(self):
         result = []

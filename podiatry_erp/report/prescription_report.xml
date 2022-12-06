@@ -377,7 +377,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner internal observations
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.optometrist_observation"></span>
+                                <span t-field="doc.doctor_observation"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -1021,7 +1021,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner internal observations
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.optometrist_observation"></span>
+                                <span t-field="doc.prescription_id.doctor_observation"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>

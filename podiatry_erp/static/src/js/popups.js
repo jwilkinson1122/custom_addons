@@ -72,7 +72,7 @@ odoo.define('podiatry_erp.popups', function (require) {
                     }).then(function (products) {
                         self.env.pos.podiatry.all_orders.push(products);
                         self.env.pos.podiatry.order_by_id[products.id] = products;
-                        $('.podiatry_prescription').text(products.name);
+                        $('.medical.prescription').text(products.name);
                         order.set_podiatry_reference(products);
                         order.set_client(self.env.pos.db.partner_by_id[products.customer[0]]);
                     });
