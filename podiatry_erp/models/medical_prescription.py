@@ -12,6 +12,7 @@ from odoo.tools.misc import get_lang
 class Prescription(models.Model):
     _name = 'medical.prescription'
     _description = 'Medical Prescription'
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = 'name'
 
     company_id = fields.Many2one(
