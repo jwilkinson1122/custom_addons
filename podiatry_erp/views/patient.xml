@@ -333,7 +333,7 @@
             </kanban>
         </field>
     </record>
-        <!--
+    <!--
     Search
     -->
     <record id="view_podiatry_patient_search" model="ir.ui.view">
@@ -386,6 +386,7 @@
         <field name="res_model">podiatry.patient</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_podiatry_patient_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new patient

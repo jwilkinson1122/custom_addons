@@ -25,6 +25,9 @@ access_practice_group,access_practice_group,model_podiatry_practice,group_podiat
 access_patient_doctor,access_patient_doctor,model_podiatry_patient,group_podiatry_erp_doctors,1,1,1,1
 access_patient_group,access_patient_group,model_podiatry_patient,group_podiatry_erp_group,1,1,1,1
 
-
+access_prescription_stage,access_prescription_stage,model_prescription_stage,base.group_system,1,1,1,1
+access_prescription_massmessage,access_prescription_massmessage,model_prescription_massmessage,base.group_system,1,1,1,1
+access_create_prescription_invoice,access_create_prescription_invoice,model_create_prescription_invoice,base.group_system,1,1,1,1
+access_create_prescription_shipment,access_create_prescription_shipment,model_create_prescription_shipment,base.group_system,1,1,1,1
 
 
