@@ -193,23 +193,25 @@ class Doctor(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
 
-    @api.model
-    def create_doctors(self, vals):
-        if not vals.get('notes'):
-            vals['notes'] = 'New Practitioner'
-        if vals.get('reference', _('New')) == _('New'):
-            vals['reference'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.doctor') or _('New')
-        doctor_id = super(Doctor, self).create(vals)
-        return doctor_id
-
     # @api.model
     # def create_doctors(self, vals):
+    #     if not vals.get('notes'):
+    #         vals['notes'] = 'New Practitioner'
     #     if vals.get('reference', _('New')) == _('New'):
     #         vals['reference'] = self.env['ir.sequence'].next_by_code(
     #             'podiatry.doctor') or _('New')
-    #     res = super(Doctor, self).create(vals)
-    #     return res
+    #     doctor_id = super(Doctor, self).create(vals)
+    #     return doctor_id
+
+    @api.model
+    def create(self,val):
+        doctor_id  = self.env['ir.sequence'].next_by_code('podiatry.doctor')
+        if doctor_id:
+            val.update({
+                        'name':doctor_id,
+                       })
+        result = super(Doctor, self).create(val)
+        return result
 
     def name_get(self):
         result = []

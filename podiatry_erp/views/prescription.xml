@@ -257,7 +257,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Ophthalmology">
+                        <page string="Podiatry">
                             <div class="row">
                                 <div class="col-8">
                                     <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
@@ -409,6 +409,85 @@
             </field>
         </record>
 
+          <!-- Search -->
+    <record id="view_podiatry_prescription_filter" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="practitioner_id" />
+                <field name="user_id" />
+
+                <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]" />
+                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
+                <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" />
+
+                <searchpanel>
+                    <field name="practitioner_id" enable_counters="1" />
+                    <field name="stage_id" select="multi" />
+                </searchpanel>
+
+            </search>
+
+        </field>
+    </record>
+
+            <!-- Activity View -->
+    <record id="view_podiatry_prescription_activity" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <activity string="Prescriptions">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" />
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
+        <field name="name">Practitioner Prescriptions</field>
+        <field name="model">podiatry.prescription</field>
+        <field eval="2" name="priority" />
+        <field name="arch" type="xml">
+            <calendar date_start="date" string="orders" mode="month" color="color">
+                <field name="stage_id" type="col" />
+                <field name="patient_id" />
+                <field name="practitioner_id" />
+                <field name="date" />
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="stage_id" type="col" />
+                <field name="practitioner_id" />
+                <field name="request_date" interval="week" />
+                <field name="num_prescriptions" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_podiatry_prescription_graph" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="stage_id" />
+                <field name="num_prescriptions" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+
         <record id="action_prescription_history_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
@@ -418,8 +497,8 @@
 
         <menuitem id="podiatry_erp_root" name="Podiatry ERP" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
         <menuitem id="podiatry_erp_practice" name="Accounts" parent="podiatry_erp_root" action="action_practice_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
-        <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
-        <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
+        <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="2"/>
+        <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
         <menuitem id="podiatry_erp_sale_order" name="Sale Order" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
         <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
         <menuitem id="podiatry_erp_config" name="Configuration" parent="podiatry_erp_root" sequence="7"/>
