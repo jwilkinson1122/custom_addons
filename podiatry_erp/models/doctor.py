@@ -63,8 +63,8 @@ class Doctor(models.Model):
     )
 
     code = fields.Char(string="Code", copy=False)
-    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
+    # reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
+    #                         default=lambda self: _('New'))
 
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
@@ -162,27 +162,27 @@ class Doctor(models.Model):
 
         return bool(result) and " ".join(result)
 
-    same_reference_doctor_id = fields.Many2one(
-        comodel_name='podiatry.doctor',
-        string='Practitioner with same Identity',
-        compute='_compute_same_reference_doctor_id',
-    )
+    # same_reference_doctor_id = fields.Many2one(
+    #     comodel_name='podiatry.doctor',
+    #     string='Practitioner with same Identity',
+    #     compute='_compute_same_reference_doctor_id',
+    # )
 
-    @api.depends('ref')
-    def _compute_same_reference_doctor_id(self):
-        for doctor in self:
-            domain = [
-                ('ref', '=', doctor.reference),
-            ]
+    # @api.depends('ref')
+    # def _compute_same_reference_doctor_id(self):
+    #     for doctor in self:
+    #         domain = [
+    #             ('ref', '=', doctor.reference),
+    #         ]
 
-            origin_id = doctor._origin.id
+    #         origin_id = doctor._origin.id
 
-            if origin_id:
-                domain += [('id', '!=', origin_id)]
+    #         if origin_id:
+    #             domain += [('id', '!=', origin_id)]
 
-            doctor.same_reference_doctor_id = bool(doctor.reference) and \
-                self.with_context(active_test=False).sudo().search(
-                    domain, limit=1)
+    #         doctor.same_reference_doctor_id = bool(doctor.reference) and \
+    #             self.with_context(active_test=False).sudo().search(
+    #                 domain, limit=1)
 
     @api.model
     def _default_image(self):
@@ -204,19 +204,29 @@ class Doctor(models.Model):
     #     return doctor_id
 
     @api.model
-    def create(self,val):
-        doctor_id  = self.env['ir.sequence'].next_by_code('podiatry.doctor')
-        if doctor_id:
-            val.update({
-                        'name':doctor_id,
-                       })
-        result = super(Doctor, self).create(val)
-        return result
+    def create_doctors(self, vals):
+        if not vals.get('notes'):
+            vals['notes'] = 'New Practitioner'
+        if vals.get('ref', _('New')) == _('New'):
+            vals['ref'] = self.env['ir.sequence'].next_by_code(
+                'podiatry.doctor') or _('New')
+        doctor_id = super(Doctor, self).create(vals)
+        return doctor_id
+
+    # @api.model
+    # def create(self,val):
+    #     doctor_id  = self.env['ir.sequence'].next_by_code('podiatry.doctor')
+    #     if doctor_id:
+    #         val.update({
+    #                     'name':doctor_id,
+    #                    })
+    #     result = super(Doctor, self).create(val)
+    #     return result
 
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = '[' + rec.ref + '] ' + rec.name
             result.append((rec.id, name))
         return result
 
