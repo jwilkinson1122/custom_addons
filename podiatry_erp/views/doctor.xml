@@ -8,11 +8,11 @@
             <form string="Practitioner">
                 <field name="active" invisible="1"/>
                 <header/>
-                <!-- <div name="alert_doctor_ref_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_doctor_id', '=', False)]}">
+                <div name="alert_doctor_ref_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_doctor_id', '=', False)]}">
                     A doctor with the same ref already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_doctor_id"/>
-                </div> -->
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
@@ -35,16 +35,19 @@
                                 <field name="name" required="1" placeholder="Contact Name"/>
                             </h1>
                         </div>
-
-                        <div name="practice_id">
-                            <!-- <label for="practice_id" string="Primary Practice"/> -->
-                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
-                        </div>
                         <div name="ref">
                             <h2>
                                 <field name="ref" string="Reference" readonly="1"/>
                             </h2>
                         </div>
+
+                        <div name="practice_id">
+                            <h2>
+                                <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+
+                            </h2>
+                        </div>
+                  
                     </div>
                     <group name="doctor_contact">
                         <!-- Contact Information -->
@@ -272,8 +275,8 @@
         <field name="res_model">podiatry.doctor</field>
         <field name="view_mode">kanban,tree,form</field>
         <!-- <field name="domain">[('is_doctor', '=', True)]</field> -->
+        <!-- <field name="search_view_id" ref="view_podiatry_practice_search"/> -->
         <!-- <field name="context">{'default_is_doctor':True}</field> -->
-        <field name="search_view_id" ref="view_podiatry_doctor_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new practice

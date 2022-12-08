@@ -733,7 +733,7 @@ Description
                         <tr>
                             <th>Ocular History:</th>
                             <td>
-                                <input name="podiatric_history" type="text"/>
+                                <input name="ocular_history" type="text"/>
                             </td>
                             <th>Consultation Reason:</th>
                             <td>

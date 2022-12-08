@@ -1,18 +1,10 @@
-
-import time
-import json
-from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.tools import datetime
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.misc import get_lang
 
 
 class Prescription(models.Model):
     _name = 'medical.prescription'
     _description = 'Medical Prescription'
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = 'name'
 
     company_id = fields.Many2one(
@@ -30,11 +22,6 @@ class Prescription(models.Model):
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
-
-    gender = fields.Selection([
-        ('male', 'Male'),
-        ('female', 'Female')
-    ], related='patient_id.gender')
     # patient_age = fields.Integer(related='patient.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -43,9 +30,6 @@ class Prescription(models.Model):
     doctor_observation = fields.Text()
     state = fields.Selection(
         [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
-
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True,
-                       default=lambda self: _('New'))
 
     def confirm_request(self):
         for rec in self:
@@ -61,165 +45,6 @@ class Prescription(models.Model):
 
     prescription_type = fields.Selection([('Internal', 'Internal'), ('External', 'External')], default='Internal',
                                          Required=True)
-
-    prescription = fields.Text(string="Prescription")
-
-    prescription_ids = fields.One2many(
-        'medical.prescription', 'patient_id', string="Prescriptions")
-
-    user_id = fields.Many2one(
-        'res.users', 'User', readonly=True, default=lambda self: self.env.user)
-
-    attachment_ids = fields.Many2many('ir.attachment', 'prescription_ir_attachments_rel',
-                                      'manager_id', 'attachment_id', string="Attachments",
-                                      help="Images/attachments before prescription")
-
-    image1 = fields.Binary(related="patient_id.image1")
-    image2 = fields.Binary(related="patient_id.image2")
-
-    inv_state = fields.Selection(
-        [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
-
-    no_invoice = fields.Boolean('Invoice exempt')
-
-    inv_id = fields.Many2one('account.invoice', 'Invoice')
-
-    completed_date = fields.Datetime(string="Completed Date")
-
-    request_date = fields.Date(
-        default=lambda s: fields.Date.today(),
-        compute="_compute_request_date_onchange",
-        store=True,
-        readonly=False,
-    )
-
-    @api.depends('patient_id')
-    def _compute_request_date_onchange(self):
-        today_date = fields.Date.today()
-        if self.request_date != today_date:
-            self.request_date = today_date
-            return {
-                "warning": {
-                    "title": "Changed Request Date",
-                    "message": "Request date changed to today!",
-                }
-            }
-
-    @api.model
-    def _default_stage(self):
-        Stage = self.env["prescription.stage"]
-        return Stage.search([("state", "=", "new")], limit=1)
-
-    @api.model
-    def _group_expand_stage_id(self, stages, domain, order):
-        return stages.search([], order=order)
-
-    stage_id = fields.Many2one(
-        "prescription.stage",
-        default=_default_stage,
-        copy=False,
-        group_expand="_group_expand_stage_id")
-
-    kanban_state = fields.Selection(
-        [("normal", "In Progress"),
-         ("blocked", "Blocked"),
-         ("done", "Ready for next stage")],
-        "Kanban State",
-        default="normal")
-
-    color = fields.Integer()
-    active = fields.Boolean(default=True)
-    date = fields.Date()
-    time = fields.Datetime()
-
-    priority = fields.Selection(
-        [("0", "High"),
-         ("1", "Very High"),
-         ("2", "Critical")],
-        default="0")
-
-    @api.model
-    def _get_bookin_date(self):
-        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
-        checkin_date = fields.Datetime.context_timestamp(
-            self, fields.Datetime.now())
-        return fields.Datetime.to_string(checkin_date)
-
-    @api.model
-    def _get_bookout_date(self):
-        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
-        checkout_date = fields.Datetime.context_timestamp(
-            self, fields.Datetime.now() + timedelta(days=1)
-        )
-        return fields.Datetime.to_string(checkout_date)
-
-    prescription_date = fields.Date(
-        'Prescription Date', default=fields.Datetime.now())
-
-    close_date = fields.Date(readonly=True)
-
-    bookin_date = fields.Datetime(
-        "Book In",
-        required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-        default=_get_bookin_date,
-    )
-    bookout_date = fields.Datetime(
-        "Book Out",
-        required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-        default=_get_bookout_date,
-    )
-
-    prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count', store=True)
-
-    def _compute_prescription_count_DISABLED(self):
-        "Naive version, not performance optimal"
-        for prescription in self:
-            domain = [
-                ("doctor_id", "=", prescription.doctor_id.id),
-                ("state", "not in", ["done", "cancel"]),
-            ]
-            prescription.prescription_count = self.search_count(domain)
-
-    def _compute_prescription_count(self):
-        for rec in self:
-            prescription_count = self.env['medical.prescription'].search_count(
-                [('doctor_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
-            rec.prescription_count = prescription_count
-
-    # num_prescriptions = fields.Integer(
-    #     compute="_compute_num_prescriptions", store=True)
-
-    # @api.depends("prescription_line")
-    # def _compute_num_prescriptions(self):
-    #     for prescription in self:
-    #         prescription.num_prescriptions = len(
-    #             prescription.prescription_line)
-
-    invoice_done = fields.Boolean('Invoice Done')
-
-    notes = fields.Text('Prescription Note')
-
-    is_invoiced = fields.Boolean(copy=False, default=False)
-
-    is_shipped = fields.Boolean(default=False, copy=False)
-
-    def action_confirm(self):
-        self.state = 'confirm'
-
-    def action_done(self):
-        self.state = 'done'
-
-    def action_draft(self):
-        self.state = 'draft'
-
-    def action_cancel(self):
-        self.state = 'cancel'
-
     # OD
     od_sph_distance = fields.Char(
     )
@@ -376,7 +201,7 @@ class Prescription(models.Model):
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
     family_eye_history = fields.Text()
-    podiatric_history = fields.Text()
+    ocular_history = fields.Text()
     consultation = fields.Text()
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
@@ -516,60 +341,7 @@ class Prescription(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'medical.prescription.sequence')
         result = super(Prescription, self).create(vals)
-        if result.stage_id.state in ("open", "close"):
-            raise exceptions.UserError(
-                "State not allowed for new prescriptions."
-            )
         return result
-
-    def write(self, vals):
-        # reset kanban state when changing stage
-        if "stage_id" in vals and "kanban_state" not in vals:
-            vals["kanban_state"] = "normal"
-        # Code before write: `self` has the old values
-        old_state = self.stage_id.state
-        super().write(vals)
-        # Code after write: can use `self` with the updated values
-        new_state = self.stage_id.state
-        if not self.env.context.get("_prescription_write"):
-            if new_state != old_state and new_state == "open":
-                self.with_context(_prescription_write=True).write(
-                    {"prescription_date": fields.Date.today()})
-            if new_state != old_state and new_state == "done":
-                self.with_context(_prescription_write=True).write(
-                    {"close_date": fields.Date.today()})
-        return True
-
-    def button_done(self):
-        Stage = self.env["prescription.stage"]
-        done_stage = Stage.search([("state", "=", "done")], limit=1)
-        for prescription in self:
-            prescription.stage_id = done_stage
-        return True
-
-    @api.onchange('patient_id')
-    def onchange_patient_id(self):
-        if self.patient_id:
-            if self.patient_id.gender:
-                self.gender = self.patient_id.gender
-            if self.patient_id.notes:
-                self.notes = self.patient_id.notes
-        else:
-            self.gender = ''
-            self.notes = ''
-
-    def unlink(self):
-        if self.state == 'done':
-            raise ValidationError(
-                _("You Cannot Delete %s as it is in Done State" % self.name))
-        return super(Prescription, self).unlink()
-
-    def action_url(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'new',
-            'url': 'https://nwpodiatric.com' % self.prescription,
-        }
 
     # def print_prescription_report(self):
     #     return {
@@ -578,9 +350,6 @@ class Prescription(models.Model):
     #         'report_file': "podiatry_erp.medical_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
-
-    # def prescription_report(self):
-    #         return self.env.ref('podiatry_erp.medical_prescription').report_action(self)
 
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.medical_prescription_ticket_size2").report_action(self)
@@ -593,5 +362,5 @@ class Prescription(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_podiatric_prescription_report_ticket_size(self):
+    def print_ophtalmologic_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.medical_prescription_ophtalmological_ticket_size2").report_action(self)

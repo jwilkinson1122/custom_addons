@@ -343,7 +343,7 @@
                                 <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ocular History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.podiatric_history"></span>
+                                    <span t-field="doc.ocular_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -1049,7 +1049,7 @@
                                 <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ocular History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.prescription_id.podiatric_history"></span>
+                                    <span t-field="doc.prescription_id.ocular_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
