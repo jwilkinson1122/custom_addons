@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="invoice_report">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <center>
+                        <div style="text-align: left;
+                                width: 300px;
+                                background-color: white;
+                                font-size: 14px;
+                                padding:0;
+                                margin:0;
+                                margin-top:20px;
+                                padding-bottom: 30px;
+                                display: inline-block;
+                                font-family: 'Arial';
+                                overflow: hidden;">
+                            <style>
+                                .headings{
+                                font-size:16px;
+                                font-weight:bold;
+                                }
+                                .text
+                                {
+                                font-size:16px;
+                                font-family: sans-serif;
+                                }
+                            </style>
+                            <center>
+                                <h4 style="font-size:small;">
+                                    <strong>Invoice
+                                        <span t-esc="doc.name"></span>
+                                    </strong>
+                                </h4>
+                                <h5 style="font-size:small;">
+                                    <span t-esc="doc.company_id.name"></span>
+                                </h5>
+                                <t t-set="record" t-value="json.loads(doc.tax_totals_json)"/>
+                                <h6 style="font-size:small;">
+                                    <strong>VAT :</strong>
+                                    <t t-if="'Untaxed Amount' in record['groups_by_subtotal']">
+                                        <span t-esc="'%.2f' % float(record['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'])"></span>
+                                    </t>
+                                    <t t-else="">
+                                        <span>0.00</span>
+                                    </t>
+                                </h6>
+                                <h6 style="font-size:small;">
+                                    <strong>STREET :</strong>
+                                    <span t-esc="doc.partner_id.street"></span>
+                                    <span t-esc="doc.partner_id.street2"></span>
+                                    <br/>
+                                    <span t-esc="doc.partner_id.city"></span>
+                                    <br/>
+                                    <span t-esc="doc.partner_id.state_id.name"></span>
+                                    <br/>
+                                    <span t-esc="doc.partner_id.zip"></span>
+                                </h6>
+                                <h6 style="font-size:small;">
+                                    <strong>DATE AND TIME :</strong>
+                                    <span t-esc="doc.invoice_date"></span>
+                                </h6>
+                                <h6 style="font-size:small;">
+                                    <strong>WAREHOUSE :</strong>
+                                    <span></span>
+                                </h6>
+                                <h6 style="font-size:small;">
+                                    <strong>USER :</strong>
+                                    <span t-esc="doc.invoice_user_id.name"></span>
+                                </h6>
+                                <hr style="border:1px dotted;"/>
+                            </center>
+                            <h6 style="font-size:small;">
+                                <span t-esc="doc.partner_id.name"></span>
+                            </h6>
+                            <h6 style="font-size:small;">
+                                <span t-esc="doc.partner_id.vat"></span>
+                            </h6>
+                            <hr style="border:1px dotted;"/>
+                            <table style="width:100%">
+                                <thead>
+                                    <tr style="border-bottom:1px dotted; font-size:small;">
+                                        <th style="width:25%; text-align:left;">Product</th>
+                                        <th style="width:25%; text-align:center;">Quant</th>
+                                        <th style="width:25%; text-align:center;">Unit Price</th>
+                                        <th style="width:25%; text-align:right;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.invoice_line_ids" t-as="order_line">
+                                        <tr style="border-bottom:1px dotted; font-size:small;">
+                                            <td style="width:25%; text-align:left;"
+                                                t-esc="order_line.product_id.name"></td>
+                                            <td style="width:25%; text-align:center;"
+                                                t-esc="order_line.quantity"></td>
+                                            <td style="width:25%; text-align:center;"
+                                                t-esc="'%.2f' % float(order_line.price_unit)"></td>
+                                            <td style="width:25%; text-align:right;"
+                                                t-esc="'%.2f' % float(order_line.price_subtotal)"></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div class="row">
+
+                                <div class="col-9" style="text-align:right; padding:0px;">
+                                    <p style="font-size:small;">
+                                        <strong>TOTAL PAYMENT :</strong>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <strong>UNTAXED AMOUNT :</strong>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <strong>TAX :</strong>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <strong>TOTAL :</strong>
+                                    </p>
+                                </div>
+                                <div class="col-3" style="text-align:right;">
+                                    <p style="font-size:small;">
+                                        <span t-esc="'%.2f' % float(record['amount_total'])"></span>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <span t-esc="'%.2f' % float(record['amount_untaxed'])"></span>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <t t-if="'Untaxed Amount' in record['groups_by_subtotal']">
+                                            <span t-esc="'%.2f' % float(record['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'])"></span>
+                                        </t>
+                                        <t t-else="">
+                                            <span>0.00</span>
+                                        </t>
+                                    </p>
+                                    <p style="font-size:small;">
+                                        <span t-esc="record['formatted_amount_total']"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p style="font-size:small;">
+                                    <strong t-esc="doc.num_word"></strong>
+                                </p>
+                            </div>
+                        </div>
+                        </center>
+                    </t>
+
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

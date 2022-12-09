@@ -1,0 +1,21 @@
+<odoo>
+    <record id="action_podiatry_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+    </record>
+
+
+    <record id="action_podiatry_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">podiatry.prescription.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_podiatry_prescription" name="Prescriptions" action="action_podiatry_prescription" parent="podiatry.menu_root" sequence="20"/>
+
+    <menuitem id="menu_podiatry_sale_order" name="Sale Order" action="sale.action_orders" parent="podiatry.menu_root" sequence="25"/>
+
+
+    <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration" sequence="20"/>
+</odoo>
