@@ -320,7 +320,8 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
-                <field name="practitioner_id" />
+                <field name="stage_id"/>
+                <!-- <field name="practitioner_id" /> -->
                 <field name="user_id" />
 
                 <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]" />
@@ -328,7 +329,7 @@
                 <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" />
 
                 <searchpanel>
-                    <field name="practitioner_id" enable_counters="1" />
+                    <!-- <field name="practitioner_id" enable_counters="1" /> -->
                     <field name="stage_id" select="multi" />
                 </searchpanel>
 
