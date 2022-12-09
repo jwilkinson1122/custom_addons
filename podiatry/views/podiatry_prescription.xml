@@ -96,9 +96,10 @@
                         <group>
                             <field name="bookin_date" />
                             <field name="user_id" />
+                        </group>
+                        <group>
                             <field name="rush_order" />
                             <field name="ship_to_patient" />
-
                         </group>
                     </group>
                     <notebook>
