@@ -5,10 +5,14 @@
             <field name="name">Medical Prescription</field>
             <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
-                <form string="Medical Prescription">
+                <form>
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
-                        <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
+                        <!-- <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
+                        <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/> -->
+                        <field name="state" invisible="True" />
+                        <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
+                        <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
+                        <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
                         <button name="open_customer" class="oe_highlight" states="Confirm" string="Create Sale Order" type="object"></button>
                         <button name="print_prescription_report_ticket_size" class="oe_highlight" string="Print Measure" type="object"></button>
                         <button name="print_ophtalmologic_prescription_report_ticket_size" class="oe_highlight" string="Print Ophtalmologic" type="object"></button>
@@ -27,7 +31,7 @@
 
                         </group>
                         <group>
-                            <field name="checkup_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
+                            <field name="prescription_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
                             <field name="test_type" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                             <field name="prescription_type" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                         </group>
@@ -382,11 +386,53 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Prescription Testing">
+                            <group string="Presc Lines">
+                                <field name="prescription_line" nolabel="1" widget="one2many_list" />
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <group name="photo_group_tlOo2">
+                                <group name="photo_group_tlOo2_left">
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
+                                </group>
+                                <group name="photo_group_tlOo2_right">
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image" />
+                                </group>
+                            </group>
+                            <group name="obj_group_DPydw">
+                                <group name="obj_group_DPydw_left">
+                                    <field name="left_obj_model" string="Left Scan" />
+
+                                </group>
+                                <group name="obj_group_DPydw_right">
+                                    <field name="right_obj_model" string="Right Scan" />
+                                </group>
+                            </group>
+                            <group string="Rx Attachement">
+                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                            </group>
+                        </page>
+                        <page string="Special Instructions">
+
+                        </page>
+                        <page string="Casting">
+
+                        </page>
+                        <page string="Process">
+
+                        </page>
+
 
                     </notebook>
                     <br/>
                     <br/>
 
+                    <div class="oe_chatter">
+                        <!-- <field name="message_follower_ids" widget="mail_followers" /> -->
+                        <!-- <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" /> -->
+                    </div>
 
                 </form>
             </field>
@@ -394,13 +440,19 @@
 
 
         <record id="medical_prescription_tree" model="ir.ui.view">
-            <field name="name">Doctor Prescription Tree View</field>
+            <field name="name">Medical Prescription Tree View</field>
             <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='open'">
+                    <header>
+                        <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
+                    </header>
+                    <field name="state" invisible="True" />
                     <field name="doctor_id"/>
+                    <field name="stage_id" />
+                    <field name="patient_id"/>
                     <field name="customer"/>
-                    <field name="checkup_date" string="Prescription Date"/>
+                    <field name="prescription_date" string="Prescription Date"/>
                     <field name="test_type"/>
                     <field name="prescription_type"/>
                     <button name="print_prescription_report_ticket_size" class="oe_highlight" string="Print Measure" type="object"></button>
@@ -409,100 +461,94 @@
             </field>
         </record>
 
-          <!-- Search -->
-    <!-- <record id="view_podiatry_prescription_filter" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name" />
-                <field name="practitioner_id" />
-                <field name="user_id" />
+        <!-- Search -->
+        <record id="medical_prescription_filter" model="ir.ui.view">
+            <field name="model">medical.prescription</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="stage_id"/>
+                    <!-- <field name="doctor_id" /> -->
+                    <field name="user_id" />
 
-                <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]" />
-                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
-                <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" />
+                    <filter name="filter_not_done" string="To Return" domain="[('state','=','open')]" />
+                    <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
+                    <filter name="group_user" string="By Practitioner" context="{'group_by': 'doctor_id'}" />
 
-                <searchpanel>
-                    <field name="practitioner_id" enable_counters="1" />
-                    <field name="stage_id" select="multi" />
-                </searchpanel>
+                    <searchpanel>
+                        <!-- <field name="doctor_id" enable_counters="1" /> -->
+                        <field name="stage_id" select="multi" />
+                    </searchpanel>
 
-            </search>
+                </search>
 
-        </field>
-    </record> -->
+            </field>
+        </record>
 
-            <!-- Activity View -->
-    <!-- <record id="view_podiatry_prescription_activity" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <activity string="Prescriptions">
-                <templates>
-                    <div t-name="activity-box">
-                        <div>
-                            <field name="name" />
-                        </div>
-                    </div>
-                </templates>
-            </activity>
-        </field>
-    </record> -->
+        <!-- Calendar View -->
+        <record id="view_medical_prescription_calendar" model="ir.ui.view">
+            <field name="name">Practitioner Prescriptions</field>
+            <field name="model">medical.prescription</field>
+            <field eval="2" name="priority" />
+            <field name="arch" type="xml">
+                <calendar date_start="date" string="orders" mode="month" color="color">
+                    <field name="stage_id" type="col" />
+                    <field name="patient_id" />
+                    <field name="doctor_id" />
+                    <field name="date" />
+                </calendar>
+            </field>
+        </record>
 
-    <!-- Calendar View -->
-    <!-- <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="model">podiatry.prescription</field>
-        <field eval="2" name="priority" />
-        <field name="arch" type="xml">
-            <calendar date_start="date" string="orders" mode="month" color="color">
-                <field name="stage_id" type="col" />
-                <field name="patient_id" />
-                <field name="practitioner_id" />
-                <field name="date" />
-            </calendar>
-        </field>
-    </record> -->
+        <!-- Pivot View -->
+        <record id="view_medical_prescription_pivot" model="ir.ui.view">
+            <field name="model">medical.prescription</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="stage_id" type="col" />
+                    <field name="doctor_id" />
+                    <field name="request_date" interval="week" />
+                    <field name="num_prescriptions" type="measure" />
+                </pivot>
+            </field>
+        </record>
 
-    <!-- Pivot View -->
-    <!-- <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <pivot>
-                <field name="stage_id" type="col" />
-                <field name="practitioner_id" />
-                <field name="request_date" interval="week" />
-                <field name="num_prescriptions" type="measure" />
-            </pivot>
-        </field>
-    </record> -->
-
-    <!-- Graph View -->
-    <!-- <record id="view_podiatry_prescription_graph" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <graph type="bar">
-                <field name="stage_id" />
-                <field name="num_prescriptions" type="measure" />
-            </graph>
-        </field>
-    </record> -->
+        <!-- Graph View -->
+        <record id="view_medical_prescription_graph" model="ir.ui.view">
+            <field name="model">medical.prescription</field>
+            <field name="arch" type="xml">
+                <graph type="bar">
+                    <field name="stage_id" />
+                    <field name="num_prescriptions" type="measure" />
+                </graph>
+            </field>
+        </record>
 
 
-        <record id="action_prescription_history_window" model="ir.actions.act_window">
+        <record id="action_prescription_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">medical.prescription</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_prescription_stages_window" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">medical.prescription.stage</field>
             <field name="view_mode">tree,form</field>
         </record>
+
 
         <menuitem id="podiatry_erp_root" name="Podiatry ERP" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
         <menuitem id="podiatry_erp_practice" name="Accounts" parent="podiatry_erp_root" action="action_practice_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
         <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="2"/>
         <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
         <menuitem id="podiatry_erp_sale_order" name="Sale Order" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
-        <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
+        <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="5"/>
         <menuitem id="podiatry_erp_config" name="Configuration" parent="podiatry_erp_root" sequence="7"/>
-        <menuitem id="podiatry_erp_prescription_history" name="Prescription" parent="podiatry_erp_root" action="action_prescription_history_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
+        <menuitem id="podiatry_erp_prescription" name="Prescription" parent="podiatry_erp_root" action="action_prescription_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="4"/>
+        <!-- <menuitem id="menu_configuration_stages" name="Stages" parent="menu_configuration" groups="group_manager" sequence="105" /> -->
+        <menuitem id="podiatry_erp_prescription_stages" name="Stages" action="action_prescription_stages_window" parent="podiatry_erp.podiatry_erp_config" sequence="20"/>
 
     </data>
 </odoo>

@@ -41,9 +41,9 @@ odoo.define('podiatry_erp.popups', function (require) {
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
             vals = JSON.stringify(vals);
-            var checkup_date = $('[name=checkup_date]').val();
+            var prescription_date = $('[name=prescription_date]').val();
             var today = new Date().toJSON().slice(0, 10);
-            if (!checkup_date) {
+            if (!prescription_date) {
                 //                this.env.pos.podiatry.ProductCreationScreen = this.gui.current_popup;
                 //                this.env.pos.podiatry.ProductCreationScreen.hide();
                 //                this.gui.current_popup = this.gui.popup_instances['error'];

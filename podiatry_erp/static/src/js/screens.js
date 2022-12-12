@@ -36,7 +36,7 @@ odoo.define('podiatry_erp.screens', function (require) {
             else if (this.search.client == '') {
                 this.podiatry_orders = this.props.all_orders;
                 if (this.search.date != '' && this.search.date != null)
-                    this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase()) })
+                    this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.prescription_date.toLowerCase().includes(self.search.date.toLowerCase()) })
             }
             this.render();
         }
@@ -45,7 +45,7 @@ odoo.define('podiatry_erp.screens', function (require) {
             var self = this;
             this.search.date = event.target.value;
             if (this.search.date != '')
-                this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase()) })
+                this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.prescription_date.toLowerCase().includes(self.search.date.toLowerCase()) })
             else if (this.search.date == '') {
                 this.podiatry_orders = this.props.all_orders;
                 if (this.search.client != '' && this.search.client != null)

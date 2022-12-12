@@ -27,7 +27,7 @@
                                             <tr>
                                                 <td class="headings">Date Prescription :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.checkup_date"></span>
+                                                    <span t-field="doc.prescription_date"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -301,7 +301,7 @@
                                         </h5>
                                         <h6 style="font-size:small;">
                                             <strong>Date :</strong>
-                                            <span t-esc="doc.checkup_date"></span>
+                                            <span t-esc="doc.prescription_date"></span>
                                         </h6>
                                         <h6 style="font-size:small;">
                                             <strong>Prescription # :</strong>
@@ -463,7 +463,7 @@
                                 <tr>
                                     <td class="headings">Prescription Date:</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.checkup_date"></span>
+                                        <span t-field="doc.prescription_id.prescription_date"></span>
                                     </td>
                                 </tr>
                             </table>

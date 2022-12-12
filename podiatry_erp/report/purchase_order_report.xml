@@ -40,7 +40,7 @@
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Date :</strong>
-                                        <span t-esc="doc.prescription_id.checkup_date"></span>
+                                        <span t-esc="doc.prescription_id.prescription_date"></span>
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Prescription # :</strong>
