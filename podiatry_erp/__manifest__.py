@@ -54,8 +54,10 @@
         "views/test_type.xml",
         'views/product_attribute_view.xml',
         'views/view.xml',
+        'views/view_main.xml',
         'views/inherit_product_template.xml',
         'views/inherit_invoice.xml',
+        'views/website_auto_sale_view.xml',
     ],
     "assets": {
         "point_of_sale.assets": [

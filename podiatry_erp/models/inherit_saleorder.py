@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import Warning, UserError
+from datetime import date, datetime
+from odoo.exceptions import UserError, ValidationError
 
 
 class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    web_work_process_id = fields.Many2one(
+        "website.auto.sale", string="Website Workflow Process", related="partner_id.web_work_process_id")
 
     prescription_id = fields.Many2one('medical.prescription')
     # doctor = fields.Char(related='prescription_id.doctor.name')
@@ -13,6 +19,39 @@ class InheritedSaleOrder(models.Model):
         related='prescription_id.prescription_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
+
+    def action_auto_sale(self):
+        if self.partner_id.web_work_process_id:
+            web_work_process_id = self.partner_id.web_work_process_id
+            if web_work_process_id.validation_order == True:
+                picking_confirm = self.action_confirm()
+                for order in self:
+                    if web_work_process_id.validation_picking == True:
+                        picking_obj = self.env['stock.picking'].search(
+                            [('origin', '=', order.name)])
+
+                        for pick in picking_obj:
+                            for qty in pick.move_lines:
+                                qty.write({
+                                    'quantity_done': qty.product_uom_qty
+                                })
+                                pick.button_validate()
+                                pick._action_done()
+
+                                for line in order.order_line:
+                                    line.write({
+                                        'qty_delivered': line.product_uom_qty,
+                                    })
+
+                                if web_work_process_id.create_incoice == True:
+                                    create_invoice = self._create_invoices()
+                                    invoice_obj = self.env['account.move'].search(
+                                        [('invoice_origin', '=', self.name)])
+                                    if web_work_process_id.validate_invoice == True:
+                                        validate = invoice_obj.action_post()
+                                    else:
+                                        raise Warning(
+                                            ('Workflow Process is not given,Please give the Website Workflow process.'))
 
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.medical_prescription_ticket_size2").report_action(self.prescription_id)
