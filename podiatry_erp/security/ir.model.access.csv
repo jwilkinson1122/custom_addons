@@ -30,9 +30,6 @@ access_practice_group,access_practice_group,model_podiatry_practice,group_podiat
 access_patient_doctor,access_patient_doctor,model_podiatry_patient,group_podiatry_erp_doctors,1,1,1,1
 access_patient_group,access_patient_group,model_podiatry_patient,group_podiatry_erp_group,1,1,1,1
 
-access_automated_sale_order,sale_access_automated_permission,model_automated_sale,,1,1,1,1
-access_product_product_order,sale_product_product_permission,product.model_product_product,,1,1,1,1
-access_product_template_order,sale_product_template_permission,product.model_product_template,,1,1,1,1
-access_website_auto_sale,access_website_auto_sale,model_website_auto_sale,sales_team.group_sale_salesman,1,1,1,0
-access_website_auto_sale,access_website_auto_sale,model_website_auto_sale,sales_team.group_sale_manager,1,1,1,1
+
+
 

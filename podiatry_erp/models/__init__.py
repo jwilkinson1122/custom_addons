@@ -1,4 +1,3 @@
-from . import main
 from . import medical_prescription
 from . import medical_prescription_line
 from . import medical_prescription_stage
@@ -8,7 +7,6 @@ from . import patient
 from . import test_type
 from . import res_partner
 from . import inherit_saleorder
-from . import website_auto_sale
 from . import res_config_settings
 # POS models
 from . import pos_order

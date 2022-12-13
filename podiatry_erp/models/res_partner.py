@@ -1,8 +1,8 @@
-from datetime import date, datetime
+from datetime import date
+
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, exceptions, models, _
-from odoo.exceptions import Warning, UserError
-from odoo.exceptions import UserError, ValidationError
 
 
 class InheritedResPartner(models.Model):
@@ -14,9 +14,6 @@ class InheritedResPartner(models.Model):
     is_patient = fields.Boolean('Patient')
     is_doctor = fields.Boolean('Doctor')
     prescription_count = fields.Integer(compute='get_prescription_count')
-
-    web_work_process_id = fields.Many2one(
-        "website.auto.sale", string="Website Workflow Process")
 
     def open_customer_prescriptions(self):
         for records in self:
