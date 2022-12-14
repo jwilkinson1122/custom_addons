@@ -13,7 +13,7 @@ class Prescription(models.Model):
     _rec_name = 'name'
 
     prescription_ids = fields.One2many(
-        'medical.prescription', 'patient_id', string="Prescriptions")
+        'medical.prescription', 'doctor_id', string="Prescriptions")
 
     prescription_line = fields.One2many('medical.prescription.line', 'prescription_id', string='Prescription Lines', states={
         'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
@@ -51,6 +51,11 @@ class Prescription(models.Model):
     date = fields.Date()
     time = fields.Datetime()
 
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ], related='patient_id.gender')
+
     prescription_date = fields.Date(
         'Prescription Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -83,6 +88,8 @@ class Prescription(models.Model):
          ("1", "Very High"),
          ("2", "Critical")],
         default="0")
+
+    notes = fields.Text('Prescription Note')
 
     @api.model
     def _get_bookin_date(self):
@@ -181,7 +188,7 @@ class Prescription(models.Model):
 
     no_invoice = fields.Boolean('Invoice exempt')
 
-    inv_id = fields.Many2one('account.invoice', 'Invoice')
+    # inv_id = fields.Many2one('account.invoice', 'Invoice')
 
     is_invoiced = fields.Boolean(copy=False, default=False)
 

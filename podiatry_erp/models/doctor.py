@@ -46,6 +46,9 @@ class Doctor(models.Model):
         inverse_name='doctor_id',
         string='Prescriptions')
 
+    prescription_ids = fields.One2many(
+        'podiatry.prescription', 'doctor_id', string="Prescriptions")
+
     @api.model
     def _default_image(self):
         '''Method to get default Image'''
@@ -192,7 +195,6 @@ class Doctor(models.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
-    
 
     @api.model
     def create_doctors(self, vals):

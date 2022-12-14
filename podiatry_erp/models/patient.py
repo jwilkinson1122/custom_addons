@@ -39,6 +39,13 @@ class Patient(models.Model):
     doctor_reference = fields.Char(related='doctor_id.name', readonly=True)
 
     is_patient = fields.Boolean()
+
+    gender = fields.Selection(selection=[
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ], string="Gender")
+
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
@@ -55,6 +62,8 @@ class Patient(models.Model):
         inverse_name='patient_id',
         string="Prescriptions",
     )
+
+    notes = fields.Text(string="Notes")
 
     def _compute_prescription_count(self):
         for rec in self:
