@@ -36,18 +36,18 @@
                             </h1>
                         </div>
                         <div name="ref">
-                            <h2>
-                                <field name="ref" string="Reference" readonly="1"/>
-                            </h2>
-                        </div>
 
+                            <field name="ref" string="Reference" readonly="1"/>
+
+                        </div>
+                        <!-- 
                         <div name="practice_id">
                             <h2>
                                 <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
 
                             </h2>
                         </div>
-                  
+                   -->
                     </div>
                     <group name="doctor_contact">
                         <!-- Contact Information -->
@@ -61,6 +61,7 @@
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
                             <div class="o_address_format">
+                                <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
