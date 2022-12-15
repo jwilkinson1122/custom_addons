@@ -643,7 +643,7 @@ Description
     <t t-name="PrescriptionButton" owl="1">
         <div class='control-button button confirm'>
             <i class='fa-prescription' />
-            <span class="label medical.prescription">
+            <span class="label podiatry.prescription">
                 <t t-if="env.pos.get_podiatry_reference()">
                     <t t-esc="env.pos.get_podiatry_reference().name" />
                 </t>

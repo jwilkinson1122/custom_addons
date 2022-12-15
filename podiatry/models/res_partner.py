@@ -119,40 +119,6 @@ class Partner(models.Model):
             result = self
         return result
 
-    # @api.model
-    # def search(self, args, offset=0, limit=None, order=None, count=False):
-    #     """Display only standalone practitioner matching ``args`` or having
-    #     attached practitioner matching ``args``"""
-    #     ctx = self.env.context
-    #     if (
-    #         ctx.get("search_show_all_positions", {}).get("is_set")
-    #         and not ctx["search_show_all_positions"]["set_value"]
-    #     ):
-    #         args = expression.normalize_domain(args)
-    #         attached_practitioner_args = expression.AND(
-    #             (args, [("practitioner_type", "=", "attached")])
-    #         )
-    #         attached_practitioners = super(
-    #             Partner, self).search(attached_practitioner_args)
-    #         args = expression.OR(
-    #             (
-    #                 expression.AND(
-    #                     ([("practitioner_type", "=", "standalone")], args)),
-    #                 [("other_practitioner_ids", "in", attached_practitioners.ids)],
-    #             )
-    #         )
-    #     return super(Partner, self).search(
-    #         args, offset=offset, limit=limit, order=order, count=count
-    #     )
-
-    # @api.model
-    # def _name_search(self, name='', args=None, offset=0, operator='ilike', limit=100, name_get_uid=None):
-    #     args = list(args or [])
-    #     if name:
-    #         args += ['|', ('name', operator, name),
-    #                  ('department_code', operator, name)]
-    #     return self._search(args, limit=limit, access_rights_uid=name_get_uid)
-
     @api.model
     def create(self, vals):
         """When creating, use a modified self to alter the context (see
@@ -231,6 +197,33 @@ class Partner(models.Model):
             if self.practitioner_id:
                 update_ids |= self.practitioner_id
             update_ids.update_practitioner(update_values)
+
+    def _needs_ref(self, vals=None):
+        """
+        Checks whether a sequence value should be assigned to a partner's 'ref'
+
+        :param vals: known field values of the partner object
+        :return: true iff a sequence value should be assigned to the\
+                      partner's 'reference'
+        """
+        if not vals and not self:  # pragma: no cover
+            raise exceptions.UserError(
+                _("Either field values or an id must be provided.")
+            )
+        # only assign a 'ref' to commercial partners
+        if self:
+            vals = {}
+            vals["is_company"] = self.is_company
+            vals["parent_id"] = self.parent_id
+        return vals.get("is_company") or not vals.get("parent_id")
+
+    @api.model
+    def _commercial_fields(self):
+        """
+        Make the partner reference a field that is propagated
+        to the partner's contacts
+        """
+        return super(Partner, self)._commercial_fields() + ["reference"]
 
     @api.onchange("practitioner_id")
     def _onchange_practitioner_id(self):

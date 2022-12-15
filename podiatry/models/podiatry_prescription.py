@@ -1,3 +1,4 @@
+
 import time
 import json
 from datetime import timedelta
@@ -53,9 +54,14 @@ class Prescription(models.Model):
         comodel_name='podiatry.practice',
         string='Practice')
 
+    practice_name = fields.Char('Practice Name', related='practice_id.name')
+
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         string='Practitioner')
+
+    practitioner_name = fields.Char(
+        'Practitioner Name', related='practitioner_id.name')
 
     practitioner_phone = fields.Char(
         string='Phone', related='practitioner_id.phone')
@@ -66,6 +72,8 @@ class Prescription(models.Model):
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
+
+    patient_name = fields.Char('Patient Name', related='patient_id.name')
 
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
@@ -234,11 +242,11 @@ class Prescription(models.Model):
     def action_cancel(self):
         self.state = 'cancel'
 
-        company_id = fields.Many2one(
-            comodel_name="res.company",
-            default=lambda self: self.env.company,
-            store=True,
-        )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        store=True,
+    )
 
     # patient_id = fields.Many2one(
     #     comodel_name="pod.patient",
@@ -292,6 +300,15 @@ class Prescription(models.Model):
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
     podiatric_history = fields.Text()
+
+    # @api.onchange('practice_id')
+    # def _ward_bed(self):
+    #     """basis of practice the prescription is computed"""
+
+    #     return {'domain': {
+    #         'prescription': [
+    #             ('practice_id', '=', self.practice_id.id),
+    #         ]}}
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):

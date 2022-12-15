@@ -3,13 +3,13 @@ import json
 
 
 class ProductFromPos(models.Model):
-    _inherit = 'medical.prescription'
+    _inherit = 'podiatry.prescription'
 
     @api.model
     def create_product_pos(self, vals):
         vals = json.loads(vals)
         vals["state"] = "Confirm"
-        rec = self.env['medical.prescription'].create(vals)
+        rec = self.env['podiatry.prescription'].create(vals)
         new_vals = self.env['podiatry.doctor'].search(
             [('id', '=', vals["doctor_id"])])
         vals["doctor_id"] = {}

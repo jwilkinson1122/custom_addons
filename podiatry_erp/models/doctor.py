@@ -42,7 +42,7 @@ class Doctor(models.Model):
         string='Practice')
 
     prescription_id = fields.One2many(
-        comodel_name='medical.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='doctor_id',
         string='Prescriptions')
 
@@ -85,14 +85,14 @@ class Doctor(models.Model):
         string='Prescription Count', compute='_compute_prescription_count')
 
     prescription_id = fields.One2many(
-        comodel_name='medical.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='doctor_id',
         string="Prescriptions",
     )
 
     def _compute_prescription_count(self):
         for rec in self:
-            prescription_count = self.env['medical.prescription'].search_count(
+            prescription_count = self.env['podiatry.prescription'].search_count(
                 [('doctor_id', '=', rec.id)])
             rec.prescription_count = prescription_count
 
@@ -192,7 +192,6 @@ class Doctor(models.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
-    
 
     @api.model
     def create_doctors(self, vals):
@@ -235,7 +234,7 @@ class Doctor(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'medical.prescription',
+            'res_model': 'podiatry.prescription',
             'domain': [('doctor_id', '=', self.id)],
             'context': {'default_doctor_id': self.id},
             'view_mode': 'kanban,tree,form',

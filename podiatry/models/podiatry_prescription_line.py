@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-
+import logging
 from odoo import api, fields, models, _
 from datetime import date, datetime
+
+_logger = logging.getLogger(__name__)
 
 
 class PrescriptionLine(models.Model):
     _name = "podiatry.prescription.line"
+    _inherit = ['prescription.wizard.mixin']
     _description = 'podiatry prescription line'
     _rec_name = 'product_id'
 
@@ -19,10 +22,58 @@ class PrescriptionLine(models.Model):
                 self.qty_available = 0
                 self.price = 0.0
 
+    prescription_id = fields.Many2one(
+        comodel_name='podiatry.prescription',
+        name="Prescription",
+        ondelete='cascade',
+        default=lambda self: self._default_prescription_id(),
+    )
+
     name = fields.Many2one('podiatry.prescription', 'Rx ID')
-    prescription_id = fields.Many2one("podiatry.prescription", required=True)
-    patient_id = fields.Many2one("podiatry.patient", required=True)
+    patient_id = fields.Many2one("podiatry.patient")
+    # practice = fields.Char(related='prescription_id.practice_id.name')
+    # practitioner = fields.Char(related='prescription_id.practitioner_id.name')
+    patient = fields.Char(
+        related='prescription_id.patient_id.name', readonly=True,)
     product_id = fields.Many2one('product.product', 'Name')
+
+    field1 = fields.Char()
+    field2 = fields.Char()
+    field3 = fields.Char()
+
+    @api.model
+    def _selection_state(self):
+        return [
+            ('start', 'Start'),
+            ('configure', 'Configure'),
+            ('custom', 'Customize'),
+            ('final', 'Final'),
+        ]
+
+    @api.model
+    def _default_prescription_id(self):
+        return self.env.context.get('active_id')
+
+    def state_exit_start(self):
+        self.state = 'configure'
+
+    def state_exit_configure(self):
+        self.state = 'custom'
+
+    def state_exit_custom(self):
+        self.state = 'final'
+
+        # def state_exit_start(self):
+    #     self.state = "final"
+
+    # def state_previous_configure(self):
+    #     self.state = 'start'
+
+    def state_previous_custom(self):
+        self.state = 'configure'
+
+    def state_previous_final(self):
+        self.state = 'custom'
 
     # right_photo = fields.Image("Right Photo")
     # left_photo = fields.Image("Left Photo")

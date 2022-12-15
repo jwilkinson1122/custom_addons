@@ -352,6 +352,33 @@
             <field name="perm_unlink" eval="0"/>
         </record>
 
+
+        <!--
+        'create.prescription.shipment'
+        -->
+
+        <record id="access_prescription_wizard_group_manager" model="ir.model.access">
+            <field name="name">access.prescription.wizard.group.manager</field>
+            <field name="model_id" ref="model_prescription_wizard_mixin"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_prescription_wizard_group_user" model="ir.model.access">
+            <field name="name">access.prescription.wizard.group.user</field>
+            <field name="model_id" ref="model_prescription_wizard_mixin"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
+
         <!-- access_variants_tree,access.variants.tree,model_variants_tree,base.group_user,1,1,1,1 -->
 
         <!--

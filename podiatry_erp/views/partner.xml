@@ -2,9 +2,9 @@
 <odoo>
 	<data>
 		<!-- Action -->
-		<record id="action_medical_prescription_from_partner" model="ir.actions.act_window">
+		<record id="action_podiatry_prescription_from_partner" model="ir.actions.act_window">
 			<field name="name">Prescriptions</field>
-			<field name="res_model">medical.prescription</field>
+			<field name="res_model">podiatry.prescription</field>
 			<field name="context">{'default_partner_id': active_id}</field>
 			<field name="domain">[('partner_id', '=', active_id)]</field>
 		</record>
@@ -25,7 +25,7 @@
 					</group>
 				</xpath>
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button type="action" name="%(action_medical_prescription_from_partner)d" class="oe_stat_button" icon="fa-tasks">
+					<button type="action" name="%(action_podiatry_prescription_from_partner)d" class="oe_stat_button" icon="fa-tasks">
 						<field name="prescription_count" string="Prescription" widget="statinfo"/>
 					</button>
 					<!-- <button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">

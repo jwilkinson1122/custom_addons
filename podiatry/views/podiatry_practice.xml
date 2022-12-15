@@ -17,11 +17,6 @@
         </field>
     </record>
 
-
-
-    <!--
-    Form
-    -->
     <record id="view_podiatry_practice_form" model="ir.ui.view">
         <field name="name">podiatry.practice.form</field>
         <field name="model">podiatry.practice</field>
@@ -29,24 +24,13 @@
             <form string="Practice">
                 <field name="active" invisible="1"/>
                 <sheet>
-                    <!-- Button Box -->
                     <div class="oe_button_box" name="button_box">
                         <field name="child_ids" invisible="1"/>
                         <button type="action" name="%(action_podiatry_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
                     </div>
-
-                    <!-- Ribbon -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-
-                    <!-- Title -->
-                    <!-- <div class="oe_title">
-                        <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
-                        <h1>
-                            <field name="name" placeholder="Practice Name" required="1"/>
-                        </h1>
-                    </div> -->
                     <div name="title" class="oe_title">
                         <div name="reference">
                             <h1>
@@ -65,16 +49,6 @@
                     </div>
 
                     <group name="practice_contact">
-                        <!-- Practice info -->
-                        <group name="contact_information" string="Contact Information">
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="code"/>
-                            <!-- <field name="patient_ids" invisible="0"/> -->
-                            <field name="company_id" groups="base.group_multi_company"/>
-
-                        </group>
                         <!-- Address info -->
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
@@ -86,6 +60,14 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                             </div>
+                        </group>
+
+                        <group name="contact_information" string="Contact Information">
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="code"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
 

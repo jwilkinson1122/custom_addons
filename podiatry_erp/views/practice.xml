@@ -39,7 +39,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="open_medical_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <button name="open_podiatry_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
                                 <div class="o_stat_info">
                                     <field name="prescription_count" class="o_stat_value"/>
                                     <span class="o_stat_text">Prescriptions</span>
@@ -355,36 +355,36 @@
             </field>
         </record>
 
-            <!--
+        <!--
     Search
     -->
-    <record id="view_podiatry_practice_search" model="ir.ui.view">
-        <field name="name">podiatry.practice.search</field>
-        <field name="model">podiatry.practice</field>
-        <field name="arch" type="xml">
-            <search string="Practices">
-                <field name="parent_id" invisible="1"/>
+        <record id="view_podiatry_practice_search" model="ir.ui.view">
+            <field name="name">podiatry.practice.search</field>
+            <field name="model">podiatry.practice</field>
+            <field name="arch" type="xml">
+                <search string="Practices">
+                    <field name="parent_id" invisible="1"/>
 
-                <!-- Fields -->
-                <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/> -->
-                <field name="name"/>
-                <field name="display_name"/>
-                <field name="reference"/>
-                <field name="parent_id" operator="child_of"/>
-                <separator/>
+                    <!-- Fields -->
+                    <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/> -->
+                    <field name="name"/>
+                    <field name="display_name"/>
+                    <field name="reference"/>
+                    <field name="parent_id" operator="child_of"/>
+                    <separator/>
 
-                <!-- Filters -->
-                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
-                <separator/>
+                    <!-- Filters -->
+                    <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
 
-                <!-- Searchpanel -->
-                <searchpanel>
-                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
-                    <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
-                </searchpanel>
-            </search>
-        </field>
-    </record>
+                    <!-- Searchpanel -->
+                    <searchpanel>
+                        <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                        <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
 
 
         <record id="action_practice_window" model="ir.actions.act_window">

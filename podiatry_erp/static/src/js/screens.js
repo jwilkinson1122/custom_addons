@@ -66,7 +66,7 @@ odoo.define('podiatry_erp.screens', function (require) {
             var self = this;
             var order = self.env.pos.get_order();
             var podiatry_order = self.env.pos.podiatry.order_by_id[parseInt(data.id)];
-            $('.medical.prescription').text(data.name);
+            $('.podiatry.prescription').text(data.name);
             order.set_podiatry_reference(data);
             order.set_client(self.env.pos.db.partner_by_id[podiatry_order.customer[0]]);
             this.close();

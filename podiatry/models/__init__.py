@@ -8,9 +8,10 @@ from . import podiatry_practice
 from . import podiatry_type
 from . import podiatry_practitioner
 from . import podiatry_prescription
-from . import podiatry_prescription_line
+from ..wizard import prescription_wizard
 from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
+from . import podiatry_prescription_line
 from . import pos_variants
 from . import pos_config
 from . import pos_customer_favorites

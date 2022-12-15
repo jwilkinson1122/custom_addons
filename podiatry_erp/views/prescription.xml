@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="medical_prescription" model="ir.ui.view">
+        <record id="podiatry_prescription" model="ir.ui.view">
             <field name="name">Medical Prescription</field>
-            <field name="model">medical.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <form string="Medical Prescription">
                     <header>
@@ -397,9 +397,9 @@
         </record>
 
 
-        <record id="medical_prescription_tree" model="ir.ui.view">
+        <record id="podiatry_prescription_tree" model="ir.ui.view">
             <field name="name">Doctor Prescription Tree View</field>
-            <field name="model">medical.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="doctor_id"/>
@@ -495,7 +495,7 @@
         <record id="action_prescription_history_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">medical.prescription</field>
+            <field name="res_model">podiatry.prescription</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -504,9 +504,9 @@
         <menuitem id="podiatry_erp_doctor" name="Practitioner" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="2"/>
         <menuitem id="podiatry_erp_patient" name="Patients" parent="podiatry_erp_root" action="action_patient_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
         <menuitem id="podiatry_erp_sale_order" name="Sale Order" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
-        <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
+        <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="5"/>
         <menuitem id="podiatry_erp_config" name="Configuration" parent="podiatry_erp_root" sequence="7"/>
-        <menuitem id="podiatry_erp_prescription_history" name="Prescription" parent="podiatry_erp_root" action="action_prescription_history_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
+        <menuitem id="podiatry_erp_prescription_history" name="Prescription" parent="podiatry_erp_root" action="action_prescription_history_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="4"/>
 
     </data>
 </odoo>

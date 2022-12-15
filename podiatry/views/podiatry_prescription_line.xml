@@ -12,6 +12,7 @@
                 <field name="product_id" />
 
 
+
             </tree>
         </field>
     </record>
@@ -20,16 +21,50 @@
     <record id="podiatry_prescription_line_form_view" model="ir.ui.view">
         <field name="name">podiatry.prescription.line.form.view</field>
         <field name="model">podiatry.prescription.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="podiatry.prescription_wizard_form"/>
         <field name="arch" type="xml">
-            <form string="Prescription">
-                <field name="product_id" />
+            <xpath expr="//footer" position="before">
+                <h1>
+                    <group>
+                        <field name="name" attrs="{'readonly': [('state', '!=', 'start')]}" class="oe_inline" placeholder="Name"/>
+                        <field name="patient" attrs="{'readonly': [('state', '!=', 'start')]}" class="oe_inline" placeholder="Patient Name"/>
 
-            </form>
+                    </group>
+                </h1>
+                <group name="configure" attrs="{'invisible': [('state', '!=', 'configure')]}">
+                    <group>
+                        <field name="field1"/>
+                        <field name="field2"/>
+                    </group>
+                </group>
+                <group name="custom" attrs="{'invisible': [('state', '!=', 'custom')]}">
+                    <group>
+                        <field name="field3"/>
+                    </group>
+                </group>
+                <div name="final" attrs="{'invisible': [('state', '!=', 'final')]}">
+                    <p>The project is now configured.</p>
+                </div>
+            </xpath>
+
+            <!-- <form string="Prescription">
+                <field name="product_id" />
+                <notebook>
+                    <page name="name" string="string">
+
+                    </page>
+                </notebook>
+            </form> -->
         </field>
     </record>
 
-
-
-
-
+    <record id="open_prescription_wizard" model="ir.actions.act_window">
+        <field name="name">Prescription Wizard</field>
+        <field name="res_model">podiatry.prescription.line</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="podiatry.model_podiatry_prescription_line" />
+        <field name="binding_view_types">form</field>
+    </record>
 </odoo>

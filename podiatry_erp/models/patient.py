@@ -12,7 +12,7 @@ class Patient(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
-    
+
     _rec_name = 'patient_id'
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
@@ -27,11 +27,9 @@ class Patient(models.Model):
     doctor_id = fields.Many2one(
         comodel_name='podiatry.doctor',
         string='Practitioner')
-    
- 
-    
+
     doctor_reference = fields.Char(related='doctor_id.name', readonly=True)
- 
+
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
@@ -45,20 +43,20 @@ class Patient(models.Model):
         string='Prescription Count', compute='_compute_prescription_count')
 
     prescription_id = fields.One2many(
-        comodel_name='medical.prescription',
+        comodel_name='podiatry.prescription',
         inverse_name='patient_id',
         string="Prescriptions",
     )
 
     def _compute_prescription_count(self):
         for rec in self:
-            prescription_count = self.env['medical.prescription'].search_count(
+            prescription_count = self.env['podiatry.prescription'].search_count(
                 [('patient_id', '=', rec.id)])
             rec.prescription_count = prescription_count
 
     prescription_date = fields.Datetime(
         'Prescription Date', default=fields.Datetime.now)
-    
+
     @api.onchange('patient_id')
     def _onchange_patient(self):
         '''
@@ -75,7 +73,6 @@ class Patient(models.Model):
         string='Patient with same Identity',
         compute='_compute_same_reference_patient_id',
     )
-
 
     @api.depends('ref')
     def _compute_same_reference_patient_id(self):
@@ -101,7 +98,7 @@ class Patient(models.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
-    
+
     @api.depends('dob')
     def _cal_age(self):
         for record in self:
@@ -134,7 +131,7 @@ class Patient(models.Model):
                         'default_groups_id': [(6, 0, patient_id)]}
 
         }
-        
+
     def name_get(self):
         result = []
         for rec in self:
@@ -156,7 +153,7 @@ class Patient(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'medical.prescription',
+            'res_model': 'podiatry.prescription',
             'domain': [('patient_id', '=', self.id)],
             'context': {'default_patient_id': self.id},
             'view_mode': 'kanban,tree,form',
