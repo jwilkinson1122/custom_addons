@@ -107,3 +107,9 @@ class PrescriptionWizard(models.AbstractModel):
 
     def state_previous_final(self):
         self.state = 'custom'
+
+    # def action_cancel(self):
+    #     self.write({'state': 'cancelled'})
+
+    # def action_reset(self):
+    #     self.write({'state': 'ordered'})
