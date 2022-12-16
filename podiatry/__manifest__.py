@@ -21,6 +21,7 @@
         "product",
         'purchase',
         'stock',
+        'website',
 
         # "contacts",
     ],
@@ -69,6 +70,7 @@
         "data/stage_data.xml",
         "views/podiatry_specialty.xml",
         "views/res_partner.xml",
+        "views/multi_step_form_view.xml",
         # -------
         # Reports
         # =======
@@ -85,7 +87,6 @@
         'views/inherit_invoice.xml',
 
     ],
-
     'assets': {
         'point_of_sale.assets': [
             'podiatry/static/src/css/pos.css',
@@ -108,6 +109,10 @@
             'podiatry/static/src/js/ProductPopup.js',
             'podiatry/static/src/js/ProductScreen.js',
         ],
+        'web.assets_frontend': [
+            'podiatry/static/src/css/stepper.css',
+            'podiatry/static/src/js/Stepper.js',
+        ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
             # 'podiatry/static/src/scss/card.scss',
@@ -120,7 +125,10 @@
         ],
     },
     # "demo": ["demo/res_partner.xml", "demo/ir_actions.xml"],
-    "demo": ['data/pos_customer_favorites_demo.xml'],
+    "demo": [
+        'demo/stepper_demo.xml',
+        'demo/pos_customer_favorites_demo.xml',
+    ],
     "installable": True,
     "application": True,
 }

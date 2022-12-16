@@ -8,7 +8,6 @@ from . import podiatry_practice
 from . import podiatry_type
 from . import podiatry_practitioner
 from . import podiatry_prescription
-from ..wizard import prescription_wizard
 from . import podiatry_practitioner_history
 from . import podiatry_prescription_stage
 from . import podiatry_prescription_line
@@ -25,3 +24,4 @@ from . import pos_create_sales_order
 from . import inherit_invoice
 from . import product_attribute
 from . import ir_actions
+from . import multi_step_form
