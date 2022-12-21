@@ -656,7 +656,7 @@ Description
 
     <t t-name="PrescriptionHistoryButtons" owl="1">
         <div class='control-button button confirm'>
-            Prescription History
+            Prescriptions
         </div>
     </t>
 

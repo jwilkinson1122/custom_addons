@@ -15,7 +15,7 @@ class InheritedResPartner(models.Model):
     def open_customer_prescriptions(self):
         for records in self:
             return {
-                'name': _('Prescription History'),
+                'name': _('Prescriptions'),
                 'view_type': 'form',
                 'domain': [('customer', '=', records.id)],
                 'res_model': 'medical.prescription',

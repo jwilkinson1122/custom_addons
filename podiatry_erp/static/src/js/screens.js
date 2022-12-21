@@ -8,7 +8,7 @@ odoo.define('podiatry_erp.screens', function (require) {
 
     //-----------------------------------------
     //-----------------------------------------
-    // Prescription History Screen
+    // Prescriptions Screen
     //-----------------------------------------
     //-----------------------------------------
 

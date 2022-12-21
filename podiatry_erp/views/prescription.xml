@@ -404,7 +404,7 @@
             </field>
         </record>
 
-        <record id="action_prescription_history_window" model="ir.actions.act_window">
+        <record id="action_prescription_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">medical.prescription</field>
@@ -412,13 +412,12 @@
         </record>
 
         <menuitem id="podiatry_erp_root" name="NWPL ERP" sequence="1" web_icon="podiatry_erp,static/description/icon.png"/>
-        <menuitem id="podiatry_erp_doctor" name="Podiatrist" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
-
-        <menuitem id="podiatry_erp_sale_order" name="Sale Order" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
-        <menuitem id="podiatry_erp_customer" name="Customer" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
+        <menuitem id="podiatry_erp_doctor" name="Practitioners" parent="podiatry_erp_root" action="action_doctor_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="1"/>
+        <menuitem id="podiatry_erp_sale_order" name="Sales Orders" parent="podiatry_erp_root" action="sale.action_orders" sequence="6"/>
+        <menuitem id="podiatry_erp_customer" name="Customers" parent="podiatry_erp_root" action="base.action_partner_customer_form" sequence="4"/>
         <menuitem id="podiatry_erp_config" name="Configuration" parent="podiatry_erp_root" sequence="7"/>
 
-        <menuitem id="podiatry_erp_prescription_history" name="Prescription History" parent="podiatry_erp_root" action="action_prescription_history_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
+        <menuitem id="podiatry_erp_prescription" name="Prescriptions" parent="podiatry_erp_root" action="action_prescription_window" groups="group_podiatry_erp_doctors,base.group_system" sequence="3"/>
 
     </data>
 </odoo>
