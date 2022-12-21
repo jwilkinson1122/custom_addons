@@ -12,13 +12,19 @@ class Prescription(models.Model):
     _description = 'Prescription Request'
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
-                                        'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+    # prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
+    #                                     'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
+
+    # company_id = fields.Many2one(
+    #     comodel_name="res.company",
+    #     default=lambda self: self.env.company,
+    #     store=True,
+    # )
 
     @api.depends('patient_id')
     def _compute_request_date_onchange(self):
@@ -117,6 +123,9 @@ class Prescription(models.Model):
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
+    # prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
+    #     'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+
     # state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
     #                           ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
     #                          string="Status", tracking=True)
@@ -199,11 +208,25 @@ class Prescription(models.Model):
             ]
             prescription.prescription_count = self.search_count(domain)
 
+    # def _compute_prescription_count(self):
+    #     for rec in self:
+    #         prescription_count = self.env['podiatry.prescription'].search_count(
+    #             [('practitioner_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
+    #         rec.prescription_count = prescription_count
+
     def _compute_prescription_count(self):
-        for rec in self:
-            prescription_count = self.env['podiatry.prescription'].search_count(
-                [('practitioner_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
-            rec.prescription_count = prescription_count
+        "Performance optimized, to run a single database query"
+        practitioners = self.mapped("practitioner_id")
+        domain = [
+            ("practitioner_id", "in", practitioners.ids),
+            ("state", "not in", ["done", "cancel"]),
+        ]
+        raw = self.read_group(domain, ["id:count"], ["practitioner_id"])
+        data = {x["practitioner_id"][0]: x["practitioner_id_count"]
+                for x in raw}
+        for prescription in self:
+            prescription.prescription_count = data.get(
+                prescription.practitioner_id.id, 0)
 
     num_prescriptions = fields.Integer(
         compute="_compute_num_prescriptions", store=True)
@@ -233,12 +256,6 @@ class Prescription(models.Model):
 
     def action_cancel(self):
         self.state = 'cancel'
-
-        company_id = fields.Many2one(
-            comodel_name="res.company",
-            default=lambda self: self.env.company,
-            store=True,
-        )
 
     # patient_id = fields.Many2one(
     #     comodel_name="pod.patient",
