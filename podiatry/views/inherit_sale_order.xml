@@ -5,13 +5,17 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='payment_term_id']" position="before">
-                <field string="Prescription" name="prescription_id"/>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
+            <!-- <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field string="Prescription" name="prescription_id"/>
+            </xpath> -->
             <!-- <xpath expr="//field[@name='partner_id']" position="replace">
                 <field string="Practice" name="practice"/>
             </xpath> -->
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field string="Prescription" name="prescription_id"/>
                 <field string="Practice" name="practice"/>
                 <field string="Podiatrist" name="practitioner"/>
                 <field string="Patient" name="patient"/>
