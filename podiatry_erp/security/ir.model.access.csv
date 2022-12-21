@@ -5,6 +5,8 @@ access_admin_config,access_admin_config,model_eye_test_type,base.group_system,1,
 access_doctor_eye_test,access_doctor_eye_test,model_eye_test_type,group_podiatry_erp_doctors,1,0,0,0
 access_doctor,access_doctor,model_podiatry_doctor,group_podiatry_erp_doctors,1,0,0,0
 access_admin_doctor,access_admin_doctor,model_podiatry_doctor,base.group_system,1,1,1,1
+access_patient,access_patient,model_podiatry_patient,group_podiatry_erp_patients,1,0,0,0
+access_admin_patient,access_admin_patient,model_podiatry_patient,base.group_system,1,1,1,1
 access_frame_material,access_frame_material,model_frame_material,base.group_system,1,1,1,1
 access_frame_shape,access_frame_shape,model_frame_shape,base.group_system,1,1,1,1
 access_frame_type,access_frame_type,model_frame_type,base.group_system,1,1,1,1
