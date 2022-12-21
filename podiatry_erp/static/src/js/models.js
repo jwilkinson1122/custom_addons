@@ -148,7 +148,7 @@ odoo.define('podiatry_erp.models', function (require) {
             if (order) {
                 order.destroy({ 'reason': 'abandon' });
             }
-            $('.medical.prescription').text("Prescription")
+            $('.medical_prescription').text("Prescription")
         },
     });
 

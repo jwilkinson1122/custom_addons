@@ -626,7 +626,7 @@ Description
                     <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Right</th>
                         <td>
-                            <t t-esc="podiatry_order..doctor"/>
+                            <t t-esc="podiatry_order.pdr"/>
                         </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
@@ -643,7 +643,7 @@ Description
     <t t-name="PrescriptionButton" owl="1">
         <div class='control-button button confirm'>
             <i class='fa-prescription' />
-            <span class="label medical.prescription">
+            <span class="label medical_prescription">
                 <t t-if="env.pos.get_podiatry_reference()">
                     <t t-esc="env.pos.get_podiatry_reference().name" />
                 </t>
@@ -656,7 +656,7 @@ Description
 
     <t t-name="PrescriptionHistoryButtons" owl="1">
         <div class='control-button button confirm'>
-            Prescription
+            Prescription History
         </div>
     </t>
 
@@ -673,9 +673,9 @@ Description
                 <form id="prescription_form">
                     <table>
                         <tr>
-                            <th>Practitioner:</th>
+                            <th>Podiatrist:</th>
                             <td>
-                                <select name="doctor_id">
+                                <select name="doctor">
                                     <t t-foreach="doctors || []" t-as="item" t-key="item.id">
                                         <option t-attf-data-id="{{ item.id }}">
                                             <t t-esc='item.name'/>
@@ -704,7 +704,7 @@ Description
                         <tr>
                             <th>Prescription Date:</th>
                             <td>
-                                <input type="date" name="prescription_date" maxlength="10" t-attf-value="{{today}}"/>
+                                <input type="date" name="checkup_date" maxlength="10" t-attf-value="{{today}}"/>
                             </td>
                             <th>Test Type:</th>
                             <td>
@@ -1167,9 +1167,9 @@ Description
                             </td>
                         </tr>
                         <tr>
-                            <th>Practitioner internal observations:</th>
+                            <th>Podiatrist internal observations:</th>
                             <td colspan="3">
-                                <input name="doctor_observation" type="text"/>
+                                <input name="podiatrist_observation" type="text"/>
                             </td>
                         </tr>
                     </table>
@@ -1360,7 +1360,7 @@ Glass left</td>
                                                 <th>Number</th>
                                                 <th>Client</th>
                                                 <th>Date</th>
-                                                <th>Practitioner</th>
+                                                <th>Podiatrist</th>
                                                 <th>Test Type</th>
                                                 <th>Prescription Type</th>
                                                 <th>Status</th>
@@ -1378,7 +1378,7 @@ Glass left</td>
                                                         <t t-esc='product.customer[1]' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.prescription_date' />
+                                                        <t t-esc='product.checkup_date' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.doctor[1]' />
@@ -1430,7 +1430,7 @@ Glass left</td>
                     <tr>
                         <td>
                             <span>Prescription Date:</span>
-                            <t t-esc="podiatry_order.prescription_date"/>
+                            <t t-esc="podiatry_order.checkup_date"/>
                         </td>
                         <td>
                             <span>Test Type:</span>

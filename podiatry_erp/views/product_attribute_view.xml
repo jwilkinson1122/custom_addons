@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="in_pos"/>
-                <field name="Sequence"/>
+				<field name="Sequence"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="in_pos"/>
-                <field name="Sequence"/>
+				<field name="Sequence"/>
             </xpath>
         </field>
     </record>

@@ -8,17 +8,16 @@ class InheritedSaleOrder(models.Model):
 
     prescription_id = fields.Many2one('medical.prescription')
     # doctor = fields.Char(related='prescription_id.doctor.name')
-    doctor = fields.Many2one('podiatry.doctor', string='Practitioner')
-    prescription_date = fields.Date(
-        related='prescription_id.prescription_date')
+    podiatrist = fields.Many2one('podiatry.doctor', string='Podiatrist')
+    prescription_date = fields.Date(related='prescription_id.checkup_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
 
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry_erp.medical_prescription_ticket_size2").report_action(self.prescription_id)
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry_erp.medical_prescription_ophtalmological_ticket_size2").report_action(self.prescription_id)
+    def print_medical_prescription_report_ticket_size(self):
+        return self.env.ref("podiatry_erp.medical_prescription_podiatric_ticket_size2").report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
         for rec in self:
@@ -71,7 +70,7 @@ class InheritedSaleOrder(models.Model):
     #     result = super(InheritedSaleOrder,self).create(vals)
     #     return result
 
-    def print_ophtalmologic_prescription_report(self):
+    def print_medical_prescription_report(self):
         pass
 
     def print_prescription_report(self):
