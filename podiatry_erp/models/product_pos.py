@@ -11,10 +11,10 @@ class ProductFromPos(models.Model):
         vals["state"] = "Confirm"
         rec = self.env['medical.prescription'].create(vals)
         new_vals = self.env['podiatry.doctor'].search(
-            [('id', '=', vals["doctor"])])
-        vals["doctor"] = {}
-        vals["doctor"][0] = new_vals.id
-        vals["doctor"][1] = new_vals.name
+            [('id', '=', vals["doctor_id"])])
+        vals["doctor_id"] = {}
+        vals["doctor_id"][0] = new_vals.id
+        vals["doctor_id"][1] = new_vals.name
         new_vals = self.env['eye.test.type'].search(
             [('id', '=', vals["test_type"])])
         vals["test_type"] = {}

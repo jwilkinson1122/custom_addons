@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <record id="ticket_report_format_measure" model="report.paperformat">
+        <record id="ticket_report_format_measure"
+                model="report.paperformat">
             <field name="name">Ticket Format | Measure</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
@@ -16,7 +17,8 @@
             <field name="header_spacing">10</field>
             <field name="dpi">90</field>
         </record>
-        <record id="ticket_report_format_purchase" model="report.paperformat">
+        <record id="ticket_report_format_purchase"
+                model="report.paperformat">
             <field name="name">Ticket Format | Purchase</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
@@ -31,7 +33,8 @@
             <field name="header_spacing">10</field>
             <field name="dpi">90</field>
         </record>
-        <record id="ticket_report_format_sale" model="report.paperformat">
+        <record id="ticket_report_format_sale"
+                model="report.paperformat">
             <field name="name">Ticket Format | Sale</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
@@ -46,7 +49,8 @@
             <field name="header_spacing">10</field>
             <field name="dpi">90</field>
         </record>
-        <record id="ticket_report_format_invoice" model="report.paperformat">
+        <record id="ticket_report_format_invoice"
+                model="report.paperformat">
             <field name="name">Ticket Format | Invoice</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
@@ -61,8 +65,9 @@
             <field name="header_spacing">10</field>
             <field name="dpi">90</field>
         </record>
-        <record id="ticket_report_format_podiatric" model="report.paperformat">
-            <field name="name">Ticket Format | podiatric</field>
+        <record id="ticket_report_format_ophthalmological"
+                model="report.paperformat">
+            <field name="name">Ticket Format | ophthalmological</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
             <field name="page_height">80</field>

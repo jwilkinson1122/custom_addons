@@ -8,29 +8,10 @@
 
                 <report id="purchase_order" string="Purchase Order" model="sale.order" report_type="qweb-pdf" file="podiatry_erp.purchase_order_report" name="podiatry_erp.purchase_order_report" />
 
-                <report id="medical_prescription" string="Prescription Measure" model="medical.prescription" report_type="qweb-pdf" file="podiatry_erp.prescription_template" name="podiatry_erp.prescription_template" />
+                <report id="medical_prescription" string="Prescription Measure" model="medical.prescription" report_type="qweb-pdf" file="podiatry_erp.medical_prescription_template" name="podiatry_erp.medical_prescription_template" />
                 <!--        <record-->
                 <!-- id="medical_prescription_ticket_size"-->
                 <!-- string="Prescription Measure"-->
-                <!-- model="medical.prescription"-->
-                <!--                multi = "True"-->
-                <!-- report_type="qweb-pdf"-->
-                <!-- file="podiatry_erp.prescription_template_ticket_size"-->
-                <!-- name="podiatry_erp.prescription_template_ticket_size"-->
-                <!--                />-->
-
-                <record id="medical_prescription_ticket_size2" model="ir.actions.report">
-                        <field name="name">Prescription Measure | Ticket</field>
-                        <field name="report_name">podiatry_erp.prescription_template_ticket_size</field>
-                        <field name="model">medical.prescription</field>
-                        <field name="report_type">qweb-pdf</field>
-                </record>
-
-                <report id="medical_prescription_podiatric" string="Podiatric Prescription" model="medical.prescription" report_type="qweb-pdf" file="podiatry_erp.medical_prescription_template" name="podiatry_erp.medical_prescription_template" />
-
-                <!--        <report-->
-                <!-- id="medical_prescription_podiatric_ticket_size"-->
-                <!-- string="medicalal Prescription"-->
                 <!-- model="medical.prescription"-->
                 <!--                multi = "True"-->
                 <!-- report_type="qweb-pdf"-->
@@ -38,9 +19,28 @@
                 <!-- name="podiatry_erp.medical_prescription_template_ticket_size"-->
                 <!--                />-->
 
-                <record id="medical_prescription_podiatric_ticket_size2" model="ir.actions.report">
-                        <field name="name">Podiatric Prescription | Ticket</field>
+                <record id="medical_prescription_ticket_size2" model="ir.actions.report">
+                        <field name="name">Prescription Measure | Ticket</field>
                         <field name="report_name">podiatry_erp.medical_prescription_template_ticket_size</field>
+                        <field name="model">medical.prescription</field>
+                        <field name="report_type">qweb-pdf</field>
+                </record>
+
+                <report id="medical_prescription_ophtalmological" string="ophtalmological Prescription" model="medical.prescription" report_type="qweb-pdf" file="podiatry_erp.doctor_ophtalmological_prescription_template" name="podiatry_erp.doctor_ophtalmological_prescription_template" />
+
+                <!--        <report-->
+                <!-- id="medical_prescription_ophtalmological_ticket_size"-->
+                <!-- string="ophtalmological Prescription"-->
+                <!-- model="medical.prescription"-->
+                <!--                multi = "True"-->
+                <!-- report_type="qweb-pdf"-->
+                <!-- file="podiatry_erp.doctor_ophtalmological_prescription_template_ticket_size"-->
+                <!-- name="podiatry_erp.doctor_ophtalmological_prescription_template_ticket_size"-->
+                <!--                />-->
+
+                <record id="medical_prescription_ophtalmological_ticket_size2" model="ir.actions.report">
+                        <field name="name">Ophtalmological Prescription | Ticket</field>
+                        <field name="report_name">podiatry_erp.doctor_ophtalmological_prescription_template_ticket_size</field>
                         <field name="model">medical.prescription</field>
                         <field name="report_type">qweb-pdf</field>
                 </record>

@@ -37,13 +37,13 @@ odoo.define('podiatry_erp.popups', function (require) {
             var self = this;
             var order = this.env.pos.get_order();
             var vals = $("#prescription_form").serializeObject();
-            vals["doctor"] = $('option:selected', $('[name=doctor]')).data('id');
+            vals["doctor_id"] = $('option:selected', $('[name=doctor]')).data('id');
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
             vals = JSON.stringify(vals);
-            var checkup_date = $('[name=checkup_date]').val();
+            var prescription_date = $('[name=prescription_date]').val();
             var today = new Date().toJSON().slice(0, 10);
-            if (!checkup_date) {
+            if (!prescription_date) {
                 //                this.env.pos.podiatry.ProductCreationScreen = this.gui.current_popup;
                 //                this.env.pos.podiatry.ProductCreationScreen.hide();
                 //                this.gui.current_popup = this.gui.popup_instances['error'];
@@ -72,7 +72,7 @@ odoo.define('podiatry_erp.popups', function (require) {
                     }).then(function (products) {
                         self.env.pos.podiatry.all_orders.push(products);
                         self.env.pos.podiatry.order_by_id[products.id] = products;
-                        $('.medical_prescription').text(products.name);
+                        $('.medical.prescription').text(products.name);
                         order.set_podiatry_reference(products);
                         order.set_client(self.env.pos.db.partner_by_id[products.customer[0]]);
                     });

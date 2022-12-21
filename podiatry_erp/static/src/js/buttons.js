@@ -8,7 +8,7 @@ odoo.define('podiatry_erp.Main_Page_Buttons', function (require) {
 
     //-----------------------------------------
     //-----------------------------------------
-    // Prescriptions Button on Main Page
+    // Prescription Button on Main Page
     //-----------------------------------------
     //-----------------------------------------
     class PrescriptionHistoryButton extends PosComponent {

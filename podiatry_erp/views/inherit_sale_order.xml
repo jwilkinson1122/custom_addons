@@ -39,14 +39,14 @@
             <!--                <field string="Prescription" name="prescription_id"/>-->
             <!--            </xpath>-->
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="podiatrist"/>
+                <field name="doctor"/>
                 <field name="prescription_date" string="Prescription Date" readonly="0"/>
                 <field name="commitment_date"/>
                 <field name="po_ref"/>
             </xpath>
             <xpath expr="//header" position="inside">
                 <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Measure" type="object"></button>
-                <button name="print_medical_prescription_report_ticket_size" class="btn btn-success" string="Print Ophtalmologic" type="object"></button>
+                <button name="print_ophtalmologic_prescription_report_ticket_size" class="btn btn-success" string="Print Ophtalmologic" type="object"></button>
                 <button name="print_sale_order_report" class="btn btn-success" string="Print Sale Order" type="object" attrs="{'invisible':[('state','!=','sale')]}"/>
                 <button name="print_purchase_order_report" class="btn btn-success" string="Print Purchase Order" type="object" attrs="{'invisible':[('state','!=','sale'),('po_ref','=',False)]}"/>
 
