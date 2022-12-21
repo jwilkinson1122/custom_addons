@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="pod_patients_form_view" model="ir.ui.view">
+            <field name="name">pod.patients.form.view</field>
+            <field name="model">pod.patient</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <sheet>
+                        <group>
+                            <div class="oe_title">
+                                <div class="oe_edit_only">
+                                    <label for="patient_id" />
+                                </div>
+                                <h1>
+                                    <field name="patient_id"
+                                        default_focus="1" placeholder="Patient Name"
+                                        context="{'default_is_patient': 1,'default_is_person': 1}"
+                                         />
+                                </h1>
+                            </div>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="date_of_birth" />
+                            </group>
+
+                            <group>
+                                <field name="gender" />
+                                <field name="age" readonly="1" />
+                                <field name="partner_address_id" invisible="1"/>
+                                <label for="partner_address_id" name="partner_address_id"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street" />
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" />
+                                    <field name="zip_code" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General Information">
+                                <group string="Patient General Information">
+                                    <group>
+                                        <field name="primary_doctor_id" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="pod_patients_tree_view" model="ir.ui.view">
+            <field name="name">pod.patients.tree.view</field>
+            <field name="model">pod.patient</field>
+            <field name="arch" type="xml">
+                <tree string="Patient Information">
+                    <field name="name" />
+                    <field name="patient_id" />
+                    <field name="gender" />
+                    <field name="date_of_birth" />
+                    <field name="primary_doctor_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_patient_window" model="ir.actions.act_window">
+            <field name="name">Patients</field>
+            <field name="res_model">pod.patient</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- <menuitem id="menu_pod_patient" action="action_pod_patient"
+            parent="pod_erp.main_menu_pod_management" sequence="3" /> -->
+
+
+</odoo>
