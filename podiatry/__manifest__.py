@@ -10,6 +10,7 @@
     "license": "GPL-3",
 
     "depends": [
+        "base",
         "base_setup",
         "resource",
         "mail",
@@ -19,7 +20,7 @@
         'point_of_sale',
         "product",
         'purchase',
-
+        'stock',            
         # "contacts",
     ],
 
@@ -42,6 +43,7 @@
         "wizard/create_prescription_invoice_wizard.xml",
         "wizard/create_prescription_shipment_wizard.xml",
         "wizard/prescription_mass_message_wizard_view.xml",
+        "wizard/prescription_wizard_views.xml",
         # -----
         # Views
         # =====

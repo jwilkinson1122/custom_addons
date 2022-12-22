@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="prescription_wizard_form" model="ir.ui.view">
+        <field name="name">prescription.wizard.form</field>
+        <field name="model">prescription.wizard.mixin</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" invisible="True" />
+                    <!-- <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" /> -->
+                    <field name="state" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
+                </header>
+                <!-- <div class="oe_title">
+                    <h2 name="state">
+                        <field name="state" readonly="1"/>
+                    </h2>
+                </div> -->
+                <!-- <field name="state" readonly="1"/> -->
+                <field name="allow_back" invisible="1" />
+                <footer>
+                    <div name="states_buttons">
+                        <button name="open_next" string="Next" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'final')]}" />
+                        <button name="open_previous" string="Back" type="object" class="btn btn-default" attrs="{'invisible': [('allow_back', '=', False)]}" />
+                        <button string="Cancel" class="btn btn-default" special="cancel" />
+                        <!-- <button name="button_cancel" type="object" string="Cancel" attrs="{'invisible': [('state', 'in', ['new','cancel'])]}" states="open" class="oe_highlight" />
+                        <button icon="fa-lg fa-save" type="object" name="action_save_as_template" string="Save as new template" attrs="{'invisible': [('can_edit_body', '=', False)]}" class="float-right btn-secondary" help="Save as a new template"/> -->
+
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
