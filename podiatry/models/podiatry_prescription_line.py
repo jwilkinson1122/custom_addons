@@ -23,7 +23,7 @@ class PrescriptionLine(models.Model):
                 self.price = 0.0
 
     name = fields.Many2one('podiatry.prescription', 'Rx ID')
-    prescription_id = fields.Many2one("podiatry.prescription", required=True)
+    prescription_id = fields.Many2one("podiatry.prescription")
     patient_id = fields.Many2one("podiatry.patient")
     patient = fields.Char(
         related='prescription_id.patient_id.name')
@@ -37,7 +37,7 @@ class PrescriptionLine(models.Model):
     field1 = fields.Char()
     field2 = fields.Char()
     field3 = fields.Char()
-    
+
     @api.model
     def _selection_state(self):
         return [
