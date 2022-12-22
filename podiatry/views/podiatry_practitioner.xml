@@ -46,13 +46,6 @@
                         </div>
                     </div>
                     <group name="practitioner_contact">
-                        <!-- Contact Information -->
-                        <group name="contact_information" string="Contact Information">
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <!-- <field name="position_type"/> -->
-                        </group>
                         <!-- Address Information -->
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
@@ -64,6 +57,13 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                             </div>
+                        </group>
+                        <!-- Contact Information -->
+                        <group name="contact_information" string="Contact Information">
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <!-- <field name="position_type"/> -->
                         </group>
                     </group>
                     <notebook>
@@ -266,7 +266,7 @@
     Action: Contacts
     -->
     <record id="action_podiatry_practitioner" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
+        <field name="name">Practice Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
@@ -286,7 +286,7 @@
     <!--
     Menu: Contacts
     -->
-    <menuitem id="menu_podiatry_practitioner_root" name="Contacts" action="action_podiatry_practitioner" parent="menu_root" groups="group_user" sequence="10" />
+    <menuitem id="menu_podiatry_practitioner_root" name="Practice Contacts" action="action_podiatry_practitioner" parent="menu_root" groups="group_user" sequence="10" />
 
 
     <!--
@@ -320,7 +320,7 @@
     Action
     -->
     <record id="action_podiatry_practitioner_report" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
+        <field name="name">Practice Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
         <field name="view_mode">pivot</field>
         <field name="search_view_id" ref="view_podiatry_practitioner_search"/>
@@ -337,6 +337,6 @@
     <!--
     Submenu: Reports / Contacts
     -->
-    <menuitem id="menu_podiatry_practitioner_dashboard" name="Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" />
+    <menuitem id="menu_podiatry_practitioner_dashboard" name="Practice Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" />
 
 </odoo>

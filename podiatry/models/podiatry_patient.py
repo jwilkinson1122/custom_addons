@@ -177,6 +177,11 @@ class Patient(models.Model):
 
     age = fields.Char(compute='_compute_age')
 
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
     @api.model
     def _relativedelta_to_text(self, delta):
         result = []

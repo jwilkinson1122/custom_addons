@@ -65,16 +65,6 @@
                     </div>
 
                     <group name="practice_contact">
-                        <!-- Practice info -->
-                        <group name="contact_information" string="Contact Information">
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="code"/>
-                            <!-- <field name="patient_ids" invisible="0"/> -->
-                            <field name="company_id" groups="base.group_multi_company"/>
-
-                        </group>
                         <!-- Address info -->
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
@@ -86,6 +76,16 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                             </div>
+                        </group>
+                        <!-- Practice info -->
+                        <group name="contact_information" string="Contact Information">
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="code"/>
+                            <!-- <field name="patient_ids" invisible="0"/> -->
+                            <field name="company_id" groups="base.group_multi_company"/>
+
                         </group>
                     </group>
 

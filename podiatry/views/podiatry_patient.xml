@@ -67,11 +67,11 @@
                     </div>
 
                     <group name="responsible" string="Responsible">
-                        <group name="practitioner_information">
-                            <field name="practitioner_id"/>
-                        </group>
                         <group name="practice_information">
                             <field name="practice_id"/>
+                        </group>
+                        <group name="practitioner_information">
+                            <field name="practitioner_id"/>
                         </group>
                     </group>
                     <group name="personal_contact">

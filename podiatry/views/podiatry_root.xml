@@ -4,7 +4,7 @@
     <!--
     Top level menu
     -->
-    <menuitem id="menu_root" name="POD HMS" groups="group_user" sequence="50" web_icon="podiatry,static/description/icon.png" />
+    <menuitem id="menu_root" name="POD ERP" groups="group_user" sequence="50" web_icon="podiatry,static/description/icon.png" />
 
     <!--
     Menu: Reports
