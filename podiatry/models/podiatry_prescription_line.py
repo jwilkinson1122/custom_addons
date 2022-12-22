@@ -21,7 +21,7 @@ class PrescriptionLine(models.Model):
 
     name = fields.Many2one('podiatry.prescription', 'Rx ID')
     prescription_id = fields.Many2one("podiatry.prescription", required=True)
-    patient_id = fields.Many2one("podiatry.patient", required=True)
+    patient_id = fields.Many2one("podiatry.patient")
     product_id = fields.Many2one('product.product', 'Name')
 
     foot_image1 = fields.Binary(related="patient_id.image1")
