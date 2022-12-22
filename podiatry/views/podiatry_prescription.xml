@@ -20,7 +20,7 @@
                 <field name="patient_id" />
                 <!-- <field name="user_id" /> -->
                 <field name="stage_id" />
-                <!-- <field name="num_prescriptions" sum="Num. Prescriptions" /> -->
+                <!-- <field name="num_prescription_items" sum="Num. Prescriptions" /> -->
                 <!-- <field name="description"/> -->
                 <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button>
             </tree>
@@ -250,7 +250,7 @@
                 <field name="stage_id" type="col" />
                 <field name="practitioner_id" />
                 <field name="request_date" interval="week" />
-                <field name="num_prescriptions" type="measure" />
+                <field name="num_prescription_items" type="measure" />
             </pivot>
         </field>
     </record>
@@ -261,7 +261,7 @@
         <field name="arch" type="xml">
             <graph type="bar">
                 <field name="stage_id" />
-                <field name="num_prescriptions" type="measure" />
+                <field name="num_prescription_items" type="measure" />
             </graph>
         </field>
     </record>

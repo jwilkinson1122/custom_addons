@@ -7,10 +7,10 @@
                 <!-- Field list to ensure is loaded ... -->
                 <field name="color" />
                 <field name="prescription_ids" />
-                <field name="num_prescriptions" />
+                <field name="num_prescription_items" />
                 <field name="state" />
 
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="num_prescriptions" />
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="num_prescription_items" />
 
                 <templates>
 
@@ -63,7 +63,7 @@
                                     <!--
             <strong><field name="name" /></strong>
             -->
-                                    <t t-set="red_or_black" t-value="record.num_prescriptions == 0 ? '' : 'oe_kanban_text_red'" />
+                                    <t t-set="red_or_black" t-value="record.num_prescription_items == 0 ? '' : 'oe_kanban_text_red'" />
                                     <strong t-att-class="red_or_black">
                                         <field name="name" />
                                     </strong>
@@ -89,30 +89,34 @@
                                         <t t-out="calendar_sign" />
                                     </div>
 
-                                    <div t-if="record.num_prescriptions.raw_value == 0">No items!</div>
-                                    <div t-elif="record.num_prescriptions.raw_value == 1">One item</div>
+                                    <div t-if="record.num_prescription_items.raw_value == 0">No items!</div>
+                                    <div t-elif="record.num_prescription_items.raw_value == 1">One item</div>
                                     <div t-else="">
-                                        <field name="num_prescriptions"/>
-items</div>
+                                        <field name="num_prescription_items"/>items
+                                    </div>
 
-                                    <!--
-            <div>
-              <t t-foreach="record.prescription_ids.raw_value.slice(0, 5)" t-as="line">
-                <img t-att-src="kanban_image(
-                  'podiatry.prescription.line', 'prescription_image', line)" class="oe_avatar" height="60" alt="Cover" />
-                </t>
-            </div>
-            -->
+                                    <div>
+                                        <!-- <field name="practice_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Practice:</span>
+                                        <label for="practice_name" class="oe_edit_only" />
+                                        <field name="practice_name" class="oe_inline" />
+                                    </div>
+                                    <div>
+                                        <!-- <field name="practitioner_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Practitioner:</span>
+                                        <label for="practitioner_name" class="oe_edit_only" />
+                                        <field name="practitioner_name" class="oe_inline" />
+                                    </div>
+                                    <div>
+                                        <!-- <field name="patient_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Patient:</span>
+                                        <label for="patient_name" class="oe_edit_only" />
+                                        <field name="patient_name" class="oe_inline" />
+                                    </div>
                                     <t t-call="foot_images">
                                         <t t-set="limit" t-value="3" />
                                     </t>
-                                    <div>
-                                        <field name="patient_id" widget="many2one_avatar"/>
-                                    </div>
-
-                                    <div>
-                                        <field name="practitioner_id" widget="many2one_avatar"/>
-                                    </div>
+                                  
                                 </div>
 
                                 <div class="o_kanban_record_bottom">

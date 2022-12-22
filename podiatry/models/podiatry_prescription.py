@@ -59,9 +59,15 @@ class Prescription(models.Model):
         comodel_name='podiatry.practice',
         string='Practice')
 
+    practice_name = fields.Char(
+        string='Practitioner', related='practice_id.name')
+
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         string='Practitioner')
+    
+    practitioner_name = fields.Char(
+        string='Practitioner', related='practitioner_id.name')
 
     practitioner_phone = fields.Char(
         string='Phone', related='practitioner_id.phone')
@@ -72,6 +78,10 @@ class Prescription(models.Model):
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
+    
+    patient_name = fields.Char(
+        string='Practitioner', related='patient_id.name')
+
 
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
@@ -228,13 +238,13 @@ class Prescription(models.Model):
             prescription.prescription_count = data.get(
                 prescription.practitioner_id.id, 0)
 
-    num_prescriptions = fields.Integer(
-        compute="_compute_num_prescriptions", store=True)
+    num_prescription_items = fields.Integer(
+        compute="_compute_num_prescription_items", store=True)
 
     @api.depends("prescription_line")
-    def _compute_num_prescriptions(self):
+    def _compute_num_prescription_items(self):
         for prescription in self:
-            prescription.num_prescriptions = len(
+            prescription.num_prescription_items = len(
                 prescription.prescription_line)
 
     invoice_done = fields.Boolean('Invoice Done')
