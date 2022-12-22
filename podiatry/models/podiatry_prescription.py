@@ -65,7 +65,7 @@ class Prescription(models.Model):
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         string='Practitioner')
-    
+
     practitioner_name = fields.Char(
         string='Practitioner', related='practitioner_id.name')
 
@@ -78,10 +78,9 @@ class Prescription(models.Model):
     patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient')
-    
+
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
-
 
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
@@ -319,6 +318,16 @@ class Prescription(models.Model):
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
     podiatric_history = fields.Text()
+
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
+    @api.onchange('practitioner_id')
+    def onchange_practitioner_id(self):
+        for rec in self:
+            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):
