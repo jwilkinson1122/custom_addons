@@ -8,28 +8,7 @@ from odoo import api, fields, models
 _logger = logging.getLogger(__name__)
 
 
-class PrescriptionWizard(models.AbstractModel):
-    """Mixin to ease the creation of multisteps wizards
-
-    _selection_state must return all possible step of
-    the wizard.
-
-    For each state but final, there must be a method named
-    "state_exit_X" where X is the name of the state. Each
-    of these method must set the next state in self.state.
-
-    For each state but start, there may be a method named
-    "state_previous_X" where X is the name of the state. Each
-    of these method must set the next state in self.state.
-
-    The final state has no related method because the view
-    should only display a button to close the wizard.
-
-    open_next, open_previous and _reopen_self should not need to be
-    overidden, but _selection_state and state_exit_start
-    likely will need to.
-
-    """
+class PrescriptionWizard(models.TransientModel):
 
     _name = "prescription.wizard.mixin"
     _description = "Prescription Wizard Mixin"
