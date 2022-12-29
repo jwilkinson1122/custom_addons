@@ -5,7 +5,7 @@
             <field name="name">Medical Prescription</field>
             <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
-                <form string="Medical Prescription">
+                <form>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
                         <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
@@ -409,8 +409,8 @@
             </field>
         </record>
 
-          <!-- Search -->
-    <!-- <record id="view_podiatry_prescription_filter" model="ir.ui.view">
+        <!-- Search -->
+        <!-- <record id="view_podiatry_prescription_filter" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <search>
@@ -432,8 +432,8 @@
         </field>
     </record> -->
 
-            <!-- Activity View -->
-    <!-- <record id="view_podiatry_prescription_activity" model="ir.ui.view">
+        <!-- Activity View -->
+        <!-- <record id="view_podiatry_prescription_activity" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <activity string="Prescriptions">
@@ -448,8 +448,8 @@
         </field>
     </record> -->
 
-    <!-- Calendar View -->
-    <!-- <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
+        <!-- Calendar View -->
+        <!-- <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
         <field name="name">Practitioner Prescriptions</field>
         <field name="model">podiatry.prescription</field>
         <field eval="2" name="priority" />
@@ -463,8 +463,8 @@
         </field>
     </record> -->
 
-    <!-- Pivot View -->
-    <!-- <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
+        <!-- Pivot View -->
+        <!-- <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <pivot>
@@ -476,8 +476,8 @@
         </field>
     </record> -->
 
-    <!-- Graph View -->
-    <!-- <record id="view_podiatry_prescription_graph" model="ir.ui.view">
+        <!-- Graph View -->
+        <!-- <record id="view_podiatry_prescription_graph" model="ir.ui.view">
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <graph type="bar">
