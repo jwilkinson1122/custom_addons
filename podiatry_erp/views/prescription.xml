@@ -5,7 +5,7 @@
             <field name="name">Medical Prescription</field>
             <field name="model">medical.prescription</field>
             <field name="arch" type="xml">
-                <form string="Medical Prescription">
+                <form>
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
                         <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
