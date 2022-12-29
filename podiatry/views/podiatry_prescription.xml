@@ -9,20 +9,10 @@
                 <header>
                     <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
                 </header>
-                <field name="name" />
+                <field name="name" invisible="True"/>
                 <field name="state" invisible="True" />
-                <!-- <field name="device_type"/> -->
-
-                <field name="bookin_date" />
-                <field name="request_date" />
-                <field name="practice_id" />
-                <field name="practitioner_id" />
-                <field name="patient_id" />
-                <!-- <field name="user_id" /> -->
-                <field name="stage_id" />
-                <!-- <field name="num_prescription_items" sum="Num. Prescriptions" /> -->
-                <!-- <field name="description"/> -->
-                <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button>
+                <field name="product_id" />
+                <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button> -->
             </tree>
         </field>
     </record>
@@ -119,8 +109,12 @@
                             </group>
                         </page>
                         <page string="Prescription Testing">
-                            <group string="Rx Lines">
-                                <field name="prescription_line" nolabel="1" widget="one2many_list" />
+                            <group string="Prescription Details">
+                                <button name="%(podiatry.create_prescription_wizard)d" string="Create Prescription" type="action" class="oe_highlight" context="{'default_practitioner': active_id}" />
+                                <!-- <field name="prescription_line" nolabel="1" widget="one2many_list" /> -->
+                            </group>
+                            <group>
+                                <field name="prescription_ids" widget="many2many_kanban" domain="[('practitioner_id', '=', False)]" />
                             </group>
                         </page>
                         <page string="Documents">

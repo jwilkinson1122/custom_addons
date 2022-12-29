@@ -244,6 +244,29 @@
         </record>
 
         <!--
+        create.prescription (wizard)
+        -->
+        <record id="access_create_prescription_group_manager" model="ir.model.access">
+            <field name="name">access.create.prescription.group.manager</field>
+            <field name="model_id" ref="model_create_prescription"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_create_prescription_group_user" model="ir.model.access">
+            <field name="name">access.create.prescription.group.user</field>
+            <field name="model_id" ref="model_create_prescription"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
         podiatry.prescription.line
         -->
         <record id="access_podiatry_prescription_line_group_manager" model="ir.model.access">

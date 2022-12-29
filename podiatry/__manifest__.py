@@ -20,7 +20,7 @@
         'point_of_sale',
         "product",
         'purchase',
-        'stock',            
+        'stock',
         # "contacts",
     ],
 
@@ -44,6 +44,7 @@
         "wizard/create_prescription_shipment_wizard.xml",
         "wizard/prescription_mass_message_wizard_view.xml",
         "wizard/prescription_wizard_views.xml",
+        "wizard/create_prescription.xml",
         # -----
         # Views
         # =====

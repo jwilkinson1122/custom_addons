@@ -127,17 +127,16 @@ class Prescription(models.Model):
     prescription = fields.Text(string="Prescription")
 
     prescription_ids = fields.One2many(
-        'podiatry.prescription', 'patient_id', string="Prescriptions")
+        'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
-    # prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
-    #     'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+    product_id = fields.Many2one('product.product', 'Name')
 
-    # state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
-    #                           ('done', 'Done'), ('cancel', 'Cancelled')], default='draft',
-    #                          string="Status", tracking=True)
+    field1 = fields.Char()
+    field2 = fields.Char()
+    field3 = fields.Char()
 
     completed_date = fields.Datetime(string="Completed Date")
 

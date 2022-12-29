@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="create_pet_form" model="ir.ui.view">
+        <field name="name">create.pet.wizard</field>
+        <field name="model">create.pet</field>
+        <field name="arch" type="xml">
+            <form string="Create Pet">
+                <group>
+                    <field name="owner" />
+                    <field name="name" />
+                    <field name="gender" />
+                </group>
+                <footer>
+                    <button name="create_pet" string="Create" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_pet_wizard" model="ir.actions.act_window">
+        <field name="name">Create Pet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.pet</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_pet_form" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>
