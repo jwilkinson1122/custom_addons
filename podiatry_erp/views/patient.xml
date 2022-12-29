@@ -2,10 +2,10 @@
 <odoo>
     <data>
         <record id="doctor_patient" model="ir.ui.view">
-            <field name="name">Patients</field>
+            <field name="name">Patient</field>
             <field name="model">podiatry.patient</field>
             <field name="arch" type="xml">
-                <form string="Patients">
+                <form string="Patient">
                     <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner_id', '=', False)]}">
                         A partner with the same <span>
                         <span class="o_vat_label">Tax ID</span>
@@ -333,7 +333,7 @@
             </kanban>
         </field>
     </record>
-    <!--
+        <!--
     Search
     -->
     <record id="view_podiatry_patient_search" model="ir.ui.view">

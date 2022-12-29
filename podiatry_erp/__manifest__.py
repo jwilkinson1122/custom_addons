@@ -21,7 +21,6 @@
         'point_of_sale',
         "product",
         'purchase',
-        'stock',
     ],
     "data": [
         'security/groups.xml',

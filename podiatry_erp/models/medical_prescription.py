@@ -13,7 +13,7 @@ class Prescription(models.Model):
         store=True,
     )
     doctor_id = fields.Many2one(
-        'podiatry.doctor', string='Practitioner')
+        'podiatry.doctor', string='Practitioner', readonly=True)
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
     practice_id = fields.Many2one(

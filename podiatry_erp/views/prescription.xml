@@ -21,7 +21,6 @@
                         </div>
                         <group>
                             <group>
-
                                 <field name="doctor_id" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                                 <field name="company_id"/>
@@ -384,14 +383,10 @@
                                     </group>
                                 </group>
                             </page>
-
                         </notebook>
                         <br/>
                         <br/>
-
-
                     </sheet>
-
                 </form>
             </field>
         </record>
