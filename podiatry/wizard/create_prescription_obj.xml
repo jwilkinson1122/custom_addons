@@ -10,12 +10,14 @@
                     <field name="state" invisible="True" />
                     <field name="state" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
                 </header>
-                <group>
-                    <field name="practitioner_id" />
-                    <field name="product_id" />
-                </group>
+                <sheet>
+                    <group>
+                        <field name="patient" />
+                        <field name="product_id" />
+                    </group>
+                </sheet>
                 <footer>
-                    <button name="create_prescription_obj" string="Create" type="object" class="btn-primary" />
+                    <button name="create_prescription_obj" string="Save" type="object" class="btn-primary" />
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>

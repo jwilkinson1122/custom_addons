@@ -24,11 +24,13 @@ class PrescriptionLine(models.Model):
 
     name = fields.Many2one('podiatry.prescription', 'Rx ID')
     prescription_id = fields.Many2one("podiatry.prescription")
+    practitioner_id = fields.Many2one("podiatry.practitioner")
+    practitioner = fields.Char(
+        related='prescription_id.practitioner_id.name')
     patient_id = fields.Many2one("podiatry.patient")
     patient = fields.Char(
         related='prescription_id.patient_id.name')
     product_id = fields.Many2one('product.product', 'Name')
-
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
@@ -60,61 +62,11 @@ class PrescriptionLine(models.Model):
     def state_exit_custom(self):
         self.state = 'final'
 
-        # def state_exit_start(self):
-    #     self.state = "final"
-
-    # def state_previous_configure(self):
-    #     self.state = 'start'
-
     def state_previous_custom(self):
         self.state = 'configure'
 
     def state_previous_final(self):
         self.state = 'custom'
-
-    # right_photo = fields.Image("Right Photo")
-    # left_photo = fields.Image("Left Photo")
-    # left_obj_model = fields.Binary("Left Obj")
-    # left_obj_file_name = fields.Char(string="Left Obj File Name")
-    # right_obj_model = fields.Binary("Right Obj")
-    # right_obj_file_name = fields.Char(string="Right Obj File Name")
-    # right_photo = fields.Binary(related="patient_id.right_photo")
-    # left_photo = fields.Binary(related="patient_id.left_photo")
-
-    # foot_image1 = fields.Binary(related="patient_id.left_photo")
-    # foot_image2 = fields.Binary(related="patient_id.right_photo")
-    # foot_image1 = fields.Binary(related="prescription_id.foot_image1")
-    # foot_image2 = fields.Binary(related="prescription_id.foot_image2")
-
-    # l_foot_only = fields.Boolean('Left Only')
-    # r_foot_only = fields.Boolean('Right Only')
-    # b_l_pair = fields.Boolean('Bilateral')
-    # l_r_mirror = fields.Boolean('Mirror Options', default=True)
-    # left_only = fields.Boolean('Left Only')
-    # right_only = fields.Boolean('Right Only')
-    # field_name = fields.Boolean(string="check box", default=False)
-    # bilateral = fields.Boolean('Bilateral', default=True)
-    # mirror_options = fields.Boolean('Mirror Options', default=True)
-
-    # price = fields.Float(compute=onchange_product, string='Price', store=True)
-    # qty_available = fields.Integer(
-    #     compute=onchange_product, string='Quantity Available', store=True)
-    # pathologies = fields.Text('Pathologies')
-    # pathology = fields.Char('Pathology')
-    # laterality = fields.Selection(
-    #     [('left', 'Left Only'), ('right', 'Right Only'), ('bilateral', 'Bilateral')], help="""" """)
-    # notes = fields.Text('Extra Info')
-    # allow_substitution = fields.Boolean('Allow Substitution')
-    # form = fields.Char('Form')
-    # prnt = fields.Boolean('Print')
-    # quantity = fields.Float('Quantity')
-    # quantity_unit_id = fields.Many2one(
-    #     'podiatry.quantity.unit', 'Quantity Unit')
-    # qty = fields.Integer('x')
-    # device_quantity_id = fields.Many2one(
-    #     'podiatry.device.quantity', 'Quantity')
-    # quantity = fields.Integer('Quantity')
-    # short_comment = fields.Char('Comment', size=128)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

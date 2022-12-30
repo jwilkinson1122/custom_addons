@@ -25,12 +25,12 @@
         <field name="inherit_id" ref="podiatry.create_prescription_obj_form"/>
         <field name="arch" type="xml">
             <xpath expr="//footer" position="before">
-                <h1>
+                <!-- <h1>
                     <group>
                         <field name="name" attrs="{'readonly': [('state', '!=', 'start')]}" class="oe_inline" placeholder="Name"/>
                         <field name="patient" attrs="{'readonly': [('state', '!=', 'start')]}" class="oe_inline" placeholder="Patient Name"/>
                     </group>
-                </h1>
+                </h1> -->
                 <group name="configure" attrs="{'invisible': [('state', '!=', 'configure')]}">
                     <group>
                         <field name="field1"/>

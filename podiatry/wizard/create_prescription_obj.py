@@ -10,19 +10,26 @@ class CreatePrescriptionObj(models.TransientModel):
     _name = 'create.prescription.obj'
     _description = 'Create Prescription Line Item'
 
-    practitioner_id = fields.Many2one(
-        'podiatry.practitioner', string="Practitioner", required=True)
+    prescription_id = fields.Many2one('podiatry.prescription')
+    practice = fields.Char(related='prescription_id.practice_id.name')
+    practitioner = fields.Char(related='prescription_id.practitioner_id.name')
+    patient = fields.Char(related='prescription_id.patient_id.name')
+
+    # practitioner_id = fields.Many2one(
+    #     'podiatry.practitioner', string="Practitioner")
+    # patient_id = fields.Many2one(
+    #     'podiatry.patient', string="Patient")
 
     product_id = fields.Many2one('product.product', 'Name')
 
     def create_prescription_obj(self):
         vals = {
-            'practitioner_id': self.practitioner_id.id,
+            # 'practitioner_id': self.practitioner_id.id,
             'product_id': self.product_id.id,
             # 'name': self.name,
         }
-        self.practitioner_id.message_post(
-            body="Your New Prescription Has Been Added", subject="New Prescription Object")
+        # self.practitioner_id.message_post(
+        #     body="Your New Prescription Has Been Added", subject="New Prescription Object")
         new_prescription_obj = self.env['podiatry.prescription.line'].create(
             vals)
         context = dict(self.env.context)
