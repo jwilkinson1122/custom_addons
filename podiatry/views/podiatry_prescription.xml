@@ -25,24 +25,14 @@
             <form string="Prescription">
                 <header>
                     <field name="state" invisible="True" />
-                    <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" />
+                    <!-- <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" /> -->
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
+                    <!-- <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
                     <button name="open_customer" class="btn btn-success" states="Confirm" string="Create Orders" type="object"></button>
                     <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
+                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
                 </header>
                 <sheet>
-                    <div name="button_box" class="oe_button_box">
-                        <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                        <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
-
-                        <!-- <button type="action" name="%(action_podiatry_prescription)d" class="oe_stat_button" icon="fa-file-text-o" domain="[('[('practitioner_id', ', '=', practitioner_id)]" context="{'default_practitioner_id': practitioner_id}">
-                            <field name="prescription_count" string="Prescriptions" widget="statinfo" />
-                        </button> -->
-                    </div>
-
-                    <!-- <field name="member_image" widget="image" class="oe_avatar" /> -->
                     <div class="oe_title">
 
                         <label for="name" class="oe_edit_only" />
@@ -110,11 +100,10 @@
                         </page>
                         <page string="Prescription Testing">
                             <group string="Prescription Details">
-                                <button name="%(podiatry.create_prescription_wizard)d" string="Create Prescription" type="action" class="oe_highlight" context="{'default_practitioner': active_id}" />
-                                <!-- <field name="prescription_line" nolabel="1" widget="one2many_list" /> -->
+                                <button name="%(podiatry.create_prescription_obj_wizard)d" string="Create Prescription Line Item" type="action" class="oe_highlight" context="{'default_practitioner': active_id}" />
                             </group>
                             <group>
-                                <field name="prescription_ids" widget="many2many_kanban" domain="[('practitioner_id', '=', False)]" />
+                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
                             </group>
                         </page>
                         <page string="Documents">

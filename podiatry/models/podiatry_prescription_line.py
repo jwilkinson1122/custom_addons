@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class PrescriptionLine(models.Model):
     _name = "podiatry.prescription.line"
-    _inherit = ['prescription.wizard.mixin']
+    _inherit = ['create.prescription.obj']
     _description = 'podiatry prescription line'
     _rec_name = 'product_id'
 

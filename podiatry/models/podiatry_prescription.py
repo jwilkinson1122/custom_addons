@@ -12,19 +12,10 @@ class Prescription(models.Model):
     _description = 'Prescription Request'
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    # prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
-    #                                     'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
-
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
-
-    # company_id = fields.Many2one(
-    #     comodel_name="res.company",
-    #     default=lambda self: self.env.company,
-    #     store=True,
-    # )
 
     @api.depends('patient_id')
     def _compute_request_date_onchange(self):
@@ -130,7 +121,10 @@ class Prescription(models.Model):
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
     prescription_line = fields.One2many(
-        'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+        'podiatry.prescription.line', 'practitioner_id', 'Prescription Line')
+
+    # prescription_line = fields.One2many('podiatry.prescription.line', 'prescription_id', string='Prescription Lines', states={
+    #                                     'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
     product_id = fields.Many2one('product.product', 'Name')
 

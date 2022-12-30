@@ -1,6 +1,4 @@
-# Copyright 2019 Camptocamp SA
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-
+# -*- coding: utf-8 -*-
 import logging
 
 from odoo import api, fields, models
@@ -8,10 +6,34 @@ from odoo import api, fields, models
 _logger = logging.getLogger(__name__)
 
 
-class PrescriptionWizard(models.TransientModel):
+class CreatePrescriptionObj(models.TransientModel):
+    _name = 'create.prescription.obj'
+    _description = 'Create Prescription Line Item'
 
-    _name = "prescription.wizard.mixin"
-    _description = "Prescription Wizard Mixin"
+    practitioner_id = fields.Many2one(
+        'podiatry.practitioner', string="Practitioner", required=True)
+
+    product_id = fields.Many2one('product.product', 'Name')
+
+    def create_prescription_obj(self):
+        vals = {
+            'practitioner_id': self.practitioner_id.id,
+            'product_id': self.product_id.id,
+            # 'name': self.name,
+        }
+        self.practitioner_id.message_post(
+            body="Your New Prescription Has Been Added", subject="New Prescription Object")
+        new_prescription_obj = self.env['podiatry.prescription.line'].create(
+            vals)
+        context = dict(self.env.context)
+        context['form_view_initial_mode'] = 'edit'
+        return {'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'podiatry.prescription.line',
+                'res_id': new_prescription_obj.id,
+                'context': context
+                }
 
     state = fields.Selection(
         selection="_selection_state", default="start", required=True
@@ -75,9 +97,6 @@ class PrescriptionWizard(models.TransientModel):
     def state_exit_custom(self):
         self.state = 'final'
 
-    # def state_exit_start(self):
-    #     self.state = "final"
-
     def state_previous_configure(self):
         self.state = 'start'
 
@@ -86,9 +105,3 @@ class PrescriptionWizard(models.TransientModel):
 
     def state_previous_final(self):
         self.state = 'custom'
-
-    # def action_cancel(self):
-    #     self.write({'state': 'cancelled'})
-
-    # def action_reset(self):
-    #     self.write({'state': 'ordered'})
