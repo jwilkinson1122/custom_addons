@@ -9,7 +9,7 @@
                 <header>
                     <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
                 </header>
-                <field name="name" invisible="True"/>
+                <field name="name"/>
                 <field name="state" invisible="True" />
                 <field name="product_id" />
                 <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button> -->

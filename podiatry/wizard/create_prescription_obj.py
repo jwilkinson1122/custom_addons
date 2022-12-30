@@ -11,20 +11,18 @@ class CreatePrescriptionObj(models.TransientModel):
     _description = 'Create Prescription Line Item'
 
     prescription_id = fields.Many2one('podiatry.prescription')
-    practice = fields.Char(related='prescription_id.practice_id.name')
-    practitioner = fields.Char(related='prescription_id.practitioner_id.name')
-    patient = fields.Char(related='prescription_id.patient_id.name')
-
-    # practitioner_id = fields.Many2one(
-    #     'podiatry.practitioner', string="Practitioner")
-    # patient_id = fields.Many2one(
-    #     'podiatry.patient', string="Patient")
+    prescription_line_id = fields.Many2one('podiatry.prescription.line')
+    practitioner_id = fields.Many2one(
+        'podiatry.practitioner', string="Practitioner")
+    patient_id = fields.Many2one(
+        'podiatry.patient', string="Patient")
 
     product_id = fields.Many2one('product.product', 'Name')
 
     def create_prescription_obj(self):
         vals = {
             # 'practitioner_id': self.practitioner_id.id,
+            'prescription_line_id': self.prescription_line_id.id,
             'product_id': self.product_id.id,
             # 'name': self.name,
         }
