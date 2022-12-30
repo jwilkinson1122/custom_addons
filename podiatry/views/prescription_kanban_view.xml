@@ -13,16 +13,16 @@
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="num_prescription_items" />
 
                 <templates>
-
+                    <!-- 
                     <t t-name="foot_images">
-                        <!-- "limit" is a variable set on the t-call -->
+                    
                         <div>
                             <t t-foreach="record.prescription_ids.raw_value.slice(0, limit)" t-as="line">
                                 <img t-att-src="kanban_image('podiatry.prescription', 'foot_image1', line)" class="oe_avatar" height="60" alt="Left Image"/>
                                 <img t-att-src="kanban_image('podiatry.prescription', 'foot_image2', line)" class="oe_avatar" height="60" alt="Right Image"/>
                             </t>
                         </div>
-                    </t>
+                    </t> -->
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click
          {{!selection_mode ? 'oe_kanban_color_' +
@@ -92,7 +92,8 @@
                                     <div t-if="record.num_prescription_items.raw_value == 0">No items!</div>
                                     <div t-elif="record.num_prescription_items.raw_value == 1">One item</div>
                                     <div t-else="">
-                                        <field name="num_prescription_items"/>items
+                                        <field name="num_prescription_items"/>
+items
                                     </div>
 
                                     <div>
@@ -113,10 +114,10 @@
                                         <label for="patient_name" class="oe_edit_only" />
                                         <field name="patient_name" class="oe_inline" />
                                     </div>
-                                    <t t-call="foot_images">
+                                    <!-- <t t-call="foot_images">
                                         <t t-set="limit" t-value="3" />
-                                    </t>
-                                  
+                                    </t> -->
+
                                 </div>
 
                                 <div class="o_kanban_record_bottom">
