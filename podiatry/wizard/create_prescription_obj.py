@@ -14,8 +14,17 @@ class CreatePrescriptionObj(models.TransientModel):
     prescription_line_id = fields.Many2one('podiatry.prescription.line')
     practitioner_id = fields.Many2one(
         'podiatry.practitioner', string="Practitioner")
+    practitioner = fields.Char(
+        string='Practitioner', related='practitioner_id.name')
     patient_id = fields.Many2one(
         'podiatry.patient', string="Patient")
+
+    # practitioner_id = fields.Many2one(
+    #     comodel_name='podiatry.practitioner',
+    #     string='Practitioner')
+
+    # practitioner_email = fields.Char(
+    #     string='Email', related='practitioner_id.email')
 
     product_id = fields.Many2one('product.product', 'Name')
 
