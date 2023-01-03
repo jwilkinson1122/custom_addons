@@ -265,11 +265,13 @@
     <!--
     Action: Contacts
     -->
-    <record id="action_podiatry_practitioner" model="ir.actions.act_window">
+    <record id="action_podiatry_contact" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
+        <field name="domain">[]</field>
+        <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_practitioner_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -280,14 +282,6 @@
             </p>
         </field>
     </record>
-
-
-
-    <!--
-    Menu: Contacts
-    -->
-    <menuitem id="menu_podiatry_practitioner_root" name="Contacts" action="action_podiatry_practitioner" parent="menu_root" groups="group_user" sequence="10" />
-
 
     <!--
         =========
@@ -319,7 +313,7 @@
     <!--
     Action
     -->
-    <record id="action_podiatry_practitioner_report" model="ir.actions.act_window">
+    <record id="action_podiatry_contact_report" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
         <field name="view_mode">pivot</field>
@@ -334,9 +328,8 @@
         </field>
     </record>
 
-    <!--
-    Submenu: Reports / Contacts
-    -->
-    <menuitem id="menu_podiatry_practitioner_dashboard" name="Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" />
+    <!-- <menuitem id="menu_podiatry_contacts" name="Contacts" action="action_podiatry_contact" parent="podiatry.menu_podiatry_contacts_root" groups="group_user" sequence="1" /> -->
+
+
 
 </odoo>

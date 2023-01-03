@@ -7,10 +7,4 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-
-    <!--
-    Submenu: Settings / Other / Specialty Types
-    -->
-    <menuitem id="menu_specialty_type" name="Medical Specialties" parent="podiatry.menu_configuration_other" action="action_window_specialities" sequence="15" groups="base.group_no_one"/>
-
 </odoo>

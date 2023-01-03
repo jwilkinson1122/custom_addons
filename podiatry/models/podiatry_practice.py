@@ -71,6 +71,7 @@ class Practice(models.Model):
     zip = fields.Char(string="ZIP Code")
 
     notes = fields.Text(string="Notes")
+    image_129 = fields.Image(max_width=128, max_height=128)
 
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
@@ -90,6 +91,13 @@ class Practice(models.Model):
 
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_company', '=', True)], string="Practice", required=True)
+
+    practice_type = fields.Selection([('hospital', 'Hospital'),
+                                      ('multi', 'Multi-Hospital'),
+                                      ('clinic', 'Clinic'),
+                                      ('military', 'Military Medical Center'),
+                                      ('other', 'Other')],
+                                     string="Practice Type")
 
     practitioner_id = fields.One2many(
         comodel_name='podiatry.practitioner',

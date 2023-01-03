@@ -100,11 +100,11 @@
                         </page>
                         <page string="Prescription Testing">
                             <group string="Prescription Details">
-                                <button name="%(podiatry.create_prescription_obj_wizard)d" string="Create Prescription Line Item" type="action" class="oe_highlight" context="{'default_practitioner': active_id}" />
+                                <!-- <button name="%(podiatry.create_prescription_obj_wizard)d" string="Create Prescription Line Item" type="action" class="oe_highlight" context="{'default_practitioner': active_id}" /> -->
                             </group>
-                            <group>
+                            <!-- <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
-                            </group>
+                            </group> -->
                         </page>
                         <page string="Documents">
                             <group name="photo_group_tlOo2">
@@ -229,6 +229,12 @@
                 <field name="num_prescription_items" type="measure" />
             </graph>
         </field>
+    </record>
+
+    <record id="action_podiatry_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
     </record>
 
 </odoo>

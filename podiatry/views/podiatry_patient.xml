@@ -98,9 +98,6 @@
                             <group name="attributes" string="Attributes">
                                 <field name="gender" required="1"/>
                                 <field name="diagnosis"/>
-                                <field name="shoe_width_id" options="{'no_open': true}"/>
-                                <field name="shoe_size_id" options="{'no_open': true}"/>
-                                <field name="weight_id" options="{'no_open': true}"/>
                             </group>
                         </page>
                         <page name="patient_measures" string="Measures">
@@ -446,13 +443,5 @@
             </p>
         </field>
     </record>
-
-    <!-- Menu: Patients -->
-    <menuitem id="menu_podiatry_patient_root" name="Patients" action="action_podiatry_patient" parent="menu_root" groups="group_user" sequence="15" />
-
-    <!--
-    Submenu: Reports / Patients
-    -->
-    <menuitem id="menu_podiatry_patient_dashboard" name="Patients" parent="menu_report" action="action_podiatry_patient_report" sequence="35" />
 
 </odoo>

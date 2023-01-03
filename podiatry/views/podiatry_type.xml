@@ -108,16 +108,4 @@
         </field>
     </record>
 
-    <!--
-    Submenu: Settings / Types
-    -->
-    <menuitem
-        id="menu_podiatry_type"
-        name="Types"
-        action="action_podiatry_type"
-        groups="group_manager"
-        parent="menu_configuration"
-        sequence="15"
-    />
-
 </odoo>

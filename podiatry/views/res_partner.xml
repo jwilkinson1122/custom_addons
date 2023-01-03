@@ -67,6 +67,6 @@
         <field name="context">{'search_default_is_patient': True}</field>
     </record>
 
-    <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_other" sequence="20"/> -->
+    <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_root" sequence="20"/> -->
 
 </odoo>

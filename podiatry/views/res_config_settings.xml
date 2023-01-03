@@ -105,9 +105,4 @@
         <field name="context">{'module': 'podiatry'}</field>
     </record>
 
-    <!--
-    Submenu: Settings
-    -->
-    <menuitem id="menu_settings" name="Settings" parent="menu_configuration" action="action_res_config_settings_inherit_podiatry" sequence="5"/>
-
 </odoo>

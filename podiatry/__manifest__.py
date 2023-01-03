@@ -47,27 +47,23 @@
         # -----
         # Views
         # =====
-        "views/podiatry_root.xml",
         "views/res_config_settings.xml",
         "views/mail_activity_type.xml",
         "views/podiatry_patient.xml",
         "views/pos_variants.xml",
         'views/pos_config_view.xml',
         'views/pos_customer_favorites_view.xml',
-        "views/podiatry_patient_shoe_size.xml",
-        "views/podiatry_patient_shoe_width.xml",
         "views/podiatry_patient_diagnosis.xml",
-        "views/podiatry_patient_weight.xml",
         "views/podiatry_practice.xml",
         "views/podiatry_type.xml",
         "views/podiatry_practitioner.xml",
-        "views/podiatry_menu.xml",
         "views/podiatry_prescription.xml",
         "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
         "data/stage_data.xml",
         "views/podiatry_specialty.xml",
         "views/res_partner.xml",
+        "views/podiatry_menu.xml",
         # -------
         # Reports
         # =======
@@ -109,9 +105,7 @@
         ],
         'web.assets_backend': [
             'podiatry/static/src/scss/podiatry_practice.scss',
-            # 'podiatry/static/src/scss/card.scss',
             'podiatry/static/src/css/customerscreen.css',
-            # 'podiatry/static/src/css/label.css',
             'podiatry/static/src/css/main.css',
         ],
         'web.assets_qweb': [

@@ -21,4 +21,10 @@
         <field name="state">cancel</field>
     </record>
 
+    <record id="action_podiatry_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">podiatry.prescription.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
 </odoo>

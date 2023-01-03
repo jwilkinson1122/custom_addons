@@ -6,13 +6,10 @@
         <field name="res_model">mail.activity.type</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'podiatry.patient')]</field>
+        <field name="view_id" eval="False"/>
         <!-- <field name="domain">['|', ('res_model', '=', False), ('res_model.model', 'in', ['podiatry.patient'])]</field> -->
         <field name="context">{'default_res_model': 'podiatry.patient'}</field>
     </record>
 
-    <!--
-    Submenu: Settings / Other / Activity Types
-    -->
-    <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_other" action="action_mail_activity_type_podiatry" sequence="10" groups="base.group_no_one"/>
 
 </odoo>
