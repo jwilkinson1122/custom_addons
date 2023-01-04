@@ -60,9 +60,10 @@
         "views/podiatry_prescription.xml",
         "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
-        "data/stage_data.xml",
         "views/podiatry_specialty.xml",
-        "views/res_partner.xml",
+        "views/product.xml",
+        "views/device.xml",
+        "views/device_shell.xml",
         "views/podiatry_menu.xml",
         # -------
         # Reports

@@ -400,6 +400,30 @@ access_custom_field,custom.partner.field,model_custom_field,,1,1,1,1 -->
             <field name="perm_unlink" eval="0"/>
         </record>
 
+        <!--
+         device.shell
+        -->
+        <record id="access_device_shell_group_manager" model="ir.model.access">
+            <field name="name">access.device.shell.group.manager</field>
+            <field name="model_id" ref="model_device_shell"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_device_shell_group_user" model="ir.model.access">
+            <field name="name">access.device.shell.group.user</field>
+            <field name="model_id" ref="model_device_shell"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
 
     </data>
 </odoo>

@@ -21,3 +21,6 @@ from . import pos_create_sales_order
 from . import inherit_invoice
 from . import product_attribute
 from . import ir_actions
+from . import product
+from . import device
+from . import device_shell

@@ -21,11 +21,20 @@
         <menuitem id="menu_podiatry_sale_order" name="Sale Order" action="sale.action_orders" parent="podiatry.menu_root" sequence="20"/>
 
         <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_root" groups="group_manager" sequence="100" />
+
         <menuitem id="menu_podiatry_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="105"/>
         <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="110"/>
-        <menuitem id="menu_configuration_product" name="Product" parent="podiatry.menu_configuration_root" groups="group_manager" sequence="115" />
+        <!-- <menuitem id="menu_configuration_product" name="Product" parent="podiatry.menu_configuration_root" groups="group_manager" sequence="115" /> -->
+        <!-- <menuitem id="menu_product_configuration_root" name='Products' parent="podiatry.menu_configuration_root" sequence="130"/> -->
+        <menuitem id="menu_podiatry_device" name="Device" action="device_action" parent="podiatry.menu_configuration_root" sequence="115"/>
         <menuitem id="menu_podiatry_type" name="Types" action="action_podiatry_type" groups="group_manager" parent="podiatry.menu_configuration_root" sequence="120" />
         <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/>
+
+
+
+
+        <!-- <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/> -->
+
 
 
     </data>
