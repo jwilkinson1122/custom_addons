@@ -38,3 +38,9 @@ access_product_product_product_config_user,product.product Product Config user,p
 access_product_product_product_config_manager,product.product Product Config Manager,product.model_product_product,podiatry.group_product_configurator_manager,1,1,1,1
 access_product_attribute_line_product_config_manager,product.attribute line Product Config Manager,product.model_product_template_attribute_line,podiatry.group_product_configurator_manager,1,1,1,1
 access_product_configurator_group,product_configurator,model_product_configurator,podiatry.group_product_configurator,1,1,1,1
+access_podiatry_practice,podiatry.practice,model_podiatry_practice,base.group_user,1,1,1,1
+access_podiatry_practitioner,podiatry.practitioner,model_podiatry_practitioner,base.group_user,1,1,1,1
+access_podiatry_patient,podiatry.patient,model_podiatry_patient,base.group_user,1,1,1,1
+access_podiatry_prescription,podiatry.prescription,model_podiatry_prescription,base.group_user,1,1,1,1
+access_podiatry_prescription_lines,podiatry.prescription.lines,model_podiatry_prescription_line,base.group_user,1,1,1,1
+access_podiatry_prescription_stage,podiatry.prescription.stage,model_podiatry_prescription_stage,base.group_user,1,1,1,1

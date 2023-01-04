@@ -37,7 +37,7 @@
                     <!-- Ribbon -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <!-- Title -->
-                    <div class="oe_title">
+                    <!-- <div class="oe_title">
                         <h1 class="d-flex">
                             <field name="reference"/>
                             <field name="name" placeholder="Practice Name" required="True"/>
@@ -45,15 +45,15 @@
                         <h3>
                             <field name="parent_id" placeholder="Parent Practice" />
                         </h3>
-                    </div>
-                    <!-- <div name="title" class="oe_title">
+                    </div> -->
+                    <div name="title" class="oe_title">
                         <div name="reference">
-                            <h1>
+                            <h1 class="d-flex">
                                 <field name="reference"/>
                             </h1>
                         </div>
                         <div name="name">
-                            <h1>
+                            <h1 class="d-flex">
                                 <field name="name" required="1" placeholder="Contact Name"/>
                             </h1>
                         </div>
@@ -61,7 +61,7 @@
                         <div name="parent_practice_id">
                             <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
-                    </div> -->
+                    </div>
 
                     <group name="practice_contact">
                         <!-- Address info -->

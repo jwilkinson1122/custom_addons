@@ -6,7 +6,7 @@
     Top level menu
     -->
         <menuitem id="menu_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" />
-        <menuitem id="menu_podiatry_infrastruture" name="Infrastructure Management" parent="podiatry.menu_root" sequence="10"/>
+        <menuitem id="menu_podiatry_infrastruture" name="Account Management" parent="podiatry.menu_root" sequence="10"/>
         <menuitem id="menu_podiatry_practice" name="Clinics" action="action_podiatry_practice" parent="podiatry.menu_podiatry_infrastruture" sequence="1" />
         <menuitem id="menu_podiatry_contacts" name="Contacts" action="action_podiatry_contact" parent="podiatry.menu_podiatry_infrastruture" sequence="2" />
         <menuitem id="menu_patients_root" name="Patients" parent="podiatry.menu_root" sequence="15" />
