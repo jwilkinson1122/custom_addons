@@ -14,6 +14,13 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    is_prescription = fields.Boolean(default=False)
+
+    over_the_counter = fields.Boolean(
+        default=False,
+        help="True if product does not require a prescription",
+    )  # Field: isOverTheCounter
+
     @api.depends("product_variant_ids.product_tmpl_id")
     def _compute_product_variant_count(self):
         """For configurable products return the number of variants configured or
@@ -38,6 +45,14 @@ class ProductTemplate(models.Model):
                 product_tmpl.attribute_line_val_ids = value_ids
             else:
                 product_tmpl.attribute_line_val_ids = False
+
+    @api.constrains("type", "is_prescription")
+    def _check_product(self):
+        if self.is_prescription:
+            if self.type not in ["product", "consu"]:
+                raise ValidationError(
+                    _("Must be a stockable product")
+                )
 
     @api.constrains("attribute_line_ids", "attribute_value_line_ids")
     def check_attr_value_ids(self):

@@ -6,6 +6,10 @@
         <field name="priority">16</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <field name="over_the_counter"/>
+                <label for="over_the_counter" string="Is OTC?"/>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <field name="config_ok" invisible="1" />
             </xpath>
