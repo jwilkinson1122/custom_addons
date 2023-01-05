@@ -12,7 +12,7 @@
         <menuitem id="menu_patients_root" name="Patients" parent="podiatry.menu_root" sequence="15" />
         <menuitem id="menu_podiatry_patients" name="Patients" action="action_podiatry_patient" parent="podiatry.menu_patients_root" sequence="1" />
         <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription" parent="podiatry.menu_patients_root" sequence="2"/>
-        <menuitem id="menu_podiatry_sale_order" name="Sale Order" action="sale.action_orders" parent="podiatry.menu_root" sequence="20"/>
+        <!-- <menuitem id="menu_podiatry_sale_order" name="Sale Order" action="sale.action_orders" parent="podiatry.menu_root" sequence="20"/> -->
         <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_root" sequence="100" />
         <menuitem id="menu_podiatry_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="105"/>
         <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="110"/>
@@ -91,7 +91,12 @@
 
         <menuitem id="menu_product_config_session" action="product_config_session" name="Configuration Sessions" parent="menu_product_configurable_settings" sequence="50" />
 
-
+        <record id="sale.product_template_action" model="ir.actions.act_window">
+            <field name="context">{&quot;search_default_filter_to_sell&quot;:1, &quot;search_default_filter_standard_products&quot;: 1, &quot;sale_multi_pricelist_product_template&quot;: 1}</field>
+        </record>
+        <record id="product.product_normal_action_sell" model="ir.actions.act_window">
+            <field name="context">{&quot;search_default_filter_to_sell&quot;:1, &quot;search_default_filter_standard_products&quot;: 1}</field>
+        </record>
 
         <!-- <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/> -->
 

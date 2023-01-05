@@ -11,4 +11,5 @@ from . import podiatry_prescription
 from . import podiatry_prescription_line
 from . import podiatry_prescription_stage
 from . import podiatry_contact_mixin
+from . import sale
 from . import res_partner

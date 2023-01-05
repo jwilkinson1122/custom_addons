@@ -38,6 +38,7 @@
         "wizard/create_prescription_shipment_wizard.xml",
         "wizard/prescription_mass_message_wizard_view.xml",
         "views/mail_activity_type.xml",
+        "views/sale_view.xml",
         "views/podiatry_patient.xml",
         "views/podiatry_practice.xml",
         "views/podiatry_type.xml",
@@ -68,6 +69,7 @@
         ]
     },
     "demo": [
+        "demo/res_partner_demo.xml",
         "demo/product_template.xml",
         "demo/product_attribute.xml",
         "demo/product_config_domain.xml",
