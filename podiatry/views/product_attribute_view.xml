@@ -68,8 +68,6 @@
         <field name="context">{'flag_config_ok': True}</field>
     </record>
 
-    <!-- <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="podiatry.menu_product_configurable_settings" sequence="10" groups="product.group_product_variant" /> -->
-
     <!-- Product Attribute Value -->
 
     <record id="product_template_attribute_value_view_tree_weight_extra" model="ir.ui.view">
@@ -146,8 +144,6 @@
         <field name="res_model">product.attribute.value</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <!-- <menuitem id="menu_variants_action_configuration" action="variants_action" parent="podiatry.menu_product_configurable_settings" sequence="20" groups="product.group_product_variant" /> -->
 
     <!-- Product Attribute Line -->
     <record id="product_template_attribute_line_form_config" model="ir.ui.view">

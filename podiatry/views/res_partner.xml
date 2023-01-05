@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Action -->
-    <record id="action_podiatry_patient_from_partner" model="ir.actions.act_window">
+    <record id="action_pod_patients_from_partner" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="res_model">podiatry.patient</field>
         <field name="context">{'default_partner_id': active_id}</field>
@@ -39,7 +39,7 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="patient_ids" invisible="1"/>
-                <button type="action" name="%(action_podiatry_patient_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
+                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
                     <field name="patient_count" string="Patients" widget="statinfo"/>
                 </button>
             </xpath>

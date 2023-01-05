@@ -13,3 +13,4 @@ from . import podiatry_prescription_stage
 from . import podiatry_contact_mixin
 from . import sale
 from . import res_partner
+from . import res_config_settings

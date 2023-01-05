@@ -229,7 +229,7 @@
         </field>
     </record>
 
-    <record id="action_podiatry_prescription" model="ir.actions.act_window">
+    <record id="action_pod_prescriptions" model="ir.actions.act_window">
         <field name="name">Prescriptions</field>
         <field name="res_model">podiatry.prescription</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>

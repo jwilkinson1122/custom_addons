@@ -25,7 +25,6 @@
         "security/configurator_security.xml",
         "security/ir.model.access.csv",
         "views/res_config_settings_view.xml",
-        # "data/menu_configurable_product.xml",
         "data/product_attribute.xml",
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
@@ -46,6 +45,7 @@
         "views/podiatry_prescription.xml",
         "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
+        "views/podiatry_actions.xml",
         "views/podiatry_menu.xml",
         # -------
         # Reports

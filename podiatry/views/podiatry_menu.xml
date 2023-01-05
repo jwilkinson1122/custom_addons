@@ -5,102 +5,57 @@
         <!--
     Top level menu
     -->
-        <menuitem id="menu_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" />
-        <menuitem id="menu_podiatry_infrastruture" name="Account Management" parent="podiatry.menu_root" sequence="10"/>
-        <menuitem id="menu_podiatry_practice" name="Clinics" action="action_podiatry_practice" parent="podiatry.menu_podiatry_infrastruture" sequence="1" />
-        <menuitem id="menu_podiatry_contacts" name="Contacts" action="action_podiatry_contact" parent="podiatry.menu_podiatry_infrastruture" sequence="2" />
-        <menuitem id="menu_patients_root" name="Patients" parent="podiatry.menu_root" sequence="15" />
-        <menuitem id="menu_podiatry_patients" name="Patients" action="action_podiatry_patient" parent="podiatry.menu_patients_root" sequence="1" />
-        <menuitem id="menu_podiatry_prescriptions" name="Prescriptions" action="action_podiatry_prescription" parent="podiatry.menu_patients_root" sequence="2"/>
-        <!-- <menuitem id="menu_podiatry_sale_order" name="Sale Order" action="sale.action_orders" parent="podiatry.menu_root" sequence="20"/> -->
-        <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_root" sequence="100" />
-        <menuitem id="menu_podiatry_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="105"/>
-        <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="110"/>
-        <menuitem id="menu_podiatry_type" name="Types" action="action_podiatry_type" parent="podiatry.menu_configuration_root" sequence="120" />
-        <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/>
+        <menuitem id="menu_pod_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" />
+        <menuitem id="menu_pod_accounts" name="Accounts" parent="podiatry.menu_pod_root" sequence="10"/>
+        <menuitem id="menu_pod_clinics" name="Clinics" action="action_pod_clinics" parent="podiatry.menu_pod_accounts" sequence="1" />
+        <menuitem id="menu_pod_contacts" name="Contacts" action="action_pod_contacts" parent="podiatry.menu_pod_accounts" sequence="2" />
+        <menuitem id="menu_pod_patients" name="Patients" action="action_pod_patients" parent="podiatry.menu_pod_accounts" sequence="3" />
+
+        <!-- <menuitem id="menu_pod_prescriptions" name="Prescriptions" action="action_pod_prescriptions" parent="podiatry.menu_pod_patients" sequence="2"/> -->
+        <menuitem id="menu_pod_rx_root" name="Prescriptions" parent="podiatry.menu_pod_root" sequence="15"/>
+        <menuitem id="menu_pod_rx_quotes" name="Prescription Quotes" action="sale.action_quotations_with_onboarding" parent="podiatry.menu_pod_rx_root" sequence="1"/>
+        <!-- <menuitem id="menu_pod_rx_quotes_test" name="Prescription Quotes Test" action="sale.action_quotations" parent="podiatry.menu_pod_rx_root" sequence="1"/> -->
+        <menuitem id="menu_pod_rx_orders" name="Prescription Orders" action="sale.action_orders" parent="podiatry.menu_pod_rx_root" sequence="2"/>
+        <menuitem id="menu_pod_rx_team" name="Sales Teams" action="sales_team.crm_team_action_sales" parent="podiatry.menu_pod_rx_root" sequence="3"/>
 
 
-        <menuitem id="menu_product_configurable" name="Configurator" parent="podiatry.menu_root" sequence="25" groups="podiatry.group_product_configurator_manager" />
-        <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="menu_product_configurable" sequence="10" />
-        <menuitem id="menu_product_configurable_settings" name="Configuration" parent="menu_product_configurable" sequence="20" />
+        <!-- product configuration root -->
+        <menuitem id="menu_product_root" name="Products" parent="podiatry.menu_pod_root" sequence="20" groups="podiatry.group_product_configurator_manager" />
 
-        <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="menu_product_configurable_settings" sequence="10" groups="product.group_product_variant" />
-        <menuitem id="menu_variants_action_configuration" action="variants_action" parent="menu_product_configurable_settings" sequence="20" groups="product.group_product_variant" />
+        <!-- configurable products heading -->
+        <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="podiatry.menu_product_root" sequence="100" />
+        <!-- Configurable Templates -->
+        <menuitem id="menu_product_configurable_template_action" action="product_configurable_template_action" parent="podiatry.menu_product_configurable_product_main" sequence="1" />
+        <!-- configurable Variants -->
+        <menuitem id="menu_product_configurable_variants_action" action="product_configurable_variant_action" parent="podiatry.menu_product_configurable_product_main" sequence="2" />
 
 
-        <record id="product_configurable_template_action" model="ir.actions.act_window">
-            <field name="name">Configurable Templates</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="product.product_template_kanban_view" />
-            <field name="context">{'default_config_ok': True, 'custom_create_variant': True, 'search_default_filter_config_ok': 1}</field>
-        </record>
+        <!-- configurable attributs heading -->
+        <menuitem id="menu_product_configurable_attributes" name="Configurable Attributes" parent="podiatry.menu_product_root" sequence="200" />
+        <!-- Attributes -->
+        <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="podiatry.menu_product_configurable_attributes" sequence="1" groups="product.group_product_variant" />
+        <!-- Attribute Values -->
+        <menuitem id="menu_variants_action_configuration" action="variants_action" parent="podiatry.menu_product_configurable_attributes" sequence="2" groups="product.group_product_variant" />
 
-        <menuitem action="product_configurable_template_action" id="menu_product_configurable_template_action" parent="menu_product_configurable_product_main" sequence="20" />
 
-        <record id="product_configurable_variant_action" model="ir.actions.act_window">
-            <field name="name">Configured Variants</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">kanban,form,tree</field>
-            <field name="search_view_id" ref="product.product_search_form_view" />
-            <field name="view_id" eval="False" />
-            <!-- Force empty -->
-            <field name="context">{'default_config_ok': True, 'custom_create_variant': True, 'search_default_filter_config_ok': 1}</field>
-        </record>
+        <!-- configurable settings heading -->
+        <menuitem id="menu_product_configurable_settings" name="Configurable Settings" parent="podiatry.menu_product_root" sequence="300" />
+        <!-- Configuration Steps -->
+        <menuitem id="menu_product_config_steps_action" action="product_config_steps_action" parent="podiatry.menu_product_configurable_settings" sequence="1" />
+        <!-- Configuration Restrictions -->
+        <menuitem id="menu_product_config_domain_action" action="product_config_domain_action" parent="podiatry.menu_product_configurable_settings" sequence="2" />
+        <!-- Configuration Sessions -->
+        <menuitem id="menu_product_config_session" action="product_config_session" parent="podiatry.menu_product_configurable_settings" sequence="3" />
 
-        <menuitem id="menu_product_configurable_variants_action" action="product_configurable_variant_action" name="Configurable Variants" parent="menu_product_configurable_product_main" sequence="25" />
 
-        <record id="action_product_configurator_configuration" model="ir.actions.act_window">
-            <field name="name">Settings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-            <field name="view_id" ref="podiatry.configurator_settings_view_form" />
-            <field name="context">{'module' : 'product_configurator'}</field>
-        </record>
-
-        <menuitem id="menu_action_product_configurator_configuration" action="action_product_configurator_configuration" name="Settings" active="False" parent="menu_product_configurable_settings" sequence="0" />
-
-        <record id="product_config_steps_action" model="ir.actions.act_window">
-            <field name="name">Configuration Steps</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.config.step</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem id="menu_product_config_steps_action" action="product_config_steps_action" name="Configuration Steps" parent="menu_product_configurable_settings" sequence="30" />
-
-        <record id="product_config_domain_action" model="ir.actions.act_window">
-            <field name="name">Configuration Restrictions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.config.domain</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem id="menu_product_config_domain_action" action="product_config_domain_action" name="Configuration Restrictions" parent="menu_product_configurable_settings" sequence="40" />
-
-        <record id="product_config_session" model="ir.actions.act_window">
-            <field name="name">Configuration Sessions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.config.session</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem id="menu_product_config_session" action="product_config_session" name="Configuration Sessions" parent="menu_product_configurable_settings" sequence="50" />
-
-        <record id="sale.product_template_action" model="ir.actions.act_window">
-            <field name="context">{&quot;search_default_filter_to_sell&quot;:1, &quot;search_default_filter_standard_products&quot;: 1, &quot;sale_multi_pricelist_product_template&quot;: 1}</field>
-        </record>
-        <record id="product.product_normal_action_sell" model="ir.actions.act_window">
-            <field name="context">{&quot;search_default_filter_to_sell&quot;:1, &quot;search_default_filter_standard_products&quot;: 1}</field>
-        </record>
+        <!-- settings  -->
+        <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_pod_root" sequence="25" />
+        <!-- <menuitem id="menu_action_product_configurator_configuration" name="Settings" action="action_product_configurator_configuration" active="False" parent="menu_product_configurable_settings" sequence="0" /> -->
+        <menuitem id="menu_podiatry_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/>
+        <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
+        <!-- <menuitem id="menu_podiatry_type" name="Types" action="action_podiatry_type" parent="podiatry.menu_configuration_root" sequence="120" /> -->
 
         <!-- <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/> -->
-
-
 
     </data>
 </odoo>

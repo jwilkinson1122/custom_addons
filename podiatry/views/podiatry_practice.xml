@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_podiatry_practice_by_parent" model="ir.actions.act_window">
+    <record id="action_pod_clinics_by_parent" model="ir.actions.act_window">
         <field name="name">Practices</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -30,7 +30,7 @@
                     <!-- Button Box -->
                     <div class="oe_button_box" name="button_box">
                         <field name="child_ids" invisible="1"/>
-                        <button type="action" name="%(action_podiatry_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                        <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
                     </div>
@@ -266,7 +266,7 @@
     <!--
     Action: Practices
     -->
-    <record id="action_podiatry_practice" model="ir.actions.act_window">
+    <record id="action_pod_clinics" model="ir.actions.act_window">
         <field name="name">Clinics</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
