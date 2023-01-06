@@ -5,6 +5,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', True)]</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']" position="before">
                 <button class="oe_highlight" groups="podiatry.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
             </xpath>
@@ -16,6 +19,18 @@
                 <field invisible="1" name="config_ok" />
                 <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','sent'])]}" class="fa-lg" groups="podiatry.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
                 <field name="config_session_id" />
+            </xpath>
+            <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', True)]</attribute>
+            </xpath> -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field string="Practice" name="practice_id"/>
+                <field string="Practitioner" name="practitioner_id"/>
+                <field string="Patient" name="patient_id"/>
+                <!-- <field string="Practice" name="practice_id"/>
+                <field string="Practitioner" name="practitioner_id"/> -->
+                <!-- <field string="Patient" name="patient_id"/> -->
+
             </xpath>
             <!--
             The line form extension was removed.

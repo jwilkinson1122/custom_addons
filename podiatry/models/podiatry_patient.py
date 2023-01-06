@@ -163,6 +163,16 @@ class Patient(models.Model):
         for rec in self:
             return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
 
+    # @api.onchange('partner_id')
+    # def onchange_partner_id(self):
+    #     for rec in self:
+    #         return {'domain': {'practitioner_id': [('partner_id', '=', rec.partner_id.id)]}}
+
+    # @api.onchange('practitioner_id')
+    # def onchange_practitioner_id(self):
+    #     for rec in self:
+    #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+
     @api.model
     def _relativedelta_to_text(self, delta):
         result = []
