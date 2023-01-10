@@ -42,7 +42,7 @@
                                 <field name="duration_dummy" invisible="1" />
                             </group>
                             <separator string="Device Lines" colspan="4" />
-                            <button class="oe_highlight" groups="pod_erp.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
+                            <!-- <button class="oe_highlight" groups="pod_erp.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" /> -->
                             <field name="device_line_ids" colspan="4" string="Device Line" nolabel="1" context="{'default_checkin_date':checkin_date,
                                         'default_checkout_date':checkout_date}">
                                 <tree editable="bottom">
@@ -67,7 +67,6 @@
                             <field name="service_line_ids" colspan="4" string="Service Line" nolabel="1" context="{'deafult_ser_checkin_date':checkin_date,
                                 'deafult_ser_checkout_date':checkout_date
                                 }">
-
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" domain="[('isservice','=',True)]" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'podiatry':parent.warehouse_id,'uom':product_uom}" options="{'no_open': True}" />
                                     <field name="ser_checkout_date" invisible="1" />

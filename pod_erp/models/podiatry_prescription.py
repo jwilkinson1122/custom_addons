@@ -18,50 +18,8 @@ class PrescriptionDeviceLine(models.Model):
     check_in = fields.Datetime("Check In Date", required=True)
     check_out = fields.Datetime("Check Out Date", required=True)
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription Number", ondelete="cascade")
-    prescription_line_id = fields.Many2one("podiatry.prescription.line", "Prescription Line", ondelete="cascade")
-
     status = fields.Selection(related="prescription_id.state", string="state")
     
-    # custom_value_ids = fields.One2many(comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values",
-    #                                    )
-    # config_ok = fields.Boolean(related="product_id.config_ok", string="Configurable", readonly=True
-    #                            )
-    # config_session_id = fields.Many2one(comodel_name="product.config.session", string="Config Session"
-    #                                     )
-
-    # def reconfigure_product(self):
-    #     """Creates and launches a product configurator wizard with a linked
-    #     template and variant in order to re-configure a existing product. It is
-    #     esetially a shortcut to pre-fill configuration data of a variant"""
-    #     wizard_model = "product.configurator.prescription"
-
-    #     extra_vals = {
-    #         "prescription_id": self.prescription_id.id,
-    #         "prescription_line_id": self.id,
-    #         "product_id": self.product_id.id,
-    #     }
-    #     self = self.with_context(
-    #         {
-    #             "default_prescription_id": self.prescription_id.id,
-    #             "default_prescription_line_id": self.id,
-    #         }
-    #     )
-    #     return self.product_id.product_tmpl_id.create_config_wizard(model_name=wizard_model, extra_vals=extra_vals
-    #                                                                 )
-
-    # @api.onchange("product_uom", "product_uom_qty")
-    # def product_uom_change(self):
-    #     if self.config_session_id:
-    #         account_tax_obj = self.env["account.tax"]
-    #         self.price_unit = account_tax_obj._fix_tax_included_price_company(
-    #             self.config_session_id.price,
-    #             self.product_id.taxes_id,
-    #             self.tax_id,
-    #             self.company_id,
-    #         )
-    #     else:
-    #         super(PrescriptionDeviceLine, self).product_uom_change()
-
 
 
 class PodiatryPrescription(models.Model):
@@ -338,24 +296,13 @@ class PodiatryPrescription(models.Model):
             }
         )
     
-    def action_config_start(self):
-        """Return action to start configuration wizard"""
-        configurator_obj = self.env["product.configurator.prescription"]
-        ctx = dict(
-            self.env.context, default_prescription_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True,
-        )
-        return configurator_obj.with_context(ctx).get_wizard_action()
-
+    
 
 class PodiatryPrescriptionLine(models.Model):
 
     _name = "podiatry.prescription.line"
     _description = "Podiatry Prescription Line"
-    
-    custom_value_ids = fields.One2many(comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
-    config_ok = fields.Boolean(related="product_id.config_ok", string="Configurable", readonly=True)
-    config_session_id = fields.Many2one(comodel_name="product.config.session", string="Config Session")
-            
+  
     prescription_line_id = fields.Many2one(
         "sale.order.line",
         "Prescription Order Line",
@@ -368,39 +315,6 @@ class PodiatryPrescriptionLine(models.Model):
     checkin_date = fields.Datetime("Check In", required=True)
     checkout_date = fields.Datetime("Check Out", required=True)
     is_reserved = fields.Boolean(help="True when prescription line created from Reservation")
-
-    def reconfigure_product(self):
-        """Creates and launches a product configurator wizard with a linked
-        template and variant in order to re-configure a existing product. It is
-        esetially a shortcut to pre-fill configuration data of a variant"""
-        wizard_model = "product.configurator.prescription"
-
-        extra_vals = {
-            "prescription_id": self.prescription_id.id,
-            "prescription_line_id": self.id,
-            "product_id": self.product_id.id,
-        }
-        self = self.with_context(
-            {
-                "default_prescription_id": self.prescription_id.id,
-                "default_prescription_line_id": self.id,
-            }
-        )
-        return self.product_id.product_tmpl_id.create_config_wizard(model_name=wizard_model, extra_vals=extra_vals
-                                                                    )
-
-    @api.onchange("product_uom", "product_uom_qty")
-    def product_uom_change(self):
-        if self.config_session_id:
-            account_tax_obj = self.env["account.tax"]
-            self.price_unit = account_tax_obj._fix_tax_included_price_company(
-                self.config_session_id.price,
-                self.product_id.taxes_id,
-                self.tax_id,
-                self.company_id,
-            )
-        else:
-            super(PodiatryPrescriptionLine, self).product_uom_change()
 
     @api.model
     def create(self, vals):
