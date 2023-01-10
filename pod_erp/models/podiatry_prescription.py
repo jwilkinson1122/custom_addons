@@ -326,11 +326,11 @@ class PodiatryPrescription(models.Model):
         """
         @param self: object pointer
         """
-        order_line_recs = self.env["sale.order.line"].search(
+        prescription_line_recs = self.env["podiatry.prescription.line"].search(
             [("prescription_id", "in", self.ids), ("state", "=", "cancel")]
         )
         self.write({"state": "draft", "invoice_ids": []})
-        order_line_recs.write(
+        prescription_line_recs.write(
             {
                 "invoiced": False,
                 "state": "draft",
