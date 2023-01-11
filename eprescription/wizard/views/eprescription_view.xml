@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="eprescription_wizard_form" model="ir.ui.view">
+        <field name="name">hospital.eprescription.wizard.form</field>
+        <field name="model">hospital.eprescription.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            E-Prescriptions Information
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="today" readonly="True"/>
+                            <field name="seri_no" readonly="True"/>
+                            <field name="protokol_no" readonly="True"/>
+                            <field name="takip_no" placeholder="Sağlık tesisleri dışındaki hekimler boş bırakınız!" readonly="True"/>
+                            <field name="provizyon_tip" readonly="True"/>
+                            <field name="tesis_kod" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="erecete_no" readonly="True"/>
+                            <field name="recete_tur" readonly="True"/>
+                            <field name="recete_alt_tur" readonly="True"/>
+                        </group>
+                    </group>
+                    <group string="Patient Information">
+                        <field name="patient_id" readonly="True"/>
+                        <field name="patient_name" readonly="True"/>
+                        <field name="patient_surname" readonly="True"/>
+                    </group>
+                    <group string="Doctor Information">
+                        <field name="doctor_id" readonly="True"/>
+                        <field name="brans_kod" readonly="True"/>
+                    </group>
+                    <group string="Detail">
+                        <field name="diagnosis_line_ids" string="Tanı listesi" readonly="True">
+                            <tree editable="bottom">
+                                <field name="tani_kodu"/>
+                                <field name="tani_adi"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="explanation_line_ids" string="E-Prescriptions Description List" readonly="True">
+                            <tree editable="bottom">
+                                <field name="aciklama_turu"/>
+                                <field name="aciklama"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Product List">
+                        <field name="pharmacy_line_ids" readonly="True">
+                            <tree>
+                                <field name="product_id"/>
+                                <field name="medicine_name"/>
+                                <field name="kullanim_sekli"/>
+                                <field name="kullanim_doz1"/>
+                                <field name="kullanim_doz2"/>
+                                <field name="kullanim_periyot"/>
+                                <field name="kullanim_periyot_birimi"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="eprescription_id"/>
+                                    <field name="product_id"/>
+                                    <field name="medicine_name"/>
+                                    <field name="quantity"/>
+                                    <field name="kullanim_sekli"/>
+                                    <field name="kullanim_doz1"/>
+                                    <field name="kullanim_doz2"/>
+                                    <field name="kullanim_periyot"/>
+                                    <field name="kullanim_periyot_birimi"/>
+                                </group>
+                                <group>
+                                    <field name="explanation_line_ids">
+                                        <tree editable="bottom">
+                                            <field name="aciklama_turu"/>
+                                            <field name="aciklama"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Kapat" data-hotkey="z"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="eprescription_wizard_action">
+        <field name="name">Eprescription Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.eprescription.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+    </record>
+
+
+</odoo>

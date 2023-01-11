@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="custom_res_users_inherit" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='preferences']" position="after">
+                    <page string="Doctor Information" name="doctor_profile">
+                        <group>
+                            <field name="doctor_id"/>
+                            <field name="name"/>
+                            <field name="surname"/>
+                            <field name="birth"/>
+                            <field name="age"/>
+                            <field name="doctor_tc"/>
+                            <field name="brans_kod"/>
+                            <field name="sertifika_kod"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="save_ereport_form" model="ir.ui.view">
+        <field name="name">hospital.service.save.ereport.form</field>
+        <field name="model">hospital.service.save.ereport</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <p>Raporu göndermek istediğinizden emin misiniz?</p>
+                    </group>
+                </group>
+                <footer>
+                    <button name="save_ereport" string="Gönder" type="object" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button special="cancel" string="Vazgeç" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="save_ereport_action">
+        <field name="name">Save E-Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.service.save.ereport</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
