@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="ereport_teshis_tree" model="ir.ui.view">
+        <field name="name">podiatry.ereport.teshis.tree</field>
+        <field name="model">podiatry.ereport.teshis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="rapor_teshis_kodu" string="teshis Kodu"/>
+                <field name="rapor_teshis_adi"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ereport_teshis_form" model="ir.ui.view">
+        <field name="name">podiatry.ereport.teshis.form</field>
+        <field name="model">podiatry.ereport.teshis</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="rapor_teshis_kodu" readonly="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="rapor_teshis_kodu"/>
+                        <field name="rapor_teshis_adi"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ereport_teshis_action">
+        <field name="name">E-Report Teşhisler</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.ereport.teshis</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first E-Report Condition!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="podiatry_ereport_teshis" name="E-Report Teşhisler" parent="podiatry_conf_root" action="ereport_teshis_action" sequence="11"/>
+
+</odoo>

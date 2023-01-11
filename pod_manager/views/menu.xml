@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <menuitem id="podiatry_root" name="POD ERP" web_icon="prescription,static/description/icon.png" sequence="12"/>
+    <!-- <menuitem id="podiatry_prescription_root" name="Prescriptions" parent="pod_manager.podiatry_root" action="prescription_action" sequence="13"/> -->
+    <!-- <menuitem id="podiatry_ereport_root" name="E-Report" parent="pod_manager.podiatry_root" action="ereport_action" sequence="13"/> -->
+    <menuitem id="podiatry_query_root" name="Query" parent="pod_manager.podiatry_root" sequence="14"/>
+    <menuitem id="podiatry_delete_root" name="Delete" parent="pod_manager.podiatry_root" sequence="14"/>
+    <!--
+    <menuitem id="podiatry_confirmation_root" name="Confirmations" parent="podiatry_root" sequence="15"/>
+    -->
+    <menuitem id="podiatry_conf_root" name="Setings" parent="pod_manager.podiatry_root" sequence="15"/>
+
+    <!-- Alt Başlıklar -->
+    <menuitem id="podiatry_query_prescription_root" name="Prescriptions" parent="pod_manager.podiatry_query_root" sequence="15"/>
+    <menuitem id="podiatry_query_ereport_root" name="E-Report" parent="pod_manager.podiatry_query_root" sequence="15"/>
+    <menuitem id="podiatry_query_ilac_root" name="Product" parent="pod_manager.podiatry_query_root" sequence="15"/>
+    <menuitem id="podiatry_query_other_root" name="Other" parent="pod_manager.podiatry_query_root" sequence="15"/>
+
+
+</odoo>

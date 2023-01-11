@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="add_ereport_explanation_form" model="ir.ui.view">
+        <field name="name">podiatry.service.add.ereport.explanation.form</field>
+        <field name="model">podiatry.service.add.ereport.explanation</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="doctor_id"/>
+                </group>
+                <group>
+                    <field name="explanation_lines" string="E-Report Description List">
+                        <tree editable="bottom">
+                            <field name="aciklama"/>
+                            <field name="takip_formu_no"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="add_explanation" string="Ekle" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Vazgeç" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="add_ereport_explanation_action">
+        <field name="name">Add E-Report Explanation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.service.add.ereport.explanation</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

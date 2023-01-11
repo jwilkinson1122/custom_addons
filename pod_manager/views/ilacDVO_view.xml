@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="ilac_tree" model="ir.ui.view">
+        <field name="name">podiatry.ilac.tree</field>
+        <field name="model">podiatry.ilac</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="barcode"/>
+                <field name="ilac_adi"/>
+                <field name="etkin_madde_kodu"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ilac_search" model="ir.ui.view">
+        <field name="name">podiatry.ilac.search</field>
+        <field name="model">podiatry.ilac</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ilac_adi" string="Product Name"/>
+                <field name="barcode" string="Item Barcode"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ilac_form" model="ir.ui.view">
+        <field name="name">podiatry.ilac.form</field>
+        <field name="model">podiatry.ilac</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="barcode" readonly="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="barcode" string="Drug Barcode"/>
+                        <field name="ilac_adi" string="Drug Name"/>
+                        <field name="sgk_ilac_kodu" string="Insurance Code"/>
+                        <field name="ambalaj_miktari" string="Packing Quantity"/>
+                        <field name="tek_doz_miktari" string="Single Item Quantity"/>
+                        <field name="kutu_birim_miktari" string="Box Quantity"/>
+                        <field name="ayaktan_odenme_sarti" string="Outstanding Payment Policy"/>
+                        <field name="yatan_odenme_sarti" string="Outstanding Payment Terms"/>
+                        <field name="etkin_madde_kodu" string="Active Ingredient Code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ilac_action">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.ilac</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first product!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="podiatry_ilacDVO" name="Products" parent="podiatry_conf_root" action="ilac_action" sequence="10"/>
+
+
+</odoo>

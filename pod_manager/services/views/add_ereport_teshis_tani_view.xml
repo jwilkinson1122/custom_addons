@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="add_ereport_teshis_tani_form" model="ir.ui.view">
+        <field name="name">podiatry.service.add.ereport.teshist.form</field>
+        <field name="model">podiatry.service.add.ereport.teshist</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="doctor_id"/>
+                </group>
+                <group>
+                    <field name="tani_lines"/>
+                </group>
+                <footer>
+                    <button name="add_teshis_tani" string="Ekle" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Vazgeç" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="add_ereport_teshis_tani_action">
+        <field name="name">Add E-Report Teshis Tani</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.service.add.ereport.teshist</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

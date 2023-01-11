@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="prescription_tree" model="ir.ui.view">
+        <field name="name">podiatry.prescription.tree</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="reference_no"/>
+                <field name="today"/>
+                <field name="patient_name"/>
+                <field name="patient_surname"/>
+                <field name="state" string="Durum" decoration-success="state == 'sent'" decoration-info="state == 'draft'" decoration-danger="state == 'deleted'" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="prescription_form" model="ir.ui.view">
+        <field name="name">podiatry.prescription.form</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(pod_manager.save_prescription_action)d" string="Save Prescription" type="action" class="oe_highlight" data-hotkey="H" context="{'default_prescription_id':active_id}" attrs="{'invisible':[('state','==', 'sent')]}"/>
+                    <button name="%(pod_manager.add_diagnosis_action)d" string="Add Condition" type="action" class="oe_highlight" data-hotkey="H" context="{'default_prescription_id':active_id}"/>
+                    <button name="%(pod_manager.add_explanation_action)d" string="Description" type="action" class="oe_highlight" context="{'default_prescription_id':active_id}"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,sent"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            Prescription Information
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="today" attrs="{'readonly':[('address_no','not in', False)]}"/>
+                            <field name="reference_no" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                            <!-- <field name="protokol_no" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
+                            <field name="tracking_no" placeholder="Physicians only - leave blank!" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                            <!-- <field name="provizyon_tip" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
+                            <field name="facility_code" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="address_no" readonly="True"/>
+                            <field name="recete_tur" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                            <field name="recete_alt_tur" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                        </group>
+                    </group>
+                    <group string="Patient Shipping Information">
+                        <!-- <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
+                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/> -->
+                    </group>
+                    <group string="Patient Information">
+                        <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
+                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
+                    </group>
+                    <group string="Doctor Information">
+                        <field name="doctor_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Doctor ID"/>
+                        <field name="doctor_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="doctor_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
+                        <field name="brans_kod" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                    </group>
+                    <group string="Detail">
+                        <field name="diagnosis_line_ids" string="Condition list" attrs="{'readonly':[('address_no','not in',False)]}">
+                            <tree editable="bottom">
+                                <field name="tani_kodu"/>
+                                <field name="tani_adi"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="explanation_line_ids" string="Prescriptions Description List" attrs="{'readonly':[('address_no','not in',False)]}">
+                            <tree editable="bottom">
+                                <field name="aciklama_turu"/>
+                                <field name="aciklama"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Product List">
+                        <field name="pharmacy_line_ids" attrs="{'readonly':[('address_no','not in',False)]}">
+                            <tree>
+                                <field name="product_id"/>
+                                <field name="medicine_name"/>
+                                <field name="kullanim_sekli"/>
+                                <field name="kullanim_doz1"/>
+                                <field name="kullanim_doz2"/>
+                                <field name="kullanim_periyot"/>
+                                <field name="kullanim_periyot_birimi"/>
+                            </tree>
+                            <form>
+                                <button name="%(pod_manager.add_medicine_explanation_action)d" string="Add Description" type="action" class="oe_highlight" context="{'default_pharmacy_line_id':active_id}"/>
+                                <group>
+                                    <field name="prescription_id" invisible="True"/>
+                                    <field name="product_id"/>
+                                    <field name="medicine_name"/>
+                                    <field name="quantity"/>
+                                    <field name="kullanim_sekli"/>
+                                    <field name="kullanim_doz1"/>
+                                    <field name="kullanim_doz2"/>
+                                    <field name="kullanim_periyot"/>
+                                    <field name="kullanim_periyot_birimi"/>
+                                </group>
+                                <group>
+                                    <field name="explanation_line_ids">
+                                        <tree editable="bottom">
+                                            <field name="aciklama_turu"/>
+                                            <field name="aciklama"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="prescription_search" model="ir.ui.view">
+        <field name="name">podiatry.prescription.search</field>
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_gonderildi" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="filter_silindi" string="Deleted" domain="[('state', '=', 'deleted')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="Durum" context="{'group_by':'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" enable_counters="1" icon="fa-file"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="prescription_action">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first e-prescription!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="podiatry_prescription_root" name="Prescriptions" parent="pod_manager.podiatry_root" action="prescription_action" sequence="13"/>
+
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="ereport_explanation_tree" model="ir.ui.view">
+        <field name="name">podiatry.ereport.explanation.tree</field>
+        <field name="model">podiatry.ereport.explanation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="aciklama"/>
+                <field name="takip_formu_no"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ereport_explanation_form" model="ir.ui.view">
+        <field name="name">podiatry.ereport.explanation.form</field>
+        <field name="model">podiatry.ereport.explanation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="aciklama"/>
+                            <field name="takip_formu_no"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ereport_explanation_action">
+        <field name="name">E-Report Explanation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.ereport.explanation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first E-Report Explanation!
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

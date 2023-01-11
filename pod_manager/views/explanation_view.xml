@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="explanation_tree" model="ir.ui.view">
+        <field name="name">podiatry.explanation.tree</field>
+        <field name="model">podiatry.explanation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="aciklama_turu"/>
+                <field name="aciklama"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="explanation_form" model="ir.ui.view">
+        <field name="name">podiatry.explanation.form</field>
+        <field name="model">podiatry.explanation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="aciklama_turu"/>
+                            <field name="aciklama"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="explanation_action">
+        <field name="name">Explanation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.explanation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first explanation!
+            </p>
+        </field>
+    </record>
+
+</odoo>

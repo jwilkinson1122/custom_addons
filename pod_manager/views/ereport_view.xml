@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="ereport_tree" model="ir.ui.view">
+        <field name="name">podiatry.ereport.tree</field>
+        <field name="model">podiatry.ereport</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="report_no"/>
+                <field name="rapor_tarihi"/>
+                <field name="patient_name"/>
+                <field name="patient_surname"/>
+                <field name="state" string="Durum" decoration-info="state == 'draft'" decoration-warning="state in ('heyet_onayinda', 'bashekim_onayinda')" decoration-success="state == 'onaylandi'" decoration-danger="state in ('onaylanmadi', 'deleted')" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ereport_form" model="ir.ui.view">
+        <field name="name">podiatry.ereport.form</field>
+        <field name="model">podiatry.ereport</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(pod_manager.save_ereport_action)d" string="Medulaya Gönder" type="action" class="oe_highlight" context="{'default_ereport_id':active_id}" attrs="{'invisible': [('state', 'not in', ('deleted','draft'))]}"/>
+                    <button name="send_to_confirmation" string="Onaya Gönder" type="object" class="oe_highlight" attrs="{'invisible': ['|',('rapor_duzenleme_turu', '==', '2'), ('state', '==', 'draft')]}"/>
+                    <button name="%(pod_manager.confirm_ereport_action)d" string="Onayla" type="action" class="oe_highlight" attrs="{'invisible': ['|',('rapor_duzenleme_turu', '==', '2'), ('state', '==', 'draft')]}" context="{'default_ereport_id':active_id}"/>
+                    <button name="%(pod_manager.add_ereport_explanation_action)d" string="Add Description" type="action" class="oe_highlight" attrs="{'invisible': [('state', '==', 'draft')]}" context="{'default_ereport_id':active_id}"/>
+                    <button name="%(pod_manager.add_ereport_etkin_madde_action)d" string="Etkin Madde Ekle" type="action" class="oe_highlight" attrs="{'invisible': [('state', '==', 'draft')]}" context="{'default_ereport_id':active_id}"/>
+                    <button name="%(pod_manager.add_ereport_teshis_action)d" string="Teşhis Ekle" type="action" class="oe_highlight" attrs="{'invisible': [('state', '==', 'draft')]}" context="{'default_ereport_id':active_id}"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,heyet_onayinda,bashekim_onayinda,onaylandi"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            E-Report Information
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="rapor_tarihi" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                            <field name="protokol_no" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                            <field name="tracking_no" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                            <field name="report_follow_no" readonly="True"/>
+                            <field name="facility_code" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="report_no" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                            <field name="rapor_duzenleme_turu" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                            <field name="rapor_onay_durumu" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Patient Information">
+                        <field name="patient_id" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                        <field name="patient_name" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                        <field name="patient_surname" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                    </group>
+                    <group>
+                        <field name="rapor_olusturan_doktor" attrs="{'readonly':[('report_follow_no','!=', False)]}"/>
+                    </group>
+                    <group string="Detail">
+                        <field name="rapor_teshis_listesi" string="Teşhis listesi" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree>
+                                <field name="rapor_teshis_kodu"/>
+                                <field name="baslangic_tarihi"/>
+                                <field name="bitis_tarihi"/>
+                                <field name="tani_listesi" widget="many2many_tags"/>
+                            </tree>
+                            <form>
+                                <header>
+                                    <button name="%(pod_manager.add_ereport_teshis_tani_action)d" string="Add Condition" type="action" class="oe_highlight" context="{'default_teshis_id':active_id}"/>
+                                </header>
+                                <group>
+                                    <field name="rapor_teshis_kodu"/>
+                                    <field name="baslangic_tarihi"/>
+                                    <field name="bitis_tarihi"/>
+                                    <field name="tani_listesi"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rapor_doktor_listesi" string="Doctor List" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree>
+                                <field name="name"/>
+                                <field name="surname"/>
+                                <field name="doctor_tc"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rapor_etkin_madde_listesi" string="Active Item List" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree>
+                                <field name="etkin_madde_kodu"/>
+                                <field name="kullanim_doz1"/>
+                                <field name="kullanim_doz2"/>
+                                <field name="kullanim_doz_birimi"/>
+                                <field name="kullanim_doz_periyot"/>
+                                <field name="kullanim_doz_periyot_birimi"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rapor_aciklama_listesi" string="Description List" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree editable="bottom">
+                                <field name="aciklama"/>
+                                <field name="takip_formu_no"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="aciklama"/>
+                                    <field name="takip_formu_no"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rapor_tani_listesi" string="Condition List" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree>
+                                <field name="tani_kodu"/>
+                                <field name="tani_adi"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rapor_ilave_deger_listesi2" string="Additional Value List" attrs="{'readonly':[('report_follow_no','!=', False)]}">
+                            <tree>
+                                <field name="turu"/>
+                                <field name="deger"/>
+                                <field name="aciklama"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="turu"/>
+                                    <field name="rapor_duzenleme_nedeni" attrs="{'invisible':[('turu', '!=', '1')]}"/>
+                                    <field name="kilo" attrs="{'invisible':[('turu', 'not in', '2')]}"/>
+                                    <field name="hemoglobin" attrs="{'invisible':[('turu', 'not in', '3')]}"/>
+                                    <field name="kan_sekeri" attrs="{'invisible':[('turu', 'not in', '4')]}"/>
+                                    <field name="karaciger_nakilli_hasta_YR" attrs="{'invisible':[('turu', 'not in', '5')]}"/>
+                                    <field name="karaciger_nakilli_hasta_DR" attrs="{'invisible':[('turu', 'not in', '6')]}"/>
+                                    <field name="ECOG" attrs="{'invisible':[('turu', 'not in', '7')]}"/>
+                                    <field name="EGFR" attrs="{'invisible':[('turu', 'not in', '8')]}"/>
+                                    <field name="progresyon" attrs="{'invisible':[('turu', 'not in', '9')]}"/>
+                                    <field name="akciger_kanseri" attrs="{'invisible':[('turu', 'not in', '10')]}"/>
+                                    <field name="Hiperamonyemi" attrs="{'invisible':[('turu', 'not in', '11')]}"/>
+                                    <field name="gunluk_kalori" attrs="{'invisible':[('turu', 'not in', '12')]}"/>
+                                    <field name="deger" invisible="True"/>
+                                    <field name="aciklama"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ereport_search" model="ir.ui.view">
+        <field name="name">podiatry.ereport.search</field>
+        <field name="model">podiatry.ereport</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_heyet_onayinda" string="Delegation Approval" domain="[('state', '=', 'heyet_onayinda')]"/>
+                <filter name="filter_bashekim_onayinda" string="Doctor Approval" domain="[('state', '=', 'bashekim_onayinda')]"/>
+                <filter name="filter_onaylandi" string="Approved" domain="[('state', '=', 'onaylandi')]"/>
+                <filter name="filter_onaylanmadi" string="Not Approved" domain="[('state', '=', 'onaylanmadi')]"/>
+                <filter name="filter_silindi" string="Deleted" domain="[('state', '=', 'deleted')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="Durum" context="{'group_by':'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" enable_counters="1" icon="fa-file"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ereport_action">
+        <field name="name">E-Reports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.ereport</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first e-report!
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="podiatry_ereport_root" name="E-Report" parent="pod_manager.podiatry_root" action="ereport_action" sequence="13"/>
+
+
+</odoo>

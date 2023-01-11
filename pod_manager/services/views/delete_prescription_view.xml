@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="delete_prescription_form" model="ir.ui.view">
+        <field name="name">podiatry.service.delete.prescription.form</field>
+        <field name="model">podiatry.service.delete.prescription</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="doctor_id"/>
+                        <field name="address_no"/>
+                        <field name="facility_code"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="delete_prescription" string="Sil" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Vazgeç" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="delete_prescription_action">
+        <field name="name">Delete Prescription</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.service.delete.prescription</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="podiatry_delete_prescription" name="Prescriptions Sil" parent="podiatry_delete_root" action="delete_prescription_action" sequence="15"/>
+
+</odoo>

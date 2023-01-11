@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="etkin_maddedvo_tree" model="ir.ui.view">
+        <field name="name">podiatry.etkin_maddedvo.tree</field>
+        <field name="model">podiatry.etkin_maddedvo</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="etkin_madde_kodu" string="Active Item Code"/>
+                <field name="etkin_madde_adi"/>
+                <field name="etkin_madde_formu"/>
+                <field name="etkin_madde_icerik_miktari"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="etkin_maddedvo_form" model="ir.ui.view">
+        <field name="name">podiatry.etkin_maddedvo.form</field>
+        <field name="model">podiatry.etkin_maddedvo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="etkin_madde_kodu" readonly="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="etkin_madde_kodu"/>
+                        <field name="etkin_madde_adi"/>
+                        <field name="etkin_madde_icerik_miktari"/>
+                        <field name="etkin_madde_formu"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="etkin_maddedvo_action">
+        <field name="name">E-Report Etkin Madde Kodları</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.etkin_maddedvo</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ilk etkin maddenizi oluşturun!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="podiatry_etkin_maddedvo" name="E-Report Etkin Madde Kodları" parent="podiatry_conf_root" action="etkin_maddedvo_action" sequence="12"/>
+
+</odoo>
