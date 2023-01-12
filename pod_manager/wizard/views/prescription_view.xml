@@ -17,21 +17,43 @@
                         <group>
                             <field name="today" readonly="True"/>
                             <field name="reference_no" readonly="True"/>
-                            <field name="protokol_no" readonly="True"/>
-                            <field name="tracking_no" placeholder="Sağlık tesisleri dışındaki hekimler boş bırakınız!" readonly="True"/>
-                            <field name="provizyon_tip" readonly="True"/>
-                            <field name="facility_code" readonly="True"/>
+                            <!-- <field name="protokol_no" readonly="True"/> -->
+                            <field name="tracking_no" placeholder="Physicians only - leave blank!" readonly="True"/>
+                            <!-- <field name="provizyon_tip" readonly="True"/>
+                            <field name="facility_code" readonly="True"/> -->
                         </group>
                         <group>
+                            <field name="facility_code" readonly="True"/>
                             <field name="address_no" readonly="True"/>
-                            <field name="recete_tur" readonly="True"/>
+                            <!-- <field name="recete_tur" readonly="True"/> -->
                             <field name="recete_alt_tur" readonly="True"/>
                         </group>
+                    </group>
+                    <group string="Order Information">
+                        <group>
+                            <field name="rush_order" readonly="True"/>
+                            <field name="make_from_prior_rx" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="ship_to_patient" readonly="True"/>
+                            <field name="make_quantity" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="make_left_only" readonly="True"/>
+                            <field name="make_right_only" readonly="True"/>
+                            <field name="make_bilateral" readonly="True"/>
+                        </group>
+
                     </group>
                     <group string="Patient Information">
                         <field name="patient_id" readonly="True"/>
                         <field name="patient_name" readonly="True"/>
                         <field name="patient_surname" readonly="True"/>
+                    </group>
+                    <group string="Patient Shipping Information">
+                        <!-- <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
+                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/> -->
                     </group>
                     <group string="Doctor Information">
                         <field name="doctor_id" readonly="True"/>

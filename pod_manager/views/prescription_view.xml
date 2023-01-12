@@ -33,27 +33,49 @@
                             Prescription Information
                         </h1>
                     </div>
+
+
+                    <group string="Patient Information">
+                        <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
+                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
+                    </group>
+                    <group string="Doctor Information">
+
+                        <field name="doctor_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Doctor ID"/>
+                        <field name="doctor_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="doctor_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
+                        <field name="brans_kod" attrs="{'readonly':[('address_no','not in',False)]}"/>
+
+                    </group>
+
+
                     <group>
-                        <group>
+                        <group string="General Information">
                             <field name="today" attrs="{'readonly':[('address_no','not in', False)]}"/>
                             <field name="reference_no" attrs="{'readonly':[('address_no','not in',False)]}"/>
-                            <!-- <field name="protokol_no" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
                             <field name="tracking_no" placeholder="Physicians only - leave blank!" attrs="{'readonly':[('address_no','not in',False)]}"/>
-                            <!-- <field name="provizyon_tip" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
                             <field name="facility_code" attrs="{'readonly':[('address_no','not in',False)]}"/>
-                        </group>
-                        <group>
                             <field name="address_no" readonly="True"/>
-                            <field name="recete_tur" attrs="{'readonly':[('address_no','not in',False)]}"/>
                             <field name="recete_alt_tur" attrs="{'readonly':[('address_no','not in',False)]}"/>
                         </group>
+                        <group string="Order Information">
+                            <group>
+                                <field name="rush_order" attrs="{'readonly':[('address_no','not in',False)]}" string="Rush order"/>
+                                <field name="make_from_prior_rx" attrs="{'readonly':[('address_no','not in',False)]}" string="Make from prior rx"/>
+                                <field name="ship_to_patient" attrs="{'readonly':[('address_no','not in',False)]}" string="Ship to patient"/>
+                                <field name="make_quantity" attrs="{'readonly':[('address_no','not in',False)]}" string="Qty to make"/>
+
+                            </group>
+                            <group>
+                                <field name="make_left_only" attrs="{'readonly':[('address_no','not in',False)]}" string="Left Only"/>
+                                <field name="make_right_only" attrs="{'readonly':[('address_no','not in',False)]}" string="Right Only"/>
+                                <field name="make_bilateral" attrs="{'readonly':[('address_no','not in',False)]}" string="Bilateral"/>
+                            </group>
+                        </group>
                     </group>
-                    <group string="Patient Shipping Information">
-                        <!-- <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
-                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
-                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/> -->
-                    </group>
-                    <group string="Patient Information">
+
+                    <!-- <group string="Patient Information">
                         <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
                         <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
                         <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
@@ -63,8 +85,8 @@
                         <field name="doctor_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
                         <field name="doctor_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
                         <field name="brans_kod" attrs="{'readonly':[('address_no','not in',False)]}"/>
-                    </group>
-                    <group string="Detail">
+                    </group> -->
+                    <group string="Pathology Detail">
                         <field name="diagnosis_line_ids" string="Condition list" attrs="{'readonly':[('address_no','not in',False)]}">
                             <tree editable="bottom">
                                 <field name="tani_kodu"/>
@@ -72,14 +94,14 @@
                             </tree>
                         </field>
                     </group>
-                    <group>
+                    <!-- <group>
                         <field name="explanation_line_ids" string="Prescriptions Description List" attrs="{'readonly':[('address_no','not in',False)]}">
                             <tree editable="bottom">
                                 <field name="aciklama_turu"/>
                                 <field name="aciklama"/>
                             </tree>
                         </field>
-                    </group>
+                    </group> -->
                     <group string="Product List">
                         <field name="pharmacy_line_ids" attrs="{'readonly':[('address_no','not in',False)]}">
                             <tree>

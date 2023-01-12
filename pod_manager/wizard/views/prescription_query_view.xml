@@ -28,19 +28,43 @@
                     </div>
                     <group>
                         <group>
-                            <field name="today" readonly="True"/>
-                            <field name="reference_no" readonly="True"/>
-                            <field name="protokol_no" readonly="True"/>
-                            <field name="tracking_no" placeholder="Sağlık tesisleri dışındaki hekimler boş bırakınız!" readonly="True"/>
-                            <field name="provizyon_tip" readonly="True"/>
-                            <field name="facility_code" readonly="True"/>
+                            <field name="today" attrs="{'readonly':[('address_no','not in', False)]}"/>
+                            <field name="reference_no" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                            <!-- <field name="protokol_no" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
+                            <field name="tracking_no" placeholder="Physicians only - leave blank!" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                            <!-- <field name="provizyon_tip" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
+                            <!-- <field name="facility_code" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
                         </group>
                         <group>
+                            <field name="facility_code" attrs="{'readonly':[('address_no','not in',False)]}"/>
                             <field name="address_no" readonly="True"/>
-                            <field name="recete_tur" readonly="True"/>
-                            <field name="recete_alt_tur" readonly="True"/>
+                            <!-- <field name="recete_tur" attrs="{'readonly':[('address_no','not in',False)]}"/> -->
+                            <field name="recete_alt_tur" attrs="{'readonly':[('address_no','not in',False)]}"/>
+
                         </group>
                     </group>
+                    <group string="Order Information">
+                        <group>
+                            <field name="rush_order"/>
+                            <field name="make_from_prior_rx"/>
+                        </group>
+                        <group>
+                            <field name="ship_to_patient"/>
+                            <field name="make_quantity"/>
+                        </group>
+                        <group>
+                            <field name="make_left_only"/>
+                            <field name="make_right_only"/>
+                            <field name="make_bilateral"/>
+                        </group>
+
+                    </group>
+                    <group string="Patient Shipping Information">
+                        <!-- <field name="patient_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Patient ID"/>
+                        <field name="patient_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
+                        <field name="patient_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/> -->
+                    </group>
+
                     <group string="Patient Information">
                         <field name="patient_id" readonly="True"/>
                         <field name="patient_name" readonly="True"/>

@@ -28,15 +28,19 @@ class EPrescriptionWizard(models.TransientModel):
         ('5', 'Green')
     ], string="Prescription Type", required=True)
     recete_alt_tur = fields.Selection([
-        ('1', 'Walk In Prescription'),
-        ('2', 'Inpatient Prescription'),
-        ('3', 'Discharge Prescription'),
-        ('4', 'Daily Prescription'),
-        ('5', 'Rush Prescription'),
-        ('6', 'Green Alan Prescription'),
-        ('7', 'Home Prescription'),
-        ('8', 'Mobile Prescription')
+        ('1', 'Custom'),
+        ('2', 'OTC'),
+        ('3', 'Brace'),
+        ('4', 'Repair'),
     ], string="Device Type", required=True)
+
+    rush_order = fields.Boolean('Rush Order')
+    make_quantity = fields.Boolean('Qty to make')
+    make_from_prior_rx = fields.Boolean('Make from prior rx')
+    ship_to_patient = fields.Boolean('Ship to patient')
+    make_left_only = fields.Boolean('Make left device only')
+    make_right_only = fields.Boolean('Make right device only')
+    make_bilateral = fields.Boolean('Make left / right pair')
 
     facility_code = fields.Char(string="Facility Code")
     tracking_no = fields.Char(string="Tracking No")
