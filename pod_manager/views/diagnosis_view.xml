@@ -49,7 +49,7 @@
         </field>
     </record>
 
-    <menuitem id="podiatry_diagnosis" name="ICD10 Tanı Kodları" parent="podiatry_conf_root" action="diagnosis_action" sequence="11"/>
+    <!-- <menuitem id="podiatry_diagnosis" name="ICD10 Tanı Kodları" parent="podiatry_conf_root" action="diagnosis_action" sequence="11"/> -->
 
 
 

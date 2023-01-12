@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_prescription" name="Prescriptions Sorgula" parent="podiatry_query_prescription_root" action="query_prescription_action" sequence="15"/>
+    <!-- <menuitem id="podiatry_query_prescription" name="Prescriptions Sorgula" parent="podiatry_query_prescription_root" action="query_prescription_action" sequence="15"/> -->
 
 </odoo>

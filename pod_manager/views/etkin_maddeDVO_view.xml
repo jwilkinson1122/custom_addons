@@ -49,6 +49,6 @@
         </field>
     </record>
 
-    <menuitem id="podiatry_etkin_maddedvo" name="E-Report Etkin Madde Kodları" parent="podiatry_conf_root" action="etkin_maddedvo_action" sequence="12"/>
+    <!-- <menuitem id="podiatry_etkin_maddedvo" name="E-Report Etkin Madde Kodları" parent="podiatry_conf_root" action="etkin_maddedvo_action" sequence="12"/> -->
 
 </odoo>

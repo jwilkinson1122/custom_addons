@@ -28,6 +28,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_teshis_listesi" name="teşhis Listesi Sorgula" parent="podiatry_query_other_root" action="teshis_listesi_action" sequence="17"/>
+    <!-- <menuitem id="podiatry_query_teshis_listesi" name="teşhis Listesi Sorgula" parent="podiatry_query_other_root" action="teshis_listesi_action" sequence="17"/> -->
 
 </odoo>

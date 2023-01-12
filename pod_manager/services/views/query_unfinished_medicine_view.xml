@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_unfinished_medicine_query" name="Kullanımı Bitmemiş İlaç Sorgula" parent="podiatry_query_other_root" action="query_unfinished_medicine_action" sequence="15"/>
+    <!-- <menuitem id="podiatry_unfinished_medicine_query" name="Kullanımı Bitmemiş İlaç Sorgula" parent="podiatry_query_other_root" action="query_unfinished_medicine_action" sequence="15"/> -->
 
 </odoo>

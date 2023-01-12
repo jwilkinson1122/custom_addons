@@ -191,7 +191,7 @@
     </record>
 
 
-    <menuitem id="podiatry_ereport_root" name="E-Report" parent="pod_manager.podiatry_root" action="ereport_action" sequence="13"/>
+    <!-- <menuitem id="podiatry_ereport_root" name="E-Report" parent="pod_manager.podiatry_root" action="ereport_action" sequence="13"/> -->
 
 
 </odoo>

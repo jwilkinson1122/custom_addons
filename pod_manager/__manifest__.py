@@ -12,7 +12,6 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
-        'views/menu.xml',
         'wizard/views/sonuc_mesaji_view.xml',
         'wizard/views/ereport_view.xml',
         'wizard/views/prescription_view.xml',
@@ -61,6 +60,8 @@
         'views/ereport_teshis_view.xml',
         'views/heyet_onayi_ereport_view.xml',
         'views/ilacDVO_view.xml',
+        'views/actions.xml',
+        'views/menu.xml',
     ],
     'installable': True,
     'application': True,

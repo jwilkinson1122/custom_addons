@@ -161,7 +161,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="prescription_action">
+    <!-- <record model="ir.actions.act_window" id="prescription_action">
         <field name="name">Prescriptions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.prescription</field>
@@ -172,9 +172,9 @@
                 create your first e-prescription!
             </p>
         </field>
-    </record>
+    </record> -->
 
-    <menuitem id="podiatry_prescription_root" name="Prescriptions" parent="pod_manager.podiatry_root" action="prescription_action" sequence="13"/>
+    <!-- <menuitem id="podiatry_prescription_root" name="Prescriptions" parent="pod_manager.podiatry_root" action="prescription_action" sequence="13"/> -->
 
 
 </odoo>

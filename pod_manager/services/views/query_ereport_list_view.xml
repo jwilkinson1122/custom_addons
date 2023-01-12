@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_ereport_list" name="E-Report Liste Sorgula" parent="podiatry_query_ereport_root" action="query_ereport_list_action" sequence="15"/>
+    <!-- <menuitem id="podiatry_query_ereport_list" name="E-Report Liste Sorgula" parent="podiatry_query_ereport_root" action="query_ereport_list_action" sequence="15"/> -->
 
 </odoo>

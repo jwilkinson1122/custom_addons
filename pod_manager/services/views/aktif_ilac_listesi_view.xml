@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_aktif_ilac_listesi" name="Aktif Product List Sorgula" parent="podiatry_query_ilac_root" action="aktif_ilac_listesi_action" sequence="16"/>
+    <!-- <menuitem id="podiatry_query_aktif_ilac_listesi" name="Aktif Product List Sorgula" parent="podiatry_query_ilac_root" action="aktif_ilac_listesi_action" sequence="16"/> -->
 
 </odoo>

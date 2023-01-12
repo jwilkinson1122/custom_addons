@@ -45,6 +45,6 @@
         </field>
     </record>
 
-    <menuitem id="podiatry_ereport_teshis" name="E-Report Teşhisler" parent="podiatry_conf_root" action="ereport_teshis_action" sequence="11"/>
+    <!-- <menuitem id="podiatry_ereport_teshis" name="E-Report Teşhisler" parent="podiatry_conf_root" action="ereport_teshis_action" sequence="11"/> -->
 
 </odoo>

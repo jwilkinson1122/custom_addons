@@ -46,7 +46,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="epatient_action">
+    <!-- <record model="ir.actions.act_window" id="epatient_action">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.epatient</field>
@@ -56,9 +56,9 @@
                 create your first patient!
             </p>
         </field>
-    </record>
+    </record> -->
 
-    <menuitem id="podiatry_epatient" name="Patients" parent="podiatry_conf_root" action="epatient_action" sequence="10"/>
+    <!-- <menuitem id="podiatry_epatient" name="Patients" parent="podiatry_conf_root" action="epatient_action" sequence="10"/> -->
 
 
 

@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_turuncu_ilac_listesi" name="Orange Prescriptions Product List Sorgula" parent="podiatry_query_ilac_root" action="turuncu_ilac_listesi_action" sequence="16"/>
+    <!-- <menuitem id="podiatry_query_turuncu_ilac_listesi" name="Orange Prescriptions Product List Sorgula" parent="podiatry_query_ilac_root" action="turuncu_ilac_listesi_action" sequence="16"/> -->
 
 </odoo>

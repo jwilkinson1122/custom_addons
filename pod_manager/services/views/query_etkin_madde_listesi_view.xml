@@ -28,6 +28,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_query_etkin_madde_listesi" name="Active Item List Sorgula" parent="podiatry_query_other_root" action="etkin_madde_listesi_action" sequence="17"/>
+    <!-- <menuitem id="podiatry_query_etkin_madde_listesi" name="Active Item List Sorgula" parent="podiatry_query_other_root" action="etkin_madde_listesi_action" sequence="17"/> -->
 
 </odoo>

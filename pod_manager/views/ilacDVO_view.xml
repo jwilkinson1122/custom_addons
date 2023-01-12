@@ -64,7 +64,7 @@
         </field>
     </record>
 
-    <menuitem id="podiatry_ilacDVO" name="Products" parent="podiatry_conf_root" action="ilac_action" sequence="10"/>
+    <!-- <menuitem id="podiatry_ilacDVO" name="Products" parent="podiatry_conf_root" action="ilac_action" sequence="10"/> -->
 
 
 </odoo>

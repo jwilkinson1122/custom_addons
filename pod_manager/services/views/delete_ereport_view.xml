@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_delete_ereport" name="E-Report Sil" parent="podiatry_delete_root" action="delete_ereport_action" sequence="15"/>
+    <!-- <menuitem id="podiatry_delete_ereport" name="E-Report Sil" parent="podiatry_delete_root" action="delete_ereport_action" sequence="15"/> -->
 
 </odoo>

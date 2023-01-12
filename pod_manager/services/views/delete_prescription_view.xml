@@ -29,6 +29,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="podiatry_delete_prescription" name="Prescriptions Sil" parent="podiatry_delete_root" action="delete_prescription_action" sequence="15"/>
+    <!-- <menuitem id="podiatry_delete_prescription" name="Prescriptions Sil" parent="podiatry_delete_root" action="delete_prescription_action" sequence="15"/> -->
 
 </odoo>
