@@ -12,7 +12,7 @@ from zeep import Client
 
 class AddEreportExplanation(models.Model):
     _name = "podiatry.service.add.ereport.etkinm"
-    _description = "Hospital Add E-Report Etkin Madde Service"
+    _description = "Podiatry Add E-Report Etkin Madde Service"
 
     ereport_id = fields.Integer()
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")

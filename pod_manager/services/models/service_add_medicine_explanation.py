@@ -14,7 +14,7 @@ from zeep import Client
 
 class AddMedicineExplanation(models.Model):
     _name = "podiatry.service.add.medicine.explanation"
-    _description = "Hospital Add Medicine Explanation Service"
+    _description = "Podiatry Add Medicine Explanation Service"
 
     pharmacy_line_id = fields.Integer()
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")

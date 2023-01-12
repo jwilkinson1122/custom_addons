@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class EReportExplanation(models.Model):
 
     _name = "podiatry.ereport.explanation"
-    _description = "Hospital E-Report Explanation"
+    _description = "Podiatry E-Report Explanation"
 
     ereport_id = fields.Many2one('podiatry.ereport')
     service_exp_id = fields.Many2one(

@@ -14,7 +14,7 @@ from zeep import Client
 
 class SavePrescription(models.Model):
     _name = "podiatry.service.save.prescription"
-    _description = "Hospital Prescriptions Save Service"
+    _description = "Podiatry Prescriptions Save Service"
 
     prescription_id = fields.Integer()
 

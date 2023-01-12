@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- POD ERP -->
-    <menuitem id="podiatry_root" name="POD ERP" web_icon="prescription,static/description/icon.png" sequence="100"/>
+    <menuitem id="podiatry_root" name="POD ERP" web_icon="prescription,static/description/icon.png" sequence="90"/>
+    <!-- Practices -->
+    <menuitem id="podiatry_practice" name="Clinics" parent="pod_manager.podiatry_root" action="practice_action" sequence="100"/>
     <!-- Doctors -->
     <menuitem id="podiatry_doctor" name="Doctors" parent="pod_manager.podiatry_root" action="doctor_action" sequence="110"/>
     <!-- Patients -->
@@ -40,7 +42,7 @@
     <menuitem id="podiatry_delete_ereport" name="E-Report Sil" parent="pod_manager.podiatry_delete_root" action="delete_ereport_action" sequence="2"/>
 
     <!-- Settings -->
-    <menuitem id="podiatry_conf_root" name="Setings" parent="pod_manager.podiatry_root" sequence="140"/>
+    <menuitem id="podiatry_conf_root" name="Settings" parent="pod_manager.podiatry_root" sequence="140"/>
     <menuitem id="podiatry_ilacDVO" name="Products" parent="pod_manager.podiatry_conf_root" action="ilac_action" sequence="1"/>
     <menuitem id="podiatry_diagnosis" name="ICD10 Tanı Kodları" parent="pod_manager.podiatry_conf_root" action="diagnosis_action" sequence="2"/>
     <menuitem id="podiatry_ereport_teshis" name="E-Report Teşhisler" parent="pod_manager.podiatry_conf_root" action="ereport_teshis_action" sequence="3"/>

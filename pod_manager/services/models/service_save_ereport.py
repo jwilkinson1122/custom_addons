@@ -14,7 +14,7 @@ from zeep import Client
 
 class SaveEreport(models.Model):
     _name = "podiatry.service.save.ereport"
-    _description = "Hospital E-Report Save Service"
+    _description = "Podiatry E-Report Save Service"
 
     ereport_id = fields.Integer()
 

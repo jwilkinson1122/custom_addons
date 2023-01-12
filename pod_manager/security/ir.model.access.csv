@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access.podiatry.practice,access_podiatry_practice,model_podiatry_practice,base.group_user,1,1,1,1
 access.podiatry.doctor,access_podiatry_doctor,model_podiatry_doctor,base.group_user,1,1,1,1
 access.podiatry.prescription,access_podiatry_prescription,model_podiatry_prescription,base.group_user,1,1,1,1
 access.podiatry.epatient,access_podiatry_epatient,model_podiatry_epatient,base.group_user,1,1,1,1

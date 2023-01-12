@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class EtkinMadde(models.Model):
 
     _name = "podiatry.etkin_madde"
-    _description = "Hospital Etkin Madde"
+    _description = "Podiatry Etkin Madde"
     _rec_name = 'etkin_madde_kodu'
 
     etkin_maddedvo_id = fields.Many2one(

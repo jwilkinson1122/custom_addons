@@ -14,7 +14,7 @@ from zeep import Client
 
 class QueryPrescriptionList(models.Model):
     _name = "service.query.prescription.list"
-    _description = "Hospital Query Prescription List Service"
+    _description = "Podiatry Query Prescription List Service"
 
     facility_code = fields.Char(string="Facility Code")
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")

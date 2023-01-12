@@ -14,7 +14,7 @@ from zeep import Client
 
 class QueryEreport(models.Model):
     _name = "podiatry.service.query.ereport"
-    _description = "Hospital Query E-Report Service"
+    _description = "Podiatry Query E-Report Service"
 
     report_follow_no = fields.Char(string="E-ReportFollow up No")
     facility_code = fields.Char(string="Facility Code")

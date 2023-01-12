@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class EtkinMaddeDVO(models.Model):
 
     _name = "podiatry.etkin_maddedvo"
-    _description = "Hospital Etkin Madde DVO"
+    _description = "Podiatry Etkin Madde DVO"
     _rec_name = 'etkin_madde_kodu'
 
     etkin_madde_kodu = fields.Char(string="Active Item Code")

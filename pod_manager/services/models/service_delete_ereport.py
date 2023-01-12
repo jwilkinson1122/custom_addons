@@ -14,7 +14,7 @@ from zeep import Client
 
 class DeleteEreport(models.Model):
     _name = "podiatry.service.delete.ereport"
-    _description = "Hospital Delete E-Report Service"
+    _description = "Podiatry Delete E-Report Service"
 
     report_follow_no = fields.Char(string="ReportFollow up No")
     facility_code = fields.Char(string="Facility Code")

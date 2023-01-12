@@ -5,7 +5,7 @@ from odoo import models, fields, api
 
 class Medicine(models.Model):
     _name = "podiatry.medicine"
-    _description = "Hospital Medicines"
+    _description = "Podiatry Medicines"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = "barcode"
 

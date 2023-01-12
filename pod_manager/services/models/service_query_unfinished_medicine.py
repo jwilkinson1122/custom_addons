@@ -14,7 +14,7 @@ from zeep import Client
 
 class QueryUnfinishedMedicine(models.Model):
     _name = "podiatry.service.query.unfinished.medicine"
-    _description = "Hospital Query Unfinished Medicine"
+    _description = "Podiatry Query Unfinished Medicine"
 
     facility_code = fields.Char(string="Facility Code")
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")

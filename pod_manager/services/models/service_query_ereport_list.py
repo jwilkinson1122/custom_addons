@@ -14,7 +14,7 @@ from zeep import Client
 
 class QueryEreportList(models.Model):
     _name = "service.query.ereport.list"
-    _description = "Hospital Query E-report List Service"
+    _description = "Podiatry Query E-report List Service"
 
     facility_code = fields.Char(string="Facility Code")
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")

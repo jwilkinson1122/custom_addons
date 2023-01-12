@@ -14,7 +14,7 @@ from zeep import Client
 
 class DeletePrescription(models.Model):
     _name = "podiatry.service.delete.prescription"
-    _description = "Hospital Delete Prescription Service"
+    _description = "Podiatry Delete Prescription Service"
 
     address_no = fields.Char(string="Prescriptions No")
     facility_code = fields.Char(string="Facility Code")

@@ -14,7 +14,7 @@ from zeep import Client
 
 class AddDiagnosis(models.Model):
     _name = "podiatry.service.add.diagnosis"
-    _description = "Hospital Add Condition Service"
+    _description = "Podiatry Add Condition Service"
 
     prescription_id = fields.Integer()
     add_diagnoises = fields.Many2many('podiatry.diagnosis', string="Tanılar")

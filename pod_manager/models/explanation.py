@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class Explanation(models.Model):
 
     _name = "podiatry.explanation"
-    _description = "Hospital Explanation"
+    _description = "Podiatry Explanation"
     _rec_name = 'id'
 
     aciklama_turu = fields.Selection([

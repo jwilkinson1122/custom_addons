@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="practice_tree" model="ir.ui.view">
+        <field name="name">podiatry.practice.tree</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Practice Name"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="practice_form" model="ir.ui.view">
+        <field name="name">podiatry.practice.form</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <field name="image" widget="image" class="oe_avatar"/>
+                    </div>
+                    <field name="name"/>
+
+
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record model="ir.actions.act_window" id="practice_action">
+        <field name="name">practices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first practice!
+            </p>
+        </field>
+    </record> -->
+
+    <!-- <menuitem id="podiatry_practice" name="practices" parent="podiatry_conf_root" action="practice_action" sequence="10"/> -->
+
+</odoo>

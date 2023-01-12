@@ -45,6 +45,7 @@
         'services/views/turuncu_ilac_listesi_view.xml',
         'services/views/query_teshis_listesi_view.xml',
         'services/views/query_etkin_madde_listesi_view.xml',
+        'views/practice_view.xml',
         'views/doctor_view.xml',
         'views/diagnosis_view.xml',
         'views/prescription_view.xml',

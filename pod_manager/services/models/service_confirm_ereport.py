@@ -14,7 +14,7 @@ from zeep import Client
 
 class ConfirmEreport(models.Model):
     _name = "podiatry.service.confirm.ereport"
-    _description = "Hospital Confirm E-Report Service"
+    _description = "Podiatry Confirm E-Report Service"
 
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")
     ereport_id = fields.Integer()

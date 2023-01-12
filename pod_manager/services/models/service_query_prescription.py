@@ -14,7 +14,7 @@ from zeep import Client
 
 class QueryPrescription(models.Model):
     _name = "podiatry.service.query.prescription"
-    _description = "Hospital Query Prescription Service"
+    _description = "Podiatry Query Prescription Service"
 
     address_no = fields.Char(string="Prescriptions No")
     facility_code = fields.Char(string="Facility Code")

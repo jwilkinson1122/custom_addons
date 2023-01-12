@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class Patient(models.Model):
 
     _name = "podiatry.epatient"
-    _description = "Hospital Patient"
+    _description = "Podiatry Patient"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'tc_no'
 

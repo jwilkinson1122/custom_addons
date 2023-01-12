@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 class EReportIlaveDeger(models.Model):
     _name = "podiatry.ereport.ilave_deger"
-    _description = "Hospital E-Report İlave Değer"
+    _description = "Podiatry E-Report İlave Değer"
 
     ereport_id = fields.Many2one('podiatry.ereport')
     turu = fields.Selection([

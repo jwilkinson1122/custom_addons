@@ -2,8 +2,13 @@
 <odoo>
 
     <record model="ir.module.category" id="module_category_podiatry">
-        <field name="name">Hospital Management</field>
-        <field name="description">Category for Hospital</field>
+        <field name="name">Podiatry Management</field>
+        <field name="description">Category for Podiatry</field>
+    </record>
+
+    <record id="group_podiatry_practice" model="res.groups">
+        <field name="name">Practice</field>
+        <field name="category_id" ref="module_category_podiatry"/>
     </record>
 
     <record id="group_podiatry_doctor" model="res.groups">

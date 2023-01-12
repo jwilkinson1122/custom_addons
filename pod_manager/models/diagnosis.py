@@ -7,7 +7,7 @@ from odoo import models, fields, api
 class Condition(models.Model):
 
     _name = "podiatry.diagnosis"
-    _description = "Hospital Condition"
+    _description = "Podiatry Condition"
     _rec_name = 'tani_kodu'
 
     tani_kodu = fields.Char(string="Tanı Kodu")

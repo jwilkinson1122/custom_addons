@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 class Teshis(models.Model):
     _name = "podiatry.ereport.teshis"
-    _description = "Hospital Teshis"
+    _description = "Podiatry Teshis"
     _rec_name = 'rapor_teshis_kodu'
 
     rapor_teshis_kodu = fields.Char(string="Diagnostic Code")
