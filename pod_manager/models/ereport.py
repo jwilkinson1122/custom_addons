@@ -78,7 +78,8 @@ class EreportDoctorLine(models.Model):
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")
     name = fields.Char(string="Doctor name", related="doctor_id.name")
     surname = fields.Char(string="Doctor surname", related="doctor_id.surname")
-    doctor_tc = fields.Char(string="Doctor Tc", related="doctor_id.doctor_tc")
+    # doctor_id = fields.Many2many(
+    #     string="Doctor ID", related="doctor_id.doctor_id")
 
 
 # EraporTeshisDVO

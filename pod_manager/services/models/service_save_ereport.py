@@ -52,8 +52,8 @@ class SaveEreport(models.Model):
 
         for doktor in ereport.rapor_doktor_listesi:
             doktor_listesi.append({
-                'tcKimlikNo': doktor.doctor_tc if doktor.doctor_tc else '',
-                'bransKodu': doktor.brans_kod.strip() if doktor.brans_kod else '',
+                'tcKimlikNo': doktor.doctor_id if doktor.doctor_id else '',
+                'bransKodu': doktor.practice_id.strip() if doktor.practice_id else '',
                 'sertifikaKodu': doktor.sertifika_kod if doktor.sertifika_kod else '',
                 'adi': doktor.name.strip() if doktor.name else '',
                 'soyadi': doktor.surname.strip() if doktor.surname else ''
@@ -103,7 +103,7 @@ class SaveEreport(models.Model):
         vals = {
             'arg0': {
                 'tesisKodu': ereport.facility_code.strip(),
-                'doktorTcKimlikNo': rapor_olusturan_doktor.doctor_tc.strip(),
+                'doktorTcKimlikNo': rapor_olusturan_doktor.doctor_id.strip(),
                 'eraporDVO': {
                     'tesisKodu': ereport.facility_code.strip(),
                     'raporTakipNo': ereport.

@@ -34,9 +34,19 @@ class Patient(models.Model):
     #     string="Other Contacts",
     # )
 
+    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+                                 help='Partner-related data of the Doctor')
+
+    is_patient = fields.Boolean()
+
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
         string="Practice",
+    )
+
+    doctor_id = fields.Many2one(
+        comodel_name='podiatry.doctor',
+        string="Doctor",
     )
 
     prescription_ids = fields.One2many('podiatry.prescription', 'patient_id')

@@ -50,7 +50,7 @@ class AddEreportExplanation(models.Model):
             'arg0': {
                 'raporTakipNo': ereport.report_follow_no,
                 'tesisKodu': ereport.facility_code,
-                'doktorTcKimlikNo': self.doctor_id.doctor_tc,
+                'doktorTcKimlikNo': self.doctor_id.doctor_id,
                 'eraporEtkinMaddeDVO': etkin_madde_listesi
             }
         }

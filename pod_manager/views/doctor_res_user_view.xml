@@ -16,8 +16,8 @@
                             <field name="surname"/>
                             <field name="birth"/>
                             <field name="age"/>
-                            <field name="doctor_tc"/>
-                            <field name="brans_kod"/>
+                            <field name="doctor_id"/>
+                            <field name="practice_id"/>
                             <field name="sertifika_kod"/>
                         </group>
                     </page>

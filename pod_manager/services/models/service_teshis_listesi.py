@@ -30,7 +30,7 @@ class TeshisListesiSorgula(models.Model):
         vals = {
             'arg0': {
                 'tesisKodu': int(self.facility_code),
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc)
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id)
             }
         }
         with client.settings(strict=False):

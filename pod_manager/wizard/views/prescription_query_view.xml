@@ -72,7 +72,7 @@
                     </group>
                     <group string="Doctor Information">
                         <field name="doctor_id" readonly="True"/>
-                        <field name="brans_kod" readonly="True"/>
+                        <field name="practice_id" readonly="True"/>
                     </group>
                 </sheet>
             </form>

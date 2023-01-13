@@ -31,7 +31,7 @@ class ConfirmEreport(models.Model):
             'arg0': {
                 'tesisKodu': int(ereport.facility_code),
                 'raporTakipNo': ereport.report_follow_no,
-                'doktorTcKimlikNo': self.doctor_id.doctor_tc
+                'doktorTcKimlikNo': self.doctor_id.doctor_id
             }
         }
         with client.settings(strict=False):

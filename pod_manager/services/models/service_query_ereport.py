@@ -32,7 +32,7 @@ class QueryEreport(models.Model):
             'arg0': {
                 'tesisKodu': self.facility_code,
                 'raporTakipNo': self.report_follow_no,
-                'doktorTcKimlikNo': self.doctor_id.doctor_tc
+                'doktorTcKimlikNo': self.doctor_id.doctor_id
             }
         }
         with client.settings(strict=False):
@@ -52,8 +52,8 @@ class QueryEreport(models.Model):
             for doktor in result.eraporDoktorListesi:
                 # doktor = self.env['podiatry.doctor'].search([('')])
                 doktor_listesi.append({
-                    'doctor_tc': doktor.tcKimlikNo,
-                    'brans_kod': doktor.bransKodu,
+                    'doctor_id': doktor.tcKimlikNo,
+                    'practice_id': doktor.bransKodu,
                     'sertifika_kod': doktor.sertifikaKodu,
                     'name': doktor.adi,
                     'surname': doktor.soyadi

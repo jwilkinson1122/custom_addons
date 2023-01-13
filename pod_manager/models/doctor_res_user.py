@@ -10,8 +10,8 @@ class ResUsersDoctor(models.Model):
     surname = fields.Char(related="doctor_id.surname")
     birth = fields.Date(related="doctor_id.birth")
     age = fields.Integer(related="doctor_id.age")
-    doctor_tc = fields.Char(related="doctor_id.doctor_tc")
-    brans_kod = fields.Char(related="doctor_id.brans_kod")
+    doctor_id = fields.Many2many(related="doctor_id.doctor_id")
+    practice_id = fields.Many2one(related="doctor_id.practice_id")
     sertifika_kod = fields.Selection([
         ('0', 'Yok'),
         ('56', 'Hemodiyaliz'),

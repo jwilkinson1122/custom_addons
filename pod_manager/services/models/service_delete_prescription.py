@@ -29,7 +29,7 @@ class DeletePrescription(models.Model):
             'arg0': {
                 'tesisKodu': int(self.facility_code),
                 'ereceteNo': self.address_no,
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc)
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id)
             }
         }
 

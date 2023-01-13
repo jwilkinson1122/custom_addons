@@ -45,7 +45,7 @@
                         <field name="doctor_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Doctor ID"/>
                         <field name="doctor_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
                         <field name="doctor_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
-                        <field name="brans_kod" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                        <field name="practice_id" attrs="{'readonly':[('address_no','not in',False)]}"/>
 
                     </group>
 
@@ -84,7 +84,7 @@
                         <field name="doctor_id" attrs="{'readonly':[('address_no','not in',False)]}" string="Doctor ID"/>
                         <field name="doctor_name" attrs="{'readonly':[('address_no','not in',False)]}" string="First Name"/>
                         <field name="doctor_surname" attrs="{'readonly':[('address_no','not in',False)]}" string="Last Name"/>
-                        <field name="brans_kod" attrs="{'readonly':[('address_no','not in',False)]}"/>
+                        <field name="practice_id" attrs="{'readonly':[('address_no','not in',False)]}"/>
                     </group> -->
                     <group string="Pathology Detail">
                         <field name="diagnosis_line_ids" string="Condition list" attrs="{'readonly':[('address_no','not in',False)]}">

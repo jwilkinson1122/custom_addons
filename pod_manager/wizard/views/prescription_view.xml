@@ -57,7 +57,7 @@
                     </group>
                     <group string="Doctor Information">
                         <field name="doctor_id" readonly="True"/>
-                        <field name="brans_kod" readonly="True"/>
+                        <field name="practice_id" readonly="True"/>
                     </group>
                     <group string="Detail">
                         <field name="diagnosis_line_ids" string="Tanı listesi" readonly="True">

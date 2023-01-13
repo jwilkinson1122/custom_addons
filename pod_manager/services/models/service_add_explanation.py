@@ -40,7 +40,7 @@ class AddExplanation(models.Model):
             'arg0': {
                 'ereceteNo': prescription.address_no,
                 'tesisKodu': int(prescription.facility_code),
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc),
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id),
                 'ereceteAciklamaDVO': explanation_list
             }
         }

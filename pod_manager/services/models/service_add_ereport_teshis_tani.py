@@ -40,7 +40,7 @@ class AddEreportTeshisTani(models.Model):
             'arg0': {
                 'raporTakipNo': ereport.report_follow_no,
                 'tesisKodu': ereport.facility_code,
-                'doktorTcKimlikNo': self.doctor_id.doctor_tc,
+                'doktorTcKimlikNo': self.doctor_id.doctor_id,
                 'raporTeshisKodu': str(teshis.rapor_teshis_kodu.rapor_teshis_kodu),
                 'eraporTaniDVO': tani_list
             }

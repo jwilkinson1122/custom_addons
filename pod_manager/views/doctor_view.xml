@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name" string="Doctor Name"/>
-                <field name="surname" string="Doctor Name"/>
+                <!-- <field name="surname" string="Doctor Name"/> -->
                 <field name="gender"/>
                 <field name="age"/>
                 <field name="birth"/>
@@ -64,13 +64,13 @@
                     <group>
                         <group name="doctr_information" string="Doctor Information">
                             <field name="name"/>
-                            <field name="surname"/>
+                            <!-- <field name="surname"/> -->
                             <!-- <field name="gender"/> -->
                             <!-- <field name="birth"/>
                             <field name="age"/> -->
                             <field name="active" invisible="1"/>
-                            <field name="doctor_tc"/>
-                            <field name="brans_kod"/>
+                            <!-- <field name="doctor_id"/> -->
+                            <field name="practice_id"/>
                             <field name="sertifika_kod"/>
                             <!-- <field name="practice_id"/> -->
 
@@ -88,20 +88,13 @@
                         </group>
                     </group>
                     <notebook>
-                        <!-- <page name="patients_list" string="Patient List">
+                        <page name="patients_list" string="Patient List">
                             <separator name="patients" string="Patients"/>
                             <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">
                                 No Patients
                             </div>
                             <field name="patient_ids" mode="kanban" context="{'default_type': 'contact'}"/>
-                        </page> -->
-                        <!-- <page name="perscriptions_list" string="Prescriptions">
-                            <separator name="prescriptions" string="Prescriptions"/>
-                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('doctor_prescription_id', '!=', ())]}">
-                                No Prescriptions
-                            </div>
-                            <field name="prescription_id" mode="kanban"/>
-                        </page> -->
+                        </page>
                         <page name="perscriptions_list" string="Prescriptions">
                             <separator name="prescriptions" string="Prescriptions"/>
                             <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('prescription_id', '!=', ())]}">

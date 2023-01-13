@@ -43,7 +43,7 @@ class AddMedicineExplanation(models.Model):
                 'ereceteNo': prescription.address_no,
                 'barkod': int(pharmacy_line.product_id.barcode),
                 'tesisKodu': int(prescription.facility_code),
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc),
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id),
                 'ereceteIlacAciklamaDVO': medicine_explanation_list
             }
         }

@@ -32,7 +32,7 @@ class DeleteEreport(models.Model):
             'arg0': {
                 'tesisKodu': int(self.facility_code),
                 'raporTakipNo': self.report_follow_no,
-                'doktorTcKimlikNo': self.doctor_id.doctor_tc
+                'doktorTcKimlikNo': self.doctor_id.doctor_id
             }
         }
 

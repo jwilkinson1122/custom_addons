@@ -27,13 +27,19 @@ class Doctor(models.Model):
     }
     _rec_name = 'doctor_id'
 
-    name = fields.Char(string="First Name", required=True, tracking=True)
-    surname = fields.Char(string="Last Name", required=True, tracking=True)
-    doctor_tc = fields.Char(string="TC NO", required=True)
+    name = fields.Char(string="Name", required=True, tracking=True)
+    surname = fields.Char(string="Last Name", tracking=True)
 
     partner_id = fields.Many2one(
         comodel_name='res.partner', string="Contact",
     )
+
+    # patient_ids = fields.One2many(
+    #     'podiatry.patient', string="Patient")
+    # patient_ids = fields.One2many(
+    #     comodel_name='podiatry.patient',
+    #     string='Patients'
+    # )
 
     doctor_id = fields.Many2many('res.partner', domain=[(
         'is_doctor', '=', True)], string="Doctor", required=True)
@@ -46,6 +52,16 @@ class Doctor(models.Model):
         comodel_name='podiatry.prescription',
         inverse_name='doctor_id',
         string='Prescriptions')
+
+    # patient_ids = fields.One2many("podiatry.patient")
+    patient_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='doctor_id',
+        string='Patients'
+    )
+
+    # patients = fields.Char(
+    #     related='prescription_id.patient_ids.name')
 
     @api.model
     def _default_image(self):
@@ -60,8 +76,6 @@ class Doctor(models.Model):
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Doctor Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-
-    brans_kod = fields.Char(string="Branch Code", required=True)
     sertifika_kod = fields.Selection([
         ('0', 'Yok'),
         ('56', 'Hemodiyaliz'),
@@ -174,7 +188,7 @@ class Doctor(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = rec.doctor_tc + ' : ' + rec.name + ' ' + rec.surname
+            name = rec.doctor_id + ' : ' + rec.name + ' ' + rec.surname
             result.append((rec.id, name))
         return result
 

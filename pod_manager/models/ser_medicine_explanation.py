@@ -42,7 +42,7 @@ class MedicineExplanation(models.Model):
                     'ereceteNo': rec.address_no,
                     'barkod': int(rec.medicine_id.barcode),
                     'tesisKodu': int(rec.tesis_kodu),
-                    'doktorTcKimlikNo': int(rec.doctor_id.doctor_tc),
+                    'doktorTcKimlikNo': int(rec.doctor_id.doctor_id),
                     'ereceteIlacAciklamaDVO': {
                         'aciklama': rec.aciklama,
                         'aciklamaTuru': int(rec.aciklama_turu)

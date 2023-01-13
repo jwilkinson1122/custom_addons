@@ -11,8 +11,8 @@ class EPrescriptionWizard(models.TransientModel):
 
     doctor_id = fields.Many2one(
         'podiatry.doctor', string="Doctor", required=True)
-    brans_kod = fields.Char(string="Branch Code",
-                            related="doctor_id.brans_kod")
+    practice_id = fields.Many2one(string="Practice ID",
+                                  related="doctor_id.practice_id")
 
     patient_id = fields.Many2one(
         'podiatry.patient', string="Patient", required=True)

@@ -84,8 +84,8 @@ class SavePrescription(models.Model):
                     'makeBilateral': int(prescription.make_bilateral),
                     'protokolNo': prescription.protokol_no,
                     'seriNo': prescription.reference_no,
-                    'doktorTcKimlikNo': int(prescription.doctor_id.doctor_tc),
-                    'doktorBransKodu': int(prescription.doctor_id.brans_kod),
+                    'doktorTcKimlikNo': int(prescription.doctor_id.doctor_id),
+                    'doktorBransKodu': int(prescription.doctor_id.practice_id),
                     'doktorSertifikaKodu': int(prescription.doctor_id.sertifika_kod),
                     'doktorAdi': prescription.doctor_id.name,
                     'doktorSoyadi': prescription.doctor_id.surname,
@@ -102,7 +102,7 @@ class SavePrescription(models.Model):
                     'ereceteIlacListesi': pharmacy_line_vals_erecete_ilac_listesi
                 },
                 'tesisKodu': int(prescription.facility_code),
-                'doktorTcKimlikNo': int(prescription.doctor_id.doctor_tc),
+                'doktorTcKimlikNo': int(prescription.doctor_id.doctor_id),
             }
         }
 

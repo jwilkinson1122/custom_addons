@@ -30,7 +30,7 @@ class KirmiziReceteIlacListesiSorgula(models.Model):
         vals = {
             'arg0': {
                 'tesisKodu': int(self.facility_code),
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc),
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id),
                 'islemTarihi': str(self.islem_tarihi.day) + '.' + str(self.islem_tarihi.month) + '.' + str(
                     self.islem_tarihi.year)
             }

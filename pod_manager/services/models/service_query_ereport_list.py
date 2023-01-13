@@ -30,7 +30,7 @@ class QueryEreportList(models.Model):
         vals = {
             'arg0': {
                 'tesisKodu': int(self.facility_code),
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc),
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id),
                 'hastaTcKimlikNo': int(self.patient_id.tc_no)
             }
         }

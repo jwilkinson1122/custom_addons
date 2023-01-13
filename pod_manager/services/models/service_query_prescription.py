@@ -32,7 +32,7 @@ class QueryPrescription(models.Model):
             'arg0': {
                 'tesisKodu': int(self.facility_code),
                 'ereceteNo': self.address_no,
-                'doktorTcKimlikNo': int(self.doctor_id.doctor_tc)
+                'doktorTcKimlikNo': int(self.doctor_id.doctor_id)
             }
         }
 
@@ -92,8 +92,8 @@ class QueryPrescription(models.Model):
                     'default_patient_id': self.env['podiatry.patient'].search([('tc_no', '=', str(result.kisiDVO.tcKimlikNo))], limit=1).id,
                     'default_patient_name': result.kisiDVO.adi.strip(),
                     'default_patient_surname': result.kisiDVO.soyadi.strip(),
-                    'default_doctor_id': self.env['podiatry.doctor'].search([('doctor_tc', '=', str(result.tcKimlikNo))], limit=1).id,
-                    'default_brans_kod': str(result.doktorBransKodu),
+                    'default_doctor_id': self.env['podiatry.doctor'].search([('doctor_id', '=', str(result.tcKimlikNo))], limit=1).id,
+                    'default_practice_id': str(result.doktorBransKodu),
                     'default_state': 'sent',
                     'default_diagnosis_line_ids': [(4, diagnosis.id) for diagnosis in prescription.diagnosis_line_ids] if prescription else diagnoises_list,
                     'default_explanation_line_ids': [(4, explanation.id) for explanation in prescription.explanation_line_ids] if prescription else explanations_list,

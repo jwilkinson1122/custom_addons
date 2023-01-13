@@ -19,8 +19,12 @@ class Prescriptions(models.Model):
     doctor_name = fields.Char(string="Doctor Adı", related="doctor_id.name")
     doctor_surname = fields.Char(
         string="Doctor Last Name", related="doctor_id.surname")
-    brans_kod = fields.Char(string="Branch Code",
-                            related="doctor_id.brans_kod")
+    practice_id = fields.Many2one(string="Practice ID",
+                                  related="doctor_id.practice_id")
+
+    # practice_id = fields.Many2one(
+    #     comodel_name='podiatry.practice',
+    #     string='Practice', required=True)
 
     patient_id = fields.Many2one(
         'podiatry.patient', string="Patient", required=True)
