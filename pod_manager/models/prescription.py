@@ -11,8 +11,11 @@ class Prescriptions(models.Model):
 
     practice_id = fields.Many2one(
         'podiatry.practice', string="Practice", required=True)
+    # doctor_id = fields.Many2one(
+    #     'podiatry.doctor', string="Doctor", required=True)
     doctor_id = fields.Many2one(
-        'podiatry.doctor', string="Doctor", required=True)
+        comodel_name='podiatry.doctor',
+        string='Doctor', required=True)
     doctor_name = fields.Char(string="Doctor Adı", related="doctor_id.name")
     doctor_surname = fields.Char(
         string="Doctor Last Name", related="doctor_id.surname")

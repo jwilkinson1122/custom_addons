@@ -21,8 +21,8 @@
         <field name="prefix">ID</field>
         <field name="padding">6</field>
     </record>
-    <!--sequence for practitioner-->
-    <record id="sequence_podiatry_practitioner" model="ir.sequence">
+    <!--sequence for doctor-->
+    <record id="sequence_podiatry_doctor" model="ir.sequence">
         <field name="name">Doctor ID</field>
         <field name="code">podiatry.doctor</field>
         <field name="prefix">ID</field>
