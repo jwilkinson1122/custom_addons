@@ -119,7 +119,7 @@ class QueryEreport(models.Model):
                     'default_rapor_duzenleme_turu': result.raporDuzenlemeTuru,
                     'default_rapor_onay_durumu': result.raporOnayDurumu,
                     'default_rapor_olusturan_doktor': ereport.rapor_olusturan_doktor.id,
-                    'default_patient_id': self.env['podiatry.epatient'].search([('tc_no', '=', result.hastaTcKimlikNo)], limit=1).id,
+                    'default_patient_id': self.env['podiatry.patient'].search([('tc_no', '=', result.hastaTcKimlikNo)], limit=1).id,
                     'default_rapor_teshis_listesi': [(4, teshis.id) for teshis in ereport.rapor_teshis_listesi],
                     'default_rapor_doktor_listesi': [(4, doctor.id) for doctor in ereport.rapor_doktor_listesi],
                     'default_rapor_etkin_madde_listesi': [(4, etkin_madde.id) for etkin_madde in ereport.rapor_etkin_madde_listesi],

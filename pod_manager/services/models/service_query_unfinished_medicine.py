@@ -18,7 +18,7 @@ class QueryUnfinishedMedicine(models.Model):
 
     facility_code = fields.Char(string="Facility Code")
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")
-    patient_id = fields.Many2one('podiatry.epatient', string="Hasta")
+    patient_id = fields.Many2one('podiatry.patient', string="Hasta")
 
     def query_unfinished_medicine(self):
         wsdl = "https://sgkt.sgk.gov.tr/medula/eczane/saglikTesisiReceteIslemleriWS?wsdl"

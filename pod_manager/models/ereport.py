@@ -15,7 +15,7 @@ class EReport(models.Model):
     # Sağlık tesisi uretecek
     protokol_no = fields.Char(string="Protocol No", required=True)
     tracking_no = fields.Char(string="Tracking No")  # MEDULA takip numarası
-    patient_id = fields.Many2one('podiatry.epatient', string="Patient")
+    patient_id = fields.Many2one('podiatry.patient', string="Patient")
     patient_name = fields.Char(
         string="Patient Name", related="patient_id.name")
     patient_surname = fields.Char(

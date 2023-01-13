@@ -2,7 +2,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access.podiatry.practice,access_podiatry_practice,model_podiatry_practice,base.group_user,1,1,1,1
 access.podiatry.doctor,access_podiatry_doctor,model_podiatry_doctor,base.group_user,1,1,1,1
 access.podiatry.prescription,access_podiatry_prescription,model_podiatry_prescription,base.group_user,1,1,1,1
-access.podiatry.epatient,access_podiatry_epatient,model_podiatry_epatient,base.group_user,1,1,1,1
+access.podiatry.patient,access_podiatry_patient,model_podiatry_patient,base.group_user,1,1,1,1
 access.podiatry.ereport,access_podiatry_ereport,model_podiatry_ereport,base.group_user,1,1,1,1
 access.podiatry.ereport.explanation,access_podiatry_ereport_explanation,model_podiatry_ereport_explanation,base.group_user,1,1,1,1
 access.podiatry.ereport.ilave_deger,access_podiatry_ereport_ilave_deger,model_podiatry_ereport_ilave_deger,base.group_user,1,1,1,1

@@ -27,7 +27,7 @@ class SaveEreport(models.Model):
             [('id', '=', self.ereport_id)])
         rapor_olusturan_doktor = self.env['podiatry.doctor'].search(
             [('id', '=', ereport.rapor_olusturan_doktor.id)])
-        patient = self.env['podiatry.epatient'].search(
+        patient = self.env['podiatry.patient'].search(
             [('id', '=', ereport.patient_id.id)])
 
         teshis_listesi = []

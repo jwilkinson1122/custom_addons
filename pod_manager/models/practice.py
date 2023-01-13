@@ -9,6 +9,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class Practice(models.Model):
     _name = "podiatry.practice"
     _description = "Practice"
@@ -16,16 +17,29 @@ class Practice(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _rec_name = 'practice_id'
     _order = 'sequence,id'
-    
+
     _parent_name = 'parent_id'
     _parent_store = True
-    
+
     active = fields.Boolean(string='Active', default='True', tracking=True)
     color = fields.Integer(string="Color Index (0-15)")
     image = fields.Image(string="Image")
     notes = fields.Text(string="Notes")
     code = fields.Char(string="Code", copy=False)
-    
+
+    # patient_ids = fields.One2many(
+    #     'podiatry.patient', string="Patient", required=True)
+    patient_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='practice_id',
+        string="Patients",
+        required=True
+    )
+    patient_names = fields.Char("Patient Name", related='patient_ids.name')
+
+    prescription_ids = fields.One2many(
+        'podiatry.prescription', 'practice_id', "Prescription")
+
     doctor_id = fields.One2many(
         comodel_name='podiatry.doctor',
         inverse_name='practice_id',
@@ -41,12 +55,12 @@ class Practice(models.Model):
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
-    
+
     sequence = fields.Integer(
         string="Sequence", required=True,
         default=5,
     )
-    
+
     full_name = fields.Char(
         string="Full Name",
         compute='_compute_full_name',
@@ -66,7 +80,7 @@ class Practice(models.Model):
             else:
                 practice.full_name = practice.name
         return
-    
+
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_company', '=', True)], string="Practice", required=True)
 
@@ -75,7 +89,7 @@ class Practice(models.Model):
                                       ('military', 'Military Medical Center'),
                                       ('other', 'Other')],
                                      string="Practice Type")
-    
+
     @api.onchange('practice_id')
     def _onchange_practice(self):
         '''
@@ -109,7 +123,7 @@ class Practice(models.Model):
         inverse_name='parent_id',
         string="Practices",
     )
-    
+
     child_count = fields.Integer(
         string="Subpractice Count",
         compute='_compute_child_count',
@@ -142,7 +156,7 @@ class Practice(models.Model):
             practice.same_reference_practice_id = bool(practice.reference) and \
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
-                
+
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
@@ -187,3 +201,13 @@ class Practice(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+
+    @api.constrains('prescription_ids')
+    @api.onchange('prescription_ids')
+    def onchange_product(self):
+        for rec in self.prescription_ids:
+            vals = []
+            if rec.practice_id and rec.product_id:
+                vals.append((0, 0, {'prescription_id': rec.id,
+                                    'product_id': rec.product_id.id}))
+                rec.prescription_ids = vals

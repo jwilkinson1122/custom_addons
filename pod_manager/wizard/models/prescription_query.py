@@ -13,7 +13,7 @@ class Prescriptions(models.TransientModel):
                             related="doctor_id.brans_kod")
 
     patient_id = fields.Many2one(
-        'podiatry.epatient', string="Patient", required=True)
+        'podiatry.patient', string="Patient", required=True)
     patient_name = fields.Char(string="Hasta Ad", related="patient_id.name")
     patient_surname = fields.Char(
         string="Hasta Soyad", related="patient_id.surname")

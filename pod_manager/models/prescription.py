@@ -9,6 +9,8 @@ class Prescriptions(models.Model):
     _description = "Prescription"
     _rec_name = 'reference_no'
 
+    practice_id = fields.Many2one(
+        'podiatry.practice', string="Practice", required=True)
     doctor_id = fields.Many2one(
         'podiatry.doctor', string="Doctor", required=True)
     doctor_name = fields.Char(string="Doctor Adı", related="doctor_id.name")
@@ -18,7 +20,7 @@ class Prescriptions(models.Model):
                             related="doctor_id.brans_kod")
 
     patient_id = fields.Many2one(
-        'podiatry.epatient', string="Patient", required=True)
+        'podiatry.patient', string="Patient", required=True)
     patient_name = fields.Char(
         string="Patient Name", related="patient_id.name")
     patient_surname = fields.Char(

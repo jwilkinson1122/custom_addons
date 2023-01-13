@@ -89,7 +89,7 @@ class QueryPrescription(models.Model):
                     'default_tesis_kod': str(result.tesisKodu),
                     'default_recete_tur': str(result.receteTuru),
                     'default_recete_alt_tur': str(result.receteAltTuru),
-                    'default_patient_id': self.env['podiatry.epatient'].search([('tc_no', '=', str(result.kisiDVO.tcKimlikNo))], limit=1).id,
+                    'default_patient_id': self.env['podiatry.patient'].search([('tc_no', '=', str(result.kisiDVO.tcKimlikNo))], limit=1).id,
                     'default_patient_name': result.kisiDVO.adi.strip(),
                     'default_patient_surname': result.kisiDVO.soyadi.strip(),
                     'default_doctor_id': self.env['podiatry.doctor'].search([('doctor_tc', '=', str(result.tcKimlikNo))], limit=1).id,

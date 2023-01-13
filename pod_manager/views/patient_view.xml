@@ -2,9 +2,9 @@
 
 <odoo>
 
-    <record id="epatient_tree" model="ir.ui.view">
-        <field name="name">podiatry.epatient.tree</field>
-        <field name="model">podiatry.epatient</field>
+    <record id="patient_tree" model="ir.ui.view">
+        <field name="name">podiatry.patient.tree</field>
+        <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" string="Patient Name"/>
@@ -14,9 +14,9 @@
         </field>
     </record>
 
-    <record id="epatient_form" model="ir.ui.view">
-        <field name="name">podiatry.epatient.form</field>
-        <field name="model">podiatry.epatient</field>
+    <record id="patient_form" model="ir.ui.view">
+        <field name="name">podiatry.patient.form</field>
+        <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -46,10 +46,10 @@
         </field>
     </record>
 
-    <!-- <record model="ir.actions.act_window" id="epatient_action">
+    <!-- <record model="ir.actions.act_window" id="patient_action">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">podiatry.epatient</field>
+        <field name="res_model">podiatry.patient</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -58,7 +58,7 @@
         </field>
     </record> -->
 
-    <!-- <menuitem id="podiatry_epatient" name="Patients" parent="podiatry_conf_root" action="epatient_action" sequence="10"/> -->
+    <!-- <menuitem id="podiatry_patient" name="Patients" parent="podiatry_conf_root" action="patient_action" sequence="10"/> -->
 
 
 

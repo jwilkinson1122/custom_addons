@@ -18,7 +18,7 @@ class QueryEreportList(models.Model):
 
     facility_code = fields.Char(string="Facility Code")
     doctor_id = fields.Many2one('podiatry.doctor', string="Doctor")
-    patient_id = fields.Many2one('podiatry.epatient', string="Hasta")
+    patient_id = fields.Many2one('podiatry.patient', string="Hasta")
     ereports_list = fields.Many2many(
         'podiatry.ereport', string="Hastaya ait e-raporlar")
 

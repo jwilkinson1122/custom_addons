@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 class Patient(models.Model):
 
-    _name = "podiatry.epatient"
+    _name = "podiatry.patient"
     _description = "Podiatry Patient"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'tc_no'
@@ -22,11 +22,11 @@ class Patient(models.Model):
     ], required=True, default='other', tracking=True)
     active = fields.Boolean(string='Active', default='True', tracking=True)
     image = fields.Image(string="Image")
-    
+
     # partner_id = fields.Many2one(
     #     comodel_name='res.partner', string="Contact",
     # )
-    
+
     # other_partner_ids = fields.Many2many(
     #     comodel_name='res.partner',
     #     relation='podiatry_patient_partners_rel',
@@ -34,6 +34,12 @@ class Patient(models.Model):
     #     string="Other Contacts",
     # )
 
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string="Practice",
+    )
+
+    prescription_ids = fields.One2many('podiatry.prescription', 'patient_id')
 
     def name_get(self):
         result = []
