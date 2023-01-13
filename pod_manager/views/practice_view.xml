@@ -229,7 +229,6 @@
         <field name="arch" type="xml">
             <search string="Practices">
                 <field name="parent_id" invisible="1"/>
-
                 <!-- Fields -->
                 <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/> -->
                 <field name="name"/>
@@ -237,11 +236,9 @@
                 <field name="reference"/>
                 <field name="parent_id" operator="child_of"/>
                 <separator/>
-
                 <!-- Filters -->
                 <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-
                 <!-- Searchpanel -->
                 <searchpanel>
                     <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
@@ -254,7 +251,7 @@
     <!--
     Action: Practices
     -->
-    <record id="action_pod_clinics" model="ir.actions.act_window">
+    <!-- <record id="action_pod_clinics" model="ir.actions.act_window">
         <field name="name">Clinics</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -270,7 +267,7 @@
                 Organize and manage practices at a glance.
             </p>
         </field>
-    </record>
+    </record> -->
 
 
 </odoo>

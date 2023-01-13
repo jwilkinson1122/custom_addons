@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class Practice(models.Model):
     _name = "podiatry.practice"
     _description = "Practice"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _inherits = {'res.partner': 'partner_id'}
     _rec_name = 'practice_id'
     _order = 'sequence,id'
@@ -24,6 +24,7 @@ class Practice(models.Model):
     active = fields.Boolean(string='Active', default='True', tracking=True)
     color = fields.Integer(string="Color Index (0-15)")
     image = fields.Image(string="Image")
+    image_129 = fields.Image(max_width=128, max_height=128)
     notes = fields.Text(string="Notes")
     code = fields.Char(string="Code", copy=False)
 
@@ -160,7 +161,7 @@ class Practice(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
-            'pod_manager', 'static/src/img', 'company_image.png')
+            'pod_manager', 'static/img', 'company_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _valid_field_parameter(self, field, name):
