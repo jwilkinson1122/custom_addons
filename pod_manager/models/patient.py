@@ -22,6 +22,18 @@ class Patient(models.Model):
     ], required=True, default='other', tracking=True)
     active = fields.Boolean(string='Active', default='True', tracking=True)
     image = fields.Image(string="Image")
+    
+    # partner_id = fields.Many2one(
+    #     comodel_name='res.partner', string="Contact",
+    # )
+    
+    # other_partner_ids = fields.Many2many(
+    #     comodel_name='res.partner',
+    #     relation='podiatry_patient_partners_rel',
+    #     column1='patient_id', column2='partner_id',
+    #     string="Other Contacts",
+    # )
+
 
     def name_get(self):
         result = []

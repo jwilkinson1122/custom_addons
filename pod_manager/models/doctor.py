@@ -13,6 +13,18 @@ class Doctor(models.Model):
     name = fields.Char(string="Name", required=True, tracking=True)
     surname = fields.Char(string="Surname", required=True, tracking=True)
     doctor_tc = fields.Char(string="TC NO", required=True)
+    
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', string="Contact",
+    )
+ 
+    doctor_id = fields.Many2many('res.partner', domain=[(
+        'is_doctor', '=', True)], string="Doctor", required=True)
+    
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice')
+        
     brans_kod = fields.Char(string="Branch Code", required=True)
     sertifika_kod = fields.Selection([
         ('0', 'Yok'),

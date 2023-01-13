@@ -1,3 +1,4 @@
+from . import res_partner
 from . import prescription
 from . import practice
 from . import doctor

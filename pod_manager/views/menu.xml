@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- POD ERP -->
-    <menuitem id="podiatry_root" name="POD ERP" web_icon="prescription,static/description/icon.png" sequence="90"/>
+    <menuitem id="podiatry_root" name="POD ERP" web_icon="prescription,static/img/icons/icon.png" sequence="90"/>
     <!-- Practices -->
     <menuitem id="podiatry_practice" name="Clinics" parent="pod_manager.podiatry_root" action="practice_action" sequence="100"/>
     <!-- Doctors -->
@@ -13,6 +13,9 @@
     <!-- E-Report -->
     <menuitem id="podiatry_ereport_root" name="E-Report" parent="pod_manager.podiatry_root" action="ereport_action" sequence="125"/>
     <!-- Query -->
+
+        <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_root" sequence="20"/> -->
+
 
     <menuitem id="podiatry_query_root" name="Query" parent="pod_manager.podiatry_root" sequence="130"/>
     <!-- Submenu - Prescriptions -->

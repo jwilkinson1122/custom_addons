@@ -12,6 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        "data/ir_sequence_data.xml",
         'wizard/views/sonuc_mesaji_view.xml',
         'wizard/views/ereport_view.xml',
         'wizard/views/prescription_view.xml',
@@ -45,6 +46,7 @@
         'services/views/turuncu_ilac_listesi_view.xml',
         'services/views/query_teshis_listesi_view.xml',
         'services/views/query_etkin_madde_listesi_view.xml',
+        'views/res_partner.xml',
         'views/practice_view.xml',
         'views/doctor_view.xml',
         'views/diagnosis_view.xml',

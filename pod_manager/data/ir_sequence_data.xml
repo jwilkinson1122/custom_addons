@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- <record id="seq_config_session" model="ir.sequence">
+        <field name="name">Configuration Session</field>
+        <field name="code">product.config.session</field>
+        <field name="prefix">CS</field>
+        <field name="padding">4</field>
+    </record> -->
+    <!--sequence for patient-->
+    <record id="sequence_podiatry_patient" model="ir.sequence">
+        <field name="name">Patient ID</field>
+        <field name="code">podiatry.patient</field>
+        <field name="prefix">PID</field>
+        <field name="padding">6</field>
+        <!-- <field name="company_id" eval="False"/> -->
+    </record>
+    <!--sequence for practice-->
+    <record id="sequence_podiatry_practice" model="ir.sequence">
+        <field name="name">Practice ID</field>
+        <field name="code">podiatry.practice</field>
+        <field name="prefix">ID</field>
+        <field name="padding">6</field>
+    </record>
+    <!--sequence for practitioner-->
+    <record id="sequence_podiatry_practitioner" model="ir.sequence">
+        <field name="name">Doctor ID</field>
+        <field name="code">podiatry.doctor</field>
+        <field name="prefix">ID</field>
+        <field name="padding">6</field>
+    </record>
+    <!--sequence for prescription-->
+    <record id="sequence_podiatry_prescription" model="ir.sequence">
+        <field name="name">Prescription Sequence</field>
+        <field name="code">podiatry.prescription</field>
+        <field name="prefix">Rx ID: %(y)s%(month)s-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <!--sequence for prescription-->
+    <record id="prescription_invoice_sequence" model="ir.sequence">
+        <field name="name">Prescription Invoice</field>
+        <field name="code">pres_inv_seq</field>
+        <field name="prefix">PRES/INV/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>
