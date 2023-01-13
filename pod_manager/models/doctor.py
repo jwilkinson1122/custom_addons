@@ -40,7 +40,7 @@ class Doctor(models.Model):
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
-        string='Practice')
+        string='Practice', required=True)
 
     prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
@@ -66,15 +66,15 @@ class Doctor(models.Model):
         ('0', 'Yok'),
         ('56', 'Hemodiyaliz'),
         ('109', 'Aile Hekimliği')
-    ], string="Sertifika Kod", required=True)
+    ], string="Sertifika Kod")
     birth = fields.Date(string="Date of Birth",
-                        date_format="dd.MM.yyyy", required=True)
-    age = fields.Integer(string="Age", readonly=True, compute='_compute_age')
+                        date_format="dd.MM.yyyy")
+    age = fields.Integer(string="Age", compute='_compute_age')
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], required=True, default='other', tracking=True)
+    ], default='other', tracking=True)
     active = fields.Boolean(string='Active', default='True', tracking=True)
     image = fields.Image(string="Image")
     notes = fields.Text(string="Notes")

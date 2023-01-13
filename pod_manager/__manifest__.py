@@ -7,7 +7,7 @@
     'description': "Medical Podiatry Prescriptions",
     'author': 'NWPL',
     'website': 'nwpodiatric.com',
-    'depends': ['mail', 'product', 'base'],
+    'depends': ['mail', 'product', 'base', 'sale_management', 'account', 'sale_stock'],
     'demo': [],
     'data': [
         'security/ir.model.access.csv',

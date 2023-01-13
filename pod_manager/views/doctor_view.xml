@@ -65,13 +65,15 @@
                         <group name="doctr_information" string="Doctor Information">
                             <field name="name"/>
                             <field name="surname"/>
-                            <field name="gender"/>
-                            <field name="birth"/>
-                            <field name="age"/>
+                            <!-- <field name="gender"/> -->
+                            <!-- <field name="birth"/>
+                            <field name="age"/> -->
                             <field name="active" invisible="1"/>
                             <field name="doctor_tc"/>
                             <field name="brans_kod"/>
                             <field name="sertifika_kod"/>
+                            <!-- <field name="practice_id"/> -->
+
                         </group>
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
@@ -100,6 +102,13 @@
                             </div>
                             <field name="prescription_id" mode="kanban"/>
                         </page> -->
+                        <page name="perscriptions_list" string="Prescriptions">
+                            <separator name="prescriptions" string="Prescriptions"/>
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('prescription_id', '!=', ())]}">
+                                No Prescriptions
+                            </div>
+                            <field name="prescription_id" mode="kanban"/>
+                        </page>
                         <page name="notes" string="Notes">
                             <separator name="notes" string="Notes"/>
                             <field name="notes" nolabel="1" placeholder="Start typing..."/>
