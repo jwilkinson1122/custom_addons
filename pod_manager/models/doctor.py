@@ -1,12 +1,10 @@
-# -*- coding: utf8 -*-
-import dateutil.utils
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
-# from . import podiatry_practice
+from . import practice
 
 # from lxml import etree
 # added import statement in try-except because when server runs on
@@ -18,50 +16,35 @@ except:
 
 
 class Doctor(models.Model):
+    _name = 'podiatry.doctor'
+    _inherit = ['mail.thread',
+                'mail.activity.mixin', 'image.mixin']
 
-    _name = "podiatry.doctor"
-    _description = "Doctor"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _inherits = {
         'res.partner': 'partner_id',
     }
+
     _rec_name = 'doctor_id'
 
-    name = fields.Char(string="Name", required=True, tracking=True)
-    surname = fields.Char(string="Last Name", tracking=True)
+    _description = 'doctor'
 
-    partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Contact",
-    )
-
-    # patient_ids = fields.One2many(
-    #     'podiatry.patient', string="Patient")
-    # patient_ids = fields.One2many(
-    #     comodel_name='podiatry.patient',
-    #     string='Patients'
-    # )
-
-    doctor_id = fields.Many2many('res.partner', domain=[(
-        'is_doctor', '=', True)], string="Doctor", required=True)
-
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
-        string='Practice', required=True)
-
-    prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='doctor_id',
-        string='Prescriptions')
-
-    # patient_ids = fields.One2many("podiatry.patient")
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='doctor_id',
         string='Patients'
     )
 
-    # patients = fields.Char(
-    #     related='prescription_id.patient_ids.name')
+    doctor_id = fields.Many2many('res.partner', domain=[(
+        'is_doctor', '=', True)], string="doctor", required=True)
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string='Practice')
+
+    doctor_prescription_id = fields.One2many(
+        comodel_name='podiatry.prescription',
+        inverse_name='doctor_id',
+        string='Prescriptions')
 
     @api.model
     def _default_image(self):
@@ -74,36 +57,31 @@ class Doctor(models.Model):
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
+
     reference = fields.Char(string='Doctor Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    sertifika_kod = fields.Selection([
-        ('0', 'Yok'),
-        ('56', 'Hemodiyaliz'),
-        ('109', 'Aile Hekimliği')
-    ], string="Sertifika Kod")
-    birth = fields.Date(string="Date of Birth",
-                        date_format="dd.MM.yyyy")
-    age = fields.Integer(string="Age", compute='_compute_age')
-    gender = fields.Selection([
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other')
-    ], default='other', tracking=True)
-    active = fields.Boolean(string='Active', default='True', tracking=True)
-    image = fields.Image(string="Image")
     notes = fields.Text(string="Notes")
 
-    @api.depends('birth')
-    def _compute_age(self):
-        for rec in self:
-            today = dateutil.utils.today()
-            if rec.birth:
-                rec.age = today.year - rec.birth.year
-            else:
-                rec.age = 0
+    salutation = fields.Selection(selection=[
+        ('doctor', 'Doctor'),
+        ('mr', 'Mr.'),
+        ('ms', 'Ms.'),
+        ('mrs', 'Mrs.'),
+    ], string="Salutation")
+
+    signature = fields.Binary(string="Signature")
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
+
+    doctor_prescription_id = fields.One2many(
+        comodel_name='podiatry.prescription',
+        inverse_name='doctor_id',
+        string="Prescriptions",
+    )
+
+    prescription_line = fields.One2many(
+        'podiatry.prescription.line', 'name', 'Prescription Line')
 
     def _compute_prescription_count(self):
         for rec in self:
@@ -123,12 +101,59 @@ class Doctor(models.Model):
         default=lambda self: self.env.user,
     )
 
+    @api.onchange('doctor_id')
+    def _onchange_doctor(self):
+        '''
+        The purpose of the method is to define a domain for the available
+        purchase orders.
+        '''
+        address_id = self.doctor_id
+        self.doctor_address_id = address_id
+
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+                                 help='Partner-related data')
+
+    doctor_address_id = fields.Many2one(
+        'res.partner', string="Address", )
+
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
         relation='podiatry_doctor_partners_rel',
         column1='doctor_id', column2='partner_id',
         string="Other Contacts",
     )
+
+    @api.model
+    def _relativedelta_to_text(self, delta):
+        result = []
+
+        if delta:
+            if delta.years > 0:
+                result.append(
+                    "{years} {doctor}".format(
+                        years=delta.years,
+                        doctor=_(
+                            "year") if delta.years == 1 else _("years"),
+                    )
+                )
+            if delta.months > 0 and delta.years < 9:
+                result.append(
+                    "{months} {doctor}".format(
+                        months=delta.months,
+                        doctor=_("month") if delta.months == 1 else _(
+                            "months"),
+                    )
+                )
+            if delta.days > 0 and not delta.years:
+                result.append(
+                    "{days} {doctor}".format(
+                        days=delta.days,
+                        doctor=_(
+                            "day") if delta.days == 1 else _("days"),
+                    )
+                )
+
+        return bool(result) and " ".join(result)
 
     same_reference_doctor_id = fields.Many2one(
         comodel_name='podiatry.doctor',
@@ -155,7 +180,7 @@ class Doctor(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
-            'podiatry', 'static/img', 'avatar.png')
+            'podiatry', 'static/src/img', 'default_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _add_followers(self):
@@ -178,17 +203,10 @@ class Doctor(models.Model):
         doctor._add_followers()
         return doctor
 
-    # def name_get(self):
-    #     result = []
-    #     for rec in self:
-    #         name = '[' + rec.reference + '] ' + rec.name
-    #         result.append((rec.id, name))
-    #     return result
-
     def name_get(self):
         result = []
         for rec in self:
-            name = rec.doctor_id + ' : ' + rec.name + ' ' + rec.surname
+            name = '[' + rec.reference + '] ' + rec.name
             result.append((rec.id, name))
         return result
 
@@ -200,7 +218,7 @@ class Doctor(models.Model):
 
     def copy(self, default=None):
         for rec in self:
-            raise UserError(_('You Can Not Duplicate Doctor.'))
+            raise UserError(_('You Can Not Duplicate doctor.'))
 
     def action_open_prescriptions(self):
         return {
@@ -212,14 +230,3 @@ class Doctor(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
-
-    # def action_open_prescriptions(self):
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Prescriptions',
-    #         'res_model': 'podiatry.prescription',
-    #         'domain': [('doctor_id', '=', self.id)],
-    #         'context': {'default_doctor_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }

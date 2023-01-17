@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
@@ -11,41 +10,19 @@ _logger = logging.getLogger(__name__)
 
 
 class Practice(models.Model):
-    _name = "podiatry.practice"
-    _description = "Practice"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
-    _inherits = {'res.partner': 'partner_id'}
+    _name = 'podiatry.practice'
+    _description = "Medical Practice"
+    _inherit = ['mail.thread',
+                'mail.activity.mixin', 'image.mixin']
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
+
     _rec_name = 'practice_id'
     _order = 'sequence,id'
 
     _parent_name = 'parent_id'
     _parent_store = True
-
-    active = fields.Boolean(string='Active', default='True', tracking=True)
-    color = fields.Integer(string="Color Index (0-15)")
-    image = fields.Image(string="Image")
-    image_129 = fields.Image(max_width=128, max_height=128)
-    notes = fields.Text(string="Notes")
-    code = fields.Char(string="Code", copy=False)
-
-    # patient_ids = fields.One2many(
-    #     'podiatry.patient', string="Patient", required=True)
-    patient_ids = fields.One2many(
-        comodel_name='podiatry.patient',
-        inverse_name='practice_id',
-        string="Patients",
-        required=True
-    )
-    patient_names = fields.Char("Patient Name", related='patient_ids.name')
-
-    prescription_ids = fields.One2many(
-        'podiatry.prescription', 'practice_id', "Prescription")
-
-    doctor_id = fields.One2many(
-        comodel_name='podiatry.doctor',
-        inverse_name='practice_id',
-        string="Contacts",
-    )
 
     parent_path = fields.Char(string="Parent Path", index=True)
 
@@ -57,10 +34,16 @@ class Practice(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
+    active = fields.Boolean(string="Active", default=True, tracking=True)
+    # name = fields.Char(string="Practice Name", index=True, translate=True)
+    color = fields.Integer(string="Color Index (0-15)")
+
     sequence = fields.Integer(
         string="Sequence", required=True,
         default=5,
     )
+
+    code = fields.Char(string="Code", copy=False)
 
     full_name = fields.Char(
         string="Full Name",
@@ -71,6 +54,24 @@ class Practice(models.Model):
     identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
+    email = fields.Char(string="E-mail")
+    phone = fields.Char(string="Telephone")
+    mobile = fields.Char(string="Mobile")
+    street = fields.Char(string="Street")
+    street2 = fields.Char(string="Street 2")
+    country_id = fields.Many2one(
+        comodel_name='res.country', string="Country",
+        default=lambda self: self.env.company.country_id,
+    )
+    state_id = fields.Many2one(
+        comodel_name='res.country.state', string="State",
+        default=lambda self: self.env.company.state_id,
+    )
+    city = fields.Char(string="City")
+    zip = fields.Char(string="ZIP Code")
+
+    notes = fields.Text(string="Notes")
+    image_129 = fields.Image(max_width=128, max_height=128)
 
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
@@ -82,14 +83,38 @@ class Practice(models.Model):
                 practice.full_name = practice.name
         return
 
+    patient_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='practice_id',
+        string="Patients",
+    )
+
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_company', '=', True)], string="Practice", required=True)
 
     practice_type = fields.Selection([('hospital', 'Hospital'),
+                                      ('multi', 'Multi-Hospital'),
                                       ('clinic', 'Clinic'),
                                       ('military', 'Military Medical Center'),
                                       ('other', 'Other')],
                                      string="Practice Type")
+
+    doctor_id = fields.One2many(
+        comodel_name='podiatry.doctor',
+        inverse_name='practice_id',
+        string="Contacts",
+    )
+
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string="Created by",
+    )
+
+    practice_prescription_id = fields.One2many(
+        comodel_name='podiatry.prescription',
+        inverse_name='practice_id',
+        string="Prescriptions",
+    )
 
     @api.onchange('practice_id')
     def _onchange_practice(self):
@@ -124,7 +149,6 @@ class Practice(models.Model):
         inverse_name='parent_id',
         string="Practices",
     )
-
     child_count = fields.Integer(
         string="Subpractice Count",
         compute='_compute_child_count',
@@ -161,7 +185,7 @@ class Practice(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
-            'pod_manager', 'static/img', 'company_image.png')
+            'podiatry', 'static/src/img', 'company_image.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _valid_field_parameter(self, field, name):
@@ -202,13 +226,3 @@ class Practice(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
-
-    @api.constrains('prescription_ids')
-    @api.onchange('prescription_ids')
-    def onchange_product(self):
-        for rec in self.prescription_ids:
-            vals = []
-            if rec.practice_id and rec.product_id:
-                vals.append((0, 0, {'prescription_id': rec.id,
-                                    'product_id': rec.product_id.id}))
-                rec.prescription_ids = vals

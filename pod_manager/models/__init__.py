@@ -1,6 +1,7 @@
 from . import res_partner
 from . import prescription
 from . import practice
+from . import practice_type
 from . import doctor
 from . import patient
 from . import medicine
@@ -16,3 +17,5 @@ from . import ilave_deger_turu
 from . import ereport_ilave_deger
 from . import etkin_maddeDVO
 from . import ilacDVO
+from . import ir_actions
+from . import contact_mixin

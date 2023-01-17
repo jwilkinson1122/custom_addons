@@ -9,3 +9,4 @@ from . import product_attribute
 from . import product_product
 from . import ir_ui_view
 from . import res_company
+from . import res_config_settings

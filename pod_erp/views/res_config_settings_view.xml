@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="configurator_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Pod ERP" string="Pod ERP" data-key="pod_erp">
+                    <h2>Patients</h2>
+                    <div class="row mt16 o_settings_container" name="patients_settings_container">
+                        <!-- podiatry_calendar -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_calendar_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_calendar"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pod_calendar" string="Prescriptions"/>
+                                <div class="text-muted">
+                                        Schedule order delivery dates
+                                </div>
+                            </div>
+                        </div>
+                        <!-- podiatry_patient_tags -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_tags_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_patient_tags"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pod_patient_tags" string="Tags"/>
+                                <div class="text-muted">
+                                        Organize and manage your patients using tags
+                                </div>
+                            </div>
+                        </div>
+                        <!-- podiatry_phone_validation -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="patient_phone_validation_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pod_phone_validation"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pod_phone_validation" string="Phone Number Validation"/>
+                                <div class="text-muted">
+                                        Automatically format and validate phone numbers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="app_settings_block" data-string="Product Configurator" string="Product Configurator" data-key="product_configurator">
+                    <!-- <h2>Product Configurator</h2> -->
+                    <!-- <div class="row mt16 o_settings_container" name="products_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="product_configurator_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_podiatry_product_configurator"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_podiatry_product_configurator" string="Product Configurator"/>
+                                <div class="text-muted">
+                                        Manage and Configure Products
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="action_res_config_settings_inherit_podiatry" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="podiatry.configurator_settings_view_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'podiatry'}</field>
+    </record> -->
+</odoo>
