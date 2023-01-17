@@ -37,8 +37,9 @@
 
     <menuitem id="podiatry_configuration_menu" name="Configuration" sequence="20" parent="pod_erp.podiatry_management_menu" />
     <!-- <menuitem id="menu_open_podiatry_floor_form_tree" name="Floor" action="open_podiatry_floor_form_tree" sequence="21" parent="podiatry_configuration_menu" /> -->
-    <menuitem id="menu_open_podiatry_device_form" name="Devices" action="action_podiatry_device_form" sequence="5" parent="pod_erp.menu_podiatry_device" />
+
     <menuitem id="menu_podiatry_device" name="Device" parent="pod_erp.podiatry_configuration_menu" sequence="2" />
+    <menuitem id="menu_open_podiatry_device_form" name="Devices" action="action_podiatry_device_form" sequence="5" parent="pod_erp.menu_podiatry_device" />
     <menuitem id="menu_open_podiatry_device_type_form_tree" name="Device Types" action="open_podiatry_device_type_form_tree" sequence="6" parent="pod_erp.menu_podiatry_device" />
 
     <menuitem id="menu_amenity" name="Amenity" parent="pod_erp.podiatry_configuration_menu" sequence="2" />
