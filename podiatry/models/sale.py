@@ -2,37 +2,23 @@ from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
+    # _inherits = {
+    #     'res.partner': 'partner_id',
+    # }
 
-    # practice_id = fields.Many2many('res.partner', domain=[(
-    #     'is_company', '=', True)], string="Practice", required=True)
+    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+                                 help='Partner-related data of the Doctor')
 
-    practice_id = fields.Many2one(
-        string="Practitioner",
-        comodel_name="podiatry.practice",
-        ondelete="cascade",
-        index=True,
-        tracking=True,
-        help="Clinic with which the practitioner is associated",
-    )  # Field : performer/actor
+    practice_id = fields.Many2one('res.partner', required=True, domain=[
+        ('is_location', '=', True)], ondelete='restrict', copy=True)
 
-    practitioner_id = fields.Many2one(
-        string="Practitioner",
-        comodel_name="podiatry.practitioner",
-        ondelete="cascade",
-        index=True,
-        tracking=True,
-        help="Who is responsible for the patient",
-    )  # Field : performer/actor
+    # practitioner_id = fields.Many2one('res.partner', required=True, domain=[
+    #     ('is_practitioner', '=', True)], ondelete='restrict', copy=True)
+    practitioner_id = fields.Many2one("podiatry.practitioner", 'Practitioner')
 
-    patient_id = fields.Many2one(
-        string="Patient",
-        comodel_name="podiatry.patient",
-        ondelete="cascade",
-        index=True,
-        tracking=True,
-        help="The patient that is associated with the order",
-    )  # Field : performer/actor
+    patient_id = fields.Many2one('res.partner', required=True, domain=[
+        ('is_patient', '=', True)], ondelete='restrict', copy=True)
 
     def action_config_start(self):
         """Return action to start configuration wizard"""

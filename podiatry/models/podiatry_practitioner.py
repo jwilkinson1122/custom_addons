@@ -34,6 +34,8 @@ class Practitioner(models.Model):
         string='Patients'
     )
 
+    is_practitioner = fields.Boolean()
+
     practitioner_id = fields.Many2many('res.partner', domain=[(
         'is_practitioner', '=', True)], string="practitioner", required=True)
 

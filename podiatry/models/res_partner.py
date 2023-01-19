@@ -15,6 +15,18 @@ class Partner(models.Model):
 
     name = fields.Char(index=True)
 
+    # patient_ids = fields.One2many(
+    #     comodel_name='podiatry.patient',
+    #     inverse_name='partner_id',
+    #     string="Patients",
+    # )
+
+    practice_ids = fields.One2many(
+        comodel_name='podiatry.practice',
+        inverse_name='partner_id',
+        string="Practices",
+    )
+
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='partner_id',

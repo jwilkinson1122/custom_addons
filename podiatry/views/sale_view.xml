@@ -27,6 +27,10 @@
                 <field string="Practice" name="practice_id"/>
                 <field string="Practitioner" name="practitioner_id"/>
                 <field string="Patient" name="patient_id"/>
+
+                <!-- <field string="Practice" name="practice_id"/>
+                <field string="Practitioner" name="practitioner_id"/>
+                <field string="Patient" name="patient_id"/> -->
                 <!-- <field string="Practice" name="practice_id"/>
                 <field string="Practitioner" name="practitioner_id"/> -->
                 <!-- <field string="Patient" name="patient_id"/> -->
