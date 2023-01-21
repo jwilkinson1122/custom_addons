@@ -28,7 +28,7 @@ class Prescription(models.Model):
     @api.model
     def _default_stage(self):
         Stage = self.env["podiatry.prescription.stage"]
-        return Stage.search([("state", "=", "new")], limit=1)
+        return Stage.search([("state", "=", "confirm")], limit=1)
 
     @api.model
     def _group_expand_stage_id(self, stages, domain, order):
@@ -44,11 +44,6 @@ class Prescription(models.Model):
 
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True,
                                  )
-
-  
-    # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
-    #                              help='Partner-related data of the Doctor')
-
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
 
@@ -118,10 +113,6 @@ class Prescription(models.Model):
 
     prescription = fields.Text(string="Prescription")
 
-    # prescription_id = fields.Many2one(
-    #     "sale.order", "Prescription Order", delegate=True, required=True, ondelete="cascade"
-    # )
-
     prescription_ids = fields.One2many(
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
@@ -129,10 +120,6 @@ class Prescription(models.Model):
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
     product_id = fields.Many2one('product.product', 'Name')
-
-    field1 = fields.Char()
-    field2 = fields.Char()
-    field3 = fields.Char()
 
     completed_date = fields.Datetime(string="Completed Date")
 
@@ -143,6 +130,9 @@ class Prescription(models.Model):
         "podiatry.prescription.stage", default=_default_stage, copy=False, group_expand="_group_expand_stage_id")
 
     state = fields.Selection(related="stage_id.state")
+    
+    # state = fields.Selection(
+    #     [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
     kanban_state = fields.Selection(
         [("normal", "In Progress"),
@@ -182,6 +172,7 @@ class Prescription(models.Model):
     bookin_date = fields.Datetime(
         "Book In", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookin_date,
     )
+    
     bookout_date = fields.Datetime(
         "Book Out", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookout_date,
     )
@@ -228,21 +219,19 @@ class Prescription(models.Model):
                 prescription.prescription_line)
 
     invoice_done = fields.Boolean('Invoice Done')
-
     notes = fields.Text('Prescription Note')
-
     is_invoiced = fields.Boolean(copy=False, default=False)
-
     is_shipped = fields.Boolean(default=False, copy=False)
+ 
 
     def action_confirm(self):
         self.state = 'confirm'
 
-    def action_done(self):
-        self.state = 'done'
-
     def action_draft(self):
         self.state = 'draft'
+
+    def action_done(self):
+        self.state = 'done'
 
     def action_cancel(self):
         self.state = 'cancel'
@@ -251,12 +240,14 @@ class Prescription(models.Model):
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     podiatrist_observation = fields.Text()
-    state = fields.Selection(
-        [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+    
+      # state = fields.Selection(
+    #     [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+
 
     def confirm_request(self):
         for rec in self:
-            rec.state = 'Confirm'
+            rec.state = 'confirm'
 
     def default_examination_chargeable(self):
         settings_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
@@ -430,7 +421,7 @@ class Prescription(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription') or _('New')
         res = super(Prescription, self).create(vals)
-        if res.stage_id.state in ("open", "close"):
+        if res.stage_id.state in ("draft", "close"):
             raise exceptions.UserError(
                 "State not allowed for new prescriptions."
             )
@@ -446,7 +437,7 @@ class Prescription(models.Model):
         # Code after write: can use `self` with the updated values
         new_state = self.stage_id.state
         if not self.env.context.get("_prescription_write"):
-            if new_state != old_state and new_state == "open":
+            if new_state != old_state and new_state == "draft":
                 self.with_context(_prescription_write=True).write(
                     {"prescription_date": fields.Date.today()})
             if new_state != old_state and new_state == "done":

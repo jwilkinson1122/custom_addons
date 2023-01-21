@@ -12,10 +12,11 @@ class PrescriptionStage(models.Model):
     active = fields.Boolean(default=True)
     state = fields.Selection(
         [
-            ("new", "Requested"),
-            ("open", "Open"),
-            ("done", "Complete"),
-            ("cancel", "Canceled"),
+            ("confirm", "Confirm"),
+            ("draft", "Draft"),
+            ("done", "Done"),
+            ("cancel", "Cancel"),
         ],
-        default="new",
+        default="confirm",
     )
+    
