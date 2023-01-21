@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_pod_patient" model="ir.sequence">
+            <field name="name">Patient Sequence</field>
+            <field name="code">pod.patient</field>
+            <field name="prefix">PID</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- <record id="seq_pod_prescription" model="ir.sequence">
+            <field name="name">prescription Sequence</field>
+            <field name="code">pod.prescription</field>
+            <field name="prefix">RX</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record> -->
+
+        <record id="device_config_one" model="device.type">
+            <field name="name">Custom Device</field>
+        </record>
+        <record id="device_config_two" model="device.type">
+            <field name="name">OTC Device</field>
+        </record>
+        <record id="device_config_three" model="device.type">
+            <field name="name">Brace</field>
+        </record>
+
+        <record id="pod_erp_product" model="product.product">
+            <field name="name">Extra charges</field>
+            <field name="standard_price">0</field>
+            <field name="list_price">0</field>
+            <field name="type">service</field>
+        </record>
+
+
+    </data>
+
+
+</odoo>

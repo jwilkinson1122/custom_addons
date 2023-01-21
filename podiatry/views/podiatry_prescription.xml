@@ -27,10 +27,10 @@
                     <field name="state" invisible="True" />
                     <!-- <button name="button_done" type="object" string="Done" attrs="{'invisible': [('state', 'in', ['new', 'done', 'cancel'])]}" states="open" class="oe_highlight" /> -->
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <!-- <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
+                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft" />
                     <button name="open_customer" class="btn btn-success" states="Confirm" string="Create Orders" type="object"></button>
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
+                    <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
+                    <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -39,16 +39,15 @@
                         <h1>
                             <field name="name" readonly="1" />
                         </h1>
-                        <!-- <h3>
-                            <span class="oe_read_only">Submitted By</span>
-                            <label for="practitioner_id" class="oe_edit_only" />
-                            <field name="practitioner_id" class="oe_inline" />
-                        </h3> -->
                     </div>
                     <group>
                         <group string="Account Info">
+                            <field name="partner_id" required="1" />
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practitioner_id" required="1" />
+                            <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/> -->
+                            <!-- <field name="company_id"/> -->
+
                         </group>
                         <group string="Patient Info">
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
@@ -57,6 +56,7 @@
                     <group string="Order Info">
                         <group>
                             <field name="bookin_date" />
+                            <field name="prescription_type" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                             <field name="user_id" />
                         </group>
                         <group>

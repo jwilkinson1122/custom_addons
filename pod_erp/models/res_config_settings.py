@@ -1,18 +1,28 @@
-from odoo import fields, models
+# -*- coding: utf-8 -*-
+# License OPL-1
+
+import base64
+from odoo import models, fields, api, _
 
 
-class ResConfigSettings(models.TransientModel):
+class InheritedResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    # module_podiatry_product_configurator = fields.Boolean(
-    #     string="Product Configurator for custom devices")
+    examination_chargeable = fields.Boolean(
+        config_parameter='pod_erp.examination')
 
-    module_pod_calendar = fields.Boolean(
-        string="Prescriptions for Patients")
-    module_pod_encounter = fields.Boolean(
-        string="Encounters for Patients")
-    # module_podiatry_product = fields.Boolean(
-    #     string="Product Configuration")
-    module_pod_patient_tags = fields.Boolean(string="Tags for Patients")
-    module_pod_phone_validation = fields.Boolean(
-        string="Phone Number Validation for Patients")
+    @api.model
+    def get_values(self):
+        res = super(InheritedResConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+        examination_chargeable = params.get_param(
+            'examination_chargeable')
+        res.update(
+            examination_chargeable=examination_chargeable,
+        )
+        return res
+
+    def set_values(self):
+        super(InheritedResConfigSettings, self).set_values()
+        self.env['ir.config_parameter'].sudo().set_param(
+            "examination_chargeable", self.examination_chargeable)

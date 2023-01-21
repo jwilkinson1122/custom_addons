@@ -11,12 +11,7 @@ class Prescription(models.Model):
     _name = 'podiatry.prescription'
     _description = 'Prescription Request'
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _rec_name = "prescription_id"
-    
-    company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Company', required=True, readonly=True,
-        default=lambda self: self.env.company)
+    _rec_name = "name"
 
     @api.depends('patient_id')
     def _compute_request_date_onchange(self):
@@ -39,24 +34,42 @@ class Prescription(models.Model):
     def _group_expand_stage_id(self, stages, domain, order):
         return stages.search([], order=order)
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
-                       default=lambda self: _('New'))
+    name = fields.Char(string='Order Reference', required=True,
+                       copy=False, readonly=True, default=lambda self: _('New'))
 
     active = fields.Boolean(default=True)
     color = fields.Integer()
     date = fields.Date()
     time = fields.Datetime()
 
+    company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True,
+                                 )
+
+    # partner_id = fields.Many2one(
+    #     'res.partner', string='Customer', required=True, change_default=True, index=True, tracking=1,
+    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+
+    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+                                 help='Partner-related data of the Doctor')
+
+    # partner_id = fields.Many2one(
+    #     'res.partner', string='Customer', readonly=True,
+    #     states={'draft': [('readonly', False)], 'sent': [
+    #         ('readonly', False)]},
+    #     required=True, change_default=True, index=True, tracking=1,
+    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+
+    customer = fields.Many2one(
+        'res.partner', string='Customer', readonly=False)
+
     practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
-        string='Practice')
+        comodel_name='podiatry.practice', string='Practice')
 
     practice_name = fields.Char(
         string='Practitioner', related='practice_id.name')
 
     practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        string='Practitioner')
+        comodel_name='podiatry.practitioner', string='Practitioner')
 
     practitioner_name = fields.Char(
         string='Practitioner', related='practitioner_id.name')
@@ -68,8 +81,7 @@ class Prescription(models.Model):
         string='Email', related='practitioner_id.email')
 
     patient_id = fields.Many2one(
-        comodel_name='podiatry.patient',
-        string='Patient')
+        comodel_name='podiatry.patient', string='Patient')
 
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
@@ -99,15 +111,13 @@ class Prescription(models.Model):
     description = fields.Text(string='Description')
 
     diagnosis_id = fields.Many2one(
-        comodel_name='podiatry.patient.diagnosis',
-        string='diagnosis')
+        comodel_name='podiatry.patient.diagnosis', string='diagnosis')
 
     user_id = fields.Many2one(
         'res.users', 'User', readonly=True, default=lambda self: self.env.user)
 
     attachment_ids = fields.Many2many('ir.attachment', 'prescription_ir_attachments_rel',
-                                      'manager_id', 'attachment_id', string="Attachments",
-                                      help="Images/attachments before prescription")
+                                      'manager_id', 'attachment_id', string="Attachments", help="Images/attachments before prescription")
 
     inv_state = fields.Selection(
         [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
@@ -117,7 +127,7 @@ class Prescription(models.Model):
     inv_id = fields.Many2one('account.invoice', 'Invoice')
 
     prescription = fields.Text(string="Prescription")
-    
+
     prescription_id = fields.Many2one(
         "sale.order", "Prescription Order", delegate=True, required=True, ondelete="cascade"
     )
@@ -125,13 +135,6 @@ class Prescription(models.Model):
     prescription_ids = fields.One2many(
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
-    # device_line_ids = fields.One2many(
-    #     "podiatry.prescription.line",
-    #     "prescription_id",
-    #     readonly=True,
-    #     states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
-    #     help="Podiatry device reservation detail.",
-    # )
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
 
@@ -146,18 +149,11 @@ class Prescription(models.Model):
 
     completed_date = fields.Datetime(string="Completed Date")
 
-    request_date = fields.Date(
-        default=lambda s: fields.Date.today(),
-        compute="_compute_request_date_onchange",
-        store=True,
-        readonly=False,
-    )
+    request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False,
+                               )
 
     stage_id = fields.Many2one(
-        "podiatry.prescription.stage",
-        default=_default_stage,
-        copy=False,
-        group_expand="_group_expand_stage_id")
+        "podiatry.prescription.stage", default=_default_stage, copy=False, group_expand="_group_expand_stage_id")
 
     state = fields.Selection(related="stage_id.state")
 
@@ -165,16 +161,14 @@ class Prescription(models.Model):
         [("normal", "In Progress"),
          ("blocked", "Blocked"),
          ("done", "Ready for next stage")],
-        "Kanban State",
-        default="normal")
+        "Kanban State", default="normal")
 
     color = fields.Integer()
 
     priority = fields.Selection(
         [("0", "High"),
          ("1", "Very High"),
-         ("2", "Critical")],
-        default="0")
+         ("2", "Critical")], default="0")
 
     @api.model
     def _get_bookin_date(self):
@@ -196,19 +190,17 @@ class Prescription(models.Model):
     close_date = fields.Date(readonly=True)
 
     bookin_date = fields.Datetime(
-        "Book In",
-        required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-        default=_get_bookin_date,
+        "Book In", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookin_date,
     )
     bookout_date = fields.Datetime(
-        "Book Out",
-        required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-        default=_get_bookout_date,
+        "Book Out", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookout_date,
     )
+
+    prescription_type = fields.Selection([
+        ('Custom', 'Custom'),
+        ('OTC', 'OTC'),
+        ('Brace', 'Brace'),
+    ], default='Internal', Required=True)
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
@@ -221,12 +213,6 @@ class Prescription(models.Model):
                 ("state", "not in", ["done", "cancel"]),
             ]
             prescription.prescription_count = self.search_count(domain)
-
-    # def _compute_prescription_count(self):
-    #     for rec in self:
-    #         prescription_count = self.env['podiatry.prescription'].search_count(
-    #             [('practitioner_id', '=', rec.id), ("state", "not in", ["done", "cancel"]), ])
-    #         rec.prescription_count = prescription_count
 
     def _compute_prescription_count(self):
         "Performance optimized, to run a single database query"
@@ -271,16 +257,6 @@ class Prescription(models.Model):
     def action_cancel(self):
         self.state = 'cancel'
 
-    # patient_id = fields.Many2one(
-    #     comodel_name="pod.patient",
-    #     default=lambda self: self.env.company,
-    #     store=True,
-    # )
-
-    customer = fields.Many2one(
-        'res.partner', string='Customer / Patient', readonly=False)
-    # customer_age = fields.Integer(related='customer.age')
-    # patient_id = fields.Many2one('pod.patient', 'Patient ID')
     prescription_date = fields.Date(
         'Prescription Date', default=fields.Datetime.now())
     device_type = fields.Many2one('device.type')
@@ -301,11 +277,6 @@ class Prescription(models.Model):
 
     examination_chargeable = fields.Boolean(
         default=default_examination_chargeable, readonly=1)
-
-    # prescription_type = fields.Selection(
-    #     [('Internal', 'Internal'), ('External', 'External')], default='internal')
-
-    # left, right, bilateral options
 
     rx_left_only = fields.Boolean()
     rx_right_only = fields.Boolean()

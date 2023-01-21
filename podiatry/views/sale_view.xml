@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', True)]</attribute>
+                <field string="Practitioner" name="practitioner_id"/>
+
             </xpath>
             <xpath expr="//field[@name='order_line']" position="before">
                 <button class="oe_highlight" groups="podiatry.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
@@ -20,41 +22,18 @@
                 <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','sent'])]}" class="fa-lg" groups="podiatry.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
                 <field name="config_session_id" />
             </xpath>
-            <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="domain">[('is_company', '=', True)]</attribute>
-            </xpath> -->
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <!-- <xpath expr="//field[@name='partner_id']" position="after">
                 <field string="Practice" name="practice_id"/>
                 <field string="Practitioner" name="practitioner_id"/>
                 <field string="Patient" name="patient_id"/>
-
-                <!-- <field string="Practice" name="practice_id"/>
-                <field string="Practitioner" name="practitioner_id"/>
-                <field string="Patient" name="patient_id"/> -->
-                <!-- <field string="Practice" name="practice_id"/>
-                <field string="Practitioner" name="practitioner_id"/> -->
-                <!-- <field string="Patient" name="patient_id"/> -->
+            </xpath> -->
+            <xpath expr="//header" position="inside">
+                <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
+                <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
+                <button name="print_sale_order_report" class="btn btn-success" string="Print Orders" type="object" attrs="{'invisible':[('state','!=','sale')]}"/>
+                <!-- <button name="print_purchase_order_report" class="btn btn-success" string="Print Purchase Order" type="object" attrs="{'invisible':[('state','!=','sale'),('po_ref','=',False)]}"/> -->
 
             </xpath>
-            <!--
-            The line form extension was removed.
-            Cases were found where it was causing install errors on other modules,
-            that were extending order line (for example sale-workflow/sale_product_approval,
-            adding a column after the sales order name field.
-
-            <xpath expr="//form//notebook//field[@name='order_line']/form/field[@name='name']" position="after">
-                <div groups="product_configurator.group_product_configurator">
-                    <label for="custom_value_ids" />
-                    <field name="custom_value_ids">
-                        <tree>
-                            <field name="attribute_id" />
-                            <field name="name" />
-                            <field name="attachment_ids" widget="many2many_tags" />
-                        </tree>
-                    </field>
-                </div>
-            </xpath>
-            -->
         </field>
     </record>
 </odoo>

@@ -1,12 +1,13 @@
-# See LICENSE file for full copyright and licensing details.
-
-from . import account_move
-from . import podiatry_prescription
-from . import podiatry_device
-from . import podiatry_services
-from . import product_config
-from . import product_attribute
-from . import product_product
-from . import ir_ui_view
-from . import res_company
+from . import dr_prescription
+from . import doctor
+from . import device_type
+from . import res_partner
+from . import doctor
+from . import inherit_saleorder
 from . import res_config_settings
+# POS models
+from . import pos_order
+from . import product_attribute
+from . import product_pos
+from . import inherit_purchase_order
+from . import inherit_invoice

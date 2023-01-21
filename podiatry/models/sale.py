@@ -3,22 +3,29 @@ from odoo import api, fields, models, _
 
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
-    # _inherits = {
-    #     'res.partner': 'partner_id',
-    # }
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Doctor')
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+    #                              help='Partner-related data of the Doctor')
 
-    practice_id = fields.Many2one('res.partner', required=True, domain=[
-        ('is_location', '=', True)], ondelete='restrict', copy=True)
+    prescription_id = fields.Many2one('podiatry.prescription')
+    # practice = fields.Many2one(
+    #     'podiatry.practice', string='Practice')
+    # practitioner = fields.Many2one(
+    #     'podiatry.practitioner', string='Practitioner')
+    # patient = fields.Many2one(
+    #     'podiatry.patient', string='Patient')
+    practice_id = fields.Many2one("podiatry.practice")
+    practice = fields.Char(
+        related='prescription_id.practice_id.name')
+    practitioner_id = fields.Many2one("podiatry.practitioner")
+    practitioner = fields.Char(
+        related='prescription_id.practitioner_id.name')
+    patient_id = fields.Many2one("podiatry.patient")
+    patient = fields.Char(
+        related='prescription_id.patient_id.name')
 
-    # practitioner_id = fields.Many2one('res.partner', required=True, domain=[
-    #     ('is_practitioner', '=', True)], ondelete='restrict', copy=True)
-    practitioner_id = fields.Many2one("podiatry.practitioner", 'Practitioner')
-
-    patient_id = fields.Many2one('res.partner', required=True, domain=[
-        ('is_patient', '=', True)], ondelete='restrict', copy=True)
+    prescription_date = fields.Date(
+        related='prescription_id.prescription_date')
 
     def action_config_start(self):
         """Return action to start configuration wizard"""
@@ -28,15 +35,61 @@ class SaleOrder(models.Model):
         )
         return configurator_obj.with_context(ctx).get_wizard_action()
 
-    # @api.onchange('partner_id')
-    # def onchange_partner_id(self):
-    #     for rec in self:
-    #         return {'domain': {'practitioner_id': [('partner_id', '=', rec.partner_id.id)]}}
+    def print_prescription_report_ticket_size(self):
+        return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
 
-    # @api.onchange('practitioner_id')
-    # def onchange_practitioner_id(self):
-    #     for rec in self:
-    #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+    # def print_podiatric_prescription_report_ticket_size(self):
+    #     return self.env.ref("podiatry.practitioner_prescription_podiatry_ticket_size2").report_action(self.prescription_id)
+
+    def _compute_amount_in_word(self):
+        for rec in self:
+            rec.num_word = str(
+                rec.currency_id.amount_to_text(rec.amount_total))
+
+    num_word = fields.Char(
+        string="This sale order is approved for the sum of: ", compute='_compute_amount_in_word')
+
+    def print_sale_order_report(self):
+        return {
+            'type': 'ir.actions.report',
+            'report_name': "podiatry.sale_order_report",
+            'report_file': "podiatry.sale_order_report",
+            'report_type': 'qweb-pdf',
+        }
+
+    # def print_purchase_order_report(self):
+    #     return {
+    #         'type': 'ir.actions.report',
+    #         'report_name': "podiatry.purchase_order_report",
+    #         'report_file': "podiatry.purchase_order_report",
+    #         'report_type': 'qweb-pdf',
+    #     }
+
+    # @api.onchange('prescription_id')
+    # def test(self):
+    #     product = self.env.ref('podiatry.optical_erp_product')
+    #     self.order_line = None
+    #     if self.prescription_id.eye_examination_chargeable==True:
+    #         self.order_line |= self.order_line.new({
+    #             'name':'',
+    #             'product_id':product.id,
+    #             'product_uom_qty':1,
+    #             'qty_delivered': 1,
+    #             'product_uom':'',
+    #             'price_unit':'',
+
+    #         })
+
+    # def print_podiatric_prescription_report(self):
+    #     pass
+
+    def print_prescription_report(self):
+        return {
+            'type': 'ir.actions.report',
+            'report_name': "podiatry.sale_prescription_template",
+            'report_file': "podiatry.sale_prescription_template",
+            'report_type': 'qweb-pdf'
+        }
 
 
 class SaleOrderLine(models.Model):

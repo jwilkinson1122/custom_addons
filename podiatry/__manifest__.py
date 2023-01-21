@@ -66,7 +66,26 @@
             "/podiatry/static/js/form_widgets.js",
             "/podiatry/static/js/data_manager.js",
             "/podiatry/static/js/relational_fields.js",
-        ]
+        ],
+        "point_of_sale.assets": [
+            "podiatry/static/src/css/style.css",
+            "podiatry/static/src/lib/base64.js",
+            "podiatry/static/src/lib/qrcode.js",
+            "podiatry/static/src/js/serializeObject.js",
+            "podiatry/static/src/js/models.js",
+            "podiatry/static/src/js/buttons.js",
+            "podiatry/static/src/js/popups.js",
+            "podiatry/static/src/js/screens.js",
+            "podiatry/static/src/js/clientListScreen.js",
+            "podiatry/static/src/js/receiptScreen.js",
+            "podiatry/static/src/js/prescriptionPrint.js",
+            "podiatry/static/src/js/OrderReceipt.js",
+            "podiatry/static/src/lib/qrcode.js",
+        ],
+        'web.assets_qweb': [
+            'podiatry/static/src/xml/pos.xml',
+        ],
+
     },
     "demo": [
         "demo/res_partner_demo.xml",
