@@ -1,50 +1,93 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <odoo>
-        <data>
-                <report id="sale_order" string="Orders" model="sale.order" report_type="qweb-pdf" file="pod_erp.sale_order_report" name="pod_erp.sale_order_report" />
+    <data>
+        <report
+                id="sale_order"
+                string="Sale Order"
+                model="sale.order"
+                report_type="qweb-pdf"
+                file="pod_erp.sale_order_report"
+                name="pod_erp.sale_order_report"
+                />
 
-                <report id="invoice" string="Invoice Report" model="account.move" report_type="qweb-pdf" file="pod_erp.invoice_report" name="pod_erp.invoice_report" />
+        <report
+                id="invoice"
+                string="Invoice Report"
+                model="account.move"
+                report_type="qweb-pdf"
+                file="pod_erp.invoice_report"
+                name="pod_erp.invoice_report"
+                />
 
-                <report id="purchase_order" string="Purchase Order" model="sale.order" report_type="qweb-pdf" file="pod_erp.purchase_order_report" name="pod_erp.purchase_order_report" />
+        <report
+                id="purchase_order"
+                string="Purchase Order"
+                model="sale.order"
+                report_type="qweb-pdf"
+                file="pod_erp.purchase_order_report"
+                name="pod_erp.purchase_order_report"
+                />
 
-                <report id="doctor_prescription" string="Prescription Measure" model="dr.prescription" report_type="qweb-pdf" file="pod_erp.doctor_prescription_template" name="pod_erp.doctor_prescription_template" />
-                <!--        <record-->
-                <!-- id="doctor_prescription_ticket_size"-->
-                <!-- string="Prescription Measure"-->
-                <!-- model="dr.prescription"-->
-                <!--                multi = "True"-->
-                <!-- report_type="qweb-pdf"-->
-                <!-- file="pod_erp.doctor_prescription_template_ticket_size"-->
-                <!-- name="pod_erp.doctor_prescription_template_ticket_size"-->
-                <!--                />-->
+        <report
+                id="prescription"
+                string="Prescription Measure"
+                model="prescription"
+                report_type="qweb-pdf"
+                file="pod_erp.prescription_template"
+                name="pod_erp.prescription_template"
+                />
+<!--        <record-->
+<!--                id="prescription_ticket_size"-->
+<!--                string="Prescription Measure"-->
+<!--                model="prescription"-->
+<!--                multi = "True"-->
+<!--                report_type="qweb-pdf"-->
+<!--                file="pod_erp.prescription_template_ticket_size"-->
+<!--                name="pod_erp.prescription_template_ticket_size"-->
+<!--                />-->
 
-                <record id="doctor_prescription_ticket_size2" model="ir.actions.report">
-                        <field name="name">Prescription Measure | Ticket</field>
-                        <field name="report_name">pod_erp.doctor_prescription_template_ticket_size</field>
-                        <field name="model">dr.prescription</field>
-                        <field name="report_type">qweb-pdf</field>
-                </record>
+        <record id="prescription_ticket_size2" model="ir.actions.report">
+			<field name="name">Prescription Measure | Ticket</field>
+			<field name="report_name">pod_erp.prescription_template_ticket_size</field>
+			<field name="model">prescription</field>
+			<field name="report_type">qweb-pdf</field>
+		</record>
 
-                <report id="doctor_prescription" string="Prescription" model="dr.prescription" report_type="qweb-pdf" file="pod_erp.doctor_prescription_template" name="pod_erp.doctor_prescription_template" />
+        <report
+                id="prescription_podiatry"
+                string="podiatry Prescription"
+                model="prescription"
+                report_type="qweb-pdf"
 
-                <!--        <report-->
-                <!-- id="doctor_prescription_ticket_size"-->
-                <!-- string=" Prescription"-->
-                <!-- model="dr.prescription"-->
-                <!--                multi = "True"-->
-                <!-- report_type="qweb-pdf"-->
-                <!-- file="pod_erp.doctor_prescription_template_ticket_size"-->
-                <!-- name="pod_erp.doctor_prescription_template_ticket_size"-->
-                <!--                />-->
+                file="pod_erp.practitioner_podiatry_prescription_template"
+                name="pod_erp.practitioner_podiatry_prescription_template"
+                />
 
-                <record id="doctor_prescription_ticket_size2" model="ir.actions.report">
-                        <field name="name">Prescription | Ticket</field>
-                        <field name="report_name">pod_erp.doctor_prescription_template_ticket_size</field>
-                        <field name="model">dr.prescription</field>
-                        <field name="report_type">qweb-pdf</field>
-                </record>
+<!--        <report-->
+<!--                id="prescription_podiatry_ticket_size"-->
+<!--                string="podiatry Prescription"-->
+<!--                model="prescription"-->
+<!--                multi = "True"-->
+<!--                report_type="qweb-pdf"-->
+<!--                file="pod_erp.practitioner_podiatry_prescription_template_ticket_size"-->
+<!--                name="pod_erp.practitioner_podiatry_prescription_template_ticket_size"-->
+<!--                />-->
 
-                <report id="sale_prescription" string="Sale Prescription" model="sale.order" report_type="qweb-pdf" file="pod_erp.sale_prescription_template" name="pod_erp.sale_prescription_template" />
-        </data>
+        <record id="prescription_podiatry_ticket_size2" model="ir.actions.report">
+			<field name="name">Ophtalmological Prescription | Ticket</field>
+			<field name="report_name">pod_erp.practitioner_podiatry_prescription_template_ticket_size</field>
+			<field name="model">prescription</field>
+			<field name="report_type">qweb-pdf</field>
+		</record>
+
+        <report
+                id="sale_prescription"
+                string="Sale Prescription"
+                model="sale.order"
+                report_type="qweb-pdf"
+                file="pod_erp.sale_prescription_template"
+                name="pod_erp.sale_prescription_template"
+                />
+    </data>
 </odoo>

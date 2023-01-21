@@ -45,19 +45,9 @@ class Prescription(models.Model):
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True,
                                  )
 
-    # partner_id = fields.Many2one(
-    #     'res.partner', string='Customer', required=True, change_default=True, index=True, tracking=1,
-    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Doctor')
-
-    # partner_id = fields.Many2one(
-    #     'res.partner', string='Customer', readonly=True,
-    #     states={'draft': [('readonly', False)], 'sent': [
-    #         ('readonly', False)]},
-    #     required=True, change_default=True, index=True, tracking=1,
-    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+  
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+    #                              help='Partner-related data of the Doctor')
 
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
@@ -128,18 +118,15 @@ class Prescription(models.Model):
 
     prescription = fields.Text(string="Prescription")
 
-    prescription_id = fields.Many2one(
-        "sale.order", "Prescription Order", delegate=True, required=True, ondelete="cascade"
-    )
+    # prescription_id = fields.Many2one(
+    #     "sale.order", "Prescription Order", delegate=True, required=True, ondelete="cascade"
+    # )
 
     prescription_ids = fields.One2many(
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
-
-    # prescription_line = fields.One2many(
-    #     'podiatry.prescription.line', 'practitioner_id', 'Prescription Line')
 
     product_id = fields.Many2one('product.product', 'Name')
 
@@ -185,7 +172,10 @@ class Prescription(models.Model):
         )
         return fields.Datetime.to_string(checkout_date)
 
-    prescription_date = fields.Date(readonly=True)
+    # prescription_date = fields.Date(readonly=True)
+    
+    prescription_date = fields.Date(
+        'Prescription Date', default=fields.Datetime.now())
 
     close_date = fields.Date(readonly=True)
 
@@ -257,8 +247,6 @@ class Prescription(models.Model):
     def action_cancel(self):
         self.state = 'cancel'
 
-    prescription_date = fields.Date(
-        'Prescription Date', default=fields.Datetime.now())
     device_type = fields.Many2one('device.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
@@ -499,6 +487,11 @@ class Prescription(models.Model):
             'target': 'new',
             'url': 'https://nwpodiatric.com' % self.prescription,
         }
+        
+    
+    def print_prescription_report_ticket_size(self):
+        return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
+
 
     # def print_prescription_report(self):
     #     return {
@@ -508,8 +501,8 @@ class Prescription(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    def print_prescription_report_ticket_size(self):
-        return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
+    def print_podiatry_prescription_report_ticket_size(self):
+        return self.env.ref("podiatry.practitioner_prescription_podiatry_ticket_size2").report_action(self)
 
     # def print_prescription_report(self):
     #     return {

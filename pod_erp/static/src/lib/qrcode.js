@@ -179,7 +179,7 @@ var QRCode;
 			this._htOption = htOption;
 		};
 
-		Drawing.prototype.draw = function (oQRCode) {
+		Drawing.prototype.practitioneraw = function (oQRCode) {
 			var _htOption = this._htOption;
 			var _el = this._el;
 			var nCount = oQRCode.getModuleCount();
@@ -233,7 +233,7 @@ var QRCode;
 		 * 
 		 * @param {QRCode} oQRCode
 		 */
-		Drawing.prototype.draw = function (oQRCode) {
+		Drawing.prototype.practitioneraw = function (oQRCode) {
             var _htOption = this._htOption;
             var _el = this._el;
 			var nCount = oQRCode.getModuleCount();
@@ -283,8 +283,8 @@ var QRCode;
 		// http://code.google.com/p/android/issues/detail?id=5141
 		if (this._android && this._android <= 2.1) {
 	    	var factor = 1 / window.devicePixelRatio;
-	        var drawImage = CanvasRenderingContext2D.prototype.drawImage; 
-	    	CanvasRenderingContext2D.prototype.drawImage = function (image, sx, sy, sw, sh, dx, dy, dw, dh) {
+	        var drawImage = CanvasRenderingContext2D.prototype.practitionerawImage; 
+	    	CanvasRenderingContext2D.prototype.practitionerawImage = function (image, sx, sy, sw, sh, dx, dy, dw, dh) {
 	    		if (("nodeName" in image) && /img/i.test(image.nodeName)) {
 		        	for (var i = arguments.length - 1; i >= 1; i--) {
 		            	arguments[i] = arguments[i] * factor;
@@ -374,7 +374,7 @@ var QRCode;
 		 * 
 		 * @param {QRCode} oQRCode 
 		 */
-		Drawing.prototype.draw = function (oQRCode) {
+		Drawing.prototype.practitioneraw = function (oQRCode) {
             var _elImage = this._elImage;
             var _oContext = this._oContext;
             var _htOption = this._htOption;
@@ -584,7 +584,7 @@ var QRCode;
 		this._oQRCode.addData(sText);
 		this._oQRCode.make();
 		this._el.title = sText;
-		this._oDrawing.draw(this._oQRCode);			
+		this._oDrawing.practitioneraw(this._oQRCode);			
 		this.makeImage();
 	};
 	

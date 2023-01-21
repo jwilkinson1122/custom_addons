@@ -1,31 +1,29 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models,_
 
 
 class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    prescription_id = fields.Many2one('dr.prescription')
-    doctor = fields.Char(related='prescription_id.dr.name')
-    prescription_date = fields.Date(
-        related='prescription_id.prescription_date')
+    prescription_id = fields.Many2one('prescription')
+    # practitioner = fields.Char(related='prescription_id.practitioner.name')
+    podiatrist = fields.Many2one('podiatry.practitioner', string='Podiatrist')
+    prescription_date = fields.Date(related='prescription_id.checkup_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_ticket_size2").report_action(self.prescription_id)
+        return self.env.ref("pod_erp.prescription_ticket_size2").report_action(self.prescription_id)
 
-    def print_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_ticket_size2").report_action(self.prescription_id)
+    def print_ophtalmologic_prescription_report_ticket_size(self):
+        return self.env.ref("pod_erp.prescription_podiatry_ticket_size2").report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
         for rec in self:
-            rec.num_word = str(
-                rec.currency_id.amount_to_text(rec.amount_total))
+                rec.num_word = str(rec.currency_id.amount_to_text(rec.amount_total))
 
-    num_word = fields.Char(
-        string="This sale order is approved for the sum of: ", compute='_compute_amount_in_word')
+    num_word = fields.Char(string="This sale order is approved for the sum of: ", compute='_compute_amount_in_word')
 
     def print_sale_order_report(self):
         return {
@@ -47,16 +45,18 @@ class InheritedSaleOrder(models.Model):
     def test(self):
         product = self.env.ref('pod_erp.pod_erp_product')
         self.order_line = None
-        if self.prescription_id.examination_chargeable == True:
+        if self.prescription_id.eye_examination_chargeable==True:
             self.order_line |= self.order_line.new({
-                'name': '',
-                'product_id': product.id,
-                'product_uom_qty': 1,
+                'name':'',
+                'product_id':product.id,
+                'product_uom_qty':1,
                 'qty_delivered': 1,
-                'product_uom': '',
-                'price_unit': '',
+                'product_uom':'',
+                'price_unit':'',
 
             })
+
+
 
     # @api.model
     # def create(self,vals):
@@ -70,8 +70,9 @@ class InheritedSaleOrder(models.Model):
     #     result = super(InheritedSaleOrder,self).create(vals)
     #     return result
 
-    def print_prescription_report(self):
+    def print_ophtalmologic_prescription_report(self):
         pass
+
 
     def print_prescription_report(self):
         return {
@@ -80,3 +81,16 @@ class InheritedSaleOrder(models.Model):
             'report_file': "pod_erp.sale_prescription_template",
             'report_type': 'qweb-pdf'
         }
+
+
+
+
+
+
+
+
+
+
+
+
+

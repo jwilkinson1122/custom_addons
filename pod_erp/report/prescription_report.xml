@@ -2,7 +2,7 @@
 
 <odoo>
     <data>
-        <template id="doctor_prescription_template">
+        <template id="prescription_template">
             <t t-call="web.html_container">
                 <t t-call="web.external_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -21,15 +21,15 @@
                             </style>
                             <table width="40%">
                                 <tr>
-                                    <td class="headings">Doctor Name :</td>
+                                    <td class="headings">Practitioner Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.dr"></span>
+                                        <span t-field="doc.practitioner"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="headings">Prescription Date:</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_date"></span>
+                                        <span t-field="doc.checkup_date"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -51,9 +51,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type:</td>
+                                                <td class="headings">Test Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.device_type"></span>
+                                                    <span t-field="doc.test_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -95,9 +95,11 @@
                                 </tr>
                             </table>
 
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0"
+                                   style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2"
+                                        style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;  font-size:16px;  font-weight:bold; ">
                                         Right
                                     </td>
@@ -144,7 +146,8 @@
                                     <td style="text-align:center;  font-size:16px;  width:30%; border-right:1px solid black; ">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.od_sph_distance"
+                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-field="doc.od_sph_distance"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">
@@ -211,9 +214,11 @@
 
                                 </tr>
                             </table>
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0"
+                                   style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2"
+                                        style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;  font-size:16px;  font-weight:bold; ">
                                         Left
                                     </td>
@@ -262,7 +267,8 @@
                                     <td style="text-align:center;  font-size:16px;  width:30%; border-right:1px solid black;">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.od_sph_distance"
+                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-field="doc.os_sph_distance"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">
@@ -330,17 +336,19 @@
                                 </tr>
                             </table>
                             <div>
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Family Eye History
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Family Eye History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.family_history"></span>
+                                    <span t-field="doc.family_eye_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             </div>
 
                             <div>
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ocular History
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Ocular History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                     <span t-field="doc.ocular_history"></span>
@@ -351,14 +359,16 @@
 
                             <div>
                                 <div style="width:100%; margin-top:
-30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
+30px; font-weight:bold; font-size:16px;"
+                                     class="headings">REMARKS
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.dr_notes"></span>
+                                    <span t-field="doc.practitioner_notes"></span>
                                 </div>
                             </div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Diagnosis for the client
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Diagnosis for the client
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.diagnosis_client"></span>
@@ -366,7 +376,8 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes for the Laboratory
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Notes for the Laboratory
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.notes_laboratory"></span>
@@ -374,7 +385,8 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Podiatrist internal observations
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Podiatrist internal observations
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.podiatrist_observation"></span>
@@ -386,7 +398,8 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
                             <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Consultation
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Consultation
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                     <span t-field="doc.consultation"></span>
@@ -402,7 +415,7 @@
             </t>
         </template>
 
-        <template id="doctor_prescription_template_ticket_size">
+        <template id="prescription_template_ticket_size">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -440,7 +453,7 @@
                                     </h5>
                                     <h6 style="font-size:small;">
                                         <strong>Date :</strong>
-                                        <span t-esc="doc.prescription_date"></span>
+                                        <span t-esc="doc.checkup_date"></span>
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Prescription # :</strong>
@@ -452,14 +465,16 @@
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Podiatrist :</strong>
-                                        <span t-esc="doc.dr.name"></span>
+                                        <span t-esc="doc.practitioner.name"></span>
                                     </h6>
                                     <hr style="border:1px solid;"/>
                                 </center>
                             </div>
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0"
+                                   style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2"
+                                        style="text-align:center; padding:5px; font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:x-small; width:40%; border-right:1px solid black; border-bottom:1px solid black; font-weight:bold;">
                                         Right
                                     </td>
@@ -506,7 +521,8 @@
                                     <td style="text-align:center;font-size:x-small; width:30%; border-right:1px solid black; ">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.od_sph_distance"
+                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-esc="'%.0f' % float(doc.od_sph_distance)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">
@@ -573,9 +589,11 @@
 
                                 </tr>
                             </table>
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0"
+                                   style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px;font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2"
+                                        style="text-align:center; padding:5px;font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px;font-size:x-small; width:40%; border-right:1px solid black; border-bottom:1px solid black; font-weight:bold;">
                                         Left
                                     </td>
@@ -624,7 +642,8 @@
                                     <td style="text-align:center;font-size:x-small; width:30%; border-right:1px solid black;">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.od_sph_distance"
+                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-esc="'%.0f' % float(doc.os_sph_distance)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">
@@ -716,15 +735,15 @@
                             </style>
                             <table width="25%">
                                 <tr>
-                                    <td class="headings">Doctor Name :</td>
+                                    <td class="headings">Practitioner Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.dr"></span>
+                                        <span t-field="doc.prescription_id.practitioner"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="headings">Prescription Date:</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.prescription_date"></span>
+                                        <span t-field="doc.prescription_id.checkup_date"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -746,9 +765,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type:</td>
+                                                <td class="headings">Test Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.device_type"></span>
+                                                    <span t-field="doc.prescription_id.test_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -791,9 +810,11 @@
                             </table>
 
 
-                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0"
+                                   style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2"
+                                        style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;  font-size:16px; color:green; font-weight:bold; ">
                                         Right
                                     </td>
@@ -1003,14 +1024,16 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Diagnosis for the client
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Diagnosis for the client
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.diagnosis_client"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes for the Laboratory
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Notes for the Laboratory
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.notes_laboratory"></span>
@@ -1018,7 +1041,8 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Podiatrist internal observations
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">Podiatrist internal observations
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.podiatrist_observation"></span>
@@ -1027,26 +1051,29 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                 class="headings">REMARKS
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.dr_notes"></span>
+                                <span t-field="doc.prescription_id.practitioner_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
                             <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Family Eye History
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Family Eye History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.prescription_id.family_history"></span>
+                                    <span t-field="doc.prescription_id.family_eye_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             </table>
 
                             <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ocular History
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Ocular History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                     <span t-field="doc.prescription_id.ocular_history"></span>
@@ -1056,7 +1083,8 @@
                             </table>
 
                             <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Consultation
+                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
+                                     class="headings">Consultation
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                     <span t-field="doc.prescription_id.consultation"></span>

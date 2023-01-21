@@ -65,9 +65,9 @@
             <field name="header_spacing">10</field>
             <field name="dpi">90</field>
         </record>
-        <record id="ticket_report_format_ophthalmological"
+        <record id="ticket_report_format_podiatry"
                 model="report.paperformat">
-            <field name="name">Ticket Format | ophthalmological</field>
+            <field name="name">Ticket Format | podiatry</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
             <field name="page_height">80</field>

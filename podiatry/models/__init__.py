@@ -3,6 +3,8 @@ from . import product_attribute
 from . import product
 from . import ir_ui_view
 from . import ir_actions
+from . import inherit_saleorder
+from . import inherit_invoice
 from . import podiatry_type
 from . import podiatry_patient
 from . import podiatry_practice
@@ -11,6 +13,5 @@ from . import podiatry_prescription
 from . import podiatry_prescription_line
 from . import podiatry_prescription_stage
 from . import podiatry_contact_mixin
-from . import sale
 from . import res_partner
 from . import res_config_settings

@@ -109,9 +109,9 @@
         <!-- name="podiatry.practitioner_prescription_template_ticket_size"-->
         <!--                />-->
 
-        <record id="practitioner_prescription_ticket_size2" model="ir.actions.report">
-            <field name="name">Prescription | Ticket</field>
-            <field name="report_name">podiatry.practitioner_prescription_template_ticket_size</field>
+        <record id="practitioner_prescription_podiatry_ticket_size2" model="ir.actions.report">
+            <field name="name">Podiatry Prescription | Ticket</field>
+            <field name="report_name">podiatry.doctor_podiatry_prescription_template_ticket_size</field>
             <field name="model">podiatry.prescription</field>
             <field name="report_type">qweb-pdf</field>
         </record>

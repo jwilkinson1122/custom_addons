@@ -1,35 +1,32 @@
 from datetime import date
-from xmlrpc.client import Boolean
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
-
+from odoo import api, fields, models,_
 
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
-    is_patient = fields.Boolean(string='Patient')
+
     dob = fields.Date()
-    age = fields.Integer(compute='_cal_age', store=True, readonly=True)
+    age = fields.Integer(compute='_cal_age',store=True,readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_customer_prescriptions(self):
         for records in self:
             return {
-                'name': _('Prescription History'),
+                'name':_('Prescription History'),
                 'view_type': 'form',
-                'domain': [('customer', '=', records.id)],
-                'res_model': 'dr.prescription',
+                'domain': [('customer', '=',records.id)],
+                'res_model': 'prescription',
                 'view_id': False,
-                'view_mode': 'kanban,tree,form',
-                'context': {'default_customer': self.id},
+                'view_mode':'tree,form',
+                'context':{'default_customer':self.id},
                 'type': 'ir.actions.act_window',
             }
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['dr.prescription'].search_count(
-                [('customer', '=', records.id)])
+            count = self.env['prescription'].search_count([('customer','=',records.id)])
             records.prescription_count = count
 
     @api.depends('dob')
@@ -40,3 +37,17 @@ class InheritedResPartner(models.Model):
                 record.age = str(int(years))
             else:
                 record.age = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
