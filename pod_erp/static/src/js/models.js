@@ -10,7 +10,7 @@ odoo.define('pod_erp.models', function(require){
             self.podiatry.practitioners = practitioners;
         },
     },{
-        model:  'prescription',
+        model:  'podiatry.prescription',
         loaded: function(self,podiatry_orders){
             self.podiatry.all_orders = podiatry_orders;
             self.podiatry.order_by_id = {};
@@ -19,7 +19,7 @@ odoo.define('pod_erp.models', function(require){
             });
         },
     },{
-        model:  'eye.test.type',
+        model:  'foot.test.type',
         fields: ['name'],
         loaded: function(self,test_type){
             self.podiatry.test_type = test_type;

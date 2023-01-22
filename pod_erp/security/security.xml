@@ -8,7 +8,7 @@
         <field name="groups" eval="[(4, ref('group_pod_erp_practitioners'))]"/>
     </record>
          <record model="ir.rule" id="admin_see_all_practitioner">
-        <field name="name">Admin see All Practitioners</field>
+        <field name="name">Admin see All Dr</field>
         <field name="model_id" ref="model_podiatry_practitioner"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>

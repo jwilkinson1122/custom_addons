@@ -30,7 +30,6 @@
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
-        'data/reports.xml',
         "views/product_view.xml",
         "views/product_attribute_view.xml",
         "views/product_config_view.xml",
@@ -53,9 +52,13 @@
         # -------
         # Reports
         # =======
-        # "report/report_view.xml",
+        "report/report_view.xml",
         "report/patient_card_report.xml",
-        'report/report_podiatry_prescription.xml',
+        "report/ticket_report_format.xml",
+        "report/prescription_report.xml",
+        'report/pod_prescription_report.xml',
+        'report/sale_order_report.xml',
+        
         # "report/prescription_demo_report.xml",
         # "report/ticket_report_format.xml",
         # "report/prescription_report.xml",

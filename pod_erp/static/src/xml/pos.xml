@@ -458,7 +458,7 @@
                 <table>
                     <tr>
                         <th rowspan="2"></th>
-                        <th colspan="6">OD-Left Eye</th>
+                        <th colspan="6">OD-Left Foot</th>
                     </tr>
                     <tr>
                         <th>SPH</th>
@@ -491,7 +491,7 @@
                     </tr>
                     <tr>
                         <th rowspan="2"></th>
-                        <th colspan="6">OS-Right Eye</th>
+                        <th colspan="6">OS-Right Foot</th>
                     </tr>
                     <tr>
                         <th>SPH</th>
@@ -564,7 +564,7 @@
 
     <t t-name="PrescriptionHistoryButtons" owl="1">
         <div class='control-button button confirm'>
-            Prescription History
+            Prescription
         </div>
     </t>
 
@@ -581,7 +581,7 @@
                 <form id="prescription_form">
                     <table>
                         <tr>
-                            <th>Podiatrist:</th>
+                            <th>Practitioner:</th>
                             <td>
                                 <select name="practitioner">
                                     <t t-foreach="practitioners || []" t-as="item" t-key="item.id">
@@ -625,9 +625,9 @@
                                    <option>External</option>
                                 </select>
                             </td>
-                            <th>Family Eye History:</th>
+                            <th>Family Foot History:</th>
                             <td>
-                                <input name="family_eye_history" type="text"/>
+                                <input name="family_foot_history" type="text"/>
                             </td>
                         </tr>
                         <tr>
@@ -1021,9 +1021,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Podiatrist internal observations:</th>
+                            <th>Practitioner internal observations:</th>
                             <td colspan="3">
-                                <input name="podiatrist_observation" type="text"/>
+                                <input name="optometrist_observation" type="text"/>
                             </td>
                         </tr>
                     </table>
@@ -1182,7 +1182,7 @@
                                                 <th>Number</th>
                                                 <th>Client</th>
                                                 <th>Date</th>
-                                                <th>Podiatrist</th>
+                                                <th>Practitioner</th>
                                                 <th>Test Type</th>
                                                 <th>Prescription Type</th>
                                                 <th>Status</th>

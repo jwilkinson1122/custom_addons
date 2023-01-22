@@ -27,8 +27,8 @@ class InheritedSaleOrder(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
 
-    # def print_podiatry_prescription_report_ticket_size(self):
-    #     return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
+    def print_podiatry_prescription_report_ticket_size(self):
+        return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
         for rec in self:
@@ -77,7 +77,7 @@ class InheritedSaleOrder(models.Model):
                 'price_unit': '',
 
             })
-
+    
     # @api.model
     # def create(self,vals):
     #     order_line_product = [(0, 0, {'product_id':30,'partner_invoice_id':12,'partner_id':12})]

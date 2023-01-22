@@ -236,14 +236,9 @@ class Prescription(models.Model):
     def action_cancel(self):
         self.state = 'cancel'
 
-    device_type = fields.Many2one('device.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     podiatrist_observation = fields.Text()
-    
-      # state = fields.Selection(
-    #     [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
-
 
     def confirm_request(self):
         for rec in self:
@@ -390,46 +385,19 @@ class Prescription(models.Model):
 
     ff_varus_rt = fields.Many2one('podiatry.forefoot.value', rel='rx_pod_ff_varus_rt', ondelete='restrict', copy=True)
     ff_varus_lt = fields.Many2one('podiatry.forefoot.value', rel='rx_pod_ff_varus_lt', ondelete='restrict', copy=True)
-    
-    @api.onchange('ff_varus_rt', 'ff_varus_lt')
-    def onchange_ff_varus(self):
-        if self.ff_varus_rt and self.ff_varus_rt.isdigit():
-            self.ff_varus_rt = "+" + "{:.2f}".format(float(self.ff_varus_rt))
-        elif self.ff_varus_rt:
-            if '-' in self.ff_varus_rt:
-                self.ff_varus_rt = "{:.2f}".format(float(self.ff_varus_rt))
-        if self.ff_varus_lt and self.ff_varus_lt.isdigit():
-            self.ff_varus_lt = "+" + "{:.2f}".format(float(self.ff_varus_lt))
-        elif self.ff_varus_lt:
-            if '-' in self.ff_varus_lt:
-                self.ff_varus_lt = "{:.2f}".format(float(self.ff_varus_lt))
-    
     ff_valgus_rt = fields.Many2one('podiatry.forefoot.value', rel='rx_pod_ff_valgus_rt', ondelete='restrict', copy=True)
     ff_valgus_lt = fields.Many2one('podiatry.forefoot.value', rel='rx_pod_ff_valgus_lt', ondelete='restrict', copy=True)
 
-    @api.onchange('ff_valgus_rt', 'ff_valgus_lt')
-    def onchange_ff_varus(self):
-        if self.ff_valgus_rt and self.ff_valgus_rt.isdigit():
-            self.ff_valgus_rt = "+" + "{:.2f}".format(float(self.ff_valgus_rt))
-        elif self.ff_valgus_rt:
-            if '-' in self.ff_valgus_rt:
-                self.ff_valgus_rt = "{:.2f}".format(float(self.ff_valgus_rt))
-        if self.ff_valgus_lt and self.ff_valgus_lt.isdigit():
-            self.ff_valgus_lt = "+" + "{:.2f}".format(float(self.ff_valgus_lt))
-        elif self.ff_valgus_lt:
-            if '-' in self.ff_valgus_lt:
-                self.ff_valgus_lt = "{:.2f}".format(float(self.ff_valgus_lt))
-    
-    def get_podiatry_prescription_template_id(self):
-        self.ensure_one()
-        report_name = 'report_podiatry_prescription'
-        template_obj = self.env['report.custom.template']
+    # def get_podiatry_prescription_template_id(self):
+    #     self.ensure_one()
+    #     report_name = 'report_podiatry_prescription'
+    #     template_obj = self.env['report.custom.template']
 
-        template = template_obj.sudo().get_template(report_name)
+    #     template = template_obj.sudo().get_template(report_name)
 
-        if not template: template_obj.reset_template(report_name=report_name)
-        template = template_obj.sudo().get_template(report_name)
-        return template
+    #     if not template: template_obj.reset_template(report_name=report_name)
+    #     template = template_obj.sudo().get_template(report_name)
+    #     return template
     
     def open_customer(self):
         sale_order = self.env['sale.order'].search(

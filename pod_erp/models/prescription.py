@@ -3,7 +3,7 @@ from odoo.tools import datetime
 
 
 class Prescription(models.Model):
-    _name = 'prescription'
+    _name = 'podiatry.prescription'
     _description = 'Prescription'
     _rec_name = 'name'
 
@@ -12,26 +12,26 @@ class Prescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    practitioner = fields.Many2one('podiatry.practitioner', string='Podiatrist', readonly=True)
+    practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner', readonly=True)
     customer = fields.Many2one('res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
-    test_type = fields.Many2one('eye.test.type')
+    test_type = fields.Many2one('foot.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
-    podiatrist_observation = fields.Text()
+    optometrist_observation = fields.Text()
     state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
     def confirm_request(self):
         for rec in self:
             rec.state = 'Confirm'
 
-    def default_eye_examination_chargeable(self):
-        settings_eye_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
-            'eye_examination_chargeable')
-        return settings_eye_examination_chargeable
+    def default_foot_examination_chargeable(self):
+        settings_foot_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
+            'foot_examination_chargeable')
+        return settings_foot_examination_chargeable
 
-    eye_examination_chargeable = fields.Boolean(default=default_eye_examination_chargeable, readonly=1)
+    foot_examination_chargeable = fields.Boolean(default=default_foot_examination_chargeable, readonly=1)
 
     prescription_type = fields.Selection([('Internal', 'Internal'), ('External', 'External')], default='Internal',
                                          Required=True)
@@ -104,7 +104,7 @@ class Prescription(models.Model):
     base_curve = fields.Char(string="Base Curve")
     dim = fields.Char(string="Dim")
 
-    # podiatry
+    # ophthalmological
     r_wc_close = fields.Char()
     r_wc_far = fields.Char()
     r_woc_close = fields.Char()
@@ -122,11 +122,12 @@ class Prescription(models.Model):
     ad_tonometria = fields.Char()
     ph = fields.Text('P.H')
     cie_10 = fields.Selection(
-        [('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'),
+        [('cataract_foot', 'Cataract Foot'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'),
          ('detachment', 'Detachment'), ('laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'),
          ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
     main_symptoms = fields.Text('Main Symptoms')
     background = fields.Text('Background')
+    podiatry_exam = fields.Text('Podiatry Exam')
     treatment = fields.Text('Treatment')
     other_exams = fields.Text('Other Exams')
     observations = fields.Text('Observations')
@@ -185,9 +186,9 @@ class Prescription(models.Model):
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
 
-    practitioner_notes = fields.Text('Notes')
+    prescription_notes = fields.Text('Notes')
     name = fields.Char(required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
-    family_eye_history = fields.Text()
+    family_foot_history = fields.Text()
     ocular_history = fields.Text()
     consultation = fields.Text()
 
@@ -317,21 +318,21 @@ class Prescription(models.Model):
     # def print_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "pod_erp.prescription_template",
-    #         'report_file': "pod_erp.prescription_template",
+    #         'report_name': "pod_erp.practitioner_prescription_template",
+    #         'report_file': "pod_erp.practitioner_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.prescription_ticket_size2").report_action(self)
+        return self.env.ref("pod_erp.practitioner_prescription_ticket_size2").report_action(self)
 
     # def print_ophtalmologic_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "pod_erp.practitioner_podiatry_prescription_template",
-    #         'report_file': "pod_erp.practitioner_podiatry_prescription_template",
+    #         'report_name': "pod_erp.practitioner_ophtalmological_prescription_template",
+    #         'report_file': "pod_erp.practitioner_ophtalmological_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.prescription_podiatry_ticket_size2").report_action(self)
+        return self.env.ref("pod_erp.practitioner_prescription_ophtalmological_ticket_size2").report_action(self)

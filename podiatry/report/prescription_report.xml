@@ -51,9 +51,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type:</td>
+                                                <td class="headings">Product Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.device_type"></span>
+                                                    <span t-field="doc.product_id"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -354,7 +354,7 @@
 30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.dr_notes"></span>
+                                    <span t-field="doc.notes"></span>
                                 </div>
                             </div>
 
@@ -746,9 +746,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type:</td>
+                                                <td class="headings">Product Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.device_type"></span>
+                                                    <span t-field="doc.prescription_id.product_id"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1030,7 +1030,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.dr_notes"></span>
+                                <span t-field="doc.prescription_id.notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>

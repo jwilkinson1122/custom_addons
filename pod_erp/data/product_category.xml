@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="product_category_contactLens" model="product.category">
-            <field name="name">Contact Lens</field>
+        <record id="product_category_shells" model="product.category">
+            <field name="name">Shells</field>
         </record>
-        <record id="product_category_frames" model="product.category">
-            <field name="name">Frames</field>
-        </record>
-        <record id="product_category_Lens" model="product.category">
-            <field name="name">Lens</field>
+        <record id="product_category_Topcover" model="product.category">
+            <field name="name">Topcover</field>
         </record>
 
-        <record id="product_category_LensTreatment" model="product.category">
-            <field name="name">Lens Treatment</field>
+        <record id="product_category_TopcoverTreatment" model="product.category">
+            <field name="name">Topcover Treatment</field>
         </record>
 
         <record id="product_category_service" model="product.category">

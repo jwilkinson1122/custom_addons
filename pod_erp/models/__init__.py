@@ -11,6 +11,6 @@ from . import product_attribute
 from . import inherit_purchase_order
 from . import inherit_invoice
 from . import inherit_product_template
-from . import frame_elements
-from . import lens_elements
-from . import contact_lens_elements
+from . import shell_elements
+from . import topcover_elements
+

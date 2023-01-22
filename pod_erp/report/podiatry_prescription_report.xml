@@ -2,7 +2,7 @@
 
 <odoo>
     <data>
-        <template id="practitioner_podiatry_prescription_template">
+        <template id="practitioner_ophtalmological_prescription_template">
             <t t-call="web.html_container">
                 <t t-call="web.internal_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -31,7 +31,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Podiatrist :</td>
+                                                <td class="headings">Practitioner :</td>
                                                 <td class="text">
                                                     <span t-field="doc.practitioner"></span>
                                                 </td>
@@ -107,7 +107,7 @@
                                             </tr>
                                             <tr>
                                                 <th style="border:1px solid black; text-align:center;">Right
-                                                    Eye
+                                                    Foot
                                                 </th>
                                                 <td style="border:1px solid black; text-align:center;">
                                                     <span t-field="doc.r_wc_far"></span>
@@ -127,7 +127,7 @@
                                             </tr>
                                             <tr>
                                                 <th style="border:1px solid black; text-align:center;">Left
-                                                    Eye
+                                                    Foot
                                                 </th>
                                                 <td style="border:1px solid black; text-align:center;">
                                                     <span t-field="doc.l_wc_far"></span>
@@ -214,7 +214,7 @@
                                  class="headings">Other Exams
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.podiatrist_observation"></span>
+                                <span t-field="doc.optometrist_observation"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -233,7 +233,7 @@
                                      class="headings">Treatment
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.family_eye_history"></span>
+                                    <span t-field="doc.family_foot_history"></span>
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -271,7 +271,7 @@
                 </t>
             </t>
         </template>
-        <template id="practitioner_podiatry_prescription_template_ticket_size">
+        <template id="practitioner_ophtalmological_prescription_template_ticket_size">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -319,7 +319,7 @@
                                             <span></span>
                                         </h6>
                                         <h6 style="font-size:small;">
-                                            <strong>Podiatrist :</strong>
+                                            <strong>Practitioner :</strong>
                                             <span t-esc="doc.practitioner.name"></span>
                                         </h6>
                                         <hr style="border:1px solid;"/>
@@ -351,7 +351,7 @@
                                         </tr>
                                         <tr style="font-size:x-small;">
                                             <th style="border:1px solid black; text-align:center;">Right
-                                                Eye
+                                                Foot
                                             </th>
                                             <td style="border:1px solid black; text-align:center;">
                                                 <span t-field="doc.r_wc_far"></span>
@@ -371,7 +371,7 @@
                                         </tr>
                                         <tr style="font-size:x-small;">
                                             <th style="border:1px solid black; text-align:center;">Left
-                                                Eye
+                                                Foot
                                             </th>
                                             <td style="border:1px solid black; text-align:center;">
                                                 <span t-field="doc.l_wc_far"></span>

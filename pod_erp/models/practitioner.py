@@ -14,13 +14,13 @@ class Practitioner(models.Model):
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
 
-    def open_prescriptions(self):
+    def open_practitioner_prescriptions(self):
         for records in self:
             return {
                 'name': _('Prescription'),
                 'view_type': 'form',
                 'domain': [('practitioner', '=', records.id)],
-                'res_model': 'prescription',
+                'res_model': 'podiatry.prescription',
                 'view_id': False,
                 'view_mode': 'tree,form',
                 'context': {'default_practitioner': self.id},
@@ -29,7 +29,7 @@ class Practitioner(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['prescription'].search_count([('practitioner', '=', records.id)])
+            count = self.env['podiatry.prescription'].search_count([('practitioner', '=', records.id)])
             records.prescription_count = count
 
     def create_practitioners(self):

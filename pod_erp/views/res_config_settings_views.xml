@@ -12,10 +12,10 @@
                     <h2 id="web_theme_title">Podiatry Erp Settings</h2>
                     <div class="row mt16 o_settings_container" name="web_theme">
                         <div class="col-12 col-lg-6 o_setting_box">
-                            <span class="o_form_label">Eye Examination Chargeable</span>
+                            <span class="o_form_label">Foot Examination Chargeable</span>
                             <div class="content-group">
                                 <div>
-                                    <field name="eye_examination_chargeable" class="col-5"/>
+                                    <field name="foot_examination_chargeable" class="col-5"/>
                                 </div>
                             </div>
                         </div>

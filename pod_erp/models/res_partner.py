@@ -14,10 +14,10 @@ class InheritedResPartner(models.Model):
     def open_customer_prescriptions(self):
         for records in self:
             return {
-                'name':_('Prescription History'),
+                'name':_('Prescription'),
                 'view_type': 'form',
                 'domain': [('customer', '=',records.id)],
-                'res_model': 'prescription',
+                'res_model': 'podiatry.prescription',
                 'view_id': False,
                 'view_mode':'tree,form',
                 'context':{'default_customer':self.id},
@@ -26,7 +26,7 @@ class InheritedResPartner(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['prescription'].search_count([('customer','=',records.id)])
+            count = self.env['podiatry.prescription'].search_count([('customer','=',records.id)])
             records.prescription_count = count
 
     @api.depends('dob')

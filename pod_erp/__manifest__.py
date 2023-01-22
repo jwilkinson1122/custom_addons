@@ -1,5 +1,5 @@
 {
-    "name": "Podiatry ERP",
+    "name": "Podiatry ERP Dev",
     "version": "15.0.0.0.1",
     "category": "Podiatry",
     'sequence': 1,

@@ -33,13 +33,13 @@
                                             <tr>
                                                 <td class="headings">Podiatrist :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.dr"></span>
+                                                    <span t-field="doc.practitioner_id"></span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type :</td>
+                                                <td class="headings">Product Type :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.device_type"></span>
+                                                    <span t-field="doc.product_id"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -103,11 +103,13 @@
                                                 <th colspan="1" style="text-align:center; border:1px solid black;">
                                                     Close
                                                 </th>
-                                                <th style="text-align:center; border:1px solid black;">Tonometria</th>
+                                                <th style="text-align:center; border:1px solid black;">
+                                                    Tonometria
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th style="border:1px solid black; text-align:center;">Right
-                                                    Eye
+                                                    Foot
                                                 </th>
                                                 <td style="border:1px solid black; text-align:center;">
                                                     <span t-field="doc.r_wc_far"></span>
@@ -127,7 +129,7 @@
                                             </tr>
                                             <tr>
                                                 <th style="border:1px solid black; text-align:center;">Left
-                                                    Eye
+                                                    Foot
                                                 </th>
                                                 <td style="border:1px solid black; text-align:center;">
                                                     <span t-field="doc.l_wc_far"></span>
@@ -171,10 +173,11 @@
                                     <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
                                         <thead>
                                             <tr>
-                                                <th style="text-align:center; border:1px solid black; width:50%;">PH
+                                                <th style="text-align:center; border:1px solid black; width:50%;">
+                                                    PH
                                                 </th>
-                                                <th style="text-align:center; border:1px solid black; width:50%;">CIE
-                                                    10
+                                                <th style="text-align:center; border:1px solid black; width:50%;">
+                                                    CIE 10
                                                 </th>
                                             </tr>
                                         </thead>
@@ -219,7 +222,7 @@
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Background
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.dr_notes"></span>
+                                <span t-field="doc.notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -324,7 +327,7 @@
                                         </tr>
                                         <tr style="font-size:x-small;">
                                             <th style="border:1px solid black; text-align:center;">Right
-                                                Eye
+                                                Foot
                                             </th>
                                             <td style="border:1px solid black; text-align:center;">
                                                 <span t-field="doc.r_wc_far"></span>
@@ -344,7 +347,7 @@
                                         </tr>
                                         <tr style="font-size:x-small;">
                                             <th style="border:1px solid black; text-align:center;">Left
-                                                Eye
+                                                Foot
                                             </th>
                                             <td style="border:1px solid black; text-align:center;">
                                                 <span t-field="doc.l_wc_far"></span>
@@ -437,7 +440,7 @@
                                 <tr>
                                     <td class="headings">Practitioner Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.dr"></span>
+                                        <span t-field="doc.prescription_id.practitioner_id"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -465,9 +468,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Device Type:</td>
+                                                <td class="headings">Product Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.device_type"></span>
+                                                    <span t-field="doc.prescription_id.product_id"></span>
                                                 </td>
                                             </tr>
                                             <tr>
