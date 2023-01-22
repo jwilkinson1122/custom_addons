@@ -181,7 +181,7 @@ class Prescription(models.Model):
         ('Custom', 'Custom'),
         ('OTC', 'OTC'),
         ('Brace', 'Brace'),
-    ], default='Internal', Required=True)
+    ], default='Custom', Required=True)
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')

@@ -18,10 +18,6 @@ class Patient(models.Model):
 
     code = fields.Char(string="Code", copy=False)
 
-    practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        string='Practitioner')
-
     identification = fields.Char(string="Identification", index=True)
 
     reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
@@ -91,13 +87,14 @@ class Patient(models.Model):
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
+        required=True,
         string="Practice",
     )
-
+    
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
-        string="Practitioner",
-    )
+        required=True,
+        string='Practitioner')
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')

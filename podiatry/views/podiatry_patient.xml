@@ -68,10 +68,10 @@
 
                     <group name="responsible" string="Responsible">
                         <group name="practice_information">
-                            <field name="practice_id"/>
+                            <field name="practice_id" required="1"/>
                         </group>
                         <group name="practitioner_information">
-                            <field name="practitioner_id"/>
+                            <field name="practitioner_id" required="1"/>
                         </group>
                     </group>
                     <group name="personal_contact">
@@ -96,7 +96,7 @@
                     <notebook>
                         <page name="patient_attributes" string="Attributes">
                             <group name="attributes" string="Attributes">
-                                <field name="gender" required="1"/>
+                                <field name="gender"/>
                                 <field name="diagnosis"/>
                             </group>
                         </page>
