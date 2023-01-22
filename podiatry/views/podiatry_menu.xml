@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <!--
-    Top level menu
-    -->
         <menuitem id="menu_pod_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" />
         <menuitem id="menu_pod_accounts" name="Accounts" parent="podiatry.menu_pod_root" sequence="10"/>
         <menuitem id="menu_pod_clinics" name="Clinics" action="action_pod_clinics" parent="podiatry.menu_pod_accounts" sequence="1" />
         <menuitem id="menu_pod_contacts" name="Contacts" action="action_pod_contacts" parent="podiatry.menu_pod_accounts" sequence="2" />
         <menuitem id="menu_pod_patients" name="Patients" action="action_pod_patients" parent="podiatry.menu_pod_accounts" sequence="3" />
-
         <menuitem id="menu_pod_prescriptions" name="Prescriptions" action="action_pod_prescriptions" parent="podiatry.menu_pod_root" sequence="15"/>
 
         <!-- <menuitem id="menu_pod_rx_root" name="Prescriptions" parent="podiatry.menu_pod_root" sequence="15"/>
@@ -33,7 +28,6 @@
         <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="podiatry.menu_product_configurable_attributes" sequence="1" groups="product.group_product_variant" />
         <!-- Attribute Values -->
         <menuitem id="menu_variants_action_configuration" action="variants_action" parent="podiatry.menu_product_configurable_attributes" sequence="2" groups="product.group_product_variant" />
-
         <!-- configurable settings heading -->
         <menuitem id="menu_product_configurable_settings" name="Configurable Settings" parent="podiatry.menu_product_root" sequence="300" />
         <!-- Configuration Steps -->
@@ -49,6 +43,8 @@
         <menuitem id="menu_podiatry_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/>
         <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
         <!-- <menuitem id="menu_podiatry_type" name="Types" action="action_podiatry_type" parent="podiatry.menu_configuration_root" sequence="120" /> -->
+        <menuitem id="menu_podiatry_prescription_values" name="Prescription" parent="podiatry.menu_configuration_root" sequence="200"/>
+        <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_prescription_values" action="action_forefoot_values" sequence="200"/>
 
         <!-- <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/> -->
 

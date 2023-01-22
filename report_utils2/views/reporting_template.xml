@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="font_assets">
+        <t t-raw="request.env['res.company'].get_template_report_font_assets()"/>
+    </template>
+
+    <!--Search-->
+    <record id="view_search_reporting_template" model="ir.ui.view">
+        <field name="name">report.custom.template.search</field>
+        <field name="model">report.custom.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name" filter_domain="[('name', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--Tree-->
+    <record id="view_tree_reporting_template" model="ir.ui.view">
+        <field name="name">report.custom.template.view.tree</field>
+        <field name="model">report.custom.template</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="1">
+                <field name="name_display"/>
+                <field name="name" invisible="1"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Form-->
+    <record id="view_form_reporting_template" model="ir.ui.view">
+        <field name="name">report.custom.template.view.form</field>
+        <field name="model">report.custom.template</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="1">
+                <sheet>
+                    <div class="oe_button_box">
+                            <button name="reset_template"
+                                    type="object"
+                                    confirm="Reset will discard your changes. Do you want to proceed?"
+                                    class="oe_stat_button"
+                                    string="Reset"
+                                    context="{'report_name':name}"
+                                    icon="fa-refresh">
+                            </button>
+                            <button name="console_template"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    string="Console"
+                                    context="{'report_name':name}"
+                                    icon="fa-play">
+                            </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" invisible="1"/>
+                            <field name="name_display" readonly="1"/>
+                            <field name="date_format" required="1"/>
+                            <field name="multi_company_applicable" invisible="1"/>
+                            <field name="company_id" readonly="1" attrs="{'invisible':[('multi_company_applicable','!=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="template_id" required="1" domain="[('report_name','=',name)]" widget="selection"/>
+                            <field name="template_preview" string="Preview" widget="image" attrs="{'invisible':[('template_preview','=',False)]}" class="oe_avatar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General">
+                            <field name="line_ids" string="Sections">
+                                <kanban class="o_kanban_mobile" create="0" delete="0">
+                                    <field name="name"/>
+                                    <field name="name_technical"/>
+                                    <field name="color"/>
+                                    <field name="preview_img"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click" t-attf-style="background:#{record.color.raw_value}">
+                                                <div class="row mb4">
+                                                    <strong class="col-9">
+                                                        <span t-esc="record.name.value"/>
+                                                    </strong>
+                                                    <strong class="col-3">
+                                                        <img t-att-src="'/report_utils2/static/img/config-preview/'+record.preview_img.value" style="width:50px;"/>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form create="0" delete="0">
+                                    <h4><field name="name" readonly="1"/></h4>
+                                    <field name="name_technical" invisible="1"/>
+                                    <field name="data_field_names" invisible="1"/>
+                                    <field name="type" invisible="1"/>
+                                    <field name="model_id" invisible="1"/>
+                                    <field name="address_field_ids" attrs="{'invisible':[('type','!=','address')]}" nolabel="1">
+                                        <tree  editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="field_id" options="{'no_create':True,'no_open':True}" required="1"/>
+                                            <field name="field_type"/>
+                                            <field name="model_id" invisible="1"/>
+                                            <field name="field_relation" invisible="1"/>
+                                            <field name="field_display_field_id" attrs="{'readonly':[('field_type','not in', ['many2one'])]}" options="{'no_create':True,'no_open':True}"/>
+                                            <field name="prefix"/>
+                                            <field name="label"/>
+                                        </tree>
+                                    </field>
+                                    <field name="field_ids" attrs="{'invisible':[('type','!=','fields')]}" nolabel="1">
+                                        <tree  editable="bottom">
+                                            <field name="report_line_id" invisible="1"/>
+                                            <field name="model_id" invisible="1"/>
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="field_id" options="{'no_create':True,'no_open':True}" required="1"/>
+                                            <field name="field_type"/>
+                                            <field name="field_relation" invisible="1"/>
+                                            <field name="field_display_field_id" attrs="{'readonly':[('field_type','not in', ['many2one'])]}" options="{'no_create':True,'no_open':True}"/>
+                                            <field name="label"/>
+                                            <field name="null_value_display"/>
+                                            <field name="thousands_separator" attrs="{'invisible':[('field_type','not in', ['integer','float','monetary'])]}"/>
+                                        </tree>
+                                    </field>
+                                    <field name="line_field_ids" attrs="{'invisible':[('type','!=','lines')]}" nolabel="1">
+                                        <tree>
+                                            <field name="report_line_id" invisible="1"/>
+                                            <field name="model_id" invisible="1"/>
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="field_id" options="{'no_create':True,'no_open':True}"/>
+                                            <field name="field_type"/>
+                                            <field name="field_relation" invisible="1"/>
+                                            <field name="field_display_field_id" attrs="{'invisible':[('field_type','not in', ['many2one'])]}" options="{'no_create':True,'no_open':True}"/>
+                                            <field name="label"/>
+                                            <field name="currency_field_name"/>
+                                            <field name="width" placeholder="30%"/>
+                                            <field name="alignment"/>
+                                            <field name="null_hide_column"/>
+                                            <field name="thousands_separator" attrs="{'invisible':[('field_type','not in', ['integer','float','monetary'])]}"/>
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <group>
+                                                    <field name="report_line_id" invisible="1"/>
+                                                    <field name="model_id" invisible="1"/>
+                                                    <field name="field_relation" invisible="1"/>
+                                                    <field name="sequence"/>
+                                                    <field name="field_id" options="{'no_create':True,'no_open':True}"/>
+                                                    <field name="field_type"/>
+                                                </group>
+                                                <group>
+                                                    <field name="field_display_field_id" attrs="{'invisible':[('field_type','not in', ['many2one'])]}" options="{'no_create':True,'no_open':True}"/>
+                                                    <field name="label"/>
+                                                    <field name="currency_field_name"/>
+                                                    <field name="width" placeholder="30%"/>
+                                                    <field name="alignment"/>
+                                                    <field name="null_hide_column"/>
+                                                    <field name="thousands_separator" attrs="{'invisible':[('field_type','not in', ['integer','float','monetary'])]}"/>
+                                                    <field name="remove_decimal_zeros" attrs="{'invisible':[('field_type','not in', ['float','monetary'])]}"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+                                    <field name="option_field_ids" attrs="{'invisible':[('type','!=','options')]}" nolabel="1">
+                                        <tree create="0" delete="0">
+                                            <field name="field_type" invisible="1"/>
+                                            <field name="name_technical" invisible="1"/>
+                                            <field name="name" readonly="1"/>
+                                            <field name="value_display" readonly="1"/>
+                                            <field name="value_char" invisible="1"/>
+                                        </tree>
+                                        <form create="0" delete="0">
+                                            <group>
+                                                <group>
+                                                    <field name="field_type" invisible="1"/>
+                                                    <field name="name_technical" invisible="1"/>
+                                                    <field name="value_display" invisible="1"/>
+                                                    <field name="name" readonly="1"/>
+                                                    <field name="value_char" string="Value" attrs="{'invisible':[('field_type','!=','char')]}"/>
+                                                    <field name="value_boolean" string="Value" attrs="{'invisible':[('field_type','!=','boolean')]}"/>
+                                                    <field name="value_image" string="Value" attrs="{'invisible':[('field_type','!=','image')]}" widget="image"/>
+                                                    <field name="value_integer" string="Value" attrs="{'invisible':[('field_type','!=','integer')]}"/>
+                                                    <field name="value_text" string="Value" attrs="{'invisible':[('field_type','!=','text')]}"/>
+                                                    <field name="key_combo_box" invisible="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="value_combo_box" string="Value" attrs="{'invisible':[('field_type','!=','combo_box')]}" widget="selection"/>
+                                                </group>
+                                                <field name="value_html" string="Value" attrs="{'invisible':[('field_type','!=','html')]}"/>
+                                            </group>
+                                        </form>
+                                    </field>
+                                    <field name="header_footer_img_ids"  attrs="{'invisible':[('type','!=','header_footer_images')]}">
+                                        <tree>
+                                            <field name="company_id"/>
+                                            <field name="header"/>
+                                            <field name="footer"/>
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <group><field name="company_id" required="1"/></group>
+                                            </group>
+                                            <group><field name="header" widget="image"/></group>
+                                            <group><field name="footer" widget="image"/></group>
+                                        </form>
+                                    </field>
+                                    <field name="signature_box_ids"  attrs="{'invisible':[('type','!=','signature_boxes')]}">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="heading"/>
+                                        </tree>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Advanced">
+                            <group string="Watermark" attrs="{'invisible':[('visible_watermark','!=',True)]}">
+                                <group>
+                                    <field name="visible_watermark" invisible="1"/>
+                                    <field name="watermark" widget="image"/>
+                                </group>
+                                <group>
+                                    <field name="watermark_opacity"/>
+                                    <field name="watermark_size"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Header / Footer">
+                                    <field name="show_header"/>
+                                    <field name="show_footer"/>
+                                    <field name="page_number_type"/>
+                                </group>
+                                <group string="Font">
+                                    <field name="font_size"/>
+                                    <field name="font_family"/>
+                                    <field name="font_line_height"/>
+                                </group>
+                                <group string="Paperformat" attrs="{'invisible':[('paperformat_id','=',False)]}">
+                                    <label for="paperformat_id"/>
+                                    <div class="o_row">
+                                        <field name="paperformat_id" readonly="1"/>
+                                        <div class="text-muted">(Click to change)</div>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <separator string="Similar Apps"/>
+                            <table>
+                                <tr>
+                                    <td>Customized Invoice Designs</td>
+                                    <td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/report_template_invoice" target="_blank">https://apps.odoo.com/apps/modules/14.0/report_template_invoice</a></td></tr>
+                                <tr>
+                                    <td>Customized Sales Quotation Designs</td><td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/report_template_quotation" target="_blank">https://apps.odoo.com/apps/modules/14.0/report_template_quotation</a></td></tr>
+                                <tr>
+                                    <td>Customized Purchase Order Designs</td><td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/report_template_purchase_order" target="_blank">https://apps.odoo.com/apps/modules/14.0/report_template_purchase_order</a></td></tr>
+                                <tr>
+                                    <td>Customized Delivery Order Designs</td><td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/report_template_delivery_slip" target="_blank">https://apps.odoo.com/apps/modules/14.0/report_template_delivery_slip</a></td></tr>
+                                <tr>
+                                    <td>Customized Payment Designs</td><td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/print_hr_contract" target="_blank">https://apps.odoo.com/apps/modules/14.0/report_template_payment</a></td></tr>
+                                <tr>
+                                    <td>Print Employee Contract</td><td>:</td>
+                                    <td><a href="https://apps.odoo.com/apps/modules/14.0/print_hr_contract" target="_blank">https://apps.odoo.com/apps/modules/14.0/print_hr_contract</a></td></tr>
+                            </table>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--Action-->
+    <record id="action_view_reporting_template" model="ir.actions.act_window">
+        <field name="name">Custom Templates</field>
+        <field name="res_model">report.custom.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <!--Menu-->
+    <menuitem name="Custom Templates" id="menu_view_reporting_template" parent="base.reporting_menuitem" action="action_view_reporting_template" sequence="10"/>
+
+    <!-- Console-->
+    <record id="view_form_report_custom_template_console" model="ir.ui.view">
+        <field name="name">report.custom.template.console.form</field>
+        <field name="model">report.custom.template.console</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="parameters" placeholder="Write Parameters here ..."/>
+                <footer>
+                    <button name="button_action_apply" string="Run" type="object" class="btn-danger" icon="fa-play"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

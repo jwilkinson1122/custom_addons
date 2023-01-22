@@ -17,16 +17,22 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="groups_id" eval="[(4, ref('group_user'))]"/>
         <field name="arch" type="xml">
-            <notebook>
+            <xpath expr="//field[@name='company_type']" position="after">
+                <group colspan="6" col="6">
+                    <field name="is_patient" />
+                    <field name="is_practitioner" />
+                    <field name="is_location" />
+                </group>
+            </xpath>
+            <!-- <notebook>
                 <page string="Medical">
                     <group colspan="6" col="6">
                         <field name="is_patient" />
                         <field name="is_practitioner" />
                         <field name="is_location" />
-                        <!-- <field name="is_person" /> -->
                     </group>
                 </page>
-            </notebook>
+            </notebook> -->
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page name="More Info" string="More Info">
                     <field name="info_ids">

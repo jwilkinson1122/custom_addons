@@ -31,8 +31,8 @@
                 <header>
                     <field name="state" invisible="True" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="confirm" />
-                    <button name="open_customer" class="btn btn-success" states="draft" string="Create Order" type="object"></button>
+                    <!-- <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="draft" /> -->
+                    <button name="open_customer" class="btn btn-success" states="done" string="Create Order" type="object"></button>
                     <!-- <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="draft" />
                     <button name="open_customer" class="btn btn-success" states="confirm" string="Create Orders" type="object"></button> -->
 
@@ -71,41 +71,44 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Prescription">
-                            <table style="border:1px solid; width:100%" border="1">
-                                SHELL / FOUNDATION
-                                <tr>
-                                    <th style="text-align:center">DEVICE</th>
-                                    <th style="text-align:center">B/L</th>
-                                    <th style="text-align:center">LEFT</th>
-                                    <th style="text-align:center">RIGHT</th>
-                                </tr>
-
-                                <tr>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                </tr>
-
-                                <tr>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                    <td align="center">Test</td>
-                                </tr>
-                            </table>
-                            <group>
-                                <group>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="dr_notes" placeholder="Note"></field>
-                                </group>
-                                <group>
-                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="notes_laboratory"></field>
-                                </group>
-                            </group>
+                        <page name="prescription_lines" string="Values">
+                                <table border="1" bordercolor="gray" style="width:100%">
+                                    <tr>
+                                        <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">RX</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VARUS</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VALGUS</td>
+                                        <!-- <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">AXIS</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">PRISM</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">ADD</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">VA</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">PD</td> -->
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Right)</td>
+                                        <td style="padding:4px; text-align:center"><field name="ff_varus_rt" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="ff_valgus_rt" widget="selection"/></td>
+                                        <!-- <td style="padding:4px; text-align:center"><field name="right_axis" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="right_prism" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="right_add" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="right_va" /></td>
+                                        <td style="padding:4px; text-align:center"><field name="right_pd" /></td> -->
+            
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Left)</td>
+                                        <td style="padding:4px; text-align:center"><field name="ff_varus_lt" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="ff_valgus_lt" widget="selection"/></td>
+                                        <!-- <td style="padding:4px; text-align:center"><field name="left_axis" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="left_prism" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="left_add" widget="selection"/></td>
+                                        <td style="padding:4px; text-align:center"><field name="left_va" /></td>
+                                        <td style="padding:4px; text-align:center"><field name="left_pd" /></td> -->
+                                    </tr>
+                                </table>
+                                <br/>
+                                <field name="notes" placeholder="Write Remarks"/>
                         </page>
                         <page string="Prescription Testing">
-
                             <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
                             </group>

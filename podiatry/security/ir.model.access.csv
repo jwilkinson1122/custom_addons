@@ -46,3 +46,7 @@ access_podiatry_patient,podiatry.patient,model_podiatry_patient,base.group_user,
 access_podiatry_prescription,podiatry.prescription,model_podiatry_prescription,base.group_user,1,1,1,1
 access_podiatry_prescription_lines,podiatry.prescription.lines,model_podiatry_prescription_line,base.group_user,1,1,1,1
 access_podiatry_prescription_stage,podiatry.prescription.stage,model_podiatry_prescription_stage,base.group_user,1,1,1,1
+access_podiatry_forefoot_value,podiatry.forefoot.value,model_podiatry_forefoot_value,base.group_user,1,1,1,0
+access_podiatry_forefoot_correction,podiatry.forefoot.correction,model_podiatry_forefoot_correction,base.group_user,1,1,1,0
+access_podiatry_rearfoot_correction,podiatry.rearfoot.correction,model_podiatry_rearfoot_correction,base.group_user,1,1,1,0
+access_podiatry_orthotic_measure,podiatry.orthotic.measure,model_podiatry_orthotic_measure,base.group_user,1,1,1,0

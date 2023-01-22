@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="document_section_device_details">
+
+        <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};">
+            <t t-set="heading_device_details" t-value="template.get_option_data('heading_device_details')"/>
+            <span t-esc="heading_device_details"/>
+        </span>
+
+        <table t-attf-style="width:100%;#{standard_font}">
+            <thead>
+                <tr>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">RX</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VARUS</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VALGUS</span></th>
+                    <!-- <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VARUS - INT</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VARUS - EXT</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VALGUS - INT</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF VALGUS - EXT</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">RF VARUS</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">RF VALGUS</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">RF NEUTRAL</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">FF WIDTH</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">HEEL DEPTH </span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">LENGTH</span></th>
+                    <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-center"><span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;">CAP SIZE</span></th> -->
+                </tr>
+                <tr>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:left;font-weight:bold;color:#{parameters.color1};">Values (Right)</td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.ff_varus_rt"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.ff_valgus_rt"/></td>
+                    <!-- <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.right_axis"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.right_prism"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.right_add"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.right_va"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.right_pd"/></td> -->
+                </tr>
+                <tr>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:left;font-weight:bold;color:#{parameters.color1};">Values (Left)</td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.ff_varus_lt"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.ff_valgus_lt"/></td>
+                    <!-- <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.left_axis"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.left_prism"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.left_add"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.left_va"/></td>
+                    <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-field="doc.left_pd"/></td> -->
+                </tr>
+            </thead>
+        </table>
+
+        <span t-attf-style="#{standard_font}" t-if="doc.notes">
+            <span t-field="doc.notes"/><br/>
+        </span>
+
+    </template>
+
+    <template id="document1_header_address">
+        <td t-attf-style="#{header_align_address};width:40%;padding-top:20px;padding-left:10px;color:#{parameters.color1};">
+            <span t-attf-style="font-size:#{font.get_size(percent=125)};font-weight:bold;text-transform:uppercase" t-esc="doc.company_id.name"/><br/>
+            <t t-foreach="template.get_address_data(doc.company_id, 'section_header')" t-as="line">
+                <span t-if="line['value']" t-raw="line['separator']"/>
+                <span t-if="line['label']" t-esc="line['label']"/>
+                <span t-if="line['label']">:</span>
+                <span t-if="line['value']" t-esc="line['value']"/>
+            </t>
+        </td>
+    </template>
+
+    <template id="document1_header_logo">
+        <td t-attf-style="width:20%;#{header_align_logo};">
+            <center><img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="width:100%;height:auto" alt="Logo"/></center>
+        </td>
+    </template>
+
+    <template id="document1_header_reference">
+        <td t-attf-style="width:40%;font-size:40px;padding-right:10px;font-weight:bolder;line-height:1.2;color:#{parameters.color1};#{header_align_reference}">
+
+            <p t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                <span t-if="doc.state not in ['draft','sent']"><span t-esc="template.get_option_data('state_order')"/></span>
+                <span t-if="doc.state in ['draft','sent']"><span t-esc="template.get_option_data('state_quotation')"/></span>
+            </p>
+            <p t-if="env.context.get('proforma', False) or is_pro_forma">
+                <span>Pro-Forma Invoice # </span>
+            </p>
+
+            <p style="color:black;font-size:15px;margin-top:-10px;font-weight:normal;">
+                No: <span t-field="doc.name"/>
+            </p>
+        </td>
+    </template>
+
+    <template id="report_podiatry_prescription_document">
+        <div class="header">
+            <t t-call="report_utils2.font_assets"/>
+            <t t-set="parameters" t-value="template.get_parameters()"/>
+            <t t-set="font" t-value="template.get_font()"/>
+            <t t-set="standard_font" t-value="template.get_standard_font_style()"/>
+
+            <div t-attf-style="background:#{parameters.color2};min-height:155px;#{standard_font}" t-if="template.show_header">
+                <table style="width:100%;">
+                    <tr>
+
+                        <t t-set="header_section_sequence" t-value="template.get_option_data('header_section_sequence')"/>
+
+                        <t t-if="not header_section_sequence or header_section_sequence == 'address_logo_reference'">
+                            <t t-set="header_align_reference" t-value="'text-align:right;'"/>
+                            <t t-set="header_align_address" t-value="'text-align:left'"/>
+                            <t t-call="podiatry.document1_header_address"/>
+                            <t t-call="podiatry.document1_header_logo"/>
+                            <t t-call="podiatry.document1_header_reference"/>
+                        </t>
+
+                        <t t-if="header_section_sequence == 'reference_logo_address'">
+                            <t t-set="header_align_reference" t-value="'text-align:left'"/>
+                            <t t-set="header_align_address" t-value="'text-align:right'"/>
+                            <t t-call="podiatry.document1_header_reference"/>
+                            <t t-call="podiatry.document1_header_logo"/>
+                            <t t-call="podiatry.document1_header_address"/>
+                        </t>
+
+                        <t t-if="header_section_sequence == 'logo_reference_address'">
+                            <t t-set="header_align_reference" t-value="'width:20%;text-align:center'"/>
+                            <t t-set="header_align_address" t-value="'text-align:right'"/>
+                            <t t-set="header_align_logo" t-value="'width:40%'"/>
+
+                            <t t-call="podiatry.document1_header_logo"/>
+                            <t t-call="podiatry.document1_header_reference"/>
+                            <t t-call="podiatry.document1_header_address"/>
+                        </t>
+                        <t t-if="header_section_sequence == 'logo_address_reference'">
+                            <t t-set="header_align_reference" t-value="'width:30%;text-align:right'"/>
+                            <t t-set="header_align_address" t-value="'width:40%;text-align:center'"/>
+                            <t t-set="header_align_logo" t-value="'width:30%'"/>
+
+                            <t t-call="podiatry.document1_header_logo"/>
+                            <t t-call="podiatry.document1_header_address"/>
+                            <t t-call="podiatry.document1_header_reference"/>
+                        </t>
+
+                        <t t-if="header_section_sequence == 'reference_address_logo'">
+                            <t t-set="header_align_reference" t-value="'width:30%;text-align:left'"/>
+                            <t t-set="header_align_address" t-value="'width:40%;text-align:center'"/>
+                            <t t-set="header_align_logo" t-value="'width:30%'"/>
+
+                            <t t-call="podiatry.document1_header_reference"/>
+                            <t t-call="podiatry.document1_header_address"/>
+                            <t t-call="podiatry.document1_header_logo"/>
+                        </t>
+
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="article" t-att-data-oe-model="doc and doc._name" t-att-data-oe-id="doc and doc.id">
+            <t t-call="report_utils2.font_assets"/>
+            <t t-set="label_customer" t-value="template.get_option_data('label_customer')"/>
+            <t t-set="show_shipping_address" t-value="template.get_option_data('show_shipping_address')"/>
+
+            <img t-if="template.watermark" t-attf-style="{{template.get_watermark_style()}}" t-attf-src="data:image/png;base64,{{template.watermark}}"/>
+            <br/>
+            <table t-attf-style="width:100%;#{standard_font}">
+                <td>
+                    <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};"><span t-esc="label_customer or 'CUSTOMER'"/></span><br/>
+                    <strong t-esc="doc.partner_id.name"/><br/>
+                    <t t-foreach="template.get_address_data(doc.partner_id, 'section_partner_address')" t-as="line">
+                        <span t-if="line['value']" t-raw="line['separator']"/>
+                        <span t-if="line['label']" t-esc="line['label']"/>
+                        <span t-if="line['label']">:</span>
+                        <span t-if="line['value']" t-esc="line['value']"/>
+                    </t>
+                </td>
+                <td t-attf-style="width:25%;" t-if="show_shipping_address and template._hasattr(doc,'partner_shipping_id')">
+                    <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};">DELIVERY ADDRESS</span><br/>
+                    <strong t-esc="doc.partner_shipping_id.name"/><br/>
+                    <t t-foreach="template.get_address_data(doc.partner_shipping_id, 'section_partner_address')" t-as="line">
+                        <span t-if="line['value']" t-raw="line['separator']"/>
+                        <span t-if="line['label']" t-esc="line['label']"/>
+                        <span t-if="line['label']">:</span>
+                        <span t-if="line['value']" t-esc="line['value']"/>
+                    </t>
+                </td>
+
+                <td style="width:25%">
+                    <t t-set="count" t-value="0"/>
+                    <t t-foreach="template.get_fields_ids_data(doc, 'section_other_fields')" t-as="line">
+                        <t t-if="line['value'] or line['null_value_display']">
+                            <t t-set="count" t-value="count + 1"/>
+                            <t t-if="count % 2 == 1">
+                                <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};text-transform:uppercase;" t-esc="line['label']"/><br/>
+                                <span t-attf-style="font-size:#{font.size};" t-esc="line['value']"/><br/>
+                            </t>
+                        </t>
+                    </t>
+                </td>
+                <td style="width:25%">
+                    <t t-set="count" t-value="0"/>
+                    <t t-foreach="template.get_fields_ids_data(doc, 'section_other_fields')" t-as="line">
+                        <t t-if="line['value'] or line['null_value_display']">
+                            <t t-set="count" t-value="count + 1"/>
+                            <t t-if="count % 2 == 0">
+                                <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};text-transform:uppercase;" t-esc="line['label']"/><br/>
+                                <span t-attf-style="font-size:#{font.size};" t-esc="line['value']"/><br/>
+                            </t>
+                        </t>
+                    </t>
+                </td>
+            </table>
+
+            <br/>
+            <t t-call="podiatry.document_section_device_details"/>
+
+            <br/>
+            <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;color:#{parameters.color1};">
+                <t t-set="heading_orderline_details" t-value="template.get_option_data('heading_orderline_details')"/>
+                <span t-esc="heading_orderline_details"/>
+            </span>
+
+            <t t-set="show_serial_number" t-value="template.get_option_data('show_serial_number')"/>
+            <t t-set="serial_number_heading" t-value="template.get_option_data('serial_number_heading')"/>
+            <t t-set="show_product_image" t-value="template.get_option_data('show_product_image')"/>
+            <t t-set="product_image_position" t-value="template.get_option_data('product_image_position')"/>
+            <t t-set="product_image_column_heading" t-value="template.get_option_data('product_image_column_heading')"/>
+            <t t-set="product_image_width" t-value="template.get_option_data('product_image_width')"/>
+            <t t-set="line_data" t-value="template.get_line_ids_data(doc, 'order_line','section_lines')"/>
+            <t t-set="show_amount_in_text" t-value="template.get_option_data('show_amount_in_text')"/>
+            <t t-set="label_amount_in_text" t-value="template.get_option_data('label_amount_in_text')"/>
+            <t t-set="show_note" t-value="template.get_option_data('show_note')"/>
+            <t t-set="show_payment_term_note" t-value="template.get_option_data('show_payment_term_note')"/>
+            <t t-set="show_fiscal_position_note" t-value="template.get_option_data('show_fiscal_position_note')"/>
+
+            <t t-set="no_of_cols" t-value="0"/>
+            <table t-attf-style="width:100%;#{standard_font}">
+                <thead>
+                    <tr>
+                        <th t-if="show_serial_number" t-attf-style="background: #{parameters.color1};padding:4px;color:white;width:10px};"  class="text-left">
+                            <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;" t-esc="serial_number_heading"/>
+                            <t t-set="no_of_cols" t-value="no_of_cols+1"/>
+                        </th>
+                        <t t-foreach="line_data[0]" t-as="line" t-if="not line['invisible']">
+                            <th t-if="show_product_image and (line_index + 1) == product_image_position" t-attf-style="background: #{parameters.color1};padding:4px;color:white;#{line['width_style']};"  class="text-left">
+                                <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;" t-esc="product_image_column_heading"/>
+                                <t t-set="no_of_cols" t-value="no_of_cols+1"/>
+                            </th>
+                            <th t-attf-style="background: #{parameters.color1};padding:4px;color:white;#{line['width_style']};"  class="text-left">
+                                <span t-attf-style="font-size:#{font.get_size(percent=112)};font-weight:bold;text-transform:uppercase;" t-esc="line['label']"/>
+                                <t t-set="no_of_cols" t-value="no_of_cols+1"/>
+                            </th>
+                        </t>
+                    </tr>
+                </thead>
+
+                <t t-set="count" t-value="0"/>
+
+                <t t-foreach="line_data[1:]" t-as="line">
+                    <t t-set="display_type" t-value="line[0]['display_type']"/>
+                    <tr t-if="not display_type" class="text-left">
+                        <t t-set="count" t-value="count+1"/>
+                        <td t-if="show_serial_number" t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:center"><span t-esc="count"/></td>
+                        <t t-foreach="line" t-as="line2">
+                            <td t-if="show_product_image and (line2_index + 1) == product_image_position" t-attf-style="border:1px solid #{parameters.color1};padding:4px;#{line2['alignment_style']}"><img t-attf-style="width:#{product_image_width}" t-if="line2['line_id'].product_id.image_1920" t-att-src="image_data_uri(line2['line_id'].product_id.image_1920)"/></td>
+                            <td t-attf-style="border:1px solid #{parameters.color1};padding:4px;#{line2['alignment_style']}" t-if="not line2['invisible']"><span t-esc="line2['value']"/></td>
+                        </t>
+                    </tr>
+
+                    <tr t-if="display_type == 'line_section'" class="text-left">
+                        <td t-attf-colspan="#{no_of_cols}" t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:left">
+                            <t t-foreach="line" t-as="line2"><strong t-if="line2['field_name'] == 'name'" t-esc="line2['value']"/></t>
+                        </td>
+                    </tr>
+
+                    <tr t-if="display_type == 'line_note'" class="text-left">
+                        <td t-attf-colspan="#{no_of_cols}" t-attf-style="border:1px solid #{parameters.color1};padding:4px;text-align:left">
+                            <t t-foreach="line" t-as="line2"><i t-if="line2['field_name'] == 'name'" t-esc="line2['value']"/></t>
+                        </td>
+                    </tr>
+                </t>
+            </table>
+            <br/>
+
+            <table t-attf-style="width:100%;#{standard_font}">
+                <!--                <tr t-foreach="template.get_o2m_data(o, 'section_footer_field_ids')" t-as="line">-->
+                <tr t-foreach="template.get_fields_ids_data(doc, 'section_bottom_amount')" t-as="line">
+                    <td t-if="line_index == 0" t-attf-rowspan="#{len(template.get_fields_ids_data(doc, 'section_bottom_amount'))}" style="width:60%;vertical-align:bottom;text-align:center">
+                        <p t-if="show_amount_in_text" style="text-transform:uppercase;padding:4px">
+                            <t t-if="label_amount_in_text"><span t-esc="label_amount_in_text"/>:</t>
+                            <t t-else="">Amount in Text:</t>
+                            <span t-esc="template.get_amount_in_text(doc, 'amount_total')"/>
+                        </p>
+                    </td>
+                    <td t-attf-style="width:19%;text-align:right;padding:4px;background:#{parameters.color1};color:white"><span t-esc="line['label']"/></td>
+                    <td t-attf-style="width:2%;text-align:center;padding:4px;background:#{parameters.color1};color:white">:</td>
+                    <td t-attf-style="width:19%;text-align:right;padding:4px;background:#{parameters.color1};color:white"><span t-esc="line['value']"/></td>
+                </tr>
+            </table>
+
+            <br/>
+
+            <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature" t-attf-style="#{standard_font}">
+                <div class="offset-8"><strong>Signature</strong></div>
+                <div class="offset-8"><img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/></div>
+                <div class="offset-8 text-center"><p t-field="doc.signed_by"/></div>
+            </div>
+
+            <p t-attf-style="#{standard_font}" t-field="doc.note" t-if="show_note"/>
+            <p t-attf-style="#{standard_font}" t-if="doc.payment_term_id.note and show_payment_term_note">
+                <span t-field="doc.payment_term_id.note"/>
+            </p>
+            <p t-attf-style="#{standard_font}" id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.sudo().note and show_fiscal_position_note">
+                <strong>Fiscal Position Remark:</strong>
+                <span t-field="doc.fiscal_position_id.sudo().note"/>
+            </p>
+        </div>
+
+
+        <div class="footer" t-attf-style="background:#{parameters.color2};min-height:200px" t-if="template.show_footer">
+            <t t-call="report_utils2.font_assets"/>
+            <t t-set="show_company_tagline_footer" t-value="template.get_option_data('show_company_tagline_footer')"/>
+            <!--            <t t-call="report_utils.font_assets"/>-->
+            <!--            <t t-set="parameters" t-value="template.get_parameters()"/>-->
+            <table t-attf-style="width:100%;border-top:1px solid #{parameters.color1};color:#{parameters.color1};#{standard_font}">
+                <tr>
+                    <td style="width:30%">
+                        <!--                        <t t-foreach="template.get_address_data(o.company_id, 'footer_company_field_ids')" t-as="line">-->
+                        <t t-foreach="template.get_address_data(doc.company_id, 'section_footer')" t-as="line">
+                            <br t-if="line_index != 0"/>
+                            <span t-if="line['value']" t-raw="line['separator']"/>
+                            <span style="font-weight:bold" t-if="line['label']" t-esc="line['label']"/>
+                            <span style="font-weight:bold" t-if="line['label']">:</span>
+                            <span t-if="line['value']" t-esc="line['value']"/>
+                        </t>
+                    </td>
+                    <td style="width:60%;text-align:center;font-style:italic;padding-left:20px;padding-right:20px;">
+                        <span t-if="show_company_tagline_footer" t-field="doc.company_id.report_header"/>
+                    </td>
+                    <td style="width:10%">
+                        <div t-if="report_type == 'pdf'">
+                            <span t-raw="template.get_page_no_section()"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </template>
+
+    <template id="report_podiatry_prescription">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="template" t-value="doc.sudo().get_podiatry_prescription_template_id()"/>
+                <t t-call="podiatry.report_podiatry_prescription_document"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_podiatry_prescription" model="ir.actions.report">
+        <field name="name">Prescription</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">podiatry.report_podiatry_prescription</field>
+        <field name="report_file">podiatry.report_podiatry_prescription</field>
+        <field name="print_report_name">'Prescription - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="podiatry.paperformat_podiatry_prescription"/>
+    </record>
+
+
+</odoo>

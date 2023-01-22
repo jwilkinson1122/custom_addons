@@ -11,6 +11,7 @@
         "base",
         "base_setup",
         "resource",
+        'report_utils2',
         "mail",
         "base",
         'sale',
@@ -29,6 +30,7 @@
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
+        'data/reports.xml',
         "views/product_view.xml",
         "views/product_attribute_view.xml",
         "views/product_config_view.xml",
@@ -40,6 +42,7 @@
         'views/inherit_sale_order.xml',
         "views/podiatry_patient.xml",
         "views/podiatry_practice.xml",
+        "views/podiatry_values.xml",
         "views/podiatry_type.xml",
         "views/podiatry_practitioner.xml",
         "views/podiatry_prescription.xml",
@@ -50,15 +53,16 @@
         # -------
         # Reports
         # =======
-        "report/report_view.xml",
+        # "report/report_view.xml",
         "report/patient_card_report.xml",
-        "report/prescription_demo_report.xml",
-        "report/ticket_report_format.xml",
-        "report/prescription_report.xml",
-        'report/pod_prescription_report.xml',
-        'report/purchase_order_report.xml',
-        'report/sale_order_report.xml',
-        'report/invoice_report.xml',
+        'report/report_podiatry_prescription.xml',
+        # "report/prescription_demo_report.xml",
+        # "report/ticket_report_format.xml",
+        # "report/prescription_report.xml",
+        # 'report/pod_prescription_report.xml',
+        # 'report/purchase_order_report.xml',
+        # 'report/sale_order_report.xml',
+        # 'report/invoice_report.xml',
     ],
     "assets": {
         "web.assets_backend": [
