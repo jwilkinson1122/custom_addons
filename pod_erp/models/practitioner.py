@@ -13,9 +13,6 @@ class Practitioner(models.Model):
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
-    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
     def open_practitioner_prescriptions(self):
         for records in self:
