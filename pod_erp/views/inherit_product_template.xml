@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='general_information']" position="after">
                     <page string="Shell Elements" name="shell_elements" autofocus="autofocus"
-                          invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service','Topcover Treatment', 'Miscellaneous']">
+                          invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service', 'Miscellaneous']">
 
                         <group>
                             <field name="shell_material"/>
@@ -21,12 +21,12 @@
                     </page>
                 </xpath>
                 <xpath expr="//div[@name='options']" position="after">
-                    <group invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service','Topcover Treatment', 'Miscellaneous']">
+                    <group invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service', 'Miscellaneous']">
                         <field name="manufacturer"/>
                         <field name="brand"/>
                         <field name="collection"/>
                     </group>
-                    <group invisible="context.get('def_categ_id') in ['Shells','Contact Topcover','Service','Topcover Treatment', 'Miscellaneous']">
+                    <group invisible="context.get('def_categ_id') in ['Shells','Contact Topcover','Service', 'Miscellaneous']">
                         <field name="topcover_type"/>
                         <field name="topcover_style"/>
                         <field name="topcover_material"/>

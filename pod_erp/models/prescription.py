@@ -128,7 +128,6 @@ class Prescription(models.Model):
     main_symptoms = fields.Text('Main Symptoms')
     background = fields.Text('Background')
     podiatry_exam = fields.Text('Podiatry Exam')
-    treatment = fields.Text('Treatment')
     other_exams = fields.Text('Other Exams')
     observations = fields.Text('Observations')
 

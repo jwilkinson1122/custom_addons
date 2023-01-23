@@ -27,8 +27,6 @@ class ProductFromTemp(models.Model):
             self.categ_id = self.env.ref('pod_erp.product_category_shells').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Topcover':
             self.categ_id = self.env.ref('pod_erp.product_category_Topcover').id
-        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Topcover Treatment':
-            self.categ_id = self.env.ref('pod_erp.product_category_TopcoverTreatment').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Service':
             self.categ_id = self.env.ref('pod_erp.product_category_service').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Miscellaneous':

@@ -428,7 +428,6 @@
                                 </group>
                                 <group>
                                     <field name="background"/>
-                                    <field name="treatment"/>
                                     <field name="observations"/>
                                 </group>
                             </group>

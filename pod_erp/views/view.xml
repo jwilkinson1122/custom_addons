@@ -103,14 +103,6 @@
             <field name="context">{'def_categ_id':'Topcover' }</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record id="erp_treatment_action" model="ir.actions.act_window">
-            <field name="name">Treatment</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.template</field>
-            <field name="domain">[('categ_id','=','Topcover Treatment')]</field>
-            <field name="context">{'def_categ_id':'Topcover Treatment' }</field>
-            <field name="view_mode">tree,form</field>
-        </record>
         <record id="erp_service_action" model="ir.actions.act_window">
             <field name="name">Service</field>
             <field name="type">ir.actions.act_window</field>
@@ -163,14 +155,11 @@
                   sequence="1"/>
         <menuitem id="pod_erp_product_topcover" name="Topcover" parent="pod_erp_products" action="erp_topcover_action"
                   sequence="2"/>
-        <menuitem id="pod_erp_product_treatment" name="Topcover Treatment" parent="pod_erp_products"
-                  action="erp_treatment_action"
-                  sequence="3"/>
         <menuitem id="pod_erp_product_service" name="Service" parent="pod_erp_products"
                   action="erp_service_action"
-                  sequence="4"/>
+                  sequence="3"/>
         <menuitem id="pod_erp_product_miscellaneous" name="Miscellaneous" parent="pod_erp_products"
                   action="erp_miscellaneous_action"
-                  sequence="5"/>
+                  sequence="4"/>
     </data>
 </odoo>
