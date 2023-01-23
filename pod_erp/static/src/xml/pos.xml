@@ -43,33 +43,49 @@
         <xpath expr="//t[@t-if='receipt.cashier']" position="replace">
             <div class="cashier">
                 <div>--------------------------------</div>
-                <div>Served by <t t-esc="receipt.cashier" /></div>
+                <div>Served by <t t-esc="receipt.cashier" />
+                </div>
             </div>
         </xpath>
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="replace">
             <div class="pos-receipt-contact">
                 <t t-if="receipt.company.contact_address">
-                    <div><strong><t t-esc="receipt.company.contact_address"/></strong></div>
+                    <div>
+                        <strong>
+                            <t t-esc="receipt.company.contact_address"/>
+                        </strong>
+                    </div>
                 </t>
-                <t t-if="env.pos.company.street"><span t-esc="env.pos.company.street"/>,
+                <t t-if="env.pos.company.street">
+                    <span t-esc="env.pos.company.street"/>
+,
                 </t>
-                <t t-if="env.pos.company.street2"><span t-esc="env.pos.company.street2"/>,
+                <t t-if="env.pos.company.street2">
+                    <span t-esc="env.pos.company.street2"/>
+,
                 </t>
-                <t t-if="env.pos.company.city"><span t-esc="env.pos.company.city"/>,
+                <t t-if="env.pos.company.city">
+                    <span t-esc="env.pos.company.city"/>
+,
                 </t>
-                <t t-if="env.pos.company.state_id"><span t-esc="env.pos.company.state_id"/>.
+                <t t-if="env.pos.company.state_id">
+                    <span t-esc="env.pos.company.state_id"/>
+.
                 </t>
                 <br/>
-                <t t-if="receipt.company.phone"><span t-esc="receipt.company.phone"/></t>
-<!--                <t t-if="receipt.company.name_arabic">-->
-<!--                    <div style="font-size:18pt;font-weight:bold">-->
-<!--                        <span t-esc="widget.name_arabic" style="text-size:12pt"/>-->
-<!--                        <br/>-->
-<!--                    </div>-->
-<!--                </t>-->
+                <t t-if="receipt.company.phone">
+                    <span t-esc="receipt.company.phone"/>
+                </t>
+                <!--                <t t-if="receipt.company.name_arabic">-->
+                <!--                    <div style="font-size:18pt;font-weight:bold">-->
+                <!--                        <span t-esc="widget.name_arabic" style="text-size:12pt"/>-->
+                <!--                        <br/>-->
+                <!--                    </div>-->
+                <!--                </t>-->
                 <div class="cashier">
                     <div>--------------------------------</div>
-                    <div>Served by <t t-esc="receipt.cashier" /></div>
+                    <div>Served by <t t-esc="receipt.cashier" />
+                    </div>
                 </div>
 
                 <table style="margin-top:5pt;padding:5pt; border-bottom:1pt dashed black;" t-if="receipt.company.vat">
@@ -199,7 +215,7 @@
                     </tr>
                 </table>
                 <table style="margin-top:5pt;padding:5pt;border-bottom:1pt dashed black;font-size:9pt;width:100%;" class='receipt-orderlines'>
-                     <colgroup>
+                    <colgroup>
                         <col width='22%'/>
                         <col width='21%'/>
                         <col width='12%'/>
@@ -207,45 +223,52 @@
                     </colgroup>
                     <tr>
                         <th style="border-bottom:1pt dashed black;vertical-align:bottom; margin-bottom:5pt;padding-bottom:3pt;">
-                            الاجمالي<br/>Total
+                            الاجمالي                            <br/>
+Total
                         </th>
                         <th style="border-bottom:1pt dashed black;vertical-align:bottom;text-align:right;margin-bottom:5pt;padding-bottom:3pt">
-                            السعر<br/>PRICE
+                            السعر                            <br/>
+PRICE
                         </th>
                         <th style="border-bottom:1pt dashed black;vertical-align:bottom;text-align:right;margin-bottom:5pt;padding-bottom:3pt">
-                            الكمية<br/>QTY
+                            الكمية                            <br/>
+QTY
                         </th>
                         <th style="border-bottom:1pt dashed black;vertical-align:bottom;text-align:right;margin-bottom:5pt;padding-bottom:3pt">
-                            الوصف<br/>Description
+                            الوصف                            <br/>
+Description
                         </th>
                     </tr>
                     <t t-foreach="orderlines" t-as="orderline" style="margin-top:5pt">
                         <tr>
-                        <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top">
-                            <t t-esc="env.pos.format_currency(orderline.get_display_price())"/>
-                        </td>
-                        <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top" class="pos-right-align">
-                            <t t-esc="env.pos.format_currency(orderline.price)"/>
-                        </td>
-                        <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top" class="pos-right-align">
-                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                        </td>
-                        <td style="text-align:right;padding-bottom:3pt;padding-top:2pt;vertical-align:top">
-                            <t t-esc="orderline.get_product().display_name"/>
-                            <t t-if="orderline.get_product().name_arabic">
-                                <br/>
-                                <t t-esc="orderline.get_product().name_arabic"/>
-                            </t>
-                            <t t-if="orderline.get_discount() > 0">
-                                <div class="pos-disc-font">
-                                    With a <t t-esc="orderline.get_discount()"/>% discount
-                                </div>
-                            </t>
-                        </td>
+                            <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top">
+                                <t t-esc="env.pos.format_currency(orderline.get_display_price())"/>
+                            </td>
+                            <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top" class="pos-right-align">
+                                <t t-esc="env.pos.format_currency(orderline.price)"/>
+                            </td>
+                            <td style="padding-bottom:3pt;padding-top:2pt;vertical-align:top" class="pos-right-align">
+                                <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                            </td>
+                            <td style="text-align:right;padding-bottom:3pt;padding-top:2pt;vertical-align:top">
+                                <t t-esc="orderline.get_product().display_name"/>
+                                <t t-if="orderline.get_product().name_arabic">
+                                    <br/>
+                                    <t t-esc="orderline.get_product().name_arabic"/>
+                                </t>
+                                <t t-if="orderline.get_discount() > 0">
+                                    <div class="pos-disc-font">
+                                    With a <t t-esc="orderline.get_discount()"/>
+% discount
+                                    </div>
+                                </t>
+                            </td>
                         </tr>
                         <tr t-if="orderline.product.barcode">
                             <td colspan="3"></td>
-                            <td colspan="1" style="display: flex;direction: rtl;"><t t-esc="orderline.product.barcode"/></td>
+                            <td colspan="1" style="display: flex;direction: rtl;">
+                                <t t-esc="orderline.product.barcode"/>
+                            </td>
                         </tr>
                     </t>
                 </table>
@@ -275,25 +298,25 @@
                         <td style="padding-bottom:5pt;padding-top:5pt">:</td>
                         <td style="text-align:right;padding-bottom:5pt;padding-top:5pt">قيمة الضريبة</td>
                     </tr>
-<!--                    <t t-foreach="receipt.tax_details" t-as="taxdetail">-->
-<!--                        <tr>-->
-<!--                            <td style="padding-bottom:5pt;padding-top:5pt">-->
-<!--                                <t t-esc="taxdetail.name"/>-->
-<!--                            </td>-->
-<!--                            <td style="padding-bottom:5pt;padding-top:5pt">:</td>-->
-<!--                            <td style="text-align:center;padding-bottom:5pt;padding-top:5pt;padding-right:6pt">-->
-<!--                                <t t-esc="env.pos.format_currency(taxdetail.amount)"/>-->
-<!--                            </td>-->
-<!--                            <td style="padding-bottom:5pt;padding-top:5pt">:</td>-->
-<!--                            <td style="text-align:right;padding-bottom:5pt;padding-top:5pt">ضريبة</td>-->
-<!--                        </tr>-->
-<!--                    </t>-->
+                    <!--                    <t t-foreach="receipt.tax_details" t-as="taxdetail">-->
+                    <!--                        <tr>-->
+                    <!--                            <td style="padding-bottom:5pt;padding-top:5pt">-->
+                    <!--                                <t t-esc="taxdetail.name"/>-->
+                    <!--                            </td>-->
+                    <!--                            <td style="padding-bottom:5pt;padding-top:5pt">:</td>-->
+                    <!--                            <td style="text-align:center;padding-bottom:5pt;padding-top:5pt;padding-right:6pt">-->
+                    <!--                                <t t-esc="env.pos.format_currency(taxdetail.amount)"/>-->
+                    <!--                            </td>-->
+                    <!--                            <td style="padding-bottom:5pt;padding-top:5pt">:</td>-->
+                    <!--                            <td style="text-align:right;padding-bottom:5pt;padding-top:5pt">ضريبة</td>-->
+                    <!--                        </tr>-->
+                    <!--                    </t>-->
                     <tr>
                         <t t-if="receipt.total_discount">
                             <td>Discount</td>
                             <td>:</td>
                             <td style="text-align:center;padding-bottom:5pt;padding-top:5pt;padding-right:6pt">
-                                <span  t-esc="env.pos.format_currency(receipt.total_discount)" class="pos-receipt-center-align"/>
+                                <span t-esc="env.pos.format_currency(receipt.total_discount)" class="pos-receipt-center-align"/>
                             </td>
                             <td>:</td>
                             <td style="text-align:right">خصم</td>
@@ -326,24 +349,24 @@
                             <td style="text-align:right;vertical-align:bottom">نقدا</td>
                         </tr>
                     </t>
-<!--                    <tr>-->
-<!--                        <td style="padding-bottom:5pt">Change</td>-->
-<!--                        <td style="padding-bottom:5pt">:</td>-->
-<!--                        <td style="padding-bottom:5pt;padding-right:6pt" class="pos-center-align">-->
-<!--                            <t t-esc="env.pos.format_currency(receipt.change)"/>-->
-<!--                        </td>-->
-<!--                        <td style="padding-bottom:5pt">:</td>-->
-<!--                        <td style="padding-bottom:5pt;text-align:right">الباقي</td>-->
-<!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td style="padding-bottom:5pt">Change</td>-->
+                    <!--                        <td style="padding-bottom:5pt">:</td>-->
+                    <!--                        <td style="padding-bottom:5pt;padding-right:6pt" class="pos-center-align">-->
+                    <!--                            <t t-esc="env.pos.format_currency(receipt.change)"/>-->
+                    <!--                        </td>-->
+                    <!--                        <td style="padding-bottom:5pt">:</td>-->
+                    <!--                        <td style="padding-bottom:5pt;text-align:right">الباقي</td>-->
+                    <!--                    </tr>-->
                 </table>
             </div>
 
             <div class="before-footer" />
             <!-- Footer -->
-            <div t-if="receipt.footer_html"  class="pos-receipt-center-align">
+            <div t-if="receipt.footer_html" class="pos-receipt-center-align">
                 <t t-raw="receipt.footer_html" />
             </div>
-            <div t-if="!receipt.footer_html and receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
+            <div t-if="!receipt.footer_html and receipt.footer" class="pos-receipt-center-align" style="white-space:pre-line">
                 <br/>
                 <t t-esc="receipt.footer" />
                 <br/>
@@ -384,7 +407,9 @@
                 <br/>
                 <div class="pos-receipt-contact">
                     <t t-if="company.name">
-                        <div><t t-esc="company.name" /></div>
+                        <div>
+                            <t t-esc="company.name" />
+                        </div>
                     </t>
                 </div>
             </t>
@@ -396,31 +421,44 @@
             </t>
             <div class="pos-receipt-contact">
                 <t t-if="company.contact_address">
-                    <div><t t-esc="company.contact_address" /></div>
+                    <div>
+                        <t t-esc="company.contact_address" />
+                    </div>
                 </t>
                 <t t-if="company.phone">
-                    <div>Tel:<t t-esc="company.phone" /></div>
+                    <div>Tel:<t t-esc="company.phone" />
+                    </div>
                 </t>
                 <t t-if="company.vat">
-                    <div><t t-esc="company.vat_label"/>:<t t-esc="company.vat" /></div>
+                    <div>
+                        <t t-esc="company.vat_label"/>
+:                        <t t-esc="company.vat" />
+                    </div>
                 </t>
                 <t t-if="company.email">
-                    <div><t t-esc="company.email" /></div>
+                    <div>
+                        <t t-esc="company.email" />
+                    </div>
                 </t>
                 <t t-if="company.website">
-                    <div><t t-esc="company.website" /></div>
+                    <div>
+                        <t t-esc="company.website" />
+                    </div>
                 </t>
                 <t t-if="cashier">
                     <div class="cashier">
                         <div>--------------------------------</div>
-                        <div>Served by <t t-esc="cashier.name" /></div>
+                        <div>Served by <t t-esc="cashier.name" />
+                        </div>
                     </div>
                 </t>
                 <t t-call="PrescriptionOrderReceiptTable"/>
             </div>
             <br/>
             <div class="pos-receipt-order-data">
-                <div><t t-esc="date" /></div>
+                <div>
+                    <t t-esc="date" />
+                </div>
             </div>
 
         </div>
@@ -470,21 +508,45 @@
                     </tr>
                     <tr>
                         <th>Distance</th>
-                        <td><t t-esc="podiatry_order.od_sph_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_cyl_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_ax_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_add_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_prism_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_base_distance"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.od_sph_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_cyl_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_ax_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_add_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_prism_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_base_distance"/>
+                        </td>
                     </tr>
                     <tr>
                         <th>Near</th>
-                        <td><t t-esc="podiatry_order.od_sph_near"/></td>
-                        <td><t t-esc="podiatry_order.od_cyl_near"/></td>
-                        <td><t t-esc="podiatry_order.od_ax_near"/></td>
-                        <td><t t-esc="podiatry_order.od_add_near"/></td>
-                        <td><t t-esc="podiatry_order.od_prism_near"/></td>
-                        <td><t t-esc="podiatry_order.od_base_near"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.od_sph_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_cyl_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_ax_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_add_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_prism_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_base_near"/>
+                        </td>
                     </tr>
                     <tr class="nbsp">
                         <th colspan="7" class="nbsp"></th>
@@ -503,21 +565,45 @@
                     </tr>
                     <tr>
                         <th>Distance</th>
-                        <td><t t-esc="podiatry_order.os_sph_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_cyl_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_ax_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_add_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_prism_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_base_distance"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.os_sph_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_cyl_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_ax_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_add_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_prism_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_base_distance"/>
+                        </td>
                     </tr>
                     <tr>
                         <th>Near</th>
-                        <td><t t-esc="podiatry_order.os_sph_near"/></td>
-                        <td><t t-esc="podiatry_order.os_cyl_near"/></td>
-                        <td><t t-esc="podiatry_order.os_ax_near"/></td>
-                        <td><t t-esc="podiatry_order.os_add_near"/></td>
-                        <td><t t-esc="podiatry_order.os_prism_near"/></td>
-                        <td><t t-esc="podiatry_order.os_base_near"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.os_sph_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_cyl_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_ax_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_add_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_prism_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_base_near"/>
+                        </td>
                     </tr>
                     <tr class="nbsp">
                         <th colspan="2" class="nbsp"></th>
@@ -525,17 +611,23 @@
                     </tr>
                     <tr t-if="!podiatry_order.dual_pd" class="nbsp">
                         <th>PD</th>
-                        <td><t t-esc="podiatry_order.pd"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.pd"/>
+                        </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
                     <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Left</th>
-                        <td><t t-esc="podiatry_order.pdl"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.pdl"/>
+                        </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
                     <tr t-if="podiatry_order.dual_pd" class="nbsp">
                         <th>PD Right</th>
-                        <td><t t-esc="podiatry_order.pdr"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.pdr"/>
+                        </td>
                         <th colspan="5" class="nbsp"></th>
                     </tr>
                 </table>
@@ -570,7 +662,7 @@
 
     <t t-name="SelectGlassesButton" owl="1">
         <div class='control-button button confirm'>
-            Select Glasses
+            Select Device
         </div>
     </t>
 
@@ -585,7 +677,9 @@
                             <td>
                                 <select name="practitioner">
                                     <t t-foreach="practitioners || []" t-as="item" t-key="item.id">
-                                        <option t-attf-data-id="{{ item.id }}"><t t-esc='item.name'/></option>
+                                        <option t-attf-data-id="{{ item.id }}">
+                                            <t t-esc='item.name'/>
+                                        </option>
                                     </t>
                                 </select>
                             </td>
@@ -594,10 +688,14 @@
                                 <select name="customer">
                                     <t t-foreach="partners || []" t-as="item" t-key="item.id">
                                         <t t-if="customer == item.id">
-                                            <option t-attf-data-id="{{ item.id }}" t-attf-selected=""><t t-esc='item.name'/></option>
+                                            <option t-attf-data-id="{{ item.id }}" t-attf-selected="">
+                                                <t t-esc='item.name'/>
+                                            </option>
                                         </t>
                                         <t t-if="customer != item.id">
-                                            <option t-attf-data-id="{{ item.id }}"><t t-esc='item.name'/></option>
+                                            <option t-attf-data-id="{{ item.id }}">
+                                                <t t-esc='item.name'/>
+                                            </option>
                                         </t>
                                     </t>
                                 </select>
@@ -606,13 +704,15 @@
                         <tr>
                             <th>Prescription Date:</th>
                             <td>
-                                <input type="date"  name="checkup_date"  maxlength="10"  t-attf-value="{{today}}"/>
+                                <input type="date" name="checkup_date" maxlength="10" t-attf-value="{{today}}"/>
                             </td>
                             <th>Test Type:</th>
                             <td>
                                 <select name="test_type">
                                     <t t-foreach="test_type || []" t-as="item" t-key="item.id">
-                                        <option t-attf-data-id="{{ item.id }}"><t t-esc='item.name'/></option>
+                                        <option t-attf-data-id="{{ item.id }}">
+                                            <t t-esc='item.name'/>
+                                        </option>
                                     </t>
                                 </select>
                             </td>
@@ -621,24 +721,11 @@
                             <th>Prescription Type:</th>
                             <td>
                                 <select name="prescription_type">
-                                   <option>Internal</option>
-                                   <option>External</option>
+                                    <option>Internal</option>
+                                    <option>External</option>
                                 </select>
                             </td>
-                            <th>Family Foot History:</th>
-                            <td>
-                                <input name="family_foot_history" type="text"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Ocular History:</th>
-                            <td>
-                                <input name="ocular_history" type="text"/>
-                            </td>
-                            <th>Consultation Reason:</th>
-                            <td>
-                                <input name="consultation" type="text"/>
-                            </td>
+
                         </tr>
                         <tr>
                             <th colspan="4">&#160;</th>
@@ -664,15 +751,17 @@
                                     <t t-set="check" t-value="30"/>
                                     <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
                                     <option t-attf-selected="selected">0</option>
                                     <t t-set="check" t-value="0.25"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 30.25">
-                                            <option>+<t t-esc="check"/></option>
+                                            <option>+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -681,9 +770,10 @@
                             <td>
                                 <select name="od_cyl_distance">
                                     <t t-set="check" t-value="10"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
@@ -693,9 +783,11 @@
                             <td>
                                 <select name="od_ax_distance">
                                     <t t-set="check" t-value="1"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 181">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 1"/>
                                     </t>
@@ -704,9 +796,11 @@
                             <td>
                                 <select name="od_add_distance">
                                     <t t-set="check" t-value="0"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 6.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -716,9 +810,11 @@
                                 <select name="od_prism_distance">
                                     <t t-set="check" t-value="0.25"/>
                                     <option t-attf-selected="selected">0</option>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 5.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -739,17 +835,19 @@
                             <td>
                                 <select name="od_sph_near">
                                     <t t-set="check" t-value="30"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
                                     <option t-attf-selected="selected">0</option>
                                     <t t-set="check" t-value="0.25"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 30.25">
-                                            <option>+<t t-esc="check"/></option>
+                                            <option>+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -758,9 +856,10 @@
                             <td>
                                 <select name="od_cyl_near">
                                     <t t-set="check" t-value="10"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
@@ -770,9 +869,11 @@
                             <td>
                                 <select name="od_ax_near">
                                     <t t-set="check" t-value="1"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 181">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 1"/>
                                     </t>
@@ -781,9 +882,11 @@
                             <td>
                                 <select name="od_add_near">
                                     <t t-set="check" t-value="0"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 6.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -793,9 +896,11 @@
                                 <select name="od_prism_near">
                                     <t t-set="check" t-value="0.25"/>
                                     <option t-attf-selected="selected">0</option>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 5.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -831,17 +936,19 @@
                             <td>
                                 <select name="os_sph_distance">
                                     <t t-set="check" t-value="30"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
                                     <option t-attf-selected="selected">0</option>
                                     <t t-set="check" t-value="0.25"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 30.25">
-                                            <option>+<t t-esc="check"/></option>
+                                            <option>+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -850,9 +957,10 @@
                             <td>
                                 <select name="os_cyl_distance">
                                     <t t-set="check" t-value="10"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
@@ -862,9 +970,11 @@
                             <td>
                                 <select name="os_ax_distance">
                                     <t t-set="check" t-value="1"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 181">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 1"/>
                                     </t>
@@ -873,9 +983,11 @@
                             <td>
                                 <select name="os_add_distance">
                                     <t t-set="check" t-value="0"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 6.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -885,9 +997,11 @@
                                 <select name="os_prism_distance">
                                     <t t-set="check" t-value="0.25"/>
                                     <option t-attf-selected="selected">0</option>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 5.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -908,17 +1022,19 @@
                             <td>
                                 <select name="os_sph_near">
                                     <t t-set="check" t-value="30"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
                                     <option t-attf-selected="selected">0</option>
                                     <t t-set="check" t-value="0.25"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 30.25">
-                                            <option>+<t t-esc="check"/></option>
+                                            <option>+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -927,9 +1043,10 @@
                             <td>
                                 <select name="os_cyl_near">
                                     <t t-set="check" t-value="10"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &gt; 0">
-                                            <option>-<t t-esc="check"/></option>
+                                            <option>-                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check - 0.25"/>
                                     </t>
@@ -939,9 +1056,11 @@
                             <td>
                                 <select name="os_ax_near">
                                     <t t-set="check" t-value="1"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 181">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 1"/>
                                     </t>
@@ -950,9 +1069,11 @@
                             <td>
                                 <select name="os_add_near">
                                     <t t-set="check" t-value="0"/>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 6.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -962,9 +1083,11 @@
                                 <select name="os_prism_near">
                                     <t t-set="check" t-value="0.25"/>
                                     <option t-attf-selected="selected">0</option>
-                                    <t t-foreach="abc || []" t-as="i"  t-key="i">
+                                    <t t-foreach="abc || []" t-as="i" t-key="i">
                                         <t t-if="check &lt; 5.25">
-                                            <option><t t-esc="check"/></option>
+                                            <option>
+                                                <t t-esc="check"/>
+                                            </option>
                                         </t>
                                         <t t-set="check" t-value="check + 0.25"/>
                                     </t>
@@ -993,11 +1116,21 @@
                             <th colspan="2" class="nbsp">&#160;</th>
                         </tr>
                         <tr>
-                            <td><input name="ipd" type="text"/></td>
-                            <td><input name="cl_right" type="text"/></td>
-                            <td><input name="cl_left" type="text"/></td>
-                            <td><input name="base_curve" type="text"/></td>
-                            <td><input name="dim" type="text"/></td>
+                            <td>
+                                <input name="ipd" type="text"/>
+                            </td>
+                            <td>
+                                <input name="cl_right" type="text"/>
+                            </td>
+                            <td>
+                                <input name="cl_left" type="text"/>
+                            </td>
+                            <td>
+                                <input name="base_curve" type="text"/>
+                            </td>
+                            <td>
+                                <input name="dim" type="text"/>
+                            </td>
                             <th colspan="2" class="nbsp">&#160;</th>
                         </tr>
                     </table>
@@ -1023,7 +1156,7 @@
                         <tr>
                             <th>Practitioner internal observations:</th>
                             <td colspan="3">
-                                <input name="optometrist_observation" type="text"/>
+                                <input name="practitioner_observation" type="text"/>
                             </td>
                         </tr>
                     </table>
@@ -1048,16 +1181,20 @@
                     <table>
                         <tr>
                             <th>Client:</th>
-                            <td colspan="3"><t t-esc="customer"/></td>
+                            <td colspan="3">
+                                <t t-esc="customer"/>
+                            </td>
                         </tr>
                         <tr>
                             <th>Prescription:</th>
-                            <td colspan="3"><t t-esc="podiatry_reference"/></td>
+                            <td colspan="3">
+                                <t t-esc="podiatry_reference"/>
+                            </td>
                         </tr>
                         <tr>
-                            <th>Glasses:</th>
+                            <th>Device:</th>
                             <td colspan="3">
-                                <select id="glasses">
+                                <select id="device">
                                 </select>
                             </td>
                         </tr>
@@ -1065,10 +1202,18 @@
                             <th colspan="4" class="nbsp">&#160;</th>
                         </tr>
                         <tr>
-                            <td><input class="coupon_question" type="radio" name="far"/> Far</td>
-                            <td><input class="coupon_question" type="radio" name="far"/> Close</td>
-                            <td><input class="coupon_question" type="checkbox" name="glass_right"/>Glass right</td>
-                            <td><input class="coupon_question" type="checkbox" name="glass_left"/>Glass left</td>
+                            <td>
+                                <input class="coupon_question" type="radio" name="far"/>
+ Far</td>
+                            <td>
+                                <input class="coupon_question" type="radio" name="far"/>
+ Close</td>
+                            <td>
+                                <input class="coupon_question" type="checkbox" name="device_right"/>
+Device right</td>
+                            <td>
+                                <input class="coupon_question" type="checkbox" name="device_left"/>
+Device left</td>
                         </tr>
                         <tr class="nbsp">
                             <th colspan="4" class="nbsp">&#160;</th>
@@ -1080,57 +1225,77 @@
                                 <table>
                                     <t t-foreach="variants1 || []" t-as="item" t-key="item.id">
                                         <tr>
-                                            <th><t t-esc='item.name'/></th>
+                                            <th>
+                                                <t t-esc='item.name'/>
+                                            </th>
                                             <t t-foreach="item.attributes || []" t-as="items">
                                                 <tr>
-                                                    <td><input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/><t t-esc='items'/></td>
+                                                    <td>
+                                                        <input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/>
+                                                        <t t-esc='items'/>
+                                                    </td>
                                                 </tr>
                                             </t>
                                         </tr>
                                     </t>
-                                 </table>
+                                </table>
                             </td>
                             <td class="sub-table">
                                 <table>
                                     <t t-foreach="variants2 || []" t-as="item" t-key="item.id">
                                         <tr>
-                                            <th><t t-esc='item.name'/></th>
+                                            <th>
+                                                <t t-esc='item.name'/>
+                                            </th>
                                             <t t-foreach="item.attributes || []" t-as="items">
                                                 <tr>
-                                                    <td><input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/><t t-esc='items'/></td>
+                                                    <td>
+                                                        <input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/>
+                                                        <t t-esc='items'/>
+                                                    </td>
                                                 </tr>
                                             </t>
                                         </tr>
                                     </t>
-                                 </table>
+                                </table>
                             </td>
                             <td class="sub-table">
                                 <table>
                                     <t t-foreach="variants3 || []" t-as="item" t-key="item.id">
                                         <tr>
-                                            <th><t t-esc='item.name'/></th>
+                                            <th>
+                                                <t t-esc='item.name'/>
+                                            </th>
                                             <t t-foreach="item.attributes || []" t-as="items">
                                                 <tr>
-                                                    <td><input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/><t t-esc='items'/></td>
+                                                    <td>
+                                                        <input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/>
+                                                        <t t-esc='items'/>
+                                                    </td>
                                                 </tr>
                                             </t>
                                         </tr>
                                     </t>
-                                 </table>
+                                </table>
                             </td>
                             <td class="sub-table">
                                 <table>
                                     <t t-foreach="variants4 || []" t-as="item" t-key="item.id">
                                         <tr>
-                                            <th><t t-esc='item.name'/></th>
+                                            <th>
+                                                <t t-esc='item.name'/>
+                                            </th>
                                             <t t-foreach="item.attributes || []" t-as="items">
                                                 <tr>
-                                                    <td><input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/><t t-esc='items'/></td>
+                                                    <td>
+                                                        <input class="coupon_question attribute_variant" t-on-change="attribute_variant_onChange" type="radio" t-attf-name="{{ item.name }}" t-attf-value="{{ items }}"/>
+                                                        <t t-esc='items'/>
+                                                    </td>
                                                 </tr>
                                             </t>
                                         </tr>
                                     </t>
-                                 </table>
+                                </table>
                             </td>
                         </tr>
                     </table>
@@ -1177,7 +1342,7 @@
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix touch-scrollable scrollable-y'>
                                     <table class='client-list'>
-                                       <thead>
+                                        <thead>
                                             <tr>
                                                 <th>Number</th>
                                                 <th>Client</th>
@@ -1186,29 +1351,45 @@
                                                 <th>Test Type</th>
                                                 <th>Prescription Type</th>
                                                 <th>Status</th>
-                                                <th>Send to Glasses</th>
+                                                <th>Send to Device</th>
                                                 <th>Prescription</th>
                                             </tr>
-                                       </thead>
-                                       <tbody class='products-list-contents'>
+                                        </thead>
+                                        <tbody class='products-list-contents'>
                                             <t t-foreach="podiatry_orders" t-as="product" t-key="product.id">
                                                 <tr t-attf-class="productlines {{(podiatry_order.id == product.id) ? 'highlight' : ''}}" t-att-data-id='product.id' t-on-click="prescription_line_click(product)">
-                                                    <td><t t-esc='product.name' /></td>
-                                                    <td><t t-esc='product.customer[1]' /></td>
-                                                    <td><t t-esc='product.checkup_date' /></td>
-                                                    <td><t t-esc='product.practitioner[1]' /></td>
-                                                    <td><t t-esc='product.test_type[1]' /></td>
-                                                    <td><t t-esc='product.prescription_type' /></td>
-                                                    <td><t t-esc='product.state' /></td>
+                                                    <td>
+                                                        <t t-esc='product.name' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.customer[1]' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.checkup_date' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.practitioner[1]' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.test_type[1]' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.prescription_type' />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc='product.state' />
+                                                    </td>
                                                     <td name="td_pos_podiatry_copy" t-att-data-order-id="product.id">
                                                         <button class="button pos_podiatry_copy" t-att-data-order-id="product.id" t-on-click="prescription_line_button(product)">
                                                             Copy Measures
                                                         </button>
                                                     </td>
-                                                    <td> <i class="fa fa-print pos_podiatry_print" t-att-data-order-id="product.id" t-on-click="print_receipt(product)"/></td>
+                                                    <td>
+                                                        <i class="fa fa-print pos_podiatry_print" t-att-data-order-id="product.id" t-on-click="print_receipt(product)"/>
+                                                    </td>
                                                 </tr>
-                                           </t>
-                                       </tbody>
+                                            </t>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -1224,12 +1405,24 @@
             <div class="prescription_receipt_details" t-att-data-id='podiatry_order.id'>
                 <table>
                     <tr>
-                        <td><span>Reference:</span><t t-esc="podiatry_order.name"/></td>
-                        <td><span>Client Name:</span><t t-esc="podiatry_order.customer[1]"/></td>
+                        <td>
+                            <span>Reference:</span>
+                            <t t-esc="podiatry_order.name"/>
+                        </td>
+                        <td>
+                            <span>Client Name:</span>
+                            <t t-esc="podiatry_order.customer[1]"/>
+                        </td>
                     </tr>
                     <tr>
-                        <td><span>Prescription Date:</span><t t-esc="podiatry_order.checkup_date"/></td>
-                        <td><span>Test Type:</span><t t-esc="podiatry_order.test_type[1]"/></td>
+                        <td>
+                            <span>Prescription Date:</span>
+                            <t t-esc="podiatry_order.checkup_date"/>
+                        </td>
+                        <td>
+                            <span>Test Type:</span>
+                            <t t-esc="podiatry_order.test_type[1]"/>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -1257,35 +1450,83 @@
                     </tr>
                     <tr>
                         <th>Distance</th>
-                        <td><t t-esc="podiatry_order.od_sph_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_cyl_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_ax_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_add_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_prism_distance"/></td>
-                        <td><t t-esc="podiatry_order.od_base_distance"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.od_sph_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_cyl_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_ax_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_add_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_prism_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_base_distance"/>
+                        </td>
                         <th>Distance</th>
-                        <td><t t-esc="podiatry_order.os_sph_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_cyl_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_ax_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_add_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_prism_distance"/></td>
-                        <td><t t-esc="podiatry_order.os_base_distance"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.os_sph_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_cyl_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_ax_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_add_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_prism_distance"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_base_distance"/>
+                        </td>
                     </tr>
                     <tr>
                         <th>Near</th>
-                        <td><t t-esc="podiatry_order.od_sph_near"/></td>
-                        <td><t t-esc="podiatry_order.od_cyl_near"/></td>
-                        <td><t t-esc="podiatry_order.od_ax_near"/></td>
-                        <td><t t-esc="podiatry_order.od_add_near"/></td>
-                        <td><t t-esc="podiatry_order.od_prism_near"/></td>
-                        <td><t t-esc="podiatry_order.od_base_near"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.od_sph_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_cyl_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_ax_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_add_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_prism_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.od_base_near"/>
+                        </td>
                         <th>Near</th>
-                        <td><t t-esc="podiatry_order.os_sph_near"/></td>
-                        <td><t t-esc="podiatry_order.os_cyl_near"/></td>
-                        <td><t t-esc="podiatry_order.os_ax_near"/></td>
-                        <td><t t-esc="podiatry_order.os_add_near"/></td>
-                        <td><t t-esc="podiatry_order.os_prism_near"/></td>
-                        <td><t t-esc="podiatry_order.os_base_near"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.os_sph_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_cyl_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_ax_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_add_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_prism_near"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.os_base_near"/>
+                        </td>
                     </tr>
                     <tr class="nbsp">
                         <th class="nbsp">&#160;</th>
@@ -1298,11 +1539,21 @@
                         <th>Dim</th>
                     </tr>
                     <tr>
-                        <td><t t-esc="podiatry_order.ipd"/></td>
-                        <td colspan="2"><t t-esc="podiatry_order.cl_right"/></td>
-                        <td colspan="2"><t t-esc="podiatry_order.cl_left"/></td>
-                        <td colspan="2"><t t-esc="podiatry_order.base_curve"/></td>
-                        <td><t t-esc="podiatry_order.dim"/></td>
+                        <td>
+                            <t t-esc="podiatry_order.ipd"/>
+                        </td>
+                        <td colspan="2">
+                            <t t-esc="podiatry_order.cl_right"/>
+                        </td>
+                        <td colspan="2">
+                            <t t-esc="podiatry_order.cl_left"/>
+                        </td>
+                        <td colspan="2">
+                            <t t-esc="podiatry_order.base_curve"/>
+                        </td>
+                        <td>
+                            <t t-esc="podiatry_order.dim"/>
+                        </td>
                     </tr>
                 </table>
             </div>

@@ -7,6 +7,11 @@
         <record id="product_category_Topcover" model="product.category">
             <field name="name">Topcover</field>
         </record>
+
+        <record id="product_category_TopcoverTreatment" model="product.category">
+            <field name="name">Topcover Treatment</field>
+        </record>
+
         <record id="product_category_service" model="product.category">
             <field name="name">Service</field>
         </record>

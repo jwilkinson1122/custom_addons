@@ -33,17 +33,15 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-<!--		<record id="product_category_action" model="ir.actions.act_window">-->
-<!--            <field name="name">Product Category</field>-->
-<!--            <field name="type">ir.actions.act_window</field>-->
-<!--            <field name="res_model">product.category</field>-->
-<!--            <field name="view_mode">tree,form</field>-->
-<!--        </record>-->
+        <!--		<record id="product_category_action" model="ir.actions.act_window">-->
+        <!--            <field name="name">Product Category</field>-->
+        <!--            <field name="type">ir.actions.act_window</field>-->
+        <!--            <field name="res_model">product.category</field>-->
+        <!--            <field name="view_mode">tree,form</field>-->
+        <!--        </record>-->
 
-        <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp_config" action="action_config"
-                  sequence="1"/>
-        <menuitem id="pod_erp_product_categories" name="Product Categories" parent="pod_erp_config" action="product.product_category_action_form"
-                  sequence="2"/>
+        <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp_config" action="action_config" sequence="1"/>
+        <menuitem id="pod_erp_product_categories" name="Product Categories" parent="pod_erp_config" action="product.product_category_action_form" sequence="2"/>
 
     </data>
 </odoo>

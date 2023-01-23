@@ -12,10 +12,10 @@
                     <h2 id="web_theme_title">Podiatry Erp Settings</h2>
                     <div class="row mt16 o_settings_container" name="web_theme">
                         <div class="col-12 col-lg-6 o_setting_box">
-                            <span class="o_form_label">Foot Examination Chargeable</span>
+                            <span class="o_form_label">Examination Chargeable</span>
                             <div class="content-group">
                                 <div>
-                                    <field name="foot_examination_chargeable" class="col-5"/>
+                                    <field name="examination_chargeable" class="col-5"/>
                                 </div>
                             </div>
                         </div>
@@ -37,11 +37,6 @@
         <field name="context">{'module':'pod_erp', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="menu_pod_erp_settings"
-              name="Settings"
-              parent="pod_erp_config"
-              sequence="2"
-              action="action_pod_erp_config_settings"
-              groups="base.group_system"/>
+    <menuitem id="menu_pod_erp_settings" name="Settings" parent="pod_erp_config" sequence="2" action="action_pod_erp_config_settings" groups="base.group_system"/>
 
 </odoo>

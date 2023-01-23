@@ -1,9 +1,7 @@
 from . import prescription
-from . import practice
 from . import practitioner
 from . import patient
 from . import test_type
-from . import contact_mixin
 from . import res_partner
 from . import inherit_saleorder
 from . import res_config_settings
@@ -16,4 +14,3 @@ from . import inherit_invoice
 from . import inherit_product_template
 from . import shell_elements
 from . import topcover_elements
-

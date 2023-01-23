@@ -4,15 +4,13 @@
     "category": "Podiatry",
     'sequence': 1,
     'summary': "Solution for Podiatry clinics",
-    'description': """
-    odoo Solution for Podiatry clinics.
-    """,
+    'description': """ Solution for Podiatry clinics.""",
     "author": "NWPL",
     "website": "www.nwpodiatric.com",
     'license': 'AGPL-3',
     'images': ['static/description/icon.png'],
     "depends": [
-        'base', 'sale','purchase',
+        'base', 'sale', 'purchase',
     ],
     "data": [
         'security/groups.xml',
@@ -30,10 +28,9 @@
         'report/invoice_report.xml',
         'views/inherit_sale_order.xml',
         'wizard/complete_pair_order.xml',
-        'views/practice.xml',
         'views/practitioner.xml',
-        'views/patient.xml',
         'views/practitioner_wizard.xml',
+        'views/patient.xml',
         "views/prescription.xml",
         "views/res_config_settings_views.xml",
         "views/partner.xml",
@@ -45,7 +42,7 @@
     ],
     "assets": {
         "point_of_sale.assets": [
-          
+
         ],
         'web.assets_qweb': [
         ],

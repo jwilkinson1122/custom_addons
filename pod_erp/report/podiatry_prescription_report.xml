@@ -2,7 +2,7 @@
 
 <odoo>
     <data>
-        <template id="practitioner_ophtalmological_prescription_template">
+        <template id="practitioner_podiatry_prescription_template">
             <t t-call="web.html_container">
                 <t t-call="web.internal_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -192,8 +192,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                 class="headings">Main Symptoms
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Main Symptoms
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.diagnosis_client"></span>
@@ -201,8 +200,7 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                 class="headings">Ophthalmological Exam
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ophthalmological Exam
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.notes_laboratory"></span>
@@ -210,58 +208,21 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                 class="headings">Other Exams
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Exams
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.optometrist_observation"></span>
+                                <span t-field="doc.practitioner_observation"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                 class="headings">Background
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Background
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.practitioner_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-
-                            <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                     class="headings">Treatment
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.family_foot_history"></span>
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
-
-                            <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                     class="headings">Observation
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.ocular_history"></span>
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
-
-                            <table style="margin-top:10px;">
-                                <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;"
-                                     class="headings">Consultation
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                    <span t-field="doc.consultation"></span>
-                                </div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                                <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
-
-
                         </div>
 
 
@@ -271,7 +232,7 @@
                 </t>
             </t>
         </template>
-        <template id="practitioner_ophtalmological_prescription_template_ticket_size">
+        <template id="practitioner_podiatry_prescription_template_ticket_size">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
                     <t t-foreach="docs" t-as="doc">
@@ -485,12 +446,12 @@
                                                     <span t-field="doc.prescription_id.customer"></span>
                                                 </td>
                                             </tr>
-                                            <!-- <tr>
+                                            <tr>
                                                 <td class="headings">PatientAge:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer_age"></span>
+                                                    <span t-field="doc.prescription_id.patient_age"></span>
                                                 </td>
-                                            </tr> -->
+                                            </tr>
                                             <tr>
                                                 <td class="headings">Test Type:</td>
                                                 <td class="text">
@@ -537,11 +498,9 @@
                             </table>
 
 
-                            <table cellspacing="0" cellpadding="0"
-                                   style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2"
-                                        style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;  font-size:16px; color:green; font-weight:bold; ">
                                         Right
                                     </td>

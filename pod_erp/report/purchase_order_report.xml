@@ -60,20 +60,22 @@
                                     </h6>
                                     <hr style="border:1px solid;"/>
 
-                                <div>
-                                    <t t-foreach="doc.po_ref.order_line" t-as="product">
-                                        <p style="font-size:x-small;"><strong><span t-esc="product.product_id.name"></span></strong></p>
-                                    </t>
+                                    <div>
+                                        <t t-foreach="doc.po_ref.order_line" t-as="product">
+                                            <p style="font-size:x-small;">
+                                                <strong>
+                                                    <span t-esc="product.product_id.name"></span>
+                                                </strong>
+                                            </p>
+                                        </t>
 
-                                </div>
+                                    </div>
                                 </center>
                                 <hr style="border:1px solid;"/>
                             </div>
-                            <table cellspacing="0" cellpadding="0"
-                                   style="border:1px solid; width:100%; margin-top:15px; font-size:x-small !important;">
+                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px; font-size:x-small !important;">
                                 <tr>
-                                    <td rowspan="2"
-                                        style="text-align:center; padding:5px; font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:x-small; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:x-small; width:40%; border-right:1px solid black; border-bottom:1px solid black; font-weight:bold;">
                                         FAR VISION
                                     </td>
@@ -120,8 +122,7 @@
                                     <td style="text-align:center;  font-size:x-small;  width:30%; border-right:1px solid black; ">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.prescription_id.od_sph_distance"
-                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.prescription_id.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-esc="'%.0f' % float(doc.prescription_id.od_sph_distance)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">
@@ -188,11 +189,9 @@
 
                                 </tr>
                             </table>
-                            <table cellspacing="0" cellpadding="0"
-                                   style="border:1px solid; width:100%; margin-top:15px;">
+                            <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100%; margin-top:15px;">
                                 <tr>
-                                    <td rowspan="2"
-                                        style="text-align:center; padding:5px; font-size:x-small;  width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
+                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:x-small;  width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
                                     <td style="text-align:center; padding:5px; font-size:x-small; width:40%; border-right:1px solid black; border-bottom:1px solid black; font-weight:bold; ">
                                         CLOSE VISION
                                     </td>
@@ -241,8 +240,7 @@
                                     <td style="text-align:center;  font-size:x-small;  width:30%; border-right:1px solid black;">
                                         <table width="100%">
                                             <tr>
-                                                <td t-if="doc.prescription_id.od_sph_distance"
-                                                    style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
+                                                <td t-if="doc.prescription_id.od_sph_distance" style="border-right:1px solid;width:10%; border-bottom:1px solid black;">
                                                     <span t-esc="'%.0f' % float(doc.prescription_id.os_sph_distance)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; border-bottom:1px solid black;">

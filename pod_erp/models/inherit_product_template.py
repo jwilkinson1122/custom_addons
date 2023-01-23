@@ -6,8 +6,9 @@ class ProductFromTemp(models.Model):
 
     shell_material = fields.Many2one('shell.material', string='Material')
     shell_shape = fields.Many2one('shell.shape', string='Shape')
-    shell_type = fields.Many2one('shell.type', string='Shell Type')
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
+    shell_type = fields.Many2one('shell.type', string='Shell / Founation Type')
+    gender = fields.Selection(
+        [('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
     # age = fields.Selection([('Male', 'Female', 'Others')])
     manufacturer = fields.Many2one('shell.manufacturer', string='Manufacturer')
     brand = fields.Many2one('shell.brand', string='Brand')
@@ -26,9 +27,14 @@ class ProductFromTemp(models.Model):
         if self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Shells':
             self.categ_id = self.env.ref('pod_erp.product_category_shells').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Topcover':
-            self.categ_id = self.env.ref('pod_erp.product_category_Topcover').id
+            self.categ_id = self.env.ref(
+                'pod_erp.product_category_Topcover').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Topcover Treatment':
+            self.categ_id = self.env.ref(
+                'pod_erp.product_category_TopcoverTreatment').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Service':
             self.categ_id = self.env.ref('pod_erp.product_category_service').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Miscellaneous':
-            self.categ_id = self.env.ref('pod_erp.product_category_miscellaneous').id
+            self.categ_id = self.env.ref(
+                'pod_erp.product_category_miscellaneous').id
         return super(ProductFromTemp, self).default_get(vals)

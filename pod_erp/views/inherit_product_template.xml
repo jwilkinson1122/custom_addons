@@ -7,8 +7,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='general_information']" position="after">
-                    <page string="Shell Elements" name="shell_elements" autofocus="autofocus"
-                          invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service', 'Miscellaneous']">
+                    <page string="Shell / Founation Elements" name="shell_elements" autofocus="autofocus" invisible="context.get('def_categ_id') in ['Topcover', 'Service','Topcover Treatment', 'Miscellaneous']">
 
                         <group>
                             <field name="shell_material"/>
@@ -21,12 +20,12 @@
                     </page>
                 </xpath>
                 <xpath expr="//div[@name='options']" position="after">
-                    <group invisible="context.get('def_categ_id') in ['Topcover','Contact Topcover','Service', 'Miscellaneous']">
+                    <group invisible="context.get('def_categ_id') in ['Topcover', 'Service','Topcover Treatment', 'Miscellaneous']">
                         <field name="manufacturer"/>
                         <field name="brand"/>
                         <field name="collection"/>
                     </group>
-                    <group invisible="context.get('def_categ_id') in ['Shells','Contact Topcover','Service', 'Miscellaneous']">
+                    <group invisible="context.get('def_categ_id') in ['Shells', 'Service','Topcover Treatment', 'Miscellaneous']">
                         <field name="topcover_type"/>
                         <field name="topcover_style"/>
                         <field name="topcover_material"/>

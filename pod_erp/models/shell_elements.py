@@ -29,7 +29,8 @@ class ShellBrands(models.Model):
     _name = "shell.brand"
 
     name = fields.Char(required=True)
-    image = fields.Binary("Image", max_width=1920, max_height=1920, widget=True)
+    image = fields.Binary("Image", max_width=1920,
+                          max_height=1920, widget=True)
 
 
 class ShellBrands(models.Model):

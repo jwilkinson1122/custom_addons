@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="practitioner" model="ir.ui.view">
+        <record id="practitioner_practitioner" model="ir.ui.view">
             <field name="name">Practitioner</field>
             <field name="model">podiatry.practitioner</field>
             <field name="arch" type="xml">
@@ -16,7 +16,7 @@
 ), are you sure to create a new one?
                     </div>
                     <header>
-                        <button style="margin-left:10px;" name="create_practitioners" string="Create User" class="btn btn-success" type="object"/>
+                        <button name="create_practitioners" string="Create User" class="btn btn-success" type="object"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -37,7 +37,6 @@
                             <div class="o_row">
                                 <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                             </div>
                         </div>
                         <group>
@@ -199,7 +198,7 @@
                 </form>
             </field>
         </record>
-        <record id="practitioner_tree" model="ir.ui.view">
+        <record id="practitioner_practitioner_tree" model="ir.ui.view">
             <field name="name">Practitioner Tree View</field>
             <field name="model">podiatry.practitioner</field>
             <field name="arch" type="xml">
@@ -274,54 +273,11 @@
                 </kanban>
             </field>
         </record>
-
-        <record id="practitioner_search" model="ir.ui.view">
-            <field name="name">podiatry.practitioner.search</field>
-            <field name="model">podiatry.practitioner</field>
-            <field name="arch" type="xml">
-                <search string="Practitioners">
-                    <field name="name"/>
-                    <!-- <field name="reference" operator="="/> -->
-                    <separator/>
-                    <!-- <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/> -->
-                    <separator/>
-                    <group name="group_by" string="Group By">
-                        <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
-                        <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
-                        <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
-                    </group>
-                    <searchpanel>
-                        <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
-                        <field name="country_id" icon="fa-globe" enable_counters="1"/>
-                    </searchpanel>
-                </search>
-            </field>
-        </record>
-    
-        <!-- <record id="action_practitioner_window" model="ir.actions.act_window">
+        <record id="action_practitioner_window" model="ir.actions.act_window">
             <field name="name">Practitioner</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">podiatry.practitioner</field>
             <field name="view_mode">kanban,tree,form</field>
-        </record> -->
-        <record id="action_practitioner_window" model="ir.actions.act_window">
-            <field name="name">Practitioners</field>
-            <field name="res_model">podiatry.practitioner</field>
-            <field name="view_mode">kanban,tree,form,activity</field>
-            <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
-            <field name="domain">[]</field>
-            <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="practitioner_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Add a new practitioner
-                </p>
-                <p>
-                    Schedule and organize your practitioners efficiently.
-                </p>
-            </field>
         </record>
-    
     </data>
 </odoo>

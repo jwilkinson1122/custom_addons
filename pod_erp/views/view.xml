@@ -86,7 +86,6 @@
             <field name="res_model">topcover.material</field>
             <field name="view_mode">tree,form</field>
         </record>
-
         <record id="erp_shells_action" model="ir.actions.act_window">
             <field name="name">Shells</field>
             <field name="type">ir.actions.act_window</field>
@@ -101,6 +100,14 @@
             <field name="res_model">product.template</field>
             <field name="domain">[('categ_id','=','Topcover')]</field>
             <field name="context">{'def_categ_id':'Topcover' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="erp_treatment_action" model="ir.actions.act_window">
+            <field name="name">Treatment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Topcover Treatment')]</field>
+            <field name="context">{'def_categ_id':'Topcover Treatment' }</field>
             <field name="view_mode">tree,form</field>
         </record>
         <record id="erp_service_action" model="ir.actions.act_window">
@@ -120,46 +127,24 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="product_shells" name="Shell" parent="pod_erp_config"
-                  sequence="4"/>
-        <menuitem id="product_topcovers" name="Topcover" parent="pod_erp_config"
-                  sequence="10"/>
-        <menuitem id="product_shells_brand" name="Brands" parent="product_shells" action="shell_brand_action"
-                  sequence="4"/>
-        <menuitem id="product_shells_collection" name="Collections" parent="product_shells"
-                  action="shell_collection_action"
-                  sequence="5"/>
-        <menuitem id="product_shells_type" name="Types" parent="product_shells"
-                  action="shell_type_action"
-                  sequence="6"/>
-        <menuitem id="product_shells_material" name="Materials" parent="product_shells"
-                  action="shell_material_action"
-                  sequence="7"/>
-        <menuitem id="product_shells_manufacturer" name="Manufacturer" parent="product_shells"
-                  action="shell_manufacturer_action"
-                  sequence="8"/>
-        <menuitem id="product_shells_shape" name="Shape" parent="product_shells"
-                  action="shell_shape_action"
-                  sequence="9"/>
+        <menuitem id="product_shells" name="Shell / Founation" parent="pod_erp_config" sequence="4"/>
+        <menuitem id="product_topcoveres" name="Topcover" parent="pod_erp_config" sequence="10"/>
+        <menuitem id="product_shells_brand" name="Brands" parent="product_shells" action="shell_brand_action" sequence="4"/>
+        <menuitem id="product_shells_collection" name="Collections" parent="product_shells" action="shell_collection_action" sequence="5"/>
+        <menuitem id="product_shells_type" name="Types" parent="product_shells" action="shell_type_action" sequence="6"/>
+        <menuitem id="product_shells_material" name="Materials" parent="product_shells" action="shell_material_action" sequence="7"/>
+        <menuitem id="product_shells_manufacturer" name="Manufacturer" parent="product_shells" action="shell_manufacturer_action" sequence="8"/>
+        <menuitem id="product_shells_shape" name="Shape" parent="product_shells" action="shell_shape_action" sequence="9"/>
 
-        <menuitem id="product_topcovers_type" name="Type" parent="product_topcovers" action="topcover_type_action"
-                  sequence="11"/>
-        <menuitem id="product_topcovers_style" name="Style" parent="product_topcovers" action="topcover_style_action"
-                  sequence="12"/>
-        <menuitem id="product_topcovers_material" name="Material" parent="product_topcovers" action="topcover_material_action"
-                  sequence="13"/>
-                  
-        <menuitem id="pod_erp_products" name="Products" parent="pod_erp_root"
-                  sequence="5"/>
-        <menuitem id="pod_erp_product_shell" name="Shells" parent="pod_erp_products" action="erp_shells_action"
-                  sequence="1"/>
-        <menuitem id="pod_erp_product_topcover" name="Topcover" parent="pod_erp_products" action="erp_topcover_action"
-                  sequence="2"/>
-        <menuitem id="pod_erp_product_service" name="Service" parent="pod_erp_products"
-                  action="erp_service_action"
-                  sequence="3"/>
-        <menuitem id="pod_erp_product_miscellaneous" name="Miscellaneous" parent="pod_erp_products"
-                  action="erp_miscellaneous_action"
-                  sequence="4"/>
+        <menuitem id="product_topcoveres_type" name="Type" parent="product_topcoveres" action="topcover_type_action" sequence="11"/>
+        <menuitem id="product_topcoveres_style" name="Style" parent="product_topcoveres" action="topcover_style_action" sequence="12"/>
+        <menuitem id="product_topcoveres_material" name="Material" parent="product_topcoveres" action="topcover_material_action" sequence="13"/>
+
+        <menuitem id="pod_erp_products" name="Products" parent="pod_erp_root" sequence="5"/>
+        <menuitem id="pod_erp_product_shell" name="Shells" parent="pod_erp_products" action="erp_shells_action" sequence="1"/>
+        <menuitem id="pod_erp_product_topcover" name="Topcover" parent="pod_erp_products" action="erp_topcover_action" sequence="2"/>
+        <menuitem id="pod_erp_product_treatment" name="Topcover Treatment" parent="pod_erp_products" action="erp_treatment_action" sequence="3"/>
+        <menuitem id="pod_erp_product_service" name="Service" parent="pod_erp_products" action="erp_service_action" sequence="4"/>
+        <menuitem id="pod_erp_product_miscellaneous" name="Miscellaneous" parent="pod_erp_products" action="erp_miscellaneous_action" sequence="5"/>
     </data>
 </odoo>
