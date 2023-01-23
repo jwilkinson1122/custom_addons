@@ -37,6 +37,7 @@
                             <div class="o_row">
                                 <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                                <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                             </div>
                         </div>
                         <group>
@@ -72,6 +73,20 @@
                             </group>
                         </group>
                         <notebook colspan="4">
+                            <page name="patients_list" string="Patient List">
+                                <separator name="patients" string="Patients"/>
+                                <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">
+                                No Patients
+                                </div>
+                                <field name="patient_ids" mode="kanban" context="{'default_type': 'contact'}"/>
+                            </page>
+                            <page name="perscriptions_list" string="Prescriptions">
+                                <separator name="prescriptions" string="Prescriptions"/>
+                                <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('prescription_ids', '!=', ())]}">
+                                No Prescriptions
+                                </div>
+                                <field name="prescription_ids" mode="kanban"/>
+                            </page>
                             <page string="Contacts &amp; Addresses" autofocus="autofocus">
                                 <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                     <kanban>

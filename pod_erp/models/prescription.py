@@ -12,10 +12,14 @@ class Prescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    practitioner = fields.Many2one('podiatry.practitioner',
-                                   string='Practitioner', readonly=True)
-    patient = fields.Many2one('podiatry.patient',
-                              string='Patient', readonly=True)
+    practice = fields.Many2one(
+        'podiatry.practice', string='Practice', readonly=True)
+    patient = fields.Many2one(
+        'podiatry.patient', string='Patient', readonly=True)
+    practitioner = fields.Many2one(
+        'podiatry.practitioner', string='Practitioner', readonly=True)
+    patient = fields.Many2one(
+        'podiatry.patient', string='Patient', readonly=True)
     patient_age = fields.Integer(related='patient.patient_age')
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
@@ -333,7 +337,7 @@ class Prescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'podiatry.prescription.sequence')
+                'podiatry.prescription')
         result = super(Prescription, self).create(vals)
         return result
 

@@ -15,6 +15,17 @@ class Patient(models.Model):
     # user_id = fields.Many2one('res.users')
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Patient')
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        required=True,
+        string="Practice",
+    )
+    practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner',
+        required=True,
+        string='Practitioner')
+
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)

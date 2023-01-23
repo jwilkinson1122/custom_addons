@@ -10,6 +10,20 @@ class Practitioner(models.Model):
     create_users_button = fields.Boolean()
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Practitioner')
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice', string='Practice')
+
+    patient_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='practitioner_id',
+        string='Patients'
+    )
+    prescription_ids = fields.One2many(
+        comodel_name='podiatry.prescription',
+        inverse_name='practitioner',
+        string='Prescriptions')
+
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')

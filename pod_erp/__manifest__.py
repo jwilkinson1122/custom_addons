@@ -10,7 +10,7 @@
     'license': 'AGPL-3',
     'images': ['static/description/icon.png'],
     "depends": [
-        'base', 'sale', 'purchase',
+        'base', "base_setup", "resource", "mail", 'sale', 'sale_management', 'purchase',
     ],
     "data": [
         'security/groups.xml',
@@ -28,6 +28,7 @@
         'report/invoice_report.xml',
         'views/inherit_sale_order.xml',
         'wizard/complete_pair_order.xml',
+        'views/practice.xml',
         'views/practitioner.xml',
         'views/practitioner_wizard.xml',
         'views/patient.xml',
