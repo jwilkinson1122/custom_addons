@@ -14,7 +14,7 @@ class Prescription(models.Model):
     )
     practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner', readonly=True)
     customer = fields.Many2one('res.partner', string='Customer', readonly=False)
-    customer_age = fields.Integer(related='customer.age')
+    # customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('foot.test.type')
     diagnosis_client = fields.Text()

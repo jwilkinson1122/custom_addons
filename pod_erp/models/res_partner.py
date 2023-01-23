@@ -7,8 +7,8 @@ from odoo import api, fields, models,_
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
 
-    dob = fields.Date()
-    age = fields.Integer(compute='_cal_age',store=True,readonly=True)
+    # dob = fields.Date()
+    # age = fields.Integer(compute='_cal_age',store=True,readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_customer_prescriptions(self):
@@ -29,14 +29,14 @@ class InheritedResPartner(models.Model):
             count = self.env['podiatry.prescription'].search_count([('customer','=',records.id)])
             records.prescription_count = count
 
-    @api.depends('dob')
-    def _cal_age(self):
-        for record in self:
-            if record.dob:
-                years = relativedelta(date.today(), record.dob).years
-                record.age = str(int(years))
-            else:
-                record.age = 0
+    # @api.depends('dob')
+    # def _cal_age(self):
+    #     for record in self:
+    #         if record.dob:
+    #             years = relativedelta(date.today(), record.dob).years
+    #             record.age = str(int(years))
+    #         else:
+    #             record.age = 0
 
 
 
