@@ -1,6 +1,10 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+import base64
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 
+from . import practice
 
 class Practitioner(models.Model):
     _name = "podiatry.practitioner"
@@ -8,11 +12,15 @@ class Practitioner(models.Model):
         'res.partner': 'partner_id',
     }
     create_users_button = fields.Boolean()
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practitioner')
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+    #                              help='Partner-related data of the Practitioner')
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
+    
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Practitioner", required=True, ondelete='restrict')
+
+    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
     def open_practitioner_prescriptions(self):
         for records in self:

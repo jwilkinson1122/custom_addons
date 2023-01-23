@@ -1,18 +1,74 @@
-from odoo import api, fields, models, _
+import base64
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Practice(models.Model):
     _name = "podiatry.practice"
     _inherits = {
         'res.partner': 'partner_id',
     }
+    _rec_name = 'practice_id'
+    _order = 'sequence,id'
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practice')
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+    #                              help='Partner-related data of the Practice')
+    
     is_practice = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Practice", required=True, ondelete='restrict')
+    practitioner_id = fields.One2many(comodel_name='podiatry.practitioner', inverse_name='practice_id', string="Practitioners")
+
+    practice_id = fields.Many2many('res.partner', domain=[('is_company', '=', True)], string="Practice", required=True)
+
+    practice_type = fields.Selection([('hospital', 'Hospital'),
+                                      ('multi', 'Multi-Hospital'),
+                                      ('clinic', 'Clinic'),
+                                      ('military', 'Military Medical Center'),
+                                      ('other', 'Other')],
+                                     string="Practice Type")
+   
+    _parent_name = 'parent_id'
+    _parent_store = True
+
+    parent_path = fields.Char(string="Parent Path", index=True)
+
+    parent_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string="Parent Practice",
+        index=True,
+        ondelete='cascade',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
+    
+    child_ids = fields.One2many(
+        comodel_name='podiatry.practice',
+        inverse_name='parent_id',
+        string="Practices",
+    )
+    
+    child_count = fields.Integer(
+        string="Subpractice Count",
+        compute='_compute_child_count',
+    )
+    
+    sequence = fields.Integer(
+        string="Sequence", required=True,
+        default=5,
+    )
+
+    @api.depends('child_ids')
+    def _compute_child_count(self):
+        for practice in self:
+            practice.child_count = len(practice.child_ids)
+        return
 
     def open_practice_prescriptions(self):
         for records in self:
