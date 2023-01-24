@@ -132,11 +132,14 @@ class Prescription(models.Model):
     ad_woc_far = fields.Char()
     ad_tonometria = fields.Char()
     ph = fields.Text('P.H')
-    cie_10 = fields.Selection(
-        [('cataract_foot', 'Cataract Foot'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'),
-         ('detachment', 'Detachment'), ('laser_myopia',
-                                        'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'),
-         ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
+    lt_cap_size = fields.Selection(
+        [('1', '1'), ('2', "2"), ('3', '3'), ('4', '4'),
+         ('5', '5'), ('6','6'), ('7', '7'),
+         ('8', '8'), ('9', '9')], string='Left Cap Size')
+    rt_cap_size = fields.Selection(
+        [('1', '1'), ('2', "2"), ('3', '3'), ('4', '4'),
+         ('5', '5'), ('6','6'), ('7', '7'),
+         ('8', '8'), ('9', '9')], string='Right Cap Size')
     main_symptoms = fields.Text('Main Symptoms')
     background = fields.Text('Background')
     podiatry_exam = fields.Text('Podiatry Exam')
