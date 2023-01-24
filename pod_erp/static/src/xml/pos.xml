@@ -704,12 +704,12 @@ Description
                         <tr>
                             <th>Prescription Date:</th>
                             <td>
-                                <input type="date" name="checkup_date" maxlength="10" t-attf-value="{{today}}"/>
+                                <input type="date" name="prescription_date" maxlength="10" t-attf-value="{{today}}"/>
                             </td>
-                            <th>Test Type:</th>
+                            <th>Device Type:</th>
                             <td>
-                                <select name="test_type">
-                                    <t t-foreach="test_type || []" t-as="item" t-key="item.id">
+                                <select name="device_type">
+                                    <t t-foreach="device_type || []" t-as="item" t-key="item.id">
                                         <option t-attf-data-id="{{ item.id }}">
                                             <t t-esc='item.name'/>
                                         </option>
@@ -1142,19 +1142,25 @@ Description
                             <td colspan="4">&#160;</td>
                         </tr>
                         <tr>
-                            <th>Diagnosis for the client:</th>
+                            <th>Pathology Notes:</th>
                             <td colspan="3">
-                                <input name="diagnosis_client" type="text"/>
+                                <input name="pathology_client" type="text"/>
                             </td>
                         </tr>
                         <tr>
-                            <th>Notes for the Laboratory:</th>
+                            <th>Measure Notes:</th>
                             <td colspan="3">
-                                <input name="notes_laboratory" type="text"/>
+                                <input name="measure_notes" type="text"/>
                             </td>
                         </tr>
                         <tr>
-                            <th>Practitioner internal observations:</th>
+                            <th>Internal Notes:</th>
+                            <td colspan="3">
+                                <input name="internal_notes" type="text"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Other Notes:</th>
                             <td colspan="3">
                                 <input name="practitioner_observation" type="text"/>
                             </td>
@@ -1348,7 +1354,7 @@ Device left</td>
                                                 <th>Client</th>
                                                 <th>Date</th>
                                                 <th>Practitioner</th>
-                                                <th>Test Type</th>
+                                                <th>Device Type</th>
                                                 <th>Prescription Type</th>
                                                 <th>Status</th>
                                                 <th>Send to Device</th>
@@ -1365,13 +1371,13 @@ Device left</td>
                                                         <t t-esc='product.customer[1]' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.checkup_date' />
+                                                        <t t-esc='product.prescription_date' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.practitioner[1]' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.test_type[1]' />
+                                                        <t t-esc='product.device_type[1]' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.prescription_type' />
@@ -1417,11 +1423,11 @@ Device left</td>
                     <tr>
                         <td>
                             <span>Prescription Date:</span>
-                            <t t-esc="podiatry_order.checkup_date"/>
+                            <t t-esc="podiatry_order.prescription_date"/>
                         </td>
                         <td>
-                            <span>Test Type:</span>
-                            <t t-esc="podiatry_order.test_type[1]"/>
+                            <span>Device Type:</span>
+                            <t t-esc="podiatry_order.device_type[1]"/>
                         </td>
                     </tr>
                 </table>

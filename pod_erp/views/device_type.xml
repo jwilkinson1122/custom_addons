@@ -2,11 +2,11 @@
 <odoo>
     <data>
 
-        <record id="foot_test_type_form" model="ir.ui.view">
-            <field name="name">Foot Test Type Form View</field>
-            <field name="model">foot.test.type</field>
+        <record id="orthotic_device_type_form" model="ir.ui.view">
+            <field name="name">Device Type Form View</field>
+            <field name="model">orthotic.device.type</field>
             <field name="arch" type="xml">
-                <form string="Foot Test Config">
+                <form string="Device Config">
                     <group>
                         <field name="name"/>
                     </group>
@@ -15,9 +15,9 @@
         </record>
 
 
-        <record id="foot_test_type_tree" model="ir.ui.view">
-            <field name="name">Foot Test Type Tree View</field>
-            <field name="model">foot.test.type</field>
+        <record id="orthotic_device_type_tree" model="ir.ui.view">
+            <field name="name">Device Type Tree View</field>
+            <field name="model">orthotic.device.type</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
@@ -27,9 +27,9 @@
 
 
         <record id="action_config" model="ir.actions.act_window">
-            <field name="name">Foot Test Type</field>
+            <field name="name">Device Type</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">foot.test.type</field>
+            <field name="res_model">orthotic.device.type</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -40,7 +40,7 @@
         <!--            <field name="view_mode">tree,form</field>-->
         <!--        </record>-->
 
-        <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp_config" action="action_config" sequence="1"/>
+        <menuitem id="pod_erp_device_type" name="Lab Device Type" parent="pod_erp_config" action="action_config" sequence="1"/>
         <menuitem id="pod_erp_product_categories" name="Product Categories" parent="pod_erp_config" action="product.product_category_action_form" sequence="2"/>
 
     </data>

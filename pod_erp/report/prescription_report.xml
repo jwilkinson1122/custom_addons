@@ -29,7 +29,7 @@
                                 <tr>
                                     <td class="headings">Prescription Date:</td>
                                     <td class="text">
-                                        <span t-field="doc.checkup_date"></span>
+                                        <span t-field="doc.prescription_date"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -51,9 +51,9 @@
                                                 </td>
                                             </tr> -->
                                             <tr>
-                                                <td class="headings">Test Type:</td>
+                                                <td class="headings">Device Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.test_type"></span>
+                                                    <span t-field="doc.device_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -331,30 +331,38 @@
                             </table>
                             <div>
                                 <div style="width:100%; margin-top:
-30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
+30px; font-weight:bold; font-size:16px;" class="headings">Practitioner Notes
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                     <span t-field="doc.practitioner_notes"></span>
                                 </div>
                             </div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Diagnosis for the client
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Pathology Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.diagnosis_client"></span>
+                                <span t-field="doc.pathology_client"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes for the Laboratory
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Measure Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.notes_laboratory"></span>
+                                <span t-field="doc.measure_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner internal observations
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Internal Notes
+                            </div>
+                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
+                                <span t-field="doc.internal_notes"></span>
+                            </div>
+                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
+                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
+
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.practitioner_observation"></span>
@@ -410,7 +418,7 @@
                                     </h5>
                                     <h6 style="font-size:small;">
                                         <strong>Date :</strong>
-                                        <span t-esc="doc.checkup_date"></span>
+                                        <span t-esc="doc.prescription_date"></span>
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Prescription # :</strong>
@@ -694,7 +702,7 @@
                                 <tr>
                                     <td class="headings">Prescription Date:</td>
                                     <td class="text">
-                                        <span t-field="doc.prescription_id.checkup_date"></span>
+                                        <span t-field="doc.prescription_id.prescription_date"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -716,9 +724,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Test Type:</td>
+                                                <td class="headings">Device Type:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.test_type"></span>
+                                                    <span t-field="doc.prescription_id.device_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -973,22 +981,22 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Diagnosis for the client
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Pathology Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.diagnosis_client"></span>
+                                <span t-field="doc.prescription_id.pathology_client"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes for the Laboratory
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Internal Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.notes_laboratory"></span>
+                                <span t-field="doc.prescription_id.internal_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner internal observations
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.practitioner_observation"></span>
@@ -997,7 +1005,7 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">REMARKS
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.practitioner_notes"></span>

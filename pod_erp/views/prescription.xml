@@ -24,21 +24,39 @@
                                 <field name="practitioner" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                                 <field name="company_id"/>
-                                <field name="examination_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
-    
+                                <!-- <field name="service_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Service" required="1"/> -->
+                                <field name="ship_to_patient" attrs="{'readonly': [('state','=','confirm')]}"/>
+
                             </group>
                             <group>
-                                <field name="checkup_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
-                                <field name="test_type" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                                <field name="prescription_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
+                                <field name="device_type" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="prescription_type" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
+                                <field name="priority"/>
                             </group>
+                            <br/>
+                            <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
+                            <br/>
+
                         </group>
+                        <!-- <group string="Patient Address" attrs="{'invisible': [('ship_to_patient','!=',True)]}">
+                            <group>
+                                <field name="street" attrs="{'invisible': [('ship_to_patient','!=',True)]}"/>
+                                <field name="street2" invisible="1"/>
+                                <field name="zip" attrs="{'invisible': [('ship_to_patient','!=',True)]}"/>
+                                <field name="country_id" attrs="{'invisible': [('ship_to_patient','!=',True)]}"/>
+                                <field name="state_id" attrs="{'invisible': [('ship_to_patient','!=',True)]}"/>
+                            </group>
+                        </group> -->
+
+
+                        <!-- <field name="other_allergy" attrs="{'invisible': [('allergy', '!=', 'other')]}"/> -->
                         <notebook>
                             <page string="Measures">
-                                <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
+                                <!-- <table cellspacing="0" cellpadding="0" style="border:1px solid; width:100% ">
                                     <tr>
-                                        <td rowspan="2" style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;"></td>
-                                        <td style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;">
+                                        <td rowspan="2" style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black; background-color:#d2d2ff;"></td>
+                                        <td style="text-align:center; padding:5px; font-size:14px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black; background-color:#d2d2ff;">
                                             ORTHOTIC MEASURES
                                         </td>
                                     </tr>
@@ -46,19 +64,19 @@
                                         <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black; font: Helvetica;">
                                             <table width="100%">
                                                 <tr>
-                                                    <td style="border-right:1px solid; width:20%">FOREFOOT LENGTH</td>
-                                                    <td style="border-right:1px solid; width:20%">HEEL DEPTH</td>
-                                                    <td style="border-right:1px solid; width:20%">LENGTH</td>
-                                                    <td style="width:20%">CAP SIZE</td>
+                                                    <td style="border-right:1px solid; width:20%; background-color:#d2d2ff;">FOREFOOT LENGTH</td>
+                                                    <td style="border-right:1px solid; width:20%; background-color:#d2d2ff;">HEEL DEPTH</td>
+                                                    <td style="border-right:1px solid; width:20%; background-color:#d2d2ff;">LENGTH</td>
+                                                    <td style="width:20%; background-color:#d2d2ff;">CAP SIZE</td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black;">
+                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:7%; border-right:1px solid black; border-bottom:1px solid black; background-color:#d2d2ff;">
                                             LEFT FOOT
                                         </td>
-                                        <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black;">
+                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black;">
                                             <table width="100%">
                                                 <tr>
                                                     <td style="border-right:1px solid;  height:25px; width:20%">
@@ -80,38 +98,141 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:5%; border-right:1px solid black; border-bottom:1px solid black;">
+                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:5%; border-right:1px solid black; border-bottom:1px solid black; background-color:#d2d2ff;">
                                             RIGHT FOOT
                                         </td>
-                                        <td style="text-align:center;  font-size:12px; font-weight:bold; width:30%;">
+                                        <td style="text-align:center; font-size:12px; font-weight:bold; width:30%;">
                                             <table width="100%">
                                                 <tr>
-                                                    <td style="border-right:1px solid; border-bottom:1px solid; height:25px; width:15%">
+                                                    <td style="border-right:1px solid; border-bottom:1px solid; height:25px; width:15%; padding-left:8px; padding-right:8px; text-align:center; font-weight:bold">
                                                         <span>
                                                             <field attrs="{'readonly': [('state','=','confirm')]}" name="od_sph_distance"/>
                                                         </span>
                                                     </td>
-                                                    <td t-if="od_cyl_distance" style="border-right:1px solid; width:15%; border-bottom:1px solid;">
+                                                    <td t-if="od_cyl_distance" style="border-right:1px solid; width:15%; border-bottom:1px solid; padding-left:8px; padding-right:8px; text-align:center; font-weight:bold">
                                                         <field attrs="{'readonly': [('state','=','confirm')]}" name="od_cyl_distance"/>
                                                     </td>
-                                                    <td style="border-right:1px solid; width:15%; border-bottom:1px solid;">
+                                                    <td style="border-right:1px solid; width:15%; border-bottom:1px solid; padding-left:8px; padding-right:8px; text-align:center;font-weight:bold">
                                                         <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
                                                     </td>
-                                                    <td style=" width:15%; border-bottom:1px solid;">
+                                                    <td style=" width:15%; border-bottom:1px solid; padding-left:8px; padding-right:8px; text-align:center; font-weight:bold">
                                                         <field attrs="{'readonly': [('state','=','confirm')]}" name="rt_cap_size"/>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                             
                                 </table>
-                                <group>
+                                <br/> -->
+
+                                <!-- <group string="Private Room" attrs="{'invisible': [('pvt_rooms','!=',True)]}">
                                     <group>
-                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="diagnosis_client"></field>
-                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="notes_laboratory"></field>
-                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="practitioner_notes" placeholder="Note"></field>
+                                        <field name="room_id" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="room_rent" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
+                                        <field name="rent_amount" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
+                                        <field name="facilities_ids" attrs="{'invisible': [('pvt_rooms','!=',True)]}" widget="many2many_tags"/>
+                                        <field name="admit_days" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
                                     </group>
+                                </group> -->
+
+                                <!-- <field name="other_allergy" attrs="{'invisible': [('allergy', '!=', 'other')]}"/> -->
+
+                                <table name="lt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'left_only')]}">
+                                    <tr>
+                                        <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                    </tr>
+                                    <tr name="lt_pod_measure">
+                                        <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (LT)</td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="lt_cap_size"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table name="rt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'right_only')]}">
+                                    <tr>
+                                        <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                    </tr>
+                                    <tr name="rt_pod_measure">
+                                        <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (RT)</td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="rt_cap_size"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'bilateral')]}">
+                                    <tr>
+                                        <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                    </tr>
+                                    <tr name="lt_pod_measure">
+                                        <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (LT)</td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="lt_cap_size"/>
+                                        </td>
+                                    </tr>
+                                    <tr name="rt_pod_measure">
+                                        <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (RT)</td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_distance"/>
+                                        </td>
+                                        <td style="padding:4px; text-align:center">
+                                            <field attrs="{'readonly': [('state','=','confirm')]}" name="rt_cap_size"/>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <br/>
+                                <br/>
+                                <group>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="measure_notes" placeholder="Internal Notes"></field>
+                                    <!-- <field attrs="{'readonly': [('state','=','confirm')]}" name="pathology_client" placeholder="Pathology Notes"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="internal_notes" placeholder="Internal Notes"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="practitioner_notes" placeholder="Practitioner Notes"></field> -->
                                 </group>
                             </page>
                             <page string="Details">
@@ -239,6 +360,15 @@
                                     </group>
                                 </group> -->
                             </page>
+                            <page name="notes" string="Notes">
+                                <group>
+                                    <group>
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="pathology_client" placeholder="Pathology Notes"></field>
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="internal_notes" placeholder="Internal Notes"></field>
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="practitioner_notes" placeholder="Practitioner Notes"></field>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -253,8 +383,8 @@
                 <tree>
                     <field name="practitioner"/>
                     <field name="customer"/>
-                    <field name="checkup_date" string="Prescription Date"/>
-                    <field name="test_type"/>
+                    <field name="prescription_date" string="Prescription Date"/>
+                    <field name="device_type"/>
                     <field name="prescription_type"/>
                     <button name="print_prescription_report_ticket_size" class="oe_highlight" string="Print Measure" type="object"></button>
                     <button name="print_podiatry_prescription_report_ticket_size" class="oe_highlight" string="Print Ophtalmologic" type="object"></button>
@@ -269,7 +399,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="pod_erp_root" name="Podiatry Erp" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
+        <menuitem id="pod_erp_root" name="POD ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
         <menuitem id="pod_erp_practice" name="Practice" parent="pod_erp_root" action="action_practice_window" groups="group_pod_erp_practices,base.group_system" sequence="1"/>
         <menuitem id="pod_erp_practitioner" name="Practitioner" parent="pod_erp_root" action="action_practitioner_window" groups="group_pod_erp_practitioners,base.group_system" sequence="2"/>
         <menuitem id="pod_erp_patient" name="Patient" parent="pod_erp_root" action="action_patient_window" groups="group_pod_erp_practitioners,base.group_system" sequence="3"/>

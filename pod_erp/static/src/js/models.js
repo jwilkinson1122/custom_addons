@@ -19,10 +19,10 @@ odoo.define('pod_erp.models', function (require) {
             });
         },
     }, {
-        model: 'foot.test.type',
+        model: 'orthotic.device.type',
         fields: ['name'],
-        loaded: function (self, test_type) {
-            self.podiatry.test_type = test_type;
+        loaded: function (self, device_type) {
+            self.podiatry.device_type = device_type;
         },
     }, {
         // =====================================

@@ -10,7 +10,8 @@ class InheritedSaleOrder(models.Model):
     # practitioner = fields.Char(related='prescription_id.practitioner.name')
     practitioner = fields.Many2one(
         'podiatry.practitioner', string='Practitioner')
-    prescription_date = fields.Date(related='prescription_id.checkup_date')
+    prescription_date = fields.Date(
+        related='prescription_id.prescription_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
 
@@ -48,7 +49,7 @@ class InheritedSaleOrder(models.Model):
     def test(self):
         product = self.env.ref('pod_erp.pod_erp_product')
         self.order_line = None
-        if self.prescription_id.examination_chargeable == True:
+        if self.prescription_id.service_chargeable == True:
             self.order_line |= self.order_line.new({
                 'name': '',
                 'product_id': product.id,

@@ -23,26 +23,67 @@ class Prescription(models.Model):
     patient_age = fields.Integer(related='patient.patient_age')
     customer = fields.Many2one(
         'res.partner', string='Customer', readonly=False)
-    # customer_age = fields.Integer(related='customer.age')
-    checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
-    test_type = fields.Many2one('foot.test.type')
-    diagnosis_client = fields.Text()
-    notes_laboratory = fields.Text()
+    ship_to_patient = fields.Boolean('Ship to patient')
+    device_type = fields.Many2one('orthotic.device.type')
+    practitioner_notes = fields.Text('Practitioner Notes')
+    pathology_client = fields.Text('Pathology Notes')
+    internal_notes = fields.Text('Internal Notes')
+    measure_notes = fields.Text('Internal Notes')
     practitioner_observation = fields.Text()
+    main_symptoms = fields.Text('Main Symptoms')
+    background = fields.Text('Background')
+    podiatry_exam = fields.Text('Podiatry Exam')
+    treatment = fields.Text('Treatment')
+    other_exams = fields.Text('Other Exams')
+    observations = fields.Text('Observations')
+    name = fields.Char(required=True, copy=False, readonly=True,
+                       index=True, default=lambda self: _('New'))
     state = fields.Selection(
         [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+
+    foot_selection = fields.Selection(
+        [('left_only', 'Left Only'), ('right_only', 'Right Only'),
+         ('bilateral', 'Bilateral (Pair)')], default='bilateral')
+
+    # @api.depends('practitioner')
+    # def _compute_request_date_onchange(self):
+    #     today_date = fields.Date.today()
+    #     if self.request_date != today_date:
+    #         self.request_date = today_date
+    #         return {
+    #             "warning": {
+    #                 "title": "Changed Request Date",
+    #                 "message": "Request date changed to today!",
+    #             }
+    #         }
+
+    priority = fields.Selection(
+        [("0", "High"), ("1", "Very High"), ("2", "Critical")], default="0")
+
+    prescription_date = fields.Date(
+        'Prescription Date', default=fields.Datetime.now())
+
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
+                                    help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
+
+    # commitment_date = fields.Datetime('Delivery Date', copy=False,
+    #                                   states={'cancel': [
+    #                                       ('readonly', True)]},
+    #                                   help="This is the delivery date promised to the customer. "
+    #                                   "If set, the delivery order will be scheduled based on "
+    #                                   "this date rather than product lead times.")
 
     def confirm_request(self):
         for rec in self:
             rec.state = 'Confirm'
 
-    def default_examination_chargeable(self):
-        settings_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
-            'examination_chargeable')
-        return settings_examination_chargeable
+    def default_service_chargeable(self):
+        settings_service_chargeable = self.env['ir.config_parameter'].sudo().get_param(
+            'service_chargeable')
+        return settings_service_chargeable
 
-    examination_chargeable = fields.Boolean(
-        default=default_examination_chargeable, readonly=1)
+    service_chargeable = fields.Boolean(
+        default=default_service_chargeable, readonly=1)
 
     prescription_type = fields.Selection([('Internal', 'Internal'), ('External', 'External')], default='Internal',
                                          Required=True)
@@ -133,19 +174,11 @@ class Prescription(models.Model):
     ad_tonometria = fields.Char()
     ph = fields.Text('P.H')
     lt_cap_size = fields.Selection(
-        [('1', '1'), ('2', "2"), ('3', '3'), ('4', '4'),
-         ('5', '5'), ('6','6'), ('7', '7'),
-         ('8', '8'), ('9', '9')], string='Left Cap Size')
+        [('2_3', '2-3'), ('4_5', "4-5"), ('6_7', '6-7'), ('8_9', '8-9'),
+         ('10_11', '10-11')], string='Left Cap Size')
     rt_cap_size = fields.Selection(
-        [('1', '1'), ('2', "2"), ('3', '3'), ('4', '4'),
-         ('5', '5'), ('6','6'), ('7', '7'),
-         ('8', '8'), ('9', '9')], string='Right Cap Size')
-    main_symptoms = fields.Text('Main Symptoms')
-    background = fields.Text('Background')
-    podiatry_exam = fields.Text('Podiatry Exam')
-    treatment = fields.Text('Treatment')
-    other_exams = fields.Text('Other Exams')
-    observations = fields.Text('Observations')
+        [('2_3', '2-3'), ('4_5', "4-5"), ('6_7', '6-7'), ('8_9', '8-9'),
+         ('10_11', '10-11')], string='Right Cap Size')
 
     # pdl = fields.Selection(
     #     [
@@ -200,10 +233,6 @@ class Prescription(models.Model):
     #     [('47', '47'), ('48', '48'), ('49', '49'), ('50', '50'),
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
-
-    practitioner_notes = fields.Text('Notes')
-    name = fields.Char(required=True, copy=False, readonly=True,
-                       index=True, default=lambda self: _('New'))
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):

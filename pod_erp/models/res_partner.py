@@ -9,7 +9,7 @@ class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
 
     is_practice = fields.Boolean(
-        string="Practitioner", store=False,
+        string="Practice", store=False,
         search='_search_is_practice',
     )
 

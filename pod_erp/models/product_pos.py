@@ -15,11 +15,11 @@ class ProductFromPos(models.Model):
         vals["practitioner"] = {}
         vals["practitioner"][0] = new_vals.id
         vals["practitioner"][1] = new_vals.name
-        new_vals = self.env['foot.test.type'].search(
-            [('id', '=', vals["test_type"])])
-        vals["test_type"] = {}
-        vals["test_type"][0] = new_vals.id
-        vals["test_type"][1] = new_vals.name
+        new_vals = self.env['orthotic.device.type'].search(
+            [('id', '=', vals["device_type"])])
+        vals["device_type"] = {}
+        vals["device_type"][0] = new_vals.id
+        vals["device_type"][1] = new_vals.name
         new_vals = self.env['res.partner'].search(
             [('id', '=', vals["customer"])])
         vals["customer"] = {}

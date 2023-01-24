@@ -8,14 +8,14 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Podiatry Erp" string="Podiatry Erp" data-key="pod_erp">
-                    <h2 id="web_theme_title">Podiatry Erp Settings</h2>
+                <div class="app_settings_block" data-string="POD ERP" string="POD ERP" data-key="pod_erp">
+                    <h2 id="web_theme_title">POD ERP Settings</h2>
                     <div class="row mt16 o_settings_container" name="web_theme">
                         <div class="col-12 col-lg-6 o_setting_box">
-                            <span class="o_form_label">Examination Chargeable</span>
+                            <span class="o_form_label">Service Chargeable</span>
                             <div class="content-group">
                                 <div>
-                                    <field name="examination_chargeable" class="col-5"/>
+                                    <field name="service_chargeable" class="col-5"/>
                                 </div>
                             </div>
                         </div>

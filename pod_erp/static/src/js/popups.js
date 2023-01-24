@@ -18,7 +18,7 @@ odoo.define('pod_erp.popups', function (require) {
             this.env.pos.podiatry.ProductCreationScreen = undefined;
             this.practitioners = this.env.pos.podiatry.practitioners;
             this.partners = this.env.pos.db.get_partners_sorted();
-            this.test_type = this.env.pos.podiatry.test_type;
+            this.device_type = this.env.pos.podiatry.device_type;
             if (this.env.pos.get_order().attributes.client)
                 this.customer = this.env.pos.get_order().attributes.client.id;
             else
@@ -39,17 +39,17 @@ odoo.define('pod_erp.popups', function (require) {
             var vals = $("#prescription_form").serializeObject();
             vals["practitioner"] = $('option:selected', $('[name=practitioner]')).data('id');
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
-            vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
+            vals["device_type"] = $('option:selected', $('[name=device_type]')).data('id');
             vals = JSON.stringify(vals);
-            var checkup_date = $('[name=checkup_date]').val();
+            var prescription_date = $('[name=prescription_date]').val();
             var today = new Date().toJSON().slice(0, 10);
-            if (!checkup_date) {
+            if (!prescription_date) {
                 //                this.env.pos.podiatry.ProductCreationScreen = this.gui.current_popup;
                 //                this.env.pos.podiatry.ProductCreationScreen.hide();
                 //                this.gui.current_popup = this.gui.popup_instances['error'];
                 this.showPopup('ErrorPopup', {
-                    title: this.env._t('Checkup date is empty'),
-                    body: this.env._t('You need to select a Checkup date'),
+                    title: this.env._t('Prescription date is empty'),
+                    body: this.env._t('You need to select a Prescription date'),
                 });
                 //                    cancel: function () {
                 //                        this.env.pos.podiatry.ProductCreationScreen.$el.removeClass('oe_hidden');
