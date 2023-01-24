@@ -230,26 +230,26 @@ class InheritedResPartner(models.Model):
             search_operator = '='
         return [('practitioner_id', search_operator, False)]
 
-    prescription_count = fields.Integer(compute='get_prescription_count')
+    # prescription_count = fields.Integer(compute='get_prescription_count')
 
-    def open_customer_prescriptions(self):
-        for records in self:
-            return {
-                'name': _('Prescription'),
-                'view_type': 'form',
-                'domain': [('customer', '=', records.id)],
-                'res_model': 'podiatry.prescription',
-                'view_id': False,
-                'view_mode': 'tree,form',
-                'context': {'default_customer': self.id},
-                'type': 'ir.actions.act_window',
-            }
+    # def open_customer_prescriptions(self):
+    #     for records in self:
+    #         return {
+    #             'name': _('Prescription'),
+    #             'view_type': 'form',
+    #             'domain': [('customer', '=', records.id)],
+    #             'res_model': 'podiatry.prescription',
+    #             'view_id': False,
+    #             'view_mode': 'tree,form',
+    #             'context': {'default_customer': self.id},
+    #             'type': 'ir.actions.act_window',
+    #         }
 
-    def get_prescription_count(self):
-        for records in self:
-            count = self.env['podiatry.prescription'].search_count(
-                [('customer', '=', records.id)])
-            records.prescription_count = count
+    # def get_prescription_count(self):
+    #     for records in self:
+    #         count = self.env['podiatry.prescription'].search_count(
+    #             [('customer', '=', records.id)])
+    #         records.prescription_count = count
 
 
 class ResPartnerInfo(models.Model):
