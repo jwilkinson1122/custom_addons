@@ -21,9 +21,14 @@
                         </div>
                         <group>
                             <group>
+                                <field name="customer" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
+
+                                <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/> -->
                                 <field name="practitioner" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
-                                <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
-                                <field name="company_id"/>
+                                <field name="patient" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                                
+                                <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/> -->
+                                <!-- <field name="company_id"/> -->
                                 <!-- <field name="service_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Service" required="1"/> -->
                                 <field name="ship_to_patient" attrs="{'readonly': [('state','=','confirm')]}"/>
 

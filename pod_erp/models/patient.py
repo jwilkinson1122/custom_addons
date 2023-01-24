@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from odoo.modules.module import get_module_resource
 
 
 class Patient(models.Model):
@@ -30,6 +31,16 @@ class Patient(models.Model):
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
+    
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
+    # @api.onchange('practitioner_id')
+    # def onchange_practice_id(self):
+    #     for rec in self:
+    #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
 
     def open_patient_prescriptions(self):
         for records in self:
@@ -82,3 +93,4 @@ class Patient(models.Model):
                         'default_groups_id': [(6, 0, patient_id)]}
 
         }
+        

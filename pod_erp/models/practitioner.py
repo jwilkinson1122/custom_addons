@@ -1,6 +1,10 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+import base64
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 
+from . import practice
 
 class Practitioner(models.Model):
     _name = "podiatry.practitioner"

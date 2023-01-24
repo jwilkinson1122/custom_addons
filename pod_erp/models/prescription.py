@@ -20,9 +20,13 @@ class Prescription(models.Model):
         'podiatry.practitioner', string='Practitioner', readonly=True)
     patient = fields.Many2one(
         'podiatry.patient', string='Patient', readonly=True)
+    # patient = fields.Many2many('res.partner', domain=[(
+    #     'is_patient', '=', True)], string="Patient", required=True)
+    customer = fields.Many2one('res.partner', domain=[(
+        'is_company', '=', True)], string="Practice", required=True)
     patient_age = fields.Integer(related='patient.patient_age')
-    customer = fields.Many2one(
-        'res.partner', string='Customer', readonly=False)
+    # customer = fields.Many2one(
+    #     'res.partner', string='Practice', readonly=False)
     ship_to_patient = fields.Boolean('Ship to patient')
     device_type = fields.Many2one('orthotic.device.type')
     practitioner_notes = fields.Text('Practitioner Notes')
@@ -233,6 +237,17 @@ class Prescription(models.Model):
     #     [('47', '47'), ('48', '48'), ('49', '49'), ('50', '50'),
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
+    
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
+    @api.onchange('practitioner_id')
+    def onchange_practitioner_id(self):
+        for rec in self:
+            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+
 
     @api.onchange('os_sph_distance', 'od_sph_distance')
     def onchange_sph_distance(self):
