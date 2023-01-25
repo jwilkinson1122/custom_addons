@@ -28,6 +28,9 @@
                         <button type="action" name="%(action_practice_window_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
+                        <button name="open_practice_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
+                            <field string="Prescription" name="prescription_count" widget="statinfo"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="title" class="oe_title">

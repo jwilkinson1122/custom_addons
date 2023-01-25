@@ -8,20 +8,71 @@ from odoo import api, fields, models, _
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
 
+    is_patient = fields.Boolean(
+        string="Patient", store=False,
+        search='_search_is_patient',
+    )
+
+    patient_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='partner_id',
+        string="Patients",
+    )
+
+    patient_count = fields.Integer(
+        string="Patient Count", store=False,
+        compute='_compute_patient_count',
+    )
+
+    @api.depends('patient_ids')
+    def _compute_patient_count(self):
+        for partner in self:
+            partner.patient_count = partner.patient_ids
+        return
+
+    def _search_is_patient(self, operator, value):
+        assert operator in ('=', '!=', '<>') and value in (
+            True, False), 'Operation not supported'
+        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+            search_operator = '!='
+        else:
+            search_operator = '='
+        return [('patient_ids', search_operator, False)]
+
     is_practice = fields.Boolean(
         string="Practice", store=False,
         search='_search_is_practice',
-    )
-
-    is_practitioner = fields.Boolean(
-        string="Practitioner", store=False,
-        search='_search_is_practitioner',
     )
 
     practice_ids = fields.One2many(
         comodel_name='podiatry.practice',
         inverse_name='partner_id',
         string="Practices",
+    )
+
+    practice_count = fields.Integer(
+        string="Practice Count", store=False,
+        compute='_compute_practice_count',
+    )
+
+    @api.depends('practice_ids')
+    def _compute_practice_count(self):
+        for partner in self:
+            partner.practice_count = partner.practice_ids
+        return
+
+    def _search_is_practice(self, operator, value):
+        assert operator in ('=', '!=', '<>') and value in (
+            True, False), 'Operation not supported'
+        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+            search_operator = '!='
+        else:
+            search_operator = '='
+        return [('practice_ids', search_operator, False)]
+
+    is_practitioner = fields.Boolean(
+        string="Practitioner", store=False,
+        search='_search_is_practitioner',
     )
 
     practitioner_id = fields.Many2one(
@@ -230,26 +281,26 @@ class InheritedResPartner(models.Model):
             search_operator = '='
         return [('practitioner_id', search_operator, False)]
 
-    # prescription_count = fields.Integer(compute='get_prescription_count')
+    prescription_count = fields.Integer(compute='get_prescription_count')
 
-    # def open_customer_prescriptions(self):
-    #     for records in self:
-    #         return {
-    #             'name': _('Prescription'),
-    #             'view_type': 'form',
-    #             'domain': [('customer', '=', records.id)],
-    #             'res_model': 'podiatry.prescription',
-    #             'view_id': False,
-    #             'view_mode': 'tree,form',
-    #             'context': {'default_customer': self.id},
-    #             'type': 'ir.actions.act_window',
-    #         }
+    def open_customer_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Prescription'),
+                'view_type': 'form',
+                'domain': [('customer', '=', records.id)],
+                'res_model': 'podiatry.prescription',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'context': {'default_customer': self.id},
+                'type': 'ir.actions.act_window',
+            }
 
-    # def get_prescription_count(self):
-    #     for records in self:
-    #         count = self.env['podiatry.prescription'].search_count(
-    #             [('customer', '=', records.id)])
-    #         records.prescription_count = count
+    def get_prescription_count(self):
+        for records in self:
+            count = self.env['podiatry.prescription'].search_count(
+                [('customer', '=', records.id)])
+            records.prescription_count = count
 
 
 class ResPartnerInfo(models.Model):

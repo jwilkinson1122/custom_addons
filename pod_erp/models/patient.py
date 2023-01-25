@@ -13,6 +13,9 @@ class Patient(models.Model):
     }
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
+    patient_id = fields.Many2one('res.partner', domain=[(
+        'is_patient', '=', True)], string="Patient")
+
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Patient')
 
@@ -31,12 +34,17 @@ class Patient(models.Model):
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
 
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
     def open_patient_prescriptions(self):
         for records in self:
             return {
                 'name': _('Prescription'),
                 'view_type': 'form',
-                'domain': [('patient', '=', records.id)],
+                'domain': [('patient_id', '=', records.id)],
                 'res_model': 'podiatry.prescription',
                 'view_id': False,
                 'view_mode': 'tree,form',
@@ -47,7 +55,7 @@ class Patient(models.Model):
     def get_prescription_count(self):
         for records in self:
             count = self.env['podiatry.prescription'].search_count(
-                [('patient', '=', records.id)])
+                [('patient_id', '=', records.id)])
             records.prescription_count = count
 
     @api.depends('dob')

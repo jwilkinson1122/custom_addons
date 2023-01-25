@@ -301,5 +301,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
+
 </data>
 </odoo>

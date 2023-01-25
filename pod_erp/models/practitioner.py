@@ -21,7 +21,7 @@ class Practitioner(models.Model):
     )
     prescription_ids = fields.One2many(
         comodel_name='podiatry.prescription',
-        inverse_name='practitioner',
+        inverse_name='practitioner_id',
         string='Prescriptions')
 
     is_practitioner = fields.Boolean()
@@ -33,7 +33,7 @@ class Practitioner(models.Model):
             return {
                 'name': _('Prescription'),
                 'view_type': 'form',
-                'domain': [('practitioner', '=', records.id)],
+                'domain': [('practitioner_id', '=', records.id)],
                 'res_model': 'podiatry.prescription',
                 'view_id': False,
                 'view_mode': 'tree,form',
@@ -44,7 +44,7 @@ class Practitioner(models.Model):
     def get_prescription_count(self):
         for records in self:
             count = self.env['podiatry.prescription'].search_count(
-                [('practitioner', '=', records.id)])
+                [('practitioner_id', '=', records.id)])
             records.prescription_count = count
 
     def create_practitioners(self):

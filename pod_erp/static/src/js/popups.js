@@ -37,7 +37,7 @@ odoo.define('pod_erp.popups', function (require) {
             var self = this;
             var order = this.env.pos.get_order();
             var vals = $("#prescription_form").serializeObject();
-            vals["practitioner"] = $('option:selected', $('[name=practitioner]')).data('id');
+            vals["practitioner_id"] = $('option:selected', $('[name=practitioner]')).data('id');
             vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
             vals["device_type"] = $('option:selected', $('[name=device_type]')).data('id');
             vals = JSON.stringify(vals);

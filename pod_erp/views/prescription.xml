@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <record id="podiatry_prescription_view" model="ir.ui.view">
             <field name="name">Prescription</field>
             <field name="model">podiatry.prescription</field>
@@ -16,14 +17,16 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="name"/>
+                                <field name="name" readonly="1"/>
                             </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="practitioner" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
-                                <field name="company_id"/>
+                                <field name="practice_id" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                                <field name="practitioner_id" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                                <field name="patient_id" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
+                                <!-- <field name="company_id"/> -->
                                 <!-- <field name="service_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Service" required="1"/> -->
                                 <field name="ship_to_patient" attrs="{'readonly': [('state','=','confirm')]}"/>
 
@@ -381,7 +384,8 @@
             <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="practitioner"/>
+                    <field name="name" />
+                    <field name="practitioner_id"/>
                     <field name="customer"/>
                     <field name="prescription_date" string="Prescription Date"/>
                     <field name="device_type"/>

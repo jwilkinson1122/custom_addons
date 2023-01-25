@@ -8,8 +8,10 @@ class InheritedSaleOrder(models.Model):
 
     prescription_id = fields.Many2one('podiatry.prescription')
     # practitioner = fields.Char(related='prescription_id.practitioner.name')
-    practitioner = fields.Many2one(
+    practitioner_id = fields.Many2one(
         'podiatry.practitioner', string='Practitioner')
+    patient_id = fields.Many2one(
+        'podiatry.patient', string='Patient')
     prescription_date = fields.Date(
         related='prescription_id.prescription_date')
     purchase_order_count = fields.Char()

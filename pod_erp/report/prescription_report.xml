@@ -23,7 +23,7 @@
                                 <tr>
                                     <td class="headings">Practitioner Name :</td>
                                     <td class="text">
-                                        <span t-field="doc.practitioner"></span>
+                                        <span t-field="doc.practitioner_id"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -430,7 +430,7 @@
                                     </h6>
                                     <h6 style="font-size:small;">
                                         <strong>Practitioner :</strong>
-                                        <span t-esc="doc.practitioner.name"></span>
+                                        <span t-esc="doc.practitioner_id.name"></span>
                                     </h6>
                                     <hr style="border:1px solid;"/>
                                 </center>

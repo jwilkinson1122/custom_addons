@@ -111,7 +111,7 @@ class Practice(models.Model):
 
     prescription_ids = fields.One2many(
         comodel_name='podiatry.prescription',
-        inverse_name='practice',
+        inverse_name='practice_id',
         string="Prescriptions",
     )
 
@@ -190,6 +190,27 @@ class Practice(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
 
+    prescription_count = fields.Integer(compute='get_prescription_count')
+
+    def open_practice_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Prescription'),
+                'view_type': 'form',
+                'domain': [('practice_id', '=', records.id)],
+                'res_model': 'podiatry.practice',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'context': {'default_practice': self.id},
+                'type': 'ir.actions.act_window',
+            }
+
+    def get_prescription_count(self):
+        for records in self:
+            count = self.env['podiatry.practice'].search_count(
+                [('practice_id', '=', records.id)])
+            records.prescription_count = count
+
     @api.model
     def create(self, vals):
         if not vals.get('notes'):
@@ -214,14 +235,3 @@ class Practice(models.Model):
     def copy(self, default=None):
         for rec in self:
             raise UserError(_('You Can Not Duplicate practice.'))
-
-    def action_open_prescriptions(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Prescriptions',
-            'res_model': 'podiatry.prescription',
-            'domain': [('practice_id', '=', self.id)],
-            'context': {'default_practice_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }

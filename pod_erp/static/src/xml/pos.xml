@@ -675,7 +675,7 @@ Description
                         <tr>
                             <th>Practitioner:</th>
                             <td>
-                                <select name="practitioner">
+                                <select name="practitioner_id">
                                     <t t-foreach="practitioners || []" t-as="item" t-key="item.id">
                                         <option t-attf-data-id="{{ item.id }}">
                                             <t t-esc='item.name'/>

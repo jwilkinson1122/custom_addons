@@ -7,22 +7,24 @@ class Prescription(models.Model):
     _description = 'Prescription'
     _rec_name = 'name'
 
+    # name = fields.Char('Prescription ID', required=True,
+    #                    copy=False, readonly=True, index=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
         store=True,
     )
-    practice = fields.Many2one(
-        'podiatry.practice', string='Practice', readonly=True)
-    patient = fields.Many2one(
-        'podiatry.patient', string='Patient', readonly=True)
-    practitioner = fields.Many2one(
-        'podiatry.practitioner', string='Practitioner', readonly=True)
-    patient = fields.Many2one(
-        'podiatry.patient', string='Patient', readonly=True)
-    patient_age = fields.Integer(related='patient.patient_age')
+    # customer = fields.Many2one(
+    #     'res.partner', string='Customer', readonly=False)
     customer = fields.Many2one(
-        'res.partner', string='Customer', readonly=False)
+        'res.partner', domain=[('is_practice', '=', True)], string='Practice')
+    practice_id = fields.Many2one(
+        'podiatry.practice', string='Practice', readonly=True)
+    practitioner_id = fields.Many2one(
+        'podiatry.practitioner', string='Practitioner', readonly=True)
+    patient_id = fields.Many2one(
+        'podiatry.patient', string='Patient', readonly=True)
+    patient_age = fields.Integer(related='patient_id.patient_age')
     ship_to_patient = fields.Boolean('Ship to patient')
     device_type = fields.Many2one('orthotic.device.type')
     practitioner_notes = fields.Text('Practitioner Notes')
@@ -38,6 +40,7 @@ class Prescription(models.Model):
     observations = fields.Text('Observations')
     name = fields.Char(required=True, copy=False, readonly=True,
                        index=True, default=lambda self: _('New'))
+
     state = fields.Selection(
         [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
@@ -45,7 +48,7 @@ class Prescription(models.Model):
         [('left_only', 'Left Only'), ('right_only', 'Right Only'),
          ('bilateral', 'Bilateral (Pair)')], default='bilateral')
 
-    # @api.depends('practitioner')
+    # @api.depends('practitioner_id')
     # def _compute_request_date_onchange(self):
     #     today_date = fields.Date.today()
     #     if self.request_date != today_date:
@@ -337,6 +340,11 @@ class Prescription(models.Model):
             self.od_av_distance = "20/" + self.od_av_distance
         if self.os_av_distance and self.os_av_distance.isdigit():
             self.os_av_distance = "20/" + self.os_av_distance
+
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
 
     def open_customer(self):
         sale_order = self.env['sale.order'].search(
