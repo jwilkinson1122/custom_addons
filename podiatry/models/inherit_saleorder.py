@@ -7,14 +7,15 @@ class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
 
     prescription_id = fields.Many2one('podiatry.prescription')
-    practice = fields.Char(related='prescription_id.practice_id.name')
-    practitioner = fields.Char(related='prescription_id.practitioner_id.name')
-    patient = fields.Char(related='prescription_id.patient_id.name')
+    practice_id = fields.Char(related='prescription_id.practice_id.name')
+    practitioner_id = fields.Char(
+        related='prescription_id.practitioner_id.name')
+    patient_id = fields.Char(related='prescription_id.patient_id.name')
     prescription_date = fields.Date(
         related='prescription_id.prescription_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
-    
+
     def action_config_start(self):
         """Return action to start configuration wizard"""
         configurator_obj = self.env["product.configurator.sale"]
@@ -22,7 +23,6 @@ class InheritedSaleOrder(models.Model):
             self.env.context, default_order_id=self.id, wizard_model="product.configurator.sale", allow_preset_selection=True,
         )
         return configurator_obj.with_context(ctx).get_wizard_action()
-
 
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
@@ -45,7 +45,7 @@ class InheritedSaleOrder(models.Model):
             'report_file': "podiatry.sale_order_report",
             'report_type': 'qweb-pdf',
         }
-        
+
     def print_prescription_report(self):
         return {
             'type': 'ir.actions.report',
@@ -53,7 +53,6 @@ class InheritedSaleOrder(models.Model):
             'report_file': "podiatry.sale_prescription_template",
             'report_type': 'qweb-pdf'
         }
-
 
     # def print_purchase_order_report(self):
     #     return {
@@ -77,7 +76,7 @@ class InheritedSaleOrder(models.Model):
                 'price_unit': '',
 
             })
-    
+
     # @api.model
     # def create(self,vals):
     #     order_line_product = [(0, 0, {'product_id':30,'partner_invoice_id':12,'partner_id':12})]
@@ -102,10 +101,9 @@ class InheritedSaleOrder(models.Model):
         }
 
 
-
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-    
+
     @api.model
     def _prepare_from_pos(self, sale_order, order_line_data):
         ProductProduct = self.env["product.product"]
@@ -119,7 +117,6 @@ class SaleOrderLine(models.Model):
             "price_unit": order_line_data["price_unit"],
             "tax_id": order_line_data["tax_ids"],
         }
-
 
     custom_value_ids = fields.One2many(comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values",
                                        )

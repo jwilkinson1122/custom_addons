@@ -37,7 +37,7 @@ class Practitioner(models.Model):
     is_practitioner = fields.Boolean()
 
     practitioner_id = fields.Many2many('res.partner', domain=[(
-        'is_practitioner', '=', True)], string="practitioner", required=True)
+        'is_practitioner', '=', True)], string="practitioner_id", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',

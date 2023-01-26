@@ -51,18 +51,15 @@
                             <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/> -->
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practitioner_id" required="1" />
-                            <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/>
-                            <!-- <field name="company_id"/> -->
-
                         </group>
                         <group string="Patient Info">
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                            <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>
                     <group string="Order Info">
                         <group>
                             <field name="bookin_date" />
-                            <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                             <field name="user_id" />
                         </group>
                         <group>
@@ -72,41 +69,49 @@
                     </group>
                     <notebook>
                         <page name="prescription_lines" string="Values">
-                                <table border="1" bordercolor="gray" style="width:100%">
-                                    <tr>
-                                        <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">RX</td>
-                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VARUS</td>
-                                        <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VALGUS</td>
-                                        <!-- <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">AXIS</td>
+                            <table border="1" bordercolor="gray" style="width:100%">
+                                <tr>
+                                    <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">RX</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VARUS</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VALGUS</td>
+                                    <!-- <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">AXIS</td>
                                         <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">PRISM</td>
                                         <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">ADD</td>
                                         <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">VA</td>
                                         <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">PD</td> -->
-                                    </tr>
-                                    <tr>
-                                        <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Right)</td>
-                                        <td style="padding:4px; text-align:center"><field name="ff_varus_rt" widget="selection"/></td>
-                                        <td style="padding:4px; text-align:center"><field name="ff_valgus_rt" widget="selection"/></td>
-                                        <!-- <td style="padding:4px; text-align:center"><field name="right_axis" widget="selection"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Right)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field name="ff_varus_rt" widget="selection"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field name="ff_valgus_rt" widget="selection"/>
+                                    </td>
+                                    <!-- <td style="padding:4px; text-align:center"><field name="right_axis" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="right_prism" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="right_add" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="right_va" /></td>
                                         <td style="padding:4px; text-align:center"><field name="right_pd" /></td> -->
-            
-                                    </tr>
-                                    <tr>
-                                        <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Left)</td>
-                                        <td style="padding:4px; text-align:center"><field name="ff_varus_lt" widget="selection"/></td>
-                                        <td style="padding:4px; text-align:center"><field name="ff_valgus_lt" widget="selection"/></td>
-                                        <!-- <td style="padding:4px; text-align:center"><field name="left_axis" widget="selection"/></td>
+
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Left)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field name="ff_varus_lt" widget="selection"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field name="ff_valgus_lt" widget="selection"/>
+                                    </td>
+                                    <!-- <td style="padding:4px; text-align:center"><field name="left_axis" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="left_prism" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="left_add" widget="selection"/></td>
                                         <td style="padding:4px; text-align:center"><field name="left_va" /></td>
                                         <td style="padding:4px; text-align:center"><field name="left_pd" /></td> -->
-                                    </tr>
-                                </table>
-                                <br/>
-                                <field name="notes" placeholder="Write Remarks"/>
+                                </tr>
+                            </table>
+                            <br/>
+                            <field name="notes" placeholder="Write Remarks"/>
                         </page>
                         <page string="Prescription Testing">
                             <group>
