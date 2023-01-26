@@ -170,11 +170,11 @@ class Prescription(models.Model):
     close_date = fields.Date(readonly=True)
 
     bookin_date = fields.Datetime(
-        "Book In", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookin_date,
+        "Book In", required=True, readonly=True, states={"confirm": [("readonly", False)], "draft": [("readonly", True)]}, default=_get_bookin_date,
     )
 
     bookout_date = fields.Datetime(
-        "Book Out", required=True, readonly=True, states={"draft": [("readonly", False)]}, default=_get_bookout_date,
+        "Book Out", required=True, readonly=True, states={"confirm": [("readonly", False)], "draft": [("readonly", True)]}, default=_get_bookout_date,
     )
 
     prescription_type = fields.Selection([
