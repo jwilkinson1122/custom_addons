@@ -1,13 +1,8 @@
 <odoo noupdate="1">
-    
-    <record id="stage_confirm" model="podiatry.prescription.stage">
-        <field name="name">Confirm</field>
-        <field name="sequence">10</field>
-        <field name="state">confirm</field>
-    </record>
+
     <record id="stage_draft" model="podiatry.prescription.stage">
         <field name="name">Draft</field>
-        <field name="sequence">20</field>
+        <field name="sequence">10</field>
         <field name="state">draft</field>
     </record>
     <record id="stage_done" model="podiatry.prescription.stage">

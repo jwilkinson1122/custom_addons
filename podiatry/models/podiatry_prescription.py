@@ -1,7 +1,7 @@
 import time
 import json
 from datetime import timedelta
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, exceptions
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import get_lang
@@ -28,7 +28,7 @@ class Prescription(models.Model):
     @api.model
     def _default_stage(self):
         Stage = self.env["podiatry.prescription.stage"]
-        return Stage.search([("state", "=", "confirm")], limit=1)
+        return Stage.search([("state", "=", "draft")], limit=1)
 
     @api.model
     def _group_expand_stage_id(self, stages, domain, order):
@@ -48,13 +48,13 @@ class Prescription(models.Model):
     #     'res.partner', string='Customer', readonly=False)
 
     practice_id = fields.Many2one(
-        comodel_name='podiatry.practice', string='Practice')
+        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
 
     practice_name = fields.Char(
         string='Practitioner', related='practice_id.name')
 
     practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner', string='Practitioner')
+        comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
 
     practitioner_name = fields.Char(
         string='Practitioner', related='practitioner_id.name')
@@ -66,7 +66,7 @@ class Prescription(models.Model):
         string='Email', related='practitioner_id.email')
 
     patient_id = fields.Many2one(
-        comodel_name='podiatry.patient', string='Patient')
+        comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
 
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
@@ -131,9 +131,6 @@ class Prescription(models.Model):
 
     state = fields.Selection(related="stage_id.state")
 
-    # state = fields.Selection(
-    #     [('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
-
     kanban_state = fields.Selection(
         [("normal", "In Progress"),
          ("blocked", "Blocked"),
@@ -170,11 +167,11 @@ class Prescription(models.Model):
     close_date = fields.Date(readonly=True)
 
     bookin_date = fields.Datetime(
-        "Book In", required=True, readonly=True, states={"confirm": [("readonly", False)], "draft": [("readonly", True)]}, default=_get_bookin_date,
+        "Book In", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookin_date,
     )
 
     bookout_date = fields.Datetime(
-        "Book Out", required=True, readonly=True, states={"confirm": [("readonly", False)], "draft": [("readonly", True)]}, default=_get_bookout_date,
+        "Book Out", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookout_date,
     )
 
     prescription_type = fields.Selection([
@@ -227,9 +224,6 @@ class Prescription(models.Model):
     is_invoiced = fields.Boolean(copy=False, default=False)
     is_shipped = fields.Boolean(default=False, copy=False)
 
-    def action_confirm(self):
-        self.state = 'confirm'
-
     def action_draft(self):
         self.state = 'draft'
 
@@ -243,9 +237,9 @@ class Prescription(models.Model):
     notes_laboratory = fields.Text()
     podiatrist_observation = fields.Text()
 
-    def confirm_request(self):
+    def confirm_draft(self):
         for rec in self:
-            rec.state = 'confirm'
+            rec.state = 'draft'
 
     def default_examination_chargeable(self):
         settings_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
@@ -528,7 +522,7 @@ class Prescription(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription') or _('New')
         res = super(Prescription, self).create(vals)
-        if res.stage_id.state in ("draft", "close"):
+        if res.stage_id.state in ("done", "cancel"):
             raise exceptions.UserError(
                 "State not allowed for new prescriptions."
             )
