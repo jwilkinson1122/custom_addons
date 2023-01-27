@@ -66,8 +66,110 @@
                             <field name="rush_order" />
                             <field name="ship_to_patient" />
                         </group>
+                        <br/>
+                        <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
+                        <br/>
+
                     </group>
                     <notebook>
+                        <page string="Measures">
+                            <table name="lt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'left_only')]}">
+                                <tr>
+                                    <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                </tr>
+                                <tr name="lt_pod_measure">
+                                    <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (LT)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_ax_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="lt_cap_size"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table name="rt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'right_only')]}">
+                                <tr>
+                                    <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                </tr>
+                                <tr name="rt_pod_measure">
+                                    <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (RT)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_sph_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_cyl_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="rt_cap_size"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'bilateral')]}">
+                                <tr>
+                                    <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">HEEL DEPTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
+                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
+                                </tr>
+                                <tr name="lt_pod_measure">
+                                    <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (LT)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_sph_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_cyl_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="os_ax_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="lt_cap_size"/>
+                                    </td>
+                                </tr>
+                                <tr name="rt_pod_measure">
+                                    <td style="padding:4px; text-align:center; font-weight:bold; background-color: #d8d8ff">FOOT (RT)</td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_sph_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_cyl_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="od_ax_near"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center">
+                                        <field attrs="{'readonly': [('state','=','confirm')]}" name="rt_cap_size"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <br/>
+                            <br/>
+                            <group>
+                                <field attrs="{'readonly': [('state','=','confirm')]}" name="measure_notes" placeholder="Internal Notes"></field>
+                                <!-- <field attrs="{'readonly': [('state','=','confirm')]}" name="pathology_client" placeholder="Pathology Notes"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="internal_notes" placeholder="Internal Notes"></field>
+                                    <field attrs="{'readonly': [('state','=','confirm')]}" name="practitioner_notes" placeholder="Practitioner Notes"></field> -->
+                            </group>
+                        </page>
                         <page name="prescription_lines" string="Values">
                             <table border="1" bordercolor="gray" style="width:100%">
                                 <tr>
