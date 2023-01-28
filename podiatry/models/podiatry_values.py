@@ -11,7 +11,7 @@ class ForefootValue(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=10)
     note = fields.Text(string="Remarks")
-    
+
 
 class ForefootCorrection(models.Model):
     _name = 'podiatry.forefoot.correction'
@@ -22,8 +22,8 @@ class ForefootCorrection(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=10)
     note = fields.Text(string="Remarks")
-    
-    
+
+
 class RearfootCorrection(models.Model):
     _name = 'podiatry.rearfoot.correction'
     _rec_name = 'name'
@@ -33,8 +33,7 @@ class RearfootCorrection(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=10)
     note = fields.Text(string="Remarks")
-    
-    
+
 
 class OrthoticMeasure(models.Model):
     _name = 'podiatry.orthotic.measure'
@@ -45,4 +44,3 @@ class OrthoticMeasure(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=10)
     note = fields.Text(string="Remarks")
-    

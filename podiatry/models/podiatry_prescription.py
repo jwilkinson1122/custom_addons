@@ -42,10 +42,8 @@ class Prescription(models.Model):
     date = fields.Date()
     time = fields.Datetime()
 
-    company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True,
-                                 )
-    # customer = fields.Many2one(
-    #     'res.partner', string='Customer', readonly=False)
+    company_id = fields.Many2one(
+        comodel_name="res.company", default=lambda self: self.env.company, store=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
@@ -76,9 +74,47 @@ class Prescription(models.Model):
 
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
     right_obj_model = fields.Binary(related="patient_id.right_obj_model")
-    l_foot_only = fields.Boolean('Left Only')
-    r_foot_only = fields.Boolean('Right Only')
-    b_l_pair = fields.Boolean('Bilateral')
+
+    lt_only_selection = fields.Boolean(string="Left", default=False)
+    rt_only_selection = fields.Boolean(string="Right", default=False)
+    bl_pair_selection = fields.Boolean(string="Bilateral", default=True)
+    # foot_selection = fields.Selection(
+    #     [('left_only', 'Left Only'), ('right_only', 'Right Only'),
+    #      ('bilateral', 'Bilateral (Pair)')], default='bilateral')
+
+    @api.onchange('lt_only_selection')
+    def onchange_lt_foot_selection(self):
+        self.rt_only_selection = False
+
+    @api.onchange('rt_only_selection')
+    def onchange_rt_foot_selection(self):
+        self.lt_only_selection = False
+
+    @api.onchange('bl_pair_selection')
+    def onchange_bl_foot_selection(self):
+        if self.bl_pair_selection == True:
+            self.rt_only_selection = False
+            self.lt_only_selection = False
+
+    # @api.onchange('lt_only_selection', 'rt_only_selection', 'bl_pair_selection')
+    # def onchange_foot_selection(self):
+    #     if self.lt_only_selection == True:
+    #         self.rt_only_selection = False
+    #         self.bl_pair_selection = False
+    #     elif self.rt_only_selection == True:
+    #         self.lt_only_selection = False
+    #         self.bl_pair_selection = False
+    #     else:
+    #         self.bl_pair_selection = True
+    #         self.lt_only_selection = False
+    #         self.rt_only_selection = False
+
+    left_low_profile = fields.Boolean()
+    right_low_profile = fields.Boolean()
+
+    shell_foundation = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
+        'laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'), ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
+
     rush_order = fields.Boolean('3-day rush')
     make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
     qty = fields.Integer('pairs to make')
@@ -123,11 +159,11 @@ class Prescription(models.Model):
 
     completed_date = fields.Datetime(string="Completed Date")
 
-    request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False,
-                               )
+    request_date = fields.Date(default=lambda s: fields.Date.today(
+    ), compute="_compute_request_date_onchange", store=True, readonly=False)
 
-    stage_id = fields.Many2one(
-        "podiatry.prescription.stage", default=_default_stage, copy=False, group_expand="_group_expand_stage_id")
+    stage_id = fields.Many2one("podiatry.prescription.stage", default=_default_stage,
+                               copy=False, group_expand="_group_expand_stage_id")
 
     state = fields.Selection(related="stage_id.state")
 
@@ -159,12 +195,10 @@ class Prescription(models.Model):
         )
         return fields.Datetime.to_string(checkout_date)
 
-    # prescription_date = fields.Date(readonly=True)
-
     prescription_date = fields.Date(
         'Prescription Date', default=fields.Datetime.now())
-
     close_date = fields.Date(readonly=True)
+    hold_date = fields.Date(readonly=True)
 
     bookin_date = fields.Datetime(
         "Book In", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookin_date,
@@ -179,10 +213,6 @@ class Prescription(models.Model):
         ('OTC', 'OTC'),
         ('Brace', 'Brace'),
     ], default='Custom', Required=True)
-
-    foot_selection = fields.Selection(
-        [('left_only', 'Left Only'), ('right_only', 'Right Only'),
-         ('bilateral', 'Bilateral (Pair)')], default='bilateral')
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
@@ -223,6 +253,9 @@ class Prescription(models.Model):
     notes = fields.Text('Prescription Note')
     is_invoiced = fields.Boolean(copy=False, default=False)
     is_shipped = fields.Boolean(default=False, copy=False)
+    diagnosis_client = fields.Text()
+    notes_laboratory = fields.Text()
+    podiatrist_observation = fields.Text()
 
     def action_draft(self):
         self.state = 'draft'
@@ -233,9 +266,8 @@ class Prescription(models.Model):
     def action_cancel(self):
         self.state = 'cancel'
 
-    diagnosis_client = fields.Text()
-    notes_laboratory = fields.Text()
-    podiatrist_observation = fields.Text()
+    def action_hold(self):
+        self.state = 'hold'
 
     def confirm_draft(self):
         for rec in self:
@@ -248,18 +280,6 @@ class Prescription(models.Model):
 
     examination_chargeable = fields.Boolean(
         default=default_examination_chargeable, readonly=1)
-
-    rx_left_only = fields.Boolean()
-    rx_right_only = fields.Boolean()
-    rx_bilateral_copy = fields.Boolean()
-    rx_bilateral_custom = fields.Boolean()
-
-    # RX options
-    left_low_profile = fields.Boolean()
-    right_low_profile = fields.Boolean()
-
-    shell_foundation = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
-        'laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'), ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
 
     dr_notes = fields.Text('Notes')
     measure_notes = fields.Text('Internal Notes')
@@ -544,6 +564,9 @@ class Prescription(models.Model):
             if new_state != old_state and new_state == "done":
                 self.with_context(_prescription_write=True).write(
                     {"close_date": fields.Date.today()})
+            if new_state != old_state and new_state == "hold":
+                self.with_context(_prescription_write=True).write(
+                    {"hold_date": fields.Date.today()})
         return True
 
     def prescription_report(self):

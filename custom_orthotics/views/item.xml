@@ -1,0 +1,135 @@
+<odoo>
+    <data>
+        <!-- item Tree View -->
+        <record model="ir.ui.view" id="custom_orthotics_item_tree">
+            <field name="name">custom_orthotics.item_tree</field>
+            <field name="model">custom_orthotics.item</field>
+            <field name="arch" type="xml">
+                <tree string="Item">
+                    <field name="internal_reference" />
+                    <field name="name" />
+                    <field name="item_type" />
+                    <field name="item_category" />
+                    <field name="amount" />
+                    <field name="price" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Item Form View -->
+        <record model="ir.ui.view" id="custom_orthotics_item_form">
+            <field name="name">custom_orthotics.item_form</field>
+            <field name="model">custom_orthotics.item</field>
+            <field name="arch" type="xml">
+                <form string="Item">
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" />
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Item Name" />
+                            <h1>
+                                <field name="name" placeholder="Item Name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="internal_reference" />
+                                <field name="item_type" />
+                                <field name="item_category" />
+                            </group>
+                            <group>
+                                <field name="amount" />
+                                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}" string="Price" readonly="False" />
+                                <field name="description" placeholder="Item Description" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Item Kanban View -->
+        <record id="custom_orthotics_item_kanban" model="ir.ui.view">
+            <field name="name">custom_orthotics.item_kanban</field>
+            <field name="model">custom_orthotics.item</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id" />
+                    <field name="image" />
+                    <field name="name" />
+                    <field name="internal_reference" />
+                    <field name="price" />
+                    <field name="amount" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_custom_orthotics_docotr_kanban">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('item.template', 'image', record.id.raw_value)" alt="Item" />
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name" />
+                                        <small>
+                                            [
+                                            <field name="internal_reference" />
+                                            ]
+                                        </small>
+                                    </strong>
+                                    <div name="tags" />
+                                    <ul>
+                                        <li>
+                                            Price:
+                                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                                        </li>
+                                    </ul>
+                                    <div name="tags" />
+                                    <field name="amount" />
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Item Search View -->
+        <record id="custom_orthotics_item_search" model="ir.ui.view">
+            <field name="name">custom_orthotics.item_search</field>
+            <field name="model">custom_orthotics.item</field>
+            <field name="arch" type="xml">
+                <search string="Search Item">
+                    <field name="name" filter_domain="['|',('name', 'ilike', self),('internal_reference', 'ilike', self)]" />
+                    <separator />
+                    <filter string="Services" name="services" domain="[('item_type','=','service')]" />
+                    <filter string="Products" name="product" domain="[('item_type', '=', 'product')]" />
+                    <filter string="Available Items" name="amount" domain="[('amount','&gt;',0)]" />
+                    <separator />
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="item_type" context="{'group_by':'item_type'}" />
+                        <filter string="Category" name="item_category" context="{'group_by':'item_category'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Item Action Window -->
+        <record model="ir.actions.act_window" id="item_action_window">
+            <field name="name">Item</field>
+            <field name="res_model">custom_orthotics.item</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!-- Menu Root -->
+        <menuitem name="Patient Clinic" id="custom_orthotics.root_menu" web_icon="custom_orthotics,static/description/icon.png" />
+
+        <!-- Menu Master Data -->
+        <menuitem name="Master Data" id="custom_orthotics.master_data" parent="custom_orthotics.root_menu" />
+
+        <!-- Menu Item -->
+        <menuitem name="Item" id="custom_orthotics.item" parent="custom_orthotics.master_data" action="item_action_window" />
+    </data>
+</odoo>

@@ -15,6 +15,7 @@ class PrescriptionStage(models.Model):
             ("draft", "Draft"),
             ("done", "Done"),
             ("cancel", "Cancel"),
+            ("hold", "Hold"),
         ],
         default="draft",
     )

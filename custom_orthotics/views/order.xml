@@ -1,0 +1,183 @@
+<odoo>
+    <data>
+        <!-- Order Tree View -->
+        <record model="ir.ui.view" id="custom_orthotics_order_tree">
+            <field name="name">custom_orthotics.order_tree</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'canceled'" decoration-primary="state == 'hold'" decoration-success="state == 'done'" decoration-danger="state == 'in_process'">
+                    <field name="order_id" />
+                    <field name="date" />
+                    <field name="owner" />
+                    <field name="practice_name" />
+                    <field name="patient" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Order Form View -->
+        <record model="ir.ui.view" id="custom_orthotics_order_form">
+            <field name="name">custom_orthotics.order_form</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <header>
+                        <button name="%(custom_orthotics.create_service_wizard)d" string="Create Service" type="action" class="oe_highlight" context="{'default_order': active_id}" />
+                        <button name="action_check" type="object" string="Book In" class="oe_highlight" states="draft" />
+                        <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible': [('state','!=', 'in_process')]}" />
+                        <button name="action_hold" type="object" string="Cancel" class="btn btn-success" attrs="{'invisible': [('state','!=', 'in_process')]}"/>
+                        <button name="action_cancel" type="object" string="Cancel" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_process,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="order_id" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="practice" />
+                                <field name="owner" />
+                            </group>
+                            <group>
+                                <field name="patient" />
+                                <field name="date" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" nolabel="1" placeholder="This is Order Note" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Order Kanban View -->
+        <record id="custom_orthotics_order_kanban" model="ir.ui.view">
+            <field name="name">custom_orthotics.order_kanban</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="id" />
+                    <field name="order_id" />
+                    <field name="patient" />
+                    <field name="practice_name" />
+                    <field name="date" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        <strong>
+                                            <span>
+                                                <field name="order_id" />
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <strong>
+                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date" />
+                                            <field name="date" />
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>
+                                            <field name="patient" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>
+                                            Practice
+                                            <field name="practice_name" />
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="float-right" style="font-size:16px;">
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'in_process': 'warning', 'done': 'success', 'canceled': 'danger'}}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Order Calendar View-->
+        <record id="custom_orthotics_order_calendar" model="ir.ui.view">
+            <field name="name">custom_orthotics.order_calendar</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <calendar string="Order Calendar" date_start="date" color="patient" mode="month" quick_add="False">
+                    <field name="order_id" />
+                    <field name="patient" />
+                    <field name="practice_name" />
+                </calendar>
+            </field>
+        </record>
+
+
+        <!-- Order Graph View -->
+        <record id="custom_orthotics_order_graph" model="ir.ui.view">
+            <field name="name">custom_orthotics.patient_graph</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <graph string="Order Graph" type="pie">
+                    <field name="date" />
+                    <field name="date" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <!-- Order Search View -->
+        <record id="custom_orthotics_order_search" model="ir.ui.view">
+            <field name="name">custom_orthotics.order_search</field>
+            <field name="model">custom_orthotics.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Order">
+                    <field name="order_id" filter_domain="[('order_id', 'ilike', self)]" />
+                    <field name="practice_name" />
+                    <field name="date" />
+                    <separator />
+                    <filter string="Today" name="date_today" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date', '&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]" />
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
+                    <filter string="In Process" name="in_process" domain="[('state', '=', 'in_process')]" />
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]" />
+                    <filter string="Canceled" name="canceled" domain="[('state', '=', 'canceled')]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="state" context="{'group_by':'state'}" />
+                        <filter string="Practice" name="practice_name" context="{'group_by':'practice_name'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Order Action Window -->
+        <record model="ir.actions.act_window" id="custom_orthotics_order_action_window">
+            <field name="name">Order</field>
+            <field name="res_model">custom_orthotics.order</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_date_today': 1}</field>
+        </record>
+
+        <!-- Menu Root -->
+        <menuitem name="Patient Clinic" id="custom_orthotics.root_menu" web_icon="custom_orthotics,static/description/icon.png" />
+        />
+        <!-- Menu Order -->
+        <menuitem name="Order" id="custom_orthotics.order" parent="custom_orthotics.root_menu" action="custom_orthotics_order_action_window" />
+    </data>
+</odoo>

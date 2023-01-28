@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="create_order_form" model="ir.ui.view">
+        <field name="name">create.order.wizard</field>
+        <field name="model">create.order</field>
+        <field name="arch" type="xml">
+            <form string="Create Order">
+                <group>
+                    <group>
+                        <field name="owner" string="Doctor"/>
+                        <field name="patient" />
+                    </group>
+                    <group>
+                        <field name="date" />
+                        <field name="practice" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="create_order" string="Create" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_order_wizard" model="ir.actions.act_window">
+        <field name="name">Create Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_order_form" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -5,6 +5,7 @@ from . import ir_ui_view
 from . import ir_actions
 from . import inherit_saleorder
 from . import inherit_invoice
+from . import item
 from . import podiatry_values
 from . import podiatry_type
 from . import podiatry_patient

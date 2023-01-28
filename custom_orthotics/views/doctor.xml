@@ -1,0 +1,153 @@
+<odoo>
+  <data>
+
+    <!-- Doctor Tree View -->
+    <record model="ir.ui.view" id="custom_orthotics_doctor_tree">
+      <field name="name">custom_orthotics.doctor_tree</field>
+      <field name="model">custom_orthotics.doctor</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="doctor_id" />
+          <field name="name" />
+          <field name="phone" />
+          <field name="email" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- Doctor Form View -->
+    <record model="ir.ui.view" id="custom_orthotics_doctor_form">
+      <field name="name">custom_orthotics.doctor_form</field>
+      <field name="model">custom_orthotics.doctor</field>
+      <field name="arch" type="xml">
+        <form string="Doctor">
+          <header>
+            <button name="%(custom_orthotics.create_patient_wizard)d" string="Create Patient" type="action" class="oe_highlight" context="{'default_owner': active_id}" />
+          </header>
+          <sheet>
+            <!-- Doctor Button Box -->
+            <div class="oe_button_box" name="button_box">
+              <button name="open_doctor_patient" class="oe_stat_button" type="object" icon="fa-paw">
+                <field string="Patients" name="patient_count" widget="statinfo" />
+              </button>
+              <button name="open_doctor_prescription" class="oe_stat_button" type="object" icon="fa-calendar">
+                <field string="Prescriptions" name="prescription_count" widget="statinfo" />
+              </button>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="doctor_id" />
+              </h1>
+            </div>
+            <group>
+              <field name="image" widget="image" class="oe_avatar" />
+            </group>
+            <group>
+              <group>
+                <field name="name" />
+                <field name="age" />
+                <field name="gender" />
+              </group>
+              <group>
+                <field name="phone" />
+                <field name="email" />
+                <field name="address" />
+              </group>
+            </group>
+            <group>
+              <field name="patient" widget="many2many_kanban" domain="[('owner', '=', False)]" />
+            </group>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Doctor Kanban View -->
+    <record id="custom_orthotics_doctor_kanban" model="ir.ui.view">
+      <field name="name">custom_orthotics.doctor_kanban</field>
+      <field name="model">custom_orthotics.doctor</field>
+      <field name="arch" type="xml">
+        <kanban>
+          <field name="id" />
+          <field name="image" />
+          <field name="name" />
+          <field name="phone" />
+          <field name="email" />
+          <field name="address" />
+          <templates>
+            <t t-name="kanban-box">
+              <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_custom_orthotics_patient_kanban">
+                <t t-if="record.image.raw_value">
+                  <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('custom_orthotics.doctor', 'image', record.id.raw_value)}')" />
+                </t>
+                <t t-else="">
+                  <img class="o_kanban_image" alt="Avatar" t-att-src="_s + '/base/static/img/avatar.png'" />
+                </t>
+                <div class="oe_kanban_details">
+                  <strong class="o_kanban_record_title">
+                    <field name="name" />
+                  </strong>
+                  <div class="o_kanban_tags_section" />
+                  <ul>
+                    <li>
+                      Phone :
+                      <field name="phone" />
+                    </li>
+                    <li>
+                      Email :
+                      <field name="email" />
+                    </li>
+                    <li>
+                      Address :
+                      <field name="address" />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <!-- Doctor Search View -->
+    <record id="custom_orthotics_doctor_search" model="ir.ui.view">
+      <field name="name">custom_orthotics.doctor_search</field>
+      <field name="model">custom_orthotics.doctor</field>
+      <field name="arch" type="xml">
+        <search string="Search Doctor">
+          <field name="name" filter_domain="['|',('name', 'ilike', self),('doctor_id', 'ilike', self)]" />
+          <field name="doctor_id" />
+          <field name="name" />
+          <separator />
+          <filter string="Male" name="male" domain="[('gender', '=', 'male')]" />
+          <filter string="Female" name="female" domain="[('gender', '=', 'female')]" />
+          <group expand="0" string="Group By">
+            <filter string="Gender" name="gender" context="{'group_by':'gender'}" />
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- Doctor Action Window -->
+    <record model="ir.actions.act_window" id="doctor_action_window">
+      <field name="name">Doctor</field>
+      <field name="res_model">custom_orthotics.doctor</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- Menu Root -->
+    <menuitem name="Patient Clinic" id="custom_orthotics.root_menu" web_icon="custom_orthotics,static/description/icon.png" />
+
+    <!-- Menu Patient -->
+    <!-- <menuitem name="Patient" id="custom_orthotics.patient" parent="custom_orthotics.root_menu" /> -->
+
+    <!-- Menu Patient -> Doctor -->
+    <menuitem name="Doctor" id="custom_orthotics.menu_doctor" parent="custom_orthotics.root_menu" sequence="2" action="doctor_action_window" />
+  </data>
+</odoo>

@@ -67,13 +67,20 @@
                             <field name="ship_to_patient" />
                         </group>
                         <br/>
-                        <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
+                        <!-- <field name="foot_selection" widget="radio" options="{'horizontal': true}"/> -->
+                        <field name="lt_only_selection" widget="boolean_toggle" string="Left Only"/>
+                        <field name="rt_only_selection" widget="boolean_toggle" string="Right Only"/>
+                        <field name="bl_pair_selection" widget="boolean_toggle"/>
+
                         <br/>
 
                     </group>
                     <notebook>
                         <page string="Measures">
-                            <table name="lt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'left_only')]}">
+                            <!-- attrs="{'column_invisible': [('parent.x_showing_discount_on_line', '=', False)]}" -->
+                            <!-- <table name="lt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'left_only')]}"> -->
+
+                            <table name="lt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('lt_only_selection', '!=', True)]}">
                                 <tr>
                                     <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
                                     <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
@@ -97,7 +104,9 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table name="rt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'right_only')]}">
+                            <!-- <table name="rt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'right_only')]}"> -->
+
+                            <table name="rt_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('rt_only_selection', '!=', True)]}">
                                 <tr>
                                     <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
                                     <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
@@ -121,7 +130,13 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'bilateral')]}">
+                            <!-- <button string="Variant Prices" type="object" name="get_product_attribute_values_action" attrs="{'invisible': ['|', ('product_template_attribute_value_ids', '=', False), ('config_ok', '=', False)]}" groups="product_configurator.group_product_configurator_manager" /> -->
+
+                            <!-- <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('foot_selection', '!=', 'bilateral')]}"> -->
+                            <!-- <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('bl_pair_selection', '!=', True)]}"></table> -->
+                            <!-- <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': ['|', ('lt_only_selection', '=', False), ('rt_only_selection', '=', False)]}"> -->
+
+                            <table name="bl_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'invisible': [('bl_pair_selection', '!=', True)]}">
                                 <tr>
                                     <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">MEASURES</td>
                                     <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT LENGTH</td>
