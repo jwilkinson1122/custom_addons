@@ -62,9 +62,9 @@
                                                 <td class="headings">Address :</td>
                                                 <td class="text">
                                                     <span t-field="doc.practitioner_id.street"></span>
-                                                    <!--                                                    <span t-field="doc.customer.state_id"></span>-->
-                                                    <!--                                                    <span t-field="doc.customer.city"></span>-->
-                                                    <!--                                                    <span t-field="doc.customer.zip"></span>-->
+                                                    <span t-field="doc.practitioner_id.state_id"></span>
+                                                    <span t-field="doc.practitioner_id.city"></span>
+                                                    <span t-field="doc.practitioner_id.zip"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -195,23 +195,23 @@
                                     </table>
                                 </div>
                             </div>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Main Symptoms
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.diagnosis_client"></span>
+                                <span t-field="doc.notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ophthalmological Exam
+                            <!-- <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Ophthalmological Exam
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.notes_laboratory"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
+                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div> -->
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Exams
+                            <!-- <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Other Exams
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.podiatrist_observation"></span>
@@ -225,9 +225,9 @@
                                 <span t-field="doc.notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
+                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div> -->
 
-                            <table style="margin-top:10px;">
+                            <!-- <table style="margin-top:10px;">
                                 <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Observation
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
@@ -235,7 +235,7 @@
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
+                            </table> -->
 
 
                         </div>

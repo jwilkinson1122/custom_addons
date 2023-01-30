@@ -35,12 +35,22 @@ class Prescription(models.Model):
         return stages.search([], order=order)
 
     name = fields.Char(string='Order Reference', required=True,
-                       copy=False, readonly=True, default=lambda self: _('New'))
+                       copy=False, index=True, readonly=True, default=lambda self: _('New'))
 
     active = fields.Boolean(default=True)
     color = fields.Integer()
     date = fields.Date()
     time = fields.Datetime()
+    invoice_done = fields.Boolean('Invoice Done')
+    notes = fields.Text('Prescription Note')
+    is_invoiced = fields.Boolean(copy=False, default=False)
+    is_shipped = fields.Boolean(default=False, copy=False)
+    diagnosis_client = fields.Text()
+    notes_laboratory = fields.Text()
+    podiatrist_observation = fields.Text()
+    dr_notes = fields.Text('Notes')
+    measure_notes = fields.Text('Internal Notes')
+    podiatric_history = fields.Text()
 
     company_id = fields.Many2one(
         comodel_name="res.company", default=lambda self: self.env.company, store=True)
@@ -75,40 +85,7 @@ class Prescription(models.Model):
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
     right_obj_model = fields.Binary(related="patient_id.right_obj_model")
 
-    lt_only_selection = fields.Boolean(string="Left", default=False)
-    rt_only_selection = fields.Boolean(string="Right", default=False)
-    bl_pair_selection = fields.Boolean(string="Bilateral", default=True)
-    # foot_selection = fields.Selection(
-    #     [('left_only', 'Left Only'), ('right_only', 'Right Only'),
-    #      ('bilateral', 'Bilateral (Pair)')], default='bilateral')
-
-    @api.onchange('lt_only_selection')
-    def onchange_lt_foot_selection(self):
-        self.rt_only_selection = False
-
-    @api.onchange('rt_only_selection')
-    def onchange_rt_foot_selection(self):
-        self.lt_only_selection = False
-
-    @api.onchange('bl_pair_selection')
-    def onchange_bl_foot_selection(self):
-        if self.bl_pair_selection == True:
-            self.rt_only_selection = False
-            self.lt_only_selection = False
-
-    # @api.onchange('lt_only_selection', 'rt_only_selection', 'bl_pair_selection')
-    # def onchange_foot_selection(self):
-    #     if self.lt_only_selection == True:
-    #         self.rt_only_selection = False
-    #         self.bl_pair_selection = False
-    #     elif self.rt_only_selection == True:
-    #         self.lt_only_selection = False
-    #         self.bl_pair_selection = False
-    #     else:
-    #         self.bl_pair_selection = True
-    #         self.lt_only_selection = False
-    #         self.rt_only_selection = False
-
+    foot_selection = fields.Selection([('left_only', 'Left Only'), ('right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
     left_low_profile = fields.Boolean()
     right_low_profile = fields.Boolean()
 
@@ -249,13 +226,6 @@ class Prescription(models.Model):
             prescription.num_prescription_items = len(
                 prescription.prescription_line)
 
-    invoice_done = fields.Boolean('Invoice Done')
-    notes = fields.Text('Prescription Note')
-    is_invoiced = fields.Boolean(copy=False, default=False)
-    is_shipped = fields.Boolean(default=False, copy=False)
-    diagnosis_client = fields.Text()
-    notes_laboratory = fields.Text()
-    podiatrist_observation = fields.Text()
 
     def action_draft(self):
         self.state = 'draft'
@@ -281,11 +251,6 @@ class Prescription(models.Model):
     examination_chargeable = fields.Boolean(
         default=default_examination_chargeable, readonly=1)
 
-    dr_notes = fields.Text('Notes')
-    measure_notes = fields.Text('Internal Notes')
-    name = fields.Char(required=True, copy=False, readonly=True,
-                       index=True, default=lambda self: _('New'))
-    podiatric_history = fields.Text()
 
     @api.onchange('practice_id')
     def onchange_practice_id(self):

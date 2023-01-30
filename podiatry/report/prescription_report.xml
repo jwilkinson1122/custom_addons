@@ -800,7 +800,6 @@
                                     <td style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:40%; border-right:1px solid black; border-bottom:1px solid black;  font-size:16px; color:green; font-weight:bold; ">
                                         Left
                                     </td>
-                                    <!--                                    <td rowspan="2" style="text-align:center; padding:5px; font-size:16px; font-weight:bold; width:3%; border-right:1px solid black; border-bottom:1px solid black;">PD</td>-->
                                 </tr>
                                 <tr>
                                     <td style="text-align:center;  font-size:16px; font-weight:bold; width:30%; border-right:1px solid black; border-bottom:1px solid black;">
@@ -1003,14 +1002,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Diagnosis for the client
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Pathology Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.diagnosis_client"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Notes for the Laboratory
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Internal Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.notes_laboratory"></span>
@@ -1018,7 +1017,7 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Podiatrist internal observations
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.prescription_id.podiatrist_observation"></span>
@@ -1035,7 +1034,7 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <table style="margin-top:10px;">
+                            <!-- <table style="margin-top:10px;">
                                 <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Family Eye History
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
@@ -1063,7 +1062,7 @@
                                 </div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                                 <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
-                            </table>
+                            </table> -->
 
 
                         </div>
