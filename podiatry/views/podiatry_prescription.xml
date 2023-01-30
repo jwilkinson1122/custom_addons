@@ -83,19 +83,19 @@
                                 <tr name="varus_forefoot_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
                                 <tr name="valgus_forefoot_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VALGUS</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
                             </table>
@@ -111,40 +111,37 @@
                                 <tr name="forefoot_varus_intrinsic_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS INTRINSIC</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_intrinsic_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_intrinsic_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
-
                                 <tr name="forefoot_valgus_intrinsic_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VALGUS INTRINSIC</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_intrinsic_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_intrinsic_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
-
                                 <tr name="forefoot_varus_extrinsic_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS EXTRINSIC</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_extrinsic_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_varus_extrinsic_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
-
                                 <tr name="forefoot_valgus_extrinsic_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VALGUS EXTRINSIC</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_extrinsic_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_valgus_extrinsic_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
                             </table>
@@ -160,30 +157,30 @@
                                 <tr name="rearfoot_varus_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_varus_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_varus_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
                                 <tr name="rearfoot_valgus_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VALGUS</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_valgus_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_valgus_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
                                 <tr name="rearfoot_neutral_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">NEUTRAL</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_neutral_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="rf_neutral_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
@@ -200,48 +197,45 @@
                                 <tr name="forefoot_length_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">FOREFOOT LENGTH</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_length_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="ff_length_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
                                 <tr name="heel_depth_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">HEEL DEPTH</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="heel_depth_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="os_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="heel_depth_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
                                 <tr name="length_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">LENGTH</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="orthotic_length_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="orthotic_length_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
 
                                 <tr name="cap_size_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">CAP SIZE</td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_sph_near" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="cap_size_lt" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                     <td style="padding:4px; text-align:center" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}">
-                                        <field name="od_cyl_near" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
+                                        <field name="cap_size_rt" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')], 'readonly': [('state', '=', 'done')]}"/>
                                     </td>
                                 </tr>
                             </table>
                             <br/>
                             <br/>
-
-
-
                         </page>
                         <page string="Testing 2">
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%">
@@ -253,19 +247,19 @@
                                 <tr name="lt_forefoot_values" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">LEFT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_lt"/>
                                     </td>
                                 </tr>
                                 <tr name="rt_forefoot_values" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">RIGHT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_rt"/>
                                     </td>
                                 </tr>
                             </table>
@@ -283,32 +277,33 @@
                                 <tr name="lt_forefoot_corrections" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">LEFT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_intrinsic_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_extrinsic_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_intrinsic_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="lt_cap_size"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_extrinsic_lt"/>
                                     </td>
                                 </tr>
                                 <tr name="rt_forefoot_corrections" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">RIGHT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_intrinsic_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_varus_extrinsic_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_intrinsic_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="rt_cap_size"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_valgus_extrinsic_rt"/>
                                     </td>
+
                                 </tr>
                             </table>
                             <br/>
@@ -324,25 +319,25 @@
                                 <tr name="lt_rearfoot_corrections" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">LEFT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_varus_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_valgus_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_neutral_lt"/>
                                     </td>
                                 </tr>
                                 <tr name="rt_rearfoot_corrections" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">RIGHT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_varus_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_valgus_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="rf_neutral_rt"/>
                                     </td>
                                 </tr>
                             </table>
@@ -357,34 +352,34 @@
                                     <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">LENGTH</td>
                                     <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">CAP SIZE</td>
                                 </tr>
-                                <tr name="lt_orthotic_measure" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')]}">
+                                <tr name="lt_orthotic_measures" attrs="{'invisible': [('foot_selection', '!=', 'left_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">LEFT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_length_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="heel_depth_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="os_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="orthotic_length_lt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="lt_cap_size"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="cap_size_lt"/>
                                     </td>
                                 </tr>
-                                <tr name="rt_orthotic_measure" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')]}">
+                                <tr name="rt_orthotic_measures" attrs="{'invisible': [('foot_selection', '!=', 'right_only'), ('foot_selection', '!=', 'bilateral')]}">
                                     <td style="padding:4px; text-align:center; font-weight:bold">RIGHT FOOT</td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_sph_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="ff_length_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_cyl_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="heel_depth_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="od_ax_near"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="orthotic_length_rt"/>
                                     </td>
                                     <td style="padding:4px; text-align:center">
-                                        <field attrs="{'readonly': [('state','=','done')]}" name="rt_cap_size"/>
+                                        <field attrs="{'readonly': [('state','=','done')]}" name="cap_size_rt"/>
                                     </td>
                                 </tr>
                             </table>
@@ -398,35 +393,6 @@
                                     <field attrs="{'readonly': [('state','=','done')]}" name="practitioner_notes" placeholder="Practitioner Notes"></field> -->
                             </group>
                         </page>
-                        <!-- <page name="prescription_lines" string="Values">
-                            <table border="1" bordercolor="gray" style="width:100%">
-                                <tr>
-                                    <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">RX</td>
-                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VARUS</td>
-                                    <td style="width: 12%; padding-left:8px; padding-right:8px; text-align:center; background-color:#8aa8fd; font-weight:bold">FF VALGUS</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Right)</td>
-                                    <td style="padding:4px; text-align:center">
-                                        <field name="ff_varus_rt" widget="selection"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center">
-                                        <field name="ff_valgus_rt" widget="selection"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:4px; text-align:left; font-weight:bold; background-color: #8bfddd">Values (Left)</td>
-                                    <td style="padding:4px; text-align:center">
-                                        <field name="ff_varus_lt" widget="selection"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center">
-                                        <field name="ff_valgus_lt" widget="selection"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br/>
-                            <field name="notes" placeholder="Write Remarks"/>
-                        </page> -->
                         <page string="Device Details">
                             <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
@@ -455,15 +421,11 @@
                             </group>
                         </page>
                         <page string="Special Instructions">
-
                         </page>
                         <page string="Casting">
-
                         </page>
                         <page string="Process">
-
                         </page>
-
                     </notebook>
                     <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
                     <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->

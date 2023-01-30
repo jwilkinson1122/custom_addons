@@ -44,7 +44,11 @@
         <menuitem id="menu_podiatry_stage" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
         <!-- <menuitem id="menu_podiatry_type" name="Types" action="action_podiatry_type" parent="podiatry.menu_configuration_root" sequence="120" /> -->
         <menuitem id="menu_podiatry_prescription_values" name="Prescription" parent="podiatry.menu_configuration_root" sequence="200"/>
+
         <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_prescription_values" action="action_forefoot_values" sequence="200"/>
+        <menuitem id="menu_podiatry_forefoot_corrections" name="Forefoot Corrections" parent="podiatry.menu_podiatry_prescription_values" action="action_forefoot_corrections" sequence="300"/>
+        <menuitem id="menu_podiatry_rearfoot_corrections" name="Rearfoot Corrections" parent="podiatry.menu_podiatry_prescription_values" action="action_rearfoot_corrections" sequence="400"/>
+        <menuitem id="menu_podiatry_orthotic_measures" name="Orthotic Measures" parent="podiatry.menu_podiatry_prescription_values" action="action_orthotic_measures" sequence="500"/>
 
         <!-- <menuitem id="menu_mail_activity_type" name="Activity Types" parent="podiatry.menu_configuration_root" action="action_mail_activity_type_podiatry" sequence="125" groups="base.group_no_one"/> -->
 

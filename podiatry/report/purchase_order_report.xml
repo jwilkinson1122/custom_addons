@@ -160,7 +160,7 @@
                                         <table cellspacing="0" cellpadding="0" width="100%">
                                             <tr>
                                                 <td style="border-right:1px solid;width:10%;">
-                                                    <span t-esc="'%.0f' % float(doc.prescription_id.od_sph_near)"></span>
+                                                    <span t-esc="'%.0f' % float(doc.prescription_id.rt_forefoot_varus)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%">
                                                     <span t-esc="'%.0f' % float(doc.prescription_id.od_cyl_near)"></span>
@@ -278,7 +278,7 @@
                                         <table cellspacing="0" cellpadding="0" width="100%">
                                             <tr>
                                                 <td style="border-right:1px solid;width:10%;">
-                                                    <span t-esc="'%.0f' % float(doc.prescription_id.os_sph_near)"></span>
+                                                    <span t-esc="'%.0f' % float(doc.prescription_id.lt_forefoot_varus)"></span>
                                                 </td>
                                                 <td style="border-right:1px solid; width:10%; ">
                                                     <span t-esc="'%.0f' % float(doc.prescription_id.os_cyl_near)"></span>
