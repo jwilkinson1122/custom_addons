@@ -6,6 +6,12 @@ from . import ir_actions
 from . import inherit_saleorder
 from . import inherit_invoice
 from . import item
+from . import arch_height_elements
+from . import cushion_elements
+from . import extension_elements
+from . import shell_elements
+from . import topcover_elements
+from . import x_guard_elements
 from . import podiatry_values
 from . import podiatry_type
 from . import podiatry_patient

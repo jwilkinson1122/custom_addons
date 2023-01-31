@@ -68,7 +68,9 @@
                         </group>
                         <br/>
                         <br />
-                        <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
+                        <group>
+                            <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
+                        </group>
                         <br/>
                         <br />
                     </group>

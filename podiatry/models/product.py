@@ -21,6 +21,74 @@ class ProductTemplate(models.Model):
         help="True if product does not require a prescription",
     )  # Field: isOverTheCounter
 
+    gender = fields.Selection(
+        [('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
+    # age = fields.Selection([('Male', 'Female', 'Others')])
+    foot_selection = fields.Selection([('left_only', 'Left Only'), (
+        'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
+
+    shell_type = fields.Many2one(
+        'shell.type', string='Shell / Foundation Type')
+    shell_collection = fields.Many2one(
+        'shell.collection', string='Shell Collection')
+    topcover_type = fields.Many2one('topcover.type', string='Top Cover Type')
+    topcover_length = fields.Many2one(
+        'topcover.length', string='Top Cover Length')
+    topcover_material = fields.Many2one(
+        'topcover.material', string='Top Cover Material')
+    topcover_thickness = fields.Many2one(
+        'topcover.thickness', string='Top Cover Thickness')
+    topcover_color = fields.Many2one(
+        'topcover.color', string='Top Cover Color')
+    arch_height_type = fields.Many2one(
+        'arch.height.type', string='Arch Height')
+    xguard_length = fields.Many2one('x_guard.length', string='X-Guard Length')
+    cushion_type = fields.Many2one('cushion.type', string='Cushion Type')
+    cushion_material = fields.Many2one(
+        'cushion.material', string='Cushion Material')
+    cushion_length = fields.Many2one('cushion.length', string='Cushion Length')
+    cushion_thickness = fields.Many2one(
+        'cushion.thickness', string='Cushion Thickness')
+    extension_type = fields.Many2one('extension.type', string='Cushion Type')
+    extension_material = fields.Many2one(
+        'extension.material', string='Cushion Material')
+    extension_length = fields.Many2one(
+        'extension.length', string='Cushion Length')
+    extension_thickness = fields.Many2one(
+        'extension.thickness', string='Cushion Thickness')
+
+    rim = fields.Selection(
+        [('3-Piece Compression', '3-Piece Compression'), ('3-Piece Screw', '3-Piece Screw'), ('Full Rim', 'Full Rim'),
+         ('Half Rim', 'Half Rim'), ('Inverted Half Rim', 'Inverted Half Rim'),
+         ('Semi-Rimless', 'Semi-Rimless'), ('Shield', 'Shield'), ('Other', 'Other'), ('None', 'None')])
+
+    @api.model
+    def default_get(self, vals):
+        if self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Shell / Foundation':
+            self.categ_id = self.env.ref('podiatry.product_category_shells').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Top Covers':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_top_covers').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Arch Height':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_arch_height').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'X-Guard':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_x_guard').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Cushion':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_cushion').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Extension':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_extension').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Service':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_service').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Miscellaneous':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_miscellaneous').id
+        return super(ProductTemplate, self).default_get(vals)
+
     @api.depends("product_variant_ids.product_tmpl_id")
     def _compute_product_variant_count(self):
         """For configurable products return the number of variants configured or

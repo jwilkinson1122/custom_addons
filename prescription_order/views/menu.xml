@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem name="Prescription" id="prescription_main" parent="sale.sale_menu_root" sequence="5"/>
+
+        <menuitem name="Prescription Order" id="prescription_order_main" parent="prescription_main" sequence="1" action="prescription_order_action"/>
+
+        <menuitem name="Work Order" id="work_order_main" parent="prescription_main" sequence="2" action="work_order_action"/>
+
+        <menuitem name="Service Team" id="service_team_main" parent="prescription_main" sequence="3" action="service_team_action"/>
+    </data>
+</odoo>

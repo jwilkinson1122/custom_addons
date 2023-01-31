@@ -333,7 +333,6 @@ class Prescription(models.Model):
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                # 'context':{'default_dr':self.id},
                 'type': 'ir.actions.act_window',
             }
 

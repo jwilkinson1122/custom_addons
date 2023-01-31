@@ -27,6 +27,7 @@
         "security/ir.model.access.csv",
         "views/res_config_settings_view.xml",
         "data/product_attribute.xml",
+        "data/product_category.xml",
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
@@ -58,7 +59,7 @@
         "report/prescription_report.xml",
         'report/pod_prescription_report.xml',
         'report/sale_order_report.xml',
-        
+
         # "report/prescription_demo_report.xml",
         # "report/ticket_report_format.xml",
         # "report/prescription_report.xml",
