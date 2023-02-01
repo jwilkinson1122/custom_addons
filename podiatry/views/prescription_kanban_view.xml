@@ -64,35 +64,26 @@
 
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_title">
-                                    <!-- Title area ... -->
-                                    <!--
-            <strong><field name="name" /></strong>
-            -->
                                     <t t-set="red_or_black" t-value="record.num_prescription_items == 0 ? '' : 'oe_kanban_text_red'" />
                                     <strong t-att-class="red_or_black">
                                         <field name="name" />
                                     </strong>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <!-- Other content area  ... -->
-                                    <!-- Using t-att-f example
-            <div t-attf-class="oe_kanban_text_{{
-              record.priority.raw_value &lt; '2'
-              ? 'black' : 'red' }}">
-              <field name="request_date"/>
-            </div>
-            -->
-                                    <div t-att-class="record.priority.raw_value &lt; '2'
-              ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
-                                        <field name="request_date"/>
+                                    <div t-att-class="record.priority.raw_value &lt; '2' ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
+                                        <!-- <field name="request_date"/> -->
+                                        <strong>
+                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date" />
+                                            <field name="request_date" />
+                                        </strong>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <t t-out="'Requested on ' + record.request_date.value" />
                                         <t t-set="calendar_sign">
                                             <i class="fa fa-calendar" title="Calendar" />
                                         </t>
                                         <t t-out="calendar_sign" />
-                                    </div>
+                                    </div> -->
 
                                     <div t-if="record.num_prescription_items.raw_value == 0">No items!</div>
                                     <div t-elif="record.num_prescription_items.raw_value == 1">One item</div>
@@ -100,7 +91,6 @@
                                         <field name="num_prescription_items"/>
 items
                                     </div>
-
                                     <div>
                                         <!-- <field name="practice_id" widget="many2one_avatar"/> -->
                                         <span class="oe_read_only">Practice:</span>
@@ -130,15 +120,11 @@ items
                                         <!-- Left side footer... -->
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
-
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span class="float-right" style="font-size:16px;">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'in_process': 'warning', 'done': 'success', 'canceled': 'danger'}}" />
                                         </span>
-                                        <!-- Right side footer... -->
-                                        <!-- <field name="kanban_state" widget="kanban_state_selection"/>
-                                        <field name="user_id" widget="many2one_avatar_user"/> -->
                                     </div>
                                 </div>
 
