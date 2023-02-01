@@ -53,6 +53,9 @@
                                     <!-- Set as Done menu option -->
                                     <a t-if="widget.editable and record.state != 'done'" role="menuitem" class="dropdown-item" name="button_done" type="object">Set as Done</a>
 
+                                    <!-- Set on hold menu option -->
+                                    <a t-if="widget.editable and record.state != 'hold'" role="menuitem" class="dropdown-item" name="button_hold" type="object">Place on hold</a>
+
                                 </div>
 
                             </div>

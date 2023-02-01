@@ -15,6 +15,11 @@
         <field name="sequence">95</field>
         <field name="state">cancel</field>
     </record>
+    <record id="stage_hold" model="podiatry.prescription.stage">
+        <field name="name">Hold</field>
+        <field name="sequence">100</field>
+        <field name="state">hold</field>
+    </record>
 
     <record id="action_podiatry_stage" model="ir.actions.act_window">
         <field name="name">Stages</field>
