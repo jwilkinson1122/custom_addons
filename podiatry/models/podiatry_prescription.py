@@ -166,6 +166,14 @@ class Prescription(models.Model):
         return fields.Datetime.to_string(checkin_date)
 
     @api.model
+    def _get_hold_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        hold_date = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now() + timedelta(days=1)
+        )
+        return fields.Datetime.to_string(hold_date)
+
+    @api.model
     def _get_bookout_date(self):
         self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
         checkout_date = fields.Datetime.context_timestamp(
@@ -176,10 +184,13 @@ class Prescription(models.Model):
     prescription_date = fields.Date(
         'Prescription Date', default=fields.Datetime.now())
     close_date = fields.Date(readonly=True)
-    hold_date = fields.Date(readonly=True)
 
     bookin_date = fields.Datetime(
         "Book In", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookin_date,
+    )
+
+    hold_date = fields.Datetime(
+        "Hold", readonly=True, default=_get_hold_date,
     )
 
     bookout_date = fields.Datetime(
@@ -229,6 +240,9 @@ class Prescription(models.Model):
 
     def action_draft(self):
         self.state = 'draft'
+
+    def action_check(self):
+        self.state = 'in_process'
 
     def action_done(self):
         self.state = 'done'

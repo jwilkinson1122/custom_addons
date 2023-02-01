@@ -16,7 +16,7 @@
                 <field name="practitioner_id" />
                 <field name="patient_id" />
                 <field name="stage_id" />
-                <field name="num_prescription_items" sum="Num. Prescriptions" />
+                <field name="num_prescription_items" sum="Items" />
                 <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button> -->
             </tree>
         </field>

@@ -13,6 +13,7 @@ class PrescriptionStage(models.Model):
     state = fields.Selection(
         [
             ("draft", "Draft"),
+            ("in_process", "In Process"),
             ("done", "Done"),
             ("cancel", "Cancel"),
             ("hold", "Hold"),
