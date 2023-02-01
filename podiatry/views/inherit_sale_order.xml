@@ -54,8 +54,9 @@
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field string="Prescription" name="prescription_id"/>
                 <field string="Practice" name="practice_id"/>
-                <field string="Podiatrist" name="practitioner_id"/>
+                <field string="Practitioner" name="practitioner_id"/>
                 <field string="Patient" name="patient_id"/>
                 <field name="prescription_date" string="Prescription Date"/>
                 <field name="commitment_date"/>

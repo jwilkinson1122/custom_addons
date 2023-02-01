@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    prescription_id = fields.Many2one('podiatry.prescription')
+    prescription_id = fields.Many2one('podiatry.prescription', readonly=True)
     practice_id = fields.Char(related='prescription_id.practice_id.name')
     practitioner_id = fields.Char(
         related='prescription_id.practitioner_id.name')
@@ -62,20 +62,20 @@ class InheritedSaleOrder(models.Model):
     #         'report_type': 'qweb-pdf',
     #     }
 
-    @api.onchange('prescription_id')
-    def test(self):
-        product = self.env.ref('podiatry.podiatry_product')
-        self.order_line = None
-        if self.prescription_id.examination_chargeable == True:
-            self.order_line |= self.order_line.new({
-                'name': '',
-                'product_id': product.id,
-                'product_uom_qty': 1,
-                'qty_delivered': 1,
-                'product_uom': '',
-                'price_unit': '',
+    # @api.onchange('prescription_id')
+    # def test(self):
+    #     product = self.env.ref('podiatry.podiatry_product')
+    #     self.order_line = None
+    #     if self.prescription_id.examination_chargeable == True:
+    #         self.order_line |= self.order_line.new({
+    #             'name': '',
+    #             'product_id': product.id,
+    #             'product_uom_qty': 1,
+    #             'qty_delivered': 1,
+    #             'product_uom': '',
+    #             'price_unit': '',
 
-            })
+    #         })
 
     # @api.model
     # def create(self,vals):

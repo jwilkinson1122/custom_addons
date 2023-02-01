@@ -359,6 +359,34 @@ class Prescription(models.Model):
             )
         return res
 
+    # def action_confirm(self):
+    #     res = super(PrescriptionOrder, self).action_confirm()
+    #     for order in self:
+    #         wo = self.env['prescription.work_order'].search(
+    #             ['|', '|', '|',
+    #              ('team_leader', 'in', [g.id for g in self.team_members]),
+    #              ('team_members', 'in', [self.team_leader.id]),
+    #              ('team_leader', '=', self.team_leader.id),
+    #              ('team_members', 'in', [g.id for g in self.team_members]),
+    #              ('state', '!=', 'cancelled'),
+    #              ('planned_start', '<=', self.prescription_end),
+    #              ('planned_end', '>=', self.prescription_start)], limit=1)
+    #         if wo:
+    #             raise ValidationError('Team is not available during this period, already booked on '
+    #                                   'SOXX. Please book on another date.')
+    #         order.action_work_order_create()
+    #     return res
+
+    # def action_work_order_create(self):
+    #     wo_obj = self.env['prescription.work_order']
+    #     for order in self:
+    #         wo_obj.create([{'bo_reference': order.id,
+    #                         'team': order.team.id,
+    #                         'team_leader': order.team_leader.id,
+    #                         'team_members': order.team_members.ids,
+    #                         'planned_start': order.prescription_start,
+    #                         'planned_end': order.prescription_end}])
+
     def write(self, vals):
         # reset kanban state when changing stage
         if "stage_id" in vals and "kanban_state" not in vals:
