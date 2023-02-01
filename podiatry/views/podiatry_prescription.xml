@@ -32,7 +32,7 @@
                     <field name="state" invisible="True" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
                     <!-- <button name="confirm_draft" type="object" string="Confirm" class="oe_highlight" states="draft" /> -->
-                    <button name="open_customer" class="btn btn-success" states="draft" string="Create Order" type="object"></button>
+                    <button name="open_customer" class="btn btn-success" states="in_process" string="Create Order" type="object"></button>
                     <!-- <button name="confirm_draft" type="object" string="Confirm" class="oe_highlight" states="draft" />
                     <button name="action_confirm" class="btn btn-success" states="confirm" string="Create Orders" type="object"></button> -->
 

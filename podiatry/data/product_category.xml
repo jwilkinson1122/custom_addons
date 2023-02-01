@@ -19,6 +19,9 @@
         <record id="product_category_extension" model="product.category">
             <field name="name">Extension</field>
         </record>
+        <record id="product_category_accommodation" model="product.category">
+            <field name="name">Accommodation</field>
+        </record>
         <record id="product_category_service" model="product.category">
             <field name="name">Service</field>
         </record>

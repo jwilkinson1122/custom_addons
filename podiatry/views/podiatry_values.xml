@@ -30,7 +30,7 @@
         </field>
     </record>
     <!--Action Forefoot Values -->
-    <record id="action_forefoot_values" model="ir.actions.act_window">
+    <record id="forefoot_values_action" model="ir.actions.act_window">
         <field name="res_model">podiatry.forefoot.value</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -65,7 +65,7 @@
         </field>
     </record>
     <!--Action Forefoot Corrections -->
-    <record id="action_forefoot_corrections" model="ir.actions.act_window">
+    <record id="forefoot_corrections_action" model="ir.actions.act_window">
         <field name="res_model">podiatry.forefoot.correction</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -100,7 +100,7 @@
         </field>
     </record>
     <!--Action Rearfoot Corrections -->
-    <record id="action_rearfoot_corrections" model="ir.actions.act_window">
+    <record id="rearfoot_corrections_action" model="ir.actions.act_window">
         <field name="res_model">podiatry.rearfoot.correction</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -135,7 +135,7 @@
         </field>
     </record>
     <!--Action Orthotic Measures -->
-    <record id="action_orthotic_measures" model="ir.actions.act_window">
+    <record id="orthotic_measures_action" model="ir.actions.act_window">
         <field name="res_model">podiatry.orthotic.measure</field>
         <field name="view_mode">tree,form</field>
     </record>

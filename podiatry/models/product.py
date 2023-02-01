@@ -81,6 +81,9 @@ class ProductTemplate(models.Model):
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Extension':
             self.categ_id = self.env.ref(
                 'podiatry.product_category_extension').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Accommodation':
+            self.categ_id = self.env.ref(
+                'podiatry.product_category_accommodation').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Service':
             self.categ_id = self.env.ref(
                 'podiatry.product_category_service').id

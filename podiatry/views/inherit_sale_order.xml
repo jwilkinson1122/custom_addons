@@ -78,6 +78,7 @@
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Test1" type="action" style="margin-left: 3px;"></button>
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Test2" type="action" style="margin-left: 3px;"></button>
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Test3" type="action" style="margin-left: 3px;"></button>
+                    <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Accommodations" type="action" style="margin-left: 3px;"></button>
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button>
                 </div>
