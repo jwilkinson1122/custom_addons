@@ -87,6 +87,10 @@ class Prescription(models.Model):
 
     foot_selection = fields.Selection([('left_only', 'Left Only'), (
         'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
+    
+    left_only = fields.Boolean('Left Only')
+    right_only = fields.Boolean('Right Only')
+    
     left_low_profile = fields.Boolean()
     right_low_profile = fields.Boolean()
 

@@ -7,8 +7,12 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
-                <field name="over_the_counter"/>
-                <label for="over_the_counter" string="Is OTC"/>
+                <field name="is_custom_device"/>
+                <label for="is_custom_device" string="Custom"/>
+                <field name="is_otc_device"/>
+                <label for="is_otc_device" string="OTC"/>
+                <field name="is_brace_device"/>
+                <label for="is_brace_device" string="Brace"/>
             </xpath>
             <xpath expr="//header" position="inside">
                 <field name="config_ok" invisible="1" />

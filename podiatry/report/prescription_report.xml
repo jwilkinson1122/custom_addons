@@ -191,9 +191,9 @@
 
                             <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Pathology Notes
                             </div>
-                            <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
+                            <!-- <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
                                 <span t-field="doc.pathology_notes"></span>
-                            </div>
+                            </div> -->
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
@@ -205,10 +205,10 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Internal Notes
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Measure Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.practitioner_notes"></span>
+                                <span t-field="doc.measure_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
@@ -538,10 +538,10 @@
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
 
-                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Practitioner Notes
+                            <div style="width:100%; margin-top:30px; font-weight:bold; font-size:16px;" class="headings">Measure Notes
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;">
-                                <span t-field="doc.prescription_id.practitioner_notes"></span>
+                                <span t-field="doc.prescription_id.measure_notes"></span>
                             </div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>
                             <div style="width:100%; margin-top:30px; border-bottom:2px solid black;"></div>

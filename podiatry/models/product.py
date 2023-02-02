@@ -15,15 +15,25 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     is_prescription = fields.Boolean(default=False)
+    
+    is_custom_device = fields.Boolean(
+        default=False,
+        help="True if product is a brace",
+    )  # Field: isBrace
 
-    over_the_counter = fields.Boolean(
+    is_otc_device = fields.Boolean(
         default=False,
         help="True if product does not require a prescription",
     )  # Field: isOverTheCounter
+    
+    is_brace_device = fields.Boolean(
+        default=False,
+        help="True if product is a brace",
+    )  # Field: isBrace
 
-    gender = fields.Selection(
-        [('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
-    # age = fields.Selection([('Male', 'Female', 'Others')])
+    # gender = fields.Selection(
+    #     [('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
+   
     foot_selection = fields.Selection([('left_only', 'Left Only'), (
         'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
 
