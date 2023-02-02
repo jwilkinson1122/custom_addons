@@ -270,10 +270,10 @@
         <field name="name">Clinics</field>
         <field name="res_model">podiatry.practice</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_location', '=', True)]</field>
+        <field name="domain">[('is_practice', '=', True)]</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_practice_search"/>
-        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_location': True}</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new practice

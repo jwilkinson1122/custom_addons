@@ -79,6 +79,12 @@ class Prescription(models.Model):
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
 
+    # patient_prescription_id = fields.One2many(
+    #     comodel_name='podiatry.prescription',
+    #     inverse_name='patient_id',
+
+    # )
+
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
 
@@ -87,10 +93,10 @@ class Prescription(models.Model):
 
     foot_selection = fields.Selection([('left_only', 'Left Only'), (
         'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
-    
+
     left_only = fields.Boolean('Left Only')
     right_only = fields.Boolean('Right Only')
-    
+
     left_low_profile = fields.Boolean()
     right_low_profile = fields.Boolean()
 
@@ -136,6 +142,34 @@ class Prescription(models.Model):
 
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+
+    prior_rx = fields.Boolean('Use Prior Rx#')
+
+    # patient_prescription_ids = fields.One2many(
+    #     'podiatry.prescription', 'patient_id', string="Prescriptions")
+
+    # medication_ids = fields.One2many(
+    #     'medical.inpatient.medication', 'medical_inpatient_registration_id', string='Medication')
+
+    # mammography_history_ids = fields.One2many(
+    #     'medical.patient.mammography.history', 'patient_id')
+
+    # @api.onchange('patient_id')
+    # def prescription_domain(self):
+    #     self.write({'prescription_line': [(5,)]})
+    #     new_lines = []
+    #     lines = self.env['sale.order.line'].search(
+    #         [('order_id.partner_id', '=', self.partner_id.id), ('order_id.state', 'in', ('sale', 'done'))])
+    #     for rec in lines:
+    #         new_lines.append((0, 0, {
+    #             'name': rec.order_id.name,
+    #             'product_id': rec.product_id,
+    #             'product_uom_qty': rec.product_uom_qty,
+    #             'price_unit': rec.price_unit,
+    #             'tax_id': rec.tax_id,
+    #             'price_subtotal': rec.price_subtotal
+    #         }))
+    #     self.write({'prescription_line': new_lines})
 
     product_id = fields.Many2one('product.product', 'Name')
 
@@ -466,3 +500,30 @@ class Prescription(models.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
+# class PrescriptionHistoryLine(models.Model):
+#     _name = 'prescription.history.line'
+#     _description = 'Prescription History Line'
+
+#     prescription_id = fields.Many2one('podiatry.prescription')
+#     name = fields.Char('Prescription')
+#     product_id = fields.Many2one('product.product')
+#     product_uom_qty = fields.Integer('Quantity')
+#     price_unit = fields.Integer('Unit price')
+#     tax_id = fields.Many2many('account.tax')
+#     company_id = fields.Many2one(
+#         'res.company', default=lambda self: self.env.company)
+#     price_subtotal = fields.Integer(string='Subtotal')
+
+#     def action_add(self):
+#         vals = {
+#             'order_id': self.order_id.id,
+#             'product_id': self.product_id.id,
+#             'product_uom_qty': self.product_uom_qty,
+#             'price_unit': self.price_unit,
+#             'tax_id': self.tax_id.id,
+#             'price_subtotal': self.price_subtotal,
+#             'company_id': self.company_id,
+#         }
+#         self.env['podiatry.prescription.line'].sudo().create(vals)

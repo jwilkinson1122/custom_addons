@@ -9,17 +9,11 @@ class Partner(models.Model):
 
     info_ids = fields.One2many(
         'res.partner.info', 'partner_id', string="More Info")
-    is_location = fields.Boolean('Practice')
-    is_practitioner = fields.Boolean('Practitioner')
     reference = fields.Char('ID Number')
-
     name = fields.Char(index=True)
 
-    # patient_ids = fields.One2many(
-    #     comodel_name='podiatry.patient',
-    #     inverse_name='partner_id',
-    #     string="Patients",
-    # )
+    is_practice = fields.Boolean('Practice')
+    is_practitioner = fields.Boolean('Practitioner')
 
     practice_ids = fields.One2many(
         comodel_name='podiatry.practice',
@@ -126,40 +120,6 @@ class Partner(models.Model):
         else:
             result = self
         return result
-
-    # @api.model
-    # def search(self, args, offset=0, limit=None, order=None, count=False):
-    #     """Display only standalone practitioner matching ``args`` or having
-    #     attached practitioner matching ``args``"""
-    #     ctx = self.env.context
-    #     if (
-    #         ctx.get("search_show_all_positions", {}).get("is_set")
-    #         and not ctx["search_show_all_positions"]["set_value"]
-    #     ):
-    #         args = expression.normalize_domain(args)
-    #         attached_practitioner_args = expression.AND(
-    #             (args, [("practitioner_type", "=", "attached")])
-    #         )
-    #         attached_practitioners = super(
-    #             Partner, self).search(attached_practitioner_args)
-    #         args = expression.OR(
-    #             (
-    #                 expression.AND(
-    #                     ([("practitioner_type", "=", "standalone")], args)),
-    #                 [("other_practitioner_ids", "in", attached_practitioners.ids)],
-    #             )
-    #         )
-    #     return super(Partner, self).search(
-    #         args, offset=offset, limit=limit, order=order, count=count
-    #     )
-
-    # @api.model
-    # def _name_search(self, name='', args=None, offset=0, operator='ilike', limit=100, name_get_uid=None):
-    #     args = list(args or [])
-    #     if name:
-    #         args += ['|', ('name', operator, name),
-    #                  ('department_code', operator, name)]
-    #     return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
     def create(self, vals):

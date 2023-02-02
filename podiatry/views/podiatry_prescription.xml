@@ -65,6 +65,8 @@
                         <group>
                             <field name="rush_order" />
                             <field name="ship_to_patient" />
+                            <field name="prior_rx"/>
+                            <!-- <field name="patient_prescription_ids" attrs="{'invisible': [('prior_rx','!=',True)]}"/> -->
                         </group>
                         <group>
                             <field name="left_only"/>

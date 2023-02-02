@@ -130,11 +130,11 @@ class Practitioner(models.Model):
         address_id = self.practitioner_id
         self.practitioner_address_id = address_id
 
+    practitioner_address_id = fields.Many2one(
+        'res.partner', string="Practitioner Address", )
+
     partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
                                  help='Partner-related data')
-
-    practitioner_address_id = fields.Many2one(
-        'res.partner', string="Address", )
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',

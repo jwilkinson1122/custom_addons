@@ -90,7 +90,7 @@ class Patient(models.Model):
         required=True,
         string="Practice",
     )
-    
+
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         required=True,
@@ -152,23 +152,23 @@ class Patient(models.Model):
     left_obj_file_name = fields.Char(string="Left Obj File Name")
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
-
     age = fields.Char(compute='_compute_age')
+
+    @api.onchange('patient_id')
+    def _onchange_patient(self):
+        '''
+        The purpose of the method is to define a domain.
+        '''
+        address_id = self.patient_id
+        self.patient_address_id = address_id
+
+    patient_address_id = fields.Many2one(
+        'res.partner', string="Patient Address", )
 
     @api.onchange('practice_id')
     def onchange_practice_id(self):
         for rec in self:
             return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
-
-    # @api.onchange('partner_id')
-    # def onchange_partner_id(self):
-    #     for rec in self:
-    #         return {'domain': {'practitioner_id': [('partner_id', '=', rec.partner_id.id)]}}
-
-    # @api.onchange('practitioner_id')
-    # def onchange_practitioner_id(self):
-    #     for rec in self:
-    #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
 
     @api.model
     def _relativedelta_to_text(self, delta):
