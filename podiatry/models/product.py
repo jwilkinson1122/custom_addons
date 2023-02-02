@@ -31,6 +31,8 @@ class ProductTemplate(models.Model):
         'shell.type', string='Shell / Foundation Type')
     shell_collection = fields.Many2one(
         'shell.collection', string='Shell Collection')
+    # shell_length = fields.Many2one(
+    #     'shell.length', string='Shell Length')
     topcover_type = fields.Many2one('topcover.type', string='Top Cover Type')
     topcover_length = fields.Many2one(
         'topcover.length', string='Top Cover Length')
