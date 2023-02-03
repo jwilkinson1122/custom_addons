@@ -12,6 +12,8 @@ class Patient(models.Model):
         'res.partner': 'partner_id',
     }
 
+    _rec_name = 'patient_id'
+
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
@@ -119,9 +121,13 @@ class Patient(models.Model):
         string="Created by",
     )
 
+    # partner_id = fields.Many2one(
+    #     "res.partner", required=True, ondelete="cascade")
+    patient_id = fields.Many2many('res.partner', domain=[(
+        'is_patient', '=', True)], string="Patient", required=True)
+
     partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Contact",
-    )
+        comodel_name='res.partner', string="Contact", ondelete="cascade")
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',

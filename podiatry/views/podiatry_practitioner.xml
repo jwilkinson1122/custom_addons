@@ -3,25 +3,25 @@
     <!-- Form -->
     <record id="view_podiatry_practitioner_form" model="ir.ui.view">
         <field name="name">podiatry.practitioner.form</field>
-        <field name="model">podiatry.practitioner</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <form string="Practitioner">
                 <field name="active" invisible="1"/>
                 <header/>
-                <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_practitioner_id', '=', False)]}">
+                <!-- <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_practitioner_id', '=', False)]}">
                     A practitioner with the same reference already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_practitioner_id"/>
-                </div>
+                </div> -->
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
+                    <!-- <div class="oe_button_box" name="button_box">
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Prescriptions</span>
                             </div>
                         </button>
-                    </div>
+                    </div> -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="avatar">
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
@@ -74,17 +74,17 @@
                             </div>
                             <field name="patient_ids" mode="kanban" context="{'default_type': 'contact'}"/>
                         </page>
-                        <page name="perscriptions_list" string="Prescriptions">
+                        <!-- <page name="perscriptions_list" string="Prescriptions">
                             <separator name="prescriptions" string="Prescriptions"/>
-                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_id', '!=', ())]}">
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('prescription_id', '!=', ())]}">
                                 No Prescriptions
                             </div>
-                            <field name="practitioner_prescription_id" mode="kanban"/>
-                        </page>
-                        <page name="notes" string="Notes">
+                            <field name="prescription_id" mode="kanban"/>
+                        </page> -->
+                        <!-- <page name="notes" string="Notes">
                             <separator name="notes" string="Notes"/>
                             <field name="notes" nolabel="1" placeholder="Start typing..."/>
-                        </page>
+                        </page> -->
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -101,7 +101,7 @@
     -->
     <record id="view_podiatry_practitioner_tree" model="ir.ui.view">
         <field name="name">podiatry.practitioner.tree</field>
-        <field name="model">podiatry.practitioner</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree string="Contacts" decoration-muted="not active">
                 <field name="name" decoration-bf="1"/>
@@ -118,7 +118,7 @@
     <!-- Kanban -->
     <record id="view_podiatry_practitioner_kanban" model="ir.ui.view">
         <field name="name">podiatry.practitioner.kanban</field>
-        <field name="model">podiatry.practitioner</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <kanban string="Contacts" class="o_res_partner_kanban">
                 <field name="id"/>
@@ -200,7 +200,7 @@
     -->
     <record id="view_podiatry_practitioner_activity" model="ir.ui.view">
         <field name="name">podiatry.practitioner.activity</field>
-        <field name="model">podiatry.practitioner</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <activity string="Contacts">
                 <field name="id"/>
@@ -221,7 +221,7 @@
     -->
     <record id="view_podiatry_practitioner_search" model="ir.ui.view">
         <field name="name">podiatry.practitioner.search</field>
-        <field name="model">podiatry.practitioner</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <search string="Contacts">
                 <!--
@@ -267,12 +267,12 @@
     -->
     <record id="action_pod_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
-        <field name="res_model">podiatry.practitioner</field>
+        <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
-        <field name="domain">[]</field>
+        <field name="domain">[('is_practitioner', '=', True)]</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_practitioner_search"/>
+        <field name="context">{'default_is_practitioner': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new practitioner

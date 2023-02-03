@@ -9,30 +9,27 @@
         <field name="domain">[('partner_id', '=', active_id)]</field>
     </record>
 
+    <record id="action_pod_prescriptions_from_partner" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">podiatry.prescription</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record>
+
 
     <!-- Form -->
     <record id="view_res_partner_form_inherit_podiatry" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.podiatry</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_type']" position="after">
-                <group colspan="6" col="6">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <group>
                     <field name="is_patient" />
                     <field name="is_practitioner" />
                     <field name="is_practice" />
                 </group>
             </xpath>
-            <!-- <notebook>
-                <page string="Medical">
-                    <group colspan="6" col="6">
-                        <field name="is_patient" />
-                        <field name="is_practitioner" />
-                        <field name="is_practice" />
-                    </group>
-                </page>
-            </notebook> -->
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page name="More Info" string="More Info">
                     <field name="info_ids">
@@ -44,9 +41,9 @@
                 </page>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="patient_ids" invisible="1"/>
-                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
-                    <field name="patient_count" string="Patients" widget="statinfo"/>
+                <field name="prescription_ids" invisible="1"/>
+                <button type="action" name="%(action_pod_prescriptions_from_partner)d" class="oe_stat_button" icon="fa-user-md" attrs="{'invisible' : [('prescription_ids', '=', [])]}">
+                    <field name="prescription_count" string="Prescriptions" widget="statinfo"/>
                 </button>
             </xpath>
         </field>
@@ -57,7 +54,6 @@
         <field name="name">res.partner.search.inherit.podiatry</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='inactive']" position="before">
                 <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />

@@ -12,11 +12,12 @@ _logger = logging.getLogger(__name__)
 class Practice(models.Model):
     _name = 'podiatry.practice'
     _description = "Medical Practice"
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
+    _inherit = 'res.partner'
+    # _inherit = ['mail.thread',
+    #             'mail.activity.mixin', 'image.mixin']
+    # _inherits = {
+    #     'res.partner': 'partner_id',
+    # }
 
     _rec_name = 'practice_id'
     _order = 'sequence,id'
@@ -33,6 +34,12 @@ class Practice(models.Model):
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
+
+    # channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner',
+    #                                'partner_id', 'channel_id', string='Channels', copy=False)
+
+    # channel_ids = fields.Many2many(
+    #     'mail.channel', relation="relation_newmodule_partner_m2m", string='Channels')
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Practice Name", index=True, translate=True)
@@ -125,15 +132,21 @@ class Practice(models.Model):
         address_id = self.practice_id
         self.practice_address_id = address_id
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Practice')
 
-    other_partner_ids = fields.Many2many(
-        comodel_name='res.partner',
-        relation='podiatry_practice_partners_rel',
-        column1='practice_id', column2='partner_id',
-        string="Other Contacts",
-    )
+    # other_partner_ids = fields.Many2many(
+    #     comodel_name='res.partner',
+    #     relation='podiatry_practice_partners_rel',
+    #     column1='practice_id', column2='partner_id',
+    #     string="Other Contacts",
+    # )
+
+    other_partner_ids = fields.Many2many("res.partner", 'podiatry_practice_partners_rel',
+                                         'partner_id', 'practice_id', string="Other Contacts")
+
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner_practice',
+                                   'partner_id', 'channel_id', string='Channels', copy=False)
 
     company_id = fields.Many2one(
         comodel_name='res.company',

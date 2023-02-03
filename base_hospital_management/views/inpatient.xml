@@ -59,14 +59,14 @@
                         </group>
 
                     </group>
-                    <group string="Private Room" attrs="{'invisible': [('pvt_rooms','!=',True)]}">
+                    <group string="Private Room" attrs="{'invisible': [('pvt_rooms','=',False)]}">
                         <group>
-                            <field name="room_id" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
+                            <field name="room_id" attrs="{'invisible': [('pvt_rooms','=',False)]}"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="room_rent" attrs="{'invisible': [('pvt_rooms','!=',True]}"/>
-                            <field name="rent_amount" attrs="{'invisible': [('pvt_rooms','!=',True]}"/>
-                            <field name="facilities_ids" attrs="{'invisible': [('pvt_rooms','!=',True)]}" widget="many2many_tags"/>
-                            <field name="admit_days" attrs="{'invisible': [('pvt_rooms','!=',True)]}"/>
+                            <field name="room_rent" attrs="{'invisible': [('pvt_rooms','=',False)]}"/>
+                            <field name="rent_amount" attrs="{'invisible': [('pvt_rooms','=',False)]}"/>
+                            <field name="facilities_ids" attrs="{'invisible': [('pvt_rooms','=',False)]}" widget="many2many_tags"/>
+                            <field name="admit_days" attrs="{'invisible': [('pvt_rooms','=',False)]}"/>
                         </group>
                     </group>
                     <notebook>

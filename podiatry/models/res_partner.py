@@ -15,10 +15,55 @@ class Partner(models.Model):
     is_practice = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
 
+    prescription_ids = fields.One2many(
+        comodel_name='podiatry.patient',
+        inverse_name='partner_id',
+        string="Prescriptions",
+    )
+
+    prescription_count = fields.Integer(
+        string="Prescription Count", store=False,
+        compute='_compute_prescription_count',
+    )
+
+    @api.depends('prescription_ids')
+    def _compute_prescription_count(self):
+        for partner in self:
+            partner.prescription_count = partner.prescription_ids
+        return
+
+    is_prescription = fields.Boolean(
+        string="Prescription", store=False,
+        search='_search_is_prescription',
+    )
+
+    def _search_is_prescription(self, operator, value):
+        assert operator in ('=', '!=', '<>') and value in (
+            True, False), 'Operation not supported'
+        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+            search_operator = '!='
+        else:
+            search_operator = '='
+        return [('prescription_ids', search_operator, False)]
+
+    practice_id = fields.Many2one(
+        "res.partner",
+        string="Practice",
+        ondelete='cascade',
+        domain=[("is_practice", "=", True)],
+    )
+
     practice_ids = fields.One2many(
         comodel_name='podiatry.practice',
         inverse_name='partner_id',
         string="Practices",
+    )
+
+    patient_id = fields.Many2one(
+        "res.partner",
+        string="Patient",
+        ondelete='cascade',
+        domain=[("is_patient", "=", True)],
     )
 
     patient_ids = fields.One2many(
@@ -55,8 +100,9 @@ class Partner(models.Model):
     practitioner_id = fields.Many2one(
         "res.partner",
         string="Main Practitioner",
-        domain=[("is_company", "=", False),
-                ("practitioner_type", "=", "standalone")],
+        ondelete='cascade',
+        domain=[("is_company", "=", False), ("is_practitioner", "=",
+                                             True), ("practitioner_type", "=", "standalone")],
     )
 
     other_practitioner_ids = fields.One2many(
@@ -75,11 +121,6 @@ class Partner(models.Model):
         for partner in self:
             partner.practitioner_count = partner.practitioner_id
         return
-
-    # is_practitioner = fields.Boolean(
-    #     string="Practitioner", store=False,
-    #     search='_search_is_practitioner',
-    # )
 
     def _search_is_practitioner(self, operator, value):
         assert operator in ('=', '!=', '<>') and value in (

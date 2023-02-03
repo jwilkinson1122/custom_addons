@@ -7,6 +7,7 @@
     "license": "AGPL-3",
     "website": "https://nwpodiatrtic.com",
     "depends": [
+        "contacts",
         "account",
         "base",
         "base_setup",
@@ -52,6 +53,7 @@
         'views/inherit_product_template.xml',
         "views/podiatry_actions.xml",
         "views/podiatry_menu.xml",
+        "views/res_partner.xml",
         # -------
         # Reports
         # =======

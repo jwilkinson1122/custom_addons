@@ -79,15 +79,8 @@ class Prescription(models.Model):
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
 
-    # patient_prescription_id = fields.One2many(
-    #     comodel_name='podiatry.prescription',
-    #     inverse_name='patient_id',
-
-    # )
-
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
-
     left_obj_model = fields.Binary(related="patient_id.left_obj_model")
     right_obj_model = fields.Binary(related="patient_id.right_obj_model")
 
@@ -96,12 +89,6 @@ class Prescription(models.Model):
 
     left_only = fields.Boolean('Left Only')
     right_only = fields.Boolean('Right Only')
-
-    left_low_profile = fields.Boolean()
-    right_low_profile = fields.Boolean()
-
-    shell_foundation = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
-        'laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'), ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
 
     rush_order = fields.Boolean('3-day rush')
     make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
@@ -116,7 +103,7 @@ class Prescription(models.Model):
     patient_phone = fields.Char(string='Phone', related='patient_id.phone')
     patient_email = fields.Char(string='Email', related='patient_id.email')
     # patient_age = fields.Integer(string='Age', related='patient_id.age')
-
+    patient_email = fields.Char(string='Email', related='patient_id.email')
     description = fields.Text(string='Description')
 
     diagnosis_id = fields.Many2one(
@@ -124,6 +111,9 @@ class Prescription(models.Model):
 
     user_id = fields.Many2one(
         'res.users', 'User', readonly=True, default=lambda self: self.env.user)
+
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', string="Contact", ondelete="cascade")
 
     attachment_ids = fields.Many2many('ir.attachment', 'prescription_ir_attachments_rel',
                                       'manager_id', 'attachment_id', string="Attachments", help="Images/attachments before prescription")
@@ -134,47 +124,18 @@ class Prescription(models.Model):
     no_invoice = fields.Boolean('Invoice exempt')
 
     inv_id = fields.Many2one('account.invoice', 'Invoice')
-
     prescription = fields.Text(string="Prescription")
-
     prescription_ids = fields.One2many(
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
-
     prescription_line = fields.One2many(
         'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
-
     prior_rx = fields.Boolean('Use Prior Rx#')
 
     # patient_prescription_ids = fields.One2many(
     #     'podiatry.prescription', 'patient_id', string="Prescriptions")
 
-    # medication_ids = fields.One2many(
-    #     'medical.inpatient.medication', 'medical_inpatient_registration_id', string='Medication')
-
-    # mammography_history_ids = fields.One2many(
-    #     'medical.patient.mammography.history', 'patient_id')
-
-    # @api.onchange('patient_id')
-    # def prescription_domain(self):
-    #     self.write({'prescription_line': [(5,)]})
-    #     new_lines = []
-    #     lines = self.env['sale.order.line'].search(
-    #         [('order_id.partner_id', '=', self.partner_id.id), ('order_id.state', 'in', ('sale', 'done'))])
-    #     for rec in lines:
-    #         new_lines.append((0, 0, {
-    #             'name': rec.order_id.name,
-    #             'product_id': rec.product_id,
-    #             'product_uom_qty': rec.product_uom_qty,
-    #             'price_unit': rec.price_unit,
-    #             'tax_id': rec.tax_id,
-    #             'price_subtotal': rec.price_subtotal
-    #         }))
-    #     self.write({'prescription_line': new_lines})
-
     product_id = fields.Many2one('product.product', 'Name')
-
     completed_date = fields.Datetime(string="Completed Date")
-
     request_date = fields.Date(default=lambda s: fields.Date.today(
     ), compute="_compute_request_date_onchange", store=True, readonly=False)
 

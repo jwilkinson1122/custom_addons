@@ -151,87 +151,6 @@
         <field name="name">podiatry.patient.kanban</field>
         <field name="model">podiatry.patient</field>
         <field name="arch" type="xml">
-            <!-- <kanban string="Patients" default_order="id asc">
-                <field name="color"/>
-                <field name="active"/>
-                <field name="id"/>
-                <field name="name"/>
-
-                <templates>
-                    <t t-name="kanban-box">
-                        <div name="kanban_card" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} o_kanban_record_has_image_fill oe_kanban_global_click">
-
-                            <t t-if="record.image_128.raw_value">
-                                <field name="image_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
-                            </t>
-                            <t t-else="">
-                                <div class="o_kanban_image_fill_left" style="background-image: url('/base/static/img/avatar_grey.png')"/>
-                            </t>
-
-                            <div name="dropdown" class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Options" title="Options">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">
-                                        <i style="width: 1.25rem;" class="fa fa-pencil"/>
-                                        Edit
-                                    </a>
-                                    <a t-if="widget.editable" role="menuitem" type="object" name="toggle_active" class="dropdown-item">
-                                        <t t-if="record.active.raw_value">
-                                            <i style="width: 1.25rem;" class="fa fa-archive"/>
-                                            Archive
-                                        </t>
-                                        <t t-else="">
-                                            <i style="width: 1.25rem;" class="fa fa-folder-open"/>
-                                            Unarchive
-                                        </t>
-                                    </a>
-                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker mt8" data-field="color"/>
-                                </div>
-                            </div>
-
-
-                            <div class="oe_kanban_details d-flex flex-column justify-content-between">
-
-                                <div name="top" class="o_kanban_record_top">
-                                    <div name="heading" class="o_kanban_record_headings">
-                                        <strong name="title" class="o_kanban_record_title">
-
-                                            <li>
-                                                ID: <field name="reference"/>
-                                            </li>
-                                            <li>
-                                                Name: <field name="name"/>
-                                            </li>
-                                            <li>
-                                                Practice: <field name="practice_id"/>
-                                            </li>
-                                            <li>
-                                                Practitioner: <field name="practitioner_id"/>
-                                            </li>
-                                            <li>
-                                                Prescriptions: <field name="prescription_count"/>
-                                            </li>
-                                        </strong>
-                                    </div>
-                                </div>
-
-                                <div name="content"/>
-
-                                <div name="footer" class="o_kanban_record_bottom">
-                                    <div name="bottom_left" class="oe_kanban_bottom_left"/>
-                                    <div name="bottom_right" class="oe_kanban_bottom_right">
-                                        <span class="ml4">
-                                            <field name="activity_ids" widget="kanban_activity"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban> -->
             <kanban string="Contacts" class="o_res_partner_kanban" default_order="id asc">
                 <field name="id"/>
                 <field name="color"/>
@@ -389,8 +308,10 @@
         <field name="name">Patients</field>
         <field name="res_model">podiatry.patient</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <!-- <field name="domain">[('is_patient', '=', True)]</field> -->
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_patient_search"/>
+        <field name="context">{'default_is_patient': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new patient

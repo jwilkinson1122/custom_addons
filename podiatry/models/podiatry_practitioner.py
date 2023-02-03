@@ -17,12 +17,15 @@ except:
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
+    _inherit = 'res.partner'
 
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
+    # _name = 'podiatry.practitioner'
+    # _inherit = ['mail.thread',
+    #             'mail.activity.mixin', 'image.mixin']
+
+    # _inherits = {
+    #     'res.partner': 'partner_id',
+    # }
 
     _rec_name = 'practitioner_id'
 
@@ -133,15 +136,21 @@ class Practitioner(models.Model):
     practitioner_address_id = fields.Many2one(
         'res.partner', string="Practitioner Address", )
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
-                                 help='Partner-related data')
+    partner_id = fields.Many2one(
+        'res.partner', string='Related Partner', ondelete='cascade', help='Partner-related data')
 
-    other_partner_ids = fields.Many2many(
-        comodel_name='res.partner',
-        relation='podiatry_practitioner_partners_rel',
-        column1='practitioner_id', column2='partner_id',
-        string="Other Contacts",
-    )
+    # other_partner_ids = fields.Many2many(
+    #     comodel_name='res.partner',
+    #     relation='podiatry_practitioner_partners_rel',
+    #     column1='practitioner_id', column2='partner_id',
+    #     string="Other Contacts",
+    # )
+
+    other_partner_ids = fields.Many2many("res.partner", 'podiatry_practitioner_partners_rel',
+                                         'partner_id', 'practitioner_id', string="Other Contacts")
+
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner_practitioner',
+                                   'partner_id', 'channel_id', string='Channels', copy=False)
 
     @api.model
     def _relativedelta_to_text(self, delta):

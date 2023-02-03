@@ -3,7 +3,7 @@
 
     <record id="action_pod_clinics_by_parent" model="ir.actions.act_window">
         <field name="name">Practices</field>
-        <field name="res_model">podiatry.practice</field>
+        <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('parent_id', '=', active_id)]</field>
         <field name="context">{'can_edit_parent_id': False}</field>
@@ -22,7 +22,7 @@
     -->
     <record id="view_podiatry_practice_form" model="ir.ui.view">
         <field name="name">podiatry.practice.form</field>
-        <field name="model">podiatry.practice</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <form string="Practice">
                 <field name="active" invisible="1"/>
@@ -30,9 +30,9 @@
                     <!-- Button Box -->
                     <div class="oe_button_box" name="button_box">
                         <field name="child_ids" invisible="1"/>
-                        <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                        <!-- <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
-                        </button>
+                        </button> -->
                     </div>
                     <!-- Ribbon -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -78,11 +78,11 @@
                         </group>
                         <!-- Practice info -->
                         <group name="contact_information" string="Contact Information">
-                            <field name="practice_type" required="True"/>
+                            <!-- <field name="practice_type" required="True"/> -->
                             <field name="mobile" widget="phone" help="help"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
-                            <field name="code"/>
+                            <!-- <field name="code"/> -->
                             <!-- <field name="patient_ids" invisible="0"/> -->
                             <field name="company_id" groups="base.group_multi_company"/>
 
@@ -102,7 +102,7 @@
                         </page>
                         <page name="practice_prescriptions_list" string="Prescriptions">
                             <group>
-                                <field name="practice_prescription_id"/>
+                                <field name="prescription_ids"/>
                             </group>
                         </page>
                         <page name="practice_affiliate_list" string="Affiliates">
@@ -115,9 +115,9 @@
                                 <field name="practitioner_prescription_id"/>
                             </group>
                         </page> -->
-                        <page name="public" string="Additional Notes">
+                        <!-- <page name="public" string="Additional Notes">
                             <field name="notes" placeholder="Notes" class="o_address_city"/>
-                        </page>
+                        </page> -->
                     </notebook>
                 </sheet>
             </form>
@@ -129,14 +129,14 @@
     -->
     <record id="view_podiatry_practice_tree" model="ir.ui.view">
         <field name="name">podiatry.practice.tree</field>
-        <field name="model">podiatry.practice</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree string="Practices" decoration-muted="not active">
                 <field name="active" invisible="1"/>
-                <field name="sequence" widget="handle"/>
-                <field name="full_name" string="Practice Name"/>
-                <field name="practice_type"/>
-                <field name="code" decoration-bf="1"/>
+                <!-- <field name="sequence" widget="handle"/> -->
+                <!-- <field name="full_name" string="Practice Name"/> -->
+                <!-- <field name="practice_type"/> -->
+                <!-- <field name="code" decoration-bf="1"/> -->
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -147,14 +147,14 @@
     -->
     <record id="view_podiatry_practice_kanban" model="ir.ui.view">
         <field name="name">podiatry.practice.kanban</field>
-        <field name="model">podiatry.practice</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <kanban string="Medical Clinics" class="o_res_partner_kanban">
                 <field name="id"/>
                 <field name="color"/>
                 <field name="reference"/>
                 <field name="name"/>
-                <field name="practice_type"/>
+                <!-- <field name="practice_type"/> -->
                 <field name="title"/>
                 <field name="email"/>
                 <field name="parent_id"/>
@@ -237,7 +237,7 @@
     -->
     <record id="view_podiatry_practice_search" model="ir.ui.view">
         <field name="name">podiatry.practice.search</field>
-        <field name="model">podiatry.practice</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <search string="Practices">
                 <field name="parent_id" invisible="1"/>
@@ -268,7 +268,7 @@
     -->
     <record id="action_pod_clinics" model="ir.actions.act_window">
         <field name="name">Clinics</field>
-        <field name="res_model">podiatry.practice</field>
+        <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_practice', '=', True)]</field>
         <field name="view_id" eval="False"/>
