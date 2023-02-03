@@ -119,9 +119,15 @@ class Patient(models.Model):
         string="Created by",
     )
 
-    partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Contact",
-    )
+    # partner_id = fields.Many2one(
+    #     comodel_name='res.partner', string="Contact",
+    # )
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+                                 help='Partner-related data of the Patient')
+
+    def unlink(self):
+        self.partner_id.unlink()
+        return super(Patient, self).unlink()
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',

@@ -125,8 +125,12 @@ class Practice(models.Model):
         address_id = self.practice_id
         self.practice_address_id = address_id
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='restrict',
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Practice')
+
+    def unlink(self):
+        self.partner_id.unlink()
+        return super(Practice, self).unlink()
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
