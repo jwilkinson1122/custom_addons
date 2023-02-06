@@ -1,0 +1,77 @@
+<odoo>
+    <!--Template for podiatry prescription -->
+    <template id="report_podiatry_prescription">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br />
+                    <br />
+                    <div class="row mt32 mb32">
+                        <h4>
+                            <span>
+                                <center>Total Collection</center>
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="text-center">
+                            <strong>From:</strong>
+                            <span t-esc="data['date_start']" />
+                            <strong>To:</strong>
+                            <span t-esc="data['date_end']" />
+                        </div>
+                    </div>
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>
+                                <strong>Prescription No.</strong>
+                            </td>
+                            <td>
+                                <strong>Customer Name</strong>
+                            </td>
+                            <td>
+                                <strong>BookIN</strong>
+                            </td>
+                            <td>
+                                <strong>BookOut</strong>
+                            </td>
+                            <td>
+                                <strong>Total</strong>
+                            </td>
+                        </tr>
+                        <tr t-foreach="prescription_data" t-as="prescription">
+                            <td>
+                                <span t-esc="prescription.get('name', '')" />
+                            </td>
+                            <td>
+                                <span t-esc="prescription.get('partner', '')" />
+                            </td>
+                            <td>
+                                <span t-esc="prescription.get('bookin', '')" />
+                            </td>
+                            <td>
+                                <span t-esc="prescription.get('bookout', '')" />
+                            </td>
+                            <td>
+                                <span t-esc="prescription.get('amount', '')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td />
+                            <td />
+                            <td>
+                                <strong>Net Total:</strong>
+                            </td>
+                            <td>
+                                <t t-foreach="prescription_data" t-as="prescription">
+                                    <t t-esc="prescription.get('total_amount', '')" />
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

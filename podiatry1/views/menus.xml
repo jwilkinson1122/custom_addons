@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem id="podiatry_management_menu" name="Podiatry Management" />
+    <menuitem id="podiatry_configuration_menu" name="Configuration" sequence="20" parent="podiatry_management_menu" />
+    <menuitem id="podiatry_report_menu" name="Pdf Reports" sequence="6" parent="podiatry_management_menu" />
+    <menuitem id="menu_open_podiatry_floor_form_tree" name="Floor" action="open_podiatry_floor_form_tree" sequence="21" parent="podiatry_configuration_menu" />
+    <menuitem id="menu_podiatry_device" name="Device" parent="podiatry1.podiatry_configuration_menu" sequence="2" />
+    <menuitem id="menu_open_podiatry_device_type_form_tree" name="Device Types" action="open_podiatry_device_type_form_tree" sequence="6" parent="podiatry1.menu_podiatry_device" />
+    <menuitem id="menu_accommodation" name="Accommodation" parent="podiatry1.podiatry_configuration_menu" sequence="2" />
+    <menuitem name="Accommodation Types" id="menu_action_podiatry_device_accommodations_type_view_form" action="action_podiatry_device_accommodations_type_view_form" sequence="3" parent="podiatry1.menu_accommodation" />
+    <menuitem id="menu_action_podiatry_device_accommodations_view_form" name="Accommodations" action="action_podiatry_device_accommodations_view_form" sequence="2" parent="podiatry1.menu_accommodation" />
+    <menuitem id="menu_open_podiatry_device_form" name="Devices" action="action_podiatry_device_form" sequence="5" parent="podiatry1.menu_podiatry_device" />
+    <menuitem id="menu_all_prescription" name="Prescription" parent="podiatry1.podiatry_management_menu" sequence="4" />
+    <menuitem name="Generate Prescription" id="menu_open_podiatry_prescription1_form_tree_all" action="open_podiatry_prescription1_form_tree_all" sequence="5" parent="menu_all_prescription" />
+    <menuitem id="menu_podiatry_service" name="Services" parent="podiatry1.podiatry_configuration_menu" sequence="2" />
+    <menuitem name="Service Types" id="menu_open_podiatry_service_type_form_tree" action="open_podiatry_service_type_form_tree" sequence="9" parent="podiatry1.menu_podiatry_service" />
+    <menuitem id="menu_open_podiatry_services_form" name="Services" action="action_podiatry_services_form" sequence="8" parent="podiatry1.menu_podiatry_service" />
+</odoo>

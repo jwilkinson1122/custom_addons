@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--======= Device Type ======= -->
+    <!-- Form view of podiatry device type -->
+    <record id="view_podiatry_device_type_form" model="ir.ui.view">
+        <field name="name">podiatry.device_type.form</field>
+        <field name="model">podiatry.device.type</field>
+        <field name="arch" type="xml">
+            <form string=" Podiatry Device Type">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="categ_id" select="1" />
+                        <field name="child_ids" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of podiatry device type -->
+    <record id="view_podiatry_device_type_tree" model="ir.ui.view">
+        <field name="name">podiatry.device_type.tree</field>
+        <field name="model">podiatry.device.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+</odoo>

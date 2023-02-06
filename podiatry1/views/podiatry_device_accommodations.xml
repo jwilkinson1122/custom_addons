@@ -1,0 +1,105 @@
+<odoo>
+    <!--==== Accommodations Type ==== -->
+    <!-- Form view of podiatry device accommodations type -->
+    <record id="view_podiatry_device_accommodations_type_form" model="ir.ui.view">
+        <field name="name">podiatry.device_accommodations_type_form</field>
+        <field name="model">podiatry.device.accommodations.type</field>
+        <field name="arch" type="xml">
+            <form string="Podiatry Device Accommodations Type">
+                <sheet>
+                    <group>
+                        <field name="name" string="Accommodation Type" />
+                        <field name="accommodation_id" />
+                        <field name="child_ids" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of podiatry device accommodations type -->
+    <record id="view_podiatry_device_accommodations_type_list" model="ir.ui.view">
+        <field name="name">podiatry.device_accommodations_type_list</field>
+        <field name="model">podiatry.device.accommodations.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <!--===== Device Accommodations ===== -->
+    <!-- Form view of podiatry device accommodations -->
+    <record id="view_podiatry_device_accommodations_form" model="ir.ui.view">
+        <field name="name">podiatry.device.accommodations.form</field>
+        <field name="model">podiatry.device.accommodations</field>
+        <field name="arch" type="xml">
+            <form string="Podiatry Device Accommodations">
+                <sheet>
+                    <label for="name" string="Name" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <notebook>
+                        <page string="Information">
+                            <group colspan="4" col="4">
+                                <field name="type" select="2" string="Accommodation Type" />
+                                <field name="accommodations_categ_id" string="Accommodations Category" />
+                                <field name="product_manager" select="2" string="Accommodation manager" />
+                                <field name="uom_id" />
+                                <field name="default_code" />
+                                <field name="uom_po_id" />
+                                <field name="supplier_taxes_id" widget="many2many_tags" string="Supplier Taxes" />
+                                <field name="taxes_id" widget="many2many_tags" string="Customer Taxes" />
+                            </group>
+                        </page>
+                        <page string="Procurement">
+                            <group colspan="4" col="4">
+                                <field name="active" select="2" />
+                                <field name="list_price" />
+                                <field name="cost_method" string="Cost Method" />
+                                <field name="sale_ok" select="2" />
+                                <field name="standard_price" />
+                            </group>
+                            <newline />
+                            <group>
+                                <separator string="Suppliers" />
+                                <field name="seller_ids" colspan="4" nolabel="1" widget="one2many_list" />
+                            </group>
+                        </page>
+                        <page string="Descriptions">
+                            <separator string="Description" />
+                            <field name="description" colspan="4" nolabel="1" />
+                            <separator string="Sale Description" />
+                            <field name="description_sale" colspan="4" nolabel="1" />
+                            <separator string="Purchase Description" />
+                            <field name="description_purchase" colspan="4" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Search view of podiatry device accommodations -->
+    <record id="view_podiatry_device_aenities_search" model="ir.ui.view">
+        <field name="name">podiatry.device_accommodations_search</field>
+        <field name="model">podiatry.device.accommodations</field>
+        <field name="arch" type="xml">
+            <search string="Podiatry Device Accommodations">
+                <field name="name" />
+                <field name="accommodations_categ_id" string="Accommodations Category" />
+                <field name="list_price" string="Accommodation rate" />
+            </search>
+        </field>
+    </record>
+    <!-- Tree view of podiatry device accommodations -->
+    <record id="view_podiatry_device_accommodations_list" model="ir.ui.view">
+        <field name="name">podiatry.device_accommodations_list</field>
+        <field name="model">podiatry.device.accommodations</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="accommodations_categ_id" string="Accommodations Category" />
+                <field name="list_price" string="Accommodation Rate" invisible="1" />
+            </tree>
+        </field>
+    </record>
+</odoo>
