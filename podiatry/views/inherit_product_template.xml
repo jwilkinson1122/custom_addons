@@ -8,13 +8,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='general_information']" position="after">
                     <page string="Shell / Foundation Elements" name="shell_elements" autofocus="autofocus" invisible="context.get('def_categ_id') in ['Top Covers','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
-
                         <group>
                             <field name="shell_type"/>
-                            <!-- <field name="shell_length"/> -->
-                            <field name="foot_selection"/>
                         </group>
-
                     </page>
                 </xpath>
                 <xpath expr="//div[@name='options']" position="after">

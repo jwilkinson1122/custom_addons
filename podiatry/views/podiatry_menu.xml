@@ -16,142 +16,20 @@
         <!-- Prescriptions Root -->
         <menuitem id="menu_prescriptions_root" name="Prescriptions" action="action_pod_prescriptions" parent="podiatry.menu_main_root" sequence="15"/>
 
-        <menuitem id="menu_sale_order" name="Sale Order Test" action="sale.action_orders" parent="podiatry.menu_accounts_root" sequence="16"/>
 
         <!-- Products Root -->
         <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/>
         <!-- Products Root - Preconfigured Devices -->
-        <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>
-        <!-- Products Root - Shell/Foundation -->
-        <!-- <menuitem id="menu_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_products_root" action="pod_shell_foundation_action" sequence="2"/> -->
-
-
-        <!-- Activity/use orthotics -->
-
-
-        <!-- Athletic -->
-
-        <!-- Low profile shoes -->
-        <!-- Superglass Proformance shell OR Polypropylene Rigid shell / charcoal vinyl top cover
-                        (3/4-length) / X-Guard (standard) -->
-
-
-        <!-- standard / high profile shoes
-                        Superglass Proformance shell OR Polypropylene Rigid shell / 1/16” neoprene top cover
-                        (heel to toe) / 1/16” firm EVA extension(full) / deepheelcup / X-Guard(standard) -->
-
-
-        <!-- Standard / high profile shoes + lateral stability
-                        Superglass Proformance shell OR Polypropylene Rigid shell / 1/16” neoprene top
-                        cover (heel to toe) / 1/16” firm EVA extension (full) / deep heel cup / heel post
-                        (vertical)# / X-Guard (standard) -->
-
-
-
-        <!-- Accommodative -->
-
-        <!-- Control + comfort -->
-        <!-- Prescription Comfort Composite OR Polypropylene Semi-flexible / charcoal vinyl top
-                        cover (heel to toe) / 1/16” P-Foam cushion (heel to toe)
-                    -->
-
-        <!-- Comfort -->
-        <!-- Prescription Comfort Multi-Density / 1/16” soft EVA top cover (heel to toe) / 1/16”
-                        P-Foam cushion (heel to toe) -->
-
-
-        <!-- Dress -->
-
-        <!-- Heel below 1.5" -->
-        <!-- Superglass Everyday shell OR Polypropylene Semi-rigid shell / black microsuede top
-                        cover (to sulcus) / 1/16” P-Foam extension (sulcus-length) / X-Guard(standard) -->
-
-
-        <!-- Heel above 1.5" -->
-        <!-- Superglass High Heel shell / leather top cover (to sulcus) / 1/16” P-Foam extension
-                        (sulcus-length) ***Please specify heel height*** -->
-
-
-        <!-- Everyday -->
-        <!-- Superglass Everyday shell OR Polypropylene Semi-rigid shell / charcoal vinyl top cover
-                        (heel to toe) / 1/16” firm EVA extension (full) / X-Guard(standard) -->
-
-
-        <!-- Child -->
-        <!-- Superglass Everyday shell (child design) / no top cover / high medial / high lateral -->
-
-
-        <!-- Ski/skate/cycle -->
-        <!-- Superglass Full-Length shell / charcoal vinyl top cover (heel to toe) / 1/16” firm EVA
-                        cushion (heel to toe) ***Specify sport & send liner or tracing of liner*** -->
-
-
-
-        <!-- Foot pain/pathology orthotics -->
-
-        <!-- AAF/PTTD
-                        Superglass Proformance shell (AAF/PTTD design) OR Polypropylene Rigid shell (AAF/PTTD
-                        design) / charcoal vinyl top cover (3/4-length) / low arch height / medial heel skive
-                        / deep heel cup / extrinsic forefoot post (3 degrees varus)# / heel post (vertical)# /
-                        high medial overlay / lateral clip (Superglass only) -->
-
-
-
-        <!-- Plantar fasciitis
-                        Superglass Everyday shell OR Polypropylene Semi-rigid shell / charcoal vinyl top cover
-                        (heel to toe) / 1/16” firm EVA extension (full) / heel post (vertical)# / medialheel
-                        skive / deepheelcup / higharchheight / X-Guard(standard)
-                     -->
-
-
-        <!-- Sesamoiditis/ hallux limitus
-                        Superglass Everyday shell OR Polypropylene Semi-rigid shell / charcoal vinyl top
-                        cover (heel to toe) / 1/16” Firm EVA extension (full) / Reverse Morton's extension -->
-
-
-        <!-- Heel spurs
-                        Superglass Everyday shell OR Polypropylene Semi-rigid shell / charcoal vinyl top cover
-                        (heel to toe) / 1/16” P-Foam cushion (heel to toe) / 1/16” firm EVA extension (full)
-                        / deep heel cup / heel cushion -->
-
-
-        <!-- Gait plate-child
-                        Superglass Everyday shell (gait plate design) / high medial / high lateral / no top cover -->
-
-
-        <!-- Gait plate- adult
-                        Superglass Everyday shell (gait plate design) / charcoal vinyl top cover (3/4-length)-->
-
-        <!-- Lateral ankle instability/ peroneal tendonitis
-                        Superglass Everyday shell (lateral ankle instability/peroneal tendonitis design) OR
-                        Polypropylene Semi-rigid shell (lateral ankle instability/peroneal tendonitis design) /
-                        charcoal vinyl top cover (3/4-length) / extrinsic forefoot post (3 degreesvalgus)# / heel
-                        post - crepe(vertical, cut perpendicular to improve lateral stability)# / deepheelcup -->
-
-
-        <!-- Amputee
-                        Prescription Comfort Composite (amputee design) OR Polypropylene Semi-rigid shell
-                        (amputee design) / 1/16” soft EVA top cover (heel to toe) / 1/16” firm EVA extension (full) -->
-
-
-        <!-- Products Root - Shell/Foundation -->
+        <!-- <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>
         <menuitem id="menu_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_products_root" action="pod_shell_foundation_action" sequence="2"/>
-        <!-- Products Root - Arch Height -->
         <menuitem id="menu_arch_height" name="Arch Height" parent="podiatry.menu_products_root" action="pod_arch_height_action" sequence="3"/>
-        <!-- Products Root - X-Guard -->
         <menuitem id="menu_x_guard" name="X-Guard" parent="podiatry.menu_products_root" action="pod_x_guard_action" sequence="4"/>
-        <!-- Products Root - Top Cover -->
         <menuitem id="menu_top_cover" name="Top Covers" parent="podiatry.menu_products_root" action="pod_top_cover_action" sequence="5"/>
-        <!-- Products Root - Cushions -->
         <menuitem id="menu_cushion" name="Cushions" parent="podiatry.menu_products_root" action="pod_cushion_action" sequence="6"/>
-        <!-- Products Root - Extensions -->
-        <menuitem id="menu_extension" name="Extensions" parent="podiatry.menu_products_root" action="pod_extension_action" sequence="7"/>
-        <!-- Products Root - Accommodations -->
+        <menuitem id="menu_extension" name="Extensions" parent="podiatry.menu_products_root" action="pod_extension_action" sequence="7"/> -->
         <menuitem id="menu_accommodation" name="Accommodations" parent="podiatry.menu_products_root" action="pod_accommodation_action" sequence="8"/>
-        <!-- Products Root - Service -->
-        <menuitem id="menu_service" name="Service" parent="podiatry.menu_products_root" action="pod_service_action" sequence="9"/>
-        <!-- Products Root - Miscellaneous -->
-        <menuitem id="menu_miscellaneous" name="Miscellaneous" parent="podiatry.menu_products_root" action="pod_miscellaneous_action" sequence="10"/>
+        <!-- <menuitem id="menu_service" name="Service" parent="podiatry.menu_products_root" action="pod_service_action" sequence="9"/>
+        <menuitem id="menu_miscellaneous" name="Miscellaneous" parent="podiatry.menu_products_root" action="pod_miscellaneous_action" sequence="10"/> -->
 
         <!-- Configuration Root -->
         <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_main_root" sequence="30" />
@@ -159,40 +37,33 @@
         <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/>
         <!-- Configuration Sub Menu - Stages  -->
         <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
+
         <!-- Configuration Sub Menu - Product Categories  -->
-        <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>
-        <!-- Configuration Sub Menu - Products  -->
-        <!-- <menuitem id="menu_config_products" name="Products" parent="podiatry.menu_configuration_root" sequence="4"/> -->
-        <!-- Configuration Sub Menu - Products - Shell/Foundation  -->
+        <!-- <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>
         <menuitem id="products_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_configuration_root" sequence="100"/>
         <menuitem id="products_shell_foundation_types" name="Types" parent="podiatry.products_shell_foundation" action="shell_type_action" sequence="1"/>
         <menuitem id="products_shell_foundation_collections" name="Collections" parent="podiatry.products_shell_foundation" action="shell_collection_action" sequence="2"/>
-        <!-- <menuitem id="products_shell_foundation_lengths" name="Lengths" parent="podiatry.products_shell_foundation" action="shell_length_action" sequence="3"/> -->
-        <!-- Settings Sub Menu - Products - Arch Height  -->
         <menuitem id="products_arch_heights" name="Arch Height" parent="podiatry.menu_configuration_root" sequence="105"/>
         <menuitem id="products_arch_height_types" name="Types" parent="podiatry.products_arch_heights" action="arch_height_type_action" sequence="1"/>
-        <!-- Settings Sub Menu - Products - X-Guard -->
         <menuitem id="products_x_guard" name="X-Guard" parent="podiatry.menu_configuration_root" sequence="110"/>
         <menuitem id="products_x_guard_types" name="Types" parent="podiatry.products_x_guard" action="x_guard_length_action" sequence="1"/>
-        <!-- Settings Sub Menu - Products - Top Covers  -->
         <menuitem id="products_top_covers" name="Top Covers" parent="podiatry.menu_configuration_root" sequence="115"/>
         <menuitem id="products_top_cover_types" name="Types" parent="podiatry.products_top_covers" action="top_cover_type_action" sequence="1"/>
         <menuitem id="products_top_cover_lengths" name="Lengths" parent="podiatry.products_top_covers" action="top_cover_length_action" sequence="2"/>
         <menuitem id="products_top_cover_materials" name="Materials" parent="podiatry.products_top_covers" action="top_cover_material_action" sequence="3"/>
         <menuitem id="products_top_cover_thickness" name="Thickness" parent="podiatry.products_top_covers" action="top_cover_thickness_action" sequence="4"/>
         <menuitem id="products_top_cover_colors" name="Colors" parent="podiatry.products_top_covers" action="top_cover_color_action" sequence="5"/>
-        <!-- Settings Sub Menu - Products - Cushions  -->
         <menuitem id="products_cushions" name="Cushions" parent="podiatry.menu_configuration_root" sequence="120"/>
         <menuitem id="products_cushion_types" name="Types" parent="podiatry.products_cushions" action="cushion_type_action" sequence="1"/>
         <menuitem id="products_cushion_lengths" name="Lengths" parent="podiatry.products_cushions" action="cushion_length_action" sequence="2"/>
         <menuitem id="products_cushion_materials" name="Materials" parent="podiatry.products_cushions" action="cushion_material_action" sequence="3"/>
         <menuitem id="products_cushion_thickness" name="Thickness" parent="podiatry.products_cushions" action="cushion_thickness_action" sequence="4"/>
-        <!-- Settings Sub Menu - Products - Extensions  -->
         <menuitem id="products_extensions" name="Extensions" parent="podiatry.menu_configuration_root" sequence="125"/>
         <menuitem id="products_extension_types" name="Types" parent="podiatry.products_extensions" action="extension_type_action" sequence="1"/>
         <menuitem id="products_extension_lengths" name="Lengths" parent="podiatry.products_extensions" action="extension_length_action" sequence="2"/>
         <menuitem id="products_extension_materials" name="Materials" parent="podiatry.products_extensions" action="extension_material_action" sequence="3"/>
         <menuitem id="products_extension_thickness" name="Thickness" parent="podiatry.products_extensions" action="extension_thickness_action" sequence="4"/>
+         -->
         <!-- Settings Sub Menu - Measures  -->
         <menuitem id="menu_podiatry_prescription_values" name="Measures" parent="podiatry.menu_configuration_root" sequence="200"/>
         <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_prescription_values" action="forefoot_values_action" sequence="1"/>
