@@ -245,7 +245,7 @@
                             <br/>
                             <br/>
                         </page>
-                        <page string="Testing 2">
+                        <!-- <page string="Testing 2">
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
                                     <td style="width: 16%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT VALUES</td>
@@ -396,11 +396,8 @@
 
                             <group>
                                 <field attrs="{'readonly': [('state','=','done')]}" name="measure_notes" placeholder="Internal Notes"></field>
-                                <!-- <field attrs="{'readonly': [('state','=','done')]}" name="pathology_client" placeholder="Pathology Notes"></field>
-                                    <field attrs="{'readonly': [('state','=','done')]}" name="internal_notes" placeholder="Internal Notes"></field>
-                                    <field attrs="{'readonly': [('state','=','done')]}" name="practitioner_notes" placeholder="Practitioner Notes"></field> -->
                             </group>
-                        </page>
+                        </page> -->
                         <page string="Device Details">
                             <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
