@@ -84,57 +84,57 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-xs-6">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_title">
                                         <strong>
                                             <span>
                                                 <t t-esc="wo_number"/>
                                             </span>
                                         </strong>
                                     </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <strong>
-                                            <field name="planned_start"/>
-                                        </strong>
+                                    <div class="o_kanban_record_body">
+                                        <div>
+                                            <strong>
+                                                <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/>
+                                                <field name="planned_start" />
+                                            </strong>
+                                        </div>
+                                        <div>
+                                            <span class="oe_read_only">BO#:</span>
+                                            <label for="bo_reference" class="oe_edit_only" />
+                                            <field name="bo_reference" class="oe_inline" />
+                                        </div>
+                                        <div>
+                                            <field name="planned_end" class="oe_inline" />
+                                        </div>
+                                        <div>
+                                            <span>
+                                                <t t-esc="record.team.value"/>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <field name="date_start" class="oe_inline" />
+                                        </div>
+                                        <div>
+                                            <span>
+                                                <t t-esc="record.team_leader.value"/>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <field name="date_end" class="oe_inline" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="bo_reference"/>
-                                        </span>
+                                    <div name="footer" class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span class="float-right" style="font-size:16px;">
+                                                <field name="state" widget="kanban_label_selection" options="{'classes': {'pending': 'default', 'in_progress': 'default', 'done': 'default', 'cancelled': 'default'}}"/>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <field name="planned_end"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="record.team.value"/>
-                                        </span>
-                                    </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <field name="date_start"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="record.team_leader.value"/>
-                                        </span>
-                                    </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <field name="date_end"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <span>
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'pending': 'default', 'in_progress': 'default',
-                                        'done': 'default', 'cancelled': 'default'}}"/>
-                                        </span>
-                                    </div>
+                                    <div class="oe_clear"/>
                                 </div>
                             </div>
                         </t>
@@ -169,7 +169,7 @@
         <record id="work_order_action" model="ir.actions.act_window">
             <field name="name">Working Order</field>
             <field name="res_model">prescription.work_order</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to add a master shift

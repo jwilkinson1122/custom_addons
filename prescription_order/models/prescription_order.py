@@ -20,6 +20,10 @@ class PrescriptionOrder(models.Model):
         string='Prescription Start')
     prescription_end = fields.Datetime(
         string='Prescription End')
+    priority = fields.Selection(
+        [("0", "High"),
+         ("1", "Very High"),
+         ("2", "Critical")], default="0")
     wo_count = fields.Integer(
         string='Work Order',
         compute='_compute_wo_count')

@@ -46,6 +46,11 @@ class WorkOrder(models.Model):
     note = fields.Text(
         string='Note')
 
+    priority = fields.Selection(
+        [("0", "High"),
+         ("1", "Very High"),
+         ("2", "Critical")], default="0")
+
     @api.model
     def create(self, vals):
         if vals.get('wo_number', _('New')) == _('New'):
