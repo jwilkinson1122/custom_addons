@@ -31,42 +31,34 @@ class PrescriptionLine(models.Model):
     patient = fields.Char(
         related='prescription_id.patient_id.name')
     product_id = fields.Many2one('product.product', 'Name')
-    foot_image1 = fields.Binary(related="patient_id.image1")
-    foot_image2 = fields.Binary(related="patient_id.image2")
-    left_obj_model = fields.Binary(related="patient_id.left_obj_model")
-    right_obj_model = fields.Binary(related="patient_id.right_obj_model")
 
-    field1 = fields.Char()
-    field2 = fields.Char()
-    field3 = fields.Char()
+    # @api.model
+    # def _selection_state(self):
+    #     return [
+    #         ('start', 'Start'),
+    #         ('configure', 'Configure'),
+    #         ('custom', 'Customize'),
+    #         ('final', 'Final'),
+    #     ]
 
-    @api.model
-    def _selection_state(self):
-        return [
-            ('start', 'Start'),
-            ('configure', 'Configure'),
-            ('custom', 'Customize'),
-            ('final', 'Final'),
-        ]
+    # @api.model
+    # def _default_prescription_id(self):
+    #     return self.env.context.get('active_id')
 
-    @api.model
-    def _default_prescription_id(self):
-        return self.env.context.get('active_id')
+    # def state_exit_start(self):
+    #     self.state = 'configure'
 
-    def state_exit_start(self):
-        self.state = 'configure'
+    # def state_exit_configure(self):
+    #     self.state = 'custom'
 
-    def state_exit_configure(self):
-        self.state = 'custom'
+    # def state_exit_custom(self):
+    #     self.state = 'final'
 
-    def state_exit_custom(self):
-        self.state = 'final'
+    # def state_previous_custom(self):
+    #     self.state = 'configure'
 
-    def state_previous_custom(self):
-        self.state = 'configure'
-
-    def state_previous_final(self):
-        self.state = 'custom'
+    # def state_previous_final(self):
+    #     self.state = 'custom'
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

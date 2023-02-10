@@ -89,7 +89,12 @@
                         <br />
                     </group>
                     <notebook>
-                        <page string="Testing 1">
+                        <page string="Device Details">
+                            <group>
+                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
+                            </group>
+                        </page>
+                        <page string="Values">
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
                                     <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT VALUES</td>
@@ -406,11 +411,7 @@
                                 <field attrs="{'readonly': [('state','=','done')]}" name="measure_notes" placeholder="Internal Notes"></field>
                             </group>
                         </page> -->
-                        <page string="Device Details">
-                            <group>
-                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
-                            </group>
-                        </page>
+
                         <page string="Documents">
                             <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
