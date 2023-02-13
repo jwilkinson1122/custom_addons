@@ -85,6 +85,8 @@ class Prescription(models.Model):
 
     # )
 
+    test_file = fields.Binary(string='Test')
+
     foot_image1 = fields.Binary(related="patient_id.image1")
     foot_image2 = fields.Binary(related="patient_id.image2")
 

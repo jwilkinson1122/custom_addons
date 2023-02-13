@@ -71,9 +71,12 @@
         # 'report/purchase_order_report.xml',
         # 'report/sale_order_report.xml',
         # 'report/invoice_report.xml',
+
     ],
     "assets": {
         "web.assets_backend": [
+            "/podiatry/static/src/js/pdf_viewer.js",
+            # "/podiatry/static/src/less/pdf_viewer.less",
             "/podiatry/static/scss/form_widget.scss",
             "/podiatry/static/js/form_widgets.js",
             "/podiatry/static/js/data_manager.js",
@@ -109,7 +112,7 @@
         "demo/product_config_step.xml",
         "demo/config_image_ids.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/orders.png"],
     "post_init_hook": "post_init_hook",
     "qweb": ["static/xml/create_button.xml"],
     "development_status": "Beta",
