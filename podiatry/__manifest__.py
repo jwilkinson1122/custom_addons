@@ -7,7 +7,6 @@
     "license": "AGPL-3",
     "website": "https://nwpodiatrtic.com",
     "depends": [
-        "storage_backend",
         "account",
         "base",
         "base_setup",
@@ -26,7 +25,6 @@
         "security/configurator_security.xml",
         "security/ir.model.access.csv",
         "views/res_config_settings_view.xml",
-        "views/backend_storage_view.xml",
         "data/product_attribute.xml",
         "data/product_category.xml",
         'data/decimal_precision.xml',
