@@ -32,6 +32,7 @@
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
         # 'views/product.xml',
+        'views/s3_views.xml',
         'views/product_template.xml',
         "views/product_view.xml",
         "views/product_attribute_view.xml",
@@ -120,5 +121,5 @@
     "installable": True,
     "application": True,
     "auto_install": False,
-    "external_dependencies": {"python": ["mako"]},
+    "external_dependencies": {"python": ["boto3","mako"]},
 }

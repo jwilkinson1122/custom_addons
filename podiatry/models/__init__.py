@@ -1,3 +1,6 @@
+from . import s3
+from . import s3_constants
+from . import s3_models
 from . import product_config
 from . import product_attribute
 from . import product

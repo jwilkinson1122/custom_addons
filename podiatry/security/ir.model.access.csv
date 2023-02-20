@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_s3_credentials,s3.credentials,model_s3_credentials,base.group_user,1,1,1,1
 product_configurator_config_line,Config Line,model_product_config_line,group_product_configurator,1,0,0,0
 product_configurator_config_image,Config Image,model_product_config_image,group_product_configurator,1,0,0,0
 product_configurator_config_step,Config Step,model_product_config_step,group_product_configurator,1,0,0,0
