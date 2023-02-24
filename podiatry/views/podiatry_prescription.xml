@@ -50,8 +50,8 @@
                                         'default_bookout_date':bookout_date}"> -->
                                 <tree editable="bottom">
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
-                                    <!-- <field name="bookin_date" />
-                                    <field name="bookout_date" /> -->
+                                    <field name="bookin_date" />
+                                    <field name="bookout_date" />
                                     <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'bookin_date':bookin_date, 'bookout_date':bookout_date}" domain="[('isdevice','=',True)]" options="{'no_open': True}" />
                                     <field name="name" />
                                     <field name="product_uom_qty" string="Quantity" />

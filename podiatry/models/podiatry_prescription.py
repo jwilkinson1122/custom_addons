@@ -309,8 +309,8 @@ class PodiatryPrescriptionLine(models.Model):
         ondelete="cascade",
     )
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription", ondelete="cascade")
-    # bookin_date = fields.Datetime("Book In", required=True)
-    # bookout_date = fields.Datetime("Book Out", required=True)
+    bookin_date = fields.Datetime("Book In", required=True)
+    bookout_date = fields.Datetime("Book Out", required=True)
     is_reserved = fields.Boolean(help="True when prescription line created from Reservation")
 
     @api.model
@@ -604,8 +604,8 @@ class PodiatryAccommodationLine(models.Model):
         ondelete="cascade",
     )
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription", ondelete="cascade")
-    # accom_bookin_date = fields.Datetime("From Date")
-    # accom_bookout_date = fields.Datetime("To Date")
+    accom_bookin_date = fields.Datetime("From Date")
+    accom_bookout_date = fields.Datetime("To Date")
 
     @api.model
     def create(self, vals):
