@@ -15,8 +15,8 @@ class PrescriptionDeviceLine(models.Model):
     _rec_name = "device_id"
 
     device_id = fields.Many2one("podiatry.device", ondelete="restrict", index=True)
-    book_in = fields.Datetime("Book In Date", required=True)
-    book_out = fields.Datetime("Book Out Date", required=True)
+    book_in = fields.Datetime("Book In Date")
+    book_out = fields.Datetime("Book Out Date")
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription Number", ondelete="cascade")
     status = fields.Selection(related="prescription_id.state", string="state")
 
@@ -26,6 +26,29 @@ class PodiatryPrescription(models.Model):
     _name = "podiatry.prescription"
     _description = "podiatry prescription"
     _rec_name = "order_id"
+    
+    # practice_id = fields.Many2one(
+    #     comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    # practice_name = fields.Char(
+    #     string='Practitioner', related='practice_id.name')
+
+    # practitioner_id = fields.Many2one(
+    #     comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    # practitioner_name = fields.Char(
+    #     string='Practitioner', related='practitioner_id.name')
+
+    # patient_id = fields.Many2one(
+    #     comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    # patient_name = fields.Char(
+    #     string='Practitioner', related='patient_id.name')
+    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
+    practice_name = fields.Char(string='Practitioner', related='practice_id.name')
+
+    practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner')
+    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
+
+    patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient')
+    patient_name = fields.Char(string='Practitioner', related='patient_id.name')
 
     def name_get(self):
         res = []
@@ -59,19 +82,19 @@ class PodiatryPrescription(models.Model):
         return fields.Datetime.to_string(bookout_date)
 
     name = fields.Char("Prescription Number", readonly=True, index=True, default="New")
+    
     order_id = fields.Many2one(
         "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
     )
+    
     bookin_date = fields.Datetime(
         "Book In",
-        required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
         default=_get_bookin_date,
     )
     bookout_date = fields.Datetime(
         "Book Out",
-        required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
         default=_get_bookout_date,
@@ -309,8 +332,8 @@ class PodiatryPrescriptionLine(models.Model):
         ondelete="cascade",
     )
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription", ondelete="cascade")
-    bookin_date = fields.Datetime("Book In", required=True)
-    bookout_date = fields.Datetime("Book Out", required=True)
+    bookin_date = fields.Datetime("Book In")
+    bookout_date = fields.Datetime("Book Out")
     is_reserved = fields.Boolean(help="True when prescription line created from Reservation")
 
     @api.model

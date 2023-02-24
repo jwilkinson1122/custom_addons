@@ -1,5 +1,75 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- Action > TODO: Add integration with the Contacts module -->
+    <!-- <record id="action_res_partner_patients" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="context">{'search_default_is_patient': True}</field>
+    </record> -->
+
+    <!-- Action -->
+    <!-- <record id="action_pod_patients_from_partner" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record> -->
+
+
+    <!-- Action: Practices-->
+    <record id="action_pod_clinics" model="ir.actions.act_window">
+        <field name="name">Clinics</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_practice', '=', True)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="view_podiatry_practice_search"/>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+    <!-- Action: Contacts -->
+    <record id="action_pod_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">podiatry.practitioner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
+        <field name="domain">[]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="view_podiatry_practitioner_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new practitioner
+            </p>
+            <p>
+                Schedule and organize your practitioners efficiently.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action: Patients-->
+    <record id="action_pod_patients" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <!-- <field name="domain">[('is_patient', '=', True)]</field> -->
+        <field name="search_view_id" ref="view_podiatry_patient_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new patient
+            </p>
+            <p>
+                Schedule and organize your patients efficiently.
+            </p>
+        </field>
+    </record>
+
     <!-- Action for podiatry device type -->
     <record id="open_podiatry_device_type_form_tree" model="ir.actions.act_window">
         <field name="name">Device Type</field>
