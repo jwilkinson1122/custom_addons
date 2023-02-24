@@ -1,395 +1,175 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tree View -->
-    <record id="view_podiatry_prescription_list" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='draft'">
-                <header>
-                    <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
-                </header>
-                <field name="name"/>
-                <field name="state" invisible="True" />
-                <field name="product_id" />
-                <field name="request_date" />
-                <field name="practitioner_id" />
-                <field name="patient_id" />
-                <field name="stage_id" />
-                <field name="num_prescription_items" sum="Items" />
-                <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print Rx" type="object"></button> -->
-            </tree>
-        </field>
-    </record>
-
-    <!-- Form View -->
+    <!-- Form view of podiatry prescription -->
     <record id="view_podiatry_prescription_form" model="ir.ui.view">
-        <field name="name">Prescription</field>
+        <field name="name">podiatry.prescription.form</field>
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <form string="Prescription">
+            <form>
                 <header>
-                    <field name="state" invisible="True" />
-                    <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <!-- <button name="confirm_draft" type="object" string="Confirm" class="oe_highlight" states="draft" /> -->
-                    <button name="open_customer" class="btn btn-success" states="in_process" string="Create Order" type="object"></button>
-                    <!-- <button name="confirm_draft" type="object" string="Confirm" class="oe_highlight" states="draft" />
-                    <button name="action_confirm" class="btn btn-success" states="confirm" string="Create Orders" type="object"></button> -->
-
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
-                    <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
+                    <button name="action_confirm" states="draft" string="Confirm Sale" class="btn-primary" type="object" />
+                    <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice" type="action" class="btn-primary" attrs="{'invisible': ['|',('state', 'in', ('draft','cancel','done')), ('invoice_status', 'in', 'invoiced')]}" />
+                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" class="oe_highlight" />
+                    <button name="action_cancel" string="Cancel" states="sale" type="object" class="oe_highlight" />
+                    <button name="action_cancel" string="Cancel" states="draft" type="object" class="oe_highlight" />
+                    <button name="action_done" type="object" string="Set to Done" states="sale" class="oe_highlight" help="If a Podiatry Prescription is done, you cannot modify it manually anymore. However, you will still be able to invoice or deliver. This is used to freeze the Podiatry Prescription." />
+                    <field name="state" select="2" widget="statusbar" statusbar_visible="draft,sent,sale,done" />
                 </header>
                 <sheet>
-                    <!-- <div class="oe_button_box" name="button_box">
-                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
-                            <div class="o_stat_info">
-                                <field name="prescription_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Prescriptions</span>
-                            </div>
-                        </button>
-                    </div> -->
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
-                        <h1>
-                            <field name="name" readonly="1" />
-                        </h1>
-                    </div>
-                    <group>
-                        <group string="Account Info">
-                            <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/> -->
-                            <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
-                            <field name="practitioner_id" required="1" />
-                        </group>
-                        <group string="Patient Info">
-                            <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
-                            <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
-                        </group>
-                    </group>
-                    <group string="Order Info">
-                        <group>
-                            <field name="bookin_date" />
-                            <field name="user_id" />
-                        </group>
-                        <group>
-                            <field name="rush_order" />
-                            <field name="ship_to_patient" />
-                            <field name="prior_rx"/>
-                            <!-- <field name="patient_prescription_ids" attrs="{'invisible': [('prior_rx','!=',True)]}"/> -->
-                        </group>
-                        <group>
-                            <field name="left_only"/>
-                            <field name="right_only"/>
-                        </group>
-                        <br/>
-                        <br />
-                        <!-- <group>
-                            <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
-                        </group> -->
-                        <br/>
-                        <br />
+                    <label for="name" string="Prescription Number" />
+                    <h1>
+                        <field name="name" colspan="4" />
+                    </h1>
+                    <group colspan="4" col="4">
+                        <field name="date_order" readonly="1" />
+                        <field name="bookin_date" />
+                        <field name="bookout_date" />
+                        <field name="warehouse_id" string="Branch" />
+                        <field name="invoice_status" />
+                        <field name="podiatry_invoice_id" states='sale,done,cancel' readonly="1" />
                     </group>
                     <notebook>
-                        <page string="Device Details">
-                            <group>
-                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
+                        <page name="prescription" string="Prescription">
+                            <group colspan="4" col="4">
+                                <field name="company_id" string="Practice Name" required="1"/>
+                                <field name="partner_id" string="Practitioner Name" required="1" domain="[('parent_id','=',company_id)]"/>
+                                <field name="partner_invoice_id" domain="[('parent_id','=',partner_id)]" />
+                                <field name="pricelist_id" />
+                                <field name="partner_shipping_id" domain="[('parent_id','=',partner_id)]" />
+                                <!-- <field name="company_id" invisible="1" /> -->
                             </group>
-                        </page>
-                        <page string="Values">
-                            <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
-                                <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT VALUES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
-                                </tr>
-                                <tr name="varus_forefoot_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_varus_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_varus_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                                <tr name="valgus_forefoot_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VALGUS</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_valgus_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_valgus_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br/>
-                            <br/>
-
-                            <table name="forefoot_corrections_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
-                                <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
-                                </tr>
-                                <tr name="forefoot_varus_intrinsic_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VARUS INTRINSIC</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_varus_intrinsic_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_varus_intrinsic_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                                <tr name="forefoot_valgus_intrinsic_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VALGUS INTRINSIC</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_valgus_intrinsic_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_valgus_intrinsic_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                                <tr name="forefoot_varus_extrinsic_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VARUS EXTRINSIC</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_varus_extrinsic_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_varus_extrinsic_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                                <tr name="forefoot_valgus_extrinsic_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VALGUS EXTRINSIC</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_valgus_extrinsic_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_valgus_extrinsic_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br/>
-                            <br/>
-
-                            <table name="rearfoot_corrections_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
-                                <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">REARFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
-                                </tr>
-                                <tr name="rearfoot_varus_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="rf_varus_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="rf_varus_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                                <tr name="rearfoot_valgus_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">VALGUS</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="rf_valgus_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="rf_valgus_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                                <tr name="rearfoot_neutral_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">NEUTRAL</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="rf_neutral_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="rf_neutral_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                            </table>
-                            <br/>
-                            <br/>
-
-                            <table name="orthotic_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
-                                <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">ORTHOTIC MEASURES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
-                                </tr>
-                                <tr name="forefoot_length_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">FOREFOOT LENGTH</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="ff_length_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="ff_length_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                                <tr name="heel_depth_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">HEEL DEPTH</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="heel_depth_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="heel_depth_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                                <tr name="length_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">LENGTH</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="orthotic_length_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="orthotic_length_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-
-                                <tr name="cap_size_values">
-                                    <td style="padding:4px; text-align:center; font-weight:bold">CAP SIZE</td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('right_only', '=', True)]}">
-                                        <field name="cap_size_lt" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    </td>
-                                    <td style="padding:4px; text-align:center" attrs="{'invisible': [('left_only', '=', True)]}">
-                                        <field name="cap_size_rt" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br/>
-                            <br/>
-                        </page>
-
-                        <page string="Documents Test">
-                            <field name="test_file" widget="pdf_viewer"/>
-                        </page>
-
-                        <page string="Documents">
-                            <group name="photo_group_tlOo2">
-                                <group name="photo_group_tlOo2_left">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
-                                </group>
-                                <group name="photo_group_tlOo2_right">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image" />
-                                </group>
+                            <newline />
+                            <group colspan="4" col="4" invisible="1">
+                                <field name="bookin_date" />
+                                <field name="bookout_date" />
+                                <field name="quantity" readonly="1" />
+                                <field name="quantity_dummy" invisible="1" />
                             </group>
-                            <group name="obj_group_DPydw">
-                                <group name="obj_group_DPydw_left">
-                                    <field name="left_obj_model" string="Left Scan" />
-
+                            <separator string="Device Lines" colspan="4" />
+                            <field name="device_line_ids" colspan="4" string="Device Line" nolabel="1">
+                                <!-- <field name="device_line_ids" colspan="4" string="Device Line" nolabel="1" context="{'default_bookin_date':bookin_date,
+                                        'default_bookout_date':bookout_date}"> -->
+                                <tree editable="bottom">
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
+                                    <!-- <field name="bookin_date" />
+                                    <field name="bookout_date" /> -->
+                                    <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'bookin_date':bookin_date, 'bookout_date':bookout_date}" domain="[('isdevice','=',True)]" options="{'no_open': True}" />
+                                    <field name="name" />
+                                    <field name="product_uom_qty" string="Quantity" />
+                                    <field name="product_uom_category_id" invisible="1" />
+                                    <field name="product_uom" string="Rent(UOM)" attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}" context="{'company_id': parent.company_id}" groups="uom.group_uom" options="{'no_open': True}" />
+                                    <field name="price_unit" />
+                                    <field domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" name="tax_id" options="{'no_create': True}" widget="many2many_tags" />
+                                    <field groups="product.group_discount_per_so_line" name="discount" />
+                                    <field groups="account.group_show_line_subtotals_tax_excluded" name="price_subtotal" widget="monetary" />
+                                    <field groups="account.group_show_line_subtotals_tax_included" name="price_total" widget="monetary" />
+                                    <field invisible="1" name="currency_id" />
+                                    <field invisible="1" name="state" />
+                                </tree>
+                            </field>
+                            <separator string="Accommodation Lines" colspan="4" />
+                            <field name="accommodation_line_ids" colspan="4" string="Accommodation Line" nolabel="1">
+                                <!-- <field name="accommodation_line_ids" colspan="4" string="Accommodation Line" nolabel="1" context="{'deafult_accom_bookin_date':bookin_date,
+                                'deafult_accom_bookout_date':bookout_date
+                                }"> -->
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" domain="[('isaccommodation','=',True)]" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'podiatry':parent.warehouse_id,'uom':product_uom}" options="{'no_open': True}" />
+                                    <field name="accom_bookout_date" invisible="1" />
+                                    <field name="accom_bookin_date" invisible="1" />
+                                    <field name="name" />
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
+                                    <field name="product_uom_qty" string="Quantity" />
+                                    <field name="product_uom_category_id" invisible="1" />
+                                    <field name="product_uom" string="Rent(UOM)" attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}" context="{'company_id': parent.company_id}" groups="uom.group_uom" options="{'no_open': True}" />
+                                    <field name="price_unit" />
+                                    <field domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" name="tax_id" options="{'no_create': True}" widget="many2many_tags" />
+                                    <field groups="product.group_discount_per_so_line" name="discount" />
+                                    <field groups="account.group_show_line_subtotals_tax_excluded" name="price_subtotal" widget="monetary" />
+                                    <field groups="account.group_show_line_subtotals_tax_included" name="price_total" widget="monetary" />
+                                    <field invisible="1" name="currency_id" />
+                                    <field name="state" invisible="1" />
+                                </tree>
+                            </field>
+                            <group colspan="2" class="oe_subtotal_footer oe_right">
+                                <field name="amount_untaxed" sum="Untaxed amount" widget='monetary'
+                                />
+<field name="amount_tax" widget='monetary' />
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                </div>
+                                <field name="amount_total" nolabel="1" sum="Total amount" widget='monetary'
+                                />
+</group>
+<div class="oe_clear" />
+                            </page>
+                            <page name='other_data' string="Other data">
+                                <group>
+                                    <field name="user_id" />
+                                    <field name="podiatry_policy" attrs="{'readonly':[('state','not in',('draft'))]}" />
+                                    <field name="client_order_ref" />
                                 </group>
-                                <group name="obj_group_DPydw_right">
-                                    <field name="right_obj_model" string="Right Scan" />
-                                </group>
-                            </group>
-                            <group string="Rx Attachement">
-                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
-                            </group>
-                        </page>
-                        <page string="Special Instructions">
-                        </page>
-                        <page string="Casting">
-                        </page>
-                        <page string="Process">
-                        </page>
-                    </notebook>
-                    <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
-                </sheet>
-                <!-- Discuss widgets -->
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <!-- Search -->
-    <record id="view_podiatry_prescription_filter" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name" />
-                <field name="stage_id"/>
-                <!-- <field name="practitioner_id" /> -->
-                <field name="user_id" />
-
-                <filter name="filter_not_done" string="To Return" domain="[('state','=','draft')]" />
-                <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
-                <!-- <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" /> -->
-
-                <searchpanel>
-                    <!-- <field name="practitioner_id" enable_counters="1" /> -->
-                    <field name="stage_id" select="multi" />
-                </searchpanel>
-
-            </search>
-
-        </field>
-    </record>
-
-    <!-- Activity View -->
-    <record id="view_podiatry_prescription_activity" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <activity string="Prescriptions">
-                <templates>
-                    <div t-name="activity-box">
-                        <div>
-                            <field name="name" />
-                        </div>
-                    </div>
-                </templates>
-            </activity>
-        </field>
-    </record>
-
-    <!-- Calendar View -->
-    <record id="view_podiatry_prescription_calendar" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
-        <field name="model">podiatry.prescription</field>
-        <field eval="2" name="priority" />
-        <field name="arch" type="xml">
-            <calendar date_start="date" string="orders" mode="month" color="color">
-                <field name="stage_id" type="col" />
-                <field name="patient_id" />
-                <field name="practitioner_id" />
-                <field name="date" />
-            </calendar>
-        </field>
-    </record>
-
-    <!-- Pivot View -->
-    <record id="view_podiatry_prescription_pivot" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <pivot>
-                <field name="stage_id" type="col" />
-                <field name="practitioner_id" />
-                <field name="request_date" interval="week" />
-                <field name="num_prescription_items" type="measure" />
-            </pivot>
-        </field>
-    </record>
-
-    <!-- Graph View -->
-    <record id="view_podiatry_prescription_graph" model="ir.ui.view">
-        <field name="model">podiatry.prescription</field>
-        <field name="arch" type="xml">
-            <graph type="bar">
-                <field name="stage_id" />
-                <field name="num_prescription_items" type="measure" />
-            </graph>
-        </field>
-    </record>
-
-    <record id="action_pod_prescriptions" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
-        <field name="res_model">podiatry.prescription</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-    </record>
-
-</odoo>
-
- 
+                            </page>
+                            <page name="invoice_history" string="History">
+                                <separator string="Related invoices" colspan="4" />
+                                <field name="invoice_ids" colspan="4" nolabel="1" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree view of podiatry prescription -->
+        <record id="view_podiatry_prescription_tree" model="ir.ui.view">
+            <field name="name">podiatry.prescription.tree</field>
+            <field name="model">podiatry.prescription</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="bookin_date" />
+                    <field name="bookout_date" />
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="date_order" />
+                    <field name="state" />
+                    <field name="amount_total" sum="Total amount" />
+                </tree>
+            </field>
+        </record>
+        <!-- Calendar view of podiatry prescription -->
+        <record id="podiatry_prescription_calendar_view" model="ir.ui.view">
+            <field name="name">Podiatry- Prescriptions Calendar</field>
+            <field name="model">podiatry.prescription</field>
+            <field name="arch" type="xml">
+                <calendar string="Prescriptions" date_start="bookin_date" color="user_id" date_stop="bookout_date">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="quantity" />
+                </calendar>
+            </field>
+        </record>
+        <!-- Search view of podiatry prescription -->
+        <record id="view_podiatry_prescription_search" model="ir.ui.view">
+            <field name="name">podiatry.prescription.search</field>
+            <field name="model">podiatry.prescription</field>
+            <field name="arch" type="xml">
+                <search string="Tables Detail">
+                    <field name="partner_id" />
+                    <field name="name" filter_domain="[('name', 'ilike', self)]" />
+                    <filter name="bookout_date" string="Current Booking" domain="[('bookout_date','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('bookin_date','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                    <group expand="0" string="Group By">
+                        <filter name="date_order" string="Order By Month" context="{'group_by':'date_order'}" />
+                        <filter name="partner_id" string="Customer" context="{'group_by':'partner_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!--graph view of podiatry prescription -->
+        <record id="view_podiatry_prescription_graph" model="ir.ui.view">
+            <field name="name">view.podiatry.prescription.graph</field>
+            <field name="model">podiatry.prescription</field>
+            <field name="arch" type="xml">
+                <graph type="bar">
+                    <field name="date_order" type="row" />
+                    <field name="amount_total" type="measure" />
+                </graph>
+            </field>
+        </record>
+    </odoo>

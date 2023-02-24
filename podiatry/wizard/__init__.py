@@ -1,5 +1,4 @@
-from . import product_configurator
-from . import create_prescription_invoice_wizard
-from . import create_prescription_shipment_wizard
-from . import prescription_mass_message
-from . import complete_pair_order
+# See LICENSE file for full copyright and licensing details.
+
+from . import podiatry_wizard
+from . import sale_make_invoice_advance
