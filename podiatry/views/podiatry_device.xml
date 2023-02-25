@@ -18,7 +18,7 @@
                             <field name="status" readonly="1" />
                         </h2>
                         <h2>
-                            <field name="isdevice" />
+                            <field name="is_custom_device" />
                         </h2>
                     </div>
                     <notebook>

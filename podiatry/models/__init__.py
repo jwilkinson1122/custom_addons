@@ -8,6 +8,7 @@ from . import podiatry_practitioner
 from . import podiatry_prescription
 from . import podiatry_device
 from . import podiatry_accommodations
+from . import podiatry_website
 from . import product_product
 from . import res_company
 from . import res_partner

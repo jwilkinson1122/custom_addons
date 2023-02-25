@@ -1,0 +1,59 @@
+<odoo>
+    <!-- Store App Menu -->
+    <menuitem id="musicstore_menu" name="Music Store"/>
+
+    <!-- Action to open the Book list -->
+    <act_window id="action_musicstore_song"
+                name="Music Store"
+                res_model="musicstore.song"
+                view_mode="tree,form"/>
+
+    <act_window id="action_musicstore_disc"
+                name="Disc"
+                res_model="musicstore.disc"
+                view_mode="tree,form"/>
+
+    <act_window id="action_musicstore_group"
+                name="Group"
+                res_model="musicstore.group"
+                view_mode="tree,form"/>
+
+    <act_window id="action_musicstore_sales"
+                name="Sales"
+                res_model="musicstore.sales"
+                view_mode="tree,form"/>
+
+    <act_window id="action_musicstore_supplies"
+                name="Supplies"
+                res_model="musicstore.supplies"
+                view_mode="tree,form"/>
+
+
+    <!-- Menu item to open the Book list -->
+    <menuitem id="menu_musicstore_song"
+              name="Song"
+              action="action_musicstore_song"
+              parent="musicstore_menu"/>
+
+    <menuitem id="menu_musicstore_disc"
+              name="Disc"
+              action="action_musicstore_disc"
+              parent="musicstore_menu"/>
+
+    <menuitem id="menu_musicstore_group"
+              name="Group"
+              action="action_musicstore_group"
+              parent="musicstore_menu"/>
+
+    <menuitem id="menu_musicstore_sales"
+              name="Sales"
+              action="action_musicstore_sales"
+              parent="musicstore_menu"/>
+
+    <menuitem id="menu_musicstore_supplies"
+              name="Supplies"
+              action="action_musicstore_supplies"
+              parent="musicstore_menu"/>
+
+
+</odoo>

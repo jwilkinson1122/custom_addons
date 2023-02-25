@@ -27,28 +27,19 @@ class PodiatryPrescription(models.Model):
     _description = "podiatry prescription"
     _rec_name = "order_id"
     
-    # practice_id = fields.Many2one(
-    #     comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    # practice_name = fields.Char(
-    #     string='Practitioner', related='practice_id.name')
-
-    # practitioner_id = fields.Many2one(
-    #     comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    # practitioner_name = fields.Char(
-    #     string='Practitioner', related='practitioner_id.name')
-
-    # patient_id = fields.Many2one(
-    #     comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    # patient_name = fields.Char(
-    #     string='Practitioner', related='patient_id.name')
+    partner_id = fields.Many2one('res.partner', string='Customer Name', required=True)
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
     practice_name = fields.Char(string='Practitioner', related='practice_id.name')
-
     practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner')
     practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
-
     patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient')
     patient_name = fields.Char(string='Practitioner', related='patient_id.name')
+    notes = fields.Text(string='Prescription Notes')
+    name = fields.Char("Prescription Number", readonly=True, index=True, default="New")
+    
+    order_id = fields.Many2one(
+        "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
+    )
 
     def name_get(self):
         res = []
@@ -81,12 +72,6 @@ class PodiatryPrescription(models.Model):
         )
         return fields.Datetime.to_string(bookout_date)
 
-    name = fields.Char("Prescription Number", readonly=True, index=True, default="New")
-    
-    order_id = fields.Many2one(
-        "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
-    )
-    
     bookin_date = fields.Datetime(
         "Book In",
         readonly=True,
@@ -174,7 +159,7 @@ class PodiatryPrescription(models.Model):
                 device = podiatry_device_obj.search(
                     [("product_id", "=", device_rec.product_id.id)]
                 )
-                device.write({"isdevice": False})
+                device.write({"is_custom_device": False})
                 vals = {
                     "device_id": device.id,
                     # "book_in": rec.bookin_date,
@@ -230,7 +215,7 @@ class PodiatryPrescription(models.Model):
                 device_list = product_obj.browse(list(new_devices))
                 for device in device_list:
                     device_obj = podiatry_device_obj.search([("product_id", "=", device.id)])
-                    device_obj.write({"isdevice": False})
+                    device_obj.write({"is_custom_device": False})
                     vals = {
                         "device_id": device_obj.id,
                         # "book_in": rec.bookin_date,
@@ -242,7 +227,7 @@ class PodiatryPrescription(models.Model):
                 device_list_obj = product_obj.browse(devices_list)
                 for device in device_list_obj:
                     device_obj = podiatry_device_obj.search([("product_id", "=", device.id)])
-                    device_obj.write({"isdevice": False})
+                    device_obj.write({"is_custom_device": False})
                     device_vals = {
                         "device_id": device_obj.id,
                         # "book_in": rec.bookin_date,
@@ -286,7 +271,7 @@ class PodiatryPrescription(models.Model):
                 lambda l: l.order_line_id.product_id == product
             ):
                 devices = self.env["podiatry.device"].search([("product_id", "=", product.id)])
-                devices.write({"isdevice": True, "status": "available"})
+                devices.write({"is_custom_device": True, "status": "available"})
             rec.invoice_ids.button_cancel()
             return rec.order_id.action_cancel()
 
@@ -391,7 +376,7 @@ class PodiatryPrescriptionLine(models.Model):
                     ]
                 )
                 prescription_device_lines.unlink()
-                devices.write({"isdevice": True, "status": "available"})
+                devices.write({"is_custom_device": True, "status": "available"})
                 line.order_line_id.unlink()
         return super(PodiatryPrescriptionLine, self).unlink()
 

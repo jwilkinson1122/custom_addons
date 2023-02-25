@@ -26,7 +26,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             PodiatryPrescription = self.env["podiatry.prescription"]
             prescription = PodiatryPrescription.browse(self._context.get("active_ids", []))
-            prescription.device_line_ids.mapped("product_id").write({"isdevice": True})
+            prescription.device_line_ids.mapped("product_id").write({"is_custom_device": True})
             ctx.update(
                 {
                     "active_ids": prescription.order_id.ids,

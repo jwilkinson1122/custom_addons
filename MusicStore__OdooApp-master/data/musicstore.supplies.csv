@@ -1,0 +1,3 @@
+"id","amount_disc","amount_songs","request_date","user_id/id","provider_id/id","disc_id/id","songs_id/id"
+musicstore_supplies_1,"10","1","2020-11-08","base.demo_user0","base.res_partner_2","musicstore_disc_SS","musicstore_song_nenp"
+musicstore_supplies_2,"1","10","2020-08-11","base.demo_user0","base.res_partner_2","musicstore_disc_ES","musicstore_song_nenp"

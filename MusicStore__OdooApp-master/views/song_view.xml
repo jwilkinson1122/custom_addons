@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- Add Song view -->
+    <record id="view_form_song" model="ir.ui.view">
+        <field name="name">Song Form</field>
+        <field name="model">musicstore.song</field>
+        <field name="arch" type="xml">
+            <form string="Song">
+                <sheet>
+                    <!-- Content goes here: -->
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name="cod"/>
+                            <field name="name"/>
+                            <field name="time" widget="float_time"/>
+                            <field name="price"/>
+                            <field name="stock"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree song view -->
+    <record id="view_tree_song" model="ir.ui.view">
+        <field name="name">Song List</field>
+        <field name="model">musicstore.song</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cod"/>
+                <field name="name"/>
+                <field name="time" widget="float_time"/>
+                <field name="stock"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search song view -->
+    <record id="view_search_song" model="ir.ui.view">
+        <field name="name">Song Filters</field>
+        <field name="model">musicstore.song</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cod"/>
+                <field name="name"/>
+                <filter name="With stock"
+                        string="Stock"
+                        domain="[('stock','>', 0)]"/>
+                <filter name="Without stock"
+                        string="No Stock"
+                        domain="[('stock','=', 0)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

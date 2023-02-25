@@ -11,9 +11,22 @@ class Partner(models.Model):
         'res.partner.info', 'partner_id', string="More Info")
     reference = fields.Char('ID Number')
     name = fields.Char(index=True)
-
     is_practice = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
+    is_patient = fields.Boolean(string="Patient", store=False, search='_search_is_patient')
+    
+    prescription_ids = fields.One2many('podiatry.prescription', 'partner_id', string='Prescription Records')
+    prescription_count = fields.Integer(compute='_compute_prescription_count', string='Prescription Count')
+
+    @api.depends('prescription_ids')
+    def _compute_prescription_count(self):
+        for record in self.filtered('id'):
+            record.prescription_count = len(self.env['podiatry.prescription'].search([('partner_id', 'child_of', self.id)]))
+
+    def prescription_history(self):
+        act = self.env.ref('podiatry.open_podiatry_prescription1_form_tree_all').read()[0]
+        act['domain'] = [('partner_id', 'child_of', self.id)]
+        return act
 
     practice_ids = fields.One2many(
         comodel_name='podiatry.practice',
@@ -37,11 +50,6 @@ class Partner(models.Model):
         for partner in self:
             partner.patient_count = partner.patient_ids
         return
-
-    is_patient = fields.Boolean(
-        string="Patient", store=False,
-        search='_search_is_patient',
-    )
 
     def _search_is_patient(self, operator, value):
         assert operator in ('=', '!=', '<>') and value in (

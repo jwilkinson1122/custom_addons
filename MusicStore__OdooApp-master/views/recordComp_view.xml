@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Form recoordCompany view -->
+    <record id="view_form_recordComp" model="ir.ui.view">
+        <field name="name">Record Company Form</field>
+        <field name="model">musicstore.recordcompany</field>
+        <field name="arch" type="xml">
+            <form string="Record Company">
+                <sheet>
+                    <!-- Content goes here: -->
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name="cod"/>
+                            <field name="name"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="address"/>
+                            <field name="tlf"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree recordCompany view -->
+    <record id="view_tree_recordComp" model="ir.ui.view">
+        <field name="name">Record Company List</field>
+        <field name="model">musicstore.recordcompany</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cod"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search recordCompany view -->
+    <record id="view_search_recordComp" model="ir.ui.view">
+        <field name="name">Record Company Filters</field>
+        <field name="model">musicstore.recordcompany</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cod"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

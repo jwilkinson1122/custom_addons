@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="sequence_disc_number" model="ir.sequence">
+            <field name="name">Disc number</field>
+            <field name="code">musicstore.disc</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">D</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_group_number" model="ir.sequence">
+            <field name="name">Group number</field>
+            <field name="code">musicstore.group</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">G</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_recordcompany_number" model="ir.sequence">
+            <field name="name">Record company number</field>
+            <field name="code">musicstore.recordcompany</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">RC</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_song_number" model="ir.sequence">
+            <field name="name">Song number</field>
+            <field name="code">musicstore.song</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">S</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_sales_number" model="ir.sequence">
+            <field name="name">Sales number</field>
+            <field name="code">musicstore.sales</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">SA</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_supplies_number" model="ir.sequence">
+            <field name="name">Supplies number</field>
+            <field name="code">musicstore.supplies</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">SU</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record id="sequence_artists_number" model="ir.sequence">
+            <field name="name">Artists number</field>
+            <field name="code">musicstore.artists</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">AR</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

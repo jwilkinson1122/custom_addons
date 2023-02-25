@@ -54,9 +54,9 @@
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
                                     <field name="bookin_date" invisible="1"/>
                                     <field name="bookout_date" invisible="1"/>
-                                    <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom}" domain="[('isdevice','=',True)]" options="{'no_open': True}" />
+                                    <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom}" domain="[('is_custom_device','=',True)]" options="{'no_open': True}" />
 
-                                    <!-- <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'bookin_date':bookin_date, 'bookout_date':bookout_date}" domain="[('isdevice','=',True)]" options="{'no_open': True}" /> -->
+                                    <!-- <field name="product_id" string="Device" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'bookin_date':bookin_date, 'bookout_date':bookout_date}" domain="[('is_custom_device','=',True)]" options="{'no_open': True}" /> -->
                                     <field name="name" />
                                     <field name="product_uom_qty" string="Quantity" />
                                     <field name="product_uom_category_id" invisible="1" />
@@ -76,7 +76,7 @@
                                 'deafult_accom_bookout_date':bookout_date
                                 }"> -->
                                 <tree editable="bottom">
-                                    <field name="product_id" required="1" domain="[('isaccommodation','=',True)]" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'podiatry':parent.warehouse_id,'uom':product_uom}" options="{'no_open': True}" />
+                                    <field name="product_id" required="1" domain="[('is_accommodation','=',True)]" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'podiatry':parent.warehouse_id,'uom':product_uom}" options="{'no_open': True}" />
                                     <field name="accom_bookout_date" invisible="1" />
                                     <field name="accom_bookin_date" invisible="1" />
                                     <field name="name" />

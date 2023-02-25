@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_tree_supplies" model="ir.ui.view">
+        <field name="name">Supplies Tree</field>
+        <field name="model">musicstore.supplies</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cod"/>
+                <field name="user_id"/>
+                <field name="provider_id"/>
+                <field name="request_date"/>
+                <field name="disc_id"/>
+                <field name="amount_disc"/>
+                <field name="songs_id"/>
+                <field name="amount_songs"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_supplies" model="ir.ui.view">
+        <field name="name">Supplies Form</field>
+        <field name="model">musicstore.supplies</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="user_id"/>
+                        <field name="provider_id"/>
+                        <field name="request_date"/>
+
+                        <field name="disc_id"/>
+                        <field name="amount_disc"/>
+
+                        <field name="songs_id"/>
+                        <field name="amount_songs"/>
+
+                        <field name="order_price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_search_supplies" model="ir.ui.view">
+        <field name="name">Supplies Filters</field>
+        <field name="model">musicstore.supplies</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <field name="provider_id"/>
+                <field name="disc_id"/>
+                <field name="songs_id"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,3 @@
+"id","user_id/id","sales_date","disc_ids/id","song_ids/id"
+musicstore_sales_1,"base.demo_user0","2020-03-15","musicstore_disc_SS,musicstore_disc_ES","musicstore_song_mnst"
+musicstore_sales_2,"base.demo_user0","2019-07-18","musicstore_disc_ES","musicstore_song_vlnd,musicstore_song_ftg"

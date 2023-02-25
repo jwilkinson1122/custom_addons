@@ -51,10 +51,10 @@ class PodiatryDevice(models.Model):
             if device.capacity <= 0:
                 raise ValidationError(_("Device capacity must be more than 0"))
 
-    @api.onchange("isdevice")
-    def _isdevice_change(self):
+    @api.onchange("is_custom_device")
+    def _is_custom_device_change(self):
         """
-        Based on isdevice, status will be updated.
+        Based on is_custom_device, status will be updated.
         ----------------------------------------
         @param self: object pointer
         """
@@ -69,9 +69,9 @@ class PodiatryDevice(models.Model):
         if "device_categ_id" in vals:
             device_categ = self.env["podiatry.device.type"].browse(vals.get("device_categ_id"))
             vals.update({"categ_id": device_categ.product_categ_id.id})
-        if "isdevice" in vals and vals["isdevice"] is False:
+        if "is_custom_device" in vals and vals["is_custom_device"] is False:
             vals.update({"color": 2, "status": "unavailable"})
-        if "isdevice" in vals and vals["isdevice"] is True:
+        if "is_custom_device" in vals and vals["is_custom_device"] is True:
             vals.update({"color": 5, "status": "available"})
         return super(PodiatryDevice, self).write(vals)
 
@@ -82,7 +82,7 @@ class PodiatryDevice(models.Model):
         ---------------------------------------
         @param self: object pointer
         """
-        return self.write({"isdevice": False, "color": 2})
+        return self.write({"is_custom_device": False, "color": 2})
 
     def set_device_status_available(self):
         """
@@ -91,7 +91,7 @@ class PodiatryDevice(models.Model):
         ---------------------------------------
         @param self: object pointer
         """
-        return self.write({"isdevice": True, "color": 5})
+        return self.write({"is_custom_device": True, "color": 5})
 
 
 class PodiatryDeviceType(models.Model):

@@ -1,0 +1,3 @@
+"id","name","country","artists_id/id"
+musicstore_group_ATL,"All Time Low","Estados Unidos","musicstore_artists_AWG,musicstore_artists_JBB,musicstore_artists_ZSM,musicstore_artists_RDD"
+musicstore_group_AGT,"All Good Things","Estados Unidos","musicstore_artists_DDM,musicstore_artists_AB,musicstore_artists_LHB,musicstore_artists_MF,musicstore_artists_TS"

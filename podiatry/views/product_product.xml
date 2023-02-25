@@ -5,8 +5,19 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='active']" position="after">
-                <field name="isdevice" />
+            <div name="options" position="inside">
+                <field name="is_custom_device"/>
+                <label for="is_custom_device"/>
+                <field name="is_otc_device"/>
+                <label for="is_otc_device"/>
+                <field name="is_brace_device"/>
+                <label for="is_brace_device"/>
+                <!-- <field name="is_web_pub"/>
+                <label for="is_web_pub"/> -->
+            </div>
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="is_web_pub" />
+                <label for="is_web_pub"/>
             </xpath>
         </field>
     </record>
