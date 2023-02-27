@@ -25,7 +25,7 @@
     <record id="seq_podiatry_prescription" model="ir.sequence">
         <field name="name">Podiatry Prescription</field>
         <field name="code">podiatry.prescription</field>
-        <field name="prefix">Rx/%(y)s%(month)/</field>
+        <field name="prefix">RX/</field>
         <field name="padding">5</field>
     </record>
 </odoo>

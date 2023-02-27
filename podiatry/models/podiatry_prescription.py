@@ -27,7 +27,7 @@ class PodiatryPrescription(models.Model):
     _description = "podiatry prescription"
     _rec_name = "order_id"
     
-    partner_id = fields.Many2one('res.partner', string='Customer Name', required=True)
+    # partner_id = fields.Many2one('res.partner', string='Customer Name')
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
     practice_name = fields.Char(string='Practitioner', related='practice_id.name')
     practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner')
