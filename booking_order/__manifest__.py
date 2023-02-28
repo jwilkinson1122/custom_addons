@@ -20,10 +20,11 @@
     'application': True,
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'sale_management'],
+    'depends': ['base', 'sale', 'sale_management', "account", 'contacts'],
 
     # always loaded
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'wizard/wizard_cancelled.xml',
         'views/service_team_views.xml',
