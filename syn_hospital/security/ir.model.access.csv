@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access.syn.hospital.patient,access_syn_hospital_patient,syn_hospital.model_syn_hospital_patient,base.group_user,1,1,1,1
+access.syn.hospital.appointment,access_syn_hospital_appointment,syn_hospital.model_syn_hospital_appointment,base.group_user,1,1,1,1
+access.syn.hospital.medicine,access_syn_hospital_medicine,syn_hospital.model_syn_hospital_medicine,base.group_user,1,1,1,1
+access.cancel.appointment.wizard,access_cancel_appointment_wizard,syn_hospital.model_cancel_appointment_wizard,base.group_user,1,1,1,1

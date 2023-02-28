@@ -1,0 +1,138 @@
+<odoo>
+  <data>
+    <!-- Doctor Tree View -->
+    <record model="ir.ui.view" id="pet_clinic_doctor_tree">
+      <field name="name">pet_clinic.doctor_tree</field>
+      <field name="model">pet_clinic.doctor</field>
+      <field name="arch" type="xml">
+        <tree string="Doctor">
+          <field name="doctor_id" />
+          <field name="name" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- Doctor Form View -->
+    <record model="ir.ui.view" id="pet_clinic_doctor_form">
+      <field name="name">pet_clinic.doctor_form</field>
+      <field name="model">pet_clinic.doctor</field>
+      <field name="arch" type="xml">
+        <form string="Doctor">
+          <sheet>
+            <!-- Doctor Button Box -->
+            <div class="oe_button_box" name="button_box">
+              <!-- Doctor Appointment Button -->
+              <button name="open_doctor_appointment" class="oe_stat_button" type="object" icon="fa-calendar">
+                <field string="Janji" name="appointment_count" widget="statinfo" />
+              </button>
+            </div>
+            <div class="oe_title">
+              <h1>
+                <field name="doctor_id" />
+              </h1>
+            </div>
+            <group>
+              <field name="image" widget="image" class="oe_avatar" />
+            </group>
+            <group>
+              <group>
+                <field name="name" />
+                <field name="age" />
+                <field name="gender" />
+              </group>
+              <group>
+                <field name="phone" />
+                <field name="email" />
+                <field name="address" />
+              </group>
+            </group>
+            <group name="Speciality">
+              <field name="item_service" />
+            </group>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids" widget="mail_activity" />
+            <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Doctor Kanban View -->
+    <record id="pet_clinic_doctor_kanban" model="ir.ui.view">
+      <field name="name">pet_clinic.doctor_kanban</field>
+      <field name="model">pet_clinic.doctor</field>
+      <field name="arch" type="xml">
+        <kanban>
+          <field name="id" />
+          <field name="image" />
+          <field name="name" />
+          <field name="phone" />
+          <field name="age" />
+          <templates>
+            <t t-name="kanban-box">
+              <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_pet_clinic_docotr_kanban">
+                <t t-if="record.image.raw_value">
+                  <div class="o_kanban_image_fill_center d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('pet_clinic.doctor', 'image', record.id.raw_value)}')" />
+                </t>
+                <t t-else="">
+                  <img class="o_kanban_image" alt="Avatar" t-att-src="_s + '/base/static/img/avatar.png'" />
+                </t>
+                <div class="oe_kanban_details">
+                  <strong class="o_kanban_record_title">
+                    <field name="name" />
+                  </strong>
+                  <div class="o_kanban_tags_section" />
+                  <ul>
+                    <li>
+                      Age :
+                      <field name="age" />
+                    </li>
+                    <li>
+                      Phone :
+                      <field name="phone" />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <!-- Doctor Search View -->
+    <record id="pet_clinic_doctor_search" model="ir.ui.view">
+      <field name="name">pet_clinic.doctor_search</field>
+      <field name="model">pet_clinic.doctor</field>
+      <field name="arch" type="xml">
+        <search string="Search Doctor">
+          <field name="name" filter_domain="['|',('name', 'ilike', self),('doctor_id', 'ilike', self)]" />
+          <field name="item_service" />
+          <field name="doctor_id" />
+          <field name="name" />
+          <separator />
+          <group expand="0" string="Group By">
+            <filter string="Speciality" name="item_service" context="{'group_by':'item_service'}" />
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- Doctor Action Window -->
+    <record model="ir.actions.act_window" id="doctor_clinic_doctor_action_window">
+      <field name="name">Doctor</field>
+      <field name="res_model">pet_clinic.doctor</field>
+      <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <!-- Menu Root -->
+    <menuitem name="Pet Clinic" id="pet_clinic.root_menu" web_icon="pet_clinic,static/description/icon.png" />
+    />
+    <!-- Menu Master Data -->
+    <menuitem name="Master Data" id="pet_clinic.master_data" parent="pet_clinic.root_menu" />
+    <!-- Menu Doctor -->
+    <menuitem name="Doctor" id="pet_clinic.doctor" parent="pet_clinic.master_data" action="doctor_clinic_doctor_action_window" />
+  </data>
+</odoo>
