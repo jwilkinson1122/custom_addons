@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_patient_tree" model="ir.ui.view">
+        <field name="name">patient.tree</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <tree string="Patients" decoration-muted="not active">
+                <field name="name" decoration-bf="1"/>
+                <field name="practitioner_id"/>
+                <field name="practice_id"/>
+                <field name="reference"/>
+                <field name="identification" optional="hide"/>
+                <field name="diagnosis" optional="show"/>
+                <field name="diagnosis_id" invisible="1"/>
+                <field name="user_id" widget="many2one_avatar" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <field name="booking_order_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">patient.form</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <field name="active" invisible="1"/>
+                <header>
+
+                </header>
+                <div name="alert_patient_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_patient_id', '=', False)]}">
+                    A patient with the same reference already exists, are you sure you want to create a new one?
+                    <br/>
+                    •                    <field name="same_reference_patient_id"/>
+                </div>
+                <div name="alert_patient_identification_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_identification_patient_id', '=', False)]}">
+                    A patient with the same identification already exists, are you sure you want to create a new one?
+                    <br/>
+                    •                    <field name="same_identification_patient_id"/>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_booking_orders" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <div class="o_stat_info">
+                                <field name="booking_order_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Booking Orders</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div name="avatar">
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
+                    </div>
+                    <div name="title" class="oe_title">
+                        <div name="reference">
+                            <h1>
+                                <field name="reference"/>
+                            </h1>
+                        </div>
+                        <div name="name">
+                            <h1>
+                                <field name="name" required="1" placeholder="Patient's Name"/>
+                            </h1>
+                        </div>
+                    </div>
+
+                    <group name="responsible" string="Responsible">
+                        <group name="practice_information">
+                            <field name="practice_id" required="1"/>
+                        </group>
+                        <group name="practitioner_information">
+                            <field name="practitioner_id" required="1"/>
+                        </group>
+                    </group>
+                    <group name="personal_contact">
+                        <group name="address_information" string="Address Information">
+                            <span class="o_form_label o_td_label" name="address">Address</span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" placeholder="State" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
+                            </div>
+                        </group>
+                        <group name="contact_information" string="Contact Information">
+                            <field name="mobile" widget="phone" help="help"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page name="patient_attributes" string="Attributes">
+                            <group name="attributes" string="Attributes">
+                                <field name="gender"/>
+                                <field name="diagnosis"/>
+                            </group>
+                        </page>
+                        <page name="patient_measures" string="Measures">
+
+                        </page>
+                        <page name="patient_images" string="File Attachments">
+                            <group name="photo_group_tlOo2">
+                                <group name="photo_group_tlOo2_left">
+                                    <field widget="image" options='{"size": [0, 150]}' name="image1" string="Left Image"/>
+                                </group>
+                                <group name="photo_group_tlOo2_right">
+                                    <field widget="image" options='{"size": [0, 150]}' name="image2" string="Right Image"/>
+                                </group>
+                            </group>
+                            <group name="obj_group_DPydw">
+                                <group name="obj_group_DPydw_left">
+                                    <field filename="left_obj_file_name" name="left_obj_model" string="Left Scan"/>
+                                    <field invisible="1" name="left_obj_file_name"/>
+                                </group>
+                                <group name="obj_group_DPydw_right">
+                                    <field filename="right_obj_file_name" name="right_obj_model" string="Right Scan"/>
+                                    <field invisible="1" name="right_obj_file_name"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name='internal_notes' string="Patient Notes">
+                            <field name="notes" placeholder="Add note..."/>
+                        </page>
+
+                        <page name="booking_orders_list" string="Booking Orders">
+                            <separator name="booking_orders" string="Booking Orders List"/>
+                            <div name="alert_no_booking_orders" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_booking_order_id', '!=', ())]}">
+                                No Booking Orders
+                            </div>
+                            <field name="patient_booking_order_id" mode="kanban"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban -->
+    <record id="view_patient_kanban" model="ir.ui.view">
+        <field name="name">patient.kanban</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <kanban string="Contacts" class="o_res_partner_kanban" default_order="id asc">
+                <field name="id"/>
+                <field name="color"/>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="email"/>
+                <field name="is_patient"/>
+                <field name="practice_id"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="avatar_128"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
+                            <t t-if="!record.is_patient.raw_value">
+                                <t t-set="background_image" t-value="kanban_image('patient', 'avatar_128', record.id.raw_value)"/>
+                                <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('patient', 'avatar_128', record.raw_value)"/>
+                                </div>
+                                <div class="o_kanban_image d-md-none" t-attf-style="background-image: url(#{background_image})">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('patient', 'avatar_128', record.raw_value)"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('patient', 'avatar_128', record.id.raw_value)})" role="img"/>
+                            </t>
+                            <div class="oe_kanban_details d-flex flex-column">
+                                <strong class="o_kanban_record_title oe_partner_heading">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <ul>
+                                    <li>PID : 
+                                        <field name="reference"/>
+                                    </li>
+                                    <li>Practice : 
+                                        <field name="practice_id"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                        <t t-if="record.city.raw_value">
+                                            <field name="city"/>
+                                            <t t-if="record.country_id.raw_value">, </t>
+                                        </t>
+                                        <t t-if="record.country_id.raw_value">
+                                            <field name="country_id"/>
+                                        </t>
+                                    </li>
+                                    <li t-if="record.email.raw_value" class="o_text_overflow">
+                                        <field name="email"/>
+                                    </li>
+                                    <li>Practitioner : 
+                                        <field name="practitioner_id"/>
+                                    </li>
+                                    <li>Booking Orders: 
+                                        <field name="booking_order_count"/>
+                                    </li>
+                                </ul>
+                                <div class="o_row">
+                                    <span class="oe_kanban_partner_links"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Activity -->
+    <record id="view_patient_activity" model="ir.ui.view">
+        <field name="name">patient.activity</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <activity string="Patients">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('patient', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="name" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_patient_search" model="ir.ui.view">
+        <field name="name">patient.search</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <search string="Patients">
+                <!--
+                Fields
+                -->
+                <field name="name"/>
+                <field name="identification" operator="="/>
+                <field name="reference" operator="="/>
+                <separator/>
+
+                <!--
+                Filters
+                -->
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+
+                <!--
+                Groups
+                -->
+                <group name="group_by" string="Group By">
+                    <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
+                    <filter string="Practitioner" name="practitioner_id" context="{'group_by': 'practitioner_id'}"/>
+                    <separator/>
+                    <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                    <separator/>
+                    <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
+                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                </group>
+
+                <!--
+                Search panel
+                -->
+
+                <searchpanel>
+                    <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
+                    <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
+                    <!-- <field name="gender" icon="fa-venus-mars" enable_counters="1"/>
+                    <field name="country_id" icon="fa-globe" enable_counters="1"/> -->
+                </searchpanel>
+
+            </search>
+        </field>
+    </record>
+
+
+
+
+
+</odoo>

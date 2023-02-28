@@ -3,14 +3,14 @@
     'name': "Booking Order",
 
     'summary': """
-        Booking Order Zhafron""",
+        Booking Order NWPL""",
 
     'description': """
-        Booking Order Zhafron
+        Booking Order NWPL
     """,
 
-    'author': "Zhafron",
-    'website': "http://www.yourcompany.com",
+    'author': "NWPL",
+    'website': "http://www.nwpodiatric.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -29,6 +29,11 @@
         'views/service_team_views.xml',
         'views/work_order_views.xml',
         'views/booking_order_views.xml',
+        "views/patient.xml",
+        "views/practice.xml",
+        "views/practitioner.xml",
+        # "views/partner.xml",
+        "views/actions.xml",
         'views/menu.xml',
         'report/report_work_order.xml',
         'report/report.xml',

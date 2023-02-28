@@ -4,6 +4,14 @@ from odoo.exceptions import ValidationError
 
 class BookingOrder(models.Model):
     _inherit = 'sale.order'
+    
+    # partner_id = fields.Many2one('res.partner', string='Customer Name')
+    practice_id = fields.Many2one(comodel_name='practice', string='Practice')
+    practice_name = fields.Char(string='Practitioner', related='practice_id.name')
+    practitioner_id = fields.Many2one(comodel_name='practitioner', string='Practitioner')
+    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
+    patient_id = fields.Many2one(comodel_name='patient', string='Patient')
+    patient_name = fields.Char(string='Practitioner', related='patient_id.name')
 
     is_booking_order = fields.Boolean(
         string='Is Booking Order')

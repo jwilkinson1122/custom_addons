@@ -3,3 +3,7 @@
 from . import service_team
 from . import booking_order
 from . import work_order
+from . import practice
+from . import practitioner
+from . import patient
+from . import partner
