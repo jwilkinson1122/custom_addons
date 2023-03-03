@@ -39,9 +39,16 @@ class Practitioner(models.Model):
     practitioner_id = fields.Many2many('res.partner', domain=[(
         'is_practitioner', '=', True)], string="practitioner_id", required=True)
 
-    practice_id = fields.Many2one(
-        comodel_name='practice',
-        string='Practice')
+    # practice_id = fields.Many2one(
+    #     comodel_name='practice',
+    #     string='Practice')
+    # practice_id = fields.Many2one('practice', string="Practice", required=True)
+    
+    practice_id = fields.Many2one('practice',
+                                 string="Practice")
+
+    practice_ids = fields.One2many('practice', 'practitioner_id', 'Practice')
+
 
     practitioner_booking_order_id = fields.One2many(
         comodel_name='sale.order',

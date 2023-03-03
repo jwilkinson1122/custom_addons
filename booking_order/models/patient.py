@@ -101,9 +101,11 @@ class Patient(models.Model):
 
     patient_booking_order_id = fields.One2many(
         comodel_name='sale.order',
-        inverse_name='patient_id',
-        # string="Booking Orders",
+        inverse_name='partner_id',
     )
+    
+    # patient_booking_order_id = fields.One2many(
+    #     'sale.order', 'partner_id', string="Patient")
 
     booking_order_line = fields.One2many(
         'sale.order.line', 'name', 'Booking Order Line')
@@ -111,7 +113,7 @@ class Patient(models.Model):
     def _compute_booking_order_count(self):
         for rec in self:
             booking_order_count = self.env['sale.order'].search_count(
-                [('patient_id', '=', rec.id)])
+                [('partner_id', '=', rec.id)])
             rec.booking_order_count = booking_order_count
 
     user_id = fields.Many2one(
@@ -160,21 +162,21 @@ class Patient(models.Model):
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     age = fields.Char(compute='_compute_age')
 
-    # @api.onchange('patient_id')
-    # def _onchange_patient(self):
-    #     '''
-    #     The purpose of the method is to define a domain.
-    #     '''
-    #     address_id = self.patient_id
-    #     self.patient_address_id = address_id
+    @api.onchange('patient_id')
+    def _onchange_patient(self):
+        '''
+        The purpose of the method is to define a domain.
+        '''
+        address_id = self.patient_id
+        self.patient_address_id = address_id
 
-    # patient_address_id = fields.Many2one(
-    #     'res.partner', string="Patient Address", )
+    patient_address_id = fields.Many2one(
+        'res.partner', string="Patient Address", )
 
-    # @api.onchange('practice_id')
-    # def onchange_practice_id(self):
-    #     for rec in self:
-    #         return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
 
     @api.model
     def _relativedelta_to_text(self, delta):
@@ -300,8 +302,8 @@ class Patient(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Booking Orders',
             'res_model': 'sale.order',
-            'domain': [('patient_id', '=', self.id)],
-            'context': {'default_patient_id': self.id},
+            'domain': [('partner_id', '=', self.id)],
+            'context': {'default_partner_id': self.id},
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }

@@ -16,11 +16,11 @@
                     </button>
                 </xpath>
                 <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="domain">[('is_company', '=', True)]</attribute>
+                    <attribute name="domain">[('is_patient', '=', True)]</attribute>
                 </xpath> -->
-                <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
-                </xpath> -->
+                </xpath>
                 <xpath expr="//field[@name='order_line']" position="before">
                     <button class="oe_highlight" groups="booking_order.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
                 </xpath>
@@ -56,17 +56,18 @@
                 <field name="partner_id" position="after">
                     <field name="is_booking_order" invisible="1"/>
 
-                    <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
-                    <field name="practitioner_id" required="1" />
-                    <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                    <field name="practice_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
+                    <field name="practitioner_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
+                    <!-- <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" /> -->
+                    <field name="patient_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="team" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="team_leader" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="team_members" widget="many2many_tags" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                 </field>
                 <field name="payment_term_id" position="after">
-                    <field name="partner_invoice_id" domain="[('parent_id','=',partner_id)]" />
+                    <field name="partner_invoice_id" domain="[('parent_id','=', partner_id)]" />
                     <field name="pricelist_id" />
-                    <field name="partner_shipping_id" domain="[('parent_id','=',partner_id)]" />
+                    <field name="partner_shipping_id" domain="[('parent_id','=', partner_id)]" />
 
                     <field name="booking_start" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="booking_end" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>

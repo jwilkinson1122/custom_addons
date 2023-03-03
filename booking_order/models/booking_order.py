@@ -1,21 +1,11 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
-
-# class BookingOrderProductReConfigurator(models.TransientModel):
-#     _inherit = 'sale.product.configurator'
-
-#     product_id = fields.Many2one('product.product')
-#     order_line_id = fields.Many2one('sale.order.line')
-#     order_id = fields.Many2one('sale.order')
-
+ 
 class BookingOrder(models.Model):
     _inherit = 'sale.order'
     
-    partner_id = fields.Many2one(
-        "res.partner",
-        string="Partner",
-        domain=[("is_practice", "=", True)]
-    )
+
+    
    
     practice_id = fields.Many2one(comodel_name='practice', string='Practice')
     practice_name = fields.Char(string='Practitioner', related='practice_id.name')
@@ -23,9 +13,36 @@ class BookingOrder(models.Model):
     practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
     patient_id = fields.Many2one(comodel_name='patient', string='Patient')
     patient_name = fields.Char(string='Practitioner', related='patient_id.name')
+    
+        # partner_id = fields.Many2one(
+    #     "res.partner",
+    #     string="Practice",
+    #     domain=[("is_practice", "=", True)]
+    # )
+    
+    partner_id = fields.Many2one(
+        'res.partner', string='Customer', readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=False, change_default=True, index=True, tracking=1,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    partner_invoice_id = fields.Many2one(
+        'res.partner', string='Invoice Address',
+        readonly=False, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    partner_shipping_id = fields.Many2one(
+        'res.partner', string='Delivery Address', readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    # practitioner_id = fields.Many2one('res.partner', string='Practitioner', domain=[("is_practitioner", "=", True)], store=True)
+    # patient_id = fields.Many2one('res.partner', string='Patient', domain=[("is_patient", "=", True)], store=True)
 
-    is_booking_order = fields.Boolean(
-        string='Is Booking Order')
+    is_booking_order = fields.Boolean(string='Is Booking Order')
+    # practice_id = fields.Many2one('res.partner', string="Practice", domain=[("is_company", "=", True)])
+    # practitioner_id = fields.Many2one('res.partner', 'Practitioner', domain=[("is_company", "=", False)])
+    # patient_id = fields.Many2one('res.partner', 'Patient', domain=[("is_patient", "=", True)])
+    # patient_name = fields.Char('Name', related='patient_id.name')
+    
     team = fields.Many2one(
         comodel_name='booking.service_team',
         string='Team')
