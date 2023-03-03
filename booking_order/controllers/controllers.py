@@ -3,7 +3,7 @@
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.sale_product_configurator.controllers.main import ProductConfiguratorController as Configurator
+from odoo.addons.sale_booking_order.controllers.main import ProductConfiguratorController as Configurator
 
 
 class ProductReConfigurator(Configurator):

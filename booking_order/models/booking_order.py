@@ -42,6 +42,17 @@ class BookingOrder(models.Model):
     wo_count = fields.Integer(
         string='Work Order',
         compute='_compute_wo_count')
+    
+    def action_config_start(self):
+        """Return action to start configuration wizard"""
+        configurator_obj = self.env["product.configurator.sale"]
+        ctx = dict(
+            self.env.context,
+            default_order_id=self.id,
+            wizard_model="product.configurator.sale",
+            allow_preset_selection=True,
+        )
+        return configurator_obj.with_context(ctx).get_wizard_action()
 
     def _compute_wo_count(self):
         wo_data = self.env['booking.work_order'].sudo().read_group([('bo_reference', 'in', self.ids)], ['bo_reference'],
@@ -132,54 +143,54 @@ class BookingOrder(models.Model):
                             'planned_start': order.booking_start,
                             'planned_end': order.booking_end}])
             
-    # @api.model
-    # def update_order_line(self, order_line_id, params):
-    #     product_id = params['product_id']
-    #     qty = params['quantity']
-    #     order_line = self.env['sale.order.line']
-    #     old_order_line = self.env['sale.order.line'].browse(order_line_id)
-    #     variant_attribute_values = params['no_variant_attribute_values']
-    #     product_custom_attribute_values = params['product_custom_attribute_values']
-    #     custom_attribute_ids = self.env['product.attribute.custom.value']
-    #     if product_custom_attribute_values:
-    #         for custom_attribute in product_custom_attribute_values:
-    #             custom_attribute_ids += self.env['product.attribute.custom.value'].new({
-    #                 'custom_value': custom_attribute['custom_value'],
-    #                 'attribute_value_id': custom_attribute['attribute_value_id'],
-    #                 'attribute_value_name': custom_attribute['attribute_value_name']
-    #             })
-    #     default_values = order_line.default_get(order_line._fields.keys())
-    #     new_order_line = order_line.new(dict(default_values,
-    #         product_id=product_id,
-    #         product_uom_qty=qty,
-    #         order_id=self,
-    #         sequence=old_order_line.sequence,
-    #         product_custom_attribute_value_ids=custom_attribute_ids,
-    #         product_no_variant_attribute_value_ids=list(map(lambda x: int(x['value']), variant_attribute_values)),
-    #     ))
-    #     new_order_line.product_id_change()
-    #     new_order_line.sequence = old_order_line.sequence
-
-    #     self.order_line += new_order_line
-    #     self.order_line -= old_order_line
 
 
-# class BookingOrderLine(models.Model):
-#     _inherit = 'sale.order.line'
+class BookingOrderLine(models.Model):
+    _inherit = "sale.order.line"
 
-#     def open_product_configurator(self):
-#         form_view = self.env.ref('booking_order.booking_order_product_reconfigurator_view_form')
-#         return {
-#             'name': _('Configure a product'),
-#             'type': 'ir.actions.act_window',
-#             'res_model': 'sale.product.configurator',
-#             'views': [[form_view.id, 'form']],
-#             'target': 'new',
-#             'context': {
-#                 'default_product_template_id': self.product_id.product_tmpl_id.id,
-#                 'default_product_id': self.product_id.id,
-#                 'default_order_line_id': self.id,
-#                 'default_order_id': self.order_id.id
-#             }
-#         }
+    custom_value_ids = fields.One2many(
+        comodel_name="product.config.session.custom.value",
+        inverse_name="cfg_session_id",
+        related="config_session_id.custom_value_ids",
+        string="Configurator Custom Values",
+    )
+    config_ok = fields.Boolean(
+        related="product_id.config_ok", string="Configurable", readonly=True
+    )
+    config_session_id = fields.Many2one(
+        comodel_name="product.config.session", string="Config Session"
+    )
 
+    def reconfigure_product(self):
+        """Creates and launches a product configurator wizard with a linked
+        template and variant in order to re-configure a existing product. It is
+        esentially a shortcut to pre-fill configuration data of a variant"""
+        wizard_model = "product.configurator.sale"
+
+        extra_vals = {
+            "order_id": self.order_id.id,
+            "order_line_id": self.id,
+            "product_id": self.product_id.id,
+        }
+        self = self.with_context(
+            {
+                "default_order_id": self.order_id.id,
+                "default_order_line_id": self.id,
+            }
+        )
+        return self.product_id.product_tmpl_id.create_config_wizard(
+            model_name=wizard_model, extra_vals=extra_vals
+        )
+
+    @api.onchange("product_uom", "product_uom_qty")
+    def product_uom_change(self):
+        if self.config_session_id:
+            account_tax_obj = self.env["account.tax"]
+            self.price_unit = account_tax_obj._fix_tax_included_price_company(
+                self.config_session_id.price,
+                self.product_id.taxes_id,
+                self.tax_id,
+                self.company_id,
+            )
+        else:
+            super(BookingOrderLine, self).product_uom_change()
