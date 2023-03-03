@@ -20,7 +20,7 @@
     'application': True,
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'sale_management', "account", 'contacts'],
+    'depends': ['base', 'sale', 'sale_management', 'sale_product_configurator', 'product', 'account', 'contacts', 'mail'],
 
     # always loaded
     'data': [
@@ -28,6 +28,7 @@
         'security/ir.model.access.csv',
         'wizard/wizard_cancelled.xml',
         'views/service_team_views.xml',
+        'views/templates.xml',
         'views/work_order_views.xml',
         'views/booking_order_views.xml',
         "views/patient.xml",
@@ -40,6 +41,11 @@
         'report/report.xml',
         'data/data.xml',
     ],
+        "assets": {
+        "web.assets_backend": [
+            # "/booking_order/static/src/js/product_configurator.js",
+        ],
+    },
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',

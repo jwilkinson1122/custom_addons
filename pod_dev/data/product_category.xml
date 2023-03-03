@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_category_shells" model="product.category">
+            <field name="name">Shell / Foundation</field>
+        </record>
+        <record id="product_category_top_covers" model="product.category">
+            <field name="name">Top Covers</field>
+        </record>
+        <record id="product_category_arch_height" model="product.category">
+            <field name="name">Arch Height</field>
+        </record>
+        <record id="product_category_x_guard" model="product.category">
+            <field name="name">X-Guard</field>
+        </record>
+        <record id="product_category_cushion" model="product.category">
+            <field name="name">Cushion</field>
+        </record>
+        <record id="product_category_extension" model="product.category">
+            <field name="name">Extension</field>
+        </record>
+        <record id="product_category_accommodation" model="product.category">
+            <field name="name">Accommodation</field>
+        </record>
+        <record id="product_category_service" model="product.category">
+            <field name="name">Service</field>
+        </record>
+        <record id="product_category_miscellaneous" model="product.category">
+            <field name="name">Miscellaneous</field>
+        </record>
+
+
+    </data>
+
+
+</odoo>

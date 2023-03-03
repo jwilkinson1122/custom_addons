@@ -160,21 +160,21 @@ class Patient(models.Model):
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     age = fields.Char(compute='_compute_age')
 
-    @api.onchange('patient_id')
-    def _onchange_patient(self):
-        '''
-        The purpose of the method is to define a domain.
-        '''
-        address_id = self.patient_id
-        self.patient_address_id = address_id
+    # @api.onchange('patient_id')
+    # def _onchange_patient(self):
+    #     '''
+    #     The purpose of the method is to define a domain.
+    #     '''
+    #     address_id = self.patient_id
+    #     self.patient_address_id = address_id
 
-    patient_address_id = fields.Many2one(
-        'res.partner', string="Patient Address", )
+    # patient_address_id = fields.Many2one(
+    #     'res.partner', string="Patient Address", )
 
-    @api.onchange('practice_id')
-    def onchange_practice_id(self):
-        for rec in self:
-            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+    # @api.onchange('practice_id')
+    # def onchange_practice_id(self):
+    #     for rec in self:
+    #         return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
 
     @api.model
     def _relativedelta_to_text(self, delta):

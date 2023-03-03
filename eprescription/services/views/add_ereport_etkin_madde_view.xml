@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="add_ereport_etkin_madde_form" model="ir.ui.view">
+        <field name="name">hospital.service.add.ereport.etkinm.form</field>
+        <field name="model">hospital.service.add.ereport.etkinm</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="doctor_id"/>
+                </group>
+                <group>
+                    <field name="etkin_madde_lines" string="E-Report Active Item List">
+                        <tree>
+                            <field name="etkin_madde_kodu"/>
+                            <field name="kullanim_doz1"/>
+                            <field name="kullanim_doz2"/>
+                            <field name="kullanim_doz_birimi"/>
+                            <field name="kullanim_doz_periyot"/>
+                            <field name="kullanim_doz_periyot_birimi"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="add_etkin_madde" string="Ekle" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Vazgeç" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="add_ereport_etkin_madde_action">
+        <field name="name">Add E-Report Etkin Madde</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.service.add.ereport.etkinm</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

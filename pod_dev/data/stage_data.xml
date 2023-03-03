@@ -1,0 +1,35 @@
+<odoo noupdate="1">
+
+    <record id="stage_draft" model="podiatry.prescription.stage">
+        <field name="name">Draft</field>
+        <field name="sequence">10</field>
+        <field name="state">draft</field>
+    </record>
+    <record id="stage_processing" model="podiatry.prescription.stage">
+        <field name="name">In Process</field>
+        <field name="sequence">85</field>
+        <field name="state">in_process</field>
+    </record>
+    <record id="stage_done" model="podiatry.prescription.stage">
+        <field name="name">Done</field>
+        <field name="sequence">90</field>
+        <field name="state">done</field>
+    </record>
+    <record id="stage_cancel" model="podiatry.prescription.stage">
+        <field name="name">Cancel</field>
+        <field name="sequence">95</field>
+        <field name="state">cancel</field>
+    </record>
+    <record id="stage_hold" model="podiatry.prescription.stage">
+        <field name="name">Hold</field>
+        <field name="sequence">100</field>
+        <field name="state">hold</field>
+    </record>
+
+    <record id="action_podiatry_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">podiatry.prescription.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
