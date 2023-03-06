@@ -8,11 +8,11 @@ class BookingOrder(models.Model):
     
    
     practice_id = fields.Many2one(comodel_name='practice', string='Practice')
-    practice_name = fields.Char(string='Practitioner', related='practice_id.name')
+    practice_name = fields.Char(string='Practice', related='practice_id.name')
     practitioner_id = fields.Many2one(comodel_name='practitioner', string='Practitioner')
     practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
     patient_id = fields.Many2one(comodel_name='patient', string='Patient')
-    patient_name = fields.Char(string='Practitioner', related='patient_id.name')
+    patient_name = fields.Char(string='Patient', related='patient_id.name')
     
         # partner_id = fields.Many2one(
     #     "res.partner",
@@ -34,6 +34,7 @@ class BookingOrder(models.Model):
         'res.partner', string='Delivery Address', readonly=True, required=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    
     # practitioner_id = fields.Many2one('res.partner', string='Practitioner', domain=[("is_practitioner", "=", True)], store=True)
     # patient_id = fields.Many2one('res.partner', string='Patient', domain=[("is_patient", "=", True)], store=True)
 

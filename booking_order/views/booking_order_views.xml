@@ -6,21 +6,14 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-
-                <!-- <xpath expr='//button[@name="action_confirm"]' position="after">
-                    <button name="action_check" string="Check" class="btn-primary" type="object"/>
-                </xpath> -->
                 <xpath expr="//button[@name='action_view_invoice']" position="after">
                     <button type="action" name="%(action_view_wo)d" class="oe_stat_button" icon="fa-book" attrs="{'invisible': [('wo_count', '=', 0)]}">
                         <field name="wo_count" widget="statinfo" string="Work Order"/>
                     </button>
                 </xpath>
                 <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="domain">[('is_patient', '=', True)]</attribute>
-                </xpath> -->
-                <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='order_line']" position="before">
                     <button class="oe_highlight" groups="booking_order.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
                 </xpath>
@@ -65,10 +58,11 @@
                     <field name="team_members" widget="many2many_tags" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                 </field>
                 <field name="payment_term_id" position="after">
-                    <field name="partner_invoice_id" domain="[('parent_id','=', partner_id)]" />
+                    <field name="partner_invoice_id"/>
+                    <!-- <field name="partner_invoice_id" domain="[('parent_id','=', partner_id)]" /> -->
                     <field name="pricelist_id" />
-                    <field name="partner_shipping_id" domain="[('parent_id','=', partner_id)]" />
-
+                    <field name="partner_shipping_id"/>
+                    <!-- <field name="partner_shipping_id" domain="[('parent_id','=', partner_id)]" /> -->
                     <field name="booking_start" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="booking_end" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                 </field>
