@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+  <!-- hotel.room_type tree view -->
+  <record id="hotel_room_type_view_tree" model="ir.ui.view">
+    <field name="name">Room Type</field>
+    <field name="model">hotel.room_type</field>
+    <field name="arch" type="xml">
+      <tree>
+        <!-- Add your fields here -->
+        <field name="name"/>
+        <field name="price"/>
+        <field name="description"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- hotel.room_type action window -->
+  <record id="hotel_room_type_action" model="ir.actions.act_window">
+    <field name="name">Room Type</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hotel.room_type</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- This Menu Item must have a parent and an action -->
+  <menuitem 
+    id="hotel_room_type_menu_act" 
+    name="Room Type" 
+    parent="room_menu_categ" 
+    action="hotel_room_type_action" 
+    sequence="20"/>
+</odoo>

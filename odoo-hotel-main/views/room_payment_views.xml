@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+  <!-- hotel.room_payment tree view -->
+  <record id="hotel_room_payment_view_tree" model="ir.ui.view">
+    <field name="name">Room Payment</field>
+    <field name="model">hotel.room_payment</field>
+    <field name="arch" type="xml">
+      <tree>
+        <!-- Add your fields here -->
+        <field name="room_id"/>
+        <field name="name"/>
+        <field name="total"/>
+        <field name="payment"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- hotel.room_payment form view -->
+  <record id="hotel_room_payment_view_form" model="ir.ui.view">
+    <field name="name">Room Payment</field>
+    <field name="model">hotel.room_payment</field>
+    <field name="arch" type="xml">
+      <form string="">
+        <sheet>
+          <group>
+            <!-- Add your fields here -->
+            <label for='room_id'>Room ID</label>
+            <h1>
+              <field name="room_id"/>
+            </h1>
+            <field name="name"/>
+            <field name="total"/>
+            <field name="payment"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- hotel.room_payment action window -->
+  <record id="hotel_room_payment_action" model="ir.actions.act_window">
+    <field name="name">Room Payment</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hotel.room_payment</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  
+  <!-- This Menu Item must have a parent and an action -->
+  <menuitem 
+    id="hotel_room_payment_menu_act" 
+    name="Payment" 
+    parent="order_menu_categ" 
+    action="hotel_room_payment_action" 
+    sequence="20"/>
+</odoo>

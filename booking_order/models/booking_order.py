@@ -7,12 +7,12 @@ class BookingOrder(models.Model):
 
     
    
-    practice_id = fields.Many2one(comodel_name='practice', string='Practice')
-    practice_name = fields.Char(string='Practice', related='practice_id.name')
-    practitioner_id = fields.Many2one(comodel_name='practitioner', string='Practitioner')
-    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
-    patient_id = fields.Many2one(comodel_name='patient', string='Patient')
-    patient_name = fields.Char(string='Patient', related='patient_id.name')
+    practice_id = fields.Many2one(comodel_name='practice.practice_id', string='Practice')
+    
+    practitioner_id = fields.Many2one(comodel_name='practitioner.practitioner_id', string='Practitioner')
+   
+    patient_id = fields.Many2one(comodel_name='patient.patient_id', string='Patient')
+   
     
         # partner_id = fields.Many2one(
     #     "res.partner",
@@ -82,32 +82,7 @@ class BookingOrder(models.Model):
         for wo in self:
             wo.wo_count = result.get(wo.id, 0)
             
-    @api.onchange('practice_id')
-    def onchange_practice_id(self):
-        for rec in self:
-            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
-    @api.onchange('practitioner_id')
-    def onchange_practitioner_id(self):
-        for rec in self:
-            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
-            
-    # @api.onchange("partner_id")
-    # def _onchange_partner_id(self):
-    #     """
-    #     When you change partner_id it will update the partner_invoice_id,
-    #     partner_shipping_id and pricelist_id of the podiatry prescription as well
-    #     ---------------------------------------------------------------
-    #     @param self: object pointer
-    #     """
-    #     if self.partner_id:
-    #         self.update(
-    #             {
-    #                 "partner_invoice_id": self.partner_id.id,
-    #                 "partner_shipping_id": self.partner_id.id,
-    #                 "pricelist_id": self.partner_id.property_product_pricelist.id,
-    #             }
-    #         )
-
+  
     @api.onchange('team')
     def _onchange_team(self):
         search = self.env['booking.service_team'].search([('id', '=', self.team.id)])

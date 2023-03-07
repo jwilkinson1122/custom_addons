@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <template id="report_hotel_room_order">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <!-- Order Information -->
+            <section>
+              <div class="row">
+                <h1>Order Number:</h1>
+                <h1 t-field="o.name" />
+              </div>
+
+              <div class="row mb-3">
+                <h3>Order Date:</h3>
+                <h3 t-field="o.date_order" />
+              </div>
+            </section>
+            
+            <!-- Customer Information -->
+            <section class="mb-3">
+              <div class="row">
+                <div class="col-6"><h5>Customer Name: </h5></div>
+                <div class="col-6"><h5 t-field="o.cust_name" /></div>
+              </div>
+              <div class="row">
+                <div class="col-6"><h5>Customer Phone Number: </h5></div>
+                <div class="col-6"><h5 t-field="o.phone_num" /></div>
+              </div>
+              <div class="row">
+                <div class="col-6"><h5>Customer Email: </h5></div>
+                <div class="col-6"><h5 t-field="o.email" /></div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-6"><h5>Check-In Date:</h5></div>
+                <div class="col-6"><h5>Check-Out Date:</h5></div>
+                
+              </div>
+              <div class="row">
+                <div class="col-6"><h5 t-field="o.date_checkin"/></div>
+                <div class="col-6"><h5 t-field="o.date_checkout"/></div>
+              </div>
+            </section>
+
+            <!-- Room Information -->
+            <section class="mb-3">
+              <div class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Room Name</th>
+                      <th>Quantity</th>
+                      <th>Price Per Unit</th>
+                      <th>Amount Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-foreach="o.orderroomdetail_ids" t-as="r">
+                      <tr>
+                        <td><t t-esc="r.room_id.name"/></td>
+                        <td><t t-esc="r.qty"/></td>
+                        <td><t t-esc="r.price_per_unit"/></td>
+                        <td><t t-esc="r.price"/></td>
+                      </tr>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Additional Information -->
+            <section>
+              <div class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Additional</th>
+                      <th>Quantity</th>
+                      <th>Price Per Unit</th>
+                      <th>Amount Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-foreach="o.orderadditionaldetail_ids" t-as="r">
+                      <tr>
+                        <td><t t-esc="r.additional_id.name"/></td>
+                        <td><t t-esc="r.qty"/></td>
+                        <td><t t-esc="r.price_per_unit"/></td>
+                        <td><t t-esc="r.price"/></td>
+                      </tr>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Price -->
+            <section>
+                <div class="row">
+                  <h5>Total Price: IDR </h5>
+                  <h5 t-field="o.total" />
+                </div>
+                <!-- <div class="row">
+                  <h5>Payment Type:</h5>
+                  <h5 t-field="o.payment" />
+                </div> -->
+            </section>
+
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>

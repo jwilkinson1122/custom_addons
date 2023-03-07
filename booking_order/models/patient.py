@@ -84,6 +84,10 @@ class Patient(models.Model):
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
+    
+    patient_id = fields.Many2many('res.partner', domain=[(
+        'is_patient', '=', True)], string="Patient", required=True)
+
 
     practice_id = fields.Many2one(
         comodel_name='practice',

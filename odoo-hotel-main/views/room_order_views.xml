@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+  <!-- hotel.room_order calendar view -->
+  <record id="hotel_room_order_view_calendar" model="ir.ui.view">
+    <field name="name">Check In Date</field>
+    <field name="model">hotel.room_order</field>
+    <field name="arch" type="xml">
+      <calendar string="Calendar Description" date_start="date_checkin" mode="month" color="id">
+        <!-- Add your fields here -->
+        <field name="name"/>
+        <field name="cust_name"/>
+      </calendar>
+    </field>
+  </record>
+
+  <!-- hotel.room_order graph view -->
+  <record id="hotel_room_order_view_graph" model="ir.ui.view">
+    <field name="name">Graph</field>
+    <field name="model">hotel.room_order</field>
+    <field name="arch" type="xml">
+      <graph string="Graph Description">
+        <!-- Add your fields here -->
+        <field name="date_checkin" type="count"/>
+      </graph>
+    </field>
+  </record>
+
+  <!-- hotel.room_order tree view -->
+  <record id="hotel_room_order_view_tree" model="ir.ui.view">
+    <field name="name">Room Order</field>
+    <field name="model">hotel.room_order</field>
+    <field name="arch" type="xml">
+      <tree>
+        <!-- Add your fields here -->
+        <field name="name"/>
+        <field name="cust_name"/>
+        <field name="phone_num"/>
+        <field name="total"/>
+        <field name="date_checkin"/>
+        <field name="date_checkout"/>
+        <field name="is_pay"/>
+        <field name="is_clean"/>
+      </tree>
+    </field>
+  </record>
+
+
+  <record id="sequence_tips" model="ir.sequence">
+    <field name="name">Tips Sequence</field>
+    <field name="code">hotel.room_order.sequence</field>
+    <field name="active">TRUE</field>
+    <field name="prefix">O</field>
+    <field name="padding">5</field>
+    <field name="number_next">1</field>
+    <field name="number_increment">1</field>
+  </record>
+
+  <!-- hotel.room_order form view -->
+  <record id="hotel_room_order_view_form" model="ir.ui.view">
+    <field name="name">Room Order</field>
+    <field name="model">hotel.room_order</field>
+    <field name="arch" type="xml">
+      <form string="">
+        <header>
+          <button string="Cancel" name="action_cancel" type="object" class="oe_highlight"
+          attrs="{'invisible': ['|', ('state', '=', 'completed'), ('state', '=', 'cleaned'), ('state', '=', 'cancelled')]}"/>
+          
+          <button string="Clean" name="action_clean" type="object" class="oe_highlight" 
+          attrs="{'invisible': ['|', ('state', '=', 'pending'), ('state', '=', 'cancelled')]}"/>
+          
+          <field name="state" widget="statusbar"/>
+        </header>
+        
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name"/>
+            </h1> 
+          </div>
+          <group name="date_order">
+            <field name="date_order" readonly="1"
+            />
+          </group>
+          <group name="name">
+            <group name="date_checkin">
+              <field name="date_checkin"/>  
+            </group>
+            <group name="date_checkout">
+              <field name="date_checkout"/>
+            </group>
+          </group>
+
+          <group name="customer" string="Customer Information">
+            <field name="cust_name"/>
+            <field name="phone_num"/>
+            <field name="email"/>
+          </group>
+
+          <group name="room" string="Rooms">
+            <notebook colspan='4'>
+              <page name="room" string="Room">
+                <field name="orderroomdetail_ids">
+                  
+                  <tree editable="bottom">
+                      <field name="room_id"/>
+                      <field name="price_per_unit"/>
+                      <field name="qty"/>
+                      <field name="price" sum='Total'/>
+                  </tree>
+                  
+                </field>
+              </page>
+            </notebook>
+          </group>
+
+          <group name="addons" string="Add-ons">
+            <notebook colspan='4'>
+              <page name="additional" string="Additional">
+                <field name="orderadditionaldetail_ids">
+                  
+                  <tree editable="bottom">
+                      <field name="additional_id"/>
+                      <field name="price_per_unit"/>
+                      <field name="qty"/>
+                      <field name="price" sum='Total'/>
+                  </tree>
+                  
+                </field>
+              </page>
+            </notebook>
+          </group>
+
+          <label for="total" string="Total Price"/>
+          <h3>
+            <field name="total"/>
+          </h3>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- hotel.room_order action window -->
+  <record id="hotel_room_order_action" model="ir.actions.act_window">
+    <field name="name">Room Order</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">hotel.room_order</field>
+    <field name="view_mode">tree,form,calendar,graph</field>
+  </record>
+
+  <!-- This Menu Item must have a parent and an action -->
+  <menuitem 
+    id="hotel_room_order_menu_act" 
+    name="Room Order" 
+    parent="order_menu_categ" 
+    action="hotel_room_order_action" 
+    sequence="10"/>
+</odoo>
