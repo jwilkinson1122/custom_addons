@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_order_customer_contact
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-27 09:36+0000\n"
+"PO-Revision-Date: 2022-09-27 12:36+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#. module: sale_order_customer_contact
+#: model_terms:ir.ui.view,arch_db:sale_order_customer_contact.report_saleorder_document
+msgid "<strong>Contact person:</strong>"
+msgstr "<strong>Contact:</strong>"
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_bank_statement_line__customer_contact_id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_move__customer_contact_id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_payment__customer_contact_id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_order__customer_contact_id
+msgid "Contact"
+msgstr "Contact"
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_advance_payment_inv__display_name
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_res_config_settings__invoice_force_commercial_partner
+#: model_terms:ir.ui.view,arch_db:sale_order_customer_contact.res_config_settings_view_form
+msgid "Force commercial partner on invoices"
+msgstr ""
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_move__id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_advance_payment_inv__id
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_order__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_order_customer_contact
+#: model:ir.model,name:sale_order_customer_contact.model_account_move
+msgid "Journal Entry"
+msgstr "Pièce comptable"
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_account_move____last_update
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_advance_payment_inv____last_update
+#: model:ir.model.fields,field_description:sale_order_customer_contact.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: sale_order_customer_contact
+#: model:ir.model,name:sale_order_customer_contact.model_res_config_settings
+msgid "Procurement purchase grouping settings"
+msgstr ""
+
+#. module: sale_order_customer_contact
+#: model:ir.model,name:sale_order_customer_contact.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Facture de paiement d'avance"
+
+#. module: sale_order_customer_contact
+#: model:ir.model,name:sale_order_customer_contact.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: sale_order_customer_contact
+#: model:ir.model.fields,help:sale_order_customer_contact.field_res_config_settings__invoice_force_commercial_partner
+msgid "When creating invoice from SO, always use commercial partner"
+msgstr ""

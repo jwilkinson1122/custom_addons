@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sales_order_line_filter" model="ir.ui.view">
+        <field name="name">sale.order.line.select.extra.fields</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_sales_order_line_filter" />
+        <field name="priority" eval="99" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="destination_country_id" />
+                <field name="state" />
+                <field name="product_categ_id" />
+            </field>
+            <xpath expr="//filter[last()]" position="after">
+                <separator />
+                <filter
+                    string="Current Month"
+                    name="current_month"
+                    domain="[('date_order','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01 00:00:00')), ('date_order','&gt;=',time.strftime('%%Y-%%m-01 00:00:00'))]"
+                />
+                <filter
+                    string="Last Month"
+                    name="last_month"
+                    domain="[('date_order','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01 00:00:00')),('date_order','&lt;',time.strftime('%%Y-%%m-01 00:00:00'))]"
+                />
+            </xpath>
+            <xpath expr="//group[last()]" position="inside">
+                <filter
+                    string="Customer"
+                    name="customer"
+                    domain="[]"
+                    context="{'group_by':'partner_id'}"
+                />
+                <filter
+                    string="Destination"
+                    name="destination"
+                    domain="[]"
+                    context="{'group_by':'destination_country_id'}"
+                />
+                <filter
+                    string="Order status"
+                    name="order_status"
+                    domain="[]"
+                    context="{'group_by':'state'}"
+                />
+                <filter
+                    string="Product category"
+                    name="product_category"
+                    domain="[]"
+                    context="{'group_by':'product_categ_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

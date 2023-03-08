@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_order_customer_order_number_form" model="ir.ui.view">
+        <field name="name">sale.order.customer.order.number.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <field name="client_order_ref" position="after">
+                <field name="customer_order_number" />
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_order_customer_order_number_tree" model="ir.ui.view">
+        <field name="name">sale.order.customer.order.number.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="customer_order_number" />
+            </field>
+        </field>
+    </record>
+</odoo>

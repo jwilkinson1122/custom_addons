@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hotel_additional,access.hotel.additional,model_hotel_additional,,1,1,1,1
-access_hotel_partner,access.hotel.partner,model_hotel_partner,,1,1,1,1
-access_hotel_room_order,access.hotel.room_order,model_hotel_room_order,,1,1,1,1
-access_hotel_order_room_detail,access.hotel.order_room_detail,model_hotel_order_room_detail,,1,1,1,1
-access_hotel_order_additional_detail,access.hotel.order_additional_detail,model_hotel_order_additional_detail,,1,1,1,1
-access_hotel_room_type,access.hotel.room_type,model_hotel_room_type,,1,1,1,1
-access_hotel_room,access.hotel.room,model_hotel_room,,1,1,1,1
-access_hotel_room_payment,access.hotel.room_payment,model_hotel_room_payment,,1,1,1,1

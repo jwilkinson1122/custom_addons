@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_move_customer_contact_form" model="ir.ui.view">
+        <field name="name">account.move.customer.contact.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <field name='partner_shipping_id' position='after'>
+                <field
+                    name='customer_contact_id'
+                    context="{'default_parent_id': partner_id, 'default_type': 'contact', 'default_is_company': False, 'default_company_type': 'person'}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

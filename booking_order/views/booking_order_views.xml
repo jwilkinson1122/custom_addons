@@ -14,37 +14,6 @@
                 <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath> -->
-                <xpath expr="//field[@name='order_line']" position="before">
-                    <button class="oe_highlight" groups="booking_order.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
-                </xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="after">
-                    <field invisible="1" name="config_ok" />
-                    <field name="config_session_id" />
-                </xpath>
-                <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="after">
-                    <field invisible="1" name="config_ok" />
-                    <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','sent'])]}" class="fa-lg" groups="booking_order.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                    <field name="config_session_id" />
-                </xpath>
-                <!--
-            The line form extension was removed.
-            Cases were found where it was causing install errors on other modules,
-            that were extending order line (for example sale-workflow/sale_product_approval,
-            adding a column after the sales order name field.
-
-            <xpath expr="//form//notebook//field[@name='order_line']/form/field[@name='name']" position="after">
-                <div groups="booking_order.group_product_configurator">
-                    <label for="custom_value_ids" />
-                    <field name="custom_value_ids">
-                        <tree>
-                            <field name="attribute_id" />
-                            <field name="name" />
-                            <field name="attachment_ids" widget="many2many_tags" />
-                        </tree>
-                    </field>
-                </div>
-            </xpath>
-            -->
 
                 <field name="partner_id" position="after">
                     <field name="is_booking_order" invisible="1"/>
@@ -68,28 +37,6 @@
                 </field>
             </field>
         </record>
-
-        <!-- <record id="booking_order_product_reconfigurator_view_form" model="ir.ui.view">
-            <field name="name">booking.order.product.configurator.view.form</field>
-            <field name="model">sale.product.configurator</field>
-            <field name="arch" type="xml">
-                <form js_class="product_configurator_form">
-                    <group>
-                        <field name="product_template_id" widget="reconfig_template" readonly="1" class="oe_product_configurator_product_template_id" />
-                        <field name="product_id" invisible="1"/>
-                        <field name="order_line_id" invisible="1"/>
-                        <field name="order_id" invisible="1"/>
-                    </group>
-                    <footer>
-
-                        <button name="open_product_configurator" string="Update" type="object" class="btn-primary"/>
-       
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
- 
-                    </footer>
-                </form>
-            </field>
-        </record> -->
 
         <record id="booking_order_action" model="ir.actions.act_window">
             <field name="name">Booking Order</field>

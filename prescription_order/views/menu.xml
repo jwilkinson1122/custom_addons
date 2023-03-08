@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="prescription_main" name="Prescription" parent="sale.sale_menu_root" sequence="0"/>
+    </data>
+</odoo>
