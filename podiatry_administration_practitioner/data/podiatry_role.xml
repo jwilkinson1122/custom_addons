@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2017 CreuBlanca
+    Copyright 2017 ForgeFlow
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <record model="podiatry.role" id="practitioner">
+        <field name="name">Practitioner</field>
+        <field name="description">Practitioner</field>
+    </record>
+    <record model="podiatry.role" id="nurse">
+        <field name="name">Nurse</field>
+        <field name="description">Nurse</field>
+    </record>
+    <record model="podiatry.role" id="pharmacist">
+        <field name="name">Pharmacist</field>
+        <field name="description">Pharmacist</field>
+    </record>
+    <record model="podiatry.role" id="ict">
+        <field name="name">IT</field>
+        <field name="description">ICT Professional</field>
+    </record>
+    <record model="podiatry.role" id="technician">
+        <field name="name">Technician</field>
+        <field name="description">Technician</field>
+    </record>
+    <record model="podiatry.role" id="administrative">
+        <field name="name">Administrative</field>
+        <field name="description">Administrative</field>
+    </record>
+</odoo>

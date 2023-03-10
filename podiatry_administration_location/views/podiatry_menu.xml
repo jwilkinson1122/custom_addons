@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2017 CreuBlanca
+    Copyright 2017 ForgeFlow
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <menuitem
+        id="podiatry_location_menu"
+        name="Locations"
+        sequence="30"
+        parent="podiatry_base.podiatry_root_administration"
+        groups="podiatry_base.group_podiatry_configurator"
+        action="podiatry_location_action"
+    />
+</odoo>

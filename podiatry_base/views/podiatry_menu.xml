@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 ForgeFlow
+    Copyright 2017 CreuBlanca
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+-->
+<odoo>
+    <menuitem id="podiatry_root" name="Podiatry" sequence="10" groups="group_podiatry_user" web_icon="podiatry_base,static/description/icon.png" />
+    <menuitem id="podiatry_root_administration" name="Administration" parent="podiatry_root" groups="group_podiatry_reception" sequence="1" />
+    <menuitem id="podiatry_root_clinical" name="Clinical" parent="podiatry_root" groups="group_podiatry_technician,group_podiatry_practitioner,group_podiatry_nurse,group_podiatry_auxiliary,group_podiatry_pharmacy" sequence="10" />
+    <menuitem id="podiatry_clinical_request" name="Requests" parent="podiatry_root_clinical" sequence="10" />
+    <menuitem id="podiatry_clinical_event" name="Events" parent="podiatry_root_clinical" sequence="10" />
+    <menuitem id="podiatry_root_diagnostics" name="Diagnostics" parent="podiatry_root" groups="group_podiatry_practitioner,group_podiatry_technician" sequence="20" />
+    <menuitem id="podiatry_root_medications" name="Medications" parent="podiatry_root" groups="group_podiatry_practitioner,group_podiatry_pharmacy" sequence="30" />
+    <menuitem id="podiatry_root_financial" name="Financial" parent="podiatry_root" groups="group_podiatry_financial" sequence="40" />
+    <menuitem id="podiatry_financial_coverage" name="Coverages" parent="podiatry_base.podiatry_root_financial" sequence="10" />
+    <menuitem id="podiatry_root_workflow" name="Workflow" parent="podiatry_root" groups="group_podiatry_configurator" sequence="50" />
+    <menuitem id="podiatry_root_terminologies" name="Terminologies" parent="podiatry_root" groups="group_podiatry_configurator" sequence="60" />
+    <menuitem id="podiatry_root_configuration" name="Configuration" parent="podiatry_root" groups="group_podiatry_configurator" sequence="90" />
+    <menuitem id="podiatry_root_settings" name="Settings" parent="podiatry_root" groups="group_podiatry_admin" sequence="100" />
+</odoo>
