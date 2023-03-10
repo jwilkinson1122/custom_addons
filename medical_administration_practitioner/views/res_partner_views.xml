@@ -11,9 +11,9 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="medical_base.res_partner_view_form" />
         <field name="arch" type="xml">
-            <field name="company_type" position="attributes">
+            <!-- <field name="company_type" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </field>
+            </field> -->
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_practitioner" invisible="1" />
             </xpath>

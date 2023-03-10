@@ -10,12 +10,12 @@ class MedicalPatient(models.Model):
     _inherit = "medical.patient"
 
     medical_location_primary_id = fields.Many2one(
-        string="Primary Medical Center",
+        string="Primary Practice",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )
     medical_location_secondary_ids = fields.Many2many(
-        string="Secondary Medical Centers",
+        string="Secondary Practice",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )
