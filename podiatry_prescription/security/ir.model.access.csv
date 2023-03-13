@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prescription_work_order,access.prescription.work_order,model_prescription_work_order,,1,1,1,1
+access_cancelled_wo,access.cancelled_wo,model_cancelled_wo,,1,1,1,1

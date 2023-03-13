@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--Group for system user -->
+    <record id="group_system_user" model="res.groups">
+        <field name="name">System Management / User</field>
+        <field eval="[(4, ref('base.user_root'))]" name="implied_ids" />
+    </record>
+    <!--Group for system manager -->
+    <record id="group_system_manager" model="res.groups">
+        <field name="name">System Management/ Manager</field>
+        <field eval="[(4, ref('podiatry_prescription.group_system_user'))]" name="implied_ids" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+
+</odoo>
