@@ -1,0 +1,53 @@
+<templates id="podiatry_pos_modifier" inherit_id="point_of_sale.template" xml:space="preserve">
+
+	<t t-name="ModifierProductPopup" owl="1">
+		<div class="modal-dialog">
+			<div class="popup" style="border-radius:5px; height:200px;width: 245px;">
+
+				<li id="cols4" style="text-align:right;margin-right: 8px;margin-top: 5px;">
+					<i class="oe_link_icon cancel fa fa-window-close" aria-hidden="true" t-on-click="back"/>
+				</li>
+				<t t-if="props.modifier_prod">
+					<t t-foreach="props.modifier_prod" t-as="product">
+						<!-- <article class='product' t-att-data-product-id="product.id" tabindex="0" t-attf-aria-labelledby="article_product_#{product.id}" t-on-click="click_on_modifier_product">
+							<div class="product-img">
+								<img t-att-src='product.image_url' alt="Product image"/>
+								<span class="price-tag">
+									<t t-esc="env.pos.format_currency(product.lst_price,'Product Price')+'/'+product.uom_id[1]"/>
+								</span>
+							</div>
+							<div class="product-name" t-attf-id="article_product_#{product.id}">
+								<t t-esc="product.display_name"/>
+							</div>
+						</article> -->
+						<!-- <article class="product" tabindex="0" t-on-click="click_on_modifier_product" t-att-data-product-id="product.id" t-attf-aria-labelledby="article_product_{{product.id}}">
+				            <div class="product-img">
+				                <img t-att-src="product.image_url" t-att-alt="product.display_name" />
+				                <span class="price-tag">
+				                    <t t-esc="env.pos.format_currency(product.lst_price,'Product Price')+'/'+product.uom_id[1]"/>
+				                </span>
+				            </div>
+				            <div class="product-name" t-attf-id="article_product_{{product.id}}">
+				                <t t-esc="product.display_name" />
+				            </div>
+				        </article> -->
+
+						<article class="product" tabindex="0" t-on-keypress="spaceClickProduct" t-on-click="click_on_modifier_product" t-att-data-product-id="product.id" t-attf-aria-labelledby="article_product_{{product.id}}" style="margin-left: 60px;margin-top: 15px;">
+							<div class="product-img">
+
+								<img t-att-src="product.image_url" t-att-alt="product.display_name" />
+								<span class="price-tag" style="font-size:11px">
+									<t t-esc="env.pos.format_currency(product.lst_price,'Product Price')+'/'+product.uom_id[1]"/>
+								</span>
+							</div>
+							<div class="product-name" t-attf-id="article_product_{{product.id}}" style="font-size:11px">
+								<t t-esc="product.display_name" />
+							</div>
+						</article>
+					</t>
+				</t>
+			</div>
+		</div>
+	</t>
+
+</templates>

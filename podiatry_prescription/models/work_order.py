@@ -12,6 +12,7 @@ class WorkOrder(models.Model):
         readonly=True,
         copy=False,
         default=lambda self: _('New'))
+    
     bo_reference = fields.Many2one(
         comodel_name='sale.order',
         readonly=True)
