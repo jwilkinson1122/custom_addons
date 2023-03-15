@@ -21,6 +21,19 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_view_invoice']" position="after">
+                    <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
+                        <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="helpdesk_discription_id"/>
+                </xpath>
+                <xpath expr="//page[@name='other_information']" position="after">
+                    <page name='helpdesk_ticket' string='Helpdesk Tickets'>
+                        <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
+                    </page>
+                </xpath>
+                <xpath expr="//button[@name='action_view_invoice']" position="after">
                     <button type="action" name="%(action_view_wo)d" class="oe_stat_button" icon="fa-book" attrs="{'invisible': [('wo_count', '=', 0)]}">
                         <field name="wo_count" widget="statinfo" string="Work Order"/>
                     </button>
