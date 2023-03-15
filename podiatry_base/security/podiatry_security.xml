@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright 2017 ForgeFlow
-    Copyright 2017-2022 CreuBlanca
-    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
--->
+
 <odoo>
     <!-- Podiatry Category -->
     <record id="ir_module_category_podiatry" model="ir.module.category">

@@ -1,7 +1,3 @@
-# Copyright 2017 CreuBlanca
-# Copyright 2017 ForgeFlow
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 from odoo import api, fields, models
 
 
@@ -18,30 +14,9 @@ class PodiatryPatient(models.Model):
 
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female"), ("other", "Other")]
-    )  # FHIR Field: gender
-    # https://www.hl7.org/fhir/valueset-administrative-gender.html)
-    marital_status = fields.Selection(
-        [
-            ("s", "Single"),
-            ("m", "Married"),
-            ("w", "Widowed"),
-            ("d", "Divorced"),
-            ("l", "Separated"),
-        ]
-    )  # FHIR Field: maritalStatus
-    # https://www.hl7.org/fhir/valueset-marital-status.html
-    birth_date = fields.Date(string="Birth date")  # FHIR Field: birthDate
-    deceased_date = fields.Date(
-        string="Deceased date"
-    )  # FHIR Field: deceasedDate
-    is_deceased = fields.Boolean(
-        compute="_compute_is_deceased"
-    )  # FHIR Field: deceasedBoolean
-
-    @api.depends("deceased_date")
-    def _compute_is_deceased(self):
-        for record in self:
-            record.is_deceased = bool(record.deceased_date)
+    )  
+    
+    birth_date = fields.Date(string="Birth date")   
 
     @api.model
     def _get_internal_identifier(self, vals):
@@ -49,6 +24,30 @@ class PodiatryPatient(models.Model):
             self.env["ir.sequence"].sudo().next_by_code("podiatry.patient")
             or "ID"
         )
+        
+    prescription_count = fields.Integer(string='Prescription Count', compute='_compute_prescription_count')
+    prescription_id = fields.Many2one('sale.order', 'patient_id', required=True, ondelete="cascade")
+    # prescription_id = fields.One2many(comodel_name='podiatry.prescription', inverse_name='patient_id', string="Prescriptions")
+
+    prescription_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', readonly=True)
+    
+ 
+    def _compute_prescription_count(self):
+        for rec in self:
+            prescription_count = self.env['sale.order'].search_count(
+                [('patient_id', '=', rec.id)])
+            rec.prescription_count = prescription_count
+            
+        attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
+                                      'manager_id', 'attachment_id', string="Attachments", help="Patient Image / File Attachments")
+
+    image1 = fields.Binary("Right photo")
+    image2 = fields.Binary("Left photo")
+
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char(string="Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char(string="Right Obj File Name")
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner
@@ -63,4 +62,15 @@ class PodiatryPatient(models.Model):
             "res_id": self.parent_id.id,
             "target": "new",
             "flags": {"form": {"action_buttons": True}},
+        }
+        
+    def action_open_prescriptions(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'sale.order',
+            'domain': [('patient_id', '=', self.id)],
+            'context': {'default_patient_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
         }

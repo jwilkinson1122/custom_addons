@@ -1,15 +1,10 @@
-# Copyright 2017 LasLabs Inc.
-# Copyright 2017 CreuBlanca
-# Copyright 2017 ForgeFlow
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
+ 
 {
     "name": "Podiatry Administration Practitioner",
-    "version": "14.0.1.0.0",
-    "author": "ForgeFlow, CreuBlanca, LasLabs, "
-    "Odoo Community Association (OCA)",
+    "version": "15.0.1.0.0",
+    "author": "NWPL",
     "category": "Podiatry",
-    "website": "https://github.com/tegin/podiatry-fhir",
+    "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
     "depends": ["podiatry_base"],
     "data": [

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright 2017 ForgeFlow
-    Copyright 2017 CreuBlanca
-    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
--->
+
 <odoo>
-    <menuitem id="podiatry_root" name="Podiatry" sequence="10" groups="group_podiatry_user" web_icon="podiatry_base,static/description/icon.png" />
+    <menuitem id="podiatry_root" name="Podiatry Contacts" sequence="10" groups="group_podiatry_user" web_icon="podiatry_base,static/description/icon.png" />
     <menuitem id="podiatry_root_administration" name="Administration" parent="podiatry_root" groups="group_podiatry_reception" sequence="1" />
     <menuitem id="podiatry_root_clinical" name="Clinical" parent="podiatry_root" groups="group_podiatry_technician,group_podiatry_practitioner,group_podiatry_nurse,group_podiatry_auxiliary,group_podiatry_pharmacy" sequence="10" />
     <menuitem id="podiatry_clinical_request" name="Requests" parent="podiatry_root_clinical" sequence="10" />

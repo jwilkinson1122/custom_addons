@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <!-- Tree view -->
+    <record id="view_podiatry_prescription_line_list" model="ir.ui.view">
+        <field name="name">podiatry.prescription.line.tree.view</field>
+        <field name="model">podiatry.prescription.line</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Prescription lines">
+                <field name="product_id" />
+
+
+            </tree>
+        </field>
+    </record>
+
+
+
+
+    <!-- Form view -->
+    <record id="podiatry_prescription_line_form_view" model="ir.ui.view">
+        <field name="name">podiatry.prescription.line.form.view</field>
+        <field name="model">podiatry.prescription.line</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string='Prescription Line'>
+                <field name="product_id"/>
+
+            </form>
+
+        </field>
+    </record>
+
+
+
+</odoo>

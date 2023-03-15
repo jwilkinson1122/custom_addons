@@ -1,5 +1,5 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo import _, api, fields, models, exceptions
+from odoo.exceptions import UserError, ValidationError
  
 class PrescriptionOrder(models.Model):
     # _name = "podiatry.prescription.order"
@@ -77,7 +77,7 @@ class PrescriptionOrder(models.Model):
         required=True,
         default="normal",
     )  # Field: priority
-   
+  
     prescription_date = fields.Datetime(
         string="Submitted date", help="Date prescription created."
     )  # Field: authoredOn
