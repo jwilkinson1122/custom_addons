@@ -293,9 +293,9 @@ class Prescription(models.Model):
     def action_hold(self):
         self.state = 'hold'
 
-    def confirm_draft(self):
-        for rec in self:
-            rec.state = 'draft'
+    # def confirm_draft(self):
+    #     for rec in self:
+    #         rec.state = 'draft'
 
     def default_examination_chargeable(self):
         settings_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
@@ -375,7 +375,7 @@ class Prescription(models.Model):
     cap_size_rt = fields.Many2one(
         'podiatry.orthotic.measure', rel='rx_cap_size_rt', ondelete='restrict', copy=True)
 
-    def open_customer(self):
+    def create_sale_order(self):
         sale_order = self.env['sale.order'].search(
             [('prescription_id', '=', self.id)], limit=1)
         print('fire', sale_order)
