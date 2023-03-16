@@ -107,6 +107,8 @@
                 <field name="reference" string="Practitioner ID" decoration-bf="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="practice_id" string="Primary Practice"/>
+                <field name="city" string="City"/>
+                <field name="state_id" string="State"/>
                 <field name="mobile" widget="phone" optional="show"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
