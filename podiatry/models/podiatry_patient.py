@@ -104,11 +104,15 @@ class Patient(models.Model):
         required=True,
         string="Practice",
     )
+    
+    practice_name = fields.Char(string='Practice', related='practice_id.name')
 
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner',
         required=True,
         string='Practitioner')
+    
+    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
