@@ -11,6 +11,7 @@
         "account_accountant",
         "base",
         "base_setup",
+        "contacts",
         "resource",
         "mail",
         "base",

@@ -3,6 +3,15 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.modules.module import get_module_resource
 
+from . import podiatry_practice
+
+# from lxml import etree
+# added import statement in try-except because when server runs on
+# windows operating system issue arise because this library is not in Windows.
+try:
+    from odoo.tools import image_colorize
+except:
+    image_colorize = False
 
 class Patient(models.Model):
     _name = 'podiatry.patient'
@@ -11,6 +20,8 @@ class Patient(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
+    
+    _rec_name = 'patient_id'
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Patient Name", index=True)
@@ -84,6 +95,9 @@ class Patient(models.Model):
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
+    
+    patient_id = fields.Many2many('res.partner', domain=[(
+        'is_patient', '=', True)], string="patient_id", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
