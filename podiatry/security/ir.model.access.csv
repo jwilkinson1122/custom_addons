@@ -1,0 +1,74 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_s3_credentials,s3.credentials,model_s3_credentials,base.group_user,1,1,1,1
+product_configurator_config_line,Config Line,model_product_config_line,group_product_configurator,1,0,0,0
+product_configurator_config_image,Config Image,model_product_config_image,group_product_configurator,1,0,0,0
+product_configurator_config_step,Config Step,model_product_config_step,group_product_configurator,1,0,0,0
+product_configurator_config_step_line,Config Step Line,model_product_config_step_line,group_product_configurator,1,0,0,0
+product_configurator_config_domain,Config Domain,model_product_config_domain,group_product_configurator,1,0,0,0
+product_configurator_config_domain_line,Config Domain Line,model_product_config_domain_line,group_product_configurator,1,0,0,0
+product_configurator_custom_attribute_value,Attribute Value Line,model_product_attribute_value_line,group_product_configurator,1,0,0,0
+product_configurator_config_session,Config Session,model_product_config_session,group_product_configurator,1,1,1,1
+product_configurator_config_session_custom_value,Config Session Custom Value,model_product_config_session_custom_value,group_product_configurator,1,1,1,1
+user_config_line,User Config Line,model_product_config_line,base.group_user,1,0,0,0
+user_config_image,User Config Image,model_product_config_image,base.group_user,1,0,0,0
+user_config_step,User Config Step,model_product_config_step,base.group_user,1,0,0,0
+user_config_step_line,User Config Step Line,model_product_config_step_line,base.group_user,1,0,0,0
+user_config_domain_line,User Config Domain Line,model_product_config_domain_line,base.group_user,1,0,0,0
+user_config_domain,User Config Domain,model_product_config_domain,base.group_user,1,0,0,0
+user_custom_attribute_value,User Attribute Value Line,model_product_attribute_value_line,base.group_user,1,0,0,0
+user_config_session,User Config Session,model_product_config_session,base.group_user,1,0,0,0
+user_config_session_custom_value,User Config Session Custom Value,model_product_config_session_custom_value,base.group_user,1,0,0,0
+portal_config_image,Portal Config Image,model_product_config_image,base.group_portal,1,0,0,0
+portal_config_step,Portal Config Step,model_product_config_step,base.group_portal,1,0,0,0
+portal_config_session,Portal Config Session,model_product_config_session,base.group_portal,1,0,0,0
+portal_config_session_custom_value,Portal Config Session Custom Value,model_product_config_session_custom_value,base.group_portal,1,0,0,0
+portal_configurator_config_line,Portal Config Line,model_product_config_line,base.group_portal,1,0,0,0
+portal_configurator_config_step_line,Portal Config Step Line,model_product_config_step_line,base.group_portal,1,0,0,0
+portal_configurator_config_domain,Portal Config Domain,model_product_config_domain,base.group_portal,1,0,0,0
+portal_configurator_config_domain_line,Portal Config Domain Line,model_product_config_domain_line,base.group_portal,1,0,0,0
+product_configurator_config_line_manager,Config Line Manager,podiatry.model_product_config_line,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_config_image_manager,Config Image Manager,podiatry.model_product_config_image,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_config_step_manager,Config Step Manager,podiatry.model_product_config_step,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_config_step_line_manager,Config Step Line Manager,podiatry.model_product_config_step_line,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_config_domain_manager,Config Domain Manager,podiatry.model_product_config_domain,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_config_domain_line_manager,Config Domain Line Manager,podiatry.model_product_config_domain_line,podiatry.group_product_configurator_manager,1,1,1,1
+product_configurator_custom_attribute_value_manager,Attribute Value Line Manager,podiatry.model_product_attribute_value_line,podiatry.group_product_configurator_manager,1,1,1,1
+access_product_template_product_config_user,product.template Product Config user,product.model_product_template,podiatry.group_product_configurator,1,0,0,0
+access_product_template_product_config_manager,product.template Product Config Manager,product.model_product_template,podiatry.group_product_configurator_manager,1,1,1,1
+access_product_product_product_config_user,product.product Product Config user,product.model_product_product,podiatry.group_product_configurator,1,0,0,0
+access_product_product_product_config_manager,product.product Product Config Manager,product.model_product_product,podiatry.group_product_configurator_manager,1,1,1,1
+access_product_attribute_line_product_config_manager,product.attribute line Product Config Manager,product.model_product_template_attribute_line,podiatry.group_product_configurator_manager,1,1,1,1
+access_product_configurator_group,product_configurator,model_product_configurator,podiatry.group_product_configurator,1,1,1,1
+access_product_configurator_sale,product_configurator_sale,model_product_configurator_sale,base.group_user,1,0,0,0
+access_product_configurator_sale_manager,product_configurator_sale,model_product_configurator_sale,podiatry.group_product_configurator_manager,1,1,1,1
+access_podiatry_practice,podiatry.practice,model_podiatry_practice,base.group_user,1,1,1,1
+access_podiatry_practitioner,podiatry.practitioner,model_podiatry_practitioner,base.group_user,1,1,1,1
+access_podiatry_patient,podiatry.patient,model_podiatry_patient,base.group_user,1,1,1,1
+access_podiatry_prescription,podiatry.prescription,model_podiatry_prescription,base.group_user,1,1,1,1
+access_podiatry_prescription_lines,podiatry.prescription.lines,model_podiatry_prescription_line,base.group_user,1,1,1,1
+access_podiatry_prescription_stage,podiatry.prescription.stage,model_podiatry_prescription_stage,base.group_user,1,1,1,1
+access_podiatry_forefoot_value,podiatry.forefoot.value,model_podiatry_forefoot_value,base.group_user,1,1,1,0
+access_podiatry_forefoot_correction,podiatry.forefoot.correction,model_podiatry_forefoot_correction,base.group_user,1,1,1,0
+access_podiatry_rearfoot_correction,podiatry.rearfoot.correction,model_podiatry_rearfoot_correction,base.group_user,1,1,1,0
+access_podiatry_orthotic_measure,podiatry.orthotic.measure,model_podiatry_orthotic_measure,base.group_user,1,1,1,0
+access_podiatry_item,podiatry.item,model_podiatry_item,base.group_user,1,1,1,0
+access_podiatry_item_category,podiatry.item.category,model_podiatry_item_category,base.group_user,1,1,1,0
+access_shell_length,access_shell_length,model_shell_length,base.group_system,1,1,1,1
+access_shell_type,access_shell_type,model_shell_type,base.group_system,1,1,1,1
+access_shell_collection,access_shell_collection,model_shell_collection,base.group_system,1,1,1,1
+access_topcover_type,access_topcover_type,model_topcover_type,base.group_system,1,1,1,1
+access_topcover_length,access_topcover_length,model_topcover_length,base.group_system,1,1,1,1
+access_topcover_material,access_topcover_material,model_topcover_material,base.group_system,1,1,1,1
+access_topcover_thickness,access_topcover_thickness,model_topcover_thickness,base.group_system,1,1,1,1
+access_topcover_color,access_topcover_color,model_topcover_color,base.group_system,1,1,1,1
+access_arch_height_type,access_arch_height_type,model_arch_height_type,base.group_system,1,1,1,1
+access_cushion_type,access_cushion_type,model_cushion_type,base.group_system,1,1,1,1
+access_cushion_material,access_cushion_material,model_cushion_material,base.group_system,1,1,1,1
+access_cushion_length,access_cushion_length,model_cushion_length,base.group_system,1,1,1,1
+access_cushion_thickness,access_cushion_thickness,model_cushion_thickness,base.group_system,1,1,1,1
+access_extension_type,access_extension_type,model_extension_type,base.group_system,1,1,1,1
+access_extension_material,access_extension_material,model_extension_material,base.group_system,1,1,1,1
+access_extension_length,access_extension_length,model_extension_length,base.group_system,1,1,1,1
+access_extension_thickness,access_extension_thickness,model_extension_thickness,base.group_system,1,1,1,1
+access_x_guard_length,access_x_guard_length,model_x_guard_length,base.group_system,1,1,1,1
+access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
