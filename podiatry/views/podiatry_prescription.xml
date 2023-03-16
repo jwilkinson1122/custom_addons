@@ -5,7 +5,7 @@
         <field name="name">Practitioner Prescriptions</field>
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='draft'">
+            <tree decoration-muted="state in ['done', 'hold', 'cancel']" decoration-bf="state=='draft'">
                 <header>
                     <button type="action" name="%(action_prescription_message)d" string="Send Messages" />
                 </header>
@@ -31,12 +31,8 @@
                 <header>
                     <field name="state" invisible="True" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-                    <!-- <button name="confirm_draft" type="object" string="Confirm" class="oe_highlight" states="draft" /> -->
-                    <button name="create_sale_order" class="btn btn-success" states="draft" string="Create SO" type="object"></button>
-                    <!-- <button name="action_confirm" class="btn btn-success" states="confirm" string="Create Orders" type="object"></button>   -->
-
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
-                    <!-- <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
+                    <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
+                    <button name="%(action_create_prescription_order1)d" type="action" string="Create Order" class="oe_highlight" />
                 </header>
                 <sheet>
                     <!-- <div class="oe_button_box" name="button_box">

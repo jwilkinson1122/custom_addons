@@ -30,6 +30,7 @@
         'mail',
         "account",
         "account_accountant",
+        'l10n_us',
         "mail",
         'purchase',
         ],

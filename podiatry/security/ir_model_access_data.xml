@@ -283,12 +283,12 @@
 
 
         <!--
-        'create.prescription.shipment'
+        'create.prescription.order'
         -->
 
-        <record id="access_create_prescription_shipment_group_manager" model="ir.model.access">
-            <field name="name">access.create.prescription.shipment.group.manager</field>
-            <field name="model_id" ref="model_create_prescription_shipment"/>
+        <record id="access_create_prescription_order_group_manager" model="ir.model.access">
+            <field name="name">access.create.prescription.order.group.manager</field>
+            <field name="model_id" ref="model_create_prescription_order"/>
             <field name="group_id" ref="group_manager"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
@@ -296,9 +296,9 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
-        <record id="access_create_prescription_shipment_group_user" model="ir.model.access">
-            <field name="name">access.create.prescription.shipment.group.user</field>
-            <field name="model_id" ref="model_create_prescription_shipment"/>
+        <record id="access_create_prescription_order_group_user" model="ir.model.access">
+            <field name="name">access.create.prescription.order.group.user</field>
+            <field name="model_id" ref="model_create_prescription_order"/>
             <field name="group_id" ref="group_user"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>

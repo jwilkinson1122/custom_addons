@@ -123,7 +123,7 @@ items
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span class="float-right" style="font-size:16px;">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'in_process': 'warning', 'done': 'success', 'canceled': 'danger'}}" />
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'done': 'success', 'canceled': 'danger', 'hold': 'warning'}}" />
                                         </span>
                                     </div>
                                 </div>

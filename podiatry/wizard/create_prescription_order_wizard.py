@@ -5,24 +5,24 @@ from datetime import date, datetime
 from odoo.exceptions import Warning
 
 
-class create_prescription_shipment(models.TransientModel):
-    _name = 'create.prescription.shipment'
-    _description = 'Create Prescrition Shipment'
+class create_prescription_order(models.TransientModel):
+    _name = 'create.prescription.order'
+    _description = 'Create Prescrition Order'
 
-    def create_prescription_shipment(self):
+    def create_prescription_order(self):
         active_id = self._context.get('active_id')
         prescription_obj = self.env['podiatry.prescription']
         sale_order_obj = self.env['sale.order']
         sale_order_line_obj = self.env['sale.order.line']
 
-        priscription_record = prescription_obj.browse(active_id)
-        if priscription_record.is_shipped == True:
+        prescription_record = prescription_obj.browse(active_id)
+        if prescription_record.is_shipped == True:
             raise Warning('All ready shipped.')
 
-        res = sale_order_obj.create({'partner_id': priscription_record.patient_id.patient_id.id,
+        res = sale_order_obj.create({'partner_id': prescription_record.patient_id.patient_id.id,
                                      })
-        if priscription_record.prescription_line:
-            for p_line in priscription_record.prescription_line:
+        if prescription_record.prescription_line:
+            for p_line in prescription_record.prescription_line:
 
                 res1 = sale_order_line_obj.create({'product_id': p_line.product_id.id,
                                                    'product_uom': p_line.product_id.uom_id.id,
@@ -31,8 +31,8 @@ class create_prescription_shipment(models.TransientModel):
                                                    'price_unit': p_line.product_id.lst_price,
                                                    'order_id': res.id})
         else:
-            raise Warning('There is no shipment line.')
-        priscription_record.write({'is_shipped': True})
+            raise Warning('There is no order line.')
+        prescription_record.write({'is_shipped': True})
         res.action_confirm()
         result = res.action_view_delivery()
         return result

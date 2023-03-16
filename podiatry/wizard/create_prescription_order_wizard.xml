@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_prescription_order_wizard_view" model="ir.ui.view">
+        <field name="name">Create Prescription Order</field>
+        <field name="model">create.prescription.order</field>
+        <field name="arch" type="xml">
+            <form string="Create prescription invoices">
+                <separator string="Do you want to create the prescription Order ?" />
+                <newline />
+                <separator string="                  " />
+                <footer>
+                    <button name="create_prescription_order" class="oe_highlight" string="Create Prescription Order" type="object" />
+                        or
+                    <button special="cancel" string="Cancel" class="oe_highlight" />
+                </footer>
+            </form>
+
+        </field>
+    </record>
+
+    <act_window id="action_create_prescription_order1" name="Create Prescription Order" res_model="create.prescription.order" binding_model="podiatry.prescription" view_mode="form" target="new" />
+
+</odoo>

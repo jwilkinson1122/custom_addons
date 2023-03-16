@@ -281,8 +281,8 @@ class Prescription(models.Model):
     def action_draft(self):
         self.state = 'draft'
 
-    def action_check(self):
-        self.state = 'in_process'
+    # def action_check(self):
+    #     self.state = 'in_process'
 
     def action_done(self):
         self.state = 'done'
@@ -407,20 +407,17 @@ class Prescription(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.prescription') or _('New')
         res = super(Prescription, self).create(vals)
-        if res.stage_id.state in ("done", "cancel"):
+        if res.stage_id.state in ("done", "hold", "cancel"):
             raise exceptions.UserError(
                 "State not allowed for new prescriptions."
             )
         return res
 
     def write(self, vals):
-        # reset kanban state when changing stage
         if "stage_id" in vals and "kanban_state" not in vals:
             vals["kanban_state"] = "normal"
-        # Code before write: `self` has the old values
         old_state = self.stage_id.state
         super().write(vals)
-        # Code after write: can use `self` with the updated values
         new_state = self.stage_id.state
         if not self.env.context.get("_prescription_write"):
             if new_state != old_state and new_state == "draft":
@@ -477,29 +474,15 @@ class Prescription(models.Model):
 
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
-
-    # def print_prescription_report(self):
-    #     return {
-    #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry.practitioner_prescription_template",
-    #         'report_file': "podiatry.practitioner_prescription_template",
-    #         'report_type': 'qweb-pdf',
-    #     }
-
+ 
     def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_podiatry_ticket_size2").report_action(self)
+    
+    def prescription_report(self):
+        return self.env.ref('podiatry.report_print_prescription').report_action(self)
+    
 
-    # def print_prescription_report(self):
-    #     return {
-    #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry.practitioner_prescription_template",
-    #         'report_file': "podiatry.practitioner_prescription_template",
-    #         'report_type': 'qweb-pdf',
-    #     }
-
-    # def print_prescription_report_ticket_size(self):
-    #     return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
-
+     
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -57,6 +57,14 @@
                                         <span t-field="test.quantity"/>
                                     </td>
                                 </tr>
+                                <tr t-if="test.product_id">
+                                    <td>
+                                        <strong>Product</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="test.product_id"/>
+                                    </td>
+                                </tr>
                                 <tr t-if="test.allow_substitution">
                                     <td>
                                         <strong>Substitution</strong>
