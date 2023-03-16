@@ -132,11 +132,11 @@
         <field name="model">podiatry.practice</field>
         <field name="arch" type="xml">
             <tree string="Practices" decoration-muted="not active">
-                <field name="active" invisible="1"/>
-                <field name="sequence" widget="handle"/>
-                <field name="full_name" string="Practice Name"/>
+                <field name="reference" string="Practice ID" decoration-bf="1"/>
+                <field name="full_name" string="Practice Name" decoration-bf="1"/>
+                <field name="parent_id" string="Parent Practice"/>
                 <field name="practice_type"/>
-                <field name="code" decoration-bf="1"/>
+                <field name="active"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>

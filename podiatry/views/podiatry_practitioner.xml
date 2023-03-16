@@ -104,16 +104,33 @@
         <field name="model">podiatry.practitioner</field>
         <field name="arch" type="xml">
             <tree string="Contacts" decoration-muted="not active">
+                <field name="reference" string="Practitioner ID" decoration-bf="1"/>
                 <field name="name" decoration-bf="1"/>
-                <field name="reference" optional="hide"/>
+                <field name="practice_id" string="Primary Practice"/>
                 <field name="mobile" widget="phone" optional="show"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
-                <field name="user_id" widget="many2one_avatar" optional="show"/>
-                <field name="active" invisible="1"/>
+                <!-- <field name="user_id" widget="many2one_avatar" optional="show"/> -->
+                <field name="active"/>
             </tree>
         </field>
     </record>
+
+    <!-- <record id="view_podiatry_practice_tree" model="ir.ui.view">
+        <field name="name">podiatry.practice.tree</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <tree string="Practices" decoration-muted="not active">
+                <field name="reference" string="Practice ID" decoration-bf="1"/>
+                <field name="full_name" string="Practice Name" decoration-bf="1"/>
+                <field name="parent_id" string="Parent Practice"/>
+                <field name="practice_type"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record> -->
+
 
     <!-- Kanban -->
     <record id="view_podiatry_practitioner_kanban" model="ir.ui.view">
