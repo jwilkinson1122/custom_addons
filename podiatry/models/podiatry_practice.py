@@ -8,6 +8,14 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+# from lxml import etree
+# added import statement in try-except because when server runs on
+# windows operating system issue arise because this library is not in Windows.
+try:
+    from odoo.tools import image_colorize
+except:
+    image_colorize = False
+
 
 class Practice(models.Model):
     _name = 'podiatry.practice'
@@ -90,7 +98,7 @@ class Practice(models.Model):
     )
 
     practice_id = fields.Many2many('res.partner', domain=[(
-        'is_company', '=', True)], string="Practice", required=True)
+        'is_practice', '=', True)], string="Practice", required=True)
 
     practice_type = fields.Selection([('hospital', 'Hospital'),
                                       ('multi', 'Multi-Hospital'),
