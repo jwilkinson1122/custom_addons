@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_servismotor_sparepart,access.servismotor.sparepart,model_servismotor_sparepart,,1,1,1,1
+access_servismotor_servis,access.servismotor.servis,model_servismotor_servis,,1,1,1,1
+access_servismotor_order,access.servismotor.order,model_servismotor_order,,1,1,1,1
+access_servismotor_sparepartdetail,access.servismotor.sparepartdetail,model_servismotor_sparepartdetail,,1,1,1,1
+access_servismotor_servicedetail,access.servismotor.servicedetail,model_servismotor_servicedetail,,1,1,1,1
+access_servismotor_mekanik,access.servismotor.mekanik,model_servismotor_mekanik,,1,1,1,1
+access_servismotor_supplier,access.servismotor.supplier,model_servismotor_supplier,,1,1,1,1
+access_servismotor_pembelian,access.servismotor.pembelian,model_servismotor_pembelian,,1,1,1,1
+access_servismotor_pembeliandetail,access.servismotor.pembeliandetail,model_servismotor_pembeliandetail,,1,1,1,1
+access_servismotor_sparepartdatang,access.servismotor.sparepartdatang,model_servismotor_sparepartdatang,,1,1,1,1
+access_servismotor_orderreport,access.servismotor.orderreport,model_servismotor_orderreport,,1,1,1,1

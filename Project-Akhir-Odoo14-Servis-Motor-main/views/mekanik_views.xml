@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mekanik_view_tree" model="ir.ui.view">
+        <field name="name">mekanik_view_tree</field>
+        <field name="model">servismotor.mekanik</field>
+        <field name="arch" type="xml">
+            <tree string="mekanik_tree">
+                <field name="gender"/>
+                <field name="name"/>
+                <field name="alamat"/>
+                <field name="no_telepon"/>
+                <field name="id_mekanik"/>
+                <field name="status_pegawai"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mekanik_action" model="ir.actions.act_window">
+        <field name="name">mekanik</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">servismotor.mekanik</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="mekanik_categ"
+              name="Mekanik"
+              parent="mekanik_menu_categ"
+              action="mekanik_action"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="orderreport_wizard_view_form" model="ir.ui.view">
+        <field name="name">Permintaan</field>
+        <field name="model">servismotor.orderreport</field>
+        <field name="arch" type="xml">
+            <form string="orderreport_wizard_form">
+                <group>
+                    <field name="pemesan"/>
+                </group>
+                <group>
+                    <field name="tgl_datang"/>
+                    <field name="tgl_ambil"/>
+                </group>
+                <footer>
+                    <button name="action_order_report" type="object" string="Print Report" class="btn btn-warning"/>
+                    <button special="cancel" string="Cancel" class="btn btn-danger"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+   <record id="orderreport_wizard_action" model="ir.actions.act_window">
+       <field name="name">Order Report</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">servismotor.orderreport</field>
+       <field name="view_mode">form</field>
+       <field name="view_id" ref="orderreport_wizard_view_form"/>
+       <field name="target">new</field>
+   </record>
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="orderreport_wizard_menu_action"
+              name="Order Report"
+              parent="servismotor_menu_root"
+              action="orderreport_wizard_action"
+              sequence="49"/>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+    <record id="sparepart_datang_view_form_wizard" model="ir.ui.view">
+        <field name="name">Kedatangan Sparepart</field>
+        <field name="model">servismotor.sparepartdatang</field>
+        <field name="arch" type="xml">
+            <form string="Form Kedatangan Sparepart">
+                <group>
+                    <field name="sparepart_id"/>
+                    <field name="jumlah"/>
+                </group>
+                <footer>
+                    <button name="sparepart_datang" type="object" string="Create" class="btn-warning"/>
+                    <button string="Cancel" special="cancel" class="btn_warning"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="sparepart_datang_action_wizard" model="ir.actions.act_window">
+        <field name="name">Kedaatangan Sparepart</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">servismotor.sparepartdatang</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sparepart_datang_view_form_wizard"/>
+        <field name="target">new</field>
+    </record>
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="sparepart_datang_menu_wizard"
+              name="Kedatangan Sparepart"
+              parent="servismotor_menu_root"
+              action="sparepart_datang_action_wizard"
+              sequence="45"/>
+</odoo>

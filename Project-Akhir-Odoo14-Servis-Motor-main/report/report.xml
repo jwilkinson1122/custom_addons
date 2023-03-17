@@ -1,0 +1,29 @@
+<odoo>
+    <record id="supplier_report_xlsx" model="ir.actions.report">
+        <field name="name">Supplier Excel</field>
+        <field name="model">servismotor.supplier</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">servismotor.report_supplier_xlsx</field>
+        <field name="report_file">servismotor.report_supplier_xlsx</field>
+        <field name="binding_model_id" ref="model_servismotor_supplier"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="report_order_pdf" model="ir.actions.report">
+        <field name="name">Faktur PDF</field>
+        <field name="model">servismotor.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">servismotor.report_order_pdf</field>
+        <field name="report_file">servismotor.report_order_pdf</field>
+        <field name="binding_model_id" ref="model_servismotor_order"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="wizard_orderreport_pdf" model="ir.actions.report">
+        <field name="name">Print Report</field>
+        <field name="model">servismotor.orderreport</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">servismotor.wizard_orderreport_pdf</field>
+        <field name="report_file">servismotor.wizard_orderreport_pdf</field>
+        <field name="binding_model_id" ref="model_servismotor_orderreport"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_order_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+<!--                <t t-call="web.external_layout">-->
+                <div class="page">
+                    <h1>FAKTUR ORDER</h1>
+                    <t t-foreach="docs" t-as="d">
+                        <div class="row">
+                            <div class="col-4">Kode Order    :</div>
+                            <div class="col-8"><span t-field="d.name"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Nama        :</div>
+                            <div class="col-8"><span t-field="d.pemesan"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Tanggal Datang :</div>
+                            <div class="col-8"><span t-field="d.tanggal_datang"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Tanggal Ambil :</div>
+                            <div class="col-8"><span t-field="d.tanggal_kirim"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Jumlah Rp   :</div>
+                            <div class="col-8"><span t-field="d.total"/></div>
+                        </div>
+                        <t t-foreach="d.sparepartdetail_ids" t-as="ds">
+                            <div class="row">
+                                <div class="col-4">Barang   :</div>
+                                <div class="col-8"><span t-field="ds.sparepart_id.name"/></div>
+                            </div>
+                        </t>
+                        <t t-foreach="d.servicedetail_ids" t-as="ds">
+                            <div class="row">
+                                <div class="col-4">Servis   :</div>
+                                <div class="col-8"><span t-field="ds.servis_id.name"/></div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

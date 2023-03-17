@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pembelian_view_tree" model="ir.ui.view">
+        <field name="name">pembelian_view_tree</field>
+        <field name="model">servismotor.pembelian</field>
+        <field name="arch" type="xml">
+            <tree string="pembelian_tree">
+                <field name="name"/>
+                <field name="kode_supplier"/>
+                <field name="tgl_nota"/>
+                <field name="total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="pembelian_view_form" model="ir.ui.view">
+        <field name="name">pembelian_view_form</field>
+        <field name="model">servismotor.pembelian</field>
+        <field name="arch" type="xml">
+            <form string="pembelian_form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="kode_supplier"/>
+                        <field name="tgl_nota"/>
+                        <field name="total"/>
+                    </group>
+                    <notebook colspan='8'>
+                        <page name="name" string="sparepart">
+                            <field name="detailpembelian_ids">
+                            <tree editable='bottom'>
+                                <field name="sparepart_id"/>  
+                                <field name="satuan"/>
+                                <field name="harga_satuan"/> 
+                                <field name="qty" />   
+                                <field name="subtotal" sum ="Total"/>                                    
+                            </tree>
+                            </field>                                                
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pembelian_action" model="ir.actions.act_window">
+        <field name="name">Pembelian</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">servismotor.pembelian</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="pembelian_categ"
+              name="pembelian"
+              parent="pembelian_menu_categ"
+              action="pembelian_action"
+              sequence="10"/>
+</odoo>

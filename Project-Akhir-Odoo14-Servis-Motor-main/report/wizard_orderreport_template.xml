@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="wizard_orderreport_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+<!--                <t t-call="web.external_layout">-->
+                <div class="page">
+                    <h1>FAKTUR ORDER</h1>
+                        <div class="row">
+                            <div class="col-4">Nama    :</div>
+                            <div class="col-8">
+                                <t t-esc="form['pemesan'][1]"/>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span>Nota Servis</span>
+                                    </th>
+                                    <th>
+                                        <span>Tanggal Servis</span>
+                                    </th>
+                                    <th>
+                                        <span>Total Pembayaran</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <t t-foreach="orderxx" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['tanggal_datang']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['tanggal_ambil']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['total']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

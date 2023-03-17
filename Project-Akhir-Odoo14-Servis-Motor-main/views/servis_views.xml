@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <!-- servismotor.servis tree view -->
+<record id="servismotor_servis_view_tree" model="ir.ui.view">
+    <field name="name">Servis Motor</field>
+    <field name="model">servismotor.servis</field>
+    <field name="arch" type="xml">
+        <tree>
+            <!-- Add your fields here -->
+            <field name="nomor"/>
+            <field name="kode"/>
+            <field name="name"/>
+            <field name="harga"/>
+        </tree>
+    </field>
+</record>
+
+    <!-- servismotor.servis action window -->
+    <record id="servismotor_servis_action" model="ir.actions.act_window">
+        <field name="name">Layanan Servis</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">servismotor.servis</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem 
+    id="servismotor_servis_menu_act" 
+    name="Layanan Servis" 
+    parent="layanan_menu_categ" 
+    action="servismotor_servis_action" 
+    sequence="10"/>
+
+
+</odoo>
