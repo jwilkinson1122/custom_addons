@@ -1,7 +1,7 @@
 from email.policy import default
 from odoo import api, fields, models
 
-
+# Customers
 class Pelanggan(models.Model):
     _inherit = 'res.partner'
 
