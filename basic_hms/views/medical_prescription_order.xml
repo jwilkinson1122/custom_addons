@@ -31,7 +31,7 @@
             <form string="Prescription">
                 <header>
                     <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+                    <!-- <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
                     <button name="%(action_create_prescription_shipment1)d" type="action" string="Create Shipment" class="oe_highlight" />
 
                 </header>
