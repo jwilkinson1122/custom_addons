@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="podiatry_patient_prescription_form" model="ir.ui.view">
+        <field name="name">podiatry.patient.prescription.form</field>
+        <field name="model">podiatry.patient.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <notebook>
+                    <page string="Main Info">
+                        <group>
+                            <group colspan="4" col="4">
+                                <field name="product_id" />
+                                <field name="doctor_practitioner_id" />
+                                <field name="is_active" />
+                                <field name="indication" />
+                                <field name="start_treatment" />
+                                <field name="end_treatment" />
+                                <field name="course_completed" />
+                                <field name="discontinued" />
+                            </group>
+                            <separator colspan="4" string="Admnistration" />
+                            <group colspan="4" col="4">
+                                <field name="route" />
+                            </group>
+                            <separator colspan="4" string="Quantity" />
+                            <group colspan="4" col="4">
+                                <field name="quantity" />
+                                <field name="qty" />
+                                <field name="quantity_unit" />
+                            </group>
+                            <separator colspan="4" string=" Treatment Duration " />
+                            <group colspan="4" col="4">
+                                <field name="duration" />
+                                <field name="duration_period" />
+                            </group>
+                            <separator colspan="4" string="  Common Quantity  " />
+                            <group colspan="4" col="4">
+                                <field name="common_quantity" />
+                                <field name="admin_times" />
+                            </group>
+                            <separator colspan="4" string="  Specific Quantity  " />
+                            <group colspan="4" col="4">
+                                <field name="frequency" />
+                                <field name="frequency_unit" />
+                            </group>
+                            <separator colspan="4" string=" Notes" />
+                            <group colspan="4" col="4">
+                                <field name="notes" />
+                            </group>
+                        </group>
+                    </page>
+                    <page string="HEADING 2">
+
+                    </page>
+                    <page string="HEADING 3">
+
+                    </page>
+
+                    <page string="HEADING 4">
+
+                    </page>
+
+                    <page string="HEADING 5">
+
+                    </page>
+
+                    <page string="HEADING 6">
+
+                    </page>
+
+                    <page string="Extra Info">
+                        <field name="notes" />
+                    </page>
+                </notebook>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="podiatry_patient_prescription_tree" model="ir.ui.view">
+        <field name="name">podiatry.patient.prescription.tree</field>
+        <field name="model">podiatry.patient.prescription</field>
+        <field name="arch" type="xml">
+            <tree string="Device">
+                <field name="treatment" />
+                <field name="doctor_practitioner_id" />
+                <field name="is_active" />
+                <field name="indication" />
+                <field name="start_treatment" />
+                <field name="end_treatment" />
+                <field name="course_completed" />
+                <field name="discontinued" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

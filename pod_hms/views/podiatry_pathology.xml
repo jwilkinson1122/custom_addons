@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="podiatry_pathology_form_view" model="ir.ui.view">
+        <field name="name">podiatry.pathology.form.view</field>
+        <field name="model">podiatry.pathology</field>
+        <field name="arch" type="xml">
+            <form string="Pathology Info">
+                <notebook>
+                    <page string="Main">
+                        <group colspan="4" col="4">
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="category_id" />
+                            <newline />
+                        </group>
+                    </page>
+                    <page string="Extra Info">
+                        <field name="info" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="podiatry_pathology_tree_view" model="ir.ui.view">
+        <field name="name">podiatry.pathology.tree.view</field>
+        <field name="model">podiatry.pathology</field>
+        <field name="arch" type="xml">
+            <tree string="Pathology">
+                <field name="name" />
+                <field name="code" />
+                <field name="category_id" />
+                <field name="info" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_podiatry_pathology" model="ir.actions.act_window">
+        <field name="name">Pathologies</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.pathology</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- <menuitem id="menu_pathologies_root" name="Pathologies" parent="pod_hms.main_menu_configuration" sequence='3' />
+    <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="3"/> -->
+
+</odoo>

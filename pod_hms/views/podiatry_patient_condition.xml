@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="podiatry_patient_condition_form_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.condition.form.view</field>
+        <field name="model">podiatry.patient.condition</field>
+        <field name="arch" type="xml">
+            <form string="Pathologies">
+                <group colspan="4" col="4" string="Main">
+                    <field name="pathology_id" />
+                    <field name="condition_severity" />
+                    <field name="status" />
+                    <field name="is_infectious" />
+                    <field name="is_active" />
+                    <field name="short_comment" />
+                    <field name="diagnosis_date" />
+                    <field name="healed_date" />
+                    <field name="age" />
+                    <field name="doctor_id" />
+                </group>
+                <group colspan="4" col="4" string="Allergies">
+                    <field name="is_allergic" />
+                    <field name="allergy_type" />
+                </group>
+                <group colspan="4" col="4" string="Therapy">
+                    <field name="is_on_treatment" />
+                    <field name="treatment_description" />
+                    <field name="date_start_treatment" />
+                    <field name="date_stop_treatment" />
+                </group>
+                <group string="Extra Info">
+                    <field name="extra_info" nolabel="1" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="podiatry_patient_condition_tree_view" model="ir.ui.view">
+        <field name="name">podiatry.patient.condition.tree.view</field>
+        <field name="model">podiatry.patient.condition</field>
+        <field name="arch" type="xml">
+            <tree string="Pathologies">
+                <field name="pathology_id" />
+                <field name="status" />
+                <field name="is_active" />
+                <field name="condition_severity" />
+                <field name="diagnosis_date" />
+                <field name="short_comment" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_podiatry_patient_condition" model="ir.actions.act_window">
+        <field name="name">Conditions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">podiatry.patient.condition</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- <menuitem id="menu_pathology_conditions" parent="menu_pathologies_root" action="action_podiatry_patient_condition" sequence='3' /> -->
+    <!-- <menuitem id="menu_pathologies" action="action_podiatry_pathology" parent="menu_pathologies_root" sequence="1"/> -->
+
+
+
+
+
+</odoo>
