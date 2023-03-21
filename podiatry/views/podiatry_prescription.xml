@@ -51,6 +51,7 @@
                     </div>
                     <group>
                         <group string="Account Info">
+                            <field name="partner_id"/>
                             <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/> -->
                             <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="practitioner_id" required="1" />

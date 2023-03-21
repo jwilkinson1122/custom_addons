@@ -72,3 +72,21 @@ access_extension_length,access_extension_length,model_extension_length,base.grou
 access_extension_thickness,access_extension_thickness,model_extension_thickness,base.group_system,1,1,1,1
 access_x_guard_length,access_x_guard_length,model_x_guard_length,base.group_system,1,1,1,1
 access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
+access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1
+access_create_prescription_order,create.prescription.order,model_create_prescription_order,,1,1,1,1
+access_sale_order,sale.order,sale.model_sale_order,base.group_user,1,1,1,0
+access_sale_order_line,sale.order.line,sale.model_sale_order_line,base.group_user,1,1,1,1
+access_sale_order_line_accountant,sale.order.line accountant,sale.model_sale_order_line,base.group_user,1,1,0,0
+access_account_move_salesman,account_move salesman,account.model_account_move,base.group_user,1,1,1,0
+access_account_move_manager,account_move manager,account.model_account_move,base.group_user,1,1,1,1
+access_account_move_line_salesman,account_move.line salesman,account.model_account_move_line,base.group_user,1,1,1,0
+access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,base.group_user,1,0,0,0
+access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,base.group_user,1,1,1,0
+access_sale_order_manager,sale.order.manager,sale.model_sale_order,base.group_user,1,1,1,1
+access_sale_order_accountant,sale.order.accountant,sale.model_sale_order,base.group_user,1,1,0,0
+access_sale_report_salesman,sale.report,sale.model_sale_report,base.group_user,1,1,1,0
+access_sale_report_manager,sale.report,sale.model_sale_report,base.group_user,1,1,1,1
+access_ir_property_sales,ir.property.sales,base.model_ir_property,base.group_user,1,1,1,1
+access_sale_account_journal,account.journal sale order.user,account.model_account_journal,base.group_user,1,0,0,0
+access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,base.group_user,1,1,1,1
+access_res_partner_sale_manager_m,res.partner.sale.manager.m,base.model_res_partner,base.group_user,1,0,0,0

@@ -49,9 +49,9 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='partner_id']" position="attributes">
+            <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </xpath>
+            </xpath> -->
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field string="Prescription" name="prescription_id"/>
@@ -82,13 +82,6 @@
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
                     <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button>
                 </div>
-
-                <!-- <button name="%(complete_pair_order_wizard)d" class="btn btn-info" type="action" string="Complete Pair"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test1" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test2" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test3" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button> -->
                 <hr states="draft,sent"/>
             </xpath>
 
@@ -107,16 +100,6 @@
                         }"/>
                 <field name="config_session_id"/>
             </xpath>
-
-            <!-- <xpath expr="//group[@name='sale_header']" position="after">
-                <hr/>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" type="action" string="Complete Pair"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test1" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test2" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Test3" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
-                <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button>
-            </xpath> -->
 
             <xpath expr="//form//notebook//field[@name='order_line']/form/field[@name='name']" position="after">
                 <div groups="podiatry.group_product_configurator">

@@ -51,6 +51,10 @@ class Prescription(models.Model):
     dr_notes = fields.Text('Notes')
     measure_notes = fields.Text('Internal Notes')
     podiatric_history = fields.Text()
+    
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+                                 help='Partner-related data of the Practice')
+
 
     company_id = fields.Many2one(
         comodel_name="res.company", default=lambda self: self.env.company, store=True)
