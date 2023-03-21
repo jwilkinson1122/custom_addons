@@ -11,7 +11,7 @@ class medical_patient(models.Model):
     _name = 'medical.patient'
     _description = 'medical patient'
     _rec_name = 'patient_id'
-
+    
     @api.onchange('patient_id')
     def _onchange_patient(self):
         '''
@@ -273,9 +273,31 @@ class medical_patient(models.Model):
     deaths_1st_week = fields.Integer('Deceased after 1st week')
     full_term = fields.Integer('Full Term')
     ses_notes = fields.Text('Notes')
+    active = fields.Boolean(string="Active", default=True)
 
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
+    
+    prescription_count = fields.Integer(compute='get_prescription_count')
+
+    def open_patient_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Patient Prescription'),
+                'view_type': 'form',
+                'domain': [('patient_id', '=', records.id)],
+                'res_model': 'podiatry.prescription',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'context': {'default_patient': self.id},
+                'type': 'ir.actions.act_window',
+            }
+
+    def get_prescription_count(self):
+        for records in self:
+            count = self.env['podiatry.prescription'].search_count(
+                [('patient_id', '=', records.id)])
+            records.prescription_count = count
 
     @api.model
     def create(self,val):

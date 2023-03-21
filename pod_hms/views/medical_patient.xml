@@ -10,12 +10,24 @@
                     <button name="print_report" type="object" string="Print Patient Card" class="oe_highlight" />
                 </header>
                 <sheet>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_patient_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
+                            <field string="Prescription" name="prescription_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <!-- <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_1920"}'/> -->
+
                     <group>
-                        <field name="name" />
+                        <field name="name" default_focus="1"/>
+
+                        <!-- <field name="name" /> -->
                         <div class="oe_title">
-                            <div class="oe_edit_only">
+                            <!-- <div class="oe_edit_only">
                                 <label for="patient_id" />
-                            </div>
+                            </div> -->
+                            <field name="active" invisible="1"/>
                             <h1>
                                 <field name="patient_id" default_focus="1" placeholder="Patient Name" context="{'default_is_patient': 1,'default_is_person': 1}" />
                             </h1>
@@ -39,10 +51,10 @@
 
                         <group>
                             <field name="gender" />
-                            <field name="age" readonly="1" />
                             <field name="date_of_birth" />
+                            <field name="age" readonly="1" />
                             <field name="marital_status" />
-                            
+
                         </group>
                     </group>
 
