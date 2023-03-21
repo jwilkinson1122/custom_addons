@@ -29,7 +29,7 @@
 												<span t-field='o.patient_id.name' />
 												<br></br>
 												<b>Gender :</b>
-												<span t-field='o.sex' />
+												<span t-field='o.gender' />
 												<br></br>
 												<b>Date of Birth :</b>
 												<span t-field='o.date_of_birth' />

@@ -37,11 +37,11 @@ class medical_patient(models.Model):
     
     partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Patient')
-    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", required= True)
-    name = fields.Char(string='ID', readonly=True)
+    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)], required= True)
+    name = fields.Char(string='Patient ID', readonly=True)
     last_name = fields.Char('Last Name')
     date_of_birth = fields.Date(string="Date of Birth")
-    sex = fields.Selection([('m', 'Male'),('f', 'Female')], string ="Sex")
+    gender = fields.Selection([('m', 'Male'),('f', 'Female')], string ="Gender")
     age = fields.Char(compute=onchange_age,string="Patient Age",store=True)
     critical_info = fields.Text(string="Patient Critical Information")
     photo = fields.Binary(string="Picture")
@@ -103,32 +103,32 @@ class medical_patient(models.Model):
     alcohol_wine_number = fields.Integer(string="Wine / day")
     alcohol_liquor_number = fields.Integer(string="Liquor / day")
     cage_ids = fields.One2many('medical.patient.cage','patient_id')
-    sex_oral = fields.Selection([('0','None'),
+    gender_oral = fields.Selection([('0','None'),
                                  ('1','Active'),
                                  ('2','Passive'),
-                                 ('3','Both')],string='Oral Sex')
-    sex_anal = fields.Selection([('0','None'),
+                                 ('3','Both')],string='Oral Gender')
+    gender_anal = fields.Selection([('0','None'),
                                  ('1','Active'),
                                  ('2','Passive'),
-                                 ('3','Both')],string='Anal Sex')
+                                 ('3','Both')],string='Anal Gender')
     prostitute = fields.Boolean(string='Prostitute')
-    sex_with_prostitutes = fields.Boolean(string=' Sex with prostitutes ')
-    sexual_preferences = fields.Selection([
-            ('h', 'Heterosexual'),
-            ('g', 'Homosexual'),
-            ('b', 'Bisexual'),
-            ('t', 'Transexual'),
-        ], 'Sexual Orientation', sort=False)
-    sexual_practices = fields.Selection([
-            ('s', 'Safe / Protected sex'),
-            ('r', 'Risky / Unprotected sex'),
-        ], 'Sexual Practices', sort=False)
-    sexual_partners = fields.Selection([
+    gender_with_prostitutes = fields.Boolean(string=' Gender with prostitutes ')
+    genderual_preferences = fields.Selection([
+            ('h', 'Heterogenderual'),
+            ('g', 'Homogenderual'),
+            ('b', 'Bigenderual'),
+            ('t', 'Trangenderual'),
+        ], 'Genderual Orientation', sort=False)
+    genderual_practices = fields.Selection([
+            ('s', 'Safe / Protected gender'),
+            ('r', 'Risky / Unprotected gender'),
+        ], 'Genderual Practices', sort=False)
+    genderual_partners = fields.Selection([
             ('m', 'Monogamous'),
             ('t', 'Polygamous'),
-        ], 'Sexual Partners', sort=False)
-    sexual_partners_number = fields.Integer('Number of sexual partners')
-    first_sexual_encounter = fields.Integer('Age first sexual encounter')
+        ], 'Genderual Partners', sort=False)
+    genderual_partners_number = fields.Integer('Number of genderual partners')
+    first_genderual_encounter = fields.Integer('Age first genderual encounter')
     anticonceptive = fields.Selection([
             ('0', 'None'),
             ('1', 'Pill / Minipill'),
@@ -142,7 +142,7 @@ class medical_patient(models.Model):
             ('9', 'Skin Patch'),
             ('10', 'Female condom'),
         ], 'Anticonceptive Method', sort=False)
-    sexuality_info = fields.Text('Extra Information')
+    genderuality_info = fields.Text('Extra Information')
     motorcycle_rider = fields.Boolean('Motorcycle Rider', help="The patient rides motorcycles")
     helmet = fields.Boolean('Uses helmet', help="The patient uses the proper motorcycle helmet")
     traffic_laws = fields.Boolean('Obeys Traffic Laws', help="Check if the patient is a safe driver")
@@ -214,7 +214,7 @@ class medical_patient(models.Model):
     domestic_violence = fields.Boolean('Domestic violence')
     working_children = fields.Boolean('Working children')
     teenage_pregnancy = fields.Boolean('Teenage pregnancy')
-    sexual_abuse = fields.Boolean('Sexual abuse')
+    genderual_abuse = fields.Boolean('Genderual abuse')
     drug_addiction = fields.Boolean('Drug addiction')
     school_withdrawal = fields.Boolean('School withdrawal')
     prison_past = fields.Boolean('Has been in prison')

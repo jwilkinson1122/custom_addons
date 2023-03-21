@@ -12,7 +12,7 @@ class medical_pediatrics_growth_charts_who(models.Model):
                              ('w-f-a','Weight for age'),
                              ('bmi-f-a','Body mass index for age (BMI for age)')],
                             string='Indicator')
-    sex = fields.Selection([('m','Male'),('f','Female')],string='sex')
+    gender = fields.Selection([('m','Male'),('f','Female')],string='gender')
     measure = fields.Selection([('p','percentile'),('z','Z-scores')],string='Measure')
     type = fields.Char(string="Type")
     month = fields.Integer(string="Month")

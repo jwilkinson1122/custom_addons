@@ -29,8 +29,8 @@
 	                        </tr> 
 
 	                        <tr> 
-		                    	<th style="border: 0px ;" class="text-left">Sex : 
-		                            <span style="font-weight:normal;" t-field="doc.patient_id.sex"/>
+		                    	<th style="border: 0px ;" class="text-left">Gender : 
+		                            <span style="font-weight:normal;" t-field="doc.patient_id.gender"/>
 		                        </th>
 
 		                        <th style="border: 0px ;" class="text-left">Doctor: 

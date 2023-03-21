@@ -20,8 +20,8 @@
                             <span style="font-weight:normal;" t-field="doc.name"/>
                         </th>
 
-                        <th style="border: 0px ;" class="text-left">Sex : 
-                            <span style="font-weight:normal;" t-field="doc.sex"/>
+                        <th style="border: 0px ;" class="text-left">Gender : 
+                            <span style="font-weight:normal;" t-field="doc.gender"/>
                         </th>
                         
                         <th style="border: 0px ;" class="text-left">Age : 

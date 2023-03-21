@@ -144,7 +144,7 @@ class medical_patient_evaluation(models.Model):
 	symptom_vaginal_discharge = fields.Boolean('Vaginal Discharge')
 	symptom_diarrhea = fields.Boolean('Diarrhea')
 	symptom_rectal_tenesmus = fields.Boolean('Rectal Tenesmus')
-	symptom_sexual_dysfunction = fields.Boolean('Sexual Dysfunction')
+	symptom_genderual_dysfunction = fields.Boolean('Genderual Dysfunction')
 	symptom_stress = fields.Boolean('Stressed-out')
 	symptom_insomnia = fields.Boolean('Insomnia')
 	symptom_dyspnea = fields.Boolean('Dyspnea')

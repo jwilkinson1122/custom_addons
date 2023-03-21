@@ -160,7 +160,7 @@
 							  	<tr>
 	                                <td class="supplier_rightcolumn2">
                                         <span>Gender: </span>
-										<b><span t-field='o.sex' /></b>
+										<b><span t-field='o.gender' /></b>
 									</td>
 									<td class="supplier_rightcolumn2">
                                      	<span>Weight(gram): </span>

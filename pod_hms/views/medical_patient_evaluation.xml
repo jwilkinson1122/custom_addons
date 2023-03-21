@@ -198,13 +198,11 @@
                                         <field name="symptom_diplopia" />
                                         <field name="symptom_dysmenorrhea" />
                                         <field name="symptom_metrorrhagia" />
-                                        <field
-                                            name="symptom_vaginal_discharge" />
+                                        <field name="symptom_vaginal_discharge" />
                                         <field name="symptom_diarrhea" />
                                         <field name="symptom_rectal_tenesmus" />
                                         <field name="symptom_proctorrhagia" />
-                                        <field
-                                            name="symptom_sexual_dysfunction" />
+                                        <field name="symptom_genderual_dysfunction" />
                                     </group>
                                     <group>
                                         <field name="symptom_stress" />

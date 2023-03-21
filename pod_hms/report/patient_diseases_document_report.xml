@@ -30,8 +30,8 @@
                                 <span style="font-weight:normal;" t-field="doc.report_date"/>
                             </th> 
 
-                            <th style="border: 0px ;" class="text-left">sex : 
-                                <span style="font-weight:normal;" t-field="doc.sex"/>
+                            <th style="border: 0px ;" class="text-left">gender : 
+                                <span style="font-weight:normal;" t-field="doc.gender"/>
                             </th>
                             <th style="border: 0px ;">
                             </th>
