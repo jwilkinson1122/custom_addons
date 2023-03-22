@@ -18,7 +18,7 @@
 
 
         <!-- Products Root -->
-        <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/>
+        <!-- <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/> -->
         <!-- Products Root - Preconfigured Devices -->
         <!-- <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>
         <menuitem id="menu_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_products_root" action="pod_shell_foundation_action" sequence="2"/>
@@ -27,43 +27,18 @@
         <menuitem id="menu_top_cover" name="Top Covers" parent="podiatry.menu_products_root" action="pod_top_cover_action" sequence="5"/>
         <menuitem id="menu_cushion" name="Cushions" parent="podiatry.menu_products_root" action="pod_cushion_action" sequence="6"/>
         <menuitem id="menu_extension" name="Extensions" parent="podiatry.menu_products_root" action="pod_extension_action" sequence="7"/> -->
-        <menuitem id="menu_accommodation" name="Accommodations" parent="podiatry.menu_products_root" action="pod_accommodation_action" sequence="8"/>
+        <!-- <menuitem id="menu_accommodation" name="Accommodations" parent="podiatry.menu_products_root" action="pod_accommodation_action" sequence="8"/> -->
         <!-- <menuitem id="menu_service" name="Service" parent="podiatry.menu_products_root" action="pod_service_action" sequence="9"/>
         <menuitem id="menu_miscellaneous" name="Miscellaneous" parent="podiatry.menu_products_root" action="pod_miscellaneous_action" sequence="10"/> -->
 
         <!-- Configuration Root -->
         <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_main_root" sequence="30" />
         <!-- Configuration Sub Menu - Settings  -->
-        <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/>
+        <!-- <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/> -->
         <!-- Configuration Sub Menu - Stages  -->
         <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
 
-        <!-- Configuration Sub Menu - Product Categories  -->
-        <!-- <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>
-        <menuitem id="products_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_configuration_root" sequence="100"/>
-        <menuitem id="products_shell_foundation_types" name="Types" parent="podiatry.products_shell_foundation" action="shell_type_action" sequence="1"/>
-        <menuitem id="products_shell_foundation_collections" name="Collections" parent="podiatry.products_shell_foundation" action="shell_collection_action" sequence="2"/>
-        <menuitem id="products_arch_heights" name="Arch Height" parent="podiatry.menu_configuration_root" sequence="105"/>
-        <menuitem id="products_arch_height_types" name="Types" parent="podiatry.products_arch_heights" action="arch_height_type_action" sequence="1"/>
-        <menuitem id="products_x_guard" name="X-Guard" parent="podiatry.menu_configuration_root" sequence="110"/>
-        <menuitem id="products_x_guard_types" name="Types" parent="podiatry.products_x_guard" action="x_guard_length_action" sequence="1"/>
-        <menuitem id="products_top_covers" name="Top Covers" parent="podiatry.menu_configuration_root" sequence="115"/>
-        <menuitem id="products_top_cover_types" name="Types" parent="podiatry.products_top_covers" action="top_cover_type_action" sequence="1"/>
-        <menuitem id="products_top_cover_lengths" name="Lengths" parent="podiatry.products_top_covers" action="top_cover_length_action" sequence="2"/>
-        <menuitem id="products_top_cover_materials" name="Materials" parent="podiatry.products_top_covers" action="top_cover_material_action" sequence="3"/>
-        <menuitem id="products_top_cover_thickness" name="Thickness" parent="podiatry.products_top_covers" action="top_cover_thickness_action" sequence="4"/>
-        <menuitem id="products_top_cover_colors" name="Colors" parent="podiatry.products_top_covers" action="top_cover_color_action" sequence="5"/>
-        <menuitem id="products_cushions" name="Cushions" parent="podiatry.menu_configuration_root" sequence="120"/>
-        <menuitem id="products_cushion_types" name="Types" parent="podiatry.products_cushions" action="cushion_type_action" sequence="1"/>
-        <menuitem id="products_cushion_lengths" name="Lengths" parent="podiatry.products_cushions" action="cushion_length_action" sequence="2"/>
-        <menuitem id="products_cushion_materials" name="Materials" parent="podiatry.products_cushions" action="cushion_material_action" sequence="3"/>
-        <menuitem id="products_cushion_thickness" name="Thickness" parent="podiatry.products_cushions" action="cushion_thickness_action" sequence="4"/>
-        <menuitem id="products_extensions" name="Extensions" parent="podiatry.menu_configuration_root" sequence="125"/>
-        <menuitem id="products_extension_types" name="Types" parent="podiatry.products_extensions" action="extension_type_action" sequence="1"/>
-        <menuitem id="products_extension_lengths" name="Lengths" parent="podiatry.products_extensions" action="extension_length_action" sequence="2"/>
-        <menuitem id="products_extension_materials" name="Materials" parent="podiatry.products_extensions" action="extension_material_action" sequence="3"/>
-        <menuitem id="products_extension_thickness" name="Thickness" parent="podiatry.products_extensions" action="extension_thickness_action" sequence="4"/>
-         -->
+
         <!-- Settings Sub Menu - Measures  -->
         <menuitem id="menu_podiatry_prescription_values" name="Measures" parent="podiatry.menu_configuration_root" sequence="200"/>
         <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_prescription_values" action="forefoot_values_action" sequence="1"/>
@@ -71,19 +46,6 @@
         <menuitem id="menu_podiatry_rearfoot_corrections" name="Rearfoot Corrections" parent="podiatry.menu_podiatry_prescription_values" action="rearfoot_corrections_action" sequence="3"/>
         <menuitem id="menu_podiatry_orthotic_measures" name="Orthotic Measures" parent="podiatry.menu_podiatry_prescription_values" action="orthotic_measures_action" sequence="4"/>
 
-        <!-- Product Configurator - Main Menu -->
-        <menuitem id="menu_configurator_root" name="Configurator" web_icon="podiatry,static/description/icon.png" groups="podiatry.group_product_configurator_manager" sequence="55"/>
-        <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="podiatry.menu_configurator_root" sequence="100" />
-        <menuitem id="menu_product_configurable_template_action" action="product_configurable_template_action" parent="podiatry.menu_product_configurable_product_main" sequence="1" />
-        <menuitem id="menu_product_configurable_variants_action" action="product_configurable_variant_action" parent="podiatry.menu_product_configurable_product_main" sequence="2" />
-        <menuitem id="menu_product_configurable_attributes" name="Configurable Attributes" parent="podiatry.menu_configurator_root" sequence="200" />
-        <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="podiatry.menu_product_configurable_attributes" sequence="1" groups="product.group_product_variant" />
-        <menuitem id="menu_variants_action_configuration" action="variants_action" parent="podiatry.menu_product_configurable_attributes" sequence="2" groups="product.group_product_variant" />
-        <menuitem id="menu_product_configurable_settings" name="Configurable Settings" parent="podiatry.menu_configurator_root" sequence="300" />
-        <menuitem id="menu_product_config_steps_action" action="product_config_steps_action" parent="podiatry.menu_product_configurable_settings" sequence="1" />
-        <menuitem id="menu_product_config_domain_action" action="product_config_domain_action" parent="podiatry.menu_product_configurable_settings" sequence="2" />
-        <menuitem id="menu_product_config_session" action="product_config_session" parent="podiatry.menu_product_configurable_settings" sequence="3" />
-
-
+       
     </data>
 </odoo>

@@ -87,7 +87,7 @@
                     <notebook>
                         <page string="Device Details">
                             <group>
-                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
+                                <field name="prescription_line" nolabel="1" widget="many2many_kanban"/>
                             </group>
                         </page>
                         <page string="Values">
@@ -306,20 +306,20 @@
         <field name="model">podiatry.prescription</field>
         <field name="arch" type="xml">
             <search>
+                <separator orientation="vertical" />
                 <field name="name" />
                 <field name="stage_id"/>
-                <!-- <field name="practitioner_id" /> -->
+                <field name="patient_id" />
+                <field name="practitioner_id" />
                 <field name="user_id" />
 
                 <filter name="filter_not_done" string="To Return" domain="[('state','=','draft')]" />
                 <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
                 <!-- <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" /> -->
-
                 <searchpanel>
                     <!-- <field name="practitioner_id" enable_counters="1" /> -->
                     <field name="stage_id" select="multi" />
                 </searchpanel>
-
             </search>
 
         </field>
@@ -380,10 +380,15 @@
         </field>
     </record>
 
-    <record id="action_pod_prescriptions" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
+    <record model="ir.actions.act_window" id="action_pod_prescriptions">
+        <field name="name">Prescription Order</field>
+        <field name="type">ir.actions.act_window</field>
         <field name="res_model">podiatry.prescription</field>
+        <field name="binding_view_types">form</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="view_podiatry_prescription_filter" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
     </record>
 
 </odoo>

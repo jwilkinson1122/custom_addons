@@ -21,44 +21,16 @@ class PrescriptionLine(models.Model):
                 self.qty_available = 0
                 self.price = 0.0
 
-    name = fields.Many2one('podiatry.prescription', 'Rx ID')
-    prescription_id = fields.Many2one(
-        "podiatry.prescription", "Prescription Number", ondelete="cascade")
-    practitioner_id = fields.Many2one("podiatry.practitioner")
-    practitioner = fields.Char(
-        related='prescription_id.practitioner_id.name')
-    patient_id = fields.Many2one("podiatry.patient")
-    patient = fields.Char(
-        related='prescription_id.patient_id.name')
-    product_id = fields.Many2one('product.product', 'Name')
+    name = fields.Many2one('podiatry.prescription','Prescription ID')
+    product_id  = fields.Many2one('product.product', 'Name')
+    price = fields.Float(compute=onchange_product,string='Price',store=True)
+    qty_available = fields.Integer(compute=onchange_product,string='Quantity Available',store=True)
+    qty = fields.Integer('x')
+    quantity = fields.Integer('Quantity')
+    prnt = fields.Boolean('Print')
+    notes = fields.Text('Extra Info')
 
-    # @api.model
-    # def _selection_state(self):
-    #     return [
-    #         ('start', 'Start'),
-    #         ('configure', 'Configure'),
-    #         ('custom', 'Customize'),
-    #         ('final', 'Final'),
-    #     ]
-
-    # @api.model
-    # def _default_prescription_id(self):
-    #     return self.env.context.get('active_id')
-
-    # def state_exit_start(self):
-    #     self.state = 'configure'
-
-    # def state_exit_configure(self):
-    #     self.state = 'custom'
-
-    # def state_exit_custom(self):
-    #     self.state = 'final'
-
-    # def state_previous_custom(self):
-    #     self.state = 'configure'
-
-    # def state_previous_final(self):
-    #     self.state = 'custom'
+  
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

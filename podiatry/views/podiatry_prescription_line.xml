@@ -9,9 +9,9 @@
         <field name="priority">2</field>
         <field name="arch" type="xml">
             <tree string="Prescription lines">
+                <field name="prnt" />
                 <field name="product_id" />
-
-
+                <field name="quantity" />
             </tree>
         </field>
     </record>
@@ -26,10 +26,10 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string='Prescription Line'>
-                <field name="product_id"/>
-
+                <field name="product_id" required="1" />
+                <field name="prnt" />
+                <field name="quantity" />
             </form>
-
         </field>
     </record>
 
