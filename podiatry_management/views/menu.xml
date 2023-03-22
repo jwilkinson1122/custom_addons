@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem name="Product Management"
+              id="menu_podiatry_management_main"
+              sequence="40"
+              groups="podiatry_management.group_podiatry_management_user,base.group_system"
+              web_icon="podiatry_management,static/description/icon.png"
+    />
+    <menuitem name="Product Management"
+              id="menu_podiatry_management"
+              parent="menu_podiatry_management_main"
+              action="podiatry_management.product_product_mntn_action"
+              sequence="10"
+              groups="podiatry_management.group_podiatry_management_user,base.group_system"
+    />
+    <menuitem name="Configuration"
+              id="menu_podiatry_management_conf"
+              parent="menu_podiatry_management_main"
+              sequence="50"
+              action="res_config_settings_podiatry_management_action"
+              groups="base.group_system"
+    />
+
+</odoo>

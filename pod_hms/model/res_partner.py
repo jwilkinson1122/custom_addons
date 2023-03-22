@@ -14,12 +14,8 @@ class res_partner(models.Model):
     relative_partner_id = fields.Many2one('res.partner',string="Relative_id")
     is_patient = fields.Boolean(string='Patient')
     is_person = fields.Boolean(string="Person")
-    is_physician = fields.Boolean(string="Doctor")
+    is_practitioner = fields.Boolean(string="Practitioner")
     is_practice = fields.Boolean('Practice')
-    is_insurance_company = fields.Boolean(string='Insurance Company')
-    is_pharmacy = fields.Boolean(string="Pharmacy")
-    patient_insurance_ids = fields.One2many('medical.insurance','patient_id')
-    company_insurance_ids = fields.One2many('medical.insurance','insurance_compnay_id','Insurance')
     reference = fields.Char('ID Number')
 
     practice_ids = fields.One2many(

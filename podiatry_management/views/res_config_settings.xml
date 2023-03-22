@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.product.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     data-string="Product Management"
+                     string="Product Management"
+                     data-key="podiatry_management"
+                     name="podiatry_management"
+                >
+                    <h2>Product Management Options</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div name="atrts_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="attrs_option_1" class="o_setting_left_pane">
+                                <field name="podiatry_management_attributes_option"/>
+                            </div>
+                            <div name="attrs_option_2" class="o_setting_right_pane">
+                                <label for="podiatry_management_attributes_option"/>
+                                <div name="attrs_option_hint" class="text-muted">
+                                    Search product templates by available attribute values. If the feature in turned on,
+                                    you would be able, for example, to find templates which have both possible options
+                                    color 'red' and material 'steel'
+                                </div>
+                            </div>
+                        </div>
+                        <div name="export_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="export_option_1" class="o_setting_left_pane">
+                                <field name="podiatry_management_export_option"/>
+                            </div>
+                            <div name="export_option_2" class="o_setting_right_pane">
+                                <label for="podiatry_management_export_option"/>
+                                <div name="export_option_hint" class="text-muted">
+                                    Let users export found and selected products
+                                </div>
+                            </div>
+                        </div>
+                        <div name="website_sale_prm_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="website_sale_prm_option_1" class="o_setting_left_pane">
+                                <field name="module_podiatry_management_website_sale"/>
+                            </div>
+                            <div name="website_sale_prm_option_2" class="o_setting_right_pane">
+                                <label for="module_podiatry_management_website_sale"/>
+                                <div name="website_sale_prm_option_hint" class="text-muted">
+                                    Turn on mass actions for E-commerce. If checked you would be able to select actions:
+                                    publish / unpublish products, update public categories, update accessories, update
+                                    alternatives. The tool
+                                    <a href="https://apps.odoo.com/apps/modules/15.0/podiatry_management_website_sale/">
+                                        Product Management Interface: e-Commerce
+                                    </a> (10 Euros extra) is required
+                                </div>
+                            </div>
+                        </div>
+                        <div name="eshop_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                             attrs="{'invisible': [('module_podiatry_management_website_sale', '=', False)]}"
+                        >
+                            <div name="eshop_option_1" class="o_setting_left_pane">
+                                <field name="podiatry_management_eshop_categories_option"/>
+                            </div>
+                            <div name="eshop_option_2" class="o_setting_right_pane">
+                                <label for="podiatry_management_eshop_categories_option"/>
+                                <div name="eshop_option_hint" class="text-muted">
+                                    Search product templates by E-commerce categories
+                                </div>
+                            </div>
+                        </div>
+                        <div name="accounting_prm_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="accounting_prm_option_1" class="o_setting_left_pane">
+                                <field name="module_podiatry_management_accounting"/>
+                            </div>
+                            <div name="accounting_prm_option_2" class="o_setting_right_pane">
+                                <label for="module_podiatry_management_accounting"/>
+                                <div name="accounting_prm_option_hint" class="text-muted">
+                                    Turn on mass actions for Accounting. If checked you would be able to select actions:
+                                    add and remove sale and purchase taxes, update income and expense accounts, change
+                                    invoice policy. The tool
+                                    <a href="https://apps.odoo.com/apps/modules/15.0/podiatry_management_accounting/">
+                                        Product Management Interface: Accounting
+                                    </a> (10 Euros extra) is required
+                                </div>
+                            </div>
+                        </div>
+                        <div name="stock_prm_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="stock_prm_option_1" class="o_setting_left_pane">
+                                <field name="module_podiatry_management_stock"/>
+                            </div>
+                            <div name="stock_prm_option_2" class="o_setting_right_pane">
+                                <label for="module_podiatry_management_stock"/>
+                                <div name="stock_prm_option_hint" class="text-muted">
+                                    Turn on mass actions for warehouse management. If checked you would be able to
+                                    select actions: add and remove logistic routes, update production and inventory
+                                    locations, change tracking method. The tool
+                                    <a href="https://apps.odoo.com/apps/modules/15.0/podiatry_management_stock/">
+                                        Product Management Interface: Warehouse
+                                    </a> (10 Euros extra) is required
+                                </div>
+                            </div>
+                        </div>
+                        <div name="purchase_prm_option"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                        >
+                            <div name="purchase_prm_option_1" class="o_setting_left_pane">
+                                <field name="module_podiatry_management_purchase"/>
+                            </div>
+                            <div name="purchase_prm_option_2" class="o_setting_right_pane">
+                                <label for="module_podiatry_management_purchase"/>
+                                <div name="purchase_prm_option_hint" class="text-muted">
+                                    Turn on mass actions for purchase management. If checked you would be able to
+                                    select actions: add new product vendors, update purchases policy, make products
+                                    purchaseable / not purchaseable. The tool
+                                    <a href="https://apps.odoo.com/apps/modules/15.0/podiatry_management_purchase/">
+                                        Product Management Interface: Purchases
+                                    </a> (10 Euros extra) is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Mass actions</h2>
+                    <div class="row mt16 o_settings_container">
+                        <field name="ir_actions_server_ids"/>
+                    </div>
+                    <h2>Kanban Fields</h2>
+                    <div class="row mt16 o_settings_container">
+                        <field name="kanban_fields_ids"
+                               domain="[('model', '=', 'product.template'), ('ttype', 'not in', ['binary']), ('name', 'not in', ['image_128', 'categ_id', 'type', 'lst_price', 'product_variant_count', 'product_variant_ids', 'currency_id', 'sale_ok', 'purchase_ok', 'purchase_ok', 'qty_available', 'uom_id', 'website_published'])]"
+                               options="{'no_create_edit': 1, 'no_quick_create': 1}"
+                        />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_podiatry_management_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'podiatry_management'}</field>
+    </record>
+
+</odoo>

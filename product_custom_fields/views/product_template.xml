@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_view_search" model="ir.ui.view">
+        <field name="name">product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="custom_type_id"/>
+            </field>
+            <search position="inside">
+                <group expand='0' string='Group by...'>
+                    <filter name="custom_type_id_group"
+                            string="Type"
+                            context="{'group_by':'custom_type_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="product_template_view_form" model="ir.ui.view">
+        <field name="name">product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="detailed_type" position="after">
+                <field name="custom_type_id" groups="product_custom_fields.group_custom_fields_products_show_type"/>
+            </field>
+            <notebook position="inside">
+                <page name="custom_fields"
+                      string="Custom Details"
+                      invisible="0"
+                >
+                    <group name="group_custom_fields" invisible="1"/>
+                </page>
+            </notebook>
+            <xpath expr="//page[@name='general_information']/group" position="after">
+                <group name="template_custom_fields">
+                    <group name="left_panel_group"
+                           invisible="1"
+                    />
+                    <group name="right_panel_group"
+                           invisible="1"
+                    />
+                </group>
+            </xpath>
+            <page name="general_information" position="inside">
+                <group name="after_description_group" invisible="1"/>
+            </page>
+        </field>
+    </record>
+
+</odoo>

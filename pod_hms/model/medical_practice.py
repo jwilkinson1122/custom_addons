@@ -104,8 +104,8 @@ class Practice(models.Model):
                                       ('other', 'Other')],
                                      string="Practice Type")
 
-    physician_id = fields.One2many(
-        comodel_name='medical.physician',
+    practitioner_ids = fields.One2many(
+        comodel_name='medical.practitioner',
         inverse_name='practice_id',
         string="Contacts",
     )
@@ -115,7 +115,7 @@ class Practice(models.Model):
         string="Created by",
     )
 
-    practice_prescription_id = fields.One2many(
+    prescription_ids = fields.One2many(
         comodel_name='medical.prescription.order',
         inverse_name='practice_id',
         string="Prescriptions",

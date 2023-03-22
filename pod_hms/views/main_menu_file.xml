@@ -1,67 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>                 
-        <menuitem 
-        	id="main_menu_hospital_management"
-        	name="Hospital Management"
-            web_icon="pod_hms,static/description/icon.png"
-           />
-
-         <menuitem name="Configuration"
-            id="main_menu_configartion"
-            parent = "main_menu_hospital_management"
-            sequence = '13'
-            />
-            
-               
-    	<menuitem name="Laboratory"
-            id="main_menu_conf_laboratory"
-            parent = "main_menu_configartion"
-            sequence='0'
-           />
-
-        <menuitem id="menu_nursing" name="Nursing"
-            parent="main_menu_hospital_management"
-            sequence="8" />
-
-        <menuitem id="menu_appointment"
-            name='Appointments' parent="main_menu_hospital_management" sequence="1" />
-
-        <menuitem id="menu_medical_health_service"
-            name='Medical Service' parent="main_menu_hospital_management"
-            sequence="11" />
-
-         <menuitem id="menu_inpatient_administration" name="Inpatient Administration"
-            parent="main_menu_hospital_management" sequence='2' />
-
-        <menuitem id="menu_patients" name='Patients'
-            parent="main_menu_hospital_management" sequence="0" />
-
-        <menuitem name="Pediatrics" id="main_menu_pediatrics"
-            parent="main_menu_hospital_management"
-            sequence="6" />
-
-
-        <menuitem id="menu_medical_paper_archive"
-            name='Archive' parent="main_menu_hospital_management" sequence="4" />
-
-        <menuitem id="menu_medical_surgery"
-            name='Surgery' parent="main_menu_hospital_management"
-            sequence="9" />
-
-        <menuitem id="menu_genetic" name="Genetics"
-            parent="main_menu_configartion" sequence='10' />
-
-
-        <menuitem id="menu_intensive_care" name="Intensive Care"
-            parent="menu_inpatient_administration" />
-
-        <menuitem id="menu_medical_management" name="Medical" />
-
-        <menuitem id="menu_insurance" 
-                name="Insurances" 
-                parent="main_menu_configartion"
-                sequence='9'/>
-
-
-
-</openerp>
+<odoo>
+    <!-- Main Menu Root -->
+    <menuitem id="menu_main_root" name="POD ERP" sequence="50" web_icon="pod_hms,static/description/icon.png" />
+    <!-- Accounts -->
+    <menuitem id="menu_accounts" name="Accounts" parent="pod_hms.menu_main_root" sequence="10"/>
+    <menuitem id="menu_practices" name="Practices" action="action_medical_practices" parent="pod_hms.menu_accounts" sequence="1" />
+    <menuitem id="menu_practitioners" name="Practitioners" action="action_medical_practitioner" parent="pod_hms.menu_accounts" sequence="2" />
+    <menuitem id="menu_patients" name="Patients" action="action_medical_patient" parent="pod_hms.menu_accounts" sequence="3" />
+    <!-- Prescriptions -->
+    <menuitem id="menu_prescriptions" name="Prescriptions" action="action_medical_prescription_order" parent="pod_hms.menu_main_root" sequence="15"/>
+    <!-- Products -->
+    <menuitem id="menu_products"  name="Products" parent="pod_hms.menu_main_root" sequence="20" groups="pod_hms.group_medical_user,base.group_system"/>
+    <menuitem id="menu_pod_hms" name="Product Management" action="action_product_management"  parent="pod_hms.menu_products" sequence="10" groups="pod_hms.group_medical_user,base.group_system" />
+    <menuitem id="menu_pod_hms_conf" name="Configuration" action="action_res_config_settings" parent="pod_hms.menu_products" sequence="20" groups="base.group_system" />
+    <!-- Configuration -->
+    <menuitem id="menu_configuration" name="Configuration" parent="pod_hms.menu_main_root" sequence = '25'/>
+    <!-- Conditions -->
+    <menuitem id="menu_conditions" name="Conditions" parent="pod_hms.menu_configuration" sequence='1'/>
+    <menuitem id="menu_medical_conditions" name="Medical Conditions" action="action_medical_pathology" parent="pod_hms.menu_conditions" sequence="1"/>
+    <menuitem id="menu_categories" name="Medical Categories" action="action_medical_pathology_category" parent="pod_hms.menu_conditions" sequence="2"/>
+    <!-- Stages -->
+    <menuitem id="menu_config_stages" name="Stages" action="action_medical_prescription_stage" parent="pod_hms.menu_configuration" sequence="2"/>
+    
+</odoo>

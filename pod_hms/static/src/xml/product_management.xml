@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductNavigationPanel">
+        <div class="pod_hms_navigation_panel prod_navigation_panel hidden_mobile">
+            <div class="pod_hms_content">
+                <div class="pod_hms_panel_header">
+                    <div class="prm_d_flex">
+                        <div>
+                            Sort by
+                        </div>
+                        <div class="prodselection_div">
+                            <select id="prodsort" class="prodselection_options">
+                                <option value="name">Name</option>
+                                <option value="categ_id">Category</option>
+                                <option value="type">Product Type</option>
+                                <option value="default_code">Internal Reference</option>
+                                <option value="list_price">Basic Sale Price</option>
+                            </select>
+                        </div>
+                        <div>
+                            <i class="fa fa-exchange prod_functional_button prodreverse_sort prodclear"></i>
+                        </div>
+                    </div>
+                    <div  class="prod_padding_top">
+                        <span class="prod_functional_button prodselect_all">
+                            Select all found
+                        </span>
+                    </div>
+                </div>
+                <hr class="pod_hms_hr"/>
+                <div class="pod_hms_panel_header">
+                    <span>
+                        Categories <i class="fa fa-ban clear_categories prod_functional_button prodclear"></i>
+                    </span>
+                </div>
+                <div class="pod_hms_panel_body">
+                    <div id="categories" >
+                    </div>
+                </div>
+                <hr class="mb8 pod_hms_hr not_shown_attributes"/>
+                <div class="pod_hms_panel_header not_shown_attributes">
+                    <span>
+                        Attributes <i class="fa fa-ban clear_attributes prod_functional_button prodclear"></i>
+                    </span>
+                </div>
+                <div class="pod_hms_panel_body not_shown_attributes">
+                    <div id="attributes" >
+                    </div>
+                </div>
+                <hr class="mb8 pod_hms_hr not_shown_eshop_categories"/>
+                <div class="pod_hms_panel_header not_shown_eshop_categories">
+                    <span>
+                        E-Commerce <i class="fa fa-ban clear_eshop_categories prod_functional_button prodclear"></i>
+                    </span>
+                </div>
+                <div class="pod_hms_panel_body not_shown_eshop_categories">
+                    <div id="eshop_categories" >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ProductRightNavigationPanel">
+        <div class="pod_hms_right_navigation_panel prod_navigation_panel hidden_mobile hidden_tablet">
+            <div class="pod_hms_content">
+                <div class="overall_products_selection">
+                    <div class="pod_hms_panel_header">
+                        <span>
+                            Selected products (<t t-out="count_products"/>)
+                            <i class="fa fa-ban clear_selected_products prod_functional_button prodclear"></i>
+                        </span>
+                    </div>
+                    <div class="pod_hms_panel_body_products">
+                        <ul class="no_padding_produl">
+                            <t t-foreach="products" t-as="product">
+                                <li>
+                                    <span class="pod_hms_product_selected_row prod_functional_button"
+                                          t-att-id="product.id"
+                                          title="click to remove this product from selection"
+                                    >
+                                        <t t-out="product.name"/>
+                                    </span>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="mb8 pod_hms_hr"/>
+                <div class="pod_hms_panel_header">
+                    <div t-if="export_conf">
+                        <span class="prod_functional_button mass_action_export">
+                            <i class="fa fa-play"></i>
+                            Export
+                        </span>
+                    </div>
+                    <t t-foreach="mass_actions" t-as="mass_action">
+                        <div>
+                            <span class="prod_functional_button mass_action_button" t-att-id="mass_action.id">
+                                <i class="fa fa-play"></i>
+                                <t t-out="mass_action.name"/>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+
+</templates>

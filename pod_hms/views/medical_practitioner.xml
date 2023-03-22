@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="medical_practitioner_form_view" model="ir.ui.view">
+        <field name="name">medical.practitioner.form.view</field>
+        <field name="model">medical.practitioner</field>
+        <field name="arch" type="xml">
+            <form string="Practitioner">
+                <sheet>
+                    <notebook>
+                        <page string="Main Info">
+                            <group colspan="4" col="4">
+                                <field name="partner_id" required="1" context="{'default_is_practitioner': 1, 'search_default_is_practitioner': 1}" />
+                                <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
+                                <field name="code" />
+                            </group>
+                        </page>
+                        <page string="Extra Info">
+                            <field name="info" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="medical_practitioner_search_view" model="ir.ui.view">
+        <field name="name">medical.practitioner.search.view</field>
+        <field name="model">medical.practitioner</field>
+        <field name="arch" type="xml">
+            <search string="Search Practitioner">
+                <separator orientation="vertical" />
+                <field name="partner_id" select="1" />
+                <field name="code" select="1" />
+                <field name="practice_partner_id" select="1" />
+                <newline />
+                <group expand="1" string="Group By">
+                    <filter string="Practitioner" name='by_user' context="{'group_by':'partner_id'}"/>
+                    <filter string="Practice" name='by_practice' context="{'group_by':'practice_partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="medical_practitioner_tree_view" model="ir.ui.view">
+        <field name="name">medical.practitioner.tree.view</field>
+        <field name="model">medical.practitioner</field>
+        <field name="arch" type="xml">
+            <tree string="Practitioner Information">
+                <field name="partner_id" />
+                <field name="code" />
+                <field name="practice_partner_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_medical_practitioner" model="ir.actions.act_window">
+        <field name="name">Practitioners</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">medical.practitioner</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+<!-- 
+    <menuitem id="menu_practitioner" name='Practitioners' parent="menu_configuration" sequence="7" />
+
+    <menuitem id="menu_medical_practitioner" parent="menu_practitioner" action="action_medical_practitioner" sequence="6" /> -->
+
+</odoo>

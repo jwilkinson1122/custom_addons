@@ -18,7 +18,7 @@
                 <field name="patient_id" />
                 <field name="user_id" />
                 <field name="prescription_date" />
-                <field name="doctor_id" />
+                <field name="practitioner_id" />
 
             </tree>
         </field>
@@ -36,18 +36,15 @@
 
                 </header>
                 <sheet>
-                    <group string="Patient and Doctor Information">
+                    <group string="Patient and Practitioner Information">
                         <group>
                             <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
                             <field name="prescription_date" required="1" />
-                            <field name="pharmacy_partner_id" />
                         </group>
                         <group>
                             <field name="name" readonly="1" />
                             <field name="user_id" />
-                            <field name="doctor_id" required="1" />
-                            <field name="invoice_to_insurer" />
-                            <field name="insurer_id" attrs="{'invisible': [('invoice_to_insurer','=', False)]}" />
+                            <field name="practitioner_id" required="1" />
                         </group>
                     </group>
                     <group string="Prescription Detail">
@@ -78,7 +75,6 @@
                 <field name="name" />
                 <field name="patient_id" />
                 <field name="prescription_date" />
-                <field name="pharmacy_partner_id" />
             </search>
         </field>
     </record>
@@ -95,7 +91,8 @@
     </record>
 
 
+    <!-- <menuitem id="menu_medical_prescription" name="Prescriptions" parent="pod_hms.menu_patients" action="action_medical_prescription_order" sequence="2" /> -->
 
-    <menuitem id="dental_prescription_child" action="action_medical_prescription_order" name="Prescriptions" parent="menu_patients" sequence="2" />
+    <!-- <menuitem id="menu_medical_prescription" action="action_medical_prescription_order" name="Prescriptions" parent="menu_patients" sequence="2" /> -->
 
 </odoo>

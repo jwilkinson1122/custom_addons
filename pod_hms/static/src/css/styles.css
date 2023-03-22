@@ -1,0 +1,179 @@
+
+
+/* Put Background image on login page */
+.container_login {
+    background: #eee url(/hms_plus/static/body_bg.png);
+    height: 100%;
+}
+.oe_login_form {
+
+	margin-top: 4%;
+        margin-left: 14%;
+}
+
+
+
+.form-control { 
+
+
+
+	width :57%
+
+}
+img#logo_img 
+
+{
+
+    margin-top: 42%;
+    width: 45%;
+    padding-left: 10%;
+
+}
+
+/* Overload standard jstree styles */
+div.pod_hms_panel_body > .jstree-default .jstree-hovered {
+    background: transparent;
+    border-radius: 0px;
+    box-shadow: inset 0 0 1px #cccccc;
+}
+div.pod_hms_panel_body > .jstree-default .jstree-context {
+    background: transparent;
+    border-radius: 0px;
+    box-shadow: inset 0 0 1px #cccccc;
+}
+div.pod_hms_panel_body > .jstree-default .jstree-clicked {
+    background: transparent;
+    border-radius: 0px;
+    box-shadow: none;
+}
+.pod_hms_selected_parent > a:not(.jstree-checked) {
+    border: 1px dotted white !important;
+}
+/* Basic*/
+.prm_d_flex {
+    display: flex !important;
+    /*align-items: flex-start;*/
+}
+.pod_hms_hidden {
+    display: none !important;
+}
+@media screen and (max-width: 540px) {
+    .hidden_mobile {
+        display: none !important;
+    }
+}
+@media screen and (min-width: 540px) and (max-width: 860px) {
+    .hidden_tablet {
+        display: none !important;
+    }
+}
+@media screen and (max-width: 1050px) {
+    .hidden_under1000 {
+        display: none !important;
+    }
+}
+.prod_functional_button {
+    cursor: pointer;
+}
+.prod_functional_button:hover {
+    color: white;
+}
+.pod_hms_fullwidth {
+    width: 100% !important;
+}
+.pod_hms_halfwidth {
+    width: 50% !important;
+}
+.prod_navigation_panel {
+    background-color: #212529;
+    display: block;
+    color: #dee2e6;
+    overflow: auto;
+}
+.pod_hms_panel_header {
+    color: #dee2e6;
+    width: 100%;
+    padding: 3% 0% 1% 8%;
+    font-size: 13pt;
+}
+.pod_hms_content {
+    display: block;
+    width: 100%;
+}
+.pod_hms_panel_body {
+    width: 100%;
+    padding-left: 1%;
+}
+.pod_hms_hr {
+    background-color: #dee2e6;
+    width: 100%;
+}
+.prodclear {
+    font-size: 9pt;
+    padding-left: 3px;
+}
+.prod_padding_top {
+    padding-top: 3%;
+}
+/* Kanban view*/
+.pod_hms_products {
+
+}
+.pod_hms_kanban_view {
+    overflow: auto !important;
+    flex: 1 1;
+    position: relative !important;
+}
+.pod_hms_navigation_panel {
+    flex: 0 0 320px;
+}
+.pod_hms_right_navigation_panel {
+    flex: 0 0 320px;
+}
+.overall_products_selection {
+    max-height: 300px;
+    overflow: auto !important;
+}
+.pod_hms_panel_body_products {
+    width: 100%;
+    padding: 3% 2% 1% 8%;
+}
+.prodselection_div {
+    padding-left: 4%;
+    padding-right: 4%;
+    padding-top: 3pt;
+}
+.prodselection_options {
+    color: #dee2e6;
+    min-width: 150px;
+    max-width: 150px;
+    padding-left: 2%;
+    font-size: 11pt;
+    background-color: #2E2E2E;
+    border: none;
+}
+.prodselection_options option {
+    color: #dee2e6;
+}
+ul.no_padding_produl {
+    padding-inline-start: 15px;
+}
+.add_prodnode_button {
+    margin-right: 5%;
+    font-size: 9pt;
+    color: #dee2e6;
+    cursor: pointer;
+}
+.add_prodnode_button:hover {
+    color: white;
+}
+.pod_hms_kanban_record {
+    box-shadow: none !important;
+}
+.pod_hms_kanban_record_bottom {
+    padding-top: 5px;
+}
+.prodkanabanselected {
+    border: 2px solid #00A09D !important;
+    box-shadow: 2px 2px 2px 2px #6c757d !important;
+}
