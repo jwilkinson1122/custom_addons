@@ -49,6 +49,12 @@ class Patient(models.Model):
                 record.patient_age = str(int(years))
             else:
                 record.patient_age=0
+                
+                
+    @api.onchange('practice')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner': [('practice', '=', rec.practice.id)]}}
 
     def create_patient(self):
         self.is_patient = True
