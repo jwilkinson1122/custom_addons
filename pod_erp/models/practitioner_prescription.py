@@ -23,6 +23,16 @@ class Prescription(models.Model):
     notes_laboratory = fields.Text()
     practitioner_observation = fields.Text()
     state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
+    
+    @api.onchange('practice')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner': [('practice', '=', rec.practice.id)]}}
+
+    @api.onchange('practitioner')
+    def onchange_practitioner_id(self):
+        for rec in self:
+            return {'domain': {'patient': [('practitioner', '=', rec.practitioner.id)]}}
 
     def confirm_request(self):
         for rec in self:
