@@ -12,14 +12,15 @@ class Prescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    practitioner = fields.Many2one('podiatry.practitioner', string='Podiatrist', readonly=True)
+    practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner', readonly=True)
+    practice = fields.Many2one('podiatry.practice', string='Practice', readonly=True)
     customer = fields.Many2one('res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
-    podiatrist_observation = fields.Text()
+    practitioner_observation = fields.Text()
     state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
 
     def confirm_request(self):
@@ -285,7 +286,7 @@ class Prescription(models.Model):
         print('fire', sale_order)
         if sale_order:
             return {
-                'name': _('Practitioner Prescription'),
+                'name': _('Prescription'),
                 'view_type': 'form',
                 'res_id': sale_order.id,
                 'res_model': 'sale.order',
@@ -299,7 +300,7 @@ class Prescription(models.Model):
 
         else:
             return {
-                'name': _('Practitioner Prescription'),
+                'name': _('Prescription'),
                 'view_type': 'form',
                 'res_model': 'sale.order',
                 'view_id': False,

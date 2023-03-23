@@ -41,7 +41,7 @@
             <!--                <field string="Prescription" name="prescription_id"/>-->
             <!--            </xpath>-->
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="podiatrist"/>
+                <field name="practitioner"/>
                 <field name="prescription_date" string="Prescription Date" readonly="0"/>
                 <field name="commitment_date"/>
                 <field name="po_ref"/>

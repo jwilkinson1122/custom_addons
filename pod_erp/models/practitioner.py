@@ -19,8 +19,8 @@ class Practitioner(models.Model):
             return {
                 'name': _('Practitioner Prescription'),
                 'view_type': 'form',
-                'domain': [('practitioner', '=', records.id)],
                 'res_model': 'practitioner.prescription',
+                'domain': [('practitioner', '=', records.id)],
                 'view_id': False,
                 'view_mode': 'tree,form',
                 'context': {'default_practitioner': self.id},

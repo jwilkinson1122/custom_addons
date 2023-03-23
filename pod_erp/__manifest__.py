@@ -31,6 +31,7 @@
         # 'report/invoice_report.xml',
         'views/inherit_sale_order.xml',
         'wizard/complete_pair_order.xml',
+        'views/practice.xml',
         'views/practitioner.xml',
         'views/practitioner_wizard.xml',
         "views/prescription.xml",

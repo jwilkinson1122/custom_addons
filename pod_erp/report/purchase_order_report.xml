@@ -51,7 +51,7 @@
                                         <span></span>
                                     </h6>
                                     <h6 style="font-size:small;">
-                                        <strong>Podiatrist :</strong>
+                                        <strong>Practitioner :</strong>
                                         <span t-esc="doc.prescription_id.practitioner.name"></span>
                                     </h6>
                                     <h6 style="font-size:small;">
