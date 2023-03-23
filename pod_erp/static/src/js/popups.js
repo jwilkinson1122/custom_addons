@@ -43,15 +43,15 @@ odoo.define('pod_erp.popups', function (require) {
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
             vals["device_type"] = $('option:selected', $('[name=device_type]')).data('id');
             vals = JSON.stringify(vals);
-            var checkup_date = $('[name=checkup_date]').val();
+            var prescription_date = $('[name=prescription_date]').val();
             var today = new Date().toJSON().slice(0, 10);
-            if (!checkup_date) {
+            if (!prescription_date) {
                 //                this.env.pos.podiatry.ProductCreationScreen = this.gui.current_popup;
                 //                this.env.pos.podiatry.ProductCreationScreen.hide();
                 //                this.gui.current_popup = this.gui.popup_instances['error'];
                 this.showPopup('ErrorPopup', {
-                    title: this.env._t('Checkup date is empty'),
-                    body: this.env._t('You need to select a Checkup date'),
+                    title: this.env._t('Prescription date is empty'),
+                    body: this.env._t('You need to select a Prescription date'),
                 });
                 //                    cancel: function () {
                 //                        this.env.pos.podiatry.ProductCreationScreen.$el.removeClass('oe_hidden');

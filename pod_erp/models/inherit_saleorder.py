@@ -6,16 +6,14 @@ from odoo import api, fields, models,_
 class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    # prescription_id = fields.Many2one('practitioner.prescription')
-    # practitioner = fields.Char(related='prescription_id.practitioner.name')
-    # practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner')
     prescription_id = fields.Many2one('practitioner.prescription', readonly=True)
     practice = fields.Char(related='prescription_id.practice.name')
     practitioner = fields.Char(related='prescription_id.practitioner.name')
     patient = fields.Char(related='prescription_id.patient.name')
-    prescription_date = fields.Date(related='prescription_id.checkup_date')
+    prescription_date = fields.Date(related='prescription_id.prescription_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
+    device_type = fields.Many2one(related='prescription_id.device_type')
     
     helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
     helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')

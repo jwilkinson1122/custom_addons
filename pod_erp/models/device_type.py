@@ -5,5 +5,3 @@ class DeviceType(models.Model):
     _rec_name = 'name'
     
     name = fields.Char(string='Device_type',required=True)
-
- 

@@ -29,7 +29,7 @@
 
                             </group>
                             <group>
-                                <field name="checkup_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
+                                <field name="prescription_date" attrs="{'readonly': [('state','=','confirm')]}" string="Prescription Date" required="1"/>
                                 <field name="test_type" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="device_type" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
                                 <field name="prescription_type" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
@@ -407,7 +407,7 @@
                 <tree>
                     <field name="practitioner"/>
                     <field name="patient"/>
-                    <field name="checkup_date" string="Prescription Date"/>
+                    <field name="prescription_date" string="Prescription Date"/>
                     <field name="test_type"/>
                     <field name="device_type"/>
                     <field name="prescription_type"/>

@@ -5,7 +5,9 @@ from odoo.exceptions import UserError, ValidationError
 
 class Prescription(models.Model):
     _name = 'practitioner.prescription'
+    _inherit = ['mail.thread']
     _description = 'Practitioner Prescription'
+    _order = 'prescription_date desc, id desc'
     _rec_name = 'name'
 
     company_id = fields.Many2one(
@@ -16,19 +18,18 @@ class Prescription(models.Model):
     practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner', readonly=True)
     practice = fields.Many2one('podiatry.practice', string='Practice', readonly=True)
     patient = fields.Many2one('podiatry.patient', string='Patient', readonly=True)
+    patient_name = fields.Char('Name', related='patient.name')
     # patient = fields.Many2one('res.partner', string='patient', readonly=False)
     patient_age = fields.Integer(related='patient.age')
-    checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
+    gender = fields.Selection('Gender', related='patient.gender')
+    prescription_date = fields.Date('Prescription Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     device_type = fields.Many2one('device.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     practitioner_observation = fields.Text()
     state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
-    
-    helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
-    helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
-    
+     
     @api.onchange('practice')
     def onchange_practice_id(self):
         for rec in self:
@@ -42,22 +43,6 @@ class Prescription(models.Model):
     def confirm_request(self):
         for rec in self:
             rec.state = 'Confirm'
-            
-    @api.depends('helpdesk_tickets_ids')
-    def _get_helpdesk_tickets_count(self):
-        for rec in self:
-            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
-
-    def helpdesk_ticket(self):
-        action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
-
-        tickets = self.order_line.mapped('helpdesk_discription_id')
-        if len(tickets) > 1:
-            action['domain'] = [('id', 'in', tickets.ids)]
-        elif tickets:
-            action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
-            action['res_id'] = tickets.id
-        return action
 
     def default_eye_examination_chargeable(self):
         settings_eye_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
@@ -312,6 +297,23 @@ class Prescription(models.Model):
             self.od_av_distance = "20/" + self.od_av_distance
         if self.os_av_distance and self.os_av_distance.isdigit():
             self.os_av_distance = "20/" + self.os_av_distance
+            
+    
+    def start_prescription(self):
+        if not self.prescription_works:
+            self.prescription_obj.state = 'accommodation'
+            self.prescription_obj.prescription_obj.state = 'process'
+        for each in self:
+            for obj in each.product_line:
+                self.env['sale.order.line'].create(
+                    {'product_id': obj.product_id.id,
+                     'name': obj.name,
+                     'price_unit': obj.price_unit,
+                     'order_id': each.prescription_obj.prescription_obj.sale_obj.id,
+                     'product_uom_qty': obj.quantity,
+                     'product_uom': obj.uom_id.id,
+                     })
+        self.state = 'process'
 
     def open_prescription(self):
         sale_order = self.env['sale.order'].search([('prescription_id', '=', self.id)], limit=1)
@@ -327,6 +329,7 @@ class Prescription(models.Model):
                 # 'context':{'default_practitioner':self.id},
                 'type': 'ir.actions.act_window',
             }
+            
         else:
             return {
                 'name': _('Prescription'),
@@ -366,3 +369,6 @@ class Prescription(models.Model):
 
     def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("pod_erp.practitioner_prescription_podiatry_ticket_size2").report_action(self)
+
+
+

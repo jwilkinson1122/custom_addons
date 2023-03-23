@@ -62,6 +62,7 @@
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="gender" string="Gender"/>
                             <field name="dob" string="Birthdate"/>
                             <field name="patient_age" string="Age"/>
                             <field name="phone" widget="phone"/>

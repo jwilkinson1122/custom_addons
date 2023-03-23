@@ -7,6 +7,13 @@ class ProductFromTemp(models.Model):
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
+    
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  default=lambda self: self.env.user.company_id
+                                  .currency_id.id,
+                                  required=True)
+    device_ok = fields.Boolean('Device')
+    product_prices = fields.Monetary('Price', help="Price of the products")
 
     frame_material = fields.Many2one('frame.material', string='Material')
     frame_shape = fields.Many2one('frame.shape', string='Shape')
@@ -25,6 +32,11 @@ class ProductFromTemp(models.Model):
     lens_style = fields.Many2one('lens.style', string='Lens Style')
     lens_material = fields.Many2one('lens.material', string='Material')
     contact_lens_manufacturer = fields.Many2one('contact.lens.manufacturer', string='Manufacturer')
+    
+    @api.onchange('device_ok')
+    def onchange_product_type(self):
+        self.type = 'consu'
+        self.list_price = self.product_prices
 
     @api.model
     def default_get(self, vals):

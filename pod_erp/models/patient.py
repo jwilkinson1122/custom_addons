@@ -17,11 +17,15 @@ class Patient(models.Model):
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
-    
+    gender = fields.Selection([('female', 'Female'),
+                               ('male', 'Male'),
+                               ('others', 'Other')],
+                              string="Gender")
     practitioner = fields.Many2one('podiatry.practitioner', 'Practitioner', help="Practitioner who is responsible for patient")
     practice = fields.Many2one('podiatry.practice', 'Practice', help="Practice where patient is seen")
+    prescription_ids = fields.One2many('practitioner.prescription', 'patient')
     prescription_count = fields.Integer(compute='get_prescription_count')
-    
+   
     def open_patient_prescriptions(self):
         for records in self:
             return {
@@ -77,3 +81,5 @@ class Patient(models.Model):
                         'default_groups_id': [(6, 0, patient_id)]}
 
         }
+
+ 

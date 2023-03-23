@@ -704,7 +704,7 @@ Description
                         <tr>
                             <th>Prescription Date:</th>
                             <td>
-                                <input type="date" name="checkup_date" maxlength="10" t-attf-value="{{today}}"/>
+                                <input type="date" name="prescription_date" maxlength="10" t-attf-value="{{today}}"/>
                             </td>
                             <th>Test Type:</th>
                             <td>
@@ -1388,7 +1388,7 @@ Glass left</td>
                                                         <t t-esc='product.patient[1]' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.checkup_date' />
+                                                        <t t-esc='product.prescription_date' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.practitioner[1]' />
@@ -1443,7 +1443,7 @@ Glass left</td>
                     <tr>
                         <td>
                             <span>Prescription Date:</span>
-                            <t t-esc="podiatry_order.checkup_date"/>
+                            <t t-esc="podiatry_order.prescription_date"/>
                         </td>
                         <td>
                             <span>Test Type:</span>
