@@ -5,11 +5,11 @@
         <field name="sequence">10</field>
         <field name="state">draft</field>
     </record>
-    <record id="stage_processing" model="podiatry.prescription.stage">
+    <!-- <record id="stage_processing" model="podiatry.prescription.stage">
         <field name="name">In Process</field>
         <field name="sequence">85</field>
         <field name="state">in_process</field>
-    </record>
+    </record> -->
     <record id="stage_done" model="podiatry.prescription.stage">
         <field name="name">Done</field>
         <field name="sequence">90</field>

@@ -281,8 +281,8 @@ class Prescription(models.Model):
     def action_draft(self):
         self.state = 'draft'
 
-    def action_check(self):
-        self.state = 'in_process'
+    # def action_check(self):
+    #     self.state = 'in_process'
 
     def action_done(self):
         self.state = 'done'
