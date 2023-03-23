@@ -6,9 +6,13 @@
         <field name="arch" type="xml">
             <form>
                 <field name="sal" invisible="1"/>
-                <field name="patient_id" invisible="1"/>
+                <field name="customer" invisible="1"/>
+                <!-- <group>
+                    <field name="prescription" domain="[('customer', '=', customer_id)]"/>
+                </group> -->
                 <group>
-                    <field name="prescription" domain="[('patient', '=', patient_id)]"/>
+                    <field name="prescription_id" domain="[('practitioner', '=', customer)]"/>
+                    <field string="Patient" name="patient"/>
                 </group>
                 <group>
                     <field name="frame"/>
@@ -35,11 +39,18 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
             <!--            <xpath expr="//field[@name='payment_term_id']" position="before">-->
             <!--                <field string="Prescription" name="prescription_id"/>-->
             <!--            </xpath>-->
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="practitioner"/>
+                <field name="prescription_id" string="Prescription"/>
+                <field name="practice" string="Practice"/>
+                <field name="practitioner" string="Practitioner"/>
+                <field name="patient" string="Patient"/>
                 <field name="prescription_date" string="Prescription Date" readonly="0"/>
                 <field name="commitment_date"/>
                 <field name="po_ref"/>
@@ -60,6 +71,7 @@
                 <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
                 <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button>
             </xpath>
+
         </field>
     </record>
 

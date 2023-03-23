@@ -43,6 +43,12 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td class="headings">Device Type :</td>
+                                                <td class="text">
+                                                    <span t-field="doc.device_type"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td class="headings">Patient :</td>
                                                 <td class="text">
                                                     <span t-field="doc.patient"></span>
@@ -488,6 +494,12 @@
                                                 <td class="headings">Test Type:</td>
                                                 <td class="text">
                                                     <span t-field="doc.prescription_id.test_type"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="headings">Device Type:</td>
+                                                <td class="text">
+                                                    <span t-field="doc.prescription_id.device_type"></span>
                                                 </td>
                                             </tr>
                                             <tr>

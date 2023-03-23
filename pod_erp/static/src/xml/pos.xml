@@ -716,6 +716,16 @@ Description
                                     </t>
                                 </select>
                             </td>
+                            <th>Device Type:</th>
+                            <td>
+                                <select name="device_type">
+                                    <t t-foreach="device_type || []" t-as="item" t-key="item.id">
+                                        <option t-attf-data-id="{{ item.id }}">
+                                            <t t-esc='item.name'/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th>Prescription Type:</th>
@@ -1387,6 +1397,9 @@ Glass left</td>
                                                         <t t-esc='product.test_type[1]' />
                                                     </td>
                                                     <td>
+                                                        <t t-esc='product.device_type[1]' />
+                                                    </td>
+                                                    <td>
                                                         <t t-esc='product.prescription_type' />
                                                     </td>
                                                     <td>
@@ -1435,6 +1448,10 @@ Glass left</td>
                         <td>
                             <span>Test Type:</span>
                             <t t-esc="podiatry_order.test_type[1]"/>
+                        </td>
+                        <td>
+                            <span>Device Type:</span>
+                            <t t-esc="podiatry_order.device_type[1]"/>
                         </td>
                     </tr>
                 </table>

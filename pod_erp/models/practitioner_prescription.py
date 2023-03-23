@@ -19,6 +19,7 @@ class Prescription(models.Model):
     patient_age = fields.Integer(related='patient.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
+    device_type = fields.Many2one('device.type')
     diagnosis_client = fields.Text()
     notes_laboratory = fields.Text()
     practitioner_observation = fields.Text()

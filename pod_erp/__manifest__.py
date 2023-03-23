@@ -39,6 +39,7 @@
         "views/res_config_settings_views.xml",
         "views/partner.xml",
         "views/test_type.xml",
+        "views/device_type.xml",
         'views/product_attribute_view.xml',
         'views/view.xml',
         'views/inherit_product_template.xml',

@@ -3,6 +3,7 @@ from . import practitioner
 from . import practice
 from . import patient
 from . import test_type
+from . import device_type
 from . import res_partner
 from . import inherit_saleorder
 from . import res_config_settings

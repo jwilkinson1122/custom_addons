@@ -5,12 +5,22 @@
         <record id="eye_test_config_one" model="eye.test.type">
             <field name="name">Glasses</field>
         </record>
-         <record id="eye_test_config_two" model="eye.test.type">
+        <record id="eye_test_config_two" model="eye.test.type">
             <field name="name">Contact Lense</field>
         </record>
 
+        <record id="device_type_config_one" model="device.type">
+            <field name="name">Custom</field>
+        </record>
+        <record id="device_type_config_two" model="device.type">
+            <field name="name">OTC</field>
+        </record>
+        <record id="device_type_config_three" model="device.type">
+            <field name="name">Brace</field>
+        </record>
+
         <record id="pod_erp_product" model="product.product">
-            <field name="name">Eye Examination charges</field>
+            <field name="name">Service charges</field>
             <field name="standard_price">0</field>
             <field name="list_price">0</field>
             <field name="type">service</field>

@@ -19,6 +19,7 @@ odoo.define('pod_erp.popups', function (require) {
             this.practitioners = this.env.pos.podiatry.practitioners;
             this.partners = this.env.pos.db.get_partners_sorted();
             this.test_type = this.env.pos.podiatry.test_type;
+            this.device_type = this.env.pos.podiatry.device_type;
             if (this.env.pos.get_order().attributes.client)
                 this.patient = this.env.pos.get_order().attributes.client.id;
             else
@@ -40,6 +41,7 @@ odoo.define('pod_erp.popups', function (require) {
             vals["practitioner"] = $('option:selected', $('[name=practitioner]')).data('id');
             vals["patient"] = $('option:selected', $('[name=patient]')).data('id');
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
+            vals["device_type"] = $('option:selected', $('[name=device_type]')).data('id');
             vals = JSON.stringify(vals);
             var checkup_date = $('[name=checkup_date]').val();
             var today = new Date().toJSON().slice(0, 10);
