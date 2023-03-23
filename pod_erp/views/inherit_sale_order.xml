@@ -7,12 +7,14 @@
             <form>
                 <field name="sal" invisible="1"/>
                 <field name="customer" invisible="1"/>
+
+                <!-- <field name="customer" invisible="1"/> -->
                 <!-- <group>
                     <field name="prescription" domain="[('customer', '=', customer_id)]"/>
                 </group> -->
                 <group>
-                    <field name="prescription_id" domain="[('practitioner', '=', customer)]"/>
-                    <field string="Patient" name="patient"/>
+                    <field name="prescription_id" domain="[('patient', '=', customer)]"/>
+                    <field name="patient" string="Patient"/>
                 </group>
                 <group>
                     <field name="frame"/>
@@ -42,7 +44,6 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-
             <!--            <xpath expr="//field[@name='payment_term_id']" position="before">-->
             <!--                <field string="Prescription" name="prescription_id"/>-->
             <!--            </xpath>-->
