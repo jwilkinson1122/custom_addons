@@ -1,5 +1,18 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+import base64
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
+
+from . import practice
+
+# from lxml import etree
+# added import statement in try-except because when server runs on
+# windows operating system issue arise because this library is not in Windows.
+try:
+    from odoo.tools import image_colorize
+except:
+    image_colorize = False
 
 
 class Practitioner(models.Model):
@@ -12,6 +25,9 @@ class Practitioner(models.Model):
                                  help='Partner-related data of the Practitioner')
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
+    
+    practice = fields.Many2one('podiatry.practice', 'Practice', help="Practice where practitioners works")
+
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_practitioner_prescriptions(self):

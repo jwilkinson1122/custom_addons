@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="action_practice_by_parent" model="ir.actions.act_window">
+            <field name="name">Practices</field>
+            <field name="res_model">podiatry.practice</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('parent_id', '=', active_id)]</field>
+            <field name="context">{'can_edit_parent_id': False}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new practice
+                </p>
+                <p>
+                    Organize and manage practices at a glance.
+                </p>
+            </field>
+        </record>
+
         <record id="practice_practice" model="ir.ui.view">
             <field name="name">Practice</field>
             <field name="model">podiatry.practice</field>
@@ -20,6 +36,10 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <field name="child_ids" invisible="1"/>
+                            <button type="action" name="%(action_practice_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                                <field name="child_count" string="Practices" widget="statinfo"/>
+                            </button>
                             <button name="open_practice_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
                                 <field string="Prescription" name="prescription_count" widget="statinfo"/>
                             </button>
@@ -35,7 +55,8 @@
                                 <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                             </h1>
                             <div class="o_row">
-                                <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                                <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
+                                <!-- <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/> -->
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                             </div>
                         </div>

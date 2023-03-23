@@ -11,8 +11,56 @@ class Practice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Practice')
     is_practice = fields.Boolean()
+    
+    _parent_name = 'parent_id'
+    _parent_store = True
+
+    parent_path = fields.Char(string="Parent Path", index=True)
+
+    parent_id = fields.Many2one(
+        comodel_name='podiatry.practice',
+        string="Parent Practice",
+        index=True,
+        ondelete='cascade',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
+    child_ids = fields.One2many(
+        comodel_name='podiatry.practice',
+        inverse_name='parent_id',
+        string="Practices",
+    )
+    child_count = fields.Integer(
+        string="Subpractice Count",
+        compute='_compute_child_count',
+    )
+
+    @api.depends('child_ids')
+    def _compute_child_count(self):
+        for practice in self:
+            practice.child_count = len(practice.child_ids)
+        return
+    
+    active = fields.Boolean(string="Active", default=True, tracking=True)
+    
+    
     prescription_count = fields.Integer(compute='get_prescription_count')
 
+    full_name = fields.Char(
+        string="Full Name",
+        compute='_compute_full_name',
+        store=True,
+    )
+    
+    @api.depends('name', 'parent_id.full_name')
+    def _compute_full_name(self):
+        for practice in self:
+            if practice.parent_id:
+                practice.full_name = "%s / %s" % (
+                    practice.parent_id.full_name, practice.name)
+            else:
+                practice.full_name = practice.name
+        return
+    
     def open_practice_prescriptions(self):
         for records in self:
             return {
