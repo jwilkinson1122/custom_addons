@@ -35,6 +35,8 @@
                                 <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                             </h1>
                             <div class="o_row">
+                                <field name="practice" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+
                                 <!-- <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/> -->
                                 <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
