@@ -3,13 +3,12 @@
     "version": "15.0.0.0.1",
     "category": "Podiatry",
     'sequence': 1,
-    'live_test_url': 'https://youtu.be/EKacxPASgWc',
-    'summary': "Solution for Podiatry(EYE) shops and clinics",
+    'summary': "Solution for Podiatry clinics",
     'description': """
-    odoo Solution for Podiatry(EYE) shops and clinics.
+    odoo Solution for Podiatry clinics.
     """,
-    "author": "Alhaditech",
-    "website": "www.alhaditech.com",
+    "author": "NWPL",
+    "website": "www.nwpodiatric.com",
     'license': 'AGPL-3',
     'images': ['static/description/background.png', 'static/description/background2.png'],
     "depends": [
@@ -34,6 +33,8 @@
         'views/practice.xml',
         'views/practitioner.xml',
         'views/practitioner_wizard.xml',
+        'views/patient.xml',
+        'views/patient_wizard.xml',
         "views/prescription.xml",
         "views/res_config_settings_views.xml",
         "views/partner.xml",

@@ -7,6 +7,8 @@ access_practitioner,access_practitioner,model_podiatry_practitioner,group_pod_er
 access_admin_practitioner,access_admin_practitioner,model_podiatry_practitioner,base.group_system,1,1,1,1
 access_practice,access_practice,model_podiatry_practice,group_pod_erp_practices,1,0,0,0
 access_admin_practice,access_admin_practice,model_podiatry_practice,base.group_system,1,1,1,1
+access_patient,access_patient,model_podiatry_patient,group_pod_erp_patients,1,0,0,0
+access_admin_patient,access_admin_patient,model_podiatry_patient,base.group_system,1,1,1,1
 access_frame_material,access_frame_material,model_frame_material,base.group_system,1,1,1,1
 access_frame_shape,access_frame_shape,model_frame_shape,base.group_system,1,1,1,1
 access_frame_type,access_frame_type,model_frame_type,base.group_system,1,1,1,1

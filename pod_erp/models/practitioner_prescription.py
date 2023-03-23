@@ -14,8 +14,9 @@ class Prescription(models.Model):
     )
     practitioner = fields.Many2one('podiatry.practitioner', string='Practitioner', readonly=True)
     practice = fields.Many2one('podiatry.practice', string='Practice', readonly=True)
-    customer = fields.Many2one('res.partner', string='Customer', readonly=False)
-    customer_age = fields.Integer(related='customer.age')
+    patient = fields.Many2one('podiatry.patient', string='Patient', readonly=True)
+    # patient = fields.Many2one('res.partner', string='patient', readonly=False)
+    patient_age = fields.Integer(related='patient.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()
@@ -281,7 +282,7 @@ class Prescription(models.Model):
         if self.os_av_distance and self.os_av_distance.isdigit():
             self.os_av_distance = "20/" + self.os_av_distance
 
-    def open_customer(self):
+    def open_prescription(self):
         sale_order = self.env['sale.order'].search([('prescription_id', '=', self.id)], limit=1)
         print('fire', sale_order)
         if sale_order:
@@ -305,7 +306,7 @@ class Prescription(models.Model):
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                'context': {'default_prescription_id': self.id, 'default_partner_id': self.customer.id},
+                'context': {'default_prescription_id': self.id, 'default_partner_id': self.patient.id},
                 'type': 'ir.actions.act_window',
             }
 

@@ -9,5 +9,9 @@
             <field name="name">Practices</field>
             <field name="users" eval="[(4, ref('base.group_system'))]"/>
         </record>
+        <record id="group_pod_erp_patients" model="res.groups">
+            <field name="name">Patients</field>
+            <field name="users" eval="[(4, ref('base.group_system'))]"/>
+        </record>
     </data>
 </odoo>

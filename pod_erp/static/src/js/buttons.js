@@ -1,4 +1,4 @@
-odoo.define('pod_erp.Main_Page_Buttons',function(require) {
+odoo.define('pod_erp.Main_Page_Buttons', function (require) {
 
     var gui = require('point_of_sale.Gui');
     const PosComponent = require('point_of_sale.PosComponent');
@@ -17,17 +17,17 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
             useListener('click', this.button_click);
         }
         button_click() {
-            this.showScreen('PrescriptionListScreenWidget',{all_orders:this.env.pos.podiatry.all_orders});
+            this.showScreen('PrescriptionListScreenWidget', { all_orders: this.env.pos.podiatry.all_orders });
         }
     }
     PrescriptionHistoryButton.template = 'PrescriptionHistoryButtons';
     ProductScreen.addControlButton({
-            component: PrescriptionHistoryButton,
-            condition: function () {
-                return true;
-            },
-            position: ['before', 'SelectGlassesButton'],
-        });
+        component: PrescriptionHistoryButton,
+        condition: function () {
+            return true;
+        },
+        position: ['before', 'SelectGlassesButton'],
+    });
 
     Registries.Component.add(PrescriptionHistoryButton);
 
@@ -51,12 +51,12 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
     }
     PrescriptionButton.template = 'PrescriptionButton';
     ProductScreen.addControlButton({
-            component: PrescriptionButton,
-            condition: function () {
-                return true;
-            },
-            position: ['before', 'PrescriptionHistoryButton'],
-        });
+        component: PrescriptionButton,
+        condition: function () {
+            return true;
+        },
+        position: ['before', 'PrescriptionHistoryButton'],
+    });
 
     Registries.Component.add(PrescriptionButton);
 
@@ -75,33 +75,33 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
         button_click() {
             var self = this;
             if (this.env.pos.get_order().attributes.client)
-                this.customer = this.env.pos.get_order().attributes.client.name;
+                this.patient = this.env.pos.get_order().attributes.client.name;
             else
-                this.customer = false;
+                this.patient = false;
             if (this.env.pos.get_order().podiatry_reference != undefined)
                 this.podiatry_reference = this.env.pos.get_order().podiatry_reference.name;
             else
                 this.podiatry_reference = false;
 
-            if (!this.customer || !this.podiatry_reference){
+            if (!this.patient || !this.podiatry_reference) {
                 self.showPopup('ErrorPopup', {
-                        title: this.env._t('No Customer or Prescription found'),
-                        body: this.env._t('You need to select Customer & Prescription to continue'),
+                    title: this.env._t('No patient or Prescription found'),
+                    body: this.env._t('You need to select patient & Prescription to continue'),
                 });
             }
             else
-                 self.showPopup('OrderCreationWidget');;
+                self.showPopup('OrderCreationWidget');;
         }
     }
     SelectGlassesButton.template = 'SelectGlassesButton';
     ProductScreen.addControlButton({
-            component: SelectGlassesButton,
-            condition: function () {
-                return true;
-            },
-            position: ['before', 'PrescriptionHistoryButton'],
-        });
+        component: SelectGlassesButton,
+        condition: function () {
+            return true;
+        },
+        position: ['before', 'PrescriptionHistoryButton'],
+    });
 
     Registries.Component.add(SelectGlassesButton);
-    return PrescriptionHistoryButton,PrescriptionButton,SelectGlassesButton;
+    return PrescriptionHistoryButton, PrescriptionButton, SelectGlassesButton;
 });

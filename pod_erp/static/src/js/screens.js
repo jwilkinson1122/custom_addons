@@ -1,4 +1,4 @@
-odoo.define('pod_erp.screens',function(require) {
+odoo.define('pod_erp.screens', function (require) {
     'use strict';
 
     const Registries = require('point_of_sale.Registries');
@@ -32,11 +32,11 @@ odoo.define('pod_erp.screens',function(require) {
             var self = this;
             this.search.client = event.target.value;
             if (this.search.client != '')
-                this.podiatry_orders = this.podiatry_orders.filter(function(el){return el.customer[1].toLowerCase().includes(self.search.client.toLowerCase())})
-            else if (this.search.client == ''){
+                this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.patient[1].toLowerCase().includes(self.search.client.toLowerCase()) })
+            else if (this.search.client == '') {
                 this.podiatry_orders = this.props.all_orders;
                 if (this.search.date != '' && this.search.date != null)
-                    this.podiatry_orders = this.podiatry_orders.filter(function(el){return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase())})
+                    this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase()) })
             }
             this.render();
         }
@@ -45,16 +45,16 @@ odoo.define('pod_erp.screens',function(require) {
             var self = this;
             this.search.date = event.target.value;
             if (this.search.date != '')
-                this.podiatry_orders = this.podiatry_orders.filter(function(el){return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase())})
-            else if (this.search.date == ''){
+                this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.checkup_date.toLowerCase().includes(self.search.date.toLowerCase()) })
+            else if (this.search.date == '') {
                 this.podiatry_orders = this.props.all_orders;
                 if (this.search.client != '' && this.search.client != null)
-                    this.podiatry_orders = this.podiatry_orders.filter(function(el){return el.customer[1].toLowerCase().includes(self.search.client.toLowerCase())})
+                    this.podiatry_orders = this.podiatry_orders.filter(function (el) { return el.patient[1].toLowerCase().includes(self.search.client.toLowerCase()) })
             }
             this.render();
         }
 
-        prescription_line_click(data){
+        prescription_line_click(data) {
             if (this.podiatry_order.id == data.id)
                 this.podiatry_order = 0;
             else
@@ -62,20 +62,20 @@ odoo.define('pod_erp.screens',function(require) {
             this.render();
         }
 
-        prescription_line_button(data){
+        prescription_line_button(data) {
             var self = this;
             var order = self.env.pos.get_order();
             var podiatry_order = self.env.pos.podiatry.order_by_id[parseInt(data.id)];
             $('.podiatry_prescription').text(data.name);
             order.set_podiatry_reference(data);
-            order.set_client(self.env.pos.db.partner_by_id[podiatry_order.customer[0]]);
+            order.set_client(self.env.pos.db.partner_by_id[podiatry_order.patient[0]]);
             this.close();
 
         }
 
-        print_receipt(data){
+        print_receipt(data) {
             this.close();
-            this.showScreen('PrescriptionPrint',{prescription:data.id});
+            this.showScreen('PrescriptionPrint', { prescription: data.id });
         }
 
         mounted() {
