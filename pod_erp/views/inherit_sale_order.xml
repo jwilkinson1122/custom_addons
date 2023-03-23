@@ -41,6 +41,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
+                    <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
+                </button>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
@@ -61,7 +66,6 @@
                 <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print Ophtalmologic" type="object"></button>
                 <button name="print_sale_order_report" class="btn btn-success" string="Print Sale Order" type="object" attrs="{'invisible':[('state','!=','sale')]}"/>
                 <button name="print_purchase_order_report" class="btn btn-success" string="Print Purchase Order" type="object" attrs="{'invisible':[('state','!=','sale'),('po_ref','=',False)]}"/>
-
             </xpath>
             <xpath expr="//group[@name='sale_header']" position="after">
                 <hr/>
@@ -71,6 +75,14 @@
                 <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Lens Only" type="action" style="margin-left: 3px;"></button>
                 <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Services" type="action" style="margin-left: 3px;"></button>
                 <button name="%(complete_pair_order_wizard)d" class="btn btn-info" string="Miscellaneous" type="action" style="margin-left: 3px;"></button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="helpdesk_discription_id"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page name='helpdesk_ticket' string='Helpdesk Tickets'>
+                    <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
+                </page>
             </xpath>
 
         </field>

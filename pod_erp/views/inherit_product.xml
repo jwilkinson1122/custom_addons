@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="inherit_product_normal_form_view_helpdesk" model="ir.ui.view">
+        <field name="name">product.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name='helpdesk_ticket' string='Helpdesk'>
+                    <group>
+                        <field name='is_helpdesk'/>
+                        <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                        <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

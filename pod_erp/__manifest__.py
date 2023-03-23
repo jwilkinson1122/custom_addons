@@ -12,7 +12,29 @@
     'license': 'AGPL-3',
     'images': ['static/description/background.png', 'static/description/background2.png'],
     "depends": [
-        'base', 'sale','purchase',
+        'base', 
+        'sale',
+        'purchase',
+        'helpdesk',
+        'website_helpdesk_form',
+        'website_helpdesk_livechat',
+        'helpdesk_repair',
+        'helpdesk_stock',
+        'helpdesk_mail_plugin',
+        'data_merge_helpdesk',
+        'sale', 
+        'sale_management', 
+        'sale_stock',
+        'sale_product_configurator',
+        'sale_product_matrix',
+        'sale_quotation_builder',
+        'stock',
+        'product', 
+        'product_matrix',
+        'uom',
+        'mail',
+        "account",
+        "account_accountant"
     ],
     "data": [
         'security/groups.xml',
@@ -44,6 +66,7 @@
         'views/view.xml',
         'views/inherit_product_template.xml',
         'views/inherit_invoice.xml',
+        'views/inherit_product.xml',
     ],
     "assets": {
         "point_of_sale.assets": [

@@ -1,5 +1,6 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, exceptions
 from odoo.tools import datetime
+from odoo.exceptions import UserError, ValidationError
 
 
 class Prescription(models.Model):
@@ -25,6 +26,9 @@ class Prescription(models.Model):
     practitioner_observation = fields.Text()
     state = fields.Selection([('Draft', 'Draft'), ('Confirm', 'Confirm')], default='Draft')
     
+    helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
+    helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
+    
     @api.onchange('practice')
     def onchange_practice_id(self):
         for rec in self:
@@ -38,6 +42,22 @@ class Prescription(models.Model):
     def confirm_request(self):
         for rec in self:
             rec.state = 'Confirm'
+            
+    @api.depends('helpdesk_tickets_ids')
+    def _get_helpdesk_tickets_count(self):
+        for rec in self:
+            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+
+    def helpdesk_ticket(self):
+        action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
+
+        tickets = self.order_line.mapped('helpdesk_discription_id')
+        if len(tickets) > 1:
+            action['domain'] = [('id', 'in', tickets.ids)]
+        elif tickets:
+            action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
+            action['res_id'] = tickets.id
+        return action
 
     def default_eye_examination_chargeable(self):
         settings_eye_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
@@ -307,9 +327,6 @@ class Prescription(models.Model):
                 # 'context':{'default_practitioner':self.id},
                 'type': 'ir.actions.act_window',
             }
-
-
-
         else:
             return {
                 'name': _('Prescription'),
