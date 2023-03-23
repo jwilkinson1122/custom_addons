@@ -583,8 +583,8 @@
                         <tr>
                             <th>Podiatrist:</th>
                             <td>
-                                <select name="dr">
-                                    <t t-foreach="doctors || []" t-as="item" t-key="item.id">
+                                <select name="practitioner">
+                                    <t t-foreach="practitioners || []" t-as="item" t-key="item.id">
                                         <option t-attf-data-id="{{ item.id }}"><t t-esc='item.name'/></option>
                                     </t>
                                 </select>
@@ -1196,7 +1196,7 @@
                                                     <td><t t-esc='product.name' /></td>
                                                     <td><t t-esc='product.customer[1]' /></td>
                                                     <td><t t-esc='product.checkup_date' /></td>
-                                                    <td><t t-esc='product.dr[1]' /></td>
+                                                    <td><t t-esc='product.practitioner[1]' /></td>
                                                     <td><t t-esc='product.test_type[1]' /></td>
                                                     <td><t t-esc='product.prescription_type' /></td>
                                                     <td><t t-esc='product.state' /></td>

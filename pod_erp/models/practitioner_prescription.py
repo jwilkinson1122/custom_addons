@@ -2,9 +2,9 @@ from odoo import api, fields, models, _
 from odoo.tools import datetime
 
 
-class DrPrescription(models.Model):
-    _name = 'dr.prescription'
-    _description = 'Doctor Prescription'
+class Prescription(models.Model):
+    _name = 'practitioner.prescription'
+    _description = 'Practitioner Prescription'
     _rec_name = 'name'
 
     company_id = fields.Many2one(
@@ -12,7 +12,7 @@ class DrPrescription(models.Model):
         default=lambda self: self.env.company,
         store=True,
     )
-    dr = fields.Many2one('podiatry.dr', string='Podiatrist', readonly=True)
+    practitioner = fields.Many2one('podiatry.practitioner', string='Podiatrist', readonly=True)
     customer = fields.Many2one('res.partner', string='Customer', readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
@@ -186,7 +186,7 @@ class DrPrescription(models.Model):
     #      ('60', '60'), ('70', '70')
     #         , ('79', '79')], 'PD')
 
-    dr_notes = fields.Text('Notes')
+    practitioner_notes = fields.Text('Notes')
     name = fields.Char(required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     family_eye_history = fields.Text()
     ocular_history = fields.Text()
@@ -285,13 +285,13 @@ class DrPrescription(models.Model):
         print('fire', sale_order)
         if sale_order:
             return {
-                'name': _('Doctor Prescription'),
+                'name': _('Practitioner Prescription'),
                 'view_type': 'form',
                 'res_id': sale_order.id,
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                # 'context':{'default_dr':self.id},
+                # 'context':{'default_practitioner':self.id},
                 'type': 'ir.actions.act_window',
             }
 
@@ -299,7 +299,7 @@ class DrPrescription(models.Model):
 
         else:
             return {
-                'name': _('Doctor Prescription'),
+                'name': _('Practitioner Prescription'),
                 'view_type': 'form',
                 'res_model': 'sale.order',
                 'view_id': False,
@@ -312,27 +312,27 @@ class DrPrescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('podiatry.prescription.sequence')
-        result = super(DrPrescription, self).create(vals)
+        result = super(Prescription, self).create(vals)
         return result
 
     # def print_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "pod_erp.doctor_prescription_template",
-    #         'report_file': "pod_erp.doctor_prescription_template",
+    #         'report_name': "pod_erp.practitioner_prescription_template",
+    #         'report_file': "pod_erp.practitioner_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_ticket_size2").report_action(self)
+        return self.env.ref("pod_erp.practitioner_prescription_ticket_size2").report_action(self)
 
     # def print_podiatry_prescription_report(self):
     #     return {
     #         'type': 'ir.actions.report',
-    #         'report_name': "pod_erp.doctor_podiatry_prescription_template",
-    #         'report_file': "pod_erp.doctor_podiatry_prescription_template",
+    #         'report_name': "pod_erp.practitioner_podiatry_prescription_template",
+    #         'report_file': "pod_erp.practitioner_podiatry_prescription_template",
     #         'report_type': 'qweb-pdf',
     #     }
 
     def print_podiatry_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_podiatry_ticket_size2").report_action(self)
+        return self.env.ref("pod_erp.practitioner_prescription_podiatry_ticket_size2").report_action(self)

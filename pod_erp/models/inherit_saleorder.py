@@ -6,18 +6,18 @@ from odoo import api, fields, models,_
 class InheritedSaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    prescription_id = fields.Many2one('dr.prescription')
-    # doctor = fields.Char(related='prescription_id.dr.name')
-    podiatrist = fields.Many2one('podiatry.dr', string='Podiatrist')
+    prescription_id = fields.Many2one('practitioner.prescription')
+    # practitioner = fields.Char(related='prescription_id.practitioner.name')
+    podiatrist = fields.Many2one('podiatry.practitioner', string='Podiatrist')
     prescription_date = fields.Date(related='prescription_id.checkup_date')
     purchase_order_count = fields.Char()
     po_ref = fields.Many2one('purchase.order', string='PO Ref')
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_ticket_size2").report_action(self.prescription_id)
+        return self.env.ref("pod_erp.practitioner_prescription_ticket_size2").report_action(self.prescription_id)
 
     def print_podiatry_prescription_report_ticket_size(self):
-        return self.env.ref("pod_erp.doctor_prescription_podiatry_ticket_size2").report_action(self.prescription_id)
+        return self.env.ref("pod_erp.practitioner_prescription_podiatry_ticket_size2").report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
         for rec in self:

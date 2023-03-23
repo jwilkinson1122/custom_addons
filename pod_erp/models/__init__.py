@@ -1,5 +1,5 @@
-from . import dr_prescription
-from . import doctor
+from . import practitioner_prescription
+from . import practitioner
 from . import test_type
 from . import res_partner
 from . import inherit_saleorder

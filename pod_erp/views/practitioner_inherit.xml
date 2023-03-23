@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<record id="patient_view_form" model="ir.ui.view">
-			<field name="name">patient.view.form</field>
-			<field name="model">podiatry.patient</field>
-			<field name="inherit_id" ref="patient.practitioner_patient"/>
+		<record id="practitioner_view_form" model="ir.ui.view">
+			<field name="name">practitioner.view.form</field>
+			<field name="model">podiatry.practitioner</field>
+			<field name="inherit_id" ref="practitioner_practitioner"/>
 			<field name="arch" type="xml">
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
 					<button name="open_practitioner_prescriptions" class="oe_stat_button" type="object"  icon="fa-tasks">
