@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="patient.practitioner_patient"/>
 			<field name="arch" type="xml">
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button name="open_practitioner_prescriptions" class="oe_stat_button" type="object"  icon="fa-tasks">
+					<button name="open_podiatry_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>

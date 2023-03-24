@@ -10,7 +10,7 @@
     "author": "NWPL",
     "website": "www.nwpodiatric.com",
     'license': 'AGPL-3',
-    'images': ['static/description/background.png', 'static/description/background2.png'],
+    'images': [],
     "depends": [
         'base', 
         'sale',
@@ -37,12 +37,12 @@
         "account_accountant"
     ],
     "data": [
-        'security/groups.xml',
-        "security/security.xml",
-        "security/ir.model.access.csv",
         "data/data.xml",
         "data/product_category.xml",
         "data/sequence.xml",
+        'security/groups.xml',
+        "security/security.xml",
+        "security/ir.model.access.csv",
         # "report/reports.xml",
         # "report/ticket_report_format.xml",
         # "report/prescription_report.xml",
@@ -75,6 +75,7 @@
         'web.assets_qweb': [
         ],
     },
+    "images": ["static/description/rx_icon_g.png"],
     "installable": True,
     'application': True,
 }

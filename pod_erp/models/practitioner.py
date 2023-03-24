@@ -32,12 +32,12 @@ class Practitioner(models.Model):
 
     prescription_count = fields.Integer(compute='get_prescription_count')
 
-    def open_practitioner_prescriptions(self):
+    def open_podiatry_prescriptions(self):
         for records in self:
             return {
                 'name': _('Practitioner Prescription'),
                 'view_type': 'form',
-                'res_model': 'practitioner.prescription',
+                'res_model': 'podiatry.prescription',
                 'domain': [('practitioner', '=', records.id)],
                 'view_id': False,
                 'view_mode': 'tree,form',
@@ -47,7 +47,7 @@ class Practitioner(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['practitioner.prescription'].search_count([('practitioner', '=', records.id)])
+            count = self.env['podiatry.prescription'].search_count([('practitioner', '=', records.id)])
             records.prescription_count = count
 
     def create_practitioners(self):

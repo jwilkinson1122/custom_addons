@@ -1,4 +1,5 @@
-from . import practitioner_prescription
+from . import ir_actions
+from . import prescription
 from . import practitioner
 from . import practice
 from . import patient

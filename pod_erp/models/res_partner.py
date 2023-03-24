@@ -20,7 +20,7 @@ class InheritedResPartner(models.Model):
             return {
                 'name':_('Prescription'),
                 'view_type': 'form',
-                'res_model': 'practitioner.prescription',
+                'res_model': 'podiatry.prescription',
                 'domain': [('patient', '=',records.id)],
                 'view_id': False,
                 'view_mode':'tree,form',
@@ -30,7 +30,7 @@ class InheritedResPartner(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['practitioner.prescription'].search_count([('patient','=',records.id)])
+            count = self.env['podiatry.prescription'].search_count([('patient','=',records.id)])
             records.prescription_count = count
 
     @api.depends('dob')

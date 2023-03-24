@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="practitioner_prescription" model="ir.ui.view">
+        <record id="podiatry_prescription" model="ir.ui.view">
             <field name="name">Practitioner Prescription</field>
-            <field name="model">practitioner.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <form string="Practitioner Prescription">
                     <header>
@@ -400,9 +400,9 @@
         </record>
 
 
-        <record id="practitioner_prescription_tree" model="ir.ui.view">
+        <record id="podiatry_prescription_tree" model="ir.ui.view">
             <field name="name">Practitioner Prescription Tree View</field>
-            <field name="model">practitioner.prescription</field>
+            <field name="model">podiatry.prescription</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="practitioner"/>
@@ -420,11 +420,11 @@
         <record id="action_prescription_window" model="ir.actions.act_window">
             <field name="name">Prescription</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">practitioner.prescription</field>
+            <field name="res_model">podiatry.prescription</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="pod_erp_root" name="Podiatry ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
+        <menuitem id="pod_erp_root" name="Podiatry ERP" sequence="1" web_icon="pod_erp,static/description/rx_icon_g.png"/>
         <menuitem id="pod_erp_practice" name="Practices" parent="pod_erp_root" action="action_practice_window" groups="group_pod_erp_practices,base.group_system" sequence="1"/>
         <menuitem id="pod_erp_practitioner" name="Contacts" parent="pod_erp_root" action="action_practitioner_window" groups="group_pod_erp_practitioners,base.group_system" sequence="2"/>
         <menuitem id="pod_erp_patient" name="Patients" parent="pod_erp_root" action="action_patient_window" groups="group_pod_erp_practitioners,group_pod_erp_patients,base.group_system" sequence="3"/>

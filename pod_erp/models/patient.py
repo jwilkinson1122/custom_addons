@@ -23,7 +23,7 @@ class Patient(models.Model):
                               string="Gender")
     practitioner = fields.Many2one('podiatry.practitioner', 'Practitioner', help="Practitioner who is responsible for patient")
     practice = fields.Many2one('podiatry.practice', 'Practice', help="Practice where patient is seen")
-    prescription_ids = fields.One2many('practitioner.prescription', 'patient')
+    prescription_ids = fields.One2many('podiatry.prescription', 'patient')
     prescription_count = fields.Integer(compute='get_prescription_count')
    
     def open_patient_prescriptions(self):
@@ -31,7 +31,7 @@ class Patient(models.Model):
             return {
                 'name': _('Patient Prescription'),
                 'view_type': 'form',
-                'res_model': 'practitioner.prescription',
+                'res_model': 'podiatry.prescription',
                 'domain': [('patient', '=', records.id)],
                 'view_id': False,
                 'view_mode': 'tree,form',
@@ -41,7 +41,7 @@ class Patient(models.Model):
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['practitioner.prescription'].search_count([('practitioner', '=', records.id)])
+            count = self.env['podiatry.prescription'].search_count([('practitioner', '=', records.id)])
             records.prescription_count = count
 
 

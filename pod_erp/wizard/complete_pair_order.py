@@ -6,7 +6,7 @@ class CompletePairOrder(models.TransientModel):
 
     sal = fields.Many2one('sale.order', default=lambda self: self.env.context.get('active_id'))
     customer = fields.Many2one(related='sal.partner_id')
-    prescription_id = fields.Many2one('practitioner.prescription', string='Prescription(Rx)', required=True)
+    prescription_id = fields.Many2one('podiatry.prescription', string='Prescription(Rx)', required=True)
     practice = fields.Char(related='prescription_id.practice.name', required=True)
     practitioner = fields.Char(related='prescription_id.practitioner.name', required=True)
     patient = fields.Char(related='prescription_id.patient.name', required=True)
