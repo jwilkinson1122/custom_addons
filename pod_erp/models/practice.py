@@ -7,9 +7,12 @@ class Practice(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
+    
     create_users_button = fields.Boolean()
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
+    
+    partner_id = fields.Many2one('res.partner', string='Related Partner', domain=("is_company", "=", True), required=True, ondelete='restrict',
                                  help='Partner-related data of the Practice')
+    
     is_practice = fields.Boolean()
     
     _parent_name = 'parent_id'

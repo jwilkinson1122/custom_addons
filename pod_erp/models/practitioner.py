@@ -21,8 +21,10 @@ class Practitioner(models.Model):
         'res.partner': 'partner_id',
     }
     create_users_button = fields.Boolean()
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practitioner')
+
+    partner_id = fields.Many2one('res.partner', string='Related Partner', domain=("is_company", "=", False), required=True, ondelete='restrict',
+                                 help='Partner-related data of the Practice')
+    
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     

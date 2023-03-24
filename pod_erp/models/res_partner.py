@@ -11,6 +11,10 @@ class InheritedResPartner(models.Model):
     age = fields.Integer(compute='_cal_age',store=True,readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
     
+    is_practice = fields.Boolean('Practice')
+    is_practitioner = fields.Boolean('Practitioner')
+    is_patient = fields.Boolean('Patient')
+    
     def open_partner_prescriptions(self):
         for records in self:
             return {

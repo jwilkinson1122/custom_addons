@@ -17,8 +17,8 @@
             </field>
         </record>
 
-        <record id="practice_practice" model="ir.ui.view">
-            <field name="name">Practice</field>
+        <record id="podiatry_practice_form_view" model="ir.ui.view">
+            <field name="name">podiatry.practice.form</field>
             <field name="model">podiatry.practice</field>
             <field name="arch" type="xml">
                 <form string="Practice">
@@ -225,17 +225,20 @@
                 </form>
             </field>
         </record>
-        <record id="practice_practice_tree" model="ir.ui.view">
-            <field name="name">Practice Tree View</field>
+
+        <record id="podiatry_practice_tree_view" model="ir.ui.view">
+            <field name="name">podiatry.practice.tree</field>
             <field name="model">podiatry.practice</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="res_practice_kanban_view">
-            <field name="name">podiatry.practice</field>
+
+        <record id="podiatry_practice_kanban_view" model="ir.ui.view">
+            <field name="name">podiatry.practice.kanban</field>
             <field name="model">podiatry.practice</field>
             <field name="arch" type="xml">
                 <kanban class="o_res_partner_kanban">
@@ -300,11 +303,52 @@
                 </kanban>
             </field>
         </record>
-        <record id="action_practice_window" model="ir.actions.act_window">
+
+        <record id="view_podiatry_practice_search" model="ir.ui.view">
+            <field name="name">podiatry.practice.search</field>
+            <field name="model">podiatry.practice</field>
+            <field name="arch" type="xml">
+                <search string="Practices">
+                    <field name="parent_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="display_name"/>
+                    <field name="parent_id" operator="child_of"/>
+                    <separator/>
+                    <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <searchpanel>
+                        <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                        <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <!-- <record id="action_practice_window" model="ir.actions.act_window">
             <field name="name">Practice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">podiatry.practice</field>
             <field name="view_mode">kanban,tree,form</field>
+        </record> -->
+
+        <record id="action_practice_window" model="ir.actions.act_window">
+            <field name="name">Practices</field>
+            <field name="res_model">podiatry.practice</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('is_practice', '=', True)]</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_podiatry_practice_search"/>
+            <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new practice
+                </p>
+                <p>
+                    Organize and manage practices at a glance.
+                </p>
+            </field>
         </record>
+    
+
     </data>
 </odoo>

@@ -36,16 +36,6 @@
                     </div>
                     <!-- Ribbon -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <!-- Title -->
-                    <!-- <div class="oe_title">
-                        <h1 class="d-flex">
-                            <field name="reference"/>
-                            <field name="name" placeholder="Practice Name" required="True"/>
-                        </h1>
-                        <h3>
-                            <field name="parent_id" placeholder="Parent Practice" />
-                        </h3>
-                    </div> -->
                     <div name="title" class="oe_title">
                         <div name="reference">
                             <h1 class="d-flex">
@@ -192,12 +182,6 @@
                                 </strong>
                                 <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                 <ul>
-                                    <!-- <li t-if="record.parent_id.raw_value and !record.function.raw_value">
-                                        <field name="reference"/>
-                                    </li> -->
-                                    <li>ID : 
-                                        <field name="reference"/>
-                                    </li>
                                     <li t-if="record.parent_id.raw_value and !record.function.raw_value">Parent :
                                         <field name="parent_id"/>
                                     </li>
