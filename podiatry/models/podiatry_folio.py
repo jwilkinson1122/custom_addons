@@ -62,6 +62,34 @@ class PodiatryFolio(models.Model):
     order_id = fields.Many2one(
         "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
     )
+    
+    company_id = fields.Many2one(
+        comodel_name="res.company", default=lambda self: self.env.company, store=True)
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practice_name = fields.Char(
+        string='Practitioner', related='practice_id.name')
+
+    practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practitioner_name = fields.Char(
+        string='Practitioner', related='practitioner_id.name')
+
+    practitioner_phone = fields.Char(
+        string='Phone', related='practitioner_id.phone')
+
+    practitioner_email = fields.Char(
+        string='Email', related='practitioner_id.email')
+
+    patient_id = fields.Many2one(
+        comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    patient_name = fields.Char(
+        string='Practitioner', related='patient_id.name')
+
     checkin_date = fields.Datetime(
         "Check In",
         required=True,
