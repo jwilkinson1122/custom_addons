@@ -145,6 +145,17 @@ class PodiatryFolio(models.Model):
     )
     podiatry_invoice_id = fields.Many2one("account.move", "Invoice", copy=False)
     duration_dummy = fields.Float()
+    
+    # partner_invoice_id = fields.Many2one(
+    #     'res.partner', string='Invoice Address',
+    #     readonly=True, required=True,
+    #     states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    # partner_shipping_id = fields.Many2one(
+    #     'res.partner', string='Delivery Address', readonly=True, required=True,
+    #     states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+    #     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+
 
     @api.constrains("room_line_ids")
     def _check_duplicate_folio_room_line(self):
@@ -860,6 +871,17 @@ class PodiatryServiceLine(models.Model):
             qty = diffDate.days + 1
             self.product_uom_qty = qty
 
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
+    @api.onchange('practitioner_id')
+    def onchange_practitioner_id(self):
+        for rec in self:
+            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+
+    
     def copy_data(self, default=None):
         """
         @param self: object pointer
