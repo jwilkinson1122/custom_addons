@@ -28,20 +28,18 @@
                     </group>
                     <notebook>
                         <page name="folio" string="Folio">
-                            <group colspan="4" col="4">
-                                <field name="partner_id" string="Practice" required="1" domain="[('is_practice', '=', True)]"/>
-                                <!-- <field name="practice_id" required="1" /> -->
-                                <field name="practitioner_id" required="1" />
-                                <field name="patient_id" required="1"/>
-                                <field name="pricelist_id" />
-                                <!-- <field name="partner_invoice_id" domain="[('parent_id','=',partner_id)]" />
-                                <field name="partner_shipping_id" domain="[('parent_id','=',partner_id)]" />
-                                 -->
-                                <field name="partner_invoice_id" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
-                                <field name="partner_shipping_id" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
-    
-
-                                <field name="company_id" invisible="1" />
+                            <group>
+                                <group>
+                                    <field name="partner_id" string="Practice" required="1" domain="[('is_practice', '=', True)]"/>
+                                    <field name="practitioner_id" required="1" />
+                                    <field name="patient_id" required="1"/>
+                                </group>
+                                <group>
+                                    <field name="pricelist_id" />
+                                    <field name="partner_invoice_id" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
+                                    <field name="partner_shipping_id" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+                                    <field name="company_id" invisible="1" />
+                                </group>
                             </group>
                             <newline />
                             <group colspan="4" col="4" invisible="1">
