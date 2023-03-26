@@ -21,16 +21,17 @@
                     </h1>
                     <group colspan="4" col="4">
                         <field name="date_order" readonly="1" />
-                        <field name="warehouse_id" string="Branch" />
+                        <field name="warehouse_id" string="Lab"/>
+                        <field name="user_name" string="Created By" readonly="1"/>
                         <field name="invoice_status" />
                         <field name="podiatry_invoice_id" states='sale,done,cancel' readonly="1" />
                     </group>
                     <notebook>
                         <page name="folio" string="Folio">
                             <group colspan="4" col="4">
-                                <field name="practice_id" />
-                                <field name="practitioner_id" />
-                                <field name="patient_id" />
+                                <field name="practice_id" required="1" />
+                                <field name="practitioner_id" required="1" />
+                                <field name="patient_id" required="1"/>
                                 <field name="partner_id" string="Guest Name" required="1" />
                                 <field name="partner_invoice_id" domain="[('parent_id','=',partner_id)]" />
                                 <field name="pricelist_id" />

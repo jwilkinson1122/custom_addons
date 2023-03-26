@@ -59,6 +59,7 @@ class PodiatryFolio(models.Model):
         return fields.Datetime.to_string(checkout_date)
 
     name = fields.Char("Folio Number", readonly=True, index=True, default="New")
+    
     order_id = fields.Many2one(
         "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
     )
@@ -89,6 +90,11 @@ class PodiatryFolio(models.Model):
 
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
+    
+    user_id = fields.Many2one('res.users', 'User', default=lambda self: self.env.user, readonly=True)
+    
+    user_name = fields.Char(
+        string='User', related='user_id.name')
 
     checkin_date = fields.Datetime(
         "Check In",
@@ -276,7 +282,7 @@ class PodiatryFolio(models.Model):
                     "pricelist_id": self.partner_id.property_product_pricelist.id,
                 }
             )
-
+            
     def action_done(self):
         self.write({"state": "done"})
 
