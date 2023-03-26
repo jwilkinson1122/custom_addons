@@ -88,6 +88,13 @@ class Practitioner(models.Model):
         ('ms', 'Ms.'),
         ('mrs', 'Mrs.'),
     ], string="Salutation")
+    
+    practitioner_type = fields.Selection([('doctor', 'Doctor'),
+                                      ('assistant', 'Assistant'),
+                                      ('nurse', 'Nurse'),
+                                      ('other', 'Other')],
+                                     string="Practice Type")
+
 
     signature = fields.Binary(string="Signature")
 

@@ -31,53 +31,60 @@
                         <button type="action" name="%(open_podiatry_practices_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
+                        <button name="action_open_folios" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <div class="o_stat_info">
+                                <field name="folio_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Folios</span>
+                            </div>
+                        </button>
                     </div>
                     <!-- Ribbon -->
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div name="title" class="oe_title">
-                        <div name="reference">
-                            <h1 class="d-flex">
-                                <field name="reference"/>
-                            </h1>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
+                    <div class="oe_title">
+                        <h2>
+                            <field id="reference" name="reference"/>
+                        </h2>
+                        <h1>
+                            <field id="name" name="name" default_focus="1" placeholder="Practice Name"/>
+                        </h1>
+                    </div>
+                    <div groups="base.group_no_one" class="row mt16 o_settings_container" name="parent_id">
+                        <div class="col-12 col-lg-6 o_setting_box" id="parent_id">
+                        <label for="parent_id"/>
+                        <field name="parent_id"/>
+                        <div class="text-muted">
+                            Select a parent practice if creating a child practice.
                         </div>
-                        <div name="name">
-                            <h1 class="d-flex">
-                                <field name="name" required="1" placeholder="Contact Name"/>
-                            </h1>
-                        </div>
-
-                        <div name="parent_practice_id">
-                            <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
-
-                    <group name="practice_contact">
-                        <!-- Address info -->
-                        <group name="address_information" string="Address Information">
-                            <span class="o_form_label o_td_label" name="address">Address</span>
-                            <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" placeholder="State" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
-                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
-                            </div>
-                        </group>
-                        <!-- Practice info -->
-                        <group name="contact_information" string="Contact Information">
-                            <field name="practice_type" required="True"/>
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="code"/>
-                            <!-- <field name="patient_ids" invisible="0"/> -->
-                            <field name="company_id" groups="base.group_multi_company"/>
-
-                        </group>
-                    </group>
+                    <br></br>
                     <!-- Notebook -->
-                    <notebook>
+                    <notebook colspan="4">
+                        <page name='contact_information' string="Practice Information" autofocus="autofocus">
+                            <group name="practice_contact">
+                                <group name="address_information" string="Address Information">
+                                    <span class="o_form_label o_td_label" name="address">Address</span>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" placeholder="State" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
+                                    </div>
+                                </group>
+                                <group name="contact_information" string="Contact Information">
+                                    <field name="practice_type" required="True"/>
+                                    <field name="mobile" widget="phone" help="help"/>
+                                    <field name="phone" widget="phone"/>
+                                    <field name="email" widget="email"/>
+                                    <field name="code"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </group>
+                            </group>
+                        </page>
                         <page name="practitioners_list" string="Contacts">
                             <group>
                                 <field name="practitioner_id"/>
@@ -98,16 +105,16 @@
                                 <field name="child_ids"/>
                             </group>
                         </page>
-                        <!-- <page name="perscriptions_list" string="Folios">
-                            <group>
-                                <field name="practitioner_folio_id"/>
-                            </group>
-                        </page> -->
                         <page name="public" string="Additional Notes">
                             <field name="notes" placeholder="Notes" class="o_address_city"/>
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
             </form>
         </field>
     </record>

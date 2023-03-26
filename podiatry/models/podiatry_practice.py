@@ -20,8 +20,7 @@ except:
 class Practice(models.Model):
     _name = 'podiatry.practice'
     _description = "Medical Practice"
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _inherits = {
         'res.partner': 'partner_id',
     }
@@ -117,6 +116,18 @@ class Practice(models.Model):
         comodel_name='res.users',
         string="Created by",
     )
+    
+    folio_count = fields.Integer(
+        string='Folio Count', compute='_compute_folio_count')
+
+    folio_line = fields.One2many(
+        'podiatry.folio.line', 'name', 'Folio Line')
+
+    def _compute_folio_count(self):
+        for rec in self:
+            folio_count = self.env['podiatry.folio'].search_count(
+                [('practice_id', '=', rec.id)])
+            rec.folio_count = folio_count
 
     practice_folio_id = fields.One2many(
         comodel_name='podiatry.folio',

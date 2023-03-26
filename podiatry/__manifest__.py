@@ -7,7 +7,7 @@
                Services Pvt. Ltd., OpenERP SA",
     "category": "Podiatry Management",
     "website": "https://github.com/OCA/vertical-podiatry",
-    "depends": ["stock", "sale_stock", "account", "sale_management", "sale"],
+    "depends": ["stock", "sale_stock", "account", "sale_management", "sale", "mail"],
     "license": "LGPL-3",
     "summary": "Podiatry Management to Manage Folio and Podiatry Configuration",
     "demo": ["demo/podiatry_data.xml"],
