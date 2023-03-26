@@ -6,8 +6,8 @@
     <menuitem id="menu_contacts" name="Contacts" action="open_podiatry_contacts" parent="podiatry.podiatry_management_menu" sequence="2" />
     <menuitem id="menu_patients" name="Patients" action="open_podiatry_patients" parent="podiatry.podiatry_management_menu" sequence="3" />
     
-    <menuitem id="menu_all_folio" parent="podiatry.podiatry_management_menu" sequence="4" />
-    <menuitem id="menu_open_podiatry_folio1_form_tree_all" name="Generate Folio" action="open_podiatry_folio1_form_tree_all" sequence="1" parent="menu_all_folio" />
+    <!-- <menuitem id="menu_all_folio" name="Folio" parent="podiatry.podiatry_management_menu" sequence="4" /> -->
+    <menuitem id="menu_open_podiatry_folio1_form_tree_all" name="Folio" parent="podiatry.podiatry_management_menu" action="open_podiatry_folio1_form_tree_all" sequence="4"/>
     
 
     <menuitem id="podiatry_configuration_menu" name="Configuration" sequence="20" parent="podiatry.podiatry_management_menu" />
