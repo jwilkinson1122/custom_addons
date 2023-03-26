@@ -1,45 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <!--Report for podiatry folio -->
+    <record id="report_podiatry_management" model="ir.actions.report">
+         <field name="name">Podiatry Folio</field>
+         <field name="model">podiatry.folio</field>
+         <field name="report_type">qweb-pdf</field>
+         <field name="report_file">podiatry.report_podiatry_folio</field>
+         <field name="report_name">podiatry.report_podiatry_folio</field>
 
-        <record id="report_print_prescription" model="ir.actions.report">
-            <field name="name">Prescription</field>
-            <field name="model">podiatry.prescription</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">podiatry.prescription_demo_report</field>
-            <field name="report_file">podiatry.prescription_demo_report</field>
-        </record>
-
-        <record id="report_print_patient_card" model="ir.actions.report">
-            <field name="name">Patient Card</field>
-            <field name="model">podiatry.patient</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">podiatry.patient_card_report</field>
-            <field name="report_file">podiatry.patient_card_report</field>
-        </record>
-
-        <report id="sale_order" string="Orders" model="sale.order" report_type="qweb-pdf" file="podiatry.sale_order_report" name="podiatry.sale_order_report" />
-        <report id="invoice" string="Invoice Report" model="account.move" report_type="qweb-pdf" file="podiatry.invoice_report" name="podiatry.invoice_report" />
-        <report id="purchase_order" string="Purchase Order" model="sale.order" report_type="qweb-pdf" file="podiatry.purchase_order_report" name="podiatry.purchase_order_report" />
-        <report id="practitioner_prescription" string="Prescription Measure" model="podiatry.prescription" report_type="qweb-pdf" file="podiatry.practitioner_prescription_template" name="podiatry.practitioner_prescription_template" />
-
-        <record id="practitioner_prescription_ticket_size2" model="ir.actions.report">
-            <field name="name">Prescription Measure | Ticket</field>
-            <field name="report_name">podiatry.practitioner_prescription_template_ticket_size</field>
-            <field name="model">podiatry.prescription</field>
-            <field name="report_type">qweb-pdf</field>
-        </record>
-
-        <report id="practitioner_prescription" string="Prescription" model="podiatry.prescription" report_type="qweb-pdf" file="podiatry.practitioner_prescription_template" name="podiatry.practitioner_prescription_template" />
-
-        <record id="practitioner_prescription_podiatry_ticket_size2" model="ir.actions.report">
-            <field name="name">Podiatry Prescription | Ticket</field>
-            <field name="report_name">podiatry.practitioner_prescription_template_ticket_size</field>
-            <field name="model">podiatry.prescription</field>
-            <field name="report_type">qweb-pdf</field>
-        </record>
-
-        <report id="sale_prescription" string="Sale Prescription" model="sale.order" report_type="qweb-pdf" file="podiatry.sale_prescription_template" name="podiatry.sale_prescription_template" />
-
-    </data>
+    </record>
 </odoo>
