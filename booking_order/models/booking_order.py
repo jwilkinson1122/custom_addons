@@ -5,18 +5,14 @@ class BookingOrder(models.Model):
     _inherit = 'sale.order'
     
     is_booking_order = fields.Boolean(string='Is Booking Order')
-   
-    # practice_id = fields.Many2one(comodel_name='practice.practice_id', string='Practice')
-    # practitioner_id = fields.Many2one(comodel_name='practitioner.practitioner_id', string='Practitioner')
-    # patient_id = fields.Many2one(comodel_name='patient.patient_id', string='Patient')
-    
+
     practice_id = fields.Many2one(comodel_name='practice', string='Practice')
     practice_name = fields.Char(string='Practice', related='practice_id.name')
     practitioner_id = fields.Many2one(comodel_name='practitioner', string='Practitioner')
     practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
     patient_id = fields.Many2one(comodel_name='patient', string='Patient')
     patient_name = fields.Char(string='Patient', related='patient_id.name')
-
+ 
 
     booking_start = fields.Datetime(
         string='Booking Start')
@@ -38,32 +34,6 @@ class BookingOrder(models.Model):
         for wo in self:
             wo.wo_count = result.get(wo.id, 0)
             
-  
-    # @api.onchange('team')
-    # def _onchange_team(self):
-    #     search = self.env['booking.service_team'].search([('id', '=', self.team.id)])
-    #     patient_id = []
-    #     for team in search:
-    #         patient_id.extend(members.id for members in team.patient_id)
-    #         self.practitioner_id = team.practitioner_id.id
-    #         self.patient_id = patient_id
-
-    # def action_check(self):
-    #     for check in self:
-    #         wo = self.env['work.order'].search(
-    #             ['|', '|', '|',
-    #              ('practitioner_id', 'in', [g.id for g in self.patient_id]),
-    #              ('patient_id', 'in', [self.practitioner_id.id]),
-    #              ('practitioner_id', '=', self.practitioner_id.id),
-    #              ('patient_id', 'in', [g.id for g in self.patient_id]),
-    #              ('state', '!=', 'cancelled'),
-    #              ('planned_start', '<=', self.booking_end),
-    #              ('planned_end', '>=', self.booking_start)], limit=1)
-    #         if wo:
-    #             raise ValidationError('Team already has work order during that period on SOXX')
-    #         else:
-    #             raise ValidationError('Team is available for booking')
-
     def action_confirm(self):
         res = super(BookingOrder, self).action_confirm()
         for order in self:

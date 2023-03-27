@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!-- edit view list is to see  -->
+
+    <!-- step 5 -->
+    <!-- model.name form view -->
+    <record id="patient_form" model="ir.ui.view">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- sheet akanmenambahkan sheet pada views -->
+                <sheet>
+                    <!-- grouping field -->
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- step 6 -->
+    <!-- model.name tree view -->
+    <record id="patient_tree" model="ir.ui.view">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- step 7 -->
+    <!-- model.name search view -->
+    <record id="patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="Patients">
+                <field name="name"/>
+                <field name="note"/>
+                <separator />
+                <filter name="male" string="Male Patients" domain="[('gender', '=', 'male')]"/>
+                <filter name="other" string="Female Patients" domain="[('gender', '=', 'female')]"/>
+                <filter name="other" string="Other Patients" domain="[('gender', '=', 'other')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by':'gender'}" />
+                    <filter string="Patient Name" name="patient_name" context="{'group_by':'name'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- step 4 -->
+    <!-- patient action window -->
+    <record id="patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first patient!
+            </p>
+        </field>
+    </record>
+
+    <!-- step 1 -->
+    <!-- This Menu Item will appear in the Upper bar, that's why It needs NO parent or action -->
+    <menuitem id="hospital_menu_root" name="Hospital" sequence="10"/>
+
+    <!-- step 2 -->
+    <!-- This Menu Item Must have a parent -->
+    <menuitem id="hospital_patient_root" name="Patients" parent="hospital_menu_root" sequence="10"/>
+
+    <!-- step 3 -->
+    <menuitem id="hospital_patient" name="Patients" parent="hospital_patient_root" action="patient_action" sequence="10"/>
+
+</odoo>
