@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 1.version -->
+    <!-- <template id="create_page">
+        <t t-call="website.layout">
+            <t t-set="title">Create Patient</t>
+            <div class="oe_structure">
+                <div class="container mt-4 mb-4">
+                    <h3>Create Patient</h3>
+                    
+                </div>
+            </div>
+        </t>
+    </template> -->
+
+    <template id="create_page">
+        <t t-call="website.layout">
+            <t t-set="title">Create Patient</t>
+            <div class="oe_structure">
+                <div class="container mt-4 mb-4">
+                    <h3>Create Patient</h3>
+                    <form action="" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="name">Name</label>
+                                <input id="name" type="text" class="form-control" name="name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="age">Age</label>
+                                <input id="age" type="text" class="form-control" name="age" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label>Responsible</label>
+                                <select name="responsible" class="form-control">
+                                    <option t-foreach="responsibles" t-as="responsible">
+                                        <t t-esc="responsible.name" />
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="note">Description</label>
+                                <input id="note" type="text" class="form-control" name="note" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" >
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+
+
+
+
+
+
+</odoo>

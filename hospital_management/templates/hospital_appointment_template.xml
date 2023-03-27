@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+
+    <!-- 1. version -->
+
+    <!-- <template id="report_hospital_appointment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Appointment</h2>
+                    
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template> -->
+
+
+    <template id="report_hospital_appointment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Appointment</h2>
+                        <!-- <h3>Created by:<span t-field="user.name"/></h3>
+                        <h3>Created on:<span t-esc="time.strftime('%d-%m-%Y')"/></h3>
+                        <h3>Company:<span t-field="res_company.name"/></h3> -->
+                        <t t-if="mode">
+                            <h4>Mode:<span t-esc="mode"/>
+                            </h4>
+                        </t>
+                        <t t-else="">
+                            <h3>Mode:Not setted
+                            </h3>
+                        </t>
+                        <p> Patient:<span t-field="o.patient_id.name"/>
+                        </p>
+                        <p> Doctor:<span t-field="o.doctor_id.name"/>
+                        </p>
+                        <p> Date<span t-field="o.date_appointment"/>
+                        </p>
+                        <p> Time:<span t-field="o.date_checkup"/>
+                        </p>
+                        <p> Note:<span t-field="o.prescription"/>
+                        </p>
+                        <p> State:<span t-field="o.state"/>
+                        </p>
+                        <p> State:<span t-esc="o.state"/>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

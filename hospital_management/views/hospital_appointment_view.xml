@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+
+    <record id="hospital_appointment_tree_view" model="ir.ui.view">
+        <field name="name">hospital.appointment.tree</field>
+        <field name="model">hospital.appointment</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Appointments">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="date_appointment"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="hospital_appointment_form_view" model="ir.ui.view">
+        <field name="name">hospital.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Appointments">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}" groups="hospital_management.group_hospital_manager"/>
+                    <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <button string="Print PDF" name="report_pdf" type="object" class="oe_highlight"/>  <!--Report -->
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group name="appointment">
+                        <group>
+                            <field name="reference"/>
+                            <field name="patient_id"/>
+                            <field name="doctor_id"/>
+                        </group>
+                        <group>
+                            <field name="date_appointment"/>
+                            <field name="date_checkup"/>
+                            <field name="prescription"/>
+
+                        </group>
+
+                    </group>
+                    <group name="name" string="BoA">                        <!--model inheritance: delegation -->
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="partner_id"/>
+                        <field name="date_order"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+
+
+
+
+
+
+
+
+    <record id="action_hospital_appointment" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new appointment
+            </p>
+        </field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+
+
+    <menuitem id="menu_appointment" name="Appointments" parent="menu_hospital_root" action="action_hospital_appointment" sequence="11"/>
+</odoo>

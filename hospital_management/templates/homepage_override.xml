@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- <template id="custom_homepage" inherit_id="website.homepage">
+        <xpath expr="//div[hasclass('oe_structure')]" position="after">
+            <h2>Inherited</h2>
+        </xpath>
+    </template> -->
+
+    <!-- <template id="website.homepage" name="Custom HomePage">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'homepage'"/>
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </t>
+
+        
+    </template> -->
+
+
+    
+
+
+
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="action_hospital_appointment_report" model="ir.actions.report">
+            <field name="name">Appointment</field>
+            <field name="model">hospital.appointment</field>
+             <field name="binding_model_id" ref="model_hospital_appointment"/><!--Eğer bu alan doldurulmaz ise print butonu çıkmaz -->
+            <field name="report_type">qweb-pdf</field><!--qweb-html de gösterilecek -->
+            <field name="report_name">hospital_management.report_hospital_appointment</field>
+            <field name="report_file">hospital_management.report_hospital_appointment</field>
+
+        </record>
+
+    </data>
+
+</odoo>

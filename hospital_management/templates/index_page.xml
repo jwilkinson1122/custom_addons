@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <template id="index_page">
+        <t t-call="website.layout">
+            <t t-set="title">Patients</t>
+            <div class="oe_structure">
+                <div class="container">
+                    <h2>Hello Word</h2>
+                </div>
+            </div>
+        </t>
+    </template>  1. version-->
+    <!-- <template id="index_page">
+        <t t-call="website.layout">
+            <t t-set="title">Patients</t>
+            <div class="oe_structure">
+                <div class="container">
+                    <h2>Hello Word</h2>
+                </div>
+            </div>
+        </t>
+    </template> -->
+
+
+    <template id="index_page">
+        <t t-call="website.layout">
+            <t t-set="title">Patients</t>
+            <div class="oe_structure">
+                <div class="container mt-4 mb-4">
+                    <h3>Appointment</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Responsible</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Appointment Count</th>
+                                <th scope="col">Update</th>
+                                <th scope="col">Delete</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="patients" t-as="patient">
+                                <tr>
+                                    <th scope="row">
+                                        <t t-esc="(patient_index+1)" />
+                                    </th>
+                                    <td>
+                                        <span t-field="patient.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="patient.age"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="patient.responsible_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="patient.note"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="patient.appointment_count"/>
+                                    </td>
+                                    <td>
+                                        <a t-attf-href="/patient/update/{{ patient.id }}" class="btn btn-primary">Update</a>
+                                    </td>
+                                    <td>
+                                        <a t-attf-href="/patient/delete/{{ patient.id }}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            </t>
+
+
+                        </tbody>
+                    </table>
+                    <a href="/patient/create" class="btn btn-primary">Create Patient<i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+
+
+
+
+
+
+</odoo>
