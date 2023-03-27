@@ -17,6 +17,9 @@
                 <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath> -->
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('is_practice', '=', True)]</attribute>
+                </xpath>
                 <field name="partner_id" position="after">
                     <field name="is_booking_order" invisible="1"/>
                     <field name="practice_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
@@ -25,9 +28,12 @@
 
                 </field>
                 <field name="payment_term_id" position="after">
-                    <field name="partner_invoice_id"/>
                     <field name="pricelist_id" />
-                    <field name="partner_shipping_id"/>
+                    <!-- <field name="partner_invoice_id"/>
+                    <field name="partner_shipping_id"/> -->
+                    <field name="partner_invoice_id" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
+                    <field name="partner_shipping_id" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+
                     <field name="booking_start" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="booking_end" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                 </field>
