@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_booking_practice,access.booking.practice,model_practice,booking_order.group_system_user,1,1,1,0
+access_booking_practitioner,access.booking.practitioner,model_practitioner,booking_order.group_system_user,1,1,1,0
+access_booking_patient,access.booking.patient,model_patient,booking_order.group_system_user,1,1,1,0
+access_booking_work_order,access.work.order,model_work_order,booking_order.group_system_user,1,1,1,1
+access_cancelled_wo,access.cancelled_wo,model_cancelled_wo,booking_order.group_system_user,1,1,1,1
