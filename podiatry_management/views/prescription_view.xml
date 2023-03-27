@@ -47,7 +47,7 @@
                             <group>
                                 <field name="order_date" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="currency_id" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="user_name" attrs="{'readonly': [('state','in',('return', 'cancel'))]}"/>
+                                <field name="user_name" string="Created By" readonly="1"/>
                                 <field name="invoice_status" invisible="1"/>
                                 <field name="order_id" invisible="1"/>
 
