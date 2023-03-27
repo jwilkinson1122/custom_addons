@@ -5,4 +5,26 @@
         <field name="type">service</field>
         <field name="invoice_policy">order</field>
     </record>
+    <!--sequence for patient-->
+    <record id="seq_podiatry_patient" model="ir.sequence">
+        <field name="name">Patient ID</field>
+        <field name="code">podiatry.patient</field>
+        <field name="prefix">PID</field>
+        <field name="padding">6</field>
+        <!-- <field name="company_id" eval="False"/> -->
+    </record>
+    <!--sequence for practice-->
+    <record id="seq_podiatry_practice" model="ir.sequence">
+        <field name="name">Practice ID</field>
+        <field name="code">podiatry.practice</field>
+        <field name="prefix">ID</field>
+        <field name="padding">6</field>
+    </record>
+    <!--sequence for practitioner-->
+    <record id="seq_podiatry_practitioner" model="ir.sequence">
+        <field name="name">Practitioner ID</field>
+        <field name="code">podiatry.practitioner</field>
+        <field name="prefix">ID</field>
+        <field name="padding">6</field>
+    </record>
 </odoo>

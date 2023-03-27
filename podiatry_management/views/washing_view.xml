@@ -63,15 +63,6 @@
             </field>
         </record>
 
-        <record id="action_washing" model="ir.actions.act_window">
-            <field name="name">Washing</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">washing.washing</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=', uid)]</field>
-        </record>
-
-        <menuitem id="prescription_washing" name="Prescription Works" parent="prescription_management_sub_menu" action="action_washing" sequence="2"/>
-
+     
     </data>
 </odoo>

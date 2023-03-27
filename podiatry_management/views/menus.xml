@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem id="podiatry_management_menu" name="Podiatry Management" />
+
+    <menuitem id="menu_podiatry_practice" name="Practices" action="open_podiatry_practices" parent="podiatry_management.podiatry_management_menu" sequence="1" />
+    <menuitem id="menu_contacts" name="Contacts" action="open_podiatry_contacts" parent="podiatry_management.podiatry_management_menu" sequence="2" />
+    <menuitem id="menu_patients" name="Patients" action="open_podiatry_patients" parent="podiatry_management.podiatry_management_menu" sequence="3" />
+    <menuitem id="menu_prescription_order" name="Prescription Order" parent="podiatry_management.podiatry_management_menu" action="open_prescription_order" sequence="4"/>
+
+    <menuitem id="prescription_config_menu" name="Configuration" parent="podiatry_management.podiatry_management_menu" sequence="5"/>
+    <menuitem id="prescription_customer" name="Customers" parent="podiatry_management.prescription_config_menu" action="base.action_partner_customer_form" sequence="1"/>
+    <menuitem id="prescription_products" name="Products" parent="podiatry_management.prescription_config_menu" action="product.product_normal_action_sell" sequence="2"/>
+    <menuitem id="prescription_washing_type" name="Washing Type" parent="podiatry_management.prescription_config_menu" action="action_washing_type" sequence="3"/>
+    <menuitem id="prescription_washing_work" name="Additional Works" parent="podiatry_management.prescription_config_menu" action="action_washing_work" sequence="4"/>
+
+    <menuitem id="prescription_washing" name="Prescription Works" parent="podiatry_management.prescription_config_menu" action="action_washing" sequence="5"/>
+
+    <menuitem id="prescription_report_menu" name="Report" parent="podiatry_management.menu_podiatry_practice" sequence="6"/>
+    <menuitem name="Prescription Order Analysis" action="open_prescription_order_analysis" id="menu_prescription_order_analysis" parent="podiatry_management.prescription_report_menu" sequence="1"/>
+
+</odoo>

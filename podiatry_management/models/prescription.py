@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#
-#    Copyright (C) 2019-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Jesni Banu and Nilmar Shereef(odoo@cybrosys.com)
-#
-#    You can modify it under the terms of the GNU AFFERO
-#    GENERAL PUBLIC LICENSE (AGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU AFFERO GENERAL PUBLIC LICENSE (AGPL v3) for more details.
-#
-#    You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENSE
-#    (AGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################
+
 import time
 from datetime import datetime
 from odoo import models, fields, api, _
@@ -46,16 +27,16 @@ class PrescriptionManagement(models.Model):
 
     def confirm_order(self):
         self.state = 'order'
-        sale_obj = self.env['sale.order'].create(
+        order_id = self.env['sale.order'].create(
             {'partner_id': self.partner_id.id,
              'partner_invoice_id': self.partner_invoice_id.id,
              'partner_shipping_id': self.partner_shipping_id.id})
-        self.sale_obj = sale_obj
+        self.order_id = order_id
         product_id = self.env.ref('prescription_management.prescription_service')
         self.env['sale.order.line'].create({'product_id': product_id.id,
                                             'name': 'Prescription Service',
                                             'price_unit': self.total_amount,
-                                            'order_id': sale_obj.id
+                                            'order_id': order_id.id
                                             })
         for each in self:
             for obj in each.order_lines:
@@ -63,22 +44,22 @@ class PrescriptionManagement(models.Model):
                     {'name': obj.product_id.name + '-Washing',
                      'user_id': obj.washing_type.assigned_person.id,
                      'description': obj.description,
-                     'prescription_obj': obj.id,
+                     'prescription_id': obj.id,
                      'state': 'draft',
                      'washing_date': datetime.now().strftime(
                          '%Y-%m-%d %H:%M:%S')})
 
     def create_invoice(self):
-        if self.sale_obj.state in ['draft', 'sent']:
-            self.sale_obj.action_confirm()
-        self.invoice_status = self.sale_obj.invoice_status
+        if self.order_id.state in ['draft', 'sent']:
+            self.order_id.action_confirm()
+        self.invoice_status = self.order_id.invoice_status
         return {
             'name': 'Create Invoice',
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'sale.advance.payment.inv',
             'type': 'ir.actions.act_window',
-            'context': {'prescription_sale_obj': self.sale_obj.id},
+            'context': {'prescription_order_id': self.order_id.id},
             'target': 'new'
         }
 
@@ -89,12 +70,12 @@ class PrescriptionManagement(models.Model):
         self.state = 'cancel'
 
     def _invoice_count(self):
-        wrk_ordr_ids = self.env['account.move'].search([('invoice_origin', '=', self.sale_obj.name)])
+        wrk_ordr_ids = self.env['account.move'].search([('invoice_origin', '=', self.order_id.name)])
         self.invoice_count = len(wrk_ordr_ids)
 
     def _work_count(self):
         if self.id:
-            wrk_ordr_ids = self.env['washing.washing'].search([('prescription_obj.prescription_obj.id', '=', self.id)])
+            wrk_ordr_ids = self.env['washing.washing'].search([('prescription_id.prescription_id.id', '=', self.id)])
             self.work_count = len(wrk_ordr_ids)
         else:
             self.work_count = False
@@ -102,13 +83,13 @@ class PrescriptionManagement(models.Model):
     def action_view_prescription_works(self):
 
         work_obj = self.env['washing.washing'].search(
-            [('prescription_obj.prescription_obj.id', '=', self.id)])
+            [('prescription_id.prescription_id.id', '=', self.id)])
         work_ids = []
         for each in work_obj:
             work_ids.append(each.id)
         view_id = self.env.ref('prescription_management.washing_form_view').id
         if work_ids:
-            if len(work_ids) <= 1:
+            if len(work_ids)<= 1:
                 value = {
                     'view_type': 'form',
                     'view_mode': 'form',
@@ -134,7 +115,7 @@ class PrescriptionManagement(models.Model):
     def action_view_invoice(self):
         self.ensure_one()
         inv_obj = self.env['account.move'].search(
-            [('invoice_origin', '=', self.sale_obj.name)])
+            [('invoice_origin', '=', self.order_id.name)])
         inv_ids = []
         for each in inv_obj:
             inv_ids.append(each.id)
@@ -169,41 +150,37 @@ class PrescriptionManagement(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-    ], string='Invoice Status', invisible=1, related='sale_obj.invoice_status',
-        store=True)
-    sale_obj = fields.Many2one('sale.order', invisible=1)
-    invoice_count = fields.Integer(compute='_invoice_count',
-                                   string='# Invoice')
+    ], string='Invoice Status', invisible=1, related='order_id.invoice_status', store=True)
+    order_id = fields.Many2one('sale.order', invisible=1)
+    invoice_count = fields.Integer(compute='_invoice_count', string='# Invoice')
     work_count = fields.Integer(compute='_work_count', string='# Works')
-    partner_id = fields.Many2one('res.partner', string='Customer',
-                                 readonly=True,
-                                 states={'draft': [('readonly', False)],
-                                         'order': [('readonly', False)]},
-                                 required=True,
-                                 change_default=True, index=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)],
+                                         'order': [('readonly', False)]}, required=True, change_default=True, index=True,
                                  )
-    partner_invoice_id = fields.Many2one('res.partner',
-                                         string='Invoice Address',
-                                         readonly=True, required=True,
-                                         states={
+    company_id = fields.Many2one( comodel_name="res.company", default=lambda self: self.env.company, store=True)
+
+    practice_id = fields.Many2one( comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practitioner_id = fields.Many2one( comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practitioner_phone = fields.Char( string='Phone', related='practitioner_id.phone')
+
+    practitioner_email = fields.Char( string='Email', related='practitioner_id.email')
+
+    patient_id = fields.Many2one( comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    user_id = fields.Many2one('res.users', 'User', default=lambda self: self.env.user, readonly=True)
+    user_name = fields.Char( string='User', related='user_id.name')
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={
                                              'draft': [('readonly', False)],
-                                             'order': [('readonly', False)]},
-                                         help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner',
-                                          string='Delivery Address',
-                                          readonly=True, required=True,
-                                          states={
+                                             'order': [('readonly', False)]}, help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={
                                               'draft': [('readonly', False)],
-                                              'order': [('readonly', False)]},
-                                          help="Delivery address for current sales order.")
-    order_date = fields.Datetime(string='Date', readonly=True, index=True,
-                                 states={'draft': [('readonly', False)],
-                                         'order': [('readonly', False)]},
-                                 copy=False, default=fields.Datetime.now, )
-    prescription_person = fields.Many2one('res.users', string='Prescription Person',
-                                     required=1)
-    order_lines = fields.One2many('prescription.order.line', 'prescription_obj',
-                                  required=1, ondelete='cascade')
+                                              'order': [('readonly', False)]}, help="Delivery address for current sales order.")
+    order_date = fields.Datetime(string='Date', readonly=True, index=True, states={'draft': [('readonly', False)],
+                                         'order': [('readonly', False)]}, copy=False, default=fields.Datetime.now, )
+    # user_id = fields.Many2one('res.users', string='Prescription Person', required=1)
+    order_lines = fields.One2many('prescription.order.line', 'prescription_id', required=1, ondelete='cascade')
     total_amount = fields.Float(compute='get_total', string='Total', store=1)
     currency_id = fields.Many2one("res.currency", string="Currency")
     note = fields.Text(string='Terms and conditions')
@@ -214,8 +191,7 @@ class PrescriptionManagement(models.Model):
         ('done', 'Done'),
         ('return', 'Returned'),
         ('cancel', 'Cancelled'),
-    ], string='Status', readonly=True, copy=False, index=True,
-        track_visibility='onchange', default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
 
 class PrescriptionManagementLine(models.Model):
@@ -233,11 +209,10 @@ class PrescriptionManagementLine(models.Model):
     product_id = fields.Many2one('product.product', string='Dress', required=1)
     qty = fields.Integer(string='No of items', required=1)
     description = fields.Text(string='Description')
-    washing_type = fields.Many2one('washing.type', string='Washing Type',
-                                   required=1)
+    washing_type = fields.Many2one('washing.type', string='Washing Type', required=1)
     extra_work = fields.Many2many('washing.work', string='Extra Work')
     amount = fields.Float(compute='get_amount', string='Amount')
-    prescription_obj = fields.Many2one('prescription.order', invisible=1)
+    prescription_id = fields.Many2one('prescription.order', invisible=1)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('wash', 'Washing'),
@@ -252,8 +227,7 @@ class WashingType(models.Model):
     _description = "Washing TYpe"
 
     name = fields.Char(string='Name', required=1)
-    assigned_person = fields.Many2one('res.users', string='Assigned Person',
-                                      required=1)
+    assigned_person = fields.Many2one('res.users', string='Assigned Person', required=1)
     amount = fields.Float(string='Service Charge', required=1)
 
 
@@ -262,8 +236,7 @@ class ExtraWork(models.Model):
     _description = 'Washing Work'
 
     name = fields.Char(string='Name', required=1)
-    assigned_person = fields.Many2one('res.users', string='Assigned Person',
-                                      required=1)
+    assigned_person = fields.Many2one('res.users', string='Assigned Person', required=1)
     amount = fields.Float(string='Service Charge', required=1)
 
 
@@ -273,15 +246,15 @@ class Washing(models.Model):
 
     def start_wash(self):
         if not self.prescription_works:
-            self.prescription_obj.state = 'wash'
-            self.prescription_obj.prescription_obj.state = 'process'
+            self.prescription_id.state = 'wash'
+            self.prescription_id.prescription_id.state = 'process'
         for each in self:
             for obj in each.product_line:
                 self.env['sale.order.line'].create(
                     {'product_id': obj.product_id.id,
                      'name': obj.name,
                      'price_unit': obj.price_unit,
-                     'order_id': each.prescription_obj.prescription_obj.sale_obj.id,
+                     'order_id': each.prescription_id.prescription_id.order_id.id,
                      'product_uom_qty': obj.quantity,
                      'product_uom': obj.uom_id.id,
                      })
@@ -292,33 +265,33 @@ class Washing(models.Model):
 
         f = 0
         if not self.prescription_works:
-            if self.prescription_obj.extra_work:
-                for each in self.prescription_obj.extra_work:
+            if self.prescription_id.extra_work:
+                for each in self.prescription_id.extra_work:
                     self.create({'name': each.name,
                                  'user_id': each.assigned_person.id,
-                                 'description': self.prescription_obj.description,
-                                 'prescription_obj': self.prescription_obj.id,
+                                 'description': self.prescription_id.description,
+                                 'prescription_id': self.prescription_id.id,
                                  'state': 'draft',
                                  'prescription_works': True,
                                  'washing_date': datetime.now().strftime(
                                      '%Y-%m-%d %H:%M:%S')})
-                self.prescription_obj.state = 'extra_work'
-        prescription_obj = self.search([('prescription_obj.prescription_obj', '=',
-                                    self.prescription_obj.prescription_obj.id)])
-        for each in prescription_obj:
+                self.prescription_id.state = 'extra_work'
+        prescription_id = self.search([('prescription_id.prescription_id', '=',
+                                    self.prescription_id.prescription_id.id)])
+        for each in prescription_id:
             if each.state != 'done' or each.state == 'cancel':
                 f = 1
                 break
         if f == 0:
-            self.prescription_obj.prescription_obj.state = 'done'
-        prescription_obj1 = self.search([('prescription_obj', '=', self.prescription_obj.id)])
+            self.prescription_id.prescription_id.state = 'done'
+        prescription_id1 = self.search([('prescription_id', '=', self.prescription_id.id)])
         f1 = 0
-        for each in prescription_obj1:
+        for each in prescription_id1:
             if each.state != 'done' or each.state == 'cancel':
                 f1 = 1
                 break
         if f1 == 0:
-            self.prescription_obj.state = 'done'
+            self.prescription_id.state = 'done'
 
     @api.depends('product_line')
     def get_total(self):
@@ -339,9 +312,8 @@ class Washing(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, default='draft')
-    prescription_obj = fields.Many2one('prescription.order.line', invisible=1)
-    product_line = fields.One2many('wash.order.line', 'wash_obj',
-                                   string='Products', ondelete='cascade')
+    prescription_id = fields.Many2one('prescription.order.line', invisible=1)
+    product_line = fields.One2many('wash.order.line', 'wash_obj', string='Products', ondelete='cascade')
     total_amount = fields.Float(compute='get_total', string='Grand Total')
 
 
@@ -356,16 +328,13 @@ class SaleOrderInherit(models.Model):
             total += obj.price_unit * obj.quantity
         obj.subtotal = total
 
-    wash_obj = fields.Many2one('washing.washing', string='Order Reference',
-                               ondelete='cascade')
+    wash_obj = fields.Many2one('washing.washing', string='Order Reference', ondelete='cascade')
     name = fields.Text(string='Description', required=True)
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Integer(string='Quantity')
     product_id = fields.Many2one('product.product', string='Product')
-    price_unit = fields.Float('Unit Price', default=0.0,
-                              related='product_id.list_price')
-    subtotal = fields.Float(compute='compute_amount', string='Subtotal',
-                            readonly=True, store=True)
+    price_unit = fields.Float('Unit Price', default=0.0, related='product_id.list_price')
+    subtotal = fields.Float(compute='compute_amount', string='Subtotal', readonly=True, store=True)
 
 
 class PrescriptionManagementInvoice(models.TransientModel):
@@ -373,17 +342,16 @@ class PrescriptionManagementInvoice(models.TransientModel):
 
     def create_invoices(self):
         context = self._context
-        if context.get('prescription_sale_obj'):
+        if context.get('prescription_order_id'):
             sale_orders = self.env['sale.order'].browse(
-                context.get('prescription_sale_obj'))
+                context.get('prescription_order_id'))
 
         else:
             sale_orders = self.env['sale.order'].browse(
                 self._context.get('active_ids', []))
         if self.advance_payment_method == 'delivered':
             sale_orders._create_invoices()
-        elif self.advance_payment_method == 'all':
-            sale_orders._create_invoices()(final=True)
+        elif self.advance_payment_method == 'all': sale_orders._create_invoices()(final=True)
         else:
             # Create deposit product if necessary
             if not self.product_id:
@@ -470,8 +438,6 @@ class PrescriptionManagementInvoice(models.TransientModel):
         if order.fiscal_position_id:
             invoice_vals['fiscal_position_id'] = order.fiscal_position_id.id
         invoice = self.env['account.move'].create(invoice_vals)
-        invoice.message_post_with_view('mail.message_origin_link',
-                                       values={'self': invoice,
-                                               'origin': order},
-                                       subtype_id=self.env.ref(
+        invoice.message_post_with_view('mail.message_origin_link', values={'self': invoice,
+                                               'origin': order}, subtype_id=self.env.ref(
                                            'mail.mt_note').id)

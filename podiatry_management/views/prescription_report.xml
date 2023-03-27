@@ -12,16 +12,16 @@
              </field>
         </record>
 
-        <record id="action_prescription_order_analysis" model="ir.actions.act_window">
+        <!-- <record id="open_prescription_order_analysis" model="ir.actions.act_window">
             <field name="name">Prescription Order Analysis</field>
             <field name="res_model">report.prescription.order</field>
             <field name="view_mode">pivot</field>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help">This report allows you to analyse the performance of your Prescription Mangement. </field>
-        </record>
+        </record> -->
 
-        <menuitem id="prescription_report_menu" name="Report" parent="prescription_management_menu" sequence="2"/>
-        <menuitem name="Prescription Order Analysis" action="action_prescription_order_analysis" id="menu_prescription_order_analysis" parent="prescription_report_menu" sequence="1"/>
+        <!-- <menuitem id="prescription_report_menu" name="Report" parent="prescription_management_menu" sequence="2"/>
+        <menuitem name="Prescription Order Analysis" action="open_prescription_order_analysis" id="menu_prescription_order_analysis" parent="prescription_report_menu" sequence="1"/> -->
 
     </data>
 </odoo>
