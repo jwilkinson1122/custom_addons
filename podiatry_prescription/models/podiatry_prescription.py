@@ -157,11 +157,11 @@ class PrescriptionOrder(models.Model):
     #         order.action_work_order_create()
     #     return res
 
-    def action_confirm(self):
-        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
-            raise UserError(_(
-                'It is not allowed to confirm an order in the following states: %s'
-            ) % (', '.join(self._get_forbidden_state_confirm())))
+    # def action_confirm(self):
+    #     if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+    #         raise UserError(_(
+    #             'It is not allowed to confirm an order in the following states: %s'
+    #         ) % (', '.join(self._get_forbidden_state_confirm())))
 
         # for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
         #     order.message_subscribe([order.partner_id.id])
@@ -173,6 +173,7 @@ class PrescriptionOrder(models.Model):
         # if self.env.user.has_group('sale.group_auto_done_setting'):
         #     self.action_done()
         
+    def action_confirm(self):
         res = super(PrescriptionOrder, self).action_confirm()
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
@@ -186,7 +187,6 @@ class PrescriptionOrder(models.Model):
             if wo:
                 raise ValidationError(' Please book on another date.')
             order.action_work_order_create()
-
         helpdesk_ticket_dict = {}
         helpdesk_ticket_list = []
         for line in self.order_line:

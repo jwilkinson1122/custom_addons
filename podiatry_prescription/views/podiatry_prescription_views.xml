@@ -44,11 +44,6 @@
                     <field name="internal_identifier" readonly="1" />
                 </xpath>
 
-                <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <field name="citizen_identification" attrs="{'required': [('is_company', '!=', True)], 'invisible': [('is_company', '=', True)], }"/>
-
-                </xpath> -->
-
                 <field name="partner_id" position="after">
                     <field name="is_prescription_order" invisible="1"/>
                     <!-- <field name="practice_id" required="1" attrs="{'invisible': [('is_prescription_order', '=', False)]}"/> -->
