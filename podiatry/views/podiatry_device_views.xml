@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id='podiatry_device_view_form' model='ir.ui.view'>
+        <field name="name">podiatry.device.form</field>
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <form string="Device" js_class="podiatry_form">
+                <header>
+                    <button string="Apply New Patient" class="btn btn-primary" type="object" name="action_accept_patient_change" attrs="{'invisible': [('hold_patient_id', '=', False)]}"/>
+                    <field name="state_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="country_code" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_assignation_logs" type="object" class="oe_stat_button" icon="fa-history">
+                            <field name="history_count" widget="statinfo" string="Patients History"/>
+                        </button>
+                        <button name="return_action_to_open" type="object" class="oe_stat_button" icon="fa-book" context="{'xml_id':'podiatry_device_log_prescription_action', 'search_default_inactive': not active}" help="show the prescription for this device">
+                            <field name="prescription_count" widget="statinfo" string="Prescriptions"/>
+                        </button>
+                        <button name="return_action_to_open" type="object" class="oe_stat_button" icon="fa-wrench" context="{'xml_id':'podiatry_device_log_services_action', 'search_default_inactive': not active}" help="show the services logs for this device">
+                            <field name="service_count" widget="statinfo" string="Services"/>
+                        </button>
+                        <button name="return_action_to_open" type="object" class="oe_stat_button" icon="fa-tachometer" context="{'xml_id':'podiatry_device_laterality_action'}" help="show the laterality logs for this device" attrs="{'invisible': [('device_type', '!=', 'device')]}">
+                            <field name="laterality_count" widget="statinfo" string="Laterality"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_128" widget='image' class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="model_id"/>
+                        <h1>
+                            <field name="model_id" placeholder="e.g. Model S"/>
+                        </h1>
+                        <label for="device_registration"/>
+                        <h2>
+                            <field name="device_registration" class="oe_inline" placeholder="e.g. PAE 326"/>
+                        </h2>
+                        <label for="tag_ids"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </div>
+                    <group col="2">
+                        <group string="Patient">
+                            <field name="active" invisible="1"/>
+                            <field name="device_type" invisible="1"/>
+                            <field name="patient_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
+                            <field name="hold_patient_id"/>
+                            <field name="plan_to_change_device" groups="podiatry.podiatry_group_manager" attrs="{'invisible': [('device_type', '!=', 'device')]}"/>
+                            <field name="next_assignation_date"/>
+                        </group>
+                        <group string="Device">
+                            <field name="acquisition_date" attrs="{'invisible': [('device_type', '!=', 'device')]}"/>
+                            <field name="din_sn"/>
+                            <label for="laterality" attrs="{'invisible': [('device_type', '!=', 'device')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('device_type', '!=', 'device')]}">
+                                <field name="laterality"/>
+                                <field name="laterality_unit"/>
+                            </div>
+                            <field name="manager_id" domain="[('share', '=', False)]"/>
+                            <field name="location"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tax Info">
+                            <group>
+                                <group string="Fiscality">
+                                    <field name="patient_weight_tax" widget="monetary"/>
+                                </group>
+                                <group string="Prescription">
+                                    <field name="first_prescription_date"/>
+                                    <field name="device_price" widget="monetary"/>
+                                    <field name="net_device_price" widget="monetary"/>
+                                    <field name="residual_value" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Model">
+                            <group>
+                                <group string="Model">
+                                    <field name="arch_height"/>
+                                    <field name="color"/>
+                                    <field name="pairs"/>
+                                    <field name="shell_type"/>
+                                    <label for="shoe_size"/>
+                                    <div class="o_row">
+                                        <field name="shoe_size" />
+                                        <span>cm</span>
+                                    </div>
+                                </group>
+                                <group string="Patient Info">
+                                    <label for="patient_height"/>
+                                    <div class="o_row">
+                                        <field name="patient_height"/>
+                                        <span>ft/in</span>
+                                    </div>
+                                    <label for="patient_weight"/>
+                                    <div class="o_row">
+                                        <field name="patient_weight"/>
+                                        <span>lbs</span>
+                                    </div>
+                                    <field name="device_type"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Note">
+                            <field name="description" nolabel="1" placeholder="Write here any other information related to this device" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id='podiatry_device_view_tree' model='ir.ui.view'>
+        <field name="name">podiatry.device.tree</field>
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <tree string="Device" decoration-warning="prescription_renewal and not prescription_renewal_overdue" decoration-danger="prescription_renewal_overdue" multi_edit="1" sample="1">
+                <field name="active" invisible="1"/>
+                <field name="device_registration" readonly="1"/>
+                <field name="model_id" widget="many2one_avatar" readonly="1"/>
+                <field name="manager_id" optional="hide"/>
+                <field name="patient_id" widget="many2one_avatar" readonly="1"/>
+                <field name="hold_patient_id" widget="many2one_avatar" readonly="1"/>
+                <field name="log_patients" invisible="1"/>
+                <field name="din_sn" readonly="1" optional="hide"/>
+                <field name="acquisition_date" readonly="1"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
+                <field name="state_id" widget="badge" readonly="1" optional="hide"/>
+                <field name="prescription_renewal" invisible="1"/>
+                <field name="prescription_renewal_overdue" invisible="1"/>
+                <field name="prescription_renewal_total" invisible="1"/>
+                <field name="prescription_state" widget="badge" decoration-info="prescription_state == 'open'" decoration-danger="prescription_state == 'expired'" optional="hide"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="podiatry_device_view_search" model="ir.ui.view">
+        <field name="name">podiatry.device.search</field>
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <search string="All devices">
+                <field string="Device" name="name" filter_domain="['|', ('name', 'ilike', self), ('device_registration', 'ilike', self)]"/>
+                <field string="Patients" name="log_patients" filter_domain="[('log_patients.patient_id.name', 'ilike', self)]"/>
+                <field string="Current Patient" name="patient_id"/>
+                <field string="Model" name="model_id"/>
+                <field string="Device Registration No." name="device_registration"/>
+                <field name="tag_ids"/>
+                <field string="Status" name="state_id"/>
+                <filter string="Available" name="available" domain="['&amp;', ('hold_patient_id', '=', False), '|', ('patient_id', '=', False), '|', '&amp;', ('plan_to_change_device', '=', True), ('device_type', '=', 'device')]"/>
+                <filter string="Devices" name="devices" domain="[('device_type', '=', 'device')]"/>
+                <filter name="planned" string="Planned for Change" domain="['|', '&amp;', ('device_type', '=', 'device'), ('plan_to_change_device', '=', True)]"/>
+                <separator/>
+                <filter string="Need Action" name="alert_true" domain="['|', ('prescription_renewal', '=', True), ('prescription_renewal_overdue', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue" domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]" help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today" domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all" domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
+                    <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Line" name="groupby_make" context="{'group_by': 'line_id'}"/>
+                    <filter string="Device Type" name="groupby_devicetype" context="{'group_by': 'device_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id='podiatry_device_view_kanban' model='ir.ui.view'>
+        <field name="name">podiatry.device.kanban</field>
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state_id" sample="1">
+                <field name="device_registration" />
+                <field name="model_id" />
+                <field name="patient_id" />
+                <field name="hold_patient_id" />
+                <field name="location" />
+                <field name="state_id" />
+                <field name="id" />
+                <field name="tag_ids" />
+                <field name="prescription_renewal" />
+                <field name="prescription_renewal_overdue" />
+                <field name="prescription_renewal_name" />
+                <field name="prescription_renewal_total" />
+                <field name="prescription_count" />
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image" t-attf-style="background-image:url('#{kanban_image('podiatry.device', 'image_128', record.id.raw_value)}')"/>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <t t-if="record.device_registration.raw_value">
+                                        <field name="device_registration"/>
+:</t>
+                                    <field name="model_id"/>
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <t t-if="record.patient_id.raw_value">
+                                            <field name="patient_id"/>
+                                        </t>
+                                    </li>
+                                    <li>
+                                        <t t-if="record.hold_patient_id.raw_value">Future Patient : <field name="hold_patient_id"/>
+                                        </t>
+                                    </li>
+                                    <li>
+                                        <t t-if="record.location.raw_value">
+                                            <field name="location"/>
+                                        </t>
+                                    </li>
+                                </ul>
+                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
+                                    <div class="oe_kanban_bottom_left">
+                                        <a t-if="record.prescription_count.raw_value>0" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"podiatry_device_log_prescription_action"}'>
+                                            <field name="prescription_count"/>
+                                            Prescription(s)
+                                            <span t-if="record.prescription_renewal.raw_value and !record.prescription_renewal_overdue.raw_value" class="fa fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
+                                            </span>
+                                            <span t-if="record.prescription_renewal_overdue.raw_value" class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
+                                            </span>
+                                        </a>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="podiatry_device_view_activity" model="ir.ui.view">
+        <field name="name">podiatry.device.activity</field>
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <activity string="Devices">
+                <field name="device_registration"/>
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('podiatry.device', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="device_registration"/>
+ :                            <field name="model_id"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="podiatry_device_view_pivot" model="ir.ui.view">
+        <field name="model">podiatry.device</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="state_id" type="col" />
+                <field name="line_id" type="row" />
+                <field name="model_id" type="row" />
+                <field name="name" type="row" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id='podiatry_device_action' model='ir.actions.act_window'>
+        <field name="name">Devices</field>
+        <field name="res_model">podiatry.device</field>
+        <field name="view_mode">kanban,tree,form,pivot,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Ready to manage your podiatry more efficiently ?
+            </p>
+            <p>
+            Let's create your first device.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Podiatry" parent="menu_root" id="podiatry_devices" sequence="2" groups="podiatry_group_user"/>
+    <menuitem action="podiatry_device_action" parent="podiatry_devices" name="Podiatry" id="podiatry_device_menu" groups="podiatry_group_user" sequence="0"/>
+
+    <record id='podiatry_device_laterality_view_form' model='ir.ui.view'>
+        <field name="name">podiatry.device.laterality.form</field>
+        <field name="model">podiatry.device.laterality</field>
+        <field name="arch" type="xml">
+            <form string="Laterality Logs">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="device_id"/>
+                            <label for="value"/>
+                            <div class="o_row">
+                                <field name="value" class="oe_inline"/>
+                                <field name="unit" class="ml-2"/>
+                            </div>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='podiatry_device_laterality_view_tree' model='ir.ui.view'>
+        <field name="name">podiatry.device.laterality.tree</field>
+        <field name="model">podiatry.device.laterality</field>
+        <field name="arch" type="xml">
+            <tree string="Laterality Logs" editable="top">
+                <field name="date" />
+                <field name="device_id" widget="many2one_avatar"/>
+                <field name="patient_id" widget="many2one_avatar"/>
+                <field name="value" />
+                <field name="unit" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='podiatry_device_laterality_view_kanban' model='ir.ui.view'>
+        <field name="name">podiatry.device.laterality.kanban</field>
+        <field name="model">podiatry.device.laterality</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong>
+                                    <field name="device_id"/>
+                                    <span class="float-right">
+                                        <field name="date"/>
+                                    </span>
+                                </strong>
+                            </div>
+                            <div>
+                                <span>
+                                    <field name="patient_id"/>
+                                </span>
+                                <span class="float-right">
+                                    <field name="value"/>
+ Km</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='podiatry_device_laterality_view_search' model='ir.ui.view'>
+        <field name="name">podiatry.device.laterality.search</field>
+        <field name="model">podiatry.device.laterality</field>
+        <field name="arch" type="xml">
+            <search string="Devices lateralitys">
+                <field name="device_id"/>
+                <field name="patient_id"/>
+                <field name="value"/>
+                <field name="date"/>
+                <group expand="0" string="Group By">
+                    <filter name="groupby_device" context="{'group_by': 'device_id'}" string="Device"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="podiatry_device_laterality_view_graph" model="ir.ui.view">
+        <field name="name">podiatry.device.laterality.graph</field>
+        <field name="model">podiatry.device.laterality</field>
+        <field name="arch" type="xml">
+            <graph string="Laterality Values Per Device" sample="1">
+                <field name="device_id"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='podiatry_device_laterality_action' model='ir.actions.act_window'>
+        <field name="name">Lateralitys</field>
+        <field name="res_model">podiatry.device.laterality</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context"></field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new laterality log
+            </p>
+            <p>
+            You can add various laterality entries for all devices.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="podiatry_device_laterality_action" parent="podiatry_devices" id="podiatry_device_laterality_menu" groups="podiatry_group_user" sequence="10"/>
+
+    <record id='podiatry_device_service_types_view_tree' model='ir.ui.view'>
+        <field name="name">podiatry.service.type.tree</field>
+        <field name="model">podiatry.service.type</field>
+        <field name="arch" type="xml">
+            <tree string="Service Types">
+                <field name="name" />
+                <field name="category"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='podiatry_device_service_types_action' model='ir.actions.act_window'>
+        <field name="name">Service Types</field>
+        <field name="res_model">podiatry.service.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new type of service
+            </p>
+            <p>
+            Each service can used in prescriptions, as a standalone service or both.
+            </p>
+        </field>
+    </record>
+    <menuitem action="podiatry_device_service_types_action" parent="podiatry_configuration" id="podiatry_device_service_types_menu" sequence="3" groups="base.group_no_one"/>
+
+    <record id='podiatry_device_state_view_tree' model='ir.ui.view'>
+        <field name="name">podiatry.device.state.tree</field>
+        <field name="model">podiatry.device.state</field>
+        <field name="arch" type="xml">
+            <tree string="State" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='podiatry_device_state_action' model='ir.actions.act_window'>
+        <field name="name">Device Status</field>
+        <field name="res_model">podiatry.device.state</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new device status
+            </p>
+            <p>
+            You can customize available status to track the evolution of
+            each device. Example: active, being repaired, sold.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="podiatry_device_state_action" parent="podiatry_configuration" id="podiatry_device_state_menu" groups="base.group_no_one"/>
+
+    <record id="podiatry_device_tag_view_view_form" model="ir.ui.view">
+        <field name="name">podiatry.device.tag.form</field>
+        <field name="model">podiatry.device.tag</field>
+        <field name="arch" type="xml">
+            <form string="Device Tags">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="podiatry_device_tag_view_view_tree" model="ir.ui.view">
+        <field name="name">podiatry.device.tag.tree</field>
+        <field name="model">podiatry.device.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Device Tags" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="podiatry_device_tag_action" model="ir.actions.act_window">
+        <field name="name">Device Tags</field>
+        <field name="res_model">podiatry.device.tag</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new tag
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="podiatry_device_tag_menu" parent="podiatry_configuration" action="podiatry_device_tag_action" sequence="89" groups="base.group_no_one"/>
+
+    <record id="podiatry_device_assignation_log_view_list" model="ir.ui.view">
+        <field name="name">podiatry.device.assignation.log.view.tree</field>
+        <field name="model">podiatry.device.assignation.log</field>
+        <field name="arch" type="xml">
+            <tree string="Assignment Logs" editable="bottom">
+                <field name="device_id" invisible="1"/>
+                <field name="patient_id" widget="many2one_avatar"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

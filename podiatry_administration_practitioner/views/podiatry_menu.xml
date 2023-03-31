@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<odoo>
-    <menuitem id="podiatry_conf_practitioner_menu" name="Practitioners" parent="podiatry_base.podiatry_root_administration" action="podiatry_practitioner_action" sequence="20" />
-    <menuitem id="podiatry_role_menu" name="Roles" parent="podiatry_base.podiatry_root_configuration" action="podiatry_role_action" sequence="60" />
-</odoo>

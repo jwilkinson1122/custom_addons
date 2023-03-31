@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="podiatry_costs_report_view_search" model="ir.ui.view">
+        <field name="name">podiatry.device.cost.view.search</field>
+        <field name="model">podiatry.device.cost.report</field>
+        <field name="arch" type="xml">
+            <search string="Podiatry Costs Analysis">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="patient_id" filter_domain="[('patient_id', 'ilike', self)]"/>
+                <field name="date_start"/>
+                <filter string="Service" name="service" domain="[('cost_type', '=', 'service')]"/>
+                <filter string="Prescription" name="prescription" domain="[('cost_type', '=', 'prescription')]"/>
+                <separator/>
+                <filter name="filter_date_start" date="date_start" default_period="this_year"/>
+                <group expand="1" string="Group By">
+                    <filter string="Device" name="device" context="{'group_by':'device_id'}"/>
+                    <filter string="Patient" name="patient" context="{'group_by':'patient_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="podiatry_costs_report_view_pivot" model="ir.ui.view">
+        <field name="name">podiatry.device.cost.view.pivot</field>
+        <field name="model">podiatry.device.cost.report</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="date_start" type="col" interval="year" />
+                <field name="cost_type" type="col" />
+                <field name="device_id" type="row" />
+                <field name="cost" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="podiatry_costs_report_view_graph" model="ir.ui.view">
+        <field name="name">podiatry.device.cost.view.graph</field>
+        <field name="model">podiatry.device.cost.report</field>
+        <field name="arch" type="xml">
+            <graph string="Podiatry Costs Analysis" sample="1">
+                <field name="date_start" interval="month"/>
+                <field name="cost_type"/>
+                <field name="cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="podiatry_vechicle_costs_report_view_tree" model="ir.ui.view">
+        <field name="name">podiatry.device.cost.report.view.tree</field>
+        <field name="model">podiatry.device.cost.report</field>
+        <field name="arch" type="xml">
+            <tree string="Podiatry Costs Analysis">
+                <field name="name"/>
+                <field name="patient_id" optional="show"/>
+                <field name="device_type" optional="hide"/>
+                <field name="date_start" optional="show"/>
+                <field name="cost" optional="show" sum="Sum of Cost"/>
+                <field name="cost_type" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="podiatry_costs_reporting_action" model="ir.actions.act_window">
+        <field name="name">Costs Analysis</field>
+        <field name="res_model">podiatry.device.cost.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id"></field>
+        <field name="context" eval="{'search_default_filter_date_start': 1}"/>
+        <field name="search_view_id" ref="podiatry.podiatry_costs_report_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+          No data for analysis
+            </p>
+            <p>
+          Manage efficiently your different effective devices Costs with Odoo.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Reporting" parent="menu_root" id="menu_podiatry_reporting" sequence="99" groups="podiatry_group_manager"/>
+    <menuitem id="menu_podiatry_reporting_costs" name="Costs" parent="menu_podiatry_reporting" action="podiatry_costs_reporting_action" sequence="1" groups="podiatry_group_manager"/>
+</odoo>

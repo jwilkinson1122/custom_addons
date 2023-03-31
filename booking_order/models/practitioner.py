@@ -134,7 +134,9 @@ class Practitioner(models.Model):
     practitioner_address_id = fields.Many2one(
         'res.partner', string="Practitioner Address", )
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+    #                              help='Partner-related data of the Practitioner')
+    partner_id = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Practitioner')
 
     def unlink(self):

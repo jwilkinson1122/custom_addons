@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherit Partner search view-->
+    <record id="view_doctor_filter" model="ir.ui.view">
+        <field name="name">doctor.search.filter</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Doctors" name="is_doctor" domain="[('is_doctor', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hospital_doctor_search" model="ir.ui.view">
+        <field name="name">doctor.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Doctor">
+                <filter string="Doctor" name="is_doctor" domain="[('is_doctor', '=', 'doctor')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="doctor_form" model="ir.ui.view">
+        <field name="name">hospital.doctor.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- <field name="company_type" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_doctor','=',True)]}</attribute>
+            </field> -->
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <!-- <xpath expr="//field[@name='company_type']" position="after">
+                <field name="is_doctor" widget="radio" options="{'horizontal': true}"/>
+            </xpath> -->
+            <xpath expr="//h1" position="before">
+                <h1 class="d-flex">
+                    <field name="doctor_seq" placeholder="Doctor No." required="True"/>
+                </h1>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="hospital_role" widget="many2many_tags" string="Role"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <!-- <field name="is_doctor" widget="radio" options="{'horizontal': true}"/> -->
+                <field name="currency_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="after">
+                <!-- <field name="degrees" widget="many2many_tags"/> -->
+                <!-- <field name="institute" widget="many2many_tags"/> -->
+                <!-- <field name="hospital_id" context="{'default_is_hospital': 1, 'search_default_is_hospital': 1}" /> -->
+                <field name="specialization" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="before">
+                <page name="prescription" string="Prescription" attrs="{'invisible': [('is_doctor','!=','doctor')]}">
+                    <field name="prescription_ids">
+                        <tree editable="bottom" create="false">
+                            <field name="pharmacy_id"/>
+                            <field name="patient_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="doctor_tree" model="ir.ui.view">
+        <field name="name">hospital.doctor.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="doctor_seq"/>
+                <field name="name"/>
+                <!-- <field name="hospital_id" /> -->
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hospital_doctor_view" model="ir.actions.act_window">
+        <field name="name">Doctor</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <!-- <field name="context">{'search_default_is_doctor': 1}</field> -->
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'search_default_is_doctor': True}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+               (0, 0, {'view_mode': 'tree', 'view_id': ref('base_hospital_management.doctor_tree')}),
+               (0, 0, {'view_mode': 'form', 'view_id': ref('base_hospital_management.doctor_form')})]"/>
+        <field name="domain">[('is_doctor', '=', True)]</field>
+        <field name="search_view_id" ref="base_hospital_management.hospital_doctor_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new doctor
+            </p>
+            <p>
+                With just a quick glance on the doctor screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+            </p>
+        </field>
+    </record>
+</odoo>

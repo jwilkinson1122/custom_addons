@@ -4,3 +4,7 @@ access_booking_practitioner,access.booking.practitioner,model_practitioner,booki
 access_booking_patient,access.booking.patient,model_patient,booking_order.group_system_user,1,1,1,0
 access_booking_work_order,access.work.order,model_work_order,booking_order.group_system_user,1,1,1,1
 access_cancelled_wo,access.cancelled_wo,model_cancelled_wo,booking_order.group_system_user,1,1,1,1
+access_custom_partner_field,access_custom_partner_field,model_custom_partner_field,booking_order.group_system_user,1,1,1,1
+access_res_partner_info,access_res_partner_info,model_res_partner_info,booking_order.group_system_user,1,1,1,1
+access_booking_order_hold_reason,access_booking_order_hold_reason,model_booking_order_hold_reason,booking_order.group_system_user,1,1,1,1
+access_cancel_order,access_cancel_order,model_cancel_order,booking_order.group_system_user,1,1,1,1

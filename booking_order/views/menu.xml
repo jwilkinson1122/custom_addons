@@ -11,7 +11,7 @@
 
         <menuitem name="Patients" id="menu_patients" action="action_pod_patients" parent="booking_order.management_menu" sequence="30" />
 
-        <menuitem name="Booking" id="booking_main" parent="sale.sale_menu_root" sequence="1"/>
+        <menuitem name="Booking" id="booking_main" parent="booking_order.management_menu" sequence="40"/>
 
         <menuitem name="Booking Order" id="booking_order_main" parent="booking_main" sequence="1" action="booking_order_action"/>
 

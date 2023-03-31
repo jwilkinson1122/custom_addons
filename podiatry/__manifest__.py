@@ -1,42 +1,55 @@
-# See LICENSE file for full copyright and licensing details.
-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    "name": "Podiatry Management",
-    "version": "15.0.1.0.0",
-    "author": "Odoo Community Association (OCA), Serpent Consulting \
-               Services Pvt. Ltd., OpenERP SA",
-    "category": "Podiatry Management",
-    "website": "https://github.com/OCA/vertical-podiatry",
-    "depends": ["stock", "sale_stock", "account", "sale_management", "sale", "mail"],
-    "license": "LGPL-3",
-    "summary": "Podiatry Management to Manage Folio and Podiatry Configuration",
-    "demo": ["demo/podiatry_data.xml"],
-    "data": [
-        "security/podiatry_security.xml",
-        "security/ir.model.access.csv",
-        "data/podiatry_sequence.xml",
-        "report/report_view.xml",
-        "report/podiatry_folio_report_template.xml",
-        "views/podiatry_patient.xml",
-        "views/podiatry_practice.xml",
-        "views/podiatry_practitioner.xml",
-        "views/podiatry_folio.xml",
-        "views/podiatry_room.xml",
-        "views/podiatry_room_amenities.xml",
-        "views/podiatry_room_type.xml",
-        "views/podiatry_service_type.xml",
-        "views/podiatry_services.xml",
-        "views/product_product.xml",
-        "views/res_company.xml",
-        # "views/res_partner.xml",
-        "views/actions.xml",
-        "views/menus.xml",
-        "wizard/podiatry_wizard.xml",
+    'name' : 'Podiatry',
+    'version' : '0.1',
+    'sequence': 185,
+    'category': 'Human Resources/Podiatry',
+    'website' : 'https://www.odoo.com/app/podiatry',
+    'summary' : 'Manage your podiatry and track device costs',
+    'description' : """
+Device, leasing, insurances, cost
+==================================
+With this module, Odoo helps you managing all your devices, the
+prescriptions associated to those device as well as services, costs
+and many other features necessary to the management of your podiatry
+of device(s)
+
+Main Features
+-------------
+* Add devices to your podiatry
+* Manage prescriptions for devices
+* Reminder when a prescription reach its expiration date
+* Add services, laterality values for all devices
+* Show all costs associated to a device or to a type of service
+* Analysis graph for costs
+""",
+    'depends': [
+        'base',
+        'mail',
     ],
-    "assets": {
-        "web.assets_backend": ["podiatry/static/src/css/room_kanban.css"],
+    'data': [
+        'security/podiatry_security.xml',
+        'security/ir.model.access.csv',
+        'views/podiatry_device_model_views.xml',
+        'views/podiatry_device_views.xml',
+        'views/podiatry_device_cost_views.xml',
+        'views/podiatry_board_view.xml',
+        'views/mail_activity_views.xml',
+        'views/res_config_settings_views.xml',
+        'data/podiatry_devices_data.xml',
+        'data/podiatry_data.xml',
+        'data/mail_data.xml',
+    ],
+
+    'demo': ['data/podiatry_demo.xml'],
+
+    'installable': True,
+    'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'podiatry/static/src/**/*',
+        ],
     },
-    "external_dependencies": {"python": ["python-dateutil"]},
-    "images": ["static/description/podiatry.png"],
-    "application": True,
+    'license': 'LGPL-3',
 }

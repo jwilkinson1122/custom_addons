@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <menuitem name="Hospital Management" id="hospital_root" sequence="50" web_icon="base_hospital_management,static/description/icon.png"/>
+
+    <menuitem name="Account Management" id="hospital_hospital_root" parent="base_hospital_management.hospital_root" sequence="1"/>
+    <menuitem name="Hospital" id="hospital_hospital" parent="base_hospital_management.hospital_hospital_root" action="hospital_action" sequence="10"/>
+    <!-- <menuitem name="Doctor" id="hospital_doctor_root" parent="base_hospital_management.hospital_root" sequence="7"/> -->
+    <menuitem name="Doctors" id="hospital_doctor_details" parent="base_hospital_management.hospital_hospital_root" action="hospital_doctor_view" sequence="11"/>
+    <menuitem name="Pharmacy" id="hospital_pharmacy" parent="base_hospital_management.hospital_hospital_root" action="pharmacy_action" sequence="12"/>
+    <menuitem name="Bed" id="hospital_bed" parent="base_hospital_management.hospital_hospital_root" action="beds_action" sequence="13"/>
+    <menuitem name="Wards" id="hospital_ward" parent="base_hospital_management.hospital_hospital_root" action="wards_action" sequence="14"/>
+    <menuitem name="Block" id="hospital_building" parent="base_hospital_management.hospital_hospital_root" action="buildings_action" sequence="15"/>
+    <menuitem name="Room" id="hospital_room" parent="base_hospital_management.hospital_hospital_root" action="room_action" sequence="16"/>
+    <menuitem name="Staff" id="hospital_staff" parent="base_hospital_management.hospital_hospital_root" action="staff_action" sequence="17"/>
+
+
+    <menuitem name="Patients" id="hospital_patient" parent="base_hospital_management.hospital_root" action="action_contacts" sequence="2"/>
+    <!-- <menuitem name="Inpatient" id="hospital_inpatient" parent="base_hospital_management.hospital_patient_root" action="inpatient_action" sequence="8"/> -->
+
+    <menuitem name="Prescriptions" id="hospital_prescription" parent="base_hospital_management.hospital_root" action="prescription_action" sequence="3"/>
+
+
+    <menuitem name="Products" id="hospital_products_root" parent="base_hospital_management.hospital_root" sequence="4"/>
+    <menuitem name="Products" id="hospital_products" parent="base_hospital_management.hospital_products_root" action="medicine_medicine" sequence="10"/>
+    <menuitem name="Medicine" id="patient_medicine" parent="base_hospital_management.hospital_products_root" action="medicine_action" sequence="11"/>
+    <menuitem name="Vaccine" id="hospital_vaccine" parent="base_hospital_management.hospital_products_root" action="vaccine_action" sequence="12"/>
+
+
+    <!-- <menuitem name="Payment" id="hospital_payment_root" parent="base_hospital_management.hospital_root" sequence="8"/> -->
+    <menuitem name=" Payment" id="hospital_payment" parent="base_hospital_management.hospital_root" action="account.action_account_payments_transfer" sequence="5"/>
+
+
+    <menuitem name="Laboratory" id="hospital_laboratory_root" parent="base_hospital_management.hospital_root" sequence="6"/>
+    <menuitem name="Laboratory Test" id="hospital_laboratory_test" parent="base_hospital_management.hospital_laboratory_root" action="lab_action" sequence="10"/>
+    <menuitem name="Lab" id="lab" parent="base_hospital_management.hospital_laboratory_root" action="labs_action" sequence="11"/>
+    <menuitem name="Test Type" id="type" parent="base_hospital_management.hospital_laboratory_root" action="type_action" sequence="12"/>
+    <menuitem name="Test" id="test_lab" parent="base_hospital_management.hospital_laboratory_root" action="test_action_type" sequence="13"/>
+    <menuitem name="Vaccination" id="hospital_vaccination_test" parent="base_hospital_management.hospital_laboratory_root" action="vaccination_action" sequence="14"/>
+    <menuitem name="Vaccine" id="hospital_vaccine" parent="base_hospital_management.hospital_laboratory_root" action="vaccination_action" sequence="15"/>
+
+    <menuitem name="Configuration" id="hospital_configuration_root" parent="base_hospital_management.hospital_root" sequence="7"/>
+    <menuitem name='Patient' id="hospital_patient_configuration_root" parent="base_hospital_management.hospital_configuration_root" sequence="10"/>
+    <menuitem name="Blood Group" id="hospital_blood" parent="base_hospital_management.hospital_patient_configuration_root" action="blood_action" sequence="1"/>
+    <menuitem name="Genetic Risks" id="genetic_risks" parent="base_hospital_management.hospital_patient_configuration_root" action="action_risks" sequence="2"/>
+    <menuitem name="Diagnosis" id="hospital_diagnosis" parent="base_hospital_management.hospital_patient_configuration_root" action="diagnosis_action" sequence="3"/>
+
+    <menuitem name="Facilities" id="facilities_root" parent="base_hospital_management.hospital_configuration_root" sequence="11"/>
+    <menuitem name="Room Facilities" id="hospital_facilities" parent="base_hospital_management.facilities_root" action="facilities_action" sequence="1"/>
+    <menuitem name="Ward Facilities" id="ward_facilities" parent="base_hospital_management.facilities_root" action="ward_facilities_action" sequence="2"/>
+
+    <menuitem name="Doctor" id="hospital_doctor" parent="base_hospital_management.hospital_configuration_root" sequence="12"/>
+    <menuitem name="Degree" id="hospital_degree_doctor" parent="base_hospital_management.hospital_doctor" action="degree_action" sequence="1"/>
+    <menuitem name="Specialization" id="hospital_specialization_doctor" parent="base_hospital_management.hospital_doctor" action="specialization_action" sequence="2"/>
+    <menuitem name="Institution" id="hospital_institution_doctor" parent="base_hospital_management.hospital_doctor" action="institution_action" sequence="3"/>
+
+
+
+
+
+
+
+</odoo>

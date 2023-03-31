@@ -103,16 +103,20 @@ class Patient(models.Model):
     booking_order_count = fields.Integer(
         string='Booking Order Count', compute='_compute_booking_order_count')
 
+    # patient_booking_order_id = fields.One2many(
+    #     comodel_name='sale.order',
+    #     inverse_name='patient_ids',
+    # )
+    
+    
     patient_booking_order_id = fields.One2many(
-        comodel_name='sale.order',
-        inverse_name='partner_id',
-    )
+        'sale.order', 'patient_id', string="Patient Order")
     
     # patient_booking_order_id = fields.One2many(
     #     'sale.order', 'partner_id', string="Patient")
 
-    booking_order_line = fields.One2many(
-        'sale.order.line', 'name', 'Booking Order Line')
+    # booking_order_line = fields.One2many(
+    #     'sale.order.line', 'name', 'Booking Order Line')
 
     def _compute_booking_order_count(self):
         for rec in self:
@@ -124,12 +128,15 @@ class Patient(models.Model):
         comodel_name='res.users',
         string="Created by",
     )
+    
+    partner_id = fields.Many2one('res.partner', domain=[('is_patient', '=', True)], string='Related Partner', ondelete='cascade',
+                                 help='Partner-related data of the Patient')
 
     # partner_id = fields.Many2one(
     #     comodel_name='res.partner', string="Contact",
     # )
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
-                                 help='Partner-related data of the Patient')
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+    #                              help='Partner-related data of the Patient')
 
     def unlink(self):
         self.partner_id.unlink()

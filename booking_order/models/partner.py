@@ -15,6 +15,19 @@ class Partner(models.Model):
     is_practitioner = fields.Boolean('Practitioner')
     is_patient = fields.Boolean(string="Patient", store=False, search='_search_is_patient')
     
+    
+    # child_ids = fields.One2many(
+    #     domain=[("active", "=", True), ("is_practice", "=", False)]
+    # )
+
+    # affiliate_ids = fields.One2many(
+    #     "res.partner",
+    #     "parent_id",
+    #     string="Affiliates",
+    #     domain=[("active", "=", True), ("is_practice", "=", True)],
+    # )
+    
+ 
     booking_order_ids = fields.One2many('sale.order', 'partner_id', string='Order Records')
     booking_order_count = fields.Integer(compute='_compute_booking_order_count', string='Booking Order Count')
 
@@ -28,11 +41,32 @@ class Partner(models.Model):
         act['domain'] = [('partner_id', 'child_of', self.id)]
         return act
 
-    practice_ids = fields.One2many(
-        comodel_name='practice',
-        inverse_name='partner_id',
-        string="Practices",
-    )
+    # practice_ids = fields.One2many(
+    #     comodel_name='practice',
+    #     inverse_name='partner_id',
+    #     string="Practices",
+    # )
+    
+    practice_id = fields.Many2one('res.partner', string='Practice Entity',
+                                            compute='_compute_practice_partner', recursive=True,
+                                            store=True, index=True)
+    
+    practice_name = fields.Char('Practice Name Entity', compute='_compute_practice_name',
+                                          store=True)
+    
+    @api.depends('is_practice', 'parent_id.practice_id')
+    def _compute_practice_partner(self):
+        for practice in self:
+            if practice.is_practice or not practice.parent_id:
+                practice.practice_id = practice
+            else:
+                practice.practice_id = practice.parent_id.practice_id
+
+    @api.depends('practice_name', 'parent_id.is_practice', 'practice_id.name')
+    def _compute_practice_name(self):
+        for practice in self:
+            p = practice.practice_id
+            practice.practice_name = p.is_practice and p.name or practice.practice_name
 
     patient_ids = fields.One2many(
         comodel_name='patient',

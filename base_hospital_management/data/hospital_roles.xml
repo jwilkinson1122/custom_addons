@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="hospital.roles" id="doctor">
+        <field name="name">Doctor</field>
+        <field name="description">Doctor</field>
+    </record>
+    <record model="hospital.roles" id="nurse">
+        <field name="name">Nurse</field>
+        <field name="description">Nurse</field>
+    </record>
+    <record model="hospital.roles" id="pharmacist">
+        <field name="name">Pharmacist</field>
+        <field name="description">Pharmacist</field>
+    </record>
+    <record model="hospital.roles" id="assistant">
+        <field name="name">Assistant</field>
+        <field name="description">Assistant</field>
+    </record>
+    <record model="hospital.roles" id="ict">
+        <field name="name">IT</field>
+        <field name="description">IT Professional</field>
+    </record>
+    <record model="hospital.roles" id="technician">
+        <field name="name">Technician</field>
+        <field name="description">Technician</field>
+    </record>
+    <record model="hospital.roles" id="administrative">
+        <field name="name">Administrative</field>
+        <field name="description">Administrative</field>
+    </record>
+</odoo>

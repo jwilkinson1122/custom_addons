@@ -125,8 +125,12 @@ class Practice(models.Model):
         address_id = self.practice_id
         self.practice_address_id = address_id
 
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+    partner_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Practice')
+    
+    
+    #    practice_id = fields.Many2many('res.partner', domain=[(
+    #     'is_practice', '=', True)], string="Practice", required=True)
 
     def unlink(self):
         self.partner_id.unlink()
@@ -153,6 +157,18 @@ class Practice(models.Model):
         inverse_name='parent_id',
         string="Practices",
     )
+    
+    # child_ids = fields.One2many(
+    #     domain=[("active", "=", True), ("is_practice", "=", False)]
+    # )
+
+    # affiliate_ids = fields.One2many(
+    #     "res.partner",
+    #     "parent_id",
+    #     string="Affiliates",
+    #     domain=[("active", "=", True), ("is_practice", "=", True)],
+    # )
+    
     child_count = fields.Integer(
         string="Subpractice Count",
         compute='_compute_child_count',

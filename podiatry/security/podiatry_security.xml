@@ -1,18 +1,111 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" ?>
 <odoo>
-    <!--Group for podiatry user -->
-    <record id="group_podiatry_user" model="res.groups">
-        <field name="name">Podiatry Management / User</field>
-        <field eval="[(4, ref('base.user_root'))]" name="implied_ids" />
+    <record id="module_podiatry_category" model="ir.module.category">
+        <field name="name">Podiatry</field>
+        <field name="sequence">17</field>
     </record>
-    <!--Group for podiatry manager -->
-    <record id="group_podiatry_manager" model="res.groups">
-        <field name="name">Podiatry Management/ Manager</field>
-        <field eval="[(4, ref('podiatry.group_podiatry_user'))]" name="implied_ids" />
-        <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
+    <record id="podiatry_group_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_human_resources_podiatry"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
- 
+    <record id="podiatry_group_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="implied_ids" eval="[(4, ref('podiatry_group_user'))]"/>
+        <field name="category_id" ref="base.module_category_human_resources_podiatry"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('podiatry.podiatry_group_manager'))]"/>
+        </record>
+        <record id="podiatry_rule_prescription_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her prescriptions</field>
+            <field name="model_id" ref="model_podiatry_device_log_prescription"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('device_id.patient_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="podiatry_rule_service_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her device's services</field>
+            <field name="model_id" ref="model_podiatry_device_log_services"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('device_id.patient_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="podiatry_rule_laterality_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her device's laterality</field>
+            <field name="model_id" ref="model_podiatry_device_laterality"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('device_id.patient_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="podiatry_rule_device_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her device</field>
+            <field name="model_id" ref="model_podiatry_device"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('patient_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="podiatry_rule_prescription_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on device's prescriptions</field>
+            <field name="model_id" ref="model_podiatry_device_log_prescription"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_manager'))]"/>
+        </record>
+        <record id="podiatry_rule_service_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on device's services</field>
+            <field name="model_id" ref="model_podiatry_device_log_services"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_manager'))]"/>
+        </record>
+        <record id="podiatry_rule_laterality_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on device's device's laterality</field>
+            <field name="model_id" ref="model_podiatry_device_laterality"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_manager'))]"/>
+        </record>
+        <record id="podiatry_rule_device_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on device</field>
+            <field name="model_id" ref="model_podiatry_device"/>
+            <field name="groups" eval="[(4, ref('podiatry_group_manager'))]"/>
+        </record>
+        <record id="ir_rule_podiatry_device" model="ir.rule">
+            <field name="name">Podiatry device: Multi Company</field>
+            <field name="model_id" ref="model_podiatry_device"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_podiatry_device_log_prescription" model="ir.rule">
+            <field name="name">Podiatry device log prescription: Multi Company</field>
+            <field name="model_id" ref="model_podiatry_device_log_prescription"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_podiatry_report" model="ir.rule">
+            <field name="name">Costs Analysis: Multi Company</field>
+            <field name="model_id" ref="model_podiatry_device_cost_report"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_podiatry_laterality" model="ir.rule">
+            <field name="name">Podiatry laterality: Multi Company</field>
+            <field name="model_id" ref="model_podiatry_device_laterality"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('device_id.company_id', '=', False), ('device_id.company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_podiatry_log_services" model="ir.rule">
+            <field name="name">Podiatry log services: Multi Company</field>
+            <field name="model_id" ref="model_podiatry_device_log_services"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
 </odoo>
