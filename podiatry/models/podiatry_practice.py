@@ -28,7 +28,7 @@ class Practice(models.Model):
 
     parent_id = fields.Many2one(
         comodel_name='podiatry.practice',
-        string="Parent Practice",
+        string="Practice",
         index=True,
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -209,7 +209,7 @@ class Practice(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('notes'):
-            vals['notes'] = 'New Practice'
+            vals['notes'] = 'Practice Notes'
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.practice') or _('New')

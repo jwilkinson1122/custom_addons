@@ -57,8 +57,9 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "/podiatry/static/src/js/pdf_viewer.js",
-            "/podiatry/static/js/float_with_uom.js",
+            "podiatry/static/src/css/main.css",
+            "podiatry/static/src/js/pdf_viewer.js",
+            "podiatry/static/js/float_with_uom.js",
         ],
         "point_of_sale.assets": [
             "podiatry/static/src/css/style.css",
