@@ -12,7 +12,7 @@ class Patient(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
-    _rec_name = 'patient_id'
+    # _rec_name = 'patient_id'
     
     patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient")
 
