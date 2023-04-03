@@ -36,7 +36,7 @@
                         <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
-                        <!-- <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                        <!-- <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-prescription">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Prescriptions</span>

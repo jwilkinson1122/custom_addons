@@ -132,7 +132,7 @@ class Practice(models.Model):
     # def _compute_prescription_count(self):
     #     for rec in self:
     #         prescription_count = self.env['podiatry.prescription'].search_count(
-    #             [('patient_id', '=', rec.id)])
+    #             [('practice_id', '=', rec.id)])
     #         rec.prescription_count = prescription_count
             
         

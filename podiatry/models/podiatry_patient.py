@@ -14,7 +14,7 @@ class Patient(models.Model):
     }
     _rec_name = 'patient_id'
     
-    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", required= True)
+    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient")
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Patient Name", index=True)
