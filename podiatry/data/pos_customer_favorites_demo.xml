@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+
+    <record id="fav_product_sale_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="product_count">12</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_1_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="product_count">3</field>
+        <field name="product_id" ref="product.product_product_6"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+
+    <record id="fav_product_sale_1_2" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="product_count">7</field>
+        <field name="product_id" ref="point_of_sale.small_shelf"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_2" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">8</field>
+        <field name="product_id" ref="product.product_product_22"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_2" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">13</field>
+        <field name="product_id" ref="product.product_product_6"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_2_1" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">15</field>
+        <field name="product_id" ref="product.product_product_8"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+
+    <record id="fav_product_sale_2_2" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">14</field>
+        <field name="product_id" ref="product.product_product_5"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+
+    <record id="fav_product_sale_2_3" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">6</field>
+        <field name="product_id" ref="product.product_delivery_02"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+
+    <record id="fav_product_sale_2_4" model="customer.favorite.product">
+         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="product_count">22</field>
+        <field name="product_id" ref="point_of_sale.newspaper_rack"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+    
+    <record id="fav_product_sale_3" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="product_count">9</field>
+        <field name="product_id" ref="point_of_sale.led_lamp"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_3_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="product_count">13</field>
+        <field name="product_id" ref="point_of_sale.whiteboard_pen"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_3_2" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="product_count">15</field>
+        <field name="product_id" ref="point_of_sale.letter_tray"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_4" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">25</field>
+        <field name="product_id" ref="point_of_sale.small_shelf"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_5" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="product_count">17</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_5_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="product_count">3</field>
+        <field name="product_id" ref="point_of_sale.desk_organizer"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_5_2" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="product_count">12</field>
+        <field name="product_id" ref="point_of_sale.whiteboard"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_5_3" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="product_count">8</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+      
+    <record id="fav_product_sale_6" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="product_count">2</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+     <record id="fav_product_sale_6_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="product_count">1</field>
+        <field name="product_id" ref="point_of_sale.led_lamp"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_7" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="product_count">4</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+     <record id="fav_product_sale_7_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">16</field>
+        <field name="product_id" ref="point_of_sale.monitor_stand"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+     <record id="fav_product_sale_8" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">5</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_8_3" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">6</field>
+        <field name="product_id" ref="point_of_sale.desk_pad"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_8_4" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">22</field>
+        <field name="product_id" ref="point_of_sale.monitor_stand"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_8_5" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">8</field>
+        <field name="product_id" ref="point_of_sale.whiteboard"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_8_6" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">3</field>
+        <field name="product_id" ref="point_of_sale.desk_organizer"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_9" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">17</field>
+        <field name="product_id" ref="stock.product_cable_management_box"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_9_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">11</field>
+        <field name="product_id" ref="point_of_sale.magnetic_board"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+     <record id="fav_product_sale_10" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">19</field>
+        <field name="product_id" ref="point_of_sale.magnetic_board"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+
+    <record id="fav_product_sale_10_1" model="customer.favorite.product">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="product_count">25</field>
+        <field name="product_id" ref="point_of_sale.monitor_stand"></field>
+        <field name="last_update" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M')"></field>
+    </record>
+</odoo>
