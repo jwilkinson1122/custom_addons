@@ -107,14 +107,14 @@ class BookingOrder(models.Model):
     #         self.patient_ids = patient_ids
             
             
-    @api.onchange('practice_id') 
-    def on_change_practice_id(self): 
-        for record in self:
-            if record.practice_id: 
-                res_practice = self.env['practice'].search([('id', '=', record.practice_id)]) 
-            if res_practice: 
-                record.practitioner_id = res_practice.practitioner_id
-                record.patient_id = res_practice.patient_id
+    # @api.onchange('practice_id') 
+    # def on_change_practice_id(self): 
+    #     for record in self:
+    #         if record.practice_id: 
+    #             res_practice = self.env['practice'].search([('id', '=', record.practice_id)]) 
+    #         if res_practice: 
+    #             record.practitioner_id = res_practice.practitioner_id
+    #             record.patient_id = res_practice.patient_id
             
     # @api.onchange('practice_id', 'practitioner_id')
     # def _onchange_practitioner_id(self):

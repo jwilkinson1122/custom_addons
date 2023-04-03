@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+
+        <record id="seq_res_partner" model="ir.sequence">
+            <field name="name">Patient</field>
+            <field name="code">res.partner.patient</field>
+            <field name="prefix">PRC-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_appointment_management" model="ir.sequence">
+            <field name="name">Appointment Management</field>
+            <field name="code">appointment.management</field>
+            <field name="prefix">APT-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_treatment_management" model="ir.sequence">
+            <field name="name">Treatment Management</field>
+            <field name="code">treatment.management</field>
+            <field name="prefix">TM-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+       
+
+      
+        <record id="seq_canteen_order" model="ir.sequence">
+            <field name="name">Canteen Order</field>
+            <field name="code">canteen.order</field>
+            <field name="prefix">CO-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+       
+        <record id="seq_patient_evaluation" model="ir.sequence">
+            <field name="name">Patient Evaluation</field>
+            <field name="code">patient.evaluation</field>
+            <field name="prefix">PE-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_patient_prescriptions" model="ir.sequence">
+            <field name="name">Patient Prescriptions</field>
+            <field name="code">patient.prescriptions</field>
+            <field name="prefix">PRE-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_patient_procedures" model="ir.sequence">
+            <field name="name">Patient Procedures</field>
+            <field name="code">patient.procedures</field>
+            <field name="prefix">PRO-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

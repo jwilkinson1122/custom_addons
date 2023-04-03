@@ -7,13 +7,16 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
 class Hospital(models.Model):
+    # _inherits = {
+    #     'res.partner': 'partner_id',
+    # }
     _inherit = 'res.partner'
     # _name = 'hospital.hospital'
     _description = 'Hospital'
     _parent_name = 'parent_id'
     _parent_store = True
     _order = 'sequence,id'
-    # _rec_name = 'name'
+    _rec_name = 'name'
     
     sequence = fields.Integer(
         string="Sequence", required=True,
@@ -29,6 +32,7 @@ class Hospital(models.Model):
     
     # parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     # child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
+    
     name = fields.Char(string="Name", help="Name of the hospital")
     hosp_type = fields.Selection([('hospital', 'Hospital'),
                                   ('multi', 'Multi-Hospital'),
@@ -93,7 +97,7 @@ class Hospital(models.Model):
     doctor_ids = fields.One2many('res.partner', 'hospital_id', string='Doctors')
     patient_ids = fields.One2many('res.partner', 'hospital_id', string='Patients')
     prescription_ids = fields.One2many('hospital.prescription', 'hospital_id', 'Prescriptions')
-    
+
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
     
@@ -118,8 +122,8 @@ class Hospital(models.Model):
             res.append((name.id, ("%s (%s)") % (name.name, name.hospital_seq)))
         return res
     
-        def write(self, values):
-            result = super(Practice, self).write(values)
+    def write(self, values):
+        result = super(Hospital, self).write(values)
         return result
 
     def copy(self, default=None):
@@ -136,6 +140,17 @@ class Hospital(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+        
+    # return {
+    #     'name': _('Details'),
+    #     'view_type': 'form',
+    #     'view_mode': 'tree, form',
+    #     'res_model': 'raw.material.report',
+    #     'views': [(view_id_tree[0].id, 'tree'),(False,'form')],
+    #     'type': 'ir.actions.act_window',
+ 
+    #     'target': 'current',
+    # } 
 
 
 
@@ -149,3 +164,4 @@ class HospitalRoles(models.Model):
     name = fields.Char(required=True)
     description = fields.Char(required=True)
     active = fields.Boolean(default=True)
+

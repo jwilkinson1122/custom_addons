@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="patient_prescription_report_temp_document">
+        <t t-call="web.external_layout">
+             <div class="page">
+                <div class="oe_structure"/>
+
+                 <center>
+                     <h4><b>Prescription</b></h4>
+                 </center>
+
+                <table width="100%">
+                    <tr>
+                        <th width="15">Patient</th>
+                        <td width="35"><span t-field="doc.partner_id.name"/> </td>
+                        <th width="15">Patient Registration No</th>
+                        <td width="35"><span t-field="doc.registration_no"/> </td>
+                    </tr>
+                    <tr>
+                        <th width="13">Date</th>
+                        <td width="87"><span t-field="doc.date"/> </td>
+                        <th width="15">Doctor</th>
+                        <td width="35"><span t-field="doc.employee_id.name"/> </td>
+                    </tr>
+                    <tr>
+                        <th width="13">Disease Type</th>
+                        <td width="87"><span t-field="doc.disease_type_id.name"/> </td>
+                        <th width="15">Disease Stage</th>
+                        <td width="35"><span t-field="doc.disease_stage_id.name"/> </td>
+                    </tr>
+                    <tr>
+                        <th width="15"></th>
+                        <td width="35"></td>
+                        <th width="15">Prescription No</th>
+                        <td width="35"><span t-field="doc.name"/> </td>
+                    </tr>
+
+                </table>
+                <h4><b>Medicine</b></h4>
+                 <t t-if="doc.line_ids">
+                     <table width="100%">
+                        <tr>
+                            <th width="22%" style="border:1px solid black;text-align:center;">Medicine</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Unit</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Quantity</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Dose</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Dose Unit</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Morning</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Afternoon</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Evening</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">Night</th>
+                            <th width="7%" style="border:1px solid black;text-align:center;">When Take</th>
+                            <th width="15%" style="border:1px solid black;text-align:center;">Remark</th>
+                        </tr>
+                        <tr t-foreach="doc.line_ids" t-as="line">
+                            <td width="22%" style="border:1px solid black;padding-left:5px;"><span t-field="line.product_id.name"/> </td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;"><span t-field="line.uom_id.name"/></td>
+                            <td width="7%" style="border:1px solid black;padding-right:5px;text-align:right;"><span t-field="line.quantity"/></td>
+                            <td width="7%" style="border:1px solid black;padding-right:5px;text-align:right;"><span t-field="line.dose"/></td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;"><span t-field="line.dose_unit"/></td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.morning">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.afternoon">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.evening">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.night">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="7%" style="border:1px solid black;padding-left:5px;"><span t-field="line.when_take"/> </td>
+                            <td width="15%" style="border:1px solid black;padding-left:5px;"><span t-field="line.remark"/> </td>
+                        </tr>
+                    </table>
+                 </t>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="patient_prescription_report_temp">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="hospital_management_app.patient_prescription_report_temp_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -6,18 +6,6 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <!-- <field name="partner_shipping_id" position="after">
-                    <field name="practice_id" domain="[('parent_id','child_of',partner_id),('type','=','contact')]" options="{'no_create': True}" />
-                </field> -->
-                <!-- <field name="partner_shipping_id" position="after">
-                    <field name="partner_contact_id" domain="[('parent_id','child_of',partner_id),('type','=','contact')]" options="{'no_create': True}" />
-                </field>
-                <button name="action_draft" position="attributes">
-                    <attribute name="confirm">Are you sure to set this to quotation?</attribute>
-                </button>
-                <button name="action_cancel" position="attributes">
-                    <attribute name="confirm">Are you sure to cancel this order?</attribute>
-                </button> -->
                 <xpath expr='//button[@name="action_confirm"]' position="after">
                     <button name="action_check" string="Check" class="btn-primary" type="object"/>
                 </xpath>
@@ -26,22 +14,20 @@
                         <field name="wo_count" widget="statinfo" string="Work Order"/>
                     </button>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </xpath>
+                <!-- <field name="partner_shipping_id" position="attributes">
+                    <attribute name="domain">[('parent_id', '=', partner_id)]</attribute>
+                </field> -->
                 <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="domain">[('is_practice', '=', True)]</attribute>
+                    <attribute name="invisible">True</attribute>
                 </xpath> -->
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('is_practice', '=', True)]</attribute>
+                </xpath>
                 <field name="partner_id" position="after">
                     <field name="is_booking_order" invisible="1"/>
-                    <!-- <field name="practice_partner_id" invisible="1" /> -->
-                    <!-- <field name="practice_partner_id" invisible="1" /> -->
-                    <!-- <field name="practice_partner_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/> -->
-                    <field name="practice_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
-
+                    <!-- <field name="practice_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/> -->
                     <!-- <field name="invoice_id" domain="[('partner_id','=', partner_id)]"></field> -->
-                    <!-- <field name="practice_id" domain="[('partner_id','=', partner_id)]" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/> -->
-                    <field name="practitioner_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
+                    <field name="practitioner_id" domain="[('parent_id','=', partner_id)]" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
                     <field name="patient_id" required="1" attrs="{'invisible': [('is_booking_order', '=', False)]}"/>
 
                 </field>

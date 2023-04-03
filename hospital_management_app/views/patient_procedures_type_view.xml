@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+		
+
+		<record id="patient_procedures_type_view_tree_new" model="ir.ui.view">
+			<field name="name">patient.procedures.type.view.form.popup</field>
+			<field name="model">patient.procedures.type</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="fees"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="patient_procedures_type_view_form_new" model="ir.ui.view">
+        <field name="name">patient.procedures.type.view.form.popup</field>
+        <field name="model">patient.procedures.type</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form>
+
+                <sheet>
+					<div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name" required="1"/>
+                        </h1>
+                    </div>
+					<group>
+						<group>
+							<field name="fees"/>
+						</group>
+					</group>
+                    <field name="note" placeholder="Log a note..."/>
+                </sheet>
+				<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    	</record> 
+
+
+
+
+		<record id="action_patient_procedures_type" model="ir.actions.act_window">
+			<field name="name">Patient Procedures Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">patient.procedures.type</field>
+<!--			<field name="domain">[('user_id', '=', uid)]</field>-->
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		 <menuitem id="menu_patient_procedures_type"
+                  name='Patient Procedures Type'
+                  parent="menu_hospital_configuration"
+                  action="action_patient_procedures_type"
+                  sequence="10" />
+
+
+	</data>
+</odoo>
