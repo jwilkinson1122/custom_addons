@@ -90,7 +90,7 @@ class Practice(models.Model):
     )
 
     practice_id = fields.Many2many('res.partner', domain=[(
-        'is_company', '=', True)], string="Practice", required=True)
+        'is_practice', '=', True)], string="Practice", required=True)
 
     practice_type = fields.Selection([('hospital', 'Hospital'),
                                       ('multi', 'Multi-Hospital'),
@@ -115,7 +115,18 @@ class Practice(models.Model):
         inverse_name='practice_id',
         string="Prescriptions",
     )
+    
+    # prescription_count = fields.Integer(
+    #     string='Prescription Count', compute='_compute_prescription_count')
 
+
+    # def _compute_prescription_count(self):
+    #     for rec in self:
+    #         prescription_count = self.env['podiatry.prescription'].search_count(
+    #             [('patient_id', '=', rec.id)])
+    #         rec.prescription_count = prescription_count
+            
+        
     @api.onchange('practice_id')
     def _onchange_practice(self):
         '''
@@ -230,3 +241,5 @@ class Practice(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+
+ 
