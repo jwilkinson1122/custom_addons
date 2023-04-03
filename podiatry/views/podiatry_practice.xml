@@ -51,8 +51,10 @@
                             <field name="name" required="1" placeholder="Practice Name"/>
                         </h1>
                     </div>
+                    <separator/>
+
                     <!-- <field name="parent_id" placeholder="Parent Practice" style="width:50%" readonly="not context.get('can_edit_parent_id', True)"/> -->
-                    <group name="practice_information" string="Practice Information">
+                    <group name="practice_information">
                         <group name="practice_information">
                             <field name="parent_id" readonly="not context.get('can_edit_parent_id', True)"/>
                         </group>
@@ -60,7 +62,8 @@
                             <field name="practice_type" required="True"/>
                         </group>
                     </group>
-                    <br></br>
+                    <separator/>
+                    <!-- <br></br> -->
                     <notebook>
                         <page name="contact_information" string="Contact Information">
                             <group name="practice_contact">
