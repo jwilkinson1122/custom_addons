@@ -104,6 +104,15 @@ class Practice(models.Model):
         inverse_name='practice_id',
         string="Contacts",
     )
+    
+    practitioner_count = fields.Integer(
+        string='Practitioner Count', compute='_compute_practitioner_count')
+    
+    def _compute_practitioner_count(self):
+        for rec in self:
+            practitioner_count = self.env['podiatry.practitioner'].search_count(
+                [('practice_id', '=', rec.id)])
+            rec.practitioner_count = practitioner_count
 
     user_id = fields.Many2one(
         comodel_name='res.users',
@@ -241,5 +250,17 @@ class Practice(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+        
+    def action_open_practitioners(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Practitioners',
+            'res_model': 'podiatry.practitioner',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+
 
  

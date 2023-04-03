@@ -27,7 +27,12 @@
                 <sheet>
                     <!-- Button Box -->
                     <div class="oe_button_box" name="button_box">
-                        <field name="child_ids" invisible="1"/>
+                        <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
+                            <div class="o_stat_info">
+                                <field name="practitioner_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Contacts</span>
+                            </div>
+                        </button>
                         <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
