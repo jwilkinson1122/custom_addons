@@ -143,7 +143,7 @@ class Prescription(models.Model):
         'podiatry.prescription', 'practitioner_id', string="Prescriptions")
 
     prescription_line = fields.One2many(
-        'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+        'podiatry.prescription.line', 'prescription_id', 'Prescription Lines')
 
     prior_rx = fields.Boolean('Use Prior Rx#')
 
@@ -474,7 +474,33 @@ class Prescription(models.Model):
     # def print_prescription_report_ticket_size(self):
     #     return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
 
+class PrescriptionLine(models.Model):
+    _name = "podiatry.prescription.line"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'podiatry prescription line'
+    _rec_name = 'prescription_id'
 
+    @api.depends('product_id')
+    def onchange_product(self):
+        for each in self:
+            if each:
+                self.qty_available = self.product_id.qty_available
+                self.price = self.product_id.lst_price
+            else:
+                self.qty_available = 0
+                self.price = 0.0
+
+    prescription_id = fields.Many2one('podiatry.prescription', string='Prescription')
+    product_id = fields.Many2one('product.product', string='Device')
+    uom_id = fields.Many2one('uom.uom', string='Unit')
+    quantity = fields.Float(string="Quantity")
+
+    left_foot = fields.Boolean(string="Left")
+    right_foot = fields.Boolean(string="Right")
+    bilateral = fields.Boolean(string="Bilateral")
+    # when_take = fields.Selection([('after', 'After Eat'), ('before', 'Before Eat')])
+    remark = fields.Text(string='Remark')
+ 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
  

@@ -90,9 +90,22 @@
                     </group>
                     <notebook>
                         <page string="Device Details">
-                            <group>
+                            <!-- <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
-                            </group>
+                            </group> -->
+                            <field name="prescription_line">
+                                <tree editable="bottom">
+                                    <field name="prescription_id" invisible="1"/>
+                                    <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                    <field name="left_foot"/>
+                                    <field name="right_foot"/>
+                                    <field name="bilateral"/>
+                                    <!-- <field name="when_take" required="1"/> -->
+                                    <field name="remark"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Values">
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">

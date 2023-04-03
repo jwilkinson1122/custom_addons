@@ -43,7 +43,6 @@
         "views/podiatry_type.xml",
         "views/podiatry_practitioner.xml",
         "views/podiatry_prescription.xml",
-        "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
         'views/inherit_product_template.xml',
