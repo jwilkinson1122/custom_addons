@@ -102,17 +102,35 @@ class PrescriptionPrescription(models.Model):
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
-    user_id = fields.Many2one(
-        'res.users', string='Responsible', tracking=True,
-        default=lambda self: self.env.user)
-    company_id = fields.Many2one(
-        'res.company', string='Company', change_default=True,
-        default=lambda self: self.env.company,
-        required=False)
-    organizer_id = fields.Many2one(
-        'res.partner', string='Organizer', tracking=True,
-        default=lambda self: self.env.company.partner_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
+    company_id = fields.Many2one('res.company', string='Company', change_default=True, default=lambda self: self.env.company, required=False)
+    organizer_id = fields.Many2one('res.partner', string='Organizer', tracking=True, default=lambda self: self.env.company.partner_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+
+    practice_id = fields.Many2one(
+        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practice_name = fields.Char(
+        string='Practitioner', related='practice_id.name')
+
+    practitioner_id = fields.Many2one(
+        comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    practitioner_name = fields.Char(
+        string='Practitioner', related='practitioner_id.name')
+
+    practitioner_phone = fields.Char(
+        string='Phone', related='practitioner_id.phone')
+
+    practitioner_email = fields.Char(
+        string='Email', related='practitioner_id.email')
+
+    patient_id = fields.Many2one(
+        comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+
+    patient_name = fields.Char(
+        string='Practitioner', related='patient_id.name')
+
+
     prescription_type_id = fields.Many2one('prescription.type', string='Template', ondelete='set null')
     prescription_mail_ids = fields.One2many(
         'prescription.mail', 'prescription_id', string='Mail Schedule', copy=True,

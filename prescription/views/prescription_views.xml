@@ -15,6 +15,22 @@
                                 <field name="name" placeholder="e.g. Online Conferences" class="mb-2"/>
                             </h1>
                         </div>
+                        <!-- <group>
+                            <group>
+                                <div colspan="2">
+                                    <label for="practice_id"/>
+                                    <field name="practice_id" class="w-100"/>
+                                </div>
+                                <div colspan="2">
+                                    <label for="practitioner_id"/>
+                                    <field name="practitioner_id" class="w-100"/>
+                                </div>
+                                <div colspan="2">
+                                    <label for="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
+                                </div>
+                            </group>
+                        </group> -->
                         <group>
                             <group>
                                 <div colspan="2" class="o_checkbox_optional_field">
@@ -206,6 +222,8 @@
                             </group>
                             <group>
                                 <field name="organizer_id"/>
+                                <field name="practice_id"/>
+                                <field name="practitioner_id"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
@@ -272,6 +290,8 @@
                     <field name="address_id" readonly="1"/>
                     <field name="organizer_id" readonly="1" optional="hide"/>
                     <field name="user_id" readonly="1" widget="many2one_avatar_user"/>
+                    <field name="practice_id" readonly="1" optional="show"/>
+                    <field name="practitioner_id" readonly="1" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="date_begin" readonly="1" widget="date"/>
                     <field name="date_end" readonly="1" widget="date"/>
@@ -313,6 +333,9 @@
                 <kanban class="o_prescription_kanban_view" default_group_by="stage_id" quick_create_view="prescription.prescription_prescription_view_form_quick_create" sample="1">
                     <field name="user_id"/>
                     <field name="name"/>
+                    <field name="practice_id"/>
+                    <field name="practitioner_id"/>
+                    <field name="patient_id"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                     <field name="address_id"/>
                     <field name="date_begin"/>
@@ -396,6 +419,7 @@
             <field name="arch" type="xml">
                 <calendar string="Prescriptions" color="prescription_type_id" quick_add="False" date_start="date_begin" date_stop="date_end">
                     <field name="user_id" avatar_field="avatar_128"/>
+                    <field name="patient_id"/>
                     <field name="seats_expected"/>
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
@@ -414,6 +438,9 @@
                     <field name="name" string="Prescription"/>
                     <field name="prescription_type_id"/>
                     <field name="user_id"/>
+                    <field name="practice_id"/>
+                    <field name="practitioner_id"/>
+                    <field name="patient_id"/>
                     <field name="stage_id"/>
                     <filter string="My Prescriptions" name="myprescriptions" help="My Prescriptions" domain="[('user_id', '=', uid)]"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
@@ -479,6 +506,7 @@
         <record id="prescription.menu_prescription_prescription" model="ir.ui.menu">
             <field name="action" ref="prescription.action_prescription_view"/>
         </record>
+
         <menuitem name="Prescriptions" id="prescription_prescription_menu_pivot_report" action="prescription_prescription_action_pivot" sequence="3" parent="prescription.menu_reporting_prescriptions" groups="prescription.group_prescription_user"/>
 
         <!-- PRESCRIPTION.REGISTRATION VIEWS -->

@@ -16,7 +16,8 @@ Key Features
 * Manage Clinic Prescriptions
 * Use emails to automatically confirm and send acknowledgments for any prescription validation
 """,
-    'depends': ['base_setup', 'mail', 'portal', 'utm'],
+    'depends': ['base_setup', 'mail', 'portal', 'utm','sale',
+        'sale_management',],
     'data': [
         'security/prescription_security.xml',
         'security/ir.model.access.csv',
@@ -32,6 +33,9 @@ Key Features
         'views/res_config_settings_views.xml',
         'views/prescription_templates.xml',
         'views/res_partner_views.xml',
+        "views/podiatry_patient.xml",
+        "views/podiatry_practice.xml",
+        "views/podiatry_practitioner.xml",
         'views/prescription_tag_views.xml'
     ],
     'demo': [
