@@ -11,7 +11,7 @@
         This app features like hospital management, patient management, staff management, appointment management, treatment, evaluation management, medical prescription, procedures, pharmacy management and hospital canteen management
     """,
     'depends' : ['base','sale_management','purchase','stock','hr'],
-    "license" : "OPL-1",
+    # "license" : "OPL-1",
     'data' : [
             'security/security.xml',
             'security/ir.model.access.csv',

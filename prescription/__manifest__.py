@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Prescriptions Organization',
-    'version': '1.6',
+    'name': 'Prescription Management',
+    'version': '1.0',
     'website': 'https://erp.nwpodiatric.com/',
     'category': 'Medical/Prescriptions',
-    'summary': 'Prescriptions, Contacts, Registrations',
+    'summary': 'Prescriptions, Contacts, Validations',
     'description': """
 Organization and management of Prescriptions.
 ======================================
@@ -14,7 +14,7 @@ The prescription module allows you to efficiently organize prescriptions and all
 Key Features
 ------------
 * Manage Clinic Prescriptions
-* Use emails to automatically confirm and send acknowledgments for any prescription registration
+* Use emails to automatically confirm and send acknowledgments for any prescription validation
 """,
     'depends': ['base_setup', 'mail', 'portal', 'utm'],
     'data': [
@@ -43,6 +43,7 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
+    "application": True,
     'assets': {
         'web.assets_backend': [
             'prescription/static/src/scss/prescription.scss',
@@ -62,5 +63,7 @@ Key Features
             '/prescription/static/src/scss/prescription_full_page_ticket_report_pdf.scss',
         ],
     },
-    'license': 'LGPL-3',
+    "author": "NWPL",
+    # "license":'OPL-1',
+    "development_status": "Beta",
 }

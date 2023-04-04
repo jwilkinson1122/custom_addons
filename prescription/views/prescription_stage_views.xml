@@ -56,7 +56,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                Create an Prescription Stage
+                Create a Prescription Stage
                 </p>
                 <p>
                 Prescription stages are used to track the progress of an Prescription from its origin until its conclusion.
