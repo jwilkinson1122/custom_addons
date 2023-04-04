@@ -19,6 +19,11 @@
 
         <!-- Products Root -->
         <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/>
+        <menuitem id="menu_product_custom_devices" name="Custom Devices" parent="podiatry.menu_products_root" action="action_product_custom_device" sequence="1" />
+        <menuitem id="menu_product_otc_devices" name="OTC Devices" parent="podiatry.menu_products_root" action="action_product_otc_device" sequence="2" />
+        <menuitem id="menu_product_brace_devices" name="Brace Devices" parent="podiatry.menu_products_root" action="action_product_brace_device" sequence="3" />
+
+
         <!-- Products Root - Preconfigured Devices -->
         <!-- <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>
         <menuitem id="menu_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_products_root" action="pod_shell_foundation_action" sequence="2"/>
@@ -27,7 +32,8 @@
         <menuitem id="menu_top_cover" name="Top Covers" parent="podiatry.menu_products_root" action="pod_top_cover_action" sequence="5"/>
         <menuitem id="menu_cushion" name="Cushions" parent="podiatry.menu_products_root" action="pod_cushion_action" sequence="6"/>
         <menuitem id="menu_extension" name="Extensions" parent="podiatry.menu_products_root" action="pod_extension_action" sequence="7"/> -->
-        <menuitem id="menu_accommodation" name="Accommodations" parent="podiatry.menu_products_root" action="pod_accommodation_action" sequence="8"/>
+
+        <!-- <menuitem id="menu_accommodation" name="Accommodations" parent="podiatry.menu_products_root" action="pod_accommodation_action" sequence="8"/> -->
         <!-- <menuitem id="menu_service" name="Service" parent="podiatry.menu_products_root" action="pod_service_action" sequence="9"/>
         <menuitem id="menu_miscellaneous" name="Miscellaneous" parent="podiatry.menu_products_root" action="pod_miscellaneous_action" sequence="10"/> -->
 

@@ -74,7 +74,6 @@
                             <field name="rush_order" />
                             <field name="ship_to_patient" />
                             <field name="prior_rx"/>
-                            <!-- <field name="patient_prescription_ids" attrs="{'invisible': [('prior_rx','!=',True)]}"/> -->
                         </group>
                         <group>
                             <field name="left_only"/>
@@ -87,21 +86,47 @@
                         </group> -->
                         <br/>
                         <br />
+                        <tree>
+
+                        </tree>
+
+                        <!-- <tree string="the tree">
+                                <field name="group_name" invisible="1"/>
+                                <field name="date_register" attrs="{'column_invisible':[('parent.some_field_in_parent_record', '==', True)]}"/>
+ -->
+
+                        <field name="prescription_line" widget="one2many_list">
+                            <tree editable="bottom">
+
+                                <field name="prescription_id" invisible="1"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="uom_id"/>
+                                <field name="quantity"/>
+                                <field name="left_only"/>
+                                <field name="right_only"/>
+                                <field name="left_foot" attrs="{'invisible': [('right_only', '=', True)]}"/>
+                                <field name="right_foot" attrs="{'invisible': [('left_only', '=', True)]}"/>
+                            </tree>
+                        </field>
+
                     </group>
                     <notebook>
                         <page string="Device Details">
                             <!-- <group>
                                 <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
                             </group> -->
-                            <field name="prescription_line">
+                            <field name="prescription_line" widget="one2many_list">
                                 <tree editable="bottom">
+
                                     <field name="prescription_id" invisible="1"/>
                                     <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
                                     <field name="uom_id"/>
                                     <field name="quantity"/>
-                                    <field name="left_foot"/>
-                                    <field name="right_foot"/>
-                                    <field name="bilateral"/>
+                                    <field name="left_only"/>
+                                    <field name="right_only"/>
+                                    <field name="left_foot" attrs="{'invisible': [('right_only', '=', True)]}"/>
+                                    <field name="right_foot" attrs="{'invisible': [('left_only', '=', True)]}"/>
+                                    <!-- <field name="bilateral"/> -->
                                     <!-- <field name="when_take" required="1"/> -->
                                     <field name="remark"/>
                                 </tree>

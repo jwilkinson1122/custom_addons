@@ -23,5 +23,6 @@
             <field name="comment">The manager will be able to access the patients configuration and statistical reports.</field>
         </record>
 
+
     </data>
 </odoo>

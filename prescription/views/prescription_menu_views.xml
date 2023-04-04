@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- MAIN MENU -->
+        <menuitem name="Prescriptions" id="prescription_main_menu" sequence="125" groups="prescription.group_prescription_registration_desk" web_icon="prescription,static/description/icon.png"/>
+
+        <!-- HEADER: PRESCRIPTIONS -->
+        <menuitem name="Prescriptions" id="menu_prescription_prescription" sequence="1" parent="prescription.prescription_main_menu" groups="prescription.group_prescription_registration_desk"/>
+
+        <!-- HEADER: REPORTING -->
+        <menuitem name="Reporting" id="menu_reporting_prescriptions" sequence="50" parent="prescription_main_menu" groups="prescription.group_prescription_user"/>
+
+        <!-- HEADER: CONFIGURATION -->
+        <menuitem name="Configuration" id="menu_prescription_configuration" sequence="99" parent="prescription_main_menu" groups="prescription.group_prescription_user"/>
+        <menuitem name="Prescription Templates" id="menu_prescription_type" sequence="1" parent="menu_prescription_configuration"/>
+        <menuitem name="Prescription Stages" id="prescription_stage_menu" sequence="2" parent="menu_prescription_configuration"/>
+        <menuitem name="Mail Schedulers" id="menu_prescription_mail_schedulers" sequence="10" parent="menu_prescription_configuration" groups="base.group_no_one"/>
+        <menuitem name="Prescription Tags Categories" id="menu_prescription_category" sequence="3" parent="menu_prescription_configuration"/>
+
+    </data>
+</odoo>

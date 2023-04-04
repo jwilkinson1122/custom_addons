@@ -494,10 +494,12 @@ class PrescriptionLine(models.Model):
     product_id = fields.Many2one('product.product', string='Device')
     uom_id = fields.Many2one('uom.uom', string='Unit')
     quantity = fields.Float(string="Quantity")
-
-    left_foot = fields.Boolean(string="Left")
-    right_foot = fields.Boolean(string="Right")
-    bilateral = fields.Boolean(string="Bilateral")
+    
+    left_only = fields.Boolean(string='Left Only', related='prescription_id.left_only')
+    right_only = fields.Boolean(string='Right Only', related='prescription_id.right_only')
+    left_foot = fields.Boolean(string="LT")
+    right_foot = fields.Boolean(string="RT")
+    # bilateral = fields.Boolean(string="Bilateral")
     # when_take = fields.Selection([('after', 'After Eat'), ('before', 'Before Eat')])
     remark = fields.Text(string='Remark')
  

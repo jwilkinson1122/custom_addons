@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.module.category" id="base.module_category_medical_prescriptions">
+            <field name="description">Helps you manage your Prescriptions.</field>
+            <field name="sequence">18</field>
+        </record>
+
+        <record id="group_prescription_registration_desk" model="res.groups">
+            <field name="name">Registration Desk</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="base.module_category_medical_prescriptions"/>
+        </record>
+
+        <record id="group_prescription_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="implied_ids" eval="[(4, ref('group_prescription_registration_desk'))]"/>
+            <field name="category_id" ref="base.module_category_medical_prescriptions"/>
+        </record>
+
+        <record id="group_prescription_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_medical_prescriptions"/>
+            <field name="implied_ids" eval="[(4, ref('group_prescription_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('prescription.group_prescription_manager'))]"/>
+        </record>
+
+        <!-- Multi - Company Rules -->
+        <record model="ir.rule" id="prescription_prescription_company_rule">
+            <field name="name">Prescription: multi-company</field>
+            <field name="model_id" ref="model_prescription_prescription"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="prescription_registration_company_rule">
+            <field name="name">Prescription/Registration: multi-company</field>
+            <field name="model_id" ref="model_prescription_registration"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_prescription_prescription_ticket_company" model="ir.rule">
+            <field name="name">Prescription/Ticket: multi-company</field>
+            <field name="model_id" ref="model_prescription_prescription_ticket"/>
+            <field name="domain_force">['|', ('prescription_id.company_id', '=', False), ('prescription_id.company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>
