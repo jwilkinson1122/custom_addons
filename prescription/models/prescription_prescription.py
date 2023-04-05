@@ -268,9 +268,24 @@ class PrescriptionPrescription(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     
+    ship_to_patient = fields.Boolean('Ship to Patient')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
+
+    # @api.onchange('practitioner_id')
+    # def _onchange_practitioner(self):
+    #     '''
+    #     The purpose of the method is to define a domain for the available
+    #     purchase orders.
+    #     '''
+    #     address_id = self.practitioner_id
+    #     self.practitioner_address_id = address_id
+
+    # practitioner_address_id = fields.Many2one(
+    #     'res.partner', string="Practitioner Address")
+    
+    
     # @api.depends('prescription_line.customer_lead', 'date_order', 'order_line.state')
     # def _compute_expected_date(self):
     #     """ For service and consumable, we only take the min dates. This method is extended in sale_stock to

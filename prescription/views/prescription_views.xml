@@ -15,22 +15,6 @@
                                 <field name="name" placeholder="e.g. Online Conferences" class="mb-2"/>
                             </h1>
                         </div>
-                        <!-- <group>
-                            <group>
-                                <div colspan="2">
-                                    <label for="practice_id"/>
-                                    <field name="practice_id" class="w-100"/>
-                                </div>
-                                <div colspan="2">
-                                    <label for="practitioner_id"/>
-                                    <field name="practitioner_id" class="w-100"/>
-                                </div>
-                                <div colspan="2">
-                                    <label for="tag_ids"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
-                                </div>
-                            </group>
-                        </group> -->
                         <group>
                             <group>
                                 <div colspan="2" class="o_checkbox_optional_field">
@@ -44,12 +28,12 @@
                             </group>
                             <group>
                                 <div colspan="2" class="o_checkbox_optional_field">
-                                    <label for="has_seats_limitation" string="Limit Registrations"/>
+                                    <!-- <label for="has_seats_limitation" string="Limit Registrations"/>
                                     <field name="has_seats_limitation"/>
                                     <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
                                        to <field name="seats_max" class="oe_inline"/>
                                        Attendees
-                                    </span>
+                                    </span> -->
                                 </div>
                                 <div colspan="2" class="o_checkbox_optional_field">
                                     <label for="auto_confirm" string="Autoconfirmation"/>
@@ -215,20 +199,7 @@
                                 <field name="request_date" widget="date"/>
                                 <field name="prescription_type_id" string="Template" options="{'no_create':True}"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
-                                <!-- <div class="o_row">
-                                    <span name="date_begin_span" class="text-muted">Booked: <field name="date_begin" widget="date"/>
-                                    </span>
-                                    <span name="date_request_span" class="text-muted">Requested: <field name="request_date" widget="date"/>
-                                    </span>
-                                </div> -->
-                            </group>
-                            <group>
-                                <field name="organizer_id"/>
-                                <field name="practice_id"/>
-                                <field name="practitioner_id"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <div colspan="2" class="o_checkbox_optional_field">
                                     <label for="seats_limited" string="Limit Registrations"/>
                                     <field name="seats_limited"/>
@@ -236,6 +207,19 @@
  Attendees</span>
                                 </div>
                                 <field name="auto_confirm"/>
+
+
+                            </group>
+                            <group>
+                                <field name="organizer_id"/>
+                                <field name="practice_id"/>
+                                <field name="practitioner_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
+                                <field name="partner_invoice_id" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
+                                <field name="partner_shipping_id" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+
+
                             </group>
                         </group>
                         <notebook>
