@@ -7,9 +7,9 @@
     'version' : '15.0.1.0',
     'live_test_url':'https://youtu.be/QpCmuMWSAmA',
     "images":['static/description/main_screenshot.png'],
-    'summary' : 'Dental Clinic Management Healthcare Management Pharmacy Management Patient Appointment Doctor Prescription patient Registration Patient Hospitalization Dental hospital management healthcare dental management hospital Odontology healthcare Odontology clinic',
+    'summary' : 'Dental Clinic Management Healthcare Management Device Management Patient Appointment Doctor Prescription patient Registration Patient Hospitalization Dental hospital management healthcare dental management hospital Odontology healthcare Odontology clinic',
     'description' : """
-        Odoo hospital dental clinic management app provides features for complete healthcare management systems like patient details, hospital staff details, patient appointment, patient treatment, patient evaluation, medical prescription, procedures, pharmacy management, canteen management and odontology(dental).
+        Odoo hospital dental clinic management app provides features for complete healthcare management systems like patient details, hospital staff details, patient appointment, patient treatment, patient evaluation, medical prescription, procedures, device management, option management and odontology(dental).
     """,
     'depends' : ['hospital_management_app'],
     "license" : "OPL-1",

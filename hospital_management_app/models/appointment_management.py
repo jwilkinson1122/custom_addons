@@ -22,11 +22,11 @@ class AppointmentManagement(models.Model):
     zip = fields.Char(string='Zip')
     city = fields.Char(string='City')
     registration_no = fields.Char(string='Registration Card')
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    condition_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    condition_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', tracking=True)
+    condition_fees = fields.Float(string='Condition Fees Per Visit', tracking=True)
     appointment_date = fields.Datetime(string='Date')
     next_visit = fields.Date(string='Next Visit')
     employee_id = fields.Many2one('hr.employee', string='Doctor')
@@ -37,10 +37,10 @@ class AppointmentManagement(models.Model):
     line_ids = fields.One2many('appointment.management.line', 'appointment_id', string="History")
     is_history_created = fields.Boolean(string="Is History Created")
 
-    @api.onchange('disease_type_id')
-    def onchange_disease_type_id(self):
+    @api.onchange('condition_type_id')
+    def onchange_condition_type_id(self):
         for rec in self:
-            rec.disease_fees = rec.disease_type_id.fees
+            rec.condition_fees = rec.condition_type_id.fees
 
     def action_create_invoice(self):
         invoice_vals = self._prepare_invoice()
@@ -80,7 +80,7 @@ class AppointmentManagement(models.Model):
         invoice_lines = []
         vals = {
             'name': name,
-            'price_unit': self.disease_fees,
+            'price_unit': self.condition_fees,
             'quantity': 1,
         }
         invoice_lines.append((0, 0, vals))
@@ -117,9 +117,9 @@ class AppointmentManagement(models.Model):
             rec.zip = rec.partner_id.zip
             rec.city = rec.partner_id.city
             rec.registration_no = rec.partner_id.registration_no
-            # rec.disease_type_id = rec.partner_id.disease_type_id
-            # rec.disease_stage_id = rec.partner_id.disease_stage_id
-            # rec.disease_fees = rec.partner_id.disease_type_id.fees
+            # rec.condition_type_id = rec.partner_id.condition_type_id
+            # rec.condition_stage_id = rec.partner_id.condition_stage_id
+            # rec.condition_fees = rec.partner_id.condition_type_id.fees
 
     def action_create_history(self):
         for rec in self:
@@ -131,10 +131,10 @@ class AppointmentManagement(models.Model):
                 for treatment_id in treatment_ids:
                     self.env['appointment.management.line'].create({
                         'appointment_id': rec.id,
-                        'disease_type_id': treatment_id.disease_type_id.id,
+                        'condition_type_id': treatment_id.condition_type_id.id,
                         'name': treatment_id.name,
-                        'disease_stage_id': treatment_id.disease_stage_id.id,
-                        'disease_fees': treatment_id.disease_fees,
+                        'condition_stage_id': treatment_id.condition_stage_id.id,
+                        'condition_fees': treatment_id.condition_fees,
                         'appointment_date': treatment_id.appointment_date,
                         'employee_id': treatment_id.employee_id.id,
                         'invoice_id': treatment_id.invoice_id.id,
@@ -150,10 +150,10 @@ class AppointmentManagement(models.Model):
                 for appointment_id in appointment_ids:
                     self.env['appointment.management.line'].create({
                         'appointment_id': rec.id,
-                        'disease_type_id': appointment_id.disease_type_id.id,
+                        'condition_type_id': appointment_id.condition_type_id.id,
                         'name': appointment_id.name,
-                        'disease_stage_id': appointment_id.disease_stage_id.id,
-                        'disease_fees': appointment_id.disease_fees,
+                        'condition_stage_id': appointment_id.condition_stage_id.id,
+                        'condition_fees': appointment_id.condition_fees,
                         'appointment_date': appointment_id.appointment_date,
                         'employee_id': appointment_id.employee_id.id,
                         'invoice_id': appointment_id.invoice_id.id,
@@ -172,11 +172,11 @@ class AppointmentManagementLine(models.Model):
     # Identification Details
     appointment_id = fields.Many2one('appointment.management', string="Appointment")
     name = fields.Char(string="Name")
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    condition_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    condition_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', store=True, related='disease_type_id.fees',
+    condition_fees = fields.Float(string='Condition Fees Per Visit', store=True, related='condition_type_id.fees',
                                 tracking=True)
     appointment_date = fields.Datetime(string='Date')
     employee_id = fields.Many2one('hr.employee', string='Doctor')

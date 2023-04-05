@@ -8,9 +8,9 @@
     "images":['static/description/main_screenshot.png'],
     'summary' : 'Hospital OPD/Appointment Management App',
     'description' : """
-        This app features like hospital management, patient management, staff management, appointment management, treatment, evaluation management, medical prescription, procedures, pharmacy management and hospital canteen management
+        This app features like hospital management, patient management, staff management, appointment management, treatment, evaluation management, medical prescription, procedures, device management and hospital option management
     """,
-    'depends' : ['base','sale_management','purchase','stock','hr'],
+    'depends' : ['base','sale_management','purchase','stock','hr','product'],
     # "license" : "OPL-1",
     'data' : [
             'security/security.xml',
@@ -21,15 +21,16 @@
             'data/paperformat.xml',
             'report/report.xml',
             #'views/menu.xml',
-            'views/disease_stage_view.xml',
-            'views/disease_type_view.xml',
+            'views/condition_stage_view.xml',
+            'views/condition_type_view.xml',
             'views/patient_registration_view.xml',
             'views/employee_degree_view.xml',
             'views/hr_employee_inherited_view.xml',
             'views/appointment_management_view.xml',
             'views/patient_procedures_type_view.xml',
+            "views/uom_category_view.xml",
+            "views/uom_uom_view.xml",
             'views/product_template_inherited_view.xml',
-            'views/canteen_order_view.xml',
             'views/patient_evaluation_view.xml',
             'views/patient_prescriptions_view.xml',
             'views/patient_procedures_view.xml',
@@ -37,9 +38,8 @@
             ],
     'qweb' : [],
     'demo' : [],
+    "pre_init_hook": "pre_init_hook",
     'installable' : True,
     'auto_install' : False,
-    'price': 25,
-    'currency': "EUR",
     'category' : 'Healthcare',
 }

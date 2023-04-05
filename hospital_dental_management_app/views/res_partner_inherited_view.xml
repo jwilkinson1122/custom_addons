@@ -7,16 +7,16 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="hospital_management_app.view_partner_form_inherit_patient"/>
             <field name="arch" type="xml">
-                <field name="disease_stage_id" position="attributes">
+                <field name="condition_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
-                <field name="disease_type_id" position="attributes">
-                    <attribute name="string">Teeth Problem</attribute>
+                <field name="condition_type_id" position="attributes">
+                    <attribute name="string">Condition</attribute>
                 </field>
-                <field name="disease_fees" position="attributes">
+                <field name="condition_fees" position="attributes">
                     <attribute name="string">Fees Per Visit</attribute>
                 </field>
             </field>
         </record>
-	</data>
+    </data>
 </odoo>

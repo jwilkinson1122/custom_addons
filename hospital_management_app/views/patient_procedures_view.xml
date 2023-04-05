@@ -1,25 +1,25 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-		<record id="patient_procedures_view_tree_new" model="ir.ui.view">
-			<field name="name">patient.procedures.view.form.popup</field>
-			<field name="model">patient.procedures</field>
-			<field name="priority">20</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="name"/>
-					<field name="partner_id"/>
-					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
-					<field name="date"/>
-					<field name="employee_id"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-<!---->
-		<record id="patient_procedures_view_form_new" model="ir.ui.view">
+        <record id="patient_procedures_view_tree_new" model="ir.ui.view">
+            <field name="name">patient.procedures.view.form.popup</field>
+            <field name="model">patient.procedures</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="registration_no"/>
+                    <field name="condition_type_id"/>
+                    <field name="condition_stage_id"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!---->
+        <record id="patient_procedures_view_form_new" model="ir.ui.view">
             <field name="name">patient.procedures.view.form.popup</field>
             <field name="model">patient.procedures</field>
             <field name="priority">20</field>
@@ -32,13 +32,15 @@
                     </header>
                     <sheet>
                         <div class="oe_title">
-                            <h1><field name="name" readonly="1"/></h1>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
-                                <field name="disease_type_id" />
-                                <field name="disease_stage_id" />
+                                <field name="condition_type_id" />
+                                <field name="condition_stage_id" />
                                 <field name="registration_no" />
                             </group>
                             <group>
@@ -70,23 +72,23 @@
                     </div>
                 </form>
             </field>
-    	</record> 
-    	<record id="patient_procedures_view_search_new" model="ir.ui.view">
+        </record>
+        <record id="patient_procedures_view_search_new" model="ir.ui.view">
             <field name="name">patient.procedures.view.search</field>
             <field name="model">patient.procedures</field>
             <field name="arch" type="xml">
                 <search string="Activity">
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <field name="registration_no"/>
-                        <field name="disease_type_id"/>
-                        <field name="disease_stage_id"/>
-                        <field name="date"/>
-                        <field name="employee_id"/>
-                        <field name="state"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="registration_no"/>
+                    <field name="condition_type_id"/>
+                    <field name="condition_stage_id"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="state"/>
                     <group expand="0" string="Group By">
-                        <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-                        <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                        <filter string="Condition Type" name="condition_type_id" context="{'group_by': 'condition_type_id'}"/>
+                        <filter string="Condition Stage" name="condition_stage_id" context="{'group_by': 'condition_stage_id'}"/>
                         <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
                         <filter string="Doctor" name="employee_id" context="{'group_by': 'employee_id'}"/>
                         <filter string="State" name="state" context="{'group_by': 'state'}"/>
@@ -96,21 +98,17 @@
         </record>
 
 
-		<record id="action_patient_procedures" model="ir.actions.act_window">
-			<field name="name">Procedures</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">patient.procedures</field>
-			<field name="view_mode">tree,search,form</field>
-		</record>
+        <record id="action_patient_procedures" model="ir.actions.act_window">
+            <field name="name">Procedures</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">patient.procedures</field>
+            <field name="view_mode">tree,search,form</field>
+        </record>
 
 
 
-		 <menuitem id="menu_patient_procedures"
-                  name='Procedures'
-                  parent="main_menu_hospitalization"
-                  action="action_patient_procedures"
-                  sequence="7" />
+        <menuitem id="menu_patient_procedures" name='Procedures' parent="main_menu_hospitalization" action="action_patient_procedures" sequence="7" />
 
 
-	</data>
+    </data>
 </odoo>

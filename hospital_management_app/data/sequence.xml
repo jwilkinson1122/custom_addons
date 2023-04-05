@@ -24,17 +24,7 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
-       
 
-      
-        <record id="seq_canteen_order" model="ir.sequence">
-            <field name="name">Canteen Order</field>
-            <field name="code">canteen.order</field>
-            <field name="prefix">CO-</field>
-            <field name="padding">4</field>
-            <field name="company_id" eval="False"/>
-        </record>
-       
         <record id="seq_patient_evaluation" model="ir.sequence">
             <field name="name">Patient Evaluation</field>
             <field name="code">patient.evaluation</field>

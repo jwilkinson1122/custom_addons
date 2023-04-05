@@ -55,10 +55,10 @@
                             </group>
                         </group>
                         <group>
-                            <group string="Disease">
-                                <field name="disease_type_id" options="{'no_create': True, 'no_open': True}"/>
-                                <field name="disease_stage_id" options="{'no_create': True, 'no_open': True}"/>
-                                <field name="disease_fees"/>
+                            <group string="Condition">
+                                <field name="condition_type_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_stage_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_fees"/>
                             </group>
                         </group>
 
@@ -67,28 +67,19 @@
             </field>
         </record>
 
-		<record id="action_hospital_management" model="ir.actions.act_window">
-			<field name="name">Patient</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">res.partner</field>
-			<field name="domain">[('is_patient', '=', True)]</field>
-			<field name="context">{'default_is_patient':True}</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record>
+        <record id="action_hospital_management" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_patient', '=', True)]</field>
+            <field name="context">{'default_is_patient':True}</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
 
-		<!---->
-        <menuitem id="main_menu_management"
-                  name='Management'
-                  parent="main_menu_hospital_management"
-                  groups="group_hospital_user"
-                  sequence="0" />
+        <!---->
+        <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" />
 
-		 <menuitem id="menu_patients"
-                    name='Patients'
-                    parent="main_menu_management"
-                    action="action_hospital_management"
-                    groups="group_hospital_user"
-                    sequence="0" />
+        <menuitem id="menu_patients" name='Patients' parent="main_menu_management" action="action_hospital_management" groups="group_hospital_user" sequence="0" />
 
-	</data>
+    </data>
 </odoo>

@@ -86,6 +86,8 @@ class PrescriptionPrescription(models.Model):
     _description = 'Prescription'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin'
+    _rec_name = "name"
+
 
     def _get_default_stage_id(self):
         return self.env['prescription.stage'].search([], limit=1)
@@ -98,7 +100,9 @@ class PrescriptionPrescription(models.Model):
     def _default_prescription_mail_ids(self):
         return self.env['prescription.type']._default_prescription_mail_type_ids()
 
-    name = fields.Char(string='Prescription', translate=True, required=True)
+    # name = fields.Char(string='Prescription', translate=True, required=True)
+    name = fields.Char(string='Order Reference', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
+
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
@@ -201,7 +205,7 @@ class PrescriptionPrescription(models.Model):
         _tz_get, string='Timezone', required=True,
         compute='_compute_date_tz', readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
-    date_end = fields.Datetime(string='End Date', required=True, tracking=True)
+    date_end = fields.Datetime(string='End Date', tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
@@ -543,14 +547,28 @@ class PrescriptionPrescription(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             # Temporary fix for ``seats_limited`` and ``date_tz`` required fields
-            vals.update(self._sync_required_computed(vals))
-
+            vals.update(self._sync_required_computed(vals))        
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code(
+                'prescription.prescription') or _('New')
         prescriptions = super(PrescriptionPrescription, self).create(vals_list)
         for res in prescriptions:
             if res.organizer_id:
                 res.message_subscribe([res.organizer_id.id])
         prescriptions.flush()
         return prescriptions
+    
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('name', _('New')) == _('New'):
+    #         vals['name'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.prescription') or _('New')
+    #     res = super(Prescription, self).create(vals)
+    #     if res.stage_id.state in ("done", "cancel"):
+    #         raise exceptions.UserError(
+    #             "State not allowed for new prescriptions."
+    #         )
+    #     return res
 
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:

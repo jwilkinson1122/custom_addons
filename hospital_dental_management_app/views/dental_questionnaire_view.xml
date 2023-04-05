@@ -1,104 +1,135 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-		<record id="dental_questionnaire_view_tree_new" model="ir.ui.view">
-			<field name="name">dental.questionnaire.view.form.popup</field>
-			<field name="model">dental.questionnaire</field>
-			<field name="priority">20</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="partner_id"/>
-					<field name="date"/>
-					<field name="employee_id"/>
-				</tree>
-			</field>
-		</record>
-<!---->
-		<record id="dental_questionnaire_view_form_new" model="ir.ui.view">
-        <field name="name">dental.questionnaire.view.form.popup</field>
-        <field name="model">dental.questionnaire</field>
-        <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
+        <record id="dental_questionnaire_view_tree_new" model="ir.ui.view">
+            <field name="name">dental.questionnaire.view.form.popup</field>
+            <field name="model">dental.questionnaire</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                </tree>
+            </field>
+        </record>
+        <!---->
+        <record id="dental_questionnaire_view_form_new" model="ir.ui.view">
+            <field name="name">dental.questionnaire.view.form.popup</field>
+            <field name="model">dental.questionnaire</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
                         <group>
-                            <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
+                            <group>
+                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
 
+                            </group>
+                            <group>
+                                <field name="date" required="1"/>
+                                <field name="employee_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('staff_type','=', 'doctor')]"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="date" required="1"/>
-                            <field name="employee_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('staff_type','=', 'doctor')]"/>
-                        </group>
-                    </group>
-                        <field name="treatment"/><label for="treatment"/><br/>
-                        <field name="previously"/><label for="previously"/><field name="previously_note" placeholder="If yes to any of the previous questions, please give details in the box below" attrs="{'invisible':[('previously', '=', False)]}"/> <br/>
-                        <field name="anesthetic"/><label for="anesthetic"/><br/>
-                        <field name="asthma"/><label for="asthma"/><br/>
-                        <field name="infections"/><label for="infections"/><field name="infections_note" placeholder="If yes, which infection?" attrs="{'invisible':[('infections', '=', False)]}"/><br/>
-                        <field name="heart"/><label for="heart"/><br/>
-                        <field name="allergies"/><label for="allergies"/><field name="allergies_note" placeholder="If yes, Then Describe?" attrs="{'invisible':[('allergies', '=', False)]}"/><br/>
-                        <field name="reaction"/><label for="reaction"/><field name="reaction_note" placeholder="If yes, Then Describe?" attrs="{'invisible':[('reaction', '=', False)]}"/><br/>
-                        <field name="artificial"/><label for="artificial"/><br/>
-                        <field name="bleeding"/><label for="bleeding"/><br/>
-                        <label for="rate" string="Please rate your comfort level with receiving dental treatment"/><br/><field name="rate" widget="radio"/><br/>
+                        <field name="treatment"/>
+                        <label for="treatment"/>
+                        <br/>
+                        <field name="previously"/>
+                        <label for="previously"/>
+                        <field name="previously_note" placeholder="If yes to any of the previous questions, please give details in the box below" attrs="{'invisible':[('previously', '=', False)]}"/>
+                        <br/>
+                        <field name="anesthetic"/>
+                        <label for="anesthetic"/>
+                        <br/>
+                        <field name="asthma"/>
+                        <label for="asthma"/>
+                        <br/>
+                        <field name="infections"/>
+                        <label for="infections"/>
+                        <field name="infections_note" placeholder="If yes, which infection?" attrs="{'invisible':[('infections', '=', False)]}"/>
+                        <br/>
+                        <field name="heart"/>
+                        <label for="heart"/>
+                        <br/>
+                        <field name="allergies"/>
+                        <label for="allergies"/>
+                        <field name="allergies_note" placeholder="If yes, Then Describe?" attrs="{'invisible':[('allergies', '=', False)]}"/>
+                        <br/>
+                        <field name="reaction"/>
+                        <label for="reaction"/>
+                        <field name="reaction_note" placeholder="If yes, Then Describe?" attrs="{'invisible':[('reaction', '=', False)]}"/>
+                        <br/>
+                        <field name="artificial"/>
+                        <label for="artificial"/>
+                        <br/>
+                        <field name="bleeding"/>
+                        <label for="bleeding"/>
+                        <br/>
+                        <label for="rate" string="Please rate your comfort level with receiving dental treatment"/>
+                        <br/>
+                        <field name="rate" widget="radio"/>
+                        <br/>
                         <notebook>
-                            <page string="History of Any Disease">
-                                <field name="disease_type_ids" widget="many2many_checkboxes" nolabel="True"/>
+                            <page string="History of Any Condition">
+                                <field name="condition_type_ids" widget="many2many_checkboxes" nolabel="True"/>
                             </page>
                             <page string="Dental Procedures">
                                 <field name="procedures_ids" widget="many2many_checkboxes" nolabel="True"/>
                             </page>
                             <page string="Details Note">
-                                <label for="note"/><field name="note" placeholder="Please describe any problems you have had with past dental experiences"/><br/>
-                                <label for="immediate"/><field name="immediate" placeholder="What is your immediate dental concern?"/><br/>
-                                <label for="care"/><field name="care" placeholder="How do you care for your mouth?"/><br/>
-                                <label for="appearance"/><field name="appearance" placeholder="These are some things that are important about my dental health and appearance:?"/><br/>
+                                <label for="note"/>
+                                <field name="note" placeholder="Please describe any problems you have had with past dental experiences"/>
+                                <br/>
+                                <label for="immediate"/>
+                                <field name="immediate" placeholder="What is your immediate dental concern?"/>
+                                <br/>
+                                <label for="care"/>
+                                <field name="care" placeholder="How do you care for your mouth?"/>
+                                <br/>
+                                <label for="appearance"/>
+                                <field name="appearance" placeholder="These are some things that are important about my dental health and appearance:?"/>
+                                <br/>
                             </page>
                         </notebook>
-                </sheet>
-				<div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-            </form>
-        </field>
-    	</record> 
-<!---->
-    	<record id="dental_questionnaire_view_search_new" model="ir.ui.view">
-        <field name="name">dental.questionnaire.view.search</field>
-        <field name="model">dental.questionnaire</field>
-        <field name="arch" type="xml">
-            <search>
-				<field name="partner_id"/>
-				<field name="date"/>
-				<field name="employee_id"/>
-                <group expand="0" string="Group By">
-                    <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Referring" name="employee_id" context="{'group_by': 'employee_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-<!---->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!---->
+        <record id="dental_questionnaire_view_search_new" model="ir.ui.view">
+            <field name="name">dental.questionnaire.view.search</field>
+            <field name="model">dental.questionnaire</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Referring" name="employee_id" context="{'group_by': 'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!---->
 
-		<record id="action_dental_questionnaire" model="ir.actions.act_window">
-			<field name="name">Dental Questionnaire</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">dental.questionnaire</field>
-			<field name="view_mode">tree,search,form</field>
-		</record>
+        <record id="action_dental_questionnaire" model="ir.actions.act_window">
+            <field name="name">Dental Questionnaire</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dental.questionnaire</field>
+            <field name="view_mode">tree,search,form</field>
+        </record>
 
 
-		<!---->
-		 <menuitem id="menu_dental_questionnaire"
-                  name='Dental Questionnaire'
-                  parent="hospital_management_app.main_menu_hospitalization"
-                  action="action_dental_questionnaire"
-                  sequence="0" />
+        <!---->
+        <menuitem id="menu_dental_questionnaire" name='Dental Questionnaire' parent="hospital_management_app.main_menu_hospitalization" action="action_dental_questionnaire" sequence="0" />
 
 
 
-	</data>
+    </data>
 </odoo>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+	<data>
+
+
+		<record id="condition_stage_view_tree_new" model="ir.ui.view">
+			<field name="name">condition.stage.view.form.popup</field>
+			<field name="model">condition.stage</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="condition_stage_view_form_new" model="ir.ui.view">
+			<field name="name">condition.stage.view.form.popup</field>
+			<field name="model">condition.stage</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<form>
+
+					<sheet>
+						<!--					<div class="oe_button_box">-->
+						<!--						 <button name="action_open_doc" class="oe_stat_button" icon="fa-tag" type="object" help="Origin">-->
+						<!--							Origin-->
+						<!--						</button>-->
+						<!--					</div>-->
+						<div class="oe_title">
+							<h1>
+								<field name="name" placeholder="Name" required="1"/>
+							</h1>
+						</div>
+						<field name="note" placeholder="Log a note..."/>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="activity_ids" widget="mail_activity"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="action_condition_stage" model="ir.actions.act_window">
+			<field name="name">Condition Stage</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">condition.stage</field>
+			<!--			<field name="domain">[('user_id', '=', uid)]</field>-->
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="main_menu_hospital_management" name="Hospital" sequence="6" web_icon="hospital_management_app,static/description/hospital.png" />
+		<!---->
+		<menuitem id="menu_hospital_configuration" name='Configuration' parent="main_menu_hospital_management" groups="group_hospital_manager" sequence="100" />
+
+		<menuitem id="menu_condition_stage" name='Condition Stage' parent="menu_hospital_configuration" action="action_condition_stage" sequence="1" />
+
+
+	</data>
+</odoo>

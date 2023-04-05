@@ -1,69 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!--************* PRODUCT TEMPLATE(BLOOD) **********-->
-    <record id="product_template_blood_form_inherit" model="ir.ui.view">
-		<field name="name">product.template.form.inherit</field>
-		<field name="model">product.template</field>
-		<field name="inherit_id" ref="product.product_template_only_form_view"/>
-		<field name="arch" type="xml">
-			<xpath expr="//field[@name='categ_id']" position="after">
-                <field name="is_food" invisible="1"/>
-			</xpath>
-		</field>
-	</record>
+    <!--************* PRODUCT TEMPLATE(UOM) **********-->
+    <record id="view_product_template_form" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="uom_po_id" position="after">
+                <field name="uom_measure_type" invisible="1" />
+            </field>
+            <xpath expr="//field[@name='uom_po_id']" position="after">
+                <field name="secondary_uom_active" groups="uom.group_uom" />
+                <field name="secondary_uom" groups="uom.group_uom" required="1" attrs="{'invisible': [('secondary_uom_active', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
 
-    <!--************* PRODUCT TEMPLATE(FOOD) **********-->
+    <record id="product_product_tree_view_inherite" model="ir.ui.view">
+        <field name="name">rt.product.product.view.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="product_sec_product_uom_qty" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                <field name="product_secondary_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
 
-     <record id="action_product_canteen_food" model="ir.actions.act_window">
-        <field name="name">Foods</field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_only_form_view_inherit" model="ir.ui.view">
+        <field name="name">rt.product.template.form.view.procurement.button.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_quants']" position="after">
+                <button type="object" name="action_open_quants" attrs="{'invisible':[('type', '!=', 'product')]}" class="oe_stat_button" icon="fa-cubes">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value" widget="statinfo">
+                            <field name="on_hand_qty" widget="statinfo" nolabel="1" class="mr4"/>
+                            <field name="uom_name" />
+                        </span>
+                        <span class="o_stat_text">Sec On Hand</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!--************* PRODUCT TEMPLATE(DEVICE) **********-->
+
+    <record id="action_product_custom_device" model="ir.actions.act_window">
+        <field name="name">Custom Device</field>
         <field name="type">ir.actions.act_window</field>
+        <field name="domain">[('is_device', '=', True)]</field>
+        <field name="context">{'default_is_device':True}</field>
         <field name="res_model">product.template</field>
-        <field name="domain">[('is_food', '=', True)]</field>
-        <field name="context">{'default_is_food':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="main_menu_canteen"
-              groups="group_canteen_management"
-              name='Canteen'
-              parent="main_menu_hospital_management"
-              sequence="6" />
+    <menuitem id="main_menu_device" name='Devices' parent="main_menu_hospital_management" groups="group_device_management" sequence="5" />
 
-     <menuitem id="menu_product_food"
-               groups="group_canteen_management"
-               name="Foods"
-               parent="main_menu_canteen"
-               action="action_product_canteen_food"
-                sequence="1" />
+    <menuitem id="menu_product_custom_device" name="Custom Devices" parent="main_menu_device" groups="group_device_management" action="action_product_custom_device" sequence="1" />
 
 
-<!--************* PRODUCT TEMPLATE(MEDICINE) **********-->
+    <!--************* PRODUCT TEMPLATE(OPTION) **********-->
 
-    <record id="action_product_medicine" model="ir.actions.act_window">
-        <field name="name">Medicine</field>
+    <record id="action_product_option_device" model="ir.actions.act_window">
+        <field name="name">Device Options</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="domain">[('is_food', '=', False)]</field>
         <field name="res_model">product.template</field>
+        <field name="domain">[('is_option', '=', True)]</field>
+        <field name="context">{'default_is_option':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="main_menu_pharmacy"
-              name='Pharmacy'
-              parent="main_menu_hospital_management"
-              groups="group_pharmacy_management"
-              sequence="5" />
+    <menuitem id="menu_product_device" name="Device Options" parent="main_menu_device" groups="group_option_management" action="action_product_option_device" sequence="2" />
 
-     <menuitem id="menu_product_medicine"
-               name="Medicine"
-               parent="main_menu_pharmacy"
-               groups="group_pharmacy_management"
-               action="action_product_medicine"
-               sequence="1" />
-
-<!--************* SALE ORDER  **********-->
-
-    <record id="action_medicine_quotation" model="ir.actions.act_window">
+    <!--************* SALE ORDER  **********-->
+    <record id="action_custom_device_quotation" model="ir.actions.act_window">
         <field name="name">Quotation</field>
         <field name="type">ir.actions.act_window</field>
         <field name="context">{'search_default_my_quotation': 1}</field>
@@ -73,20 +89,11 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
     </record>
 
-    <menuitem id="main_menu_medicine_sale_order"
-              groups="group_pharmacy_management"
-              name='Sales'
-              parent="main_menu_pharmacy"
-              sequence="2" />
+    <menuitem id="main_menu_custom_device_sale_order" groups="group_device_management" name='Sales' parent="main_menu_device" sequence="2" />
 
-     <menuitem id="menu_medicine_quotation"
-               groups="group_pharmacy_management"
-               name="Quotation"
-               parent="main_menu_medicine_sale_order"
-               action="action_medicine_quotation"
-               sequence="1" />
+    <menuitem id="menu_custom_device_quotation" groups="group_device_management" name="Quotation" parent="main_menu_custom_device_sale_order" action="action_custom_device_quotation" sequence="1" />
 
-    <record id="action_medicine_sale_order" model="ir.actions.act_window">
+    <record id="action_custom_device_sale_order" model="ir.actions.act_window">
         <field name="name">Sale Order</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
@@ -95,17 +102,10 @@
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
     </record>
-     <menuitem id="menu_medicine_sale_order"
-               groups="group_pharmacy_management"
-               name="Sale Order"
-               parent="main_menu_medicine_sale_order"
-               action="action_medicine_sale_order"
-               sequence="2" />
+    <menuitem id="menu_custom_device_sale_order" groups="group_device_management" name="Sale Order" parent="main_menu_custom_device_sale_order" action="action_custom_device_sale_order" sequence="2" />
 
     <!--************* PURCHASE ORDER **********-->
-
-
-    <record id="action_medicine_po_quotation" model="ir.actions.act_window">
+    <record id="action_custom_device_po_quotation" model="ir.actions.act_window">
         <field name="name">Request For Quotation</field>
         <field name="type">ir.actions.act_window</field>
         <field name="domain">[('state','in',['draft','sent'])]</field>
@@ -116,20 +116,11 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
     </record>
 
-    <menuitem id="main_menu_medicine_purchase_order"
-              groups="group_pharmacy_management"
-              name='Purchase'
-              parent="main_menu_pharmacy"
-              sequence="3" />
+    <menuitem id="main_menu_custom_device_purchase_order" groups="group_device_management" name='Purchase' parent="main_menu_device" sequence="3" />
 
-     <menuitem id="menu_medicine_po_quotation"
-               groups="group_pharmacy_management"
-               name="Request For Quotation"
-               parent="main_menu_medicine_purchase_order"
-               action="action_medicine_po_quotation"
-               sequence="1" />
+    <menuitem id="menu_custom_device_po_quotation" groups="group_device_management" name="Request For Quotation" parent="main_menu_custom_device_purchase_order" action="action_custom_device_po_quotation" sequence="1" />
 
-    <record id="action_medicine_purchase_order" model="ir.actions.act_window">
+    <record id="action_custom_device_purchase_order" model="ir.actions.act_window">
         <field name="name">Purchase Order</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.order</field>
@@ -138,12 +129,7 @@
         <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
     </record>
-     <menuitem id="menu_medicine_purchase_order"
-               groups="group_pharmacy_management"
-               name="Purchase Order"
-               parent="main_menu_medicine_purchase_order"
-               action="action_medicine_purchase_order"
-               sequence="2" />
-    
+    <menuitem id="menu_custom_device_purchase_order" groups="group_device_management" name="Purchase Order" parent="main_menu_custom_device_purchase_order" action="action_custom_device_purchase_order" sequence="2" />
+
 
 </odoo>
