@@ -2,7 +2,7 @@
 <odoo>
     <data>
     </data>
-    <template id="prescription_default_descripton" name="Prescription default description">
+    <template id="prescription_default_description" name="Prescription default description">
         <section class="s_text_block">
             <h5>Join us for this 24 hours Prescription</h5>
             <p>Every year we invite our community, partners and end-users to come and meet us! It's the ideal prescription to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....

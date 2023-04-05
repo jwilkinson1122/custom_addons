@@ -3,7 +3,9 @@
 
 import logging
 import pytz
-
+import time
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime, is_html_empty
@@ -95,7 +97,7 @@ class PrescriptionPrescription(models.Model):
     def _default_description(self):
         # avoid template branding with rendering_bundle=True
         return self.env['ir.ui.view'].with_context(rendering_bundle=True) \
-            ._render_template('prescription.prescription_default_descripton')
+            ._render_template('prescription.prescription_default_description')
 
     def _default_prescription_mail_ids(self):
         return self.env['prescription.type']._default_prescription_mail_type_ids()
@@ -106,7 +108,7 @@ class PrescriptionPrescription(models.Model):
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
-    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Created by', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', string='Company', change_default=True, default=lambda self: self.env.company, required=False)
     organizer_id = fields.Many2one('res.partner', string='Organizer', tracking=True, default=lambda self: self.env.company.partner_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
@@ -199,13 +201,57 @@ class PrescriptionPrescription(models.Model):
     start_sale_datetime = fields.Datetime(
         'Start sale date', compute='_compute_start_sale_date',
         help='If ticketing is used, contains the earliest starting sale date of tickets.')
+    
+    @api.model
+    def _get_begin_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        begin_date = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now())
+        return fields.Datetime.to_string(begin_date)
+    
+    # @api.model
+    # def _get_end_date(self):
+    #     self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+    #     end_date = fields.Datetime.context_timestamp(
+    #         self, fields.Datetime.now() + timedelta(days=1)
+    #     )
+    #     return fields.Datetime.to_string(end_date)
+
+    # @api.model
+    # def _get_hold_date(self):
+    #     self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+    #     hold_date = fields.Datetime.context_timestamp(
+    #         self, fields.Datetime.now() + timedelta(days=1)
+    #     )
+    #     return fields.Datetime.to_string(hold_date)
+    
+    @api.depends('practitioner_id')
+    def _compute_request_date_onchange(self):
+        today_date = fields.Date.today()
+        if self.request_date != today_date:
+            self.request_date = today_date
+            return {
+                "warning": {
+                    "title": "Changed Request Date",
+                    "message": "Request date changed to today!",
+                }
+            }
+
 
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         compute='_compute_date_tz', readonly=False, store=True)
-    date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
-    date_end = fields.Datetime(string='End Date', tracking=True)
+    # date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
+    date_begin = fields.Datetime("Book In", required=True, tracking=True, default=_get_begin_date)
+    # date_end = fields.Datetime(string='End Date', tracking=True)
+    date_end = fields.Datetime("Complete", tracking=True)
+    # request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False)
+    request_date = fields.Datetime('Requested', copy=False, help="This is the delivery date requested by the customer. "
+                                           "If set, the delivery order will be scheduled based on "
+                                           "this date rather than product lead times.")
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
+        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
@@ -221,6 +267,26 @@ class PrescriptionPrescription(models.Model):
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
+    
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+
+    # @api.depends('prescription_line.customer_lead', 'date_order', 'order_line.state')
+    # def _compute_expected_date(self):
+    #     """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
+    #         take the picking_policy of SO into account.
+    #     """
+    #     self.mapped("order_line")   
+    #     for order in self:
+    #         dates_list = []
+    #         for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
+    #             dt = line._expected_date()
+    #             dates_list.append(dt)
+    #         if dates_list:
+    #             order.expected_date = fields.Datetime.to_string(min(dates_list))
+    #         else:
+    #             order.expected_date = False
+
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -408,6 +474,19 @@ class PrescriptionPrescription(models.Model):
     def onchange_practitioner_id(self):
         for rec in self:
             return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+        
+    @api.onchange('request_date', 'date_end')
+    def _onchange_request_date(self):
+        """ Warn if the request dates is sooner than the end date """
+        if (self.request_date and self.date_end and self.request_date < self.date_end):
+            return {
+                'warning': {
+                    'title': _('Requested date is too soon.'),
+                    'message': _("The request date is sooner than the end date."
+                                 "You may be unable to honor the delivery date.")
+                }
+            }
+
 
     # seats
     @api.depends('prescription_type_id')
@@ -533,16 +612,16 @@ class PrescriptionPrescription(models.Model):
         if any(prescription.seats_limited and prescription.seats_max and prescription.seats_available < 0 for prescription in self):
             raise ValidationError(_('No more available seats.'))
 
-    @api.constrains('date_begin', 'date_end')
-    def _check_closing_date(self):
+    @api.constrains('date_begin', 'request_date')
+    def _check_request_date(self):
         for prescription in self:
-            if prescription.date_end < prescription.date_begin:
-                raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+            if prescription.request_date < prescription.date_begin:
+                raise ValidationError(_('The request date cannot be earlier than the beginning date.'))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['prescription.stage'].search([])
-
+    
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
