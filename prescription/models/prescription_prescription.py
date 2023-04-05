@@ -72,7 +72,7 @@ class PrescriptionType(models.Model):
         'prescription.type.mail', 'prescription_type_id', string='Mail Schedule',
         default=_default_prescription_mail_type_ids)
     # ticket reports
-    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+    ticket_instructions = fields.Html('Prescription Instructions', translate=True,
         help="This information will be printed on your tickets.")
 
     @api.depends('has_seats_limitation')
@@ -264,7 +264,7 @@ class PrescriptionPrescription(models.Model):
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # ticket reports
-    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+    ticket_instructions = fields.Html('Prescription Instructions', translate=True,
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     
