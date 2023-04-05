@@ -107,13 +107,13 @@ class PrescriptionPrescription(models.Model):
     organizer_id = fields.Many2one('res.partner', string='Organizer', tracking=True, default=lambda self: self.env.company.partner_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     practice_id = fields.Many2one(
-        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+        comodel_name='podiatry.practice', string='Practice')
 
     practice_name = fields.Char(
         string='Practitioner', related='practice_id.name')
 
     practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+        comodel_name='podiatry.practitioner', string='Practitioner')
 
     practitioner_name = fields.Char(
         string='Practitioner', related='practitioner_id.name')
@@ -125,7 +125,7 @@ class PrescriptionPrescription(models.Model):
         string='Email', related='practitioner_id.email')
 
     patient_id = fields.Many2one(
-        comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+        comodel_name='podiatry.patient', string='Patient')
 
     patient_name = fields.Char(
         string='Practitioner', related='patient_id.name')
@@ -394,8 +394,18 @@ class PrescriptionPrescription(models.Model):
             if not prescription.date_tz:
                 prescription.date_tz = self.env.user.tz or 'UTC'
 
-    # seats
 
+    @api.onchange('practice_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+
+    @api.onchange('practitioner_id')
+    def onchange_practitioner_id(self):
+        for rec in self:
+            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
+
+    # seats
     @api.depends('prescription_type_id')
     def _compute_seats_max(self):
         """ Update prescription configuration from its prescription type. Depends are set only
