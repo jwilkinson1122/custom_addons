@@ -230,7 +230,8 @@ class Practitioner(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = rec.name + ' [' + rec.reference + '] '
+            # name = '[' + rec.reference + '] ' + rec.name
             result.append((rec.id, name))
         return result
 
