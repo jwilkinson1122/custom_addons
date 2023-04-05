@@ -70,10 +70,10 @@ class TestPrescriptionCommon(common.TransactionCase):
             'has_seats_limitation': True,
             'seats_max': 30,
             'default_timezone': 'Europe/Paris',
-            'prescription_type_ticket_ids': [(0, 0, {
-                    'name': 'First Ticket',
+            'prescription_type_device_ids': [(0, 0, {
+                    'name': 'First Device',
                 }), (0, 0, {
-                    'name': 'Second Ticket',
+                    'name': 'Second Device',
                 })
             ],
             'prescription_type_mail_ids': [

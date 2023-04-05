@@ -16,8 +16,8 @@
         <field name="dpi">96</field>
     </record>
 
-    <record id="paperformat_prescription_full_page_ticket" model="report.paperformat">
-        <field name="name">Custom Paperformat for the Prescription Full Page Ticket report</field>
+    <record id="paperformat_prescription_full_page_device" model="report.paperformat">
+        <field name="name">Custom Paperformat for the Prescription Full Page Device report</field>
         <field name="default" eval="False"/>
         <field name="disable_shrinking" eval="True"/>
         <field name="format">A4</field>
@@ -31,35 +31,35 @@
         <field name="dpi">96</field>
     </record>
 
-    <!-- The "Full Page Ticket", as opposed to the foldable badge that is meant to be folded and
+    <!-- The "Full Page Device", as opposed to the foldable badge that is meant to be folded and
     only contains the bare minimum (attendee name + barcode), gives all the information of the
-    ticket in a portrait A4 format.
-    It allows to add some information in the ticket_instructions field and, when printed, functions
-    as an "official" ticket that the attendee can show to the registration desk where all
+    device in a portrait A4 format.
+    It allows to add some information in the device_instructions field and, when printed, functions
+    as an "official" device that the attendee can show to the registration desk where all
     the information are available (prescription name, organizer, SO reference, barcode, footer with
     sponsors, ...). -->
-    <record id="action_report_prescription_registration_full_page_ticket" model="ir.actions.report">
-        <field name="name">Full Page Ticket</field>
+    <record id="action_report_prescription_registration_full_page_device" model="ir.actions.report">
+        <field name="name">Full Page Device</field>
         <field name="model">prescription.registration</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">prescription.prescription_registration_report_template_full_page_ticket</field>
-        <field name="report_file">prescription.prescription_registration_report_template_full_page_ticket</field>
-        <field name="print_report_name">'Full Page Ticket - %s - %s' % ((object.prescription_id.name or 'Prescription').replace('/',''), object.name.replace('/',''))</field>
+        <field name="report_name">prescription.prescription_registration_report_template_full_page_device</field>
+        <field name="report_file">prescription.prescription_registration_report_template_full_page_device</field>
+        <field name="print_report_name">'Full Page Device - %s - %s' % ((object.prescription_id.name or 'Prescription').replace('/',''), object.name.replace('/',''))</field>
         <field name="binding_model_id" ref="model_prescription_registration"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="paperformat_prescription_full_page_ticket"/>
+        <field name="paperformat_id" ref="paperformat_prescription_full_page_device"/>
     </record>
 
-    <record id="action_report_prescription_prescription_full_page_ticket" model="ir.actions.report">
-        <field name="name">Full Page Ticket Example</field>
+    <record id="action_report_prescription_prescription_full_page_device" model="ir.actions.report">
+        <field name="name">Full Page Device Example</field>
         <field name="model">prescription.prescription</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">prescription.prescription_prescription_report_template_full_page_ticket</field>
-        <field name="report_file">prescription.prescription_prescription_report_template_full_page_ticket</field>
-        <field name="print_report_name">'Full Page Ticket - %s' % (object.name or 'Prescription').replace('/','')</field>
+        <field name="report_name">prescription.prescription_prescription_report_template_full_page_device</field>
+        <field name="report_file">prescription.prescription_prescription_report_template_full_page_device</field>
+        <field name="print_report_name">'Full Page Device - %s' % (object.name or 'Prescription').replace('/','')</field>
         <field name="binding_model_id" ref="model_prescription_prescription"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="paperformat_prescription_full_page_ticket"/>
+        <field name="paperformat_id" ref="paperformat_prescription_full_page_device"/>
     </record>
 
     <record id="action_report_prescription_registration_foldable_badge" model="ir.actions.report">

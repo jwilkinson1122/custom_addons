@@ -92,7 +92,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertFalse(prescription.seats_limited)
         self.assertFalse(prescription.auto_confirm)
         self.assertEqual(prescription.prescription_mail_ids, self.env['prescription.mail'])
-        self.assertEqual(prescription.prescription_ticket_ids, self.env['prescription.prescription.ticket'])
+        self.assertEqual(prescription.prescription_device_ids, self.env['prescription.prescription.device'])
 
         registration = self._create_registrations(prescription, 1)
         self.assertEqual(registration.state, 'draft')  # prescription is not auto confirm
@@ -107,7 +107,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_prescription',
                 'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('prescription.prescription_reminder')})
             ],
-            'prescription_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
+            'prescription_type_device_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
         })
         prescription.write({'prescription_type_id': prescription_type.id})
         self.assertEqual(prescription.date_tz, 'Europe/Paris')
@@ -120,7 +120,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.prescription_mail_ids.interval_unit, 'days')
         self.assertEqual(prescription.prescription_mail_ids.interval_type, 'before_prescription')
         self.assertEqual(prescription.prescription_mail_ids.template_ref, self.env.ref('prescription.prescription_reminder'))
-        self.assertEqual(len(prescription.prescription_ticket_ids), 1)
+        self.assertEqual(len(prescription.prescription_device_ids), 1)
 
         # update template, unlink from prescription -> should not impact prescription
         prescription_type.write({'has_seats_limitation': False})
@@ -134,9 +134,9 @@ class TestPrescriptionData(TestPrescriptionCommon):
         prescription.write({'prescription_type_id': prescription_type.id})
         self.assertFalse(prescription.seats_limited)
         self.assertEqual(prescription.seats_max, 0)
-        self.assertEqual(len(prescription.prescription_ticket_ids), 1)
-        prescription_ticket1 = prescription.prescription_ticket_ids[0]
-        self.assertEqual(prescription_ticket1.name, 'TestRegistration')
+        self.assertEqual(len(prescription.prescription_device_ids), 1)
+        prescription_device1 = prescription.prescription_device_ids[0]
+        self.assertEqual(prescription_device1.name, 'TestRegistration')
 
     @users('user_prescriptionmanager')
     def test_prescription_configuration_mails_from_type(self):
@@ -241,11 +241,11 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.note, '<p>Prescription Type Note</p>')
 
     @users('user_prescriptionmanager')
-    def test_prescription_configuration_tickets_from_type(self):
-        """ Test data computation (related to tickets) of prescription coming from its prescription.type template.
+    def test_prescription_configuration_devices_from_type(self):
+        """ Test data computation (related to devices) of prescription coming from its prescription.type template.
         This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
         required to highlight an undesired behavior when switching prescription_type templates :
-        prescription_ticket_ids not linked to a registration were generated and kept when switching between
+        prescription_device_ids not linked to a registration were generated and kept when switching between
         different templates in the Form, which could rapidly lead to a substantial amount of
         undesired lines. """
         # setup test records
@@ -253,15 +253,15 @@ class TestPrescriptionData(TestPrescriptionCommon):
             'name': 'Type Default',
             'auto_confirm': True
         })
-        prescription_type_tickets = self.env['prescription.type'].create({
-            'name': 'Type Tickets',
+        prescription_type_devices = self.env['prescription.type'].create({
+            'name': 'Type Devices',
             'auto_confirm': False
         })
-        prescription_type_tickets.write({
-            'prescription_type_ticket_ids': [
+        prescription_type_devices.write({
+            'prescription_type_device_ids': [
                 Command.clear(),
                 Command.create({
-                    'name': 'Default Ticket',
+                    'name': 'Default Device',
                     'seats_max': 10,
                 })
             ]
@@ -273,38 +273,38 @@ class TestPrescriptionData(TestPrescriptionCommon):
             'prescription_type_id': prescription_type_default.id
         })
         prescription.write({
-            'prescription_ticket_ids': [
+            'prescription_device_ids': [
                 Command.clear(),
                 Command.create({
-                    'name': 'Registration Ticket',
+                    'name': 'Registration Device',
                     'seats_max': 10,
                 })
             ]
         })
-        ticket = prescription.prescription_ticket_ids[0]
+        device = prescription.prescription_device_ids[0]
         registration = self._create_registrations(prescription, 1)
-        # link the ticket to the registration
-        registration.write({'prescription_ticket_id': ticket.id})
+        # link the device to the registration
+        registration.write({'prescription_device_id': device.id})
         # start test scenario
         prescription_form = Form(prescription)
-        # verify that the ticket is linked to the prescription in the form
+        # verify that the device is linked to the prescription in the form
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), prescription_form.prescription_ticket_ids._records)),
-            set(['Registration Ticket'])
+            set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
+            set(['Registration Device'])
         )
-        # switch to an prescription_type with a ticket template which should be computed
-        prescription_form.prescription_type_id = prescription_type_tickets
-        # verify that both tickets are computed
+        # switch to an prescription_type with a device template which should be computed
+        prescription_form.prescription_type_id = prescription_type_devices
+        # verify that both devices are computed
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), prescription_form.prescription_ticket_ids._records)),
-            set(['Registration Ticket', 'Default Ticket'])
+            set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
+            set(['Registration Device', 'Default Device'])
         )
-        # switch back to an prescription_type without default tickets
+        # switch back to an prescription_type without default devices
         prescription_form.prescription_type_id = prescription_type_default
-        # verify that the ticket linked to the registration was kept, and the other removed
+        # verify that the device linked to the registration was kept, and the other removed
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), prescription_form.prescription_ticket_ids._records)),
-            set(['Registration Ticket'])
+            set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
+            set(['Registration Device'])
         )
 
     @users('user_prescriptionmanager')
@@ -363,14 +363,14 @@ class TestPrescriptionData(TestPrescriptionCommon):
         })
         self.assertTrue(prescription.prescription_registrations_open)
 
-        # ticket without dates boundaries -> ok
-        ticket = self.env['prescription.prescription.ticket'].create({
-            'name': 'TestTicket',
+        # device without dates boundaries -> ok
+        device = self.env['prescription.prescription.device'].create({
+            'name': 'TestDevice',
             'prescription_id': prescription.id,
         })
         self.assertTrue(prescription.prescription_registrations_open)
 
-        # even with valid tickets, date limits registrations
+        # even with valid devices, date limits registrations
         prescription.write({
             'date_begin': datetime(2020, 1, 28, 15, 0, 0),
             'date_end': datetime(2020, 1, 30, 15, 0, 0),
@@ -396,9 +396,9 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.seats_available, 1)
         self.assertTrue(prescription.prescription_registrations_open)
 
-        # but tickets are expired
-        ticket.write({'end_sale_datetime': datetime(2020, 1, 30, 15, 0, 0)})
-        self.assertTrue(ticket.is_expired)
+        # but devices are expired
+        device.write({'end_sale_datetime': datetime(2020, 1, 30, 15, 0, 0)})
+        self.assertTrue(device.is_expired)
         self.assertFalse(prescription.prescription_registrations_open)
 
     @users('user_prescriptionmanager')
@@ -569,92 +569,92 @@ class TestPrescriptionRegistrationData(TestPrescriptionCommon):
         self.assertEqual(new_reg.phone, contact.phone)
 
 
-class TestPrescriptionTicketData(TestPrescriptionCommon):
+class TestPrescriptionDeviceData(TestPrescriptionCommon):
 
     def setUp(self):
-        super(TestPrescriptionTicketData, self).setUp()
-        self.ticket_date_patcher = patch('odoo.addons.prescription.models.prescription_ticket.fields.Date', wraps=FieldsDate)
-        self.ticket_date_patcher_mock = self.ticket_date_patcher.start()
-        self.ticket_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
-        self.ticket_datetime_patcher = patch('odoo.addons.prescription.models.prescription_ticket.fields.Datetime', wraps=FieldsDatetime)
-        self.ticket_datetime_patcher_mock = self.ticket_datetime_patcher.start()
-        self.ticket_datetime_patcher_mock.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
+        super(TestPrescriptionDeviceData, self).setUp()
+        self.device_date_patcher = patch('odoo.addons.prescription.models.prescription_device.fields.Date', wraps=FieldsDate)
+        self.device_date_patcher_mock = self.device_date_patcher.start()
+        self.device_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
+        self.device_datetime_patcher = patch('odoo.addons.prescription.models.prescription_device.fields.Datetime', wraps=FieldsDatetime)
+        self.device_datetime_patcher_mock = self.device_datetime_patcher.start()
+        self.device_datetime_patcher_mock.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
 
     def tearDown(self):
-        super(TestPrescriptionTicketData, self).tearDown()
-        self.ticket_date_patcher.stop()
-        self.ticket_datetime_patcher.stop()
+        super(TestPrescriptionDeviceData, self).tearDown()
+        self.device_date_patcher.stop()
+        self.device_datetime_patcher.stop()
 
     @users('user_prescriptionmanager')
-    def test_prescription_ticket_fields(self):
-        """ Test prescription ticket fields synchronization """
+    def test_prescription_device_fields(self):
+        """ Test prescription device fields synchronization """
         prescription = self.prescription_0.with_user(self.env.user)
         prescription.write({
-            'prescription_ticket_ids': [
+            'prescription_device_ids': [
                 (5, 0),
                 (0, 0, {
-                    'name': 'First Ticket',
+                    'name': 'First Device',
                     'seats_max': 30,
                 }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
-                    'name': 'Second Ticket',
+                    'name': 'Second Device',
                     'start_sale_datetime': datetime(2020, 1, 10, 0, 0, 0),
                     'end_sale_datetime': datetime(2020, 2, 10, 23, 59, 59),
                 })
             ],
         })
-        first_ticket = prescription.prescription_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
-        second_ticket = prescription.prescription_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
+        first_device = prescription.prescription_device_ids.filtered(lambda t: t.name == 'First Device')
+        second_device = prescription.prescription_device_ids.filtered(lambda t: t.name == 'Second Device')
 
-        self.assertTrue(first_ticket.seats_limited)
-        self.assertTrue(first_ticket.sale_available)
-        self.assertFalse(first_ticket.is_expired)
+        self.assertTrue(first_device.seats_limited)
+        self.assertTrue(first_device.sale_available)
+        self.assertFalse(first_device.is_expired)
 
-        self.assertFalse(second_ticket.seats_limited)
-        self.assertTrue(second_ticket.sale_available)
-        self.assertFalse(second_ticket.is_expired)
+        self.assertFalse(second_device.seats_limited)
+        self.assertTrue(second_device.sale_available)
+        self.assertFalse(second_device.is_expired)
         # sale is ended
-        second_ticket.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
-        self.assertFalse(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_expired)
+        second_device.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
+        self.assertFalse(second_device.sale_available)
+        self.assertTrue(second_device.is_expired)
         # sale has not started
-        second_ticket.write({
+        second_device.write({
             'start_sale_datetime': datetime(2020, 2, 10, 0, 0, 0),
             'end_sale_datetime': datetime(2020, 2, 20, 23, 59, 59),
         })
-        self.assertFalse(second_ticket.sale_available)
-        self.assertFalse(second_ticket.is_expired)
+        self.assertFalse(second_device.sale_available)
+        self.assertFalse(second_device.is_expired)
         # sale started today
-        second_ticket.write({
+        second_device.write({
             'start_sale_datetime': datetime(2020, 1, 31, 0, 0, 0),
             'end_sale_datetime': datetime(2020, 2, 20, 23, 59, 59),
         })
-        self.assertTrue(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_launched())
-        self.assertFalse(second_ticket.is_expired)
+        self.assertTrue(second_device.sale_available)
+        self.assertTrue(second_device.is_launched())
+        self.assertFalse(second_device.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):
-            second_ticket.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
+            second_device.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
 
         #test if prescription start/end dates are taking datetime fields (hours, minutes, seconds) into account
-        second_ticket.write({'start_sale_datetime': datetime(2020, 1, 31, 11, 0, 0)})
-        self.assertFalse(second_ticket.sale_available)
-        self.assertFalse(second_ticket.is_launched())
+        second_device.write({'start_sale_datetime': datetime(2020, 1, 31, 11, 0, 0)})
+        self.assertFalse(second_device.sale_available)
+        self.assertFalse(second_device.is_launched())
 
-        second_ticket.write({
+        second_device.write({
             'start_sale_datetime': datetime(2020, 1, 31, 7, 0, 0),
             'end_sale_datetime': datetime(2020, 2, 27, 13, 0, 0)
         })
 
-        self.assertTrue(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_launched())
-        self.assertFalse(second_ticket.is_expired)
+        self.assertTrue(second_device.sale_available)
+        self.assertTrue(second_device.is_launched())
+        self.assertFalse(second_device.is_expired)
 
-        second_ticket.write({
+        second_device.write({
             'end_sale_datetime': datetime(2020, 1, 31, 9, 0, 0)
         })
 
-        self.assertFalse(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_expired)
+        self.assertFalse(second_device.sale_available)
+        self.assertTrue(second_device.is_expired)
 
 
 class TestPrescriptionTypeData(TestPrescriptionCommon):

@@ -55,8 +55,8 @@ odoo.define('prescription.prescription_tour', function (require) {
             $('input[name="date_end"]').val('10/02/2020 23:00:00').change();
         },
     }, {
-        trigger: '.o_prescription_form_view div[name="prescription_ticket_ids"] .o_field_x2many_list_row_add a',
-        content: Markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
+        trigger: '.o_prescription_form_view div[name="prescription_device_ids"] .o_field_x2many_list_row_add a',
+        content: Markup(_t("Device types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
     }, ...new PrescriptionAdditionalTourSteps()._get_website_prescription_steps(), {
         trigger: '.o_prescription_form_view div[name="stage_id"]',
         extra_trigger: 'div.o_form_buttons_view:not(.o_hidden)',

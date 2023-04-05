@@ -18,8 +18,8 @@ class PrescriptionRegistration(models.Model):
     prescription_id = fields.Many2one(
         'prescription.prescription', string='Prescription', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
-    prescription_ticket_id = fields.Many2one(
-        'prescription.prescription.ticket', string='Prescription Ticket', readonly=True, ondelete='restrict',
+    prescription_device_id = fields.Many2one(
+        'prescription.prescription.device', string='Prescription Device', readonly=True, ondelete='restrict',
         states={'draft': [('readonly', False)]})
     active = fields.Boolean(default=True)
     # utm informations
@@ -122,16 +122,16 @@ class PrescriptionRegistration(models.Model):
             if registration.prescription_id.seats_limited and registration.prescription_id.seats_max and registration.prescription_id.seats_available < (1 if registration.state == 'draft' else 0):
                 raise ValidationError(_('No more seats available for this prescription.'))
 
-    @api.constrains('prescription_ticket_id', 'state')
-    def _check_ticket_seats_limit(self):
+    @api.constrains('prescription_device_id', 'state')
+    def _check_device_seats_limit(self):
         for record in self:
-            if record.prescription_ticket_id.seats_max and record.prescription_ticket_id.seats_available < 0:
-                raise ValidationError(_('No more available seats for this ticket'))
+            if record.prescription_device_id.seats_max and record.prescription_device_id.seats_available < 0:
+                raise ValidationError(_('No more available seats for this device'))
 
-    @api.constrains('prescription_id', 'prescription_ticket_id')
-    def _check_prescription_ticket(self):
-        if any(registration.prescription_id != registration.prescription_ticket_id.prescription_id for registration in self if registration.prescription_ticket_id):
-            raise ValidationError(_('Invalid prescription / ticket choice'))
+    @api.constrains('prescription_id', 'prescription_device_id')
+    def _check_prescription_device(self):
+        if any(registration.prescription_id != registration.prescription_device_id.prescription_id for registration in self if registration.prescription_device_id):
+            raise ValidationError(_('Invalid prescription / device choice'))
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
@@ -342,7 +342,7 @@ class PrescriptionRegistration(models.Model):
             'id': self.id,
             'name': self.name,
             'partner_id': self.partner_id.id,
-            'ticket_name': self.prescription_ticket_id.name or _('None'),
+            'device_name': self.prescription_device_id.name or _('None'),
             'prescription_id': self.prescription_id.id,
             'prescription_display_name': self.prescription_id.display_name,
             'company_name': self.prescription_id.company_id and self.prescription_id.company_id.name or False,

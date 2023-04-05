@@ -52,8 +52,8 @@ class PrescriptionType(models.Model):
     name = fields.Char('Prescription Template', required=True, translate=True)
     note = fields.Html(string='Note')
     sequence = fields.Integer()
-    # tickets
-    prescription_type_ticket_ids = fields.One2many('prescription.type.ticket', 'prescription_type_id', string='Tickets')
+    # devices
+    prescription_type_device_ids = fields.One2many('prescription.type.device', 'prescription_type_id', string='Devices')
     tag_ids = fields.Many2many('prescription.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
@@ -71,9 +71,9 @@ class PrescriptionType(models.Model):
     prescription_type_mail_ids = fields.One2many(
         'prescription.type.mail', 'prescription_type_id', string='Mail Schedule',
         default=_default_prescription_mail_type_ids)
-    # ticket reports
-    ticket_instructions = fields.Html('Prescription Instructions', translate=True,
-        help="This information will be printed on your tickets.")
+    # device reports
+    device_instructions = fields.Html('Prescription Instructions', translate=True,
+        help="This information will be printed on your devices.")
 
     @api.depends('has_seats_limitation')
     def _compute_default_registration(self):
@@ -182,25 +182,25 @@ class PrescriptionPrescription(models.Model):
         string='Autoconfirmation', compute='_compute_auto_confirm', readonly=False, store=True,
         help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('prescription.registration', 'prescription_id', string='Attendees')
-    prescription_ticket_ids = fields.One2many(
-        'prescription.prescription.ticket', 'prescription_id', string='Prescription Ticket', copy=True,
-        compute='_compute_prescription_ticket_ids', readonly=False, store=True)
+    prescription_device_ids = fields.One2many(
+        'prescription.prescription.device', 'prescription_id', string='Prescription Device', copy=True,
+        compute='_compute_prescription_device_ids', readonly=False, store=True)
     prescription_registrations_started = fields.Boolean(
         'Registrations started', compute='_compute_prescription_registrations_started',
-        help="registrations have started if the current datetime is after the earliest starting date of tickets."
+        help="registrations have started if the current datetime is after the earliest starting date of devices."
     )
     prescription_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_prescription_registrations_open', compute_sudo=True,
         help="Registrations are open if:\n"
         "- the prescription is not ended\n"
         "- there are seats available on prescription\n"
-        "- the tickets are sellable (if ticketing is used)")
+        "- the devices are sellable (if deviceing is used)")
     prescription_registrations_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_prescription_registrations_sold_out', compute_sudo=True,
-        help='The prescription is sold out if no more seats are available on prescription. If ticketing is used and all tickets are sold out, the prescription will be sold out.')
+        help='The prescription is sold out if no more seats are available on prescription. If deviceing is used and all devices are sold out, the prescription will be sold out.')
     start_sale_datetime = fields.Datetime(
         'Start sale date', compute='_compute_start_sale_date',
-        help='If ticketing is used, contains the earliest starting sale date of tickets.')
+        help='If deviceing is used, contains the earliest starting sale date of devices.')
     
     @api.model
     def _get_begin_date(self):
@@ -263,10 +263,10 @@ class PrescriptionPrescription(models.Model):
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
-    # ticket reports
-    ticket_instructions = fields.Html('Prescription Instructions', translate=True,
-        compute='_compute_ticket_instructions', store=True, readonly=False,
-        help="This information will be printed on your tickets.")
+    # device reports
+    device_instructions = fields.Html('Prescription Instructions', translate=True,
+        compute='_compute_device_instructions', store=True, readonly=False,
+        help="This information will be printed on your devices.")
     
     ship_to_patient = fields.Boolean('Ship to Patient')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
@@ -361,14 +361,14 @@ class PrescriptionPrescription(models.Model):
             else:
                 prescription.prescription_registrations_started = True
 
-    @api.depends('date_tz', 'prescription_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'prescription_ticket_ids.sale_available')
+    @api.depends('date_tz', 'prescription_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'prescription_device_ids.sale_available')
     def _compute_prescription_registrations_open(self):
         """ Compute whether people may take registrations for this prescription
 
           * prescription.date_end -> if prescription is done, registrations are not open anymore;
-          * prescription.start_sale_datetime -> lowest start date of tickets (if any; start_sale_datetime
-            is False if no ticket are defined, see _compute_start_sale_date);
-          * any ticket is available for sale (seats available) if any;
+          * prescription.start_sale_datetime -> lowest start date of devices (if any; start_sale_datetime
+            is False if no device are defined, see _compute_start_sale_date);
+          * any device is available for sale (seats available) if any;
           * seats are unlimited or seats are available;
         """
         for prescription in self:
@@ -378,24 +378,24 @@ class PrescriptionPrescription(models.Model):
             prescription.prescription_registrations_open = prescription.prescription_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not prescription.seats_limited or prescription.seats_available) and \
-                (not prescription.prescription_ticket_ids or any(ticket.sale_available for ticket in prescription.prescription_ticket_ids))
+                (not prescription.prescription_device_ids or any(device.sale_available for device in prescription.prescription_device_ids))
 
-    @api.depends('prescription_ticket_ids.start_sale_datetime')
+    @api.depends('prescription_device_ids.start_sale_datetime')
     def _compute_start_sale_date(self):
         """ Compute the start sale date of an prescription. Currently lowest starting sale
-        date of tickets if they are used, of False. """
+        date of devices if they are used, of False. """
         for prescription in self:
-            start_dates = [ticket.start_sale_datetime for ticket in prescription.prescription_ticket_ids if not ticket.is_expired]
+            start_dates = [device.start_sale_datetime for device in prescription.prescription_device_ids if not device.is_expired]
             prescription.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
-    @api.depends('prescription_ticket_ids.sale_available')
+    @api.depends('prescription_device_ids.sale_available')
     def _compute_prescription_registrations_sold_out(self):
         for prescription in self:
             if prescription.seats_limited and not prescription.seats_available:
                 prescription.prescription_registrations_sold_out = True
-            elif prescription.prescription_ticket_ids:
+            elif prescription.prescription_device_ids:
                 prescription.prescription_registrations_sold_out = not any(
-                    ticket.seats_available > 0 if ticket.seats_limited else True for ticket in prescription.prescription_ticket_ids
+                    device.seats_available > 0 if device.seats_limited else True for device in prescription.prescription_device_ids
                 )
             else:
                 prescription.prescription_registrations_sold_out = False
@@ -578,36 +578,36 @@ class PrescriptionPrescription(models.Model):
                 prescription.tag_ids = prescription.prescription_type_id.tag_ids
 
     @api.depends('prescription_type_id')
-    def _compute_prescription_ticket_ids(self):
+    def _compute_prescription_device_ids(self):
         """ Update prescription configuration from its prescription type. Depends are set only
         on prescription_type_id itself, not its sub fields. Purpose is to emulate an
         onchange: if prescription type is changed, update prescription configuration. Changing
         prescription type content itself should not trigger this method.
 
-        When synchronizing tickets:
+        When synchronizing devices:
 
           * lines that have no registrations linked are remove;
           * type lines are added;
 
-        Note that updating prescription_ticket_ids triggers _compute_start_sale_date
+        Note that updating prescription_device_ids triggers _compute_start_sale_date
         (start_sale_datetime computation) so ensure result to avoid cache miss.
         """
         for prescription in self:
-            if not prescription.prescription_type_id and not prescription.prescription_ticket_ids:
-                prescription.prescription_ticket_ids = False
+            if not prescription.prescription_type_id and not prescription.prescription_device_ids:
+                prescription.prescription_device_ids = False
                 continue
 
             # lines to keep: those with existing registrations
-            tickets_to_remove = prescription.prescription_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
-            command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
-            if prescription.prescription_type_id.prescription_type_ticket_ids:
+            devices_to_remove = prescription.prescription_device_ids.filtered(lambda device: not device._origin.registration_ids)
+            command = [Command.unlink(device.id) for device in devices_to_remove]
+            if prescription.prescription_type_id.prescription_type_device_ids:
                 command += [
                     Command.create({
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['prescription.type.ticket']._get_prescription_ticket_fields_whitelist()
-                    }) for line in prescription.prescription_type_id.prescription_type_ticket_ids
+                        for attribute_name in self.env['prescription.type.device']._get_prescription_device_fields_whitelist()
+                    }) for line in prescription.prescription_type_id.prescription_type_device_ids
                 ]
-            prescription.prescription_ticket_ids = command
+            prescription.prescription_device_ids = command
 
     @api.depends('prescription_type_id')
     def _compute_note(self):
@@ -616,11 +616,11 @@ class PrescriptionPrescription(models.Model):
                 prescription.note = prescription.prescription_type_id.note
 
     @api.depends('prescription_type_id')
-    def _compute_ticket_instructions(self):
+    def _compute_device_instructions(self):
         for prescription in self:
-            if is_html_empty(prescription.ticket_instructions) and not \
-               is_html_empty(prescription.prescription_type_id.ticket_instructions):
-                prescription.ticket_instructions = prescription.prescription_type_id.ticket_instructions
+            if is_html_empty(prescription.device_instructions) and not \
+               is_html_empty(prescription.prescription_type_id.device_instructions):
+                prescription.device_instructions = prescription.prescription_type_id.device_instructions
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):

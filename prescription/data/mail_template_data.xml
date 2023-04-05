@@ -309,8 +309,8 @@ Mitchell Admin</t>
             </tr>
         </table>
     </field>
-    <field name="report_template" ref="action_report_prescription_registration_full_page_ticket"/>
-    <field name="report_name">Full Page Ticket - {{ (object.prescription_id.name or 'Prescription').replace('/','') }}</field>
+    <field name="report_template" ref="action_report_prescription_registration_full_page_device"/>
+    <field name="report_name">Full Page Device - {{ (object.prescription_id.name or 'Prescription').replace('/','') }}</field>
     <field name="lang">{{ object.partner_id.lang }}</field>
 </record>
 

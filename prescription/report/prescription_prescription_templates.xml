@@ -11,10 +11,10 @@
                     <div class="oe_structure"/>
                 </div>
                 <!-- Back -->
-                <div class="page col-6 o_prescription_foldable_badge_top o_prescription_foldable_badge_ticket pt-4">
+                <div class="page col-6 o_prescription_foldable_badge_top o_prescription_foldable_badge_device pt-4">
                     <div class="oe_structure"/>
-                    <div class="o_prescription_foldable_badge_ticket_wrapper p-2">
-                        <div class="o_prescription_foldable_badge_ticket_wrapper_top page">
+                    <div class="o_prescription_foldable_badge_device_wrapper p-2">
+                        <div class="o_prescription_foldable_badge_device_wrapper_top page">
                             <h5 class="o_prescription_foldable_badge_prescription_name font-weight-bold text-center" t-field="prescription.name"/>
                             <div class="text-center o_prescription_foldable_badge_font_small">
                                 <span itemprop="startDate" t-esc="prescription.date_begin.date()" class="font-weight-bold"/>
@@ -31,9 +31,9 @@
                                 <h2 t-elif="not attendee">
                                     <span>John Doe</span>
                                 </h2>
-                                <t t-set="first_ticket" t-value="prescription.prescription_ticket_ids[0] if prescription.prescription_ticket_ids else None"/>
-                                <div t-if="attendee" class="o_prescription_foldable_badge_font_faded" t-field="attendee.prescription_ticket_id"/>
-                                <div t-elif="first_ticket" t-esc="first_ticket.name" class="o_prescription_foldable_badge_font_faded"/>
+                                <t t-set="first_device" t-value="prescription.prescription_device_ids[0] if prescription.prescription_device_ids else None"/>
+                                <div t-if="attendee" class="o_prescription_foldable_badge_font_faded" t-field="attendee.prescription_device_id"/>
+                                <div t-elif="first_device" t-esc="first_device.name" class="o_prescription_foldable_badge_font_faded"/>
                             </div>
                         </div>
                         <div class="o_prescription_foldable_badge_barcode mt-2">
@@ -47,7 +47,7 @@
                 <!-- Inner left -->
                 <div class="page o_prescription_foldable_badge_bottom o_prescription_foldable_badge_left p-1 px-2 col-6 overflow-hidden">
                     <div class="oe_structure"/>
-                    <div t-field="prescription.ticket_instructions" class="p-4"></div>
+                    <div t-field="prescription.device_instructions" class="p-4"></div>
                 </div>
                 <!-- Inner right -->
                 <div class="page o_prescription_foldable_badge_bottom o_prescription_foldable_badge_right col-6 text-center">
@@ -97,24 +97,24 @@
 
     <!-- PRESCRIPTION FULL PAGE TICKET -->
 
-    <template id="prescription_report_template_full_page_ticket">
+    <template id="prescription_report_template_full_page_device">
         <div class="row page">
-            <div class="o_prescription_full_page_ticket_container page w-100">
-                <div class="o_prescription_full_page_ticket_wrapper">
-                    <div class="o_prescription_full_page_ticket_details row">
+            <div class="o_prescription_full_page_device_container page w-100">
+                <div class="o_prescription_full_page_device_wrapper">
+                    <div class="o_prescription_full_page_device_details row">
                         <div class="col-10">
                             <div class="row">
                                 <div class="col-8 page">
-                                    <div class="o_prescription_full_page_ticket_font_faded">
-                                    Prescription Ticket For
+                                    <div class="o_prescription_full_page_device_font_faded">
+                                    Prescription Device For
                                     </div>
-                                    <h5 class="o_prescription_full_page_ticket_prescription_name font-weight-bold py-0 my-0" t-field="prescription.name"/>
+                                    <h5 class="o_prescription_full_page_device_prescription_name font-weight-bold py-0 my-0" t-field="prescription.name"/>
                                     <span itemprop="startDate" t-esc="prescription.date_begin.date()" class="font-weight-bold"/>
                                     <span itemprop="startDateTime" t-esc="prescription.date_begin" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
-                                    <span class="fa fa-arrow-right o_prescription_full_page_ticket_font_faded"/>
+                                    <span class="fa fa-arrow-right o_prescription_full_page_device_font_faded"/>
                                     <span t-if="not prescription.is_one_day" itemprop="endDate" t-esc="prescription.date_end.date()" class="font-weight-bold"/>
                                     <span itemprop="endDateTime" t-esc="prescription.date_end" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
-                                    <div t-if="prescription.address_id" class="o_prescription_full_page_ticket_font_faded">
+                                    <div t-if="prescription.address_id" class="o_prescription_full_page_device_font_faded">
                                         <t t-call="prescription.prescription_report_template_formatted_prescription_address"/>
                                     </div>
                                     <br/>
@@ -122,34 +122,34 @@
                                     <h5 t-elif="not attendee">
                                         <span>John Doe</span>
                                     </h5>
-                                    <t t-set="first_ticket" t-value="prescription.prescription_ticket_ids[0] if prescription.prescription_ticket_ids else None"/>
-                                    <div t-if="attendee" class="o_prescription_full_page_ticket_font_faded" t-field="attendee.prescription_ticket_id"/>
-                                    <div t-elif="first_ticket" t-esc="first_ticket.name" class="o_prescription_full_page_ticket_font_faded"/>
+                                    <t t-set="first_device" t-value="prescription.prescription_device_ids[0] if prescription.prescription_device_ids else None"/>
+                                    <div t-if="attendee" class="o_prescription_full_page_device_font_faded" t-field="attendee.prescription_device_id"/>
+                                    <div t-elif="first_device" t-esc="first_device.name" class="o_prescription_full_page_device_font_faded"/>
                                 </div>
-                                <div class="col-4 o_prescription_full_page_ticket_side_info page">
+                                <div class="col-4 o_prescription_full_page_device_side_info page">
                                     <span t-if="prescription.organizer_id.image_128">
-                                        <img t-att-src="image_data_uri(prescription.organizer_id.image_128)" class="o_prescription_full_page_ticket_prescription_logo mb-2"/>
+                                        <img t-att-src="image_data_uri(prescription.organizer_id.image_128)" class="o_prescription_full_page_device_prescription_logo mb-2"/>
                                     </span>
-                                    <div t-if="attendee and attendee.partner_id" class="mb-2 o_prescription_full_page_ticket_side_info_booked_by">
-                                        <div class="o_prescription_full_page_ticket_font_faded o_prescription_full_page_ticket_small_caps font-weight-bold">Booked By</div>
-                                        <div class="o_prescription_full_page_ticket_small" t-field="attendee.partner_id"/>
+                                    <div t-if="attendee and attendee.partner_id" class="mb-2 o_prescription_full_page_device_side_info_booked_by">
+                                        <div class="o_prescription_full_page_device_font_faded o_prescription_full_page_device_small_caps font-weight-bold">Booked By</div>
+                                        <div class="o_prescription_full_page_device_small" t-field="attendee.partner_id"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="o_prescription_full_page_ticket_barcode col-2">
-                            <div class="o_prescription_full_page_ticket_barcode_container">
+                        <div class="o_prescription_full_page_device_barcode col-2">
+                            <div class="o_prescription_full_page_device_barcode_container">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="page oe_structure"/>
-                <div t-field="prescription.ticket_instructions" class="o_prescription_full_page_extra_instructions px-2 pt-3"></div>
+                <div t-field="prescription.device_instructions" class="o_prescription_full_page_extra_instructions px-2 pt-3"></div>
             </div>
         </div>
     </template>
 
-    <template id="prescription_report_full_page_ticket_layout">
+    <template id="prescription_report_full_page_device_layout">
         <!-- Inspired from "external_layout_standard" to get a repeated footer element. -->
         <div class="article" t-att-data-oe-model="main_object and main_object._name" t-att-data-oe-id="main_object and main_object.id" t-att-data-oe-lang="main_object and main_object.env.context.get('lang')">
             <main>
@@ -157,8 +157,8 @@
             </main>
         </div>
 
-        <div class="row footer o_prescription_full_page_ticket_footer d-block">
-            <div class="o_prescription_full_page_ticket_powered_by text-white text-center p-2 w-100">
+        <div class="row footer o_prescription_full_page_device_footer d-block">
+            <div class="o_prescription_full_page_device_powered_by text-white text-center p-2 w-100">
                 <t t-if="prescription.organizer_id">
                     <span class="font-weight-bold" t-field="prescription.organizer_id.name"></span>
                     <span t-if="prescription.organizer_id.phone" class="pl-3 fa fa-phone"/>
@@ -176,25 +176,25 @@
         </div>
     </template>
 
-    <template id="prescription_registration_report_template_full_page_ticket">
+    <template id="prescription_registration_report_template_full_page_device">
         <t t-foreach="docs" t-as="attendee">
             <t t-call="web.html_container">
                 <t t-set="prescription" t-value="attendee.prescription_id._set_tz_context()"/>
                 <t t-set="main_object" t-value="attendee"/>
-                <t t-call="prescription.prescription_report_full_page_ticket_layout">
-                    <t t-call="prescription.prescription_report_template_full_page_ticket"/>
+                <t t-call="prescription.prescription_report_full_page_device_layout">
+                    <t t-call="prescription.prescription_report_template_full_page_device"/>
                 </t>
             </t>
         </t>
     </template>
 
-    <template id="prescription_prescription_report_template_full_page_ticket">
+    <template id="prescription_prescription_report_template_full_page_device">
         <t t-foreach="docs" t-as="prescription">
             <t t-call="web.html_container">
                 <t t-set="prescription" t-value="prescription._set_tz_context()"/>
                 <t t-set="main_object" t-value="prescription"/>
-                <t t-call="prescription.prescription_report_full_page_ticket_layout">
-                    <t t-call="prescription.prescription_report_template_full_page_ticket"/>
+                <t t-call="prescription.prescription_report_full_page_device_layout">
+                    <t t-call="prescription.prescription_report_template_full_page_device"/>
                 </t>
             </t>
         </t>

@@ -3,12 +3,12 @@
     <data>
 
         <!-- PRESCRIPTION.TYPE.TICKET -->
-        <record id="prescription_type_ticket_view_tree_from_type" model="ir.ui.view">
-            <field name="name">prescription.type.ticket.view.tree.from.type</field>
-            <field name="model">prescription.type.ticket</field>
+        <record id="prescription_type_device_view_tree_from_type" model="ir.ui.view">
+            <field name="name">prescription.type.device.view.tree.from.type</field>
+            <field name="model">prescription.type.device</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Prescription Template Tickets" editable="bottom">
+                <tree string="Prescription Template Devices" editable="bottom">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="seats_max"/>
@@ -17,12 +17,12 @@
             </field>
         </record>
 
-        <record id="prescription_type_ticket_view_form_from_type" model="ir.ui.view">
-            <field name="name">prescription.type.ticket.view.form.from.type</field>
-            <field name="model">prescription.type.ticket</field>
+        <record id="prescription_type_device_view_form_from_type" model="ir.ui.view">
+            <field name="name">prescription.type.device.view.form.from.type</field>
+            <field name="model">prescription.type.device</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Prescription Template Ticket">
+                <form string="Prescription Template Device">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -35,10 +35,10 @@
             </field>
         </record>
 
-        <record id="prescription_type_ticket_view_tree" model="ir.ui.view">
-            <field name="name">prescription.type.ticket.view.tree</field>
-            <field name="model">prescription.type.ticket</field>
-            <field name="inherit_id" ref="prescription_type_ticket_view_tree_from_type"/>
+        <record id="prescription_type_device_view_tree" model="ir.ui.view">
+            <field name="name">prescription.type.device.view.tree</field>
+            <field name="model">prescription.type.device</field>
+            <field name="inherit_id" ref="prescription_type_device_view_tree_from_type"/>
             <field name="mode">primary</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
@@ -51,10 +51,10 @@
             </field>
         </record>
 
-        <record id="prescription_type_ticket_view_form" model="ir.ui.view">
-            <field name="name">prescription.type.ticket.view.form</field>
-            <field name="model">prescription.type.ticket</field>
-            <field name="inherit_id" ref="prescription_type_ticket_view_form_from_type"/>
+        <record id="prescription_type_device_view_form" model="ir.ui.view">
+            <field name="name">prescription.type.device.view.form</field>
+            <field name="model">prescription.type.device</field>
+            <field name="inherit_id" ref="prescription_type_device_view_form_from_type"/>
             <field name="mode">primary</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
@@ -65,12 +65,12 @@
         </record>
 
         <!-- PRESCRIPTION.TICKET -->
-        <record id="prescription_prescription_ticket_view_tree_from_prescription" model="ir.ui.view">
-            <field name="name">prescription.prescription.ticket.view.tree.from.prescription</field>
-            <field name="model">prescription.prescription.ticket</field>
+        <record id="prescription_prescription_device_view_tree_from_prescription" model="ir.ui.view">
+            <field name="name">prescription.prescription.device.view.tree.from.prescription</field>
+            <field name="model">prescription.prescription.device</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Tickets" editable="bottom">
+                <tree string="Devices" editable="bottom">
                     <field name="name"/>
                     <field name="description" optional="hide"/>
                     <field name="start_sale_datetime" optional="show"/>
@@ -82,12 +82,12 @@
             </field>
         </record>
 
-        <record id="prescription_prescription_ticket_view_form_from_prescription" model="ir.ui.view">
-            <field name="name">prescription.prescription.ticket.view.form.from.prescription</field>
-            <field name="model">prescription.prescription.ticket</field>
+        <record id="prescription_prescription_device_view_form_from_prescription" model="ir.ui.view">
+            <field name="name">prescription.prescription.device.view.form.from.prescription</field>
+            <field name="model">prescription.prescription.device</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Ticket">
+                <form string="Device">
                     <sheet>
                         <group>
                             <group>
@@ -107,9 +107,9 @@
             </field>
         </record>
 
-        <record id="prescription_prescription_ticket_view_kanban_from_prescription" model="ir.ui.view">
-            <field name="name">prescription.prescription.ticket.view.kanban.from.prescription</field>
-            <field name="model">prescription.prescription.ticket</field>
+        <record id="prescription_prescription_device_view_kanban_from_prescription" model="ir.ui.view">
+            <field name="name">prescription.prescription.device.view.kanban.from.prescription</field>
+            <field name="model">prescription.prescription.device</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
@@ -141,10 +141,10 @@
             </field>
         </record>
 
-        <record id="prescription_prescription_ticket_view_tree" model="ir.ui.view">
-            <field name="name">prescription.prescription.ticket.view.tree</field>
-            <field name="model">prescription.prescription.ticket</field>
-            <field name="inherit_id" ref="prescription_prescription_ticket_view_tree_from_prescription"/>
+        <record id="prescription_prescription_device_view_tree" model="ir.ui.view">
+            <field name="name">prescription.prescription.device.view.tree</field>
+            <field name="model">prescription.prescription.device</field>
+            <field name="inherit_id" ref="prescription_prescription_device_view_tree_from_prescription"/>
             <field name="mode">primary</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
@@ -157,16 +157,16 @@
             </field>
         </record>
 
-        <record id="prescription_prescription_ticket_form_view" model="ir.ui.view">
-            <field name="name">prescription.prescription.ticket.view.form</field>
-            <field name="model">prescription.prescription.ticket</field>
+        <record id="prescription_prescription_device_form_view" model="ir.ui.view">
+            <field name="name">prescription.prescription.device.view.form</field>
+            <field name="model">prescription.prescription.device</field>
             <field name="arch" type="xml">
-                <form string="Prescription's Ticket">
+                <form string="Prescription's Device">
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" string="Ticket Type"/>
+                            <label for="name" string="Device Type"/>
                             <h1>
-                                <field name="name" placeholder="e.g. VIP Ticket"/>
+                                <field name="name" placeholder="e.g. VIP Device"/>
                             </h1>
                         </div>
                         <group>

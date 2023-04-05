@@ -43,9 +43,9 @@
             <field name="model_id" ref="model_prescription_registration"/>
             <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
-        <record id="ir_rule_prescription_prescription_ticket_company" model="ir.rule">
-            <field name="name">Prescription/Ticket: multi-company</field>
-            <field name="model_id" ref="model_prescription_prescription_ticket"/>
+        <record id="ir_rule_prescription_prescription_device_company" model="ir.rule">
+            <field name="name">Prescription/Device: multi-company</field>
+            <field name="model_id" ref="model_prescription_prescription_device"/>
             <field name="domain_force">['|', ('prescription_id.company_id', '=', False), ('prescription_id.company_id', 'in', company_ids)]</field>
         </record>
 

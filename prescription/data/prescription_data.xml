@@ -2,8 +2,8 @@
 <odoo>
     <data noupdate="1">
         <!-- Prescription Categories -->
-        <record id="prescription_type_data_ticket" model="prescription.type">
-            <field name="name">Ticketing</field>
+        <record id="prescription_type_data_low_profile_shoes" model="prescription.type">
+            <field name="name">Low Profile Shoes</field>
             <field name="auto_confirm" eval="False"/>
         </record>
         <record id="prescription_type_data_conference" model="prescription.type">

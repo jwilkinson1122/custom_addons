@@ -22,7 +22,7 @@ Key Features
         'security/prescription_security.xml',
         'security/ir.model.access.csv',
         'views/prescription_menu_views.xml',
-        'views/prescription_ticket_views.xml',
+        'views/prescription_device_views.xml',
         'views/prescription_views.xml',
         'views/prescription_stage_views.xml',
         'report/prescription_prescription_templates.xml',
@@ -61,10 +61,10 @@ Key Features
         ],
         'web.report_assets_common': [
             '/prescription/static/src/scss/prescription_foldable_badge_report.scss',
-            '/prescription/static/src/scss/prescription_full_page_ticket_report.scss',
+            '/prescription/static/src/scss/prescription_full_page_device_report.scss',
         ],
         'web.report_assets_pdf': [
-            '/prescription/static/src/scss/prescription_full_page_ticket_report_pdf.scss',
+            '/prescription/static/src/scss/prescription_full_page_device_report_pdf.scss',
         ],
     },
     "author": "NWPL",

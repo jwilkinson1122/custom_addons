@@ -43,10 +43,10 @@
                         </group>
 
                         <notebook>
-                            <page string="Tickets">
-                                <field name="prescription_type_ticket_ids" class="w-100" context="{
-                                         'tree_view_ref': 'prescription.prescription_type_ticket_view_tree_from_type',
-                                         'form_view_ref': 'prescription.prescription_type_ticket_view_form_from_type'
+                            <page string="Devices">
+                                <field name="prescription_type_device_ids" class="w-100" context="{
+                                         'tree_view_ref': 'prescription.prescription_type_device_view_tree_from_type',
+                                         'form_view_ref': 'prescription.prescription_type_device_view_form_from_type'
                                       }" />
                             </page>
                             <page string="Communication" name="prescription_type_communication">
@@ -63,9 +63,9 @@
                             </page>
                             <page string="Notes">
                                 <field name="note"/>
-                                <label for="ticket_instructions" string="Ticket Extra Instructions"></label>
+                                <label for="device_instructions" string="Device Extra Instructions"></label>
                                 <br/>
-                                <field name="ticket_instructions" nolabel="1" class="pt-2"/>
+                                <field name="device_instructions" nolabel="1" class="pt-2"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -223,12 +223,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Tickets" name="tickets">
-                                <field name="prescription_ticket_ids" context="{
+                            <page string="Devices" name="devices">
+                                <field name="prescription_device_ids" context="{
                                     'default_prescription_name': name,
-                                    'tree_view_ref': 'prescription.prescription_prescription_ticket_view_tree_from_prescription',
-                                    'form_view_ref': 'prescription.prescription_prescription_ticket_view_form_from_prescription',
-                                    'kanban_view_ref': 'prescription.prescription_prescription_ticket_view_kanban_from_prescription'}" mode="tree,kanban"/>
+                                    'tree_view_ref': 'prescription.prescription_prescription_device_view_tree_from_prescription',
+                                    'form_view_ref': 'prescription.prescription_prescription_device_view_form_from_prescription',
+                                    'kanban_view_ref': 'prescription.prescription_prescription_device_view_kanban_from_prescription'}" mode="tree,kanban"/>
                             </page>
                             <page string="Communication" name="prescription_communication">
                                 <field name="prescription_mail_ids">
@@ -251,9 +251,9 @@
                                     <label for="note" string="Note"/>
                                     <br/>
                                     <field nolabel="1" colspan="2" name="note" placeholder="Add a note..."/>
-                                    <label for="ticket_instructions" string="Prescription Instructions"/>
+                                    <label for="device_instructions" string="Prescription Instructions"/>
                                     <br/>
-                                    <field nolabel="1" colspan="2" name="ticket_instructions"/>
+                                    <field nolabel="1" colspan="2" name="device_instructions"/>
                                 </group>
                             </page>
                         </notebook>
@@ -359,10 +359,10 @@
                                             <i class="fa fa-arrow-right o_prescription_fontsize_09" title="Requested date"/>
                                             <t t-esc="moment(record.request_date.raw_value).format('D MMM')"/>
                                         </div>
-                                        <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
+                                        <!-- <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
                                             <i class="fa fa-arrow-right o_prescription_fontsize_09" title="End date"/>
                                             <t t-esc="moment(record.date_end.raw_value).format('D MMM')"/>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                         <div>
@@ -494,7 +494,7 @@
                 Create a Prescription
                 </p>
                 <p>
-                Schedule and organize your prescriptions: handle registrations, send automated confirmation emails, sell tickets, etc.
+                Schedule and organize your prescriptions: handle registrations, send automated confirmation emails, sell devices, etc.
                 </p>
             </field>
         </record>
@@ -519,7 +519,7 @@
                     <field name="phone" optional="show"/>
                     <field name="mobile" optional="hide"/>
                     <field name="prescription_id" invisible="context.get('default_prescription_id')"/>
-                    <field name="prescription_ticket_id" domain="[('prescription_id', '=', prescription_id)]"/>
+                    <field name="prescription_device_id" domain="[('prescription_id', '=', prescription_id)]"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
@@ -556,7 +556,7 @@
                             </group>
                             <group string="Prescription Information" name="prescription">
                                 <field class="o_text_overflow" name="prescription_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
-                                <field name="prescription_ticket_id" domain="[
+                                <field name="prescription_device_id" domain="[
                                         ('prescription_id', '=', prescription_id),
                                         '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
                                     ]" attrs="{'invisible': [('prescription_id', '=', False)]}" options="{'no_open': True, 'no_create': True}"/>
@@ -589,7 +589,7 @@
                     <field name="partner_id"/>
                     <field name="state"/>
                     <field name="email"/>
-                    <field name="prescription_ticket_id"/>
+                    <field name="prescription_device_id"/>
                     <templates>
                         <t t-name="prescription_attendees_kanban_icons_desktop">
                             <div class="d-none d-md-block h-100">
@@ -631,12 +631,12 @@
                                                 <field class="o_text_overflow" name="prescription_id" invisible="context.get('default_prescription_id')" />
                                                 <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" />
                                                 </span>
-                                                <div id="prescription_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
-                                                    <t t-if="record.prescription_ticket_id.raw_value">
-                                                        <div t-attf-class="badge badge-pill o_tag_color_#{(record.prescription_ticket_id.raw_value % 11) + 1}">
+                                                <div id="prescription_device_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
+                                                    <t t-if="record.prescription_device_id.raw_value">
+                                                        <div t-attf-class="badge badge-pill o_tag_color_#{(record.prescription_device_id.raw_value % 11) + 1}">
                                                             <b>
                                                                 <span class="o_badge_text o_text_overflow">
-                                                                    <t t-esc="record.prescription_ticket_id.value"/>
+                                                                    <t t-esc="record.prescription_device_id.value"/>
                                                                 </span>
                                                             </b>
                                                         </div>
@@ -718,7 +718,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Prescription" name="group_prescription" domain="[]" context="{'group_by':'prescription_id'}"/>
-                        <filter string="Ticket Type" name ="group_prescription_ticket_id" domain="[]" context="{'group_by': 'prescription_ticket_id'}"/>
+                        <filter string="Device Type" name ="group_prescription_device_id" domain="[]" context="{'group_by': 'prescription_device_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                     </group>
