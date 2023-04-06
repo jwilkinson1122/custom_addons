@@ -209,13 +209,13 @@ class PrescriptionPrescription(models.Model):
             self, fields.Datetime.now())
         return fields.Datetime.to_string(begin_date)
     
-    # @api.model
-    # def _get_end_date(self):
-    #     self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
-    #     end_date = fields.Datetime.context_timestamp(
-    #         self, fields.Datetime.now() + timedelta(days=1)
-    #     )
-    #     return fields.Datetime.to_string(end_date)
+    @api.model
+    def _get_end_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        end_date = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now() + timedelta(days=1)
+        )
+        return fields.Datetime.to_string(end_date)
 
     # @api.model
     # def _get_hold_date(self):
@@ -225,17 +225,17 @@ class PrescriptionPrescription(models.Model):
     #     )
     #     return fields.Datetime.to_string(hold_date)
     
-    @api.depends('practitioner_id')
-    def _compute_request_date_onchange(self):
-        today_date = fields.Date.today()
-        if self.request_date != today_date:
-            self.request_date = today_date
-            return {
-                "warning": {
-                    "title": "Changed Request Date",
-                    "message": "Request date changed to today!",
-                }
-            }
+    # @api.depends('practitioner_id')
+    # def _compute_request_date_onchange(self):
+    #     today_date = fields.Date.today()
+    #     if self.request_date != today_date:
+    #         self.request_date = today_date
+    #         return {
+    #             "warning": {
+    #                 "title": "Changed Request Date",
+    #                 "message": "Request date changed to today!",
+    #             }
+    #         }
 
 
     # Date fields
@@ -247,9 +247,9 @@ class PrescriptionPrescription(models.Model):
     # date_end = fields.Datetime(string='End Date', tracking=True)
     date_end = fields.Datetime("Complete", tracking=True)
     # request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False)
-    request_date = fields.Datetime('Requested', copy=False, help="This is the delivery date requested by the customer. "
-                                           "If set, the delivery order will be scheduled based on "
-                                           "this date rather than product lead times.")
+    # request_date = fields.Datetime('Requested', copy=False, help="This is the delivery date requested by the customer. "
+    #                                        "If set, the delivery order will be scheduled based on "
+    #                                        "this date rather than product lead times.")
     expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
@@ -490,17 +490,17 @@ class PrescriptionPrescription(models.Model):
         for rec in self:
             return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
         
-    @api.onchange('request_date', 'date_end')
-    def _onchange_request_date(self):
-        """ Warn if the request dates is sooner than the end date """
-        if (self.request_date and self.date_end and self.request_date < self.date_end):
-            return {
-                'warning': {
-                    'title': _('Requested date is too soon.'),
-                    'message': _("The request date is sooner than the end date."
-                                 "You may be unable to honor the delivery date.")
-                }
-            }
+    # @api.onchange('request_date', 'date_end')
+    # def _onchange_request_date(self):
+    #     """ Warn if the request dates is sooner than the end date """
+    #     if (self.request_date and self.date_end and self.request_date < self.date_end):
+    #         return {
+    #             'warning': {
+    #                 'title': _('Requested date is too soon.'),
+    #                 'message': _("The request date is sooner than the end date."
+    #                              "You may be unable to honor the delivery date.")
+    #             }
+    #         }
 
 
     # seats
@@ -627,11 +627,11 @@ class PrescriptionPrescription(models.Model):
         if any(prescription.seats_limited and prescription.seats_max and prescription.seats_available < 0 for prescription in self):
             raise ValidationError(_('No more available seats.'))
 
-    @api.constrains('date_begin', 'request_date')
-    def _check_request_date(self):
-        for prescription in self:
-            if prescription.request_date < prescription.date_begin:
-                raise ValidationError(_('The request date cannot be earlier than the beginning date.'))
+    # @api.constrains('date_begin', 'request_date')
+    # def _check_request_date(self):
+    #     for prescription in self:
+    #         if prescription.request_date < prescription.date_begin:
+    #             raise ValidationError(_('The request date cannot be earlier than the beginning date.'))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

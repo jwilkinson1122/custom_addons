@@ -20,7 +20,7 @@
                                 <span itemprop="startDate" t-esc="prescription.date_begin.date()" class="font-weight-bold"/>
                                 <span itemprop="startDateTime" t-esc="prescription.date_begin" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                                 <span class="fa fa-arrow-right o_prescription_foldable_badge_font_faded"/>
-                                <span t-if="not prescription.is_one_day" itemprop="endDate" t-esc="prescription.date_end.date()" class="font-weight-bold"/>
+                                <!-- <span t-if="not prescription.is_one_day" itemprop="endDate" t-esc="prescription.date_end.date()" class="font-weight-bold"/> -->
                                 <span itemprop="endDateTime" t-esc="prescription.date_end" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                             </div>
                             <div t-if="prescription.address_id" class="o_prescription_foldable_badge_font_faded o_prescription_foldable_badge_font_small text-center">
@@ -106,13 +106,13 @@
                             <div class="row">
                                 <div class="col-8 page">
                                     <div class="o_prescription_full_page_device_font_faded">
-                                    Prescription Device For
+                                    Prescription For
                                     </div>
                                     <h5 class="o_prescription_full_page_device_prescription_name font-weight-bold py-0 my-0" t-field="prescription.name"/>
                                     <span itemprop="startDate" t-esc="prescription.date_begin.date()" class="font-weight-bold"/>
                                     <span itemprop="startDateTime" t-esc="prescription.date_begin" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                                     <span class="fa fa-arrow-right o_prescription_full_page_device_font_faded"/>
-                                    <span t-if="not prescription.is_one_day" itemprop="endDate" t-esc="prescription.date_end.date()" class="font-weight-bold"/>
+                                    <!-- <span t-if="not prescription.is_one_day" itemprop="endDate" t-esc="prescription.date_end.date()" class="font-weight-bold"/> -->
                                     <span itemprop="endDateTime" t-esc="prescription.date_end" class="font-weight-bold" t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                                     <div t-if="prescription.address_id" class="o_prescription_full_page_device_font_faded">
                                         <t t-call="prescription.prescription_report_template_formatted_prescription_address"/>

@@ -196,7 +196,7 @@
                                 <field name="active" invisible="1"/>
                                 <field name="date_tz" invisible="1"/>
                                 <field name="date_begin" widget="datetime"/>
-                                <field name="request_date" widget="date"/>
+                                <field name="date_end" widget="date"/>
                                 <field name="prescription_type_id" string="Template" options="{'no_create':True}"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
@@ -280,7 +280,6 @@
                     <field name="practitioner_id" readonly="1" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="date_begin" readonly="1" widget="date"/>
-                    <field name="request_date" readonly="1" widget="date"/>
                     <field name="date_end" readonly="1" widget="date"/>
                     <field name="stage_id" readonly="1"/>
                     <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
@@ -304,13 +303,9 @@
                         <field name="name" placeholder="e.g. Conference for Architects"/>
                         <label for="date_begin" string="Date"/>
                         <div class="o_row">
-                            <field name="date_begin"/>
+                            <field name="date_begin" widget="daterange" options="{'related_end_date': 'date_end'}"/>
                             <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                            <field name="request_date"/>
-
-                            <!-- <field name="date_begin" widget="daterange" options="{'related_end_date': 'date_end'}"/>
-                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                            <field name="date_end" widget="daterange" options="{'related_start_date': 'date_begin'}"/> -->
+                            <field name="date_end" widget="daterange" options="{'related_start_date': 'date_begin'}"/>
                         </div>
                     </group>
                 </form>
@@ -330,7 +325,6 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                     <field name="address_id"/>
                     <field name="date_begin"/>
-                    <field name="request_date"/>
                     <field name="date_end"/>
                     <field name="auto_confirm"/>
                     <field name="seats_unconfirmed"/>
@@ -355,14 +349,10 @@
                                         <div>
                                             <t t-esc="moment(record.date_begin.raw_value).format('LT')"/>
                                         </div>
-                                        <div t-if="moment(record.request_date.raw_value).dayOfYear() !== moment(record.request_date.raw_value).dayOfYear()">
-                                            <i class="fa fa-arrow-right o_prescription_fontsize_09" title="Requested date"/>
-                                            <t t-esc="moment(record.request_date.raw_value).format('D MMM')"/>
-                                        </div>
-                                        <!-- <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
+                                        <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
                                             <i class="fa fa-arrow-right o_prescription_fontsize_09" title="End date"/>
                                             <t t-esc="moment(record.date_end.raw_value).format('D MMM')"/>
-                                        </div> -->
+                                        </div>
                                     </div>
                                     <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                         <div>

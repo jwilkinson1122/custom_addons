@@ -11,8 +11,8 @@
             <field name="body_html" type="html">
                 <div>
     Dear <t t-out="object.name or ''">Oscar Morgan</t>,                    <br/>
-    Thank you for your inquiry.<br/>
-    Here is your badge for the prescription <t t-out="object.prescription_id.name or ''">OpenWood Collection Online Reveal</t>.                <br/>
+    Thank you for your submission.<br/>
+    Here is your confirmation for the prescription <t t-out="object.prescription_id.name or ''">OpenWood Collection Online Reveal</t>.                <br/>
     If you have any questions, please let us know.
                 <br/>
                 <br/>
