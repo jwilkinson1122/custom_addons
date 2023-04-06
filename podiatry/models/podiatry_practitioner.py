@@ -68,6 +68,11 @@ class Practitioner(models.Model):
 
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
+    other_practice_ids = fields.Many2many(
+        string='Other Practice',
+        comodel_name='podiatry.practice',
+    )
+
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
         inverse_name='practitioner_id',
@@ -279,18 +284,7 @@ class Practitioner(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
- 
-    # def action_open_practitioners(self):
-    #         return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Practitioners',
-    #         'res_model': 'podiatry.practitioner',
-    #         'domain': [('practice_id', '=', self.id)],
-    #         'context': {'default_practice_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }
-            
+  
     def action_open_patients(self):
             return {
             'type': 'ir.actions.act_window',

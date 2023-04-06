@@ -15,7 +15,7 @@
         <field name="name">res.partner.form.inherit.podiatry</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('group_medical_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_type']" position="after">
                 <group colspan="6" col="6">
@@ -57,7 +57,7 @@
         <field name="name">res.partner.search.inherit.podiatry</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('group_medical_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='inactive']" position="before">
                 <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />

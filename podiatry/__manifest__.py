@@ -1,12 +1,13 @@
 {
     "name": "Podiatry ERP",
     "version": "15.0.1.0.0",
-    "category": "Generic Modules/Base",
+    "category": "Medical",
     "summary": "Base for custom orthotics manufacturing",
     "author": "NWPL",
     "license": "AGPL-3",
     "website": "https://nwpodiatrtic.com",
     "depends": [
+        "contacts",
         "account",
         "account_accountant",
         "base",
@@ -23,6 +24,7 @@
         'stock',
     ],
     "data": [
+        'security/podiatry_security.xml',
         "security/ir.model.access.csv",
         "views/res_config_settings_view.xml",
         "data/product_category.xml",
@@ -46,6 +48,7 @@
         "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
         'views/inherit_product_template.xml',
+        'views/res_partner.xml',
         "views/podiatry_menu.xml",
         "report/report_view.xml",
         "report/patient_card_report.xml",

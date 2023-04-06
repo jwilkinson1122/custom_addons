@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo noupdate="1">
-    <record model="podiatry.role" id="doctor">
+    <record model="podiatry.role" id="practitioner">
         <field name="name">Physician</field>
         <field name="description">Physician</field>
     </record>

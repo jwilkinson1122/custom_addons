@@ -63,8 +63,6 @@
                         </h1>
                     </div>
                     <separator/>
-
-                    <!-- <field name="parent_id" placeholder="Parent Practice" style="width:50%" readonly="not context.get('can_edit_parent_id', True)"/> -->
                     <group name="practice_information">
                         <group name="practice_information">
                             <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
@@ -74,7 +72,6 @@
                         </group>
                     </group>
                     <separator/>
-                    <!-- <br></br> -->
                     <notebook>
                         <page name="contact_information" string="Contact Information">
                             <group name="practice_contact">

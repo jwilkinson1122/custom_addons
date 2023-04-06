@@ -41,7 +41,12 @@ class Practitioner(models.Model):
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
-        string='Practice')
+        string='Primary Practice')
+    
+    other_practice_ids = fields.Many2many(
+        string='Other Practice',
+        comodel_name='podiatry.practice',
+    )
 
     practitioner_prescription_id = fields.One2many(
         comodel_name='prescription.prescription',
