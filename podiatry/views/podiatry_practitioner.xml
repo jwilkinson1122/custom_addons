@@ -15,7 +15,13 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                        <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_stat_info">
+                                <field name="patient_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Patients</span>
+                            </div>
+                        </button>
+                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Prescriptions</span>
@@ -23,28 +29,31 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div name="avatar">
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
-                    </div>
-                    <!-- Title -->
-
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
                     <div name="title" class="oe_title">
-                        <div name="reference">
-                            <h1>
-                                <field name="reference"/>
-                            </h1>
-                        </div>
-                        <div name="name">
-                            <h1>
-                                <field name="name" required="1" placeholder="Contact Name"/>
-                            </h1>
-                        </div>
 
-                        <div name="practice_id">
-                            <!-- <label for="practice_id" string="Primary Practice"/> -->
-                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
-                        </div>
+                        <h1>
+                            <field name="name" required="1" placeholder="Contact Name"/>
+                        </h1>
+
                     </div>
+                    <separator/>
+                    <group name="practice_information">
+                        <group name="practice_information">
+                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                        </group>
+                        <group name="practice_type">
+                            <field name="practice_type" class="text-muted" placeholder="e.g. Hospital..." required="True"/>
+                        </group>
+                    </group>
+                    <separator/>
+
+
+
+                    <!-- <div name="practice_id">
+                        <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                    </div> -->
                     <group name="practitioner_contact">
                         <!-- Address Information -->
                         <group name="address_information" string="Address Information">

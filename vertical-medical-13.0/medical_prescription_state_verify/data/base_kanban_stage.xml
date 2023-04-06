@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License GPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<odoo>
+    <record id="medical_prescription_state.prescription_order_state_verified" model="base.kanban.stage">
+        <field name="is_verified" eval="True"/>
+    </record>
+
+    <record id="medical_prescription_state.prescription_order_line_state_hold" model="base.kanban.stage">
+        <field name="is_verified" eval="True"/>
+    </record>
+
+    <record id="medical_prescription_state.prescription_order_line_state_ordered" model="base.kanban.stage">
+        <field name="is_verified" eval="True"/>
+    </record>
+
+    <record id="medical_prescription_state.prescription_order_line_state_pv2" model="base.kanban.stage">
+        <field name="is_verified" eval="True"/>
+    </record>
+
+    <record id="medical_prescription_state.prescription_order_line_state_complete" model="base.kanban.stage">
+        <field name="is_verified" eval="True"/>
+    </record>
+</odoo>

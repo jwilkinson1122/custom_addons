@@ -17,31 +17,56 @@ except:
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
-
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
-
+    _description = 'Medical Practitioner'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+    _inherits = {'res.partner': 'partner_id'}
     _rec_name = 'practitioner_id'
 
-    _description = 'practitioner'
+    _sql_constraints = [(
+        'podiatry_practitioner_unique_code',
+        'UNIQUE (code)',
+        'Internal ID must be unique',
+    )]
+    
 
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
         inverse_name='practitioner_id',
         string='Patients'
     )
+    
+    patient_count = fields.Integer(
+        string='Patient Count', compute='_compute_patient_count')
+
+    def _compute_patient_count(self):
+        for rec in self:
+            patient_count = self.env['podiatry.patient'].search_count(
+                [('practitioner_id', '=', rec.id)])
+            rec.patient_count = patient_count
 
     is_practitioner = fields.Boolean()
 
-    practitioner_id = fields.Many2many('res.partner', domain=[(
-        'is_practitioner', '=', True)], string="practitioner_id", required=True)
+    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
+    
+    role_ids = fields.Many2many(
+        string='Roles',
+        comodel_name='podiatry.role',
+    )
+    
+    specialty_ids = fields.Many2many(
+        string='Specialties',
+        comodel_name='podiatry.specialty',
+    )
+    
+    practitioner_type = fields.Selection(
+        string='Entity Type',
+        selection=[('internal', 'Internal Entity'),
+                   ('external', 'External Entity')],
+        readonly=False,
+    )
+    
 
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
-        string='Practice')
+    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
@@ -254,3 +279,26 @@ class Practitioner(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+ 
+    # def action_open_practitioners(self):
+    #         return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Practitioners',
+    #         'res_model': 'podiatry.practitioner',
+    #         'domain': [('practice_id', '=', self.id)],
+    #         'context': {'default_practice_id': self.id},
+    #         'view_mode': 'kanban,tree,form',
+    #         'target': 'current',
+    #     }
+            
+    def action_open_patients(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Patients',
+            'res_model': 'podiatry.patient',
+            'domain': [('practitioner_id', '=', self.id)],
+            'context': {'default_practitioner_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+

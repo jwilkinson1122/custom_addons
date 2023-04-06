@@ -88,6 +88,15 @@ class Practice(models.Model):
         inverse_name='practice_id',
         string="Patients",
     )
+    
+    patient_count = fields.Integer(
+        string='Patient Count', compute='_compute_patient_count')
+
+    def _compute_patient_count(self):
+        for rec in self:
+            patient_count = self.env['podiatry.patient'].search_count(
+                [('practice_id', '=', rec.id)])
+            rec.patient_count = patient_count
 
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_practice', '=', True)], string="Practice", required=True)
@@ -125,15 +134,15 @@ class Practice(models.Model):
         string="Prescriptions",
     )
     
-    # prescription_count = fields.Integer(
-    #     string='Prescription Count', compute='_compute_prescription_count')
+    prescription_count = fields.Integer(
+        string='Prescription Count', compute='_compute_prescription_count')
 
 
-    # def _compute_prescription_count(self):
-    #     for rec in self:
-    #         prescription_count = self.env['podiatry.prescription'].search_count(
-    #             [('practice_id', '=', rec.id)])
-    #         rec.prescription_count = prescription_count
+    def _compute_prescription_count(self):
+        for rec in self:
+            prescription_count = self.env['podiatry.prescription'].search_count(
+                [('practice_id', '=', rec.id)])
+            rec.prescription_count = prescription_count
             
         
     @api.onchange('practice_id')
@@ -251,16 +260,27 @@ class Practice(models.Model):
             'target': 'current',
         }
         
-    # def action_open_practitioners(self):
-    #         return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Practitioners',
-    #         'res_model': 'podiatry.practitioner',
-    #         'domain': [('practice_id', '=', self.id)],
-    #         'context': {'default_practice_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }
+    def action_open_practitioners(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Practitioners',
+            'res_model': 'podiatry.practitioner',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+            
+    def action_open_patients(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Patients',
+            'res_model': 'podiatry.patient',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
 
 
  

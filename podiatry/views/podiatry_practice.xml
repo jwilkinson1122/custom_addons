@@ -27,21 +27,27 @@
                 <sheet>
                     <!-- Button Box -->
                     <div class="oe_button_box" name="button_box">
+                        <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                            <field name="child_count" string="Practices" widget="statinfo"/>
+                        </button>
                         <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
                             <div class="o_stat_info">
                                 <field name="practitioner_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Contacts</span>
                             </div>
                         </button>
-                        <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
-                            <field name="child_count" string="Practices" widget="statinfo"/>
+                        <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_stat_info">
+                                <field name="patient_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Patients</span>
+                            </div>
                         </button>
-                        <!-- <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-prescription">
+                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Prescriptions</span>
                             </div>
-                        </button> -->
+                        </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="avatar_128" invisible="1"/>
@@ -117,11 +123,6 @@
                                 <field name="child_ids"/>
                             </group>
                         </page>
-                        <!-- <page name="perscriptions_list" string="Prescriptions">
-                            <group>
-                                <field name="practitioner_prescription_id"/>
-                            </group>
-                        </page> -->
                         <page name="public" string="Additional Notes">
                             <field name="notes" placeholder="Notes" class="o_address_city"/>
                         </page>
