@@ -25,14 +25,21 @@
         <record id="prescription_stage_done" model="prescription.stage">
             <field name="name">Completed</field>
             <field name="description">Fully completed</field>
-            <field name="sequence">5</field>
+            <field name="sequence">3</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="prescription_stage_hold" model="prescription.stage">
+            <field name="name">Hold</field>
+            <field name="description">The prescription has been put on hold</field>
+            <field name="sequence">4</field>
             <field name="pipe_end" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
         <record id="prescription_stage_cancelled" model="prescription.stage">
             <field name="name">Cancelled</field>
             <field name="description">The prescription has been cancelled</field>
-            <field name="sequence">6</field>
+            <field name="sequence">5</field>
             <field name="pipe_end" eval="True"/>
             <field name="fold" eval="True"/>
         </record>

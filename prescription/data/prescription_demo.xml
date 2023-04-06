@@ -152,7 +152,7 @@ I will take care of it today !</p>
         <field name="date_end" eval="(DateTime.today()+ timedelta(days=133)).strftime('%Y-%m-%d 00:30:00')"/>
         <field name="prescription_type_id" ref="prescription_type_0"/>
         <field name="address_id" ref="prescription.res_partner_location_1"/>
-        <field name="stage_id" ref="prescription_stage_booked"/>
+        <field name="stage_id" ref="prescription_stage_hold"/>
         <field name="tag_ids" eval="[(4, ref('prescription.prescription_tag_category_1_tag_3')), (4, ref('prescription.prescription_tag_category_2_tag_2'))]"/>
     </record>
     <record id="prescription_3_device_0" model="prescription.prescription.device">
