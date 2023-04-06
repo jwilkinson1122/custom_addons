@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_s3_credentials,s3.credentials,model_s3_credentials,base.group_user,1,1,1,1
 access_podiatry_practice,podiatry.practice,model_podiatry_practice,base.group_user,1,1,1,1
 access_podiatry_practitioner,podiatry.practitioner,model_podiatry_practitioner,base.group_user,1,1,1,1
 access_podiatry_patient,podiatry.patient,model_podiatry_patient,base.group_user,1,1,1,1

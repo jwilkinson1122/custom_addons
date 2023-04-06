@@ -43,7 +43,7 @@ Key Features
         'data/res_partner_demo.xml',
         'data/prescription_demo_misc.xml',
         'data/prescription_demo.xml',
-        'data/prescription_registration_demo.xml',
+        'data/prescription_confirmation_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

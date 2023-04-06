@@ -18,5 +18,5 @@ class MailTemplate(models.Model):
         method to filtrate the mail templates.
         """
         if self.env.context.get('filter_template_on_prescription'):
-            args = expression.AND([[('model', '=', 'prescription.registration')], args])
+            args = expression.AND([[('model', '=', 'prescription.confirmation')], args])
         return super(MailTemplate, self)._name_search(name, args, operator, limit, name_get_uid)

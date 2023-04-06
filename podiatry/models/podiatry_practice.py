@@ -251,16 +251,16 @@ class Practice(models.Model):
             'target': 'current',
         }
         
-    def action_open_practitioners(self):
-            return {
-            'type': 'ir.actions.act_window',
-            'name': 'Practitioners',
-            'res_model': 'podiatry.practitioner',
-            'domain': [('practice_id', '=', self.id)],
-            'context': {'default_practice_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }
+    # def action_open_practitioners(self):
+    #         return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Practitioners',
+    #         'res_model': 'podiatry.practitioner',
+    #         'domain': [('practice_id', '=', self.id)],
+    #         'context': {'default_practice_id': self.id},
+    #         'view_mode': 'kanban,tree,form',
+    #         'target': 'current',
+    #     }
 
 
  

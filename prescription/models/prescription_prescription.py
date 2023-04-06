@@ -55,15 +55,15 @@ class PrescriptionType(models.Model):
     # devices
     prescription_type_device_ids = fields.One2many('prescription.type.device', 'prescription_type_id', string='Devices')
     tag_ids = fields.Many2many('prescription.tag', string="Tags")
-    # registration
+    # confirmation
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
-        'Maximum Registrations', compute='_compute_default_registration',
+        'Maximum Confirmations', compute='_compute_default_confirmation',
         readonly=False, store=True,
         help="It will select this default maximum value when you choose this prescription")
     auto_confirm = fields.Boolean(
-        'Automatically Confirm Registrations', default=True,
-        help="Prescriptions and registrations will automatically be confirmed "
+        'Automatically Confirm Confirmations', default=True,
+        help="Prescriptions and confirmations will automatically be confirmed "
              "upon creation, easing the flow for simple prescriptions.")
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
@@ -76,7 +76,7 @@ class PrescriptionType(models.Model):
         help="This information will be printed on your devices.")
 
     @api.depends('has_seats_limitation')
-    def _compute_default_registration(self):
+    def _compute_default_confirmation(self):
         for template in self:
             if not template.has_seats_limitation:
                 template.seats_max = 0
@@ -159,7 +159,7 @@ class PrescriptionPrescription(models.Model):
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
         compute='_compute_seats_max', readonly=False, store=True,
-        help="For each prescription you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
+        help="For each prescription you can define a maximum confirmation of seats(number of attendees), above this numbers the confirmations are not accepted.")
     seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
                                    readonly=False, store=True)
     seats_reserved = fields.Integer(
@@ -177,26 +177,26 @@ class PrescriptionPrescription(models.Model):
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
         compute_sudo=True, readonly=True, compute='_compute_seats_expected')
-    # Registration fields
+    # Confirmation fields
     auto_confirm = fields.Boolean(
         string='Autoconfirmation', compute='_compute_auto_confirm', readonly=False, store=True,
-        help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
-    registration_ids = fields.One2many('prescription.registration', 'prescription_id', string='Attendees')
+        help='Autoconfirm Confirmations. Confirmations will automatically be confirmed upon creation.')
+    confirmation_ids = fields.One2many('prescription.confirmation', 'prescription_id', string='Attendees')
     prescription_device_ids = fields.One2many(
         'prescription.prescription.device', 'prescription_id', string='Prescription Device', copy=True,
         compute='_compute_prescription_device_ids', readonly=False, store=True)
-    prescription_registrations_started = fields.Boolean(
-        'Registrations started', compute='_compute_prescription_registrations_started',
-        help="registrations have started if the current datetime is after the earliest starting date of devices."
+    prescription_confirmations_started = fields.Boolean(
+        'Confirmations started', compute='_compute_prescription_confirmations_started',
+        help="confirmations have started if the current datetime is after the earliest starting date of devices."
     )
-    prescription_registrations_open = fields.Boolean(
-        'Registration open', compute='_compute_prescription_registrations_open', compute_sudo=True,
-        help="Registrations are open if:\n"
+    prescription_confirmations_open = fields.Boolean(
+        'Confirmation open', compute='_compute_prescription_confirmations_open', compute_sudo=True,
+        help="Confirmations are open if:\n"
         "- the prescription is not ended\n"
         "- there are seats available on prescription\n"
         "- the devices are sellable (if deviceing is used)")
-    prescription_registrations_sold_out = fields.Boolean(
-        'Sold Out', compute='_compute_prescription_registrations_sold_out', compute_sudo=True,
+    prescription_confirmations_sold_out = fields.Boolean(
+        'Sold Out', compute='_compute_prescription_confirmations_sold_out', compute_sudo=True,
         help='The prescription is sold out if no more seats are available on prescription. If deviceing is used and all devices are sold out, the prescription will be sold out.')
     start_sale_datetime = fields.Datetime(
         'Start sale date', compute='_compute_start_sale_date',
@@ -244,8 +244,8 @@ class PrescriptionPrescription(models.Model):
         compute='_compute_date_tz', readonly=False, store=True)
     # date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_begin = fields.Datetime("Book In", required=True, tracking=True, default=_get_begin_date)
-    # date_end = fields.Datetime(string='End Date', tracking=True)
-    date_end = fields.Datetime("Complete", tracking=True)
+    # date_end = fields.Datetime(string='Complete Date', tracking=True)
+    date_end = fields.Datetime("Book Out", tracking=True)
     # request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False)
     # request_date = fields.Datetime('Requested', copy=False, help="This is the delivery date requested by the customer. "
     #                                        "If set, the delivery order will be scheduled based on "
@@ -253,7 +253,7 @@ class PrescriptionPrescription(models.Model):
     expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    date_end_located = fields.Char(string='Complete Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
@@ -313,13 +313,13 @@ class PrescriptionPrescription(models.Model):
             else:
                 prescription.kanban_state_label = prescription.stage_id.legend_done
 
-    @api.depends('seats_max', 'registration_ids.state')
+    @api.depends('seats_max', 'confirmation_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0
         for prescription in self:
             prescription.seats_unconfirmed = prescription.seats_reserved = prescription.seats_used = prescription.seats_available = 0
-        # aggregate registrations by prescription and by state
+        # aggregate confirmations by prescription and by state
         state_field = {
             'draft': 'seats_unconfirmed',
             'open': 'seats_reserved',
@@ -329,11 +329,11 @@ class PrescriptionPrescription(models.Model):
         results = dict((prescription_id, dict(base_vals)) for prescription_id in self.ids)
         if self.ids:
             query = """ SELECT prescription_id, state, count(prescription_id)
-                        FROM prescription_registration
+                        FROM prescription_confirmation
                         WHERE prescription_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY prescription_id, state
                     """
-            self.env['prescription.registration'].flush(['prescription_id', 'state'])
+            self.env['prescription.confirmation'].flush(['prescription_id', 'state'])
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for prescription_id, state, num in res:
@@ -351,21 +351,21 @@ class PrescriptionPrescription(models.Model):
             prescription.seats_expected = prescription.seats_unconfirmed + prescription.seats_reserved + prescription.seats_used
 
     @api.depends('date_tz', 'start_sale_datetime')
-    def _compute_prescription_registrations_started(self):
+    def _compute_prescription_confirmations_started(self):
         for prescription in self:
             prescription = prescription._set_tz_context()
             if prescription.start_sale_datetime:
                 current_datetime = fields.Datetime.context_timestamp(prescription, fields.Datetime.now())
                 start_sale_datetime = fields.Datetime.context_timestamp(prescription, prescription.start_sale_datetime)
-                prescription.prescription_registrations_started = (current_datetime >= start_sale_datetime)
+                prescription.prescription_confirmations_started = (current_datetime >= start_sale_datetime)
             else:
-                prescription.prescription_registrations_started = True
+                prescription.prescription_confirmations_started = True
 
-    @api.depends('date_tz', 'prescription_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'prescription_device_ids.sale_available')
-    def _compute_prescription_registrations_open(self):
-        """ Compute whether people may take registrations for this prescription
+    @api.depends('date_tz', 'prescription_confirmations_started', 'date_end', 'seats_available', 'seats_limited', 'prescription_device_ids.sale_available')
+    def _compute_prescription_confirmations_open(self):
+        """ Compute whether people may take confirmations for this prescription
 
-          * prescription.date_end -> if prescription is done, registrations are not open anymore;
+          * prescription.date_end -> if prescription is done, confirmations are not open anymore;
           * prescription.start_sale_datetime -> lowest start date of devices (if any; start_sale_datetime
             is False if no device are defined, see _compute_start_sale_date);
           * any device is available for sale (seats available) if any;
@@ -375,7 +375,7 @@ class PrescriptionPrescription(models.Model):
             prescription = prescription._set_tz_context()
             current_datetime = fields.Datetime.context_timestamp(prescription, fields.Datetime.now())
             date_end_tz = prescription.date_end.astimezone(pytz.timezone(prescription.date_tz or 'UTC')) if prescription.date_end else False
-            prescription.prescription_registrations_open = prescription.prescription_registrations_started and \
+            prescription.prescription_confirmations_open = prescription.prescription_confirmations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not prescription.seats_limited or prescription.seats_available) and \
                 (not prescription.prescription_device_ids or any(device.sale_available for device in prescription.prescription_device_ids))
@@ -389,16 +389,16 @@ class PrescriptionPrescription(models.Model):
             prescription.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
     @api.depends('prescription_device_ids.sale_available')
-    def _compute_prescription_registrations_sold_out(self):
+    def _compute_prescription_confirmations_sold_out(self):
         for prescription in self:
             if prescription.seats_limited and not prescription.seats_available:
-                prescription.prescription_registrations_sold_out = True
+                prescription.prescription_confirmations_sold_out = True
             elif prescription.prescription_device_ids:
-                prescription.prescription_registrations_sold_out = not any(
+                prescription.prescription_confirmations_sold_out = not any(
                     device.seats_available > 0 if device.seats_limited else True for device in prescription.prescription_device_ids
                 )
             else:
-                prescription.prescription_registrations_sold_out = False
+                prescription.prescription_confirmations_sold_out = False
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
@@ -546,7 +546,7 @@ class PrescriptionPrescription(models.Model):
 
         When synchronizing mails:
 
-          * lines that are not sent and have no registrations linked are remove;
+          * lines that are not sent and have no confirmations linked are remove;
           * type lines are added;
         """
         for prescription in self:
@@ -554,9 +554,9 @@ class PrescriptionPrescription(models.Model):
                 prescription.prescription_mail_ids = self._default_prescription_mail_ids()
                 continue
 
-            # lines to keep: those with already sent emails or registrations
+            # lines to keep: those with already sent emails or confirmations
             mails_to_remove = prescription.prescription_mail_ids.filtered(
-                lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
+                lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_confirmation_ids)
             )
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
             if prescription.prescription_type_id.prescription_type_mail_ids:
@@ -586,7 +586,7 @@ class PrescriptionPrescription(models.Model):
 
         When synchronizing devices:
 
-          * lines that have no registrations linked are remove;
+          * lines that have no confirmations linked are remove;
           * type lines are added;
 
         Note that updating prescription_device_ids triggers _compute_start_sale_date
@@ -597,8 +597,8 @@ class PrescriptionPrescription(models.Model):
                 prescription.prescription_device_ids = False
                 continue
 
-            # lines to keep: those with existing registrations
-            devices_to_remove = prescription.prescription_device_ids.filtered(lambda device: not device._origin.registration_ids)
+            # lines to keep: those with existing confirmations
+            devices_to_remove = prescription.prescription_device_ids.filtered(lambda device: not device._origin.confirmation_ids)
             command = [Command.unlink(device.id) for device in devices_to_remove]
             if prescription.prescription_type_id.prescription_type_device_ids:
                 command += [
@@ -683,10 +683,10 @@ class PrescriptionPrescription(models.Model):
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         if (
             operation == 'create'
-            and self.env.user.has_group('prescription.group_prescription_registration_desk')
+            and self.env.user.has_group('prescription.group_prescription_confirmation_desk')
             and (not model_name or model_name == 'prescription.prescription')
         ):
-            # allow the registration desk users to post messages on Prescription
+            # allow the confirmation desk users to post messages on Prescription
             # can not be done with "_mail_post_access" otherwise public user will be
             # able to post on published Prescription (see website_prescription)
             return 'read'
@@ -712,7 +712,7 @@ class PrescriptionPrescription(models.Model):
     def action_set_done(self):
         """
         Action which will move the prescriptions
-        into the first next (by sequence) stage defined as "Ended"
+        into the first next (by sequence) stage defined as "Completed"
         (if they are not already in an ended stage)
         """
         first_ended_stage = self.env['prescription.stage'].search([('pipe_end', '=', True)], limit=1, order='sequence')
@@ -721,7 +721,7 @@ class PrescriptionPrescription(models.Model):
 
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for prescription in self:
-            for attendee in prescription.registration_ids.filtered(filter_func):
+            for attendee in prescription.confirmation_ids.filtered(filter_func):
                 self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
     def _get_ics_file(self):

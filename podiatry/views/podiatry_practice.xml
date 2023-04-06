@@ -64,7 +64,7 @@
                             <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
                         </group>
                         <group name="practice_type">
-                            <field name="practice_type" placeholder="e.g. Hospital..." required="True"/>
+                            <field name="practice_type" class="text-muted" placeholder="e.g. Hospital..." required="True"/>
                         </group>
                     </group>
                     <separator/>

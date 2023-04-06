@@ -27,12 +27,12 @@ class TestPrescriptionCommon(common.TransactionCase):
             company_id=cls.env.ref("base.main_company").id,
             groups='base.group_user',
         )
-        cls.user_prescriptionregistrationdesk = mail_new_test_user(
-            cls.env, login='user_prescriptionregistrationdesk',
-            name='Ursule PrescriptionRegistration', email='ursule.prescriptionregistration@test.example.com',
+        cls.user_prescriptionconfirmationdesk = mail_new_test_user(
+            cls.env, login='user_prescriptionconfirmationdesk',
+            name='Ursule PrescriptionConfirmation', email='ursule.prescriptionconfirmation@test.example.com',
             tz='Europe/Brussels', notification_type='inbox',
             company_id=cls.env.ref("base.main_company").id,
-            groups='base.group_user,prescription.group_prescription_registration_desk',
+            groups='base.group_user,prescription.group_prescription_confirmation_desk',
         )
         cls.user_prescriptionuser = mail_new_test_user(
             cls.env, login='user_prescriptionuser',
@@ -100,12 +100,12 @@ class TestPrescriptionCommon(common.TransactionCase):
         cls.prescription_0.company_id.write({'country_id': cls.env.ref('base.be').id})
 
     @classmethod
-    def _create_registrations(cls, prescription, reg_count):
-        # create some registrations
-        registrations = cls.env['prescription.registration'].create([{
+    def _create_confirmations(cls, prescription, reg_count):
+        # create some confirmations
+        confirmations = cls.env['prescription.confirmation'].create([{
             'prescription_id': prescription.id,
-            'name': 'Test Registration %s' % x,
+            'name': 'Test Confirmation %s' % x,
             'email': '_test_reg_%s@example.com' % x,
             'phone': '04560000%s%s' % (x, x),
         } for x in range(0, reg_count)])
-        return registrations
+        return confirmations

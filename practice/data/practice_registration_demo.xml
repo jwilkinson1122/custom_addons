@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Design fair -->
+        <record id="practice_confirmation_0_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_0"/>
+            <field name="practice_device_id" ref="practice.practice_0_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_1"/>
+        </record>
+        <record id="practice_confirmation_0_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_0"/>
+            <field name="practice_device_id" ref="practice.practice_0_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_2"/>
+        </record>
+        <record id="practice_confirmation_0_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_0"/>
+            <field name="practice_device_id" ref="practice.practice_0_device_0"/>
+            <field name="name">Tucker Carlson</field>
+            <field name="email">tuck@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+
+        <!-- Reno Ballon Race -->
+        <record id="practice_confirmation_1_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="partner_id" ref="base.res_partner_address_1"/>
+        </record>
+        <record id="practice_confirmation_1_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="partner_id" ref="base.res_partner_address_2"/>
+        </record>
+        <record id="practice_confirmation_1_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="name">Piers Morgan</field>
+            <field name="email">piersm@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+        <record id="practice_confirmation_1_3" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+        </record>
+        <record id="practice_confirmation_1_4" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="partner_id" ref="base.res_partner_address_4"/>
+        </record>
+        <record id="practice_confirmation_1_5" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_1"/>
+            <field name="name">Nigel Woodfire</field>
+            <field name="email">nigelw@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+
+        <!-- Conference for architects -->
+        <record id="practice_confirmation_2_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_2"/>
+            <field name="practice_device_id" ref="practice.practice_2_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_1"/>
+        </record>
+        <record id="practice_confirmation_2_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_2"/>
+            <field name="practice_device_id" ref="practice.practice_2_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_2"/>
+        </record>
+        <record id="practice_confirmation_2_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_2"/>
+            <field name="practice_device_id" ref="practice.practice_2_device_2"/>
+            <field name="name">Piers Morgan</field>
+            <field name="email">piersm@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+        <record id="practice_confirmation_2_3" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_2"/>
+            <field name="practice_device_id" ref="practice.practice_2_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+        </record>
+        <record id="practice_confirmation_2_4" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_2"/>
+            <field name="practice_device_id" ref="practice.practice_2_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_4"/>
+        </record>
+
+        <!-- Live Music Festival -->
+        <record id="practice_confirmation_3_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="partner_id" ref="base.res_partner_address_1"/>
+        </record>
+        <record id="practice_confirmation_3_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="partner_id" ref="base.res_partner_address_2"/>
+        </record>
+        <record id="practice_confirmation_3_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="name">Piers Morgan</field>
+            <field name="email">piersm@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+        <record id="practice_confirmation_3_3" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+        </record>
+        <record id="practice_confirmation_3_4" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="partner_id" ref="base.res_partner_address_4"/>
+        </record>
+        <record id="practice_confirmation_3_5" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_3"/>
+            <field name="name">Nigel Woodfire</field>
+            <field name="email">nigelw@test.example.com</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+
+        <!-- Business Workshop -->
+        <record id="practice_confirmation_4_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_4"/>
+            <field name="practice_device_id" ref="practice.practice_4_device_0"/>
+            <field name="partner_id" ref="base.res_partner_address_7"/>
+        </record>
+        <record id="practice_confirmation_4_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_4"/>
+            <field name="practice_device_id" ref="practice.practice_4_device_0"/>
+            <field name="partner_id" ref="base.res_partner_address_13"/>
+        </record>
+        <record id="practice_confirmation_4_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_4"/>
+            <field name="practice_device_id" ref="practice.practice_4_device_0"/>
+            <field name="partner_id" ref="base.res_partner_address_14"/>
+        </record>
+
+        <!-- OpenWood Collection Online Reveal: Gemini (all) -->
+        <record id="practice_confirmation_7_0" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_7"/>
+            <field name="practice_device_id" ref="practice.practice_7_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_5"/>
+        </record>
+        <record id="practice_confirmation_7_1" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_7"/>
+            <field name="practice_device_id" ref="practice.practice_7_device_1"/>
+            <field name="partner_id" ref="base.res_partner_address_10"/>
+        </record>
+        <record id="practice_confirmation_7_2" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_7"/>
+            <field name="practice_device_id" ref="practice.practice_7_device_2"/>
+            <field name="partner_id" ref="base.res_partner_address_11"/>
+        </record>
+        <record id="practice_confirmation_7_3" model="practice.confirmation">
+            <field name="practice_id" ref="practice.practice_7"/>
+            <field name="practice_device_id" ref="practice.practice_7_device_2"/>
+            <field name="partner_id" ref="base.res_partner_address_25"/>
+        </record>
+
+        <function model="practice.confirmation" name="action_confirm" context="{'install_mode' : True}" eval="[[ref('practice_confirmation_0_0'), ref('practice_confirmation_0_1'),
+                ref('practice_confirmation_1_0'), ref('practice_confirmation_1_1'), ref('practice_confirmation_1_2'),
+                ref('practice_confirmation_2_0'), ref('practice_confirmation_2_1'), ref('practice_confirmation_2_2'), ref('practice_confirmation_2_3'),
+                ref('practice_confirmation_4_2')]]" />
+
+        <function model="practice.confirmation" name="action_set_done" eval="[[ref('practice_confirmation_4_0'), ref('practice_confirmation_4_1')]]" />
+
+    </data>
+</odoo>

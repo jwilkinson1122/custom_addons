@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
     module_website_prescription_track_live = fields.Boolean("Live Mode")
     module_website_prescription_track_quiz = fields.Boolean("Quiz on Tracks")
     module_website_prescription_exhibitor = fields.Boolean("Advanced Sponsors")
-    module_website_prescription_questions = fields.Boolean("Registration Survey")
+    module_website_prescription_questions = fields.Boolean("Confirmation Survey")
     module_prescription_barcode = fields.Boolean("Barcode")
     module_website_prescription_sale = fields.Boolean("Online Deviceing")
     module_prescription_booth = fields.Boolean("Booth Management")

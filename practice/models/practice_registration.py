@@ -8,18 +8,18 @@ from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
 
 
-class PrescriptionRegistration(models.Model):
-    _name = 'prescription.registration'
-    _description = 'Prescription Registration'
+class PracticeConfirmation(models.Model):
+    _name = 'practice.confirmation'
+    _description = 'Practice Confirmation'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
-    # prescription
-    prescription_id = fields.Many2one(
-        'prescription.prescription', string='Prescription', required=True,
+    # practice
+    practice_id = fields.Many2one(
+        'practice.practice', string='Practice', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
-    prescription_device_id = fields.Many2one(
-        'prescription.prescription.device', string='Prescription Device', readonly=True, ondelete='restrict',
+    practice_device_id = fields.Many2one(
+        'practice.practice.device', string='Practice Device', readonly=True, ondelete='restrict',
         states={'draft': [('readonly', False)]})
     active = fields.Boolean(default=True)
     # utm informations
@@ -37,14 +37,14 @@ class PrescriptionRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
     mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
     # organization
-    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
+    date_open = fields.Datetime(string='Confirmation Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
-    prescription_begin_date = fields.Datetime(string="Prescription Start Date", related='prescription_id.date_begin', readonly=True)
-    prescription_end_date = fields.Datetime(string="Prescription End Date", related='prescription_id.date_end', readonly=True)
+    practice_begin_date = fields.Datetime(string="Practice Start Date", related='practice_id.date_begin', readonly=True)
+    practice_end_date = fields.Datetime(string="Practice End Date", related='practice_id.date_end', readonly=True)
     company_id = fields.Many2one(
-        'res.company', string='Company', related='prescription_id.company_id',
+        'res.company', string='Company', related='practice_id.company_id',
         store=True, readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
@@ -56,7 +56,7 @@ class PrescriptionRegistration(models.Model):
         """ Keep an explicit onchange on partner_id. Rationale : if user explicitly
         changes the partner in interface, he want to update the whole customer
         information. If partner_id is updated in code (e.g. updating your personal
-        information after having registered in website_prescription_sale) fields with a
+        information after having registered in website_practice_sale) fields with a
         value should not be reset as we don't know which one is the right one.
 
         In other words
@@ -64,74 +64,74 @@ class PrescriptionRegistration(models.Model):
             information. Indeed automated code cannot decide which information
             is more accurate;
           * interface should allow to update all customer related information
-            at once. We consider prescription users really want to update all fields
+            at once. We consider practice users really want to update all fields
             related to the partner;
         """
-        for registration in self:
-            if registration.partner_id:
-                registration.update(registration._synchronize_partner_values(registration.partner_id))
+        for confirmation in self:
+            if confirmation.partner_id:
+                confirmation.update(confirmation._synchronize_partner_values(confirmation.partner_id))
 
     @api.depends('partner_id')
     def _compute_name(self):
-        for registration in self:
-            if not registration.name and registration.partner_id:
-                registration.name = registration._synchronize_partner_values(
-                    registration.partner_id,
+        for confirmation in self:
+            if not confirmation.name and confirmation.partner_id:
+                confirmation.name = confirmation._synchronize_partner_values(
+                    confirmation.partner_id,
                     fnames=['name']
                 ).get('name') or False
 
     @api.depends('partner_id')
     def _compute_email(self):
-        for registration in self:
-            if not registration.email and registration.partner_id:
-                registration.email = registration._synchronize_partner_values(
-                    registration.partner_id,
+        for confirmation in self:
+            if not confirmation.email and confirmation.partner_id:
+                confirmation.email = confirmation._synchronize_partner_values(
+                    confirmation.partner_id,
                     fnames=['email']
                 ).get('email') or False
 
     @api.depends('partner_id')
     def _compute_phone(self):
-        for registration in self:
-            if not registration.phone and registration.partner_id:
-                registration.phone = registration._synchronize_partner_values(
-                    registration.partner_id,
+        for confirmation in self:
+            if not confirmation.phone and confirmation.partner_id:
+                confirmation.phone = confirmation._synchronize_partner_values(
+                    confirmation.partner_id,
                     fnames=['phone']
                 ).get('phone') or False
 
     @api.depends('partner_id')
     def _compute_mobile(self):
-        for registration in self:
-            if not registration.mobile and registration.partner_id:
-                registration.mobile = registration._synchronize_partner_values(
-                    registration.partner_id,
+        for confirmation in self:
+            if not confirmation.mobile and confirmation.partner_id:
+                confirmation.mobile = confirmation._synchronize_partner_values(
+                    confirmation.partner_id,
                     fnames=['mobile']
                 ).get('mobile') or False
 
     @api.depends('state')
     def _compute_date_closed(self):
-        for registration in self:
-            if not registration.date_closed:
-                if registration.state == 'done':
-                    registration.date_closed = fields.Datetime.now()
+        for confirmation in self:
+            if not confirmation.date_closed:
+                if confirmation.state == 'done':
+                    confirmation.date_closed = fields.Datetime.now()
                 else:
-                    registration.date_closed = False
+                    confirmation.date_closed = False
 
-    @api.constrains('prescription_id', 'state')
+    @api.constrains('practice_id', 'state')
     def _check_seats_limit(self):
-        for registration in self:
-            if registration.prescription_id.seats_limited and registration.prescription_id.seats_max and registration.prescription_id.seats_available < (1 if registration.state == 'draft' else 0):
-                raise ValidationError(_('No more seats available for this prescription.'))
+        for confirmation in self:
+            if confirmation.practice_id.seats_limited and confirmation.practice_id.seats_max and confirmation.practice_id.seats_available < (1 if confirmation.state == 'draft' else 0):
+                raise ValidationError(_('No more seats available for this practice.'))
 
-    @api.constrains('prescription_device_id', 'state')
+    @api.constrains('practice_device_id', 'state')
     def _check_device_seats_limit(self):
         for record in self:
-            if record.prescription_device_id.seats_max and record.prescription_device_id.seats_available < 0:
+            if record.practice_device_id.seats_max and record.practice_device_id.seats_available < 0:
                 raise ValidationError(_('No more available seats for this device'))
 
-    @api.constrains('prescription_id', 'prescription_device_id')
-    def _check_prescription_device(self):
-        if any(registration.prescription_id != registration.prescription_device_id.prescription_id for registration in self if registration.prescription_device_id):
-            raise ValidationError(_('Invalid prescription / device choice'))
+    @api.constrains('practice_id', 'practice_device_id')
+    def _check_practice_device(self):
+        if any(confirmation.practice_id != confirmation.practice_device_id.practice_id for confirmation in self if confirmation.practice_device_id):
+            raise ValidationError(_('Invalid practice / device choice'))
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
@@ -149,27 +149,27 @@ class PrescriptionRegistration(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        registrations = super(PrescriptionRegistration, self).create(vals_list)
+        confirmations = super(PracticeConfirmation, self).create(vals_list)
 
         # auto_confirm if possible; if not automatically confirmed, call mail schedulers in case
         # some were created already open
-        if registrations._check_auto_confirmation():
-            registrations.sudo().action_confirm()
+        if confirmations._check_auto_confirmation():
+            confirmations.sudo().action_confirm()
         elif not self.env.context.get('install_mode', False):
             # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
             # server start and hangs indefinitely, leading to serious crashes
             # we currently avoid this by not running the scheduler, would be best to find the actual
             # reason for this issue and fix it so we can remove this check
-            registrations._update_mail_schedulers()
+            confirmations._update_mail_schedulers()
 
-        return registrations
+        return confirmations
 
     def write(self, vals):
-        pre_draft = self.env['prescription.registration']
+        pre_draft = self.env['practice.confirmation']
         if vals.get('state') == 'open':
-            pre_draft = self.filtered(lambda registration: registration.state == 'draft')
+            pre_draft = self.filtered(lambda confirmation: confirmation.state == 'draft')
 
-        ret = super(PrescriptionRegistration, self).write(vals)
+        ret = super(PracticeConfirmation, self).write(vals)
 
         if vals.get('state') == 'open' and not self.env.context.get('install_mode', False):
             # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
@@ -181,29 +181,29 @@ class PrescriptionRegistration(models.Model):
         return ret
 
     def name_get(self):
-        """ Custom name_get implementation to better differentiate registrations
+        """ Custom name_get implementation to better differentiate confirmations
         linked to a given partner but with different name (one partner buying
-        several registrations)
+        several confirmations)
 
           * name, partner_id has no name -> take name
           * partner_id has name, name void or same -> take partner name
           * both have name: partner + name
         """
         ret_list = []
-        for registration in self:
-            if registration.partner_id.name:
-                if registration.name and registration.name != registration.partner_id.name:
-                    name = '%s, %s' % (registration.partner_id.name, registration.name)
+        for confirmation in self:
+            if confirmation.partner_id.name:
+                if confirmation.name and confirmation.name != confirmation.partner_id.name:
+                    name = '%s, %s' % (confirmation.partner_id.name, confirmation.name)
                 else:
-                    name = registration.partner_id.name
+                    name = confirmation.partner_id.name
             else:
-                name = registration.name
-            ret_list.append((registration.id, name))
+                name = confirmation.name
+            ret_list.append((confirmation.id, name))
         return ret_list
 
     def _check_auto_confirmation(self):
-        if any(not registration.prescription_id.auto_confirm or
-               (not registration.prescription_id.seats_available and registration.prescription_id.seats_limited) for registration in self):
+        if any(not confirmation.practice_id.auto_confirm or
+               (not confirmation.practice_id.seats_available and confirmation.practice_id.seats_limited) for confirmation in self):
             return False
         return True
 
@@ -218,21 +218,21 @@ class PrescriptionRegistration(models.Model):
         self.write({'state': 'open'})
 
     def action_set_done(self):
-        """ Close Registration """
+        """ Close Confirmation """
         self.write({'state': 'done'})
 
     def action_cancel(self):
         self.write({'state': 'cancel'})
 
     def action_send_badge_email(self):
-        """ Open a window to compose an email, with the template - 'prescription_badge'
+        """ Open a window to compose an email, with the template - 'practice_badge'
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref('prescription.prescription_registration_mail_template_badge', raise_if_not_found=False)
+        template = self.env.ref('practice.practice_confirmation_mail_template_badge', raise_if_not_found=False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
-            default_model='prescription.registration',
+            default_model='practice.confirmation',
             default_res_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id,
@@ -253,19 +253,19 @@ class PrescriptionRegistration(models.Model):
     def _update_mail_schedulers(self):
         """ Update schedulers to set them as running again, and cron to be called
         as soon as possible. """
-        open_registrations = self.filtered(lambda registration: registration.state == 'open')
-        if not open_registrations:
+        open_confirmations = self.filtered(lambda confirmation: confirmation.state == 'open')
+        if not open_confirmations:
             return
 
-        onsubscribe_schedulers = self.env['prescription.mail'].sudo().search([
-            ('prescription_id', 'in', open_registrations.prescription_id.ids),
+        onsubscribe_schedulers = self.env['practice.mail'].sudo().search([
+            ('practice_id', 'in', open_confirmations.practice_id.ids),
             ('interval_type', '=', 'after_sub')
         ])
         if not onsubscribe_schedulers:
             return
 
         onsubscribe_schedulers.update({'mail_done': False})
-        # we could simply call _create_missing_mail_registrations and let cron do their job
+        # we could simply call _create_missing_mail_confirmations and let cron do their job
         # but it currently leads to several delays. We therefore call execute until
         # cron triggers are correctly used
         onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
@@ -275,7 +275,7 @@ class PrescriptionRegistration(models.Model):
     # ------------------------------------------------------------
 
     def _message_get_suggested_recipients(self):
-        recipients = super(PrescriptionRegistration, self)._message_get_suggested_recipients()
+        recipients = super(PracticeConfirmation, self)._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
         public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
         if public_groups:
@@ -292,7 +292,7 @@ class PrescriptionRegistration(models.Model):
         return recipients
 
     def _message_get_default_recipients(self):
-        # Prioritize registration email over partner_id, which may be shared when a single
+        # Prioritize confirmation email over partner_id, which may be shared when a single
         # partner booked multiple seats
         return {r.id: {
             'partner_ids': [],
@@ -312,7 +312,7 @@ class PrescriptionRegistration(models.Model):
                     ('email', '=', new_partner.email),
                     ('state', 'not in', ['cancel']),
                 ]).write({'partner_id': new_partner.id})
-        return super(PrescriptionRegistration, self)._message_post_after_hook(message, msg_vals)
+        return super(PracticeConfirmation, self)._message_post_after_hook(message, msg_vals)
 
     # ------------------------------------------------------------
     # TOOLS
@@ -321,8 +321,8 @@ class PrescriptionRegistration(models.Model):
     def get_date_range_str(self):
         self.ensure_one()
         today = fields.Datetime.now()
-        prescription_date = self.prescription_begin_date
-        diff = (prescription_date.date() - today.date())
+        practice_date = self.practice_begin_date
+        diff = (practice_date.date() - today.date())
         if diff.days <= 0:
             return _('today')
         elif diff.days == 1:
@@ -331,19 +331,19 @@ class PrescriptionRegistration(models.Model):
             return _('in %d days') % (diff.days, )
         elif (diff.days < 14):
             return _('next week')
-        elif prescription_date.month == (today + relativedelta(months=+1)).month:
+        elif practice_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on %(date)s', date=format_datetime(self.env, self.prescription_begin_date, tz=self.prescription_id.date_tz, dt_format='medium'))
+            return _('on %(date)s', date=format_datetime(self.env, self.practice_begin_date, tz=self.practice_id.date_tz, dt_format='medium'))
 
-    def _get_registration_summary(self):
+    def _get_confirmation_summary(self):
         self.ensure_one()
         return {
             'id': self.id,
             'name': self.name,
             'partner_id': self.partner_id.id,
-            'device_name': self.prescription_device_id.name or _('None'),
-            'prescription_id': self.prescription_id.id,
-            'prescription_display_name': self.prescription_id.display_name,
-            'company_name': self.prescription_id.company_id and self.prescription_id.company_id.name or False,
+            'device_name': self.practice_device_id.name or _('None'),
+            'practice_id': self.practice_id.id,
+            'practice_display_name': self.practice_id.display_name,
+            'company_name': self.practice_id.company_id and self.practice_id.company_id.name or False,
         }

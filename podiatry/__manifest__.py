@@ -29,7 +29,7 @@
         'data/decimal_precision.xml',
         "data/ir_sequence_data.xml",
         "data/stage_data.xml",
-        'views/s3_views.xml',
+        # 'views/s3_views.xml',
         'views/product_template.xml',
         "views/product_view.xml",
         "wizard/create_prescription_invoice_wizard.xml",

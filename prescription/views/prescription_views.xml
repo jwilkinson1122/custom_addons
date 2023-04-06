@@ -28,7 +28,7 @@
                             </group>
                             <group>
                                 <div colspan="2" class="o_checkbox_optional_field">
-                                    <!-- <label for="has_seats_limitation" string="Limit Registrations"/>
+                                    <!-- <label for="has_seats_limitation" string="Limit Confirmations"/>
                                     <field name="has_seats_limitation"/>
                                     <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
                                        to <field name="seats_max" class="oe_inline"/>
@@ -54,7 +54,7 @@
                                     <tree string="Communication" editable="bottom">
                                         <field name="notification_type"/>
                                         <field name="template_model_id" invisible="1"/>
-                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.registration'}"/>
+                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.confirmation'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -114,8 +114,8 @@
         </record>
 
         <!-- PRESCRIPTION.REGISTRATION ACTIONS -->
-        <record id="act_prescription_registration_from_prescription" model="ir.actions.act_window">
-            <field name="res_model">prescription.registration</field>
+        <record id="act_prescription_confirmation_from_prescription" model="ir.actions.act_window">
+            <field name="res_model">prescription.confirmation</field>
             <field name="name">Attendees</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="domain">[('prescription_id', '=', active_id)]</field>
@@ -125,13 +125,13 @@
                     No Attendees yet!
                 </p>
                 <p>
-                    Wait until Attendees register to your Prescription or create their registrations manually.
+                    Wait until Attendees register to your Prescription or create their confirmations manually.
                 </p>
             </field>
         </record>
 
-        <record id="prescription_registration_action" model="ir.actions.act_window">
-            <field name="res_model">prescription.registration</field>
+        <record id="prescription_confirmation_action" model="ir.actions.act_window">
+            <field name="res_model">prescription.confirmation</field>
             <field name="name">Attendees</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
@@ -139,15 +139,15 @@
                     No Attendees expected yet!
                 </p>
                 <p>
-                    Wait until Attendees register to your Prescription or create their registrations manually.
+                    Wait until Attendees register to your Prescription or create their confirmations manually.
                 </p>
             </field>
         </record>
 
-        <record id="prescription_registration_action_tree" model="ir.actions.act_window">
-            <field name="name">Prescription registrations</field>
+        <record id="prescription_confirmation_action_tree" model="ir.actions.act_window">
+            <field name="name">Prescription confirmations</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">prescription.registration</field>
+            <field name="res_model">prescription.confirmation</field>
             <field name="view_mode">tree,kanban,form,calendar,graph</field>
         </record>
 
@@ -176,7 +176,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
-                            <button name="%(prescription.act_prescription_registration_from_prescription)d" type="action" context="{'search_default_expected': True}" class="oe_stat_button" icon="fa-users" help="Total Registrations for this Prescription">
+                            <button name="%(prescription.act_prescription_confirmation_from_prescription)d" type="action" context="{'search_default_expected': True}" class="oe_stat_button" icon="fa-users" help="Total Confirmations for this Prescription">
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
@@ -201,7 +201,7 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
                                 <div colspan="2" class="o_checkbox_optional_field">
-                                    <label for="seats_limited" string="Limit Registrations"/>
+                                    <label for="seats_limited" string="Limit Confirmations"/>
                                     <field name="seats_limited"/>
                                     <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/>
  Attendees</span>
@@ -236,7 +236,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="notification_type"/>
                                         <field name="template_model_id" invisible="1"/>
-                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.registration'}"/>
+                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.confirmation'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -350,7 +350,7 @@
                                             <t t-esc="moment(record.date_begin.raw_value).format('LT')"/>
                                         </div>
                                         <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
-                                            <i class="fa fa-arrow-right o_prescription_fontsize_09" title="End date"/>
+                                            <i class="fa fa-arrow-right o_prescription_fontsize_09" title="Complete date"/>
                                             <t t-esc="moment(record.date_end.raw_value).format('D MMM')"/>
                                         </div>
                                     </div>
@@ -365,14 +365,14 @@
                                             </div>
                                         </div>
                                         <h5 class="o_prescription_fontsize_11 p-0">
-                                            <a name="%(act_prescription_registration_from_prescription)d" type="action" context="{'search_default_expected': True}">
+                                            <a name="%(act_prescription_confirmation_from_prescription)d" type="action" context="{'search_default_expected': True}">
                                                 <t t-esc="record.seats_expected.raw_value"/>
  Expected attendees
                                             </a>
                                             <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
                                             <div class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value">
                                                 <br/>
-                                                <a class="pl-2" name="%(act_prescription_registration_from_prescription)d" type="action" context="{'search_default_confirmed': True}">
+                                                <a class="pl-2" name="%(act_prescription_confirmation_from_prescription)d" type="action" context="{'search_default_confirmed': True}">
                                                     <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/>
                                                     <span class="pl-2">
                                                         <t t-esc="total_seats"/>
@@ -484,7 +484,7 @@
                 Create a Prescription
                 </p>
                 <p>
-                Schedule and organize your prescriptions: handle registrations, send automated confirmation emails, sell devices, etc.
+                Schedule and organize your prescriptions: handle confirmations, send automated confirmation emails, sell devices, etc.
                 </p>
             </field>
         </record>
@@ -496,12 +496,12 @@
         <menuitem name="Prescriptions" id="prescription_prescription_menu_pivot_report" action="prescription_prescription_action_pivot" sequence="3" parent="prescription.menu_reporting_prescriptions" groups="prescription.group_prescription_user"/>
 
         <!-- PRESCRIPTION.REGISTRATION VIEWS -->
-        <record model="ir.ui.view" id="view_prescription_registration_tree">
-            <field name="name">prescription.registration.tree</field>
-            <field name="model">prescription.registration</field>
+        <record model="ir.ui.view" id="view_prescription_confirmation_tree">
+            <field name="name">prescription.confirmation.tree</field>
+            <field name="model">prescription.confirmation</field>
             <field name="arch" type="xml">
-                <tree string="Registration" multi_edit="1" sample="1">
-                    <field name="create_date" optional="show" string="Registration Date"/>
+                <tree string="Confirmation" multi_edit="1" sample="1">
+                    <field name="create_date" optional="show" string="Confirmation Date"/>
                     <field name="date_open" optional="hide"/>
                     <field name="name"/>
                     <field name="partner_id" optional="hide"/>
@@ -521,20 +521,20 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_prescription_registration_form">
-            <field name="name">prescription.registration.form</field>
-            <field name="model">prescription.registration</field>
+        <record model="ir.ui.view" id="view_prescription_confirmation_form">
+            <field name="name">prescription.confirmation.form</field>
+            <field name="model">prescription.confirmation</field>
             <field name="arch" type="xml">
-                <form string="Prescription Registration">
+                <form string="Prescription Confirmation">
                     <header>
                         <button name="action_send_badge_email" string="Send by Email" type="object" states="open,done" class="oe_highlight"/>
                         <button name="action_confirm" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="action_set_done" string="Attended" states="open" type="object" class="oe_highlight"/>
                         <button name="action_set_draft" string="Set To Unconfirmed" states="cancel,done" type="object" />
-                        <button name="action_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                        <button name="action_cancel" string="Cancel Confirmation" states="draft,open" type="object"/>
                         <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                     </header>
-                    <sheet string="Registration">
+                    <sheet string="Confirmation">
                         <div class="oe_button_box" name="button_box"/>
                         <group>
                             <group string="Attendee" name="attendee">
@@ -569,9 +569,9 @@
             </field>
         </record>
 
-        <record id="prescription_registration_view_kanban" model="ir.ui.view">
-            <field name="name">prescription.registration.kanban</field>
-            <field name="model">prescription.registration</field>
+        <record id="prescription_confirmation_view_kanban" model="ir.ui.view">
+            <field name="name">prescription.confirmation.kanban</field>
+            <field name="model">prescription.confirmation</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <kanban class="o_prescription_attendee_kanban_view" default_order="name, create_date desc" sample="1">
@@ -584,8 +584,8 @@
                         <t t-name="prescription_attendees_kanban_icons_desktop">
                             <div class="d-none d-md-block h-100">
                                 <div id="prescription_attendees_kanban_icons_desktop" class="h-100 float-right p-2 d-flex align-items-end flex-column">
-                                    <a class="btn btn-md btn-primary" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
-                                        <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                    <a class="btn btn-md btn-primary" string="Confirm Confirmation" name="action_confirm" type="object" states="draft" role="button">
+                                        <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Confirmation"/>
                                     </a>
                                     <a class="btn btn-md btn-primary" string="Confirm Attendance" name="action_set_done" type="object" states="open" role="button">
                                         <i class="fa fa-user-plus" role="img" aria-label="Attended button" title="Confirm Attendance"/>
@@ -597,8 +597,8 @@
                         </t>
                         <t t-name="prescription_attendees_kanban_icons_mobile">
                             <div id="prescription_attendees_kanban_icons_mobile" class="d-md-none h-100 pl-4">
-                                <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
-                                    <i class="fa fa-check fa-3x" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100" string="Confirm Confirmation" name="action_confirm" type="object" states="draft" role="button">
+                                    <i class="fa fa-check fa-3x" role="img" aria-label="Confirm button" title="Confirm Confirmation"/>
                                 </a>
                                 <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100" string="Confirm Attendance" name="action_set_done" type="object" states="open" role="button">
                                     <i class="fa fa-user-plus fa-3x" role="img" aria-label="Attended button" title="Confirm Attendance"/>
@@ -610,7 +610,7 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_prescription_registration_kanban container-fluid p-0">
+                            <div class="oe_kanban_global_click o_prescription_confirmation_kanban container-fluid p-0">
                                 <div class="row h-100">
                                     <div class="col-9 pr-0">
                                         <div class="oe_kanban_content h-100">
@@ -647,12 +647,12 @@
             </field>
         </record>
 
-        <record id="view_prescription_registration_calendar" model="ir.ui.view">
-            <field name="name">prescription_registration.calendar</field>
-            <field name="model">prescription.registration</field>
+        <record id="view_prescription_confirmation_calendar" model="ir.ui.view">
+            <field name="name">prescription_confirmation.calendar</field>
+            <field name="model">prescription.confirmation</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="prescription_begin_date" date_stop="prescription_end_date" string="Prescription Registration" color="prescription_id" event_limit="5">
+                <calendar date_start="prescription_begin_date" date_stop="prescription_end_date" string="Prescription Confirmation" color="prescription_id" event_limit="5">
                     <field name="prescription_id" filters="1"/>
                     <field name="name"/>
                 </calendar>
@@ -660,32 +660,32 @@
         </record>
 
 
-        <record model="ir.ui.view" id="view_prescription_registration_pivot">
-            <field name="name">prescription.registration.pivot</field>
-            <field name="model">prescription.registration</field>
+        <record model="ir.ui.view" id="view_prescription_confirmation_pivot">
+            <field name="name">prescription.confirmation.pivot</field>
+            <field name="model">prescription.confirmation</field>
             <field name="arch" type="xml">
-                <pivot string="Registration" display_quantity="1" sample="1">
+                <pivot string="Confirmation" display_quantity="1" sample="1">
                     <field name="prescription_id" type="row"/>
                 </pivot>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_prescription_registration_graph">
-            <field name="name">prescription.registration.graph</field>
-            <field name="model">prescription.registration</field>
+        <record model="ir.ui.view" id="view_prescription_confirmation_graph">
+            <field name="name">prescription.confirmation.graph</field>
+            <field name="model">prescription.confirmation</field>
             <field name="arch" type="xml">
-                <graph string="Registration" sample="1">
+                <graph string="Confirmation" sample="1">
                     <field name="prescription_id"/>
                 </graph>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_registration_search">
-            <field name="name">prescription.registration.search</field>
-            <field name="model">prescription.registration</field>
+        <record model="ir.ui.view" id="view_confirmation_search">
+            <field name="name">prescription.confirmation.search</field>
+            <field name="model">prescription.confirmation</field>
             <field name="arch" type="xml">
-                <search string="Prescription Registration">
-                    <field name="id" string="Registration ID"/>
+                <search string="Prescription Confirmation">
+                    <field name="id" string="Confirmation ID"/>
                     <field name="name" string="Participant" filter_domain="['|', ('name', 'ilike', self), ('email', 'ilike', self)]"/>
                     <filter string="Ongoing Prescriptions" name="filter_is_ongoing" domain="[('prescription_id.is_ongoing', '=', True)]"/>
                     <separator/>
@@ -696,7 +696,7 @@
                     <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'open')]"/>
                     <filter string="Attended" name="attended" domain="[('state', '=', 'done')]"/>
                     <separator/>
-                    <filter string="Registration Date" name="filter_date_open" date="date_open"/>
+                    <filter string="Confirmation Date" name="filter_date_open" date="date_open"/>
                     <filter string="Prescription Start Date" name="filter_prescription_begin_date" date="prescription_begin_date"/>
                     <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
                     <field name="prescription_id"/>
@@ -710,30 +710,30 @@
                         <filter string="Prescription" name="group_prescription" domain="[]" context="{'group_by':'prescription_id'}"/>
                         <filter string="Device Type" name ="group_prescription_device_id" domain="[]" context="{'group_by': 'prescription_device_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Confirmation Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="action_registration" model="ir.actions.act_window">
+        <record id="action_confirmation" model="ir.actions.act_window">
             <field name="name">Attendees</field>
-            <field name="res_model">prescription.registration</field>
+            <field name="res_model">prescription.confirmation</field>
             <field name="domain"></field>
             <field name="view_mode">pivot,graph,kanban,tree,form</field>
             <field name="context">{}</field>
-            <field name="search_view_id" ref="view_registration_search"/>
+            <field name="search_view_id" ref="view_confirmation_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No Attendees yet!
                 </p>
                 <p>
-                    From this dashboard you can report, analyze and detect trends regarding your prescription registrations.
+                    From this dashboard you can report, analyze and detect trends regarding your prescription confirmations.
                 </p>
             </field>
         </record>
 
-        <menuitem name="Attendees" id="menu_action_registration" parent="prescription.menu_reporting_prescriptions" sequence="4" action="action_registration" groups="prescription.group_prescription_user"/>
+        <menuitem name="Attendees" id="menu_action_confirmation" parent="prescription.menu_reporting_prescriptions" sequence="4" action="action_confirmation" groups="prescription.group_prescription_user"/>
 
         <!-- PRESCRIPTION.MAIL VIEWS -->
         <record model="ir.ui.view" id="view_prescription_mail_form">
@@ -747,7 +747,7 @@
                                 <field name="prescription_id"/>
                                 <field name="notification_type"/>
                                 <field name="template_model_id" invisible="1"/>
-                                <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.registration'}"/>
+                                <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.confirmation'}"/>
                                 <field name="mail_state"/>
                             </group>
                             <group>
@@ -761,10 +761,10 @@
                             </group>
                         </group>
                         <notebook groups="base.group_no_one">
-                            <page string="Registration Mails" name="registration_mails">
-                                <field name="mail_registration_ids">
-                                    <tree string="Registration mail" editable="bottom">
-                                        <field name="registration_id"/>
+                            <page string="Confirmation Mails" name="confirmation_mails">
+                                <field name="mail_confirmation_ids">
+                                    <tree string="Confirmation mail" editable="bottom">
+                                        <field name="confirmation_id"/>
                                         <field name="scheduled_date"/>
                                         <field name="mail_sent" string="Sent"/>
                                     </tree>
@@ -784,7 +784,7 @@
                     <field name="prescription_id"/>
                     <field name="notification_type"/>
                     <field name="template_model_id" invisible="1"/>
-                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.registration'}"/>
+                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_prescription': True, 'default_model': 'prescription.confirmation'}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_count_done"/>
                     <field name="mail_state" widget="icon_selection" string=" " options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>

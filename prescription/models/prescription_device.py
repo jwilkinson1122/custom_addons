@@ -11,7 +11,7 @@ class PrescriptionTemplateDevice(models.Model):
 
     # description
     name = fields.Char(
-        string='Name', default=lambda self: _('Registration'),
+        string='Name', default=lambda self: _('Confirmation'),
         required=True, translate=True)
     description = fields.Text(
         'Description', translate=True,
@@ -23,7 +23,7 @@ class PrescriptionTemplateDevice(models.Model):
                                    compute='_compute_seats_limited')
     seats_max = fields.Integer(
         string='Maximum Seats',
-        help="Define the number of available devices. If you have too many registrations you will "
+        help="Define the number of available devices. If you have too many confirmations you will "
              "not be able to sell devices anymore. Set 0 to ignore this rule set as unlimited.")
 
     @api.depends('seats_max')
@@ -39,7 +39,7 @@ class PrescriptionTemplateDevice(models.Model):
 
 
 class PrescriptionDevice(models.Model):
-    """ Device model allowing to have differnt kind of registrations for a given
+    """ Device model allowing to have differnt kind of confirmations for a given
     prescription. Device are based on device type as they share some common fields
     and behavior. Those models come from <= v13 Odoo prescription.prescription.device that
     modeled both concept: devices for prescription templates, and devices for prescriptions. """
@@ -50,8 +50,8 @@ class PrescriptionDevice(models.Model):
     @api.model
     def default_get(self, fields):
         res = super(PrescriptionDevice, self).default_get(fields)
-        if 'name' in fields and (not res.get('name') or res['name'] == _('Registration')) and self.env.context.get('default_prescription_name'):
-            res['name'] = _('Registration for %s', self.env.context['default_prescription_name'])
+        if 'name' in fields and (not res.get('name') or res['name'] == _('Confirmation')) and self.env.context.get('default_prescription_name'):
+            res['name'] = _('Confirmation for %s', self.env.context['default_prescription_name'])
         return res
 
     # description
@@ -61,11 +61,11 @@ class PrescriptionDevice(models.Model):
         ondelete='cascade', required=True)
     company_id = fields.Many2one('res.company', related='prescription_id.company_id')
     # sale
-    start_sale_datetime = fields.Datetime(string="Registration Start")
-    end_sale_datetime = fields.Datetime(string="Registration End")
+    start_sale_datetime = fields.Datetime(string="Confirmation Start")
+    end_sale_datetime = fields.Datetime(string="Confirmation Complete")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
     sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
-    registration_ids = fields.One2many('prescription.registration', 'prescription_device_id', string='Registrations')
+    confirmation_ids = fields.One2many('prescription.confirmation', 'prescription_device_id', string='Confirmations')
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
@@ -91,13 +91,13 @@ class PrescriptionDevice(models.Model):
             else:
                 device.sale_available = True
 
-    @api.depends('seats_max', 'registration_ids.state')
+    @api.depends('seats_max', 'confirmation_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0 + compute seats availability
         for device in self:
             device.seats_unconfirmed = device.seats_reserved = device.seats_used = device.seats_available = 0
-        # aggregate registrations by device and by state
+        # aggregate confirmations by device and by state
         results = {}
         if self.ids:
             state_field = {
@@ -106,11 +106,11 @@ class PrescriptionDevice(models.Model):
                 'done': 'seats_used',
             }
             query = """ SELECT prescription_device_id, state, count(prescription_id)
-                        FROM prescription_registration
+                        FROM prescription_confirmation
                         WHERE prescription_device_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY prescription_device_id, state
                     """
-            self.env['prescription.registration'].flush(['prescription_id', 'prescription_device_id', 'state'])
+            self.env['prescription.confirmation'].flush(['prescription_id', 'prescription_device_id', 'state'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for prescription_device_id, state, num in self.env.cr.fetchall():
                 results.setdefault(prescription_device_id, {})[state_field[state]] = num
@@ -154,8 +154,8 @@ class PrescriptionDevice(models.Model):
             return True
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_if_registrations(self):
-        if self.registration_ids:
+    def _unlink_except_if_confirmations(self):
+        if self.confirmation_ids:
             raise UserError(_(
-                "The following devices cannot be deleted while they have one or more registrations linked to them:\n- %s",
+                "The following devices cannot be deleted while they have one or more confirmations linked to them:\n- %s",
                 '\n- '.join(self.mapped('name'))))

@@ -1,0 +1,26 @@
+.o_kanban_view.o_practice_kanban_view {
+    .o_kanban_record {
+        min-height: 140px;
+    }
+    .o_kanban_content {
+        .o_practice_fontsize_09 {
+            font-size: .9rem;
+        }
+
+        .o_practice_fontsize_11 {
+            font-size: 1.1rem;
+        }
+
+        .o_practice_fontsize_20 {
+            font-size: 2rem;
+        }
+    }
+}
+
+.o_kanban_view.o_practice_attendee_kanban_view {
+    @media (max-width: 768px) {
+        .o_practice_confirmation_kanban {
+            min-height: 80px;
+        }
+    }
+}

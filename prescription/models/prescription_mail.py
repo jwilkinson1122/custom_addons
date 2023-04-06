@@ -44,7 +44,7 @@ class PrescriptionTypeMail(models.Model):
         ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
-        ('after_sub', 'After each registration'),
+        ('after_sub', 'After each confirmation'),
         ('before_prescription', 'Before the prescription'),
         ('after_prescription', 'After the prescription')],
         string='Trigger', default="before_prescription", required=True)
@@ -90,15 +90,15 @@ class PrescriptionMailScheduler(models.Model):
         ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
-        ('after_sub', 'After each registration'),
+        ('after_sub', 'After each confirmation'),
         ('before_prescription', 'Before the prescription'),
         ('after_prescription', 'After the prescription')],
         string='Trigger ', default="before_prescription", required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
     # contact and status
-    mail_registration_ids = fields.One2many(
-        'prescription.mail.registration', 'scheduler_id',
-        help='Communication related to prescription registrations')
+    mail_confirmation_ids = fields.One2many(
+        'prescription.mail.confirmation', 'scheduler_id',
+        help='Communication related to prescription confirmations')
     mail_done = fields.Boolean("Sent", copy=False, readonly=True)
     mail_state = fields.Selection(
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent')],
@@ -128,7 +128,7 @@ class PrescriptionMailScheduler(models.Model):
     @api.depends('interval_type', 'scheduled_date', 'mail_done')
     def _compute_mail_state(self):
         for scheduler in self:
-            # registrations based
+            # confirmations based
             if scheduler.interval_type == 'after_sub':
                 scheduler.mail_state = 'running'
             # global prescription based
@@ -143,14 +143,14 @@ class PrescriptionMailScheduler(models.Model):
         for scheduler in self:
             now = fields.Datetime.now()
             if scheduler.interval_type == 'after_sub':
-                new_registrations = scheduler.prescription_id.registration_ids.filtered_domain(
+                new_confirmations = scheduler.prescription_id.confirmation_ids.filtered_domain(
                     [('state', 'not in', ('cancel', 'draft'))]
-                ) - scheduler.mail_registration_ids.registration_id
-                scheduler._create_missing_mail_registrations(new_registrations)
+                ) - scheduler.mail_confirmation_ids.confirmation_id
+                scheduler._create_missing_mail_confirmations(new_confirmations)
 
-                # execute scheduler on registrations
-                scheduler.mail_registration_ids.execute()
-                total_sent = len(scheduler.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
+                # execute scheduler on confirmations
+                scheduler.mail_confirmation_ids.execute()
+                total_sent = len(scheduler.mail_confirmation_ids.filtered(lambda reg: reg.mail_sent))
                 scheduler.update({
                     'mail_done': total_sent >= (scheduler.prescription_id.seats_reserved + scheduler.prescription_id.seats_used),
                     'mail_count_done': total_sent,
@@ -171,16 +171,16 @@ class PrescriptionMailScheduler(models.Model):
                     })
         return True
 
-    def _create_missing_mail_registrations(self, registrations):
+    def _create_missing_mail_confirmations(self, confirmations):
         new = []
         for scheduler in self:
             new += [{
-                'registration_id': registration.id,
+                'confirmation_id': confirmation.id,
                 'scheduler_id': scheduler.id,
-            } for registration in registrations]
+            } for confirmation in confirmations]
         if new:
-            return self.env['prescription.mail.registration'].create(new)
-        return self.env['prescription.mail.registration']
+            return self.env['prescription.mail.confirmation'].create(new)
+        return self.env['prescription.mail.confirmation']
 
     @api.model
     def _warn_template_error(self, scheduler, exception):
@@ -235,7 +235,7 @@ You receive this email because you are:
 
         for scheduler in schedulers:
             try:
-                # Prprescription a mega prefetch of the registration ids of all the prescriptions of all the schedulers
+                # Prprescription a mega prefetch of the confirmation ids of all the prescriptions of all the schedulers
                 self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
@@ -247,14 +247,14 @@ You receive this email because you are:
         return True
 
 
-class PrescriptionMailRegistration(models.Model):
-    _name = 'prescription.mail.registration'
-    _description = 'Registration Mail Scheduler'
+class PrescriptionMailConfirmation(models.Model):
+    _name = 'prescription.mail.confirmation'
+    _description = 'Confirmation Mail Scheduler'
     _rec_name = 'scheduler_id'
     _order = 'scheduled_date DESC'
 
     scheduler_id = fields.Many2one('prescription.mail', 'Mail Scheduler', required=True, ondelete='cascade')
-    registration_id = fields.Many2one('prescription.registration', 'Attendee', required=True, ondelete='cascade')
+    confirmation_id = fields.Many2one('prescription.confirmation', 'Attendee', required=True, ondelete='cascade')
     scheduled_date = fields.Datetime('Scheduled Time', compute='_compute_scheduled_date', store=True)
     mail_sent = fields.Boolean('Mail Sent')
 
@@ -262,7 +262,7 @@ class PrescriptionMailRegistration(models.Model):
         now = fields.Datetime.now()
         todo = self.filtered(lambda reg_mail:
             not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
+            reg_mail.confirmation_id.state in ['open', 'done'] and \
             (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
             reg_mail.scheduler_id.notification_type == 'mail'
         )
@@ -282,14 +282,14 @@ class PrescriptionMailRegistration(models.Model):
             }
             if not reg_mail.scheduler_id.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
-            reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
+            reg_mail.scheduler_id.template_ref.send_mail(reg_mail.confirmation_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 
-    @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
+    @api.depends('confirmation_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
         for mail in self:
-            if mail.registration_id:
-                date_open = mail.registration_id.date_open
+            if mail.confirmation_id:
+                date_open = mail.confirmation_id.date_open
                 date_open_datetime = date_open or fields.Datetime.now()
                 mail.scheduled_date = date_open_datetime + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
             else:

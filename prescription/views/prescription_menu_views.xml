@@ -3,7 +3,7 @@
     <data>
 
         <!-- MAIN MENU -->
-        <menuitem name="POD ERP" id="prescription_main_menu" sequence="125" groups="prescription.group_prescription_registration_desk" web_icon="prescription,static/description/icon.png"/>
+        <menuitem name="POD ERP" id="prescription_main_menu" sequence="125" groups="prescription.group_prescription_confirmation_desk" web_icon="prescription,static/description/icon.png"/>
 
         <!-- <record id="prescription.menu_accounts_root" model="ir.ui.menu">
 
@@ -22,14 +22,14 @@
         </record> -->
 
         <!-- ACCOUNTS -->
-        <menuitem name="Accounts" id="menu_accounts_root" parent="prescription.prescription_main_menu" sequence="1" groups="prescription.group_prescription_registration_desk"/>
+        <menuitem name="Accounts" id="menu_accounts_root" parent="prescription.prescription_main_menu" sequence="1" groups="prescription.group_prescription_confirmation_desk"/>
         <menuitem name="Clinics" id="menu_clinics" parent="prescription.menu_accounts_root" sequence="1" groups="prescription.group_prescription_user"/>
         <menuitem name="Contacts" id="menu_contacts" parent="prescription.menu_accounts_root" sequence="2" groups="prescription.group_prescription_user"/>
         <menuitem name="Patients" id="menu_patients" parent="prescription.menu_accounts_root" sequence="3" groups="prescription.group_prescription_user"/>
 
 
         <!-- HEADER: PRESCRIPTIONS -->
-        <menuitem name="Prescriptions" id="menu_prescription_prescription" sequence="2" parent="prescription.prescription_main_menu" groups="prescription.group_prescription_registration_desk"/>
+        <menuitem name="Prescriptions" id="menu_prescription_prescription" sequence="2" parent="prescription.prescription_main_menu" groups="prescription.group_prescription_confirmation_desk"/>
 
         <!-- HEADER: REPORTING -->
         <menuitem name="Reporting" id="menu_reporting_prescriptions" sequence="50" parent="prescription_main_menu" groups="prescription.group_prescription_user"/>

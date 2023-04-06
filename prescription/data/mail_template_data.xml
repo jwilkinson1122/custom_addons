@@ -2,9 +2,9 @@
 <odoo>
     <data noupdate="1">
 
-        <record id="prescription_registration_mail_template_badge" model="mail.template">
-            <field name="name">Prescription: Registration Badge</field>
-            <field name="model_id" ref="prescription.model_prescription_registration"/>
+        <record id="prescription_confirmation_mail_template_badge" model="mail.template">
+            <field name="name">Prescription: Confirmation Badge</field>
+            <field name="model_id" ref="prescription.model_prescription_confirmation"/>
             <field name="subject">Your badge for {{ object.prescription_id.name }}</field>
             <field name="email_from">{{ (object.prescription_id.organizer_id.email_formatted or object.prescription_id.user_id.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
@@ -24,16 +24,16 @@ Mitchell Admin</t>
                 </t>
             </div>
         </field>
-        <field name="report_template" ref="action_report_prescription_registration_foldable_badge"/>
+        <field name="report_template" ref="action_report_prescription_confirmation_foldable_badge"/>
         <field name="report_name">Foldable Badge - {{ (object.prescription_id.name or 'Prescription').replace('/','_') }}</field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="True"/>
     </record>
 
     <record id="prescription_subscription" model="mail.template">
-        <field name="name">Prescription: Registration</field>
-        <field name="model_id" ref="prescription.model_prescription_registration"/>
-        <field name="subject">Your registration at {{ object.prescription_id.name }}</field>
+        <field name="name">Prescription: Confirmation</field>
+        <field name="model_id" ref="prescription.model_prescription_confirmation"/>
+        <field name="subject">Your confirmation at {{ object.prescription_id.name }}</field>
         <field name="email_from">{{ (object.prescription_id.organizer_id.email_formatted or object.prescription_id.user_id.email_formatted or '') }}</field>
         <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
         <field name="body_html" type="html">
@@ -53,7 +53,7 @@ Mitchell Admin</t>
                                         <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                                             <tr>
                                                 <td valign="middle">
-                                                    <span style="font-size: 10px;">Your registration</span>
+                                                    <span style="font-size: 10px;">Your confirmation</span>
                                                     <br/>
                                                     <span style="font-size: 20px; font-weight: bold;">
                                                         <t t-out="object.name or ''">Oscar Morgan</t>
@@ -86,7 +86,7 @@ Mitchell Admin</t>
                                                 <td valign="top" style="font-size: 14px;">
                                                     <div>
                         Hello <t t-out="object.name or ''">Oscar Morgan</t>,                                                        <br/>
-                        We are happy to confirm your registration to the prescription
+                        We are happy to confirm your confirmation to the prescription
                                                         <t t-if="is_online">
                                                             <a t-att-href="object.prescription_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.prescription_id.name or ''">OpenWood Collection Online Reveal</a>
                                                         </t>
@@ -309,14 +309,14 @@ Mitchell Admin</t>
             </tr>
         </table>
     </field>
-    <field name="report_template" ref="action_report_prescription_registration_full_page_device"/>
+    <field name="report_template" ref="action_report_prescription_confirmation_full_page_device"/>
     <field name="report_name">Full Page Device - {{ (object.prescription_id.name or 'Prescription').replace('/','') }}</field>
     <field name="lang">{{ object.partner_id.lang }}</field>
 </record>
 
 <record id="prescription_reminder" model="mail.template">
     <field name="name">Prescription: Reminder</field>
-    <field name="model_id" ref="prescription.model_prescription_registration"/>
+    <field name="model_id" ref="prescription.model_prescription_confirmation"/>
     <field name="subject">{{ object.prescription_id.name }}: {{ object.get_date_range_str() }}</field>
     <field name="email_from">{{ (object.prescription_id.organizer_id.email_formatted or object.prescription_id.user_id.email_formatted or '') }}</field>
     <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
@@ -337,7 +337,7 @@ Mitchell Admin</t>
                                     <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                                         <tr>
                                             <td valign="middle">
-                                                <span style="font-size: 10px;">Your registration</span>
+                                                <span style="font-size: 10px;">Your confirmation</span>
                                                 <br/>
                                                 <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Oscar Morgan</span>
                                             </td>
@@ -394,7 +394,7 @@ Mitchell Admin</t>
                                                     <br />
                                                 </div>
                                                 <div>
-                        We confirm your registration and hope to meet you there,<br/>
+                        We confirm your confirmation and hope to meet you there,<br/>
                                                 <span style="color: #454748;">
                         --                                                    <br/>
                                                     <t t-if="prescription_organizer">

@@ -74,8 +74,8 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>Registration</h2>
-                        <div class="row mt16 o_settings_container" name="registration_setting_container">
+                        <h2>Confirmation</h2>
+                        <div class="row mt16 o_settings_container" name="confirmation_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box" id="sell_devices">
                                 <div class="o_setting_left_pane">
                                     <field name="module_prescription_sale"/>

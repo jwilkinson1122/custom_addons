@@ -87,14 +87,14 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
         self.assertEqual(prescription_next_scheduler.mail_state, 'scheduled')
         self.assertEqual(prescription_next_scheduler.mail_count_done, 0)
 
-        # create some registrations
+        # create some confirmations
         with freeze_time(now), self.mock_mail_gateway():
-            reg1 = self.env['prescription.registration'].with_user(self.user_prescriptionuser).create({
+            reg1 = self.env['prescription.confirmation'].with_user(self.user_prescriptionuser).create({
                 'prescription_id': test_prescription.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
-            reg2 = self.env['prescription.registration'].with_user(self.user_prescriptionuser).create({
+            reg2 = self.env['prescription.confirmation'].with_user(self.user_prescriptionuser).create({
                 'prescription_id': test_prescription.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
@@ -103,64 +103,64 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
         # REGISTRATIONS / PRE SCHEDULERS
         # --------------------------------------------------
 
-        # check registration state
-        self.assertTrue(all(reg.state == 'open' for reg in reg1 + reg2), 'Registrations: should be auto-confirmed')
-        self.assertTrue(all(reg.date_open == now for reg in reg1 + reg2), 'Registrations: should have open date set to confirm date')
+        # check confirmation state
+        self.assertTrue(all(reg.state == 'open' for reg in reg1 + reg2), 'Confirmations: should be auto-confirmed')
+        self.assertTrue(all(reg.date_open == now for reg in reg1 + reg2), 'Confirmations: should have open date set to confirm date')
 
-        # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 2, 'prescription: should have 2 scheduled communication (1 / registration)')
-        for mail_registration in after_sub_scheduler.mail_registration_ids:
-            self.assertEqual(mail_registration.scheduled_date, now)
-            self.assertTrue(mail_registration.mail_sent, 'prescription: registration mail should be sent at registration creation')
+        # verify that subscription scheduler was auto-executed after each confirmation
+        self.assertEqual(len(after_sub_scheduler.mail_confirmation_ids), 2, 'prescription: should have 2 scheduled communication (1 / confirmation)')
+        for mail_confirmation in after_sub_scheduler.mail_confirmation_ids:
+            self.assertEqual(mail_confirmation.scheduled_date, now)
+            self.assertTrue(mail_confirmation.mail_sent, 'prescription: confirmation mail should be sent at confirmation creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'prescription: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler.mail_state, 'running')
         self.assertEqual(after_sub_scheduler.mail_count_done, 2)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 2 scheduled emails (1 / confirmation)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': 'Your registration at %s' % test_prescription.name,
+            fields_values={'subject': 'Your confirmation at %s' % test_prescription.name,
                            'email_from': self.user_prescriptionmanager.company_id.email_formatted,
                           })
 
         # same for second scheduler: scheduled but not sent
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'prescription: should have 2 scheduled communication (1 / registration)')
-        for mail_registration in after_sub_scheduler_2.mail_registration_ids:
-            self.assertEqual(mail_registration.scheduled_date, now + relativedelta(hours=1))
-            self.assertFalse(mail_registration.mail_sent, 'prescription: registration mail should be scheduled, not sent')
+        self.assertEqual(len(after_sub_scheduler_2.mail_confirmation_ids), 2, 'prescription: should have 2 scheduled communication (1 / confirmation)')
+        for mail_confirmation in after_sub_scheduler_2.mail_confirmation_ids:
+            self.assertEqual(mail_confirmation.scheduled_date, now + relativedelta(hours=1))
+            self.assertFalse(mail_confirmation.mail_sent, 'prescription: confirmation mail should be scheduled, not sent')
         self.assertFalse(after_sub_scheduler_2.mail_done, 'prescription: all subscription mails should be scheduled, not sent')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 0)
 
         # execute prescription reminder scheduler explicitly, before scheduled date -> should not do anything
         with freeze_time(now), self.mock_mail_gateway():
             after_sub_scheduler_2.execute()
-        self.assertFalse(any(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
+        self.assertFalse(any(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_confirmation_ids))
         self.assertFalse(after_sub_scheduler_2.mail_done)
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 0)
         self.assertEqual(len(self._new_mails), 0, 'prescription: should not send mails before scheduled date')
 
         # execute prescription reminder scheduler explicitly, right at scheduled date -> should sent mails
-        now_registration = now + relativedelta(hours=1)
-        with freeze_time(now_registration), self.mock_mail_gateway():
+        now_confirmation = now + relativedelta(hours=1)
+        with freeze_time(now_confirmation), self.mock_mail_gateway():
             after_sub_scheduler_2.execute()
 
-        # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'prescription: should have 2 scheduled communication (1 / registration)')
-        self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
+        # verify that subscription scheduler was auto-executed after each confirmation
+        self.assertEqual(len(after_sub_scheduler_2.mail_confirmation_ids), 2, 'prescription: should have 2 scheduled communication (1 / confirmation)')
+        self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_confirmation_ids))
         self.assertTrue(after_sub_scheduler_2.mail_done, 'prescription: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 2)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 2 scheduled emails (1 / confirmation)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': 'Your registration at %s' % test_prescription.name,
+            fields_values={'subject': 'Your confirmation at %s' % test_prescription.name,
                            'email_from': self.user_prescriptionmanager.company_id.email_formatted,
                           })
 
@@ -190,7 +190,7 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
         self.assertEqual(prescription_prev_scheduler.mail_state, 'sent', 'prescription: reminder scheduler should have run')
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'prescription: should have scheduled 2 mails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 2, 'prescription: should have scheduled 2 mails (1 / confirmation)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
@@ -204,7 +204,7 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
 
         test_prescription.write({'auto_confirm': False})
         with freeze_time(now_start), self.mock_mail_gateway():
-            reg3 = self.env['prescription.registration'].with_user(self.user_prescriptionuser).create({
+            reg3 = self.env['prescription.confirmation'].with_user(self.user_prescriptionuser).create({
                 'prescription_id': test_prescription.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
@@ -216,36 +216,36 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
         # schedulers state untouched
         self.assertTrue(prescription_prev_scheduler.mail_done)
         self.assertFalse(prescription_next_scheduler.mail_done)
-        self.assertTrue(after_sub_scheduler.mail_done, 'prescription: scheduler on registration not updated next to draft registration')
-        self.assertTrue(after_sub_scheduler_2.mail_done, 'prescription: scheduler on registration not updated next to draft registration')
+        self.assertTrue(after_sub_scheduler.mail_done, 'prescription: scheduler on confirmation not updated next to draft confirmation')
+        self.assertTrue(after_sub_scheduler_2.mail_done, 'prescription: scheduler on confirmation not updated next to draft confirmation')
 
-        # confirm registration -> should trigger registration schedulers
+        # confirm confirmation -> should trigger confirmation schedulers
         # NOTE: currently all schedulers are based on date_open which equals create_date
         # meaning several communications may be sent in the time time
         with freeze_time(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
             reg3.action_confirm()
 
-        # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 3, 'prescription: should have 3 scheduled communication (1 / registration)')
-        new_mail_reg = after_sub_scheduler.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
+        # verify that subscription scheduler was auto-executed after new confirmation confirmed
+        self.assertEqual(len(after_sub_scheduler.mail_confirmation_ids), 3, 'prescription: should have 3 scheduled communication (1 / confirmation)')
+        new_mail_reg = after_sub_scheduler.mail_confirmation_ids.filtered(lambda mail_reg: mail_reg.confirmation_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start)
-        self.assertTrue(new_mail_reg.mail_sent, 'prescription: registration mail should be sent at registration creation')
+        self.assertTrue(new_mail_reg.mail_sent, 'prescription: confirmation mail should be sent at confirmation creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'prescription: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler.mail_count_done, 3)
-        # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 3, 'prescription: should have 3 scheduled communication (1 / registration)')
-        new_mail_reg = after_sub_scheduler_2.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
+        # verify that subscription scheduler was auto-executed after new confirmation confirmed
+        self.assertEqual(len(after_sub_scheduler_2.mail_confirmation_ids), 3, 'prescription: should have 3 scheduled communication (1 / confirmation)')
+        new_mail_reg = after_sub_scheduler_2.mail_confirmation_ids.filtered(lambda mail_reg: mail_reg.confirmation_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start + relativedelta(hours=1))
-        self.assertTrue(new_mail_reg.mail_sent, 'prescription: registration mail should be sent at registration creation')
+        self.assertTrue(new_mail_reg.mail_sent, 'prescription: confirmation mail should be sent at confirmation creation')
         self.assertTrue(after_sub_scheduler_2.mail_done, 'prescription: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 3)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 1 scheduled emails (new registration only)')
+        self.assertEqual(len(self._new_mails), 2, 'prescription: should have 1 scheduled emails (new confirmation only)')
         # manual check because 2 identical mails are sent and mail tools do not support it easily
         for mail in self._new_mails:
             self.assertEqual(mail.email_from, self.user_prescriptionmanager.company_id.email_formatted)
-            self.assertEqual(mail.subject, 'Your registration at %s' % test_prescription.name)
+            self.assertEqual(mail.subject, 'Your confirmation at %s' % test_prescription.name)
             self.assertEqual(mail.state, 'outgoing')
             self.assertEqual(mail.email_to, formataddr((reg3.name, reg3.email)))
 
@@ -265,7 +265,7 @@ class TestMailSchedule(TestPrescriptionCommon, MockEmail):
         self.assertEqual(prescription_next_scheduler.mail_count_done, 3)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 3, 'prescription: should have scheduled 3 mails, one for each registration')
+        self.assertEqual(len(self._new_mails), 3, 'prescription: should have scheduled 3 mails, one for each confirmation')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email)), formataddr((reg3.name, reg3.email))],
             'outgoing',

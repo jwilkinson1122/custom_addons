@@ -1,6 +1,6 @@
-from . import s3
-from . import s3_constants
-from . import s3_models
+# from . import s3
+# from . import s3_constants
+# from . import s3_models
 from . import product
 from . import product_template
 from . import product_uom

@@ -31,24 +31,24 @@ class TestPrescriptionData(TestPrescriptionCommon):
     def test_prescription_date_computation(self):
         prescription = self.prescription_0.with_user(self.env.user)
         prescription.write({
-            'registration_ids': [(0, 0, {'partner_id': self.prescription_customer.id, 'name': 'test_reg'})],
+            'confirmation_ids': [(0, 0, {'partner_id': self.prescription_customer.id, 'name': 'test_reg'})],
             'date_begin': datetime(2020, 1, 31, 15, 0, 0),
             'date_end': datetime(2020, 4, 5, 18, 0, 0),
         })
-        registration = prescription.registration_ids[0]
-        self.assertEqual(registration.get_date_range_str(), u'today')
+        confirmation = prescription.confirmation_ids[0]
+        self.assertEqual(confirmation.get_date_range_str(), u'today')
 
         prescription.date_begin = datetime(2020, 2, 1, 15, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'tomorrow')
+        self.assertEqual(confirmation.get_date_range_str(), u'tomorrow')
 
         prescription.date_begin = datetime(2020, 2, 2, 6, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'in 2 days')
+        self.assertEqual(confirmation.get_date_range_str(), u'in 2 days')
 
         prescription.date_begin = datetime(2020, 2, 20, 17, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'next month')
+        self.assertEqual(confirmation.get_date_range_str(), u'next month')
 
         prescription.date_begin = datetime(2020, 3, 1, 10, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
+        self.assertEqual(confirmation.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
 
         # Is actually 8:30 to 20:00 in Mexico
         prescription.write({
@@ -94,8 +94,8 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.prescription_mail_ids, self.env['prescription.mail'])
         self.assertEqual(prescription.prescription_device_ids, self.env['prescription.prescription.device'])
 
-        registration = self._create_registrations(prescription, 1)
-        self.assertEqual(registration.state, 'draft')  # prescription is not auto confirm
+        confirmation = self._create_confirmations(prescription, 1)
+        self.assertEqual(confirmation.state, 'draft')  # prescription is not auto confirm
 
         # ------------------------------------------------------------
         # FILL SYNC TEST
@@ -107,7 +107,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_prescription',
                 'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('prescription.prescription_reminder')})
             ],
-            'prescription_type_device_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
+            'prescription_type_device_ids': [(5, 0), (0, 0, {'name': 'TestConfirmation'})],
         })
         prescription.write({'prescription_type_id': prescription_type.id})
         self.assertEqual(prescription.date_tz, 'Europe/Paris')
@@ -136,14 +136,14 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.seats_max, 0)
         self.assertEqual(len(prescription.prescription_device_ids), 1)
         prescription_device1 = prescription.prescription_device_ids[0]
-        self.assertEqual(prescription_device1.name, 'TestRegistration')
+        self.assertEqual(prescription_device1.name, 'TestConfirmation')
 
     @users('user_prescriptionmanager')
     def test_prescription_configuration_mails_from_type(self):
         """ Test data computation (related to mails) of prescription coming from its prescription.type template.
         This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
         required to highlight an undesired behavior when switching prescription_type templates :
-        prescription_mail_ids not linked to a registration were generated and kept when switching between
+        prescription_mail_ids not linked to a confirmation were generated and kept when switching between
         different templates in the Form, which could rapidly lead to a substantial amount of
         undesired lines. """
         # setup test records
@@ -184,12 +184,12 @@ class TestPrescriptionData(TestPrescriptionCommon):
             ]
         })
         mail = prescription.prescription_mail_ids[0]
-        registration = self._create_registrations(prescription, 1)
-        self.assertEqual(registration.state, 'open')  # prescription auto confirms
-        # verify that mail is linked to the registration
+        confirmation = self._create_confirmations(prescription, 1)
+        self.assertEqual(confirmation.state, 'open')  # prescription auto confirms
+        # verify that mail is linked to the confirmation
         self.assertEqual(
-            set(mail.mapped('mail_registration_ids.registration_id.id')),
-            set([registration.id])
+            set(mail.mapped('mail_confirmation_ids.confirmation_id.id')),
+            set([confirmation.id])
         )
         # start test scenario
         prescription_form = Form(prescription)
@@ -202,7 +202,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
         prescription_form.prescription_type_id = prescription_type_mails
         # verify that 2 mails were computed
         self.assertEqual(len(prescription_form.prescription_mail_ids._records), 2)
-        # verify that the mail linked to the registration was kept
+        # verify that the mail linked to the confirmation was kept
         self.assertTrue(filter(lambda m: m.get('id', None) == mail.id, prescription_form.prescription_mail_ids._records))
         # since the other computed prescription.mail is to be created from an prescription.type.mail template,
         # verify that its attributes are the correct ones
@@ -212,7 +212,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(computed_mail.get('interval_type', None), 'after_prescription')
         # switch back to an prescription type without a mail template
         prescription_form.prescription_type_id = prescription_type_default
-        # verify that the mail linked to the registration was kept, and the other removed
+        # verify that the mail linked to the confirmation was kept, and the other removed
         self.assertEqual(
             set(map(lambda m: m.get('id', None), prescription_form.prescription_mail_ids._records)),
             set([mail.id])
@@ -245,7 +245,7 @@ class TestPrescriptionData(TestPrescriptionCommon):
         """ Test data computation (related to devices) of prescription coming from its prescription.type template.
         This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
         required to highlight an undesired behavior when switching prescription_type templates :
-        prescription_device_ids not linked to a registration were generated and kept when switching between
+        prescription_device_ids not linked to a confirmation were generated and kept when switching between
         different templates in the Form, which could rapidly lead to a substantial amount of
         undesired lines. """
         # setup test records
@@ -276,35 +276,35 @@ class TestPrescriptionData(TestPrescriptionCommon):
             'prescription_device_ids': [
                 Command.clear(),
                 Command.create({
-                    'name': 'Registration Device',
+                    'name': 'Confirmation Device',
                     'seats_max': 10,
                 })
             ]
         })
         device = prescription.prescription_device_ids[0]
-        registration = self._create_registrations(prescription, 1)
-        # link the device to the registration
-        registration.write({'prescription_device_id': device.id})
+        confirmation = self._create_confirmations(prescription, 1)
+        # link the device to the confirmation
+        confirmation.write({'prescription_device_id': device.id})
         # start test scenario
         prescription_form = Form(prescription)
         # verify that the device is linked to the prescription in the form
         self.assertEqual(
             set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
-            set(['Registration Device'])
+            set(['Confirmation Device'])
         )
         # switch to an prescription_type with a device template which should be computed
         prescription_form.prescription_type_id = prescription_type_devices
         # verify that both devices are computed
         self.assertEqual(
             set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
-            set(['Registration Device', 'Default Device'])
+            set(['Confirmation Device', 'Default Device'])
         )
         # switch back to an prescription_type without default devices
         prescription_form.prescription_type_id = prescription_type_default
-        # verify that the device linked to the registration was kept, and the other removed
+        # verify that the device linked to the confirmation was kept, and the other removed
         self.assertEqual(
             set(map(lambda m: m.get('name', None), prescription_form.prescription_device_ids._records)),
-            set(['Registration Device'])
+            set(['Confirmation Device'])
         )
 
     @users('user_prescriptionmanager')
@@ -338,68 +338,68 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.prescription_mail_ids, self.env['prescription.mail'])
 
     def test_prescription_mail_filter_template_on_prescription(self):
-        """Test that the mail template are filtered to show only those which are related to the prescription registration model.
+        """Test that the mail template are filtered to show only those which are related to the prescription confirmation model.
 
         This is important to be able to show only relevant mail templates on the related
         field "template_ref".
         """
-        self.env['mail.template'].search([('model', '=', 'prescription.registration')]).unlink()
-        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('prescription.registration').id, 'name': 'test template'})
+        self.env['mail.template'].search([('model', '=', 'prescription.confirmation')]).unlink()
+        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('prescription.confirmation').id, 'name': 'test template'})
         self.env['mail.template'].create({'model_id': self.env['ir.model']._get('res.partner').id, 'name': 'test template'})
         templates = self.env['mail.template'].with_context(filter_template_on_prescription=True).name_search('test template')
-        self.assertEqual(len(templates), 1, 'Should return only mail templates related to the prescription registration model')
+        self.assertEqual(len(templates), 1, 'Should return only mail templates related to the prescription confirmation model')
 
     @users('user_prescriptionmanager')
     def test_prescription_registrable(self):
-        """Test if `_compute_prescription_registrations_open` works properly."""
+        """Test if `_compute_prescription_confirmations_open` works properly."""
         prescription = self.prescription_0.with_user(self.env.user)
         prescription.write({
             'date_begin': datetime(2020, 1, 30, 8, 0, 0),
             'date_end': datetime(2020, 1, 31, 8, 0, 0),
         })
-        self.assertFalse(prescription.prescription_registrations_open)
+        self.assertFalse(prescription.prescription_confirmations_open)
         prescription.write({
             'date_end': datetime(2020, 2, 4, 8, 0, 0),
         })
-        self.assertTrue(prescription.prescription_registrations_open)
+        self.assertTrue(prescription.prescription_confirmations_open)
 
         # device without dates boundaries -> ok
         device = self.env['prescription.prescription.device'].create({
             'name': 'TestDevice',
             'prescription_id': prescription.id,
         })
-        self.assertTrue(prescription.prescription_registrations_open)
+        self.assertTrue(prescription.prescription_confirmations_open)
 
-        # even with valid devices, date limits registrations
+        # even with valid devices, date limits confirmations
         prescription.write({
             'date_begin': datetime(2020, 1, 28, 15, 0, 0),
             'date_end': datetime(2020, 1, 30, 15, 0, 0),
         })
-        self.assertFalse(prescription.prescription_registrations_open)
+        self.assertFalse(prescription.prescription_confirmations_open)
 
         # no more seats available
-        registration = self.env['prescription.registration'].create({
+        confirmation = self.env['prescription.confirmation'].create({
             'name': 'Albert Test',
             'prescription_id': prescription.id,
         })
-        registration.action_confirm()
+        confirmation.action_confirm()
         prescription.write({
             'date_end': datetime(2020, 2, 1, 15, 0, 0),
             'seats_max': 1,
             'seats_limited': True,
         })
         self.assertEqual(prescription.seats_available, 0)
-        self.assertFalse(prescription.prescription_registrations_open)
+        self.assertFalse(prescription.prescription_confirmations_open)
 
         # seats available are back
-        registration.unlink()
+        confirmation.unlink()
         self.assertEqual(prescription.seats_available, 1)
-        self.assertTrue(prescription.prescription_registrations_open)
+        self.assertTrue(prescription.prescription_confirmations_open)
 
         # but devices are expired
         device.write({'end_sale_datetime': datetime(2020, 1, 30, 15, 0, 0)})
         self.assertTrue(device.is_expired)
-        self.assertFalse(prescription.prescription_registrations_open)
+        self.assertFalse(prescription.prescription_confirmations_open)
 
     @users('user_prescriptionmanager')
     def test_prescription_ongoing(self):
@@ -450,20 +450,20 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.seats_used, 0)
         self.assertEqual(prescription.seats_expected, 0)
 
-        # create registration in order to check the seats computation
+        # create confirmation in order to check the seats computation
         self.assertTrue(prescription.auto_confirm)
         for x in range(5):
-            reg = self.env['prescription.registration'].create({
+            reg = self.env['prescription.confirmation'].create({
                 'prescription_id': prescription.id,
                 'name': 'reg_open',
             })
             self.assertEqual(reg.state, 'open')
-        reg_draft = self.env['prescription.registration'].create({
+        reg_draft = self.env['prescription.confirmation'].create({
             'prescription_id': prescription.id,
             'name': 'reg_draft',
         })
         reg_draft.write({'state': 'draft'})
-        reg_done = self.env['prescription.registration'].create({
+        reg_done = self.env['prescription.confirmation'].create({
             'prescription_id': prescription.id,
             'name': 'reg_done',
         })
@@ -475,11 +475,11 @@ class TestPrescriptionData(TestPrescriptionCommon):
         self.assertEqual(prescription.seats_expected, 7)
 
 
-class TestPrescriptionRegistrationData(TestPrescriptionCommon):
+class TestPrescriptionConfirmationData(TestPrescriptionCommon):
 
     @users('user_prescriptionmanager')
-    def test_registration_partner_sync(self):
-        """ Test registration computed fields about partner """
+    def test_confirmation_partner_sync(self):
+        """ Test confirmation computed fields about partner """
         test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
         test_phone = '0456001122'
 
@@ -488,11 +488,11 @@ class TestPrescriptionRegistrationData(TestPrescriptionCommon):
 
         # take all from partner
         prescription.write({
-            'registration_ids': [(0, 0, {
+            'confirmation_ids': [(0, 0, {
                 'partner_id': customer.id,
             })]
         })
-        new_reg = prescription.registration_ids[0]
+        new_reg = prescription.confirmation_ids[0]
         self.assertEqual(new_reg.partner_id, customer)
         self.assertEqual(new_reg.name, customer.name)
         self.assertEqual(new_reg.email, customer.email)
@@ -500,32 +500,32 @@ class TestPrescriptionRegistrationData(TestPrescriptionCommon):
 
         # partial update
         prescription.write({
-            'registration_ids': [(0, 0, {
+            'confirmation_ids': [(0, 0, {
                 'partner_id': customer.id,
                 'name': 'Nibbler In Space',
                 'email': test_email,
             })]
         })
-        new_reg = prescription.registration_ids.sorted()[0]
+        new_reg = prescription.confirmation_ids.sorted()[0]
         self.assertEqual(new_reg.partner_id, customer)
         self.assertEqual(
             new_reg.name, 'Nibbler In Space',
-            'Registration should take user input over computed partner value')
+            'Confirmation should take user input over computed partner value')
         self.assertEqual(
             new_reg.email, test_email,
-            'Registration should take user input over computed partner value')
+            'Confirmation should take user input over computed partner value')
         self.assertEqual(
             new_reg.phone, customer.phone,
-            'Registration should take partner value if not user input')
+            'Confirmation should take partner value if not user input')
 
         # already filled information should not be updated
         prescription.write({
-            'registration_ids': [(0, 0, {
+            'confirmation_ids': [(0, 0, {
                 'name': 'Nibbler In Space',
                 'phone': test_phone,
             })]
         })
-        new_reg = prescription.registration_ids.sorted()[0]
+        new_reg = prescription.confirmation_ids.sorted()[0]
         self.assertEqual(new_reg.name, 'Nibbler In Space')
         self.assertEqual(new_reg.email, False)
         self.assertEqual(new_reg.phone, test_phone)
@@ -536,7 +536,7 @@ class TestPrescriptionRegistrationData(TestPrescriptionCommon):
         self.assertEqual(new_reg.phone, test_phone)
 
     @users('user_prescriptionmanager')
-    def test_registration_partner_sync_company(self):
+    def test_confirmation_partner_sync_company(self):
         """ Test synchronization involving companies """
         prescription = self.env['prescription.prescription'].browse(self.prescription_0.ids)
         customer = self.env['res.partner'].browse(self.prescription_customer.id)
@@ -558,11 +558,11 @@ class TestPrescriptionRegistrationData(TestPrescriptionCommon):
 
         # take all from partner
         prescription.write({
-            'registration_ids': [(0, 0, {
+            'confirmation_ids': [(0, 0, {
                 'partner_id': customer.id,
             })]
         })
-        new_reg = prescription.registration_ids[0]
+        new_reg = prescription.confirmation_ids[0]
         self.assertEqual(new_reg.partner_id, customer)
         self.assertEqual(new_reg.name, contact.name)
         self.assertEqual(new_reg.email, contact.email)
