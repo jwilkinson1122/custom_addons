@@ -44,13 +44,12 @@
                     <separator/>
                     <group name="practice_information">
                         <group name="practice_information">
-                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="practice_id" placeholder="Primary Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                             <field name="other_practice_ids" placeholder="Other Practice" widget="many2many_tags" />
                         </group>
                         <group name="practitioner_type">
                             <field name="practitioner_type" widget="radio" options="{'horizontal': true}" />
                             <field name="role_ids" placeholder="Roles" widget="many2many_tags" options="{'no_create_edit': True}" />
-                            <!-- <field name="practitioner_type" widget="radio"/> -->
                         </group>
                     </group>
                     <separator/>

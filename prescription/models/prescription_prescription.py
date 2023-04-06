@@ -216,15 +216,16 @@ class PrescriptionPrescription(models.Model):
             self, fields.Datetime.now() + timedelta(days=1)
         )
         return fields.Datetime.to_string(end_date)
-
-    # @api.model
-    # def _get_hold_date(self):
-    #     self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
-    #     hold_date = fields.Datetime.context_timestamp(
-    #         self, fields.Datetime.now() + timedelta(days=1)
-    #     )
-    #     return fields.Datetime.to_string(hold_date)
     
+    @api.model
+    def _get_date_hold(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        date_hold = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now() + timedelta(days=1)
+        )
+        return fields.Datetime.to_string(date_hold)
+
+
     # @api.depends('practitioner_id')
     # def _compute_request_date_onchange(self):
     #     today_date = fields.Date.today()
@@ -246,6 +247,7 @@ class PrescriptionPrescription(models.Model):
     date_begin = fields.Datetime("Book In", required=True, tracking=True, default=_get_begin_date)
     # date_end = fields.Datetime(string='Complete Date', tracking=True)
     date_end = fields.Datetime("Book Out", tracking=True)
+    date_hold = fields.Datetime("Hold", readonly=True, default=_get_hold_date)
     # request_date = fields.Date(default=lambda s: fields.Date.today(), compute="_compute_request_date_onchange", store=True, readonly=False)
     # request_date = fields.Datetime('Requested', copy=False, help="This is the delivery date requested by the customer. "
     #                                        "If set, the delivery order will be scheduled based on "
@@ -418,6 +420,7 @@ class PrescriptionPrescription(models.Model):
             else:
                 prescription.date_end_located = False
 
+    
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
         now = fields.Datetime.now()

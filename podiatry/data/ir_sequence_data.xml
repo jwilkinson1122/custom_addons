@@ -13,14 +13,14 @@
         <field name="name">Practice ID</field>
         <field name="code">podiatry.practice</field>
         <field name="prefix">ID</field>
-        <field name="padding">6</field>
+        <field name="padding">4</field>
     </record>
     <!--sequence for practitioner-->
     <record id="sequence_podiatry_practitioner" model="ir.sequence">
         <field name="name">Practitioner ID</field>
         <field name="code">podiatry.practitioner</field>
         <field name="prefix">ID</field>
-        <field name="padding">6</field>
+        <field name="padding">4</field>
     </record>
     <!--sequence for prescription-->
     <record id="sequence_podiatry_prescription" model="ir.sequence">
