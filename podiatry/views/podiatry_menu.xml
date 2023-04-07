@@ -43,6 +43,7 @@
         <!-- <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/> -->
         <!-- Configuration Sub Menu - Stages  -->
         <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
+        <!-- <menuitem id="menu_specialties" name="Specialties" parent="podiatry.menu_configuration_root" action="action_podiatry_specialties" sequence="3"/> -->
 
         <!-- Configuration Sub Menu - Product Categories  -->
         <!-- <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>

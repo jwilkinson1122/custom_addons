@@ -38,11 +38,11 @@
         </field>
     </record>
 
-    <record id="podiatry_specialty_action" model="ir.actions.act_window">
+    <record id="action_podiatry_specialties" model="ir.actions.act_window">
         <field name="name">Specialties</field>
         <field name="res_model">podiatry.specialty</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="podiatry_specialty_menu" name="Specialties" parent="podiatry_conf_practitioner_menu" action="podiatry_specialty_action" sequence="30"/>
+    <!-- <menuitem id="podiatry_specialty_menu" name="Specialties" parent="podiatry_conf_practitioner_menu" action="action_podiatry_specialties" sequence="30"/> -->
 </odoo>

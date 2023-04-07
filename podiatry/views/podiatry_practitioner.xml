@@ -52,7 +52,7 @@
                             <field name="role_ids" placeholder="Roles" widget="many2many_tags" options="{'no_create_edit': True}" />
                         </group>
                     </group>
-                    <separator/>
+                    <!-- <separator/> -->
                     <group name="practitioner_contact">
                         <group name="address_information" string="ADDRESS">
                             <field name="street" class="o_address_street"/>

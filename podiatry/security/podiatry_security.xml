@@ -42,9 +42,15 @@
         <field name="category_id" ref="ir_module_category_medical"/>
         <field name="implied_ids" eval="[(4, ref('group_medical_manager'))]"/>
     </record>
-
+    
     <record id="base.group_erp_manager" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('group_medical_configurator'))]"/>
     </record>
 
+    <!-- access_practice_assistant_specialty,access_practice_assistant_specialty,model_podiatry_specialty,podiatry.group_medical_assistant,1,1,1,0
+access_practice_manager_specialty,access_practice_manager_specialty,model_podiatry_specialty,podiatry.group_medical_practice_manager,1,0,0,0
+access_practice_practitioner_specialty,access_practice_practitioner_specialty,model_podiatry_specialty,podiatry.group_medical_practitioner,1,1,1,0
+access_practice_user_specialty,access_practice_user_specialty,model_podiatry_specialty,podiatry.group_medical_user,1,1,1,0 -->
+
+  
 </odoo>
