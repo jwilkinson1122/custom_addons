@@ -52,22 +52,18 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div name="avatar">
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
+                    <div name="reference">
+                        <h1 class="d-flex">
+                            <field name="reference"/>
+                        </h1>
                     </div>
                     <div name="title" class="oe_title">
-                        <div name="reference">
-                            <h1>
-                                <field name="reference"/>
-                            </h1>
-                        </div>
-                        <div name="name">
-                            <h1>
-                                <field name="name" required="1" placeholder="Patient's Name"/>
-                            </h1>
-                        </div>
+                        <h1>
+                            <field name="name" required="1" placeholder="Patient Name"/>
+                        </h1>
                     </div>
-
                     <group name="responsible" string="Responsible">
                         <group name="practice_information">
                             <field name="practice_id" required="1"/>
@@ -93,8 +89,8 @@
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
                         </group>
-
                     </group>
+                    <separator/>
                     <notebook>
                         <page name="patient_attributes" string="Attributes">
                             <group name="attributes" string="Attributes">

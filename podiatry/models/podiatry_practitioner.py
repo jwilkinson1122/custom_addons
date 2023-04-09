@@ -69,7 +69,7 @@ class Practitioner(models.Model):
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
     other_practice_ids = fields.Many2many(
-        string='Other Practice',
+        string='Other',
         comodel_name='podiatry.practice',
     )
 
