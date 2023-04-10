@@ -60,15 +60,20 @@ class Patient(models.Model):
         ('other', 'Other'),
     ], string="Diagnosis")
     
-    weight = fields.Float()
-    weight_uom = fields.Many2one(
-        string="Weight unit",
-        comodel_name="uom.uom",
-        default=lambda s: s.env['res.lang'].default_uom_by_category('Weight'),
-        domain=lambda self: [(
-            'category_id', '=',
-            self.env.ref('uom.product_uom_categ_kgm').id)
-        ])
+    # weight = fields.Float("Weight")
+    # weight_uom = fields.Many2one(
+    #     "product.uom", "Weight UoM",
+    #     domain=lambda self: [('category_id', '=',
+    #                           self.env.ref('product.uom_categ_weight').id)]
+    # )
+    
+    # height = fields.Float("Height")
+    # height_uom = fields.Many2one(
+    #     "product.uom", "Height UoM",
+    #     domain=lambda self: [('category_id', '=',
+    #                           self.env.ref('product.uom_categ_length').id)]
+    # )
+
 
     signature = fields.Binary(string="Signature")
 

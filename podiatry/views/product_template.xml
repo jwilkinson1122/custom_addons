@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- <xpath expr="//page[@name='inventory']" position="after">
+        <page name='helpdesk_ticket_product' string='Helpdesk' attrs="{'invisible':[('product_variant_count','&gt;', 1)]}">
+            <group>
+                <field name='is_helpdesk'/>
+                <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+            </group>
+        </page>
+    </xpath> -->
+
     <!--************* PRODUCT TEMPLATE(SHELL/FOUNDATION) **********-->
 
     <record id="action_product_custom_device" model="ir.actions.act_window">
@@ -46,6 +56,16 @@
                 <label for="is_otc_device" string="OTC"/>
                 <field name="is_brace_device"/>
                 <label for="is_brace_device" string="Brace"/>
+            </xpath>
+
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name='helpdesk_ticket_product' string='Helpdesk' attrs="{'invisible':[('product_variant_count','&gt;', 1)]}">
+                    <group>
+                        <field name='is_helpdesk'/>
+                        <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                        <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                    </group>
+                </page>
             </xpath>
 
 

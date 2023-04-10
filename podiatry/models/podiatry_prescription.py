@@ -84,6 +84,9 @@ class Prescription(models.Model):
     #     inverse_name='patient_id',
 
     # )
+    
+    helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
+    helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
 
     test_file = fields.Binary(string='Test')
 
@@ -251,6 +254,22 @@ class Prescription(models.Model):
         for prescription in self:
             prescription.num_prescription_items = len(
                 prescription.prescription_line)
+            
+    @api.depends('helpdesk_tickets_ids')
+    def _get_helpdesk_tickets_count(self):
+        for rec in self:
+            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+
+    def helpdesk_ticket(self):
+        action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
+
+        tickets = self.order_line.mapped('helpdesk_discription_id')
+        if len(tickets) > 1:
+            action['domain'] = [('id', 'in', tickets.ids)]
+        elif tickets:
+            action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
+            action['res_id'] = tickets.id
+        return action
 
     def action_draft(self):
         self.state = 'draft'

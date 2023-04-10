@@ -10,6 +10,12 @@ from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
+class InheritedProduct(models.Model):
+    _inherit = "product.product"
+
+    is_helpdesk = fields.Boolean("Helpdesk Ticket?")
+    helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
+    helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
 
 class ProductWithWeightInKg(models.Model):
     """Rename the field weight to `Weight in kg`."""
