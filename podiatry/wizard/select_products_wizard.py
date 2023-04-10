@@ -22,10 +22,18 @@ class SelectProducts(models.TransientModel):
                     'price_unit': product.lst_price,
                     'order_id': order_id.id
                 })
-        elif self.flag_order == 'rx':
+        elif self.flag_order == 'rx_device':
             prescription_id = self.env['podiatry.prescription'].browse(self._context.get('active_id', False))
             for product in self.product_ids:
-                self.env['podiatry.prescription.line'].create({
+                self.env['prescription.device.line'].create({
+                    'product_id': product.id,
+                    'uom_id': product.uom_id.id,
+                    'prescription_id': prescription_id.id
+                })
+        elif self.flag_order == 'rx_option':
+            prescription_id = self.env['podiatry.prescription'].browse(self._context.get('active_id', False))
+            for product in self.product_ids:
+                self.env['prescription.option.line'].create({
                     'product_id': product.id,
                     'uom_id': product.uom_id.id,
                     'prescription_id': prescription_id.id

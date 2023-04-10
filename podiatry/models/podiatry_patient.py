@@ -127,7 +127,7 @@ class Patient(models.Model):
     
 
     prescription_line = fields.One2many(
-        'podiatry.prescription.line', 'prescription_id', 'Prescription Line')
+        'prescription.device.line', 'prescription_id', 'Prescription Line')
 
     def _compute_prescription_count(self):
         for rec in self:

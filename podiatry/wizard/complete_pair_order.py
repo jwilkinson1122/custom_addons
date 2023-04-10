@@ -5,7 +5,7 @@ class CompletePairOrder(models.TransientModel):
     _name = 'complete.pair.order'
 
     # prescription_id = fields.Many2one('podiatry.prescription')
-    # prescription_line_id = fields.Many2one('podiatry.prescription.line')
+    # prescription_line_id = fields.Many2one('prescription.device.line')
     # practitioner_id = fields.Many2one(
     #     'podiatry.practitioner', string="Practitioner")
     # practitioner = fields.Char(
@@ -116,14 +116,14 @@ class CompletePairOrder(models.TransientModel):
         sale_order_line6.product_id_change()
 
     # def show_btn_rx(self):
-    #     PrescriptionOrderLine = self.env['podiatry.prescription.line'].with_context(
+    #     PrescriptionOrderLine = self.env['prescription.device.line'].with_context(
     #         tracking_disable=True)
     #     PrescriptionOrderLine.create({
     #         'name': 'Complete Pair Order',
     #         'display_type': 'line_section',
     #         'prescription_id': self.env.context.get('active_id'),
     #     })
-    #     PrescriptionOrderLine = self.env['podiatry.prescription.line'].create({
+    #     PrescriptionOrderLine = self.env['prescription.device.line'].create({
     #         'name': self.frame.name,
     #         'product_id': self.frame.id,
     #         'product_uom_qty': 1,

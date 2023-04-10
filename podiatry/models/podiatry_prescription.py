@@ -63,8 +63,8 @@ class Prescription(models.Model):
     patient_name = fields.Char(string='Practitioner', related='patient_id.name')
     prescription = fields.Text(string="Prescription")
     prescription_ids = fields.One2many('podiatry.prescription', 'practitioner_id', string="Prescriptions")
-    prescription_lines = fields.One2many('podiatry.prescription.line', 'prescription_id')
-    # prescription_option_lines = fields.One2many('podiatry.prescription.option.line', 'prescription_id')
+    prescription_device_lines = fields.One2many('prescription.device.line', 'prescription_id', string="Devices")
+    prescription_option_lines = fields.One2many('prescription.option.line', 'prescription_id', string="Options")
     helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
     helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
 
@@ -217,12 +217,12 @@ class Prescription(models.Model):
     num_prescription_items = fields.Integer(
         compute="_compute_num_prescription_items", store=True)
 
-    @api.depends("prescription_lines")
+    @api.depends("prescription_device_lines")
     def _compute_num_prescription_items(self):
         for prescription in self:
-            prescription.num_prescription_items = len(
-                prescription.prescription_lines)
+            prescription.num_prescription_items = len(prescription.prescription_device_lines)
             
+ 
     @api.depends('helpdesk_tickets_ids')
     def _get_helpdesk_tickets_count(self):
         for rec in self:
@@ -470,32 +470,15 @@ class Prescription(models.Model):
     def print_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
 
-    # def print_prescription_report(self):
-    #     return {
-    #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry.practitioner_prescription_template",
-    #         'report_file': "podiatry.practitioner_prescription_template",
-    #         'report_type': 'qweb-pdf',
-    #     }
-
+ 
     def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("podiatry.practitioner_prescription_podiatry_ticket_size2").report_action(self)
+ 
 
-    # def print_prescription_report(self):
-    #     return {
-    #         'type': 'ir.actions.report',
-    #         'report_name': "podiatry.practitioner_prescription_template",
-    #         'report_file': "podiatry.practitioner_prescription_template",
-    #         'report_type': 'qweb-pdf',
-    #     }
-
-    # def print_prescription_report_ticket_size(self):
-    #     return self.env.ref("podiatry.practitioner_prescription_ticket_size2").report_action(self)
-
-class PrescriptionLine(models.Model):
-    _name = "podiatry.prescription.line"
+class PrescriptionDeviceLine(models.Model):
+    _name = "prescription.device.line"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'podiatry prescription line'
+    _description = 'Prescription Device Lines'
     _rec_name = 'prescription_id'
 
     @api.depends('product_id')
@@ -510,7 +493,7 @@ class PrescriptionLine(models.Model):
                 
     helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
     prescription_id = fields.Many2one('podiatry.prescription', string='Prescription')
-    product_id = fields.Many2one('product.product', string='Device')
+    product_id = fields.Many2one('product.product', string='Devices')
     prescription_line_image = fields.Binary(string="Image", related="product_id.image_1920")
     uom_id = fields.Many2one('uom.uom', string='Unit')
     quantity = fields.Float(string='Quantity', digits='Product Quantity', required=True)
@@ -518,6 +501,38 @@ class PrescriptionLine(models.Model):
     right_foot = fields.Boolean(string="RT")
     bilateral = fields.Boolean(string="BL")
     remark = fields.Text(string='Remark')
+    
+
+class PrescriptionOptionLine(models.Model):
+    _name = 'prescription.option.line'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Prescription Option Line'
+    _rec_name = 'prescription_id'
+
+    helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
+    prescription_id = fields.Many2one('podiatry.prescription', string='Prescription')
+    product_id = fields.Many2one('product.product', string='Options')
+    prescription_line_image = fields.Binary(string="Image", related="product_id.image_1920")
+    uom_id = fields.Many2one('uom.uom', string='Unit')
+    quantity = fields.Float(string='Quantity', digits='Product Quantity', required=True)
+    left_foot = fields.Boolean(string="LT")
+    right_foot = fields.Boolean(string="RT")
+    bilateral = fields.Boolean(string="BL")
+    remark = fields.Text(string='Remark')
+    # subtotal = fields.Float(string="Sub Total", compute='compute_subtotal')
+
+    # @api.onchange('product_id')
+    # def onchange_product_id(self):
+    #     for rec in self:
+    #         rec.price_unit = rec.product_id.list_price
+
+    # @api.onchange('price_unit', 'quantity')
+    # def compute_subtotal(self):
+    #     for rec in self:
+    #         rec.subtotal = rec.price_unit * rec.quantity
+
+    
+ 
  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
