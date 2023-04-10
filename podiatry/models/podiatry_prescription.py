@@ -513,8 +513,7 @@ class PrescriptionLine(models.Model):
     product_id = fields.Many2one('product.product', string='Device')
     prescription_line_image = fields.Binary(string="Image", related="product_id.image_1920")
     uom_id = fields.Many2one('uom.uom', string='Unit')
-    quantity = fields.Float(string="Quantity")
-
+    quantity = fields.Float(string='Quantity', digits='Product Quantity', required=True)
     left_foot = fields.Boolean(string="LT")
     right_foot = fields.Boolean(string="RT")
     bilateral = fields.Boolean(string="BL")

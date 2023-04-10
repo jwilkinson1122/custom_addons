@@ -75,6 +75,12 @@
                 <button name="print_sale_order_report" class="btn btn-success" string="Print Sale Order" type="object" attrs="{'invisible':[('state','!=','sale')]}"/>
             </xpath>
 
+            <xpath expr="//field[@name='order_line']" position="before">
+                <group>
+                    <button name="%(act_open_select_products_view)d" type="action" string="Select Products" context="{'default_flag_order': 'so'}" attrs="{'invisible': [('state', '!=', 'draft')]}" class="oe_highlight" />
+                </group>
+            </xpath>
+
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="helpdesk_description_id"/>
             </xpath>

@@ -82,7 +82,14 @@
                         </group>
                     </group>
                     <group string="Device Details">
+                        <group>
+                            <button name="%(act_open_select_products_view)d" type="action" string="Select Products" context="{'default_flag_order': 'rx'}" attrs="{'invisible': [('state', '!=', 'draft')]}" class="oe_highlight" />
+                        </group>
                         <field name="prescription_lines" widget="one2many_list">
+                            <!-- <button name="%(act_open_select_products_view)d" type="action" states="draft" context="{'default_flag_order': 'rx'}" string="Select Products" class="oe_highlight" /> -->
+                            <!-- <group>
+                                <button name="%(act_open_select_products_view)d" type="action" string="Select Products" context="{'default_flag_order': 'rx'}" attrs="{'invisible': [('state', '!=', 'draft')]}" class="oe_highlight" />
+                            </group> -->
                             <tree editable="bottom">
                                 <field name="prescription_id" invisible="1"/>
                                 <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
