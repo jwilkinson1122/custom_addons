@@ -52,39 +52,19 @@ class Prescription(models.Model):
     measure_notes = fields.Text('Internal Notes')
     podiatric_history = fields.Text()
 
-    company_id = fields.Many2one(
-        comodel_name="res.company", default=lambda self: self.env.company, store=True)
-
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-
-    practice_name = fields.Char(
-        string='Practitioner', related='practice_id.name')
-
-    practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-
-    practitioner_name = fields.Char(
-        string='Practitioner', related='practitioner_id.name')
-
-    practitioner_phone = fields.Char(
-        string='Phone', related='practitioner_id.phone')
-
-    practitioner_email = fields.Char(
-        string='Email', related='practitioner_id.email')
-
-    patient_id = fields.Many2one(
-        comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-
-    patient_name = fields.Char(
-        string='Practitioner', related='patient_id.name')
-
-    # patient_prescription_id = fields.One2many(
-    #     comodel_name='podiatry.prescription',
-    #     inverse_name='patient_id',
-
-    # )
-    
+    company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True)
+    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    practice_name = fields.Char(string='Practitioner', related='practice_id.name')
+    practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
+    practitioner_phone = fields.Char(string='Phone', related='practitioner_id.phone')
+    practitioner_email = fields.Char(string='Email', related='practitioner_id.email')
+    patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    patient_name = fields.Char(string='Practitioner', related='patient_id.name')
+    prescription = fields.Text(string="Prescription")
+    prescription_ids = fields.One2many('podiatry.prescription', 'practitioner_id', string="Prescriptions")
+    prescription_lines = fields.One2many('podiatry.prescription.line', 'prescription_id')
+    # prescription_option_lines = fields.One2many('podiatry.prescription.option.line', 'prescription_id')
     helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
     helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
 
@@ -137,21 +117,9 @@ class Prescription(models.Model):
         [('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
 
     no_invoice = fields.Boolean('Invoice exempt')
-
     inv_id = fields.Many2one('account.invoice', 'Invoice')
-
-    prescription = fields.Text(string="Prescription")
-
-    prescription_ids = fields.One2many(
-        'podiatry.prescription', 'practitioner_id', string="Prescriptions")
-
-    prescription_line = fields.One2many(
-        'podiatry.prescription.line', 'prescription_id', 'Prescription Lines')
-
     prior_rx = fields.Boolean('Use Prior Rx#')
-
     product_id = fields.Many2one('product.product', 'Name')
-
     completed_date = fields.Datetime(string="Completed Date")
 
     request_date = fields.Date(default=lambda s: fields.Date.today(
@@ -249,11 +217,11 @@ class Prescription(models.Model):
     num_prescription_items = fields.Integer(
         compute="_compute_num_prescription_items", store=True)
 
-    @api.depends("prescription_line")
+    @api.depends("prescription_lines")
     def _compute_num_prescription_items(self):
         for prescription in self:
             prescription.num_prescription_items = len(
-                prescription.prescription_line)
+                prescription.prescription_lines)
             
     @api.depends('helpdesk_tickets_ids')
     def _get_helpdesk_tickets_count(self):
@@ -263,13 +231,14 @@ class Prescription(models.Model):
     def helpdesk_ticket(self):
         action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
 
-        tickets = self.order_line.mapped('helpdesk_discription_id')
+        tickets = self.order_line.mapped('helpdesk_description_id')
         if len(tickets) > 1:
             action['domain'] = [('id', 'in', tickets.ids)]
         elif tickets:
             action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
             action['res_id'] = tickets.id
         return action
+    
 
     def action_draft(self):
         self.state = 'draft'
@@ -290,13 +259,43 @@ class Prescription(models.Model):
         for rec in self:
             rec.state = 'draft'
 
-    def default_examination_chargeable(self):
-        settings_examination_chargeable = self.env['ir.config_parameter'].sudo().get_param(
-            'examination_chargeable')
-        return settings_examination_chargeable
+        # Overwrite Confirm Button
+    def action_confirm(self):
+        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+            raise UserError(_(
+                'It is not allowed to confirm an order in the following states: %s'
+            ) % (', '.join(self._get_forbidden_state_confirm())))
 
-    examination_chargeable = fields.Boolean(
-        default=default_examination_chargeable, readonly=1)
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
+        self.write({
+            'state': 'sale',
+            'date_order': fields.Datetime.now()
+        })
+        self._action_confirm()
+        if self.env.user.has_group('sale.group_auto_done_setting'):
+            self.action_done()
+        helpdesk_ticket_dict = {}
+        helpdesk_ticket_list = []
+        for line in self.order_line:
+            if line:
+                if line.product_id.is_helpdesk:
+                    helpdesk_ticket_dict = {
+                                            'name' : line.product_id.name,
+                                            'team_id' : line.product_id.helpdesk_team.id,
+                                            'user_id' : line.product_id.helpdesk_assigned_to.id,
+                                            'partner_id' : self.partner_id.id,
+                                            'partner_name' : self.partner_id.name,
+                                            'partner_email' : self.partner_id.email,
+                                            'description' : line.name  
+                                           }
+                    helpdesk_ticket_id = self.env['helpdesk.ticket'].create(helpdesk_ticket_dict)
+                    if helpdesk_ticket_id:
+                        line.helpdesk_description_id = helpdesk_ticket_id.id
+                        helpdesk_ticket_list.append(helpdesk_ticket_id.id)
+                        self.helpdesk_tickets_ids = helpdesk_ticket_list
+        return True
+
 
     @api.onchange('practice_id')
     def onchange_practice_id(self):
@@ -508,18 +507,16 @@ class PrescriptionLine(models.Model):
             else:
                 self.qty_available = 0
                 self.price = 0.0
-
+                
+    helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
     prescription_id = fields.Many2one('podiatry.prescription', string='Prescription')
     product_id = fields.Many2one('product.product', string='Device')
     uom_id = fields.Many2one('uom.uom', string='Unit')
     quantity = fields.Float(string="Quantity")
-    
-    left_only = fields.Boolean(string='Left Only', related='prescription_id.left_only')
-    right_only = fields.Boolean(string='Right Only', related='prescription_id.right_only')
+
     left_foot = fields.Boolean(string="LT")
     right_foot = fields.Boolean(string="RT")
-    # bilateral = fields.Boolean(string="Bilateral")
-    # when_take = fields.Selection([('after', 'After Eat'), ('before', 'Before Eat')])
+    bilateral = fields.Boolean(string="BL")
     remark = fields.Text(string='Remark')
  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

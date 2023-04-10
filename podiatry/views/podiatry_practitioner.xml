@@ -43,11 +43,13 @@
                     </div>
                     <!-- <separator/> -->
                     <group name="primary_practice">
-                        <group name="primary_practice" string="Primary">
+                        <group name="primary_practice" string="Practice Info">
                             <field name="practice_id" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
-                        </group>
-                        <group name="other_practice" string="Secondary">
                             <field name="other_practice_ids" widget="many2many_tags"/>
+                        </group>
+                        <group name="practice_role" string="Role Info">
+                            <!-- <field name="other_practice_ids" widget="many2many_tags"/> -->
+                            <field name="role_ids" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
                         </group>
                     </group>
                     <group name="practitioner_contact">

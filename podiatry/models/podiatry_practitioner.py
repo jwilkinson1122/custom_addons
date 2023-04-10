@@ -49,7 +49,7 @@ class Practitioner(models.Model):
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
     
     role_ids = fields.Many2many(
-        string='Roles',
+        string='Type',
         comodel_name='podiatry.role',
     )
     

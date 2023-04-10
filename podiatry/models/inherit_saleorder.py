@@ -67,7 +67,7 @@ class InheritedSaleOrder(models.Model):
     def helpdesk_ticket(self):
         action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
 
-        tickets = self.order_line.mapped('helpdesk_discription_id')
+        tickets = self.order_line.mapped('helpdesk_description_id')
         if len(tickets) > 1:
             action['domain'] = [('id', 'in', tickets.ids)]
         elif tickets:
@@ -107,7 +107,7 @@ class InheritedSaleOrder(models.Model):
                                            }
                     helpdesk_ticket_id = self.env['helpdesk.ticket'].create(helpdesk_ticket_dict)
                     if helpdesk_ticket_id:
-                        line.helpdesk_discription_id = helpdesk_ticket_id.id
+                        line.helpdesk_description_id = helpdesk_ticket_id.id
                         helpdesk_ticket_list.append(helpdesk_ticket_id.id)
                         self.helpdesk_tickets_ids = helpdesk_ticket_list
         return True
@@ -116,7 +116,7 @@ class InheritedSaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     
-    helpdesk_discription_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
+    helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
 
 
     @api.model

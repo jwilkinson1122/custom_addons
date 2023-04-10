@@ -40,6 +40,11 @@
                     <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
+                            <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                    </div>
                     <!-- <div class="oe_button_box" name="button_box">
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
                             <div class="o_stat_info">
@@ -75,64 +80,40 @@
                             <field name="ship_to_patient" />
                             <field name="prior_rx"/>
                         </group>
-                        <group>
-                            <field name="left_only"/>
-                            <field name="right_only"/>
-                        </group>
-                        <br/>
-                        <br />
-                        <!-- <group>
-                            <field name="foot_selection" widget="radio" options="{'horizontal': true}"/>
-                        </group> -->
-                        <br/>
-                        <br />
-                        <tree>
-
-                        </tree>
-
-                        <!-- <tree string="the tree">
-                                <field name="group_name" invisible="1"/>
-                                <field name="date_register" attrs="{'column_invisible':[('parent.some_field_in_parent_record', '==', True)]}"/>
- -->
-
-                        <field name="prescription_line" widget="one2many_list">
+                    </group>
+                    <group string="Device Details">
+                        <field name="prescription_lines" widget="one2many_list">
                             <tree editable="bottom">
-
                                 <field name="prescription_id" invisible="1"/>
                                 <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="left_foot"/>
+                                <field name="right_foot"/>
+                                <field name="bilateral"/>
                                 <field name="uom_id"/>
                                 <field name="quantity"/>
-                                <field name="left_only"/>
-                                <field name="right_only"/>
-                                <field name="left_foot" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                <field name="right_foot" attrs="{'invisible': [('left_only', '=', True)]}"/>
                             </tree>
                         </field>
-
                     </group>
+                    <!-- <separator/> -->
+                    <!-- <group string="Device Options">
+                        <field name="prescription_lines" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="prescription_id" invisible="1"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="left_foot"/>
+                                <field name="right_foot"/>
+                                <field name="bilateral"/>
+                                <field name="uom_id"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </group> -->
                     <notebook>
-                        <page string="Device Details">
-                            <!-- <group>
-                                <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" />
-                            </group> -->
-                            <field name="prescription_line" widget="one2many_list">
-                                <tree editable="bottom">
-
-                                    <field name="prescription_id" invisible="1"/>
-                                    <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
-                                    <field name="uom_id"/>
-                                    <field name="quantity"/>
-                                    <field name="left_only"/>
-                                    <field name="right_only"/>
-                                    <field name="left_foot" attrs="{'invisible': [('right_only', '=', True)]}"/>
-                                    <field name="right_foot" attrs="{'invisible': [('left_only', '=', True)]}"/>
-                                    <!-- <field name="bilateral"/> -->
-                                    <!-- <field name="when_take" required="1"/> -->
-                                    <field name="remark"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Values">
+                            <group invisible="1">
+                                <field name="left_only" invisible="1"/>
+                                <field name="right_only" invisible="1"/>
+                            </group>
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
                                     <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT VALUES</td>
@@ -329,6 +310,14 @@
                         </page>
                         <page string="Process">
                         </page>
+                        <page string='Helpdesk Tickets' name='helpdesk_ticket'>
+                            <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
+                        </page>
+                        <!-- <page name="practitioners_list" string="Contacts">
+                            <group>
+                                <field name="practitioner_id"/>
+                            </group>
+                        </page> -->
                     </notebook>
                     <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
                     <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
@@ -352,18 +341,14 @@
                 <field name="stage_id"/>
                 <!-- <field name="practitioner_id" /> -->
                 <field name="user_id" />
-
                 <filter name="filter_not_done" string="To Return" domain="[('state','=','draft')]" />
                 <filter name="filter_my_prescriptions" string="My Prescriptions" domain="[('user_id','=',uid)]" />
                 <!-- <filter name="group_user" string="By Practitioner" context="{'group_by': 'practitioner_id'}" /> -->
-
                 <searchpanel>
                     <!-- <field name="practitioner_id" enable_counters="1" /> -->
                     <field name="stage_id" select="multi" />
                 </searchpanel>
-
             </search>
-
         </field>
     </record>
 

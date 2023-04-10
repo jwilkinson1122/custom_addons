@@ -76,7 +76,7 @@
             </xpath>
 
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="helpdesk_discription_id"/>
+                <field name="helpdesk_description_id"/>
             </xpath>
             <xpath expr="//page[@name='other_information']" position="after">
                 <page name='helpdesk_ticket' string='Helpdesk Tickets'>
