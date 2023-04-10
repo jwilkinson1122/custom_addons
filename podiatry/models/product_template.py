@@ -5,7 +5,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     is_prescription = fields.Boolean(default=False)
-    is_accommodation = fields.Boolean(string='Is Accommodation')
+    is_device = fields.Boolean(string='Is Accommodation')
 
     is_custom_device = fields.Boolean(
         default=False,

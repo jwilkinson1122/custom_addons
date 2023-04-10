@@ -16,7 +16,7 @@
     <record id="action_product_custom_device" model="ir.actions.act_window">
         <field name="name">Custom Devices</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="domain">[('is_accommodation', '=', False)]</field>
+        <field name="domain">[('is_device', '=', False)]</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
@@ -26,7 +26,7 @@
     <record id="action_product_otc_device" model="ir.actions.act_window">
         <field name="name">OTC Devices</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="domain">[('is_accommodation', '=', False)]</field>
+        <field name="domain">[('is_device', '=', False)]</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
@@ -36,7 +36,7 @@
     <record id="action_product_brace_device" model="ir.actions.act_window">
         <field name="name">Braces</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="domain">[('is_accommodation', '=', False)]</field>
+        <field name="domain">[('is_device', '=', False)]</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>

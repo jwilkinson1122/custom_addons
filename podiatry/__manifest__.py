@@ -57,7 +57,7 @@
         "views/podiatry_prescription.xml",
         "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
-        'views/inherit_product_template.xml',
+        # 'views/inherit_product_template.xml',
         'views/res_partner.xml',
         "views/podiatry_menu.xml",
         'views/podiatry_specialty.xml',

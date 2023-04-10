@@ -86,13 +86,9 @@
                             <button name="%(act_open_select_products_view)d" type="action" string="Select Products" context="{'default_flag_order': 'rx'}" attrs="{'invisible': [('state', '!=', 'draft')]}" class="oe_highlight" />
                         </group>
                         <field name="prescription_lines" widget="one2many_list">
-                            <!-- <button name="%(act_open_select_products_view)d" type="action" states="draft" context="{'default_flag_order': 'rx'}" string="Select Products" class="oe_highlight" /> -->
-                            <!-- <group>
-                                <button name="%(act_open_select_products_view)d" type="action" string="Select Products" context="{'default_flag_order': 'rx'}" attrs="{'invisible': [('state', '!=', 'draft')]}" class="oe_highlight" />
-                            </group> -->
                             <tree editable="bottom">
                                 <field name="prescription_id" invisible="1"/>
-                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_device', '=', True)]"/>
                                 <field name="prescription_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
                                 <field name="left_foot"/>
                                 <field name="right_foot"/>
@@ -101,13 +97,27 @@
                                 <field name="quantity"/>
                             </tree>
                         </field>
+                        <field name="option_line_ids" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="prescription_id" invisible="1"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open': True}" domain="[('is_option', '=', True)]"/>
+                                <field name="uom_id"/>
+                                <field name="quantity"/>
+                                <field name="left_foot"/>
+                                <field name="right_foot"/>
+                                <field name="bilateral"/>
+                                <field name="remark"/>
+                            </tree>
+                        </field>
+                        <separator/>
+
                     </group>
                     <!-- <separator/> -->
                     <!-- <group string="Device Options">
                         <field name="prescription_lines" widget="one2many_list">
                             <tree editable="bottom">
                                 <field name="prescription_id" invisible="1"/>
-                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_device', '=', False)]"/>
                                 <field name="left_foot"/>
                                 <field name="right_foot"/>
                                 <field name="bilateral"/>
