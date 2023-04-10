@@ -116,6 +116,7 @@ class InheritedSaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     
+    order_line_image = fields.Binary(string="Image", related="product_id.image_1920")
     helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
 
 

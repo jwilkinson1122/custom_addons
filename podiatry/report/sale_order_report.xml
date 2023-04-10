@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+        <!-- <template id="report_saleorder_inherit" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//table//tr/th[1]" position="after">
+                <t t-if="request.env['ir.config_parameter'].sudo().get_param('sale_product_image.show_product_image_line_item')">
+                    <th>
+                        <strong>Image</strong>
+                    </th>
+                </t>
+            </xpath>
+            <xpath expr="//t[@t-foreach='doc.order_line']//td[@name='td_name']" position="after">
+                <t t-if="request.env['ir.config_parameter'].sudo().get_param('sale_product_image.show_product_image_line_item')">
+                    <td style="height:20px !important;width:20px !important;">
+                        <span t-field="line.order_line_image" t-options='{"widget": "image"}'/>
+                    </td>
+                </t>
+            </xpath>
+        </template> -->
         <template id="sale_order_report">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">

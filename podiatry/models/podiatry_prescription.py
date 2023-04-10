@@ -511,6 +511,7 @@ class PrescriptionLine(models.Model):
     helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
     prescription_id = fields.Many2one('podiatry.prescription', string='Prescription')
     product_id = fields.Many2one('product.product', string='Device')
+    prescription_line_image = fields.Binary(string="Image", related="product_id.image_1920")
     uom_id = fields.Many2one('uom.uom', string='Unit')
     quantity = fields.Float(string="Quantity")
 

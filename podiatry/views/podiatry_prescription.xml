@@ -86,6 +86,7 @@
                             <tree editable="bottom">
                                 <field name="prescription_id" invisible="1"/>
                                 <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_accommodation', '=', False)]"/>
+                                <field name="prescription_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
                                 <field name="left_foot"/>
                                 <field name="right_foot"/>
                                 <field name="bilateral"/>
