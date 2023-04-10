@@ -301,7 +301,7 @@ class Practitioner(models.Model):
         #     result.append((rec.id, name))
         # return result
     
-    def action_add_reg_no(self):
+    def action_add_communication(self):
         for rec in self:
             rec.reference_no = rec.reference
             # rec.reference_no = rec.env['ir.sequence'].next_by_code('res.partner.patient')

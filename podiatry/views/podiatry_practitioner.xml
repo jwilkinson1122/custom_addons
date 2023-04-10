@@ -16,7 +16,7 @@
                 <sheet>
 
                     <div class="oe_button_box" name="button_box">
-                        <!-- <button name="action_add_reg_no" string="Send Registration No" type="object" class="oe_highlight"/> -->
+                        <!-- <button name="action_add_communication" string="Send Registration No" type="object" class="oe_highlight"/> -->
 
                         <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
                             <div class="o_stat_info">
@@ -100,11 +100,11 @@
                         </page>
                         <page name="communications" string="Communications">
                             <header>
-                                <button name="action_add_reg_no" string="Send Registration No." type="object" class="oe_highlight"/>
+                                <button name="action_add_communication" string="Send Email" type="object" class="oe_highlight"/>
                             </header>
-                            <group string="Reference No">
+                            <!-- <group string="Reference No">
                                 <field name="reference" readonly="1"/>
-                            </group>
+                            </group> -->
                         </page>
                     </notebook>
                 </sheet>
