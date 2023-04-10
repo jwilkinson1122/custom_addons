@@ -36,6 +36,7 @@
         "data/product_category.xml",
         'data/decimal_precision.xml',
         "data/ir_sequence_data.xml",
+        'data/mail_template_data.xml',
         'data/podiatry_role.xml',
         "data/stage_data.xml",
         # 'views/s3_views.xml',
@@ -97,6 +98,7 @@
         "demo/res_partner_demo.xml",
 
     ],
+    # "external_dependencies": {"python": ["boto3"]},
     "images": ["static/description/orders.png"],
     "development_status": "Beta",
     "maintainers": ["NWPL"],

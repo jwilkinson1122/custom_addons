@@ -14,7 +14,10 @@
                     •                    <field name="same_reference_practitioner_id"/>
                 </div>
                 <sheet>
+
                     <div class="oe_button_box" name="button_box">
+                        <!-- <button name="action_add_reg_no" string="Send Registration No" type="object" class="oe_highlight"/> -->
+
                         <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
                             <div class="o_stat_info">
                                 <field name="patient_count" class="o_stat_value"/>
@@ -48,7 +51,6 @@
                             <field name="other_practice_ids" widget="many2many_tags"/>
                         </group>
                         <group name="practice_role" string="Role Info">
-                            <!-- <field name="other_practice_ids" widget="many2many_tags"/> -->
                             <field name="role_ids" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -95,6 +97,14 @@
                         <page name="notes" string="Notes">
                             <separator name="notes" string="Notes"/>
                             <field name="notes" nolabel="1" placeholder="Start typing..."/>
+                        </page>
+                        <page name="communications" string="Communications">
+                            <header>
+                                <button name="action_add_reg_no" string="Send Registration No." type="object" class="oe_highlight"/>
+                            </header>
+                            <group string="Reference No">
+                                <field name="reference" readonly="1"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

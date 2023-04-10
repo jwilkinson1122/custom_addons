@@ -45,18 +45,14 @@ class Practitioner(models.Model):
             rec.patient_count = patient_count
 
     is_practitioner = fields.Boolean()
-
+    
+    # Personal Information
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
+    reference_no = fields.Char(string='Reference No.')
     
-    role_ids = fields.Many2many(
-        string='Type',
-        comodel_name='podiatry.role',
-    )
+    role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
     
-    specialty_ids = fields.Many2many(
-        string='Specialties',
-        comodel_name='podiatry.specialty',
-    )
+    specialty_ids = fields.Many2many(string='Specialties', comodel_name='podiatry.specialty')
     
     practitioner_type = fields.Selection(
         string='Entity Type',
@@ -68,10 +64,7 @@ class Practitioner(models.Model):
 
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
-    other_practice_ids = fields.Many2many(
-        string='Other',
-        comodel_name='podiatry.practice',
-    )
+    other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
 
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
@@ -273,18 +266,8 @@ class Practitioner(models.Model):
     def copy(self, default=None):
         for rec in self:
             raise UserError(_('You Can Not Duplicate practitioner.'))
-
-    def action_open_prescriptions(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Prescriptions',
-            'res_model': 'podiatry.prescription',
-            'domain': [('practitioner_id', '=', self.id)],
-            'context': {'default_practitioner_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }
-  
+        
+        
     def action_open_patients(self):
             return {
             'type': 'ir.actions.act_window',
@@ -295,4 +278,105 @@ class Practitioner(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+
+    def action_open_prescriptions(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'podiatry.prescription',
+            'domain': [('practitioner_id', '=', self.id)],
+            'context': {
+                'default_practitioner_id': self.id,
+                # 'default_reference_no': self.reference_no,
+                },
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+        
+        
+        # def name_get(self):
+        #     result = []
+        # for rec in self:
+        #     name = '[' + rec.reference + '] ' + rec.name
+        #     result.append((rec.id, name))
+        # return result
+    
+    def action_add_reg_no(self):
+        for rec in self:
+            rec.reference_no = rec.reference
+            # rec.reference_no = rec.env['ir.sequence'].next_by_code('res.partner.patient')
+            self.ensure_one()
+            ir_model_data = self.env['ir.model.data']
+            try:
+                template_id = \
+                    ir_model_data._xmlid_to_res_id('podiatry.email_template_send_reference_no')
+            except ValueError:
+                template_id = False
+            try:
+                compose_form_id = ir_model_data._xmlid_to_res_id('mail.email_compose_message_wizard_form')
+            except ValueError:
+                compose_form_id = False
+            ctx = {
+                'default_model': 'res.partner',
+                'default_res_id': self.ids[0],
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'default_composition_mode': 'comment',
+                'mark_so_as_sent': True,
+                'proforma': self.env.context.get('proforma', False),
+                'force_email': True
+            }
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.compose.message',
+                'views': [(compose_form_id, 'form')],
+                'view_id': compose_form_id,
+                'target': 'new',
+                'context': ctx,
+            }
+
+    def send_birthday_wish(self):
+        for rec in self:
+            print('hiiiiii--------------------------')
+            user_id = rec.create_uid
+            template = self.env.ref('podiatry.email_template_send_birthday')
+            ctx = self._context.copy()
+            template.with_context(ctx).send_mail(user_id.id, force_send=True)
+
+            # self.ensure_one()
+            # ir_model_data = self.env['ir.model.data']
+            # try:
+            #     template_id = \
+            #         ir_model_data.get_object_reference('hospital_management_app',
+            #                                            'email_template_send_birthday')[1]
+            # except ValueError:
+            #     template_id = False
+            # try:
+            #     compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+            # except ValueError:
+            #     compose_form_id = False
+            # ctx = {
+            #     'default_model': 'res.partner',
+            #     'default_res_id': self.ids[0],
+            #     'default_use_template': bool(template_id),
+            #     'default_template_id': template_id,
+            #     'default_composition_mode': 'comment',
+            #     'mark_so_as_sent': True,
+            #     'proforma': self.env.context.get('proforma', False),
+            #     'force_email': True
+            # }
+            # return {
+            #     'type': 'ir.actions.act_window',
+            #     'view_type': 'form',
+            #     'view_mode': 'form',
+            #     'res_model': 'mail.compose.message',
+            #     'views': [(compose_form_id, 'form')],
+            #     'view_id': compose_form_id,
+            #     'target': 'new',
+            #     'context': ctx,
+            # }
+  
+
 
