@@ -1,4 +1,6 @@
-from odoo import api, fields, models
+# -*- coding: utf-8 -*-
+
+from odoo import api, fields, models, tools, _
 
 
 class ProductTemplate(models.Model):
@@ -7,25 +9,67 @@ class ProductTemplate(models.Model):
     is_prescription = fields.Boolean(default=False)
     is_device = fields.Boolean(string='Is Device')
     is_option = fields.Boolean(string='Is Option')
-
-    is_custom_device = fields.Boolean(
-        default=False,
-        help="True if product is a brace",
-    )  # Field: isBrace
-
-    is_otc_device = fields.Boolean(
-        default=False,
-        help="True if product does not require a prescription",
-    )  # Field: isOverTheCounter
-
-    is_brace_device = fields.Boolean(
-        default=False,
-        help="True if product is a brace",
-    )  # Field: isBrace
-    
+    is_custom_device = fields.Boolean(default=False, help="True if product is a brace")   
+    is_otc_device = fields.Boolean(default=False, help="True if product does not require a prescription") 
+    is_brace_device = fields.Boolean(default=False, help="True if product is a brace")  
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
+    
+    @tools.ormcache()
+    def _get_default_secondary_uom(self):
+        return self.env.ref('uom.product_uom_dozen')
+    
+    secondary_uom_active = fields.Boolean(string='Secondary Unit ?', default=True)
+    secondary_uom = fields.Many2one('uom.uom', 'Secondary Unit of Measure', 
+        required=True, help="Default unit of measure used for all stock operations.",
+        default=_get_default_secondary_uom)
+    
+    uom_name = fields.Char(string='Sec UoM Name', related='secondary_uom.name', readonly=True)
+    on_hand_qty = fields.Float(
+        'Quantity On Hand', compute='_compute_on_hand_qty',
+        digits='Product Unit of Measure', compute_sudo=False,
+        help="Current quantity of products.\n"
+             "In a context with a single Stock Location, this includes "
+             "goods stored at this Location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods stored in the Stock Location of this Warehouse, or any "
+             "of its children.\n"
+             "stored in the Stock Location of the Warehouse of this Shop, "
+             "or any of its children.\n"
+             "Otherwise, this includes goods stored in any Stock Location "
+             "with 'internal' type.")
+
+    # def _compute_on_hand_qty(self):
+    #     self.on_hand_qty = self.qty_available
+    @api.depends('qty_available')
+    def _compute_on_hand_qty(self):
+        for record in self:
+            if record.uom_id == record.secondary_uom:
+                record.on_hand_qty = record.qty_available
+            elif record.secondary_uom.uom_type == 'reference' and record.uom_id.uom_type == 'bigger':
+                record.on_hand_qty = (record.secondary_uom.ratio * record.uom_id.ratio) * record.qty_available
+
+            elif record.secondary_uom.uom_type == 'bigger' and record.uom_id.uom_type == 'reference':
+                record.on_hand_qty = (record.uom_id.ratio / record.secondary_uom.ratio) * record.qty_available
+
+            elif record.secondary_uom.uom_type == 'smaller' and record.uom_id.uom_type == 'reference':
+                record.on_hand_qty = (record.secondary_uom.ratio * record.uom_id.ratio) * record.qty_available
+
+            elif record.secondary_uom.uom_type == 'reference' and record.uom_id.uom_type == 'smaller':
+                record.on_hand_qty = (record.secondary_uom.ratio / record.uom_id.ratio) * record.qty_available 
+
+            elif record.secondary_uom.uom_type == 'smaller' and record.uom_id.uom_type == 'bigger':
+                record.on_hand_qty = (record.secondary_uom.ratio * record.uom_id.ratio) * record.qty_available 
+                
+            elif record.secondary_uom.uom_type == 'bigger' and record.uom_id.uom_type == 'smaller':
+                record.on_hand_qty = (1 / (record.secondary_uom.ratio * record.uom_id.ratio))* record.qty_available
+
+            elif record.secondary_uom.uom_type == 'smaller' and record.uom_id.uom_type == 'smaller':
+                record.on_hand_qty = (record.secondary_uom.ratio / record.uom_id.ratio) * record.qty_available
+            
+            elif record.secondary_uom.uom_type == 'bigger' and record.uom_id.uom_type == 'bigger':
+                record.on_hand_qty = (record.uom_id.ratio / record.secondary_uom.ratio) * record.qty_available
 
     @api.model
     def create(self, vals):
@@ -51,19 +95,11 @@ class ProductTemplate(models.Model):
                 self.product_variant_id.helpdesk_assigned_to.unlink()
 
         return res
-
-    # gender = fields.Selection(
-    #     [('male', 'Male'), ('female', 'Female'), ('other', 'Others')])
-
-    foot_selection = fields.Selection([('left_only', 'Left Only'), (
-        'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
-
+ 
     shell_type = fields.Many2one(
         'shell.type', string='Shell / Foundation Type')
     shell_collection = fields.Many2one(
         'shell.collection', string='Shell Collection')
-    # shell_length = fields.Many2one(
-    #     'shell.length', string='Shell Length')
     topcover_type = fields.Many2one('topcover.type', string='Top Cover Type')
     topcover_length = fields.Many2one(
         'topcover.length', string='Top Cover Length')
@@ -126,7 +162,6 @@ class ProductTemplate(models.Model):
         return super(ProductTemplate, self).default_get(vals)
 
    
-
 class ProductTemplateWithWeightInKg(models.Model):
     """Rename the field weight to `Weight in Kg`."""
 

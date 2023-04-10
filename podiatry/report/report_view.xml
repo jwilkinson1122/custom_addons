@@ -30,6 +30,8 @@
             <field name="report_type">qweb-pdf</field>
         </record>
 
+        <!-- <report id="action_patient_prescription_report" string="Print Prescription" model="patient.prescriptions" report_type="qweb-pdf" file="hospital_management_app.patient_prescription_report_temp" name="hospital_management_app.patient_prescription_report_temp" print_report_name="'Prescription - %s' % object.partner_id.name" paperformat="hospital_management_app.patient_prescription_report_paperformat" menu="True" /> -->
+
         <report id="practitioner_prescription" string="Prescription" model="podiatry.prescription" report_type="qweb-pdf" file="podiatry.practitioner_prescription_template" name="podiatry.practitioner_prescription_template" />
 
         <record id="practitioner_prescription_podiatry_ticket_size2" model="ir.actions.report">

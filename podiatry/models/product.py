@@ -16,6 +16,61 @@ class InheritedProduct(models.Model):
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
+    
+    product_secondary_uom_id = fields.Many2one('uom.uom', 'Secondary Unit of Measure', 
+        related="product_tmpl_id.secondary_uom", domain="[('category_id', '=', product_sec_product_uom_category_id)]",
+        help="Default unit of measure used for all stock operations.", readonly=False)
+    product_sec_product_uom_qty = fields.Float(string='S-Qty on Hand', digits='Product Unit of Measure',
+        compute="_compute_product_sec_product_uom_qty", store=True)    
+    product_sec_product_uom_category_id = fields.Many2one(related='product_tmpl_id.secondary_uom.category_id', string="Sec Product Category")
+    
+    @api.depends('qty_available')
+    def _compute_product_sec_product_uom_qty(self):
+        for record in self:
+            if record.uom_id == record.product_secondary_uom_id:
+                record.product_sec_product_uom_qty = record.qty_available
+            elif record.product_secondary_uom_id.uom_type == 'reference' and record.uom_id.uom_type == 'bigger':
+                record.product_sec_product_uom_qty = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.qty_available
+
+            elif record.product_secondary_uom_id.uom_type == 'bigger' and record.uom_id.uom_type == 'reference':
+                record.product_sec_product_uom_qty = (record.uom_id.ratio / record.product_secondary_uom_id.ratio) * record.qty_available
+
+            elif record.product_secondary_uom_id.uom_type == 'smaller' and record.uom_id.uom_type == 'reference':
+                record.product_sec_product_uom_qty = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.qty_available
+
+            elif record.product_secondary_uom_id.uom_type == 'reference' and record.uom_id.uom_type == 'smaller':
+                record.product_sec_product_uom_qty = (record.product_secondary_uom_id.ratio / record.uom_id.ratio) * record.qty_available 
+
+            elif record.product_secondary_uom_id.uom_type == 'smaller' and record.uom_id.uom_type == 'bigger':
+                record.product_sec_product_uom_qty = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.qty_available 
+                
+            elif record.product_secondary_uom_id.uom_type == 'bigger' and record.uom_id.uom_type == 'smaller':
+                record.product_sec_product_uom_qty = (1 / (record.product_secondary_uom_id.ratio * record.uom_id.ratio))* record.qty_available 
+
+            elif record.product_secondary_uom_id.uom_type == 'smaller' and record.uom_id.uom_type == 'smaller':
+                record.product_sec_product_uom_qty = (record.product_secondary_uom_id.ratio / record.uom_id.ratio) * record.qty_available
+            
+            elif record.product_secondary_uom_id.uom_type == 'bigger' and record.uom_id.uom_type == 'bigger':
+                record.product_sec_product_uom_qty = (record.uom_id.ratio / record.product_secondary_uom_id.ratio) * record.qty_available
+
+    # @api.onchange('product_sec_product_uom_qty')
+    # def _inverse_product_sec_product_uom_qty(self):
+    #     for record in self:
+    #         if record.uom_id == record.product_secondary_uom_id:
+    #             record.qty_available = record.product_sec_product_uom_qty            
+    #         elif record.product_secondary_uom_id.uom_type == 'reference' and record.uom_id.uom_type == 'bigger':
+    #             record.qty_available = (record.product_secondary_uom_id.ratio / record.uom_id.ratio) * record.product_sec_product_uom_qty
+    #         elif record.product_secondary_uom_id.uom_type == 'bigger' and record.uom_id.uom_type == 'reference':
+    #             record.qty_available = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.product_sec_product_uom_qty
+    #         elif record.product_secondary_uom_id.uom_type == 'smaller' and record.uom_id.uom_type == 'reference':
+    #              record.qty_available = (record.uom_id.ratio / record.product_secondary_uom_id.ratio) * record.product_sec_product_uom_qty
+    #         elif record.product_secondary_uom_id.uom_type == 'reference' and record.uom_id.uom_type == 'smaller':
+    #             record.qty_available = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.product_sec_product_uom_qty
+    #         elif record.product_secondary_uom_id.uom_type == 'smaller' and record.uom_id.uom_type == 'bigger':
+    #             record.qty_available = (1 / (record.product_secondary_uom_id.ratio * record.uom_id.ratio))* record.product_sec_product_uom_qty
+    #         elif record.product_secondary_uom_id.uom_type == 'bigger' and record.uom_id.uom_type == 'smaller':
+    #             record.qty_available = (record.product_secondary_uom_id.ratio * record.uom_id.ratio) * record.product_sec_product_uom_qty
+
 
 class ProductWithWeightInKg(models.Model):
     """Rename the field weight to `Weight in kg`."""

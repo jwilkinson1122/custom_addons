@@ -18,6 +18,19 @@
         </field>
     </record>
 
+    <record id="inherit_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.view.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="product_sec_product_uom_qty" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                <field name="product_secondary_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
+
+            </xpath>
+        </field>
+    </record>
+
 
     <record id="product_form_view_with_dimension_label" model="ir.ui.view">
         <field name="name">Product Simplified Form With Dimensions</field>

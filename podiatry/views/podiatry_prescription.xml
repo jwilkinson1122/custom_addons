@@ -36,8 +36,8 @@
                     <!-- <button name="action_confirm" class="btn btn-success" states="done" string="Create Orders Test" type="object"></button> -->
                     <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" /> -->
                     <button name="%(action_create_prescription_shipment1)d" type="action" states="done" string="Create Invoice" class="oe_highlight" />
-                    <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
-                    <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button>
+                    <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
+                    <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -133,12 +133,12 @@
                                     <tree editable="bottom">
                                         <field name="prescription_id" invisible="1"/>
                                         <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_device', '=', True)]"/>
-                                        <field name="prescription_line_image" widget="image" style="height:20px ;width:20px;" readonly="1"/>
+                                        <field name="prescription_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
                                         <field name="left_foot"/>
                                         <field name="right_foot"/>
                                         <field name="bilateral"/>
-                                        <field name="uom_id"/>
                                         <field name="quantity"/>
+                                        <field name="uom_id"/>
                                         <field name="remark"/>
                                     </tree>
                                 </field>
@@ -151,12 +151,12 @@
                                     <tree editable="bottom">
                                         <field name="prescription_id" invisible="1"/>
                                         <field name="product_id" options="{'no_create': True, 'no_open': True}" domain="[('is_option', '=', True)]"/>
-                                        <field name="prescription_line_image" widget="image" style="height:20px ;width:20px;" readonly="1"/>
+                                        <field name="prescription_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
                                         <field name="left_foot"/>
                                         <field name="right_foot"/>
                                         <field name="bilateral"/>
-                                        <field name="uom_id"/>
                                         <field name="quantity"/>
+                                        <field name="uom_id"/>
                                         <field name="remark"/>
                                     </tree>
                                 </field>
