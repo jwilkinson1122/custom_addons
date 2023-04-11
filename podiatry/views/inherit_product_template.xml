@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Shell / Foundation Elements" name="shell_elements" autofocus="autofocus" invisible="context.get('def_categ_id') in ['Top Covers','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
+                        <group>
+                            <field name="shell_type"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="after">
+                    <group invisible="context.get('def_categ_id') in ['Top Covers','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
+                        <field name="shell_collection"/>
+                    </group>
+                    <group invisible="context.get('def_categ_id') in ['Shell / Foundation','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
+                        <field name="topcover_type"/>
+                        <field name="topcover_length"/>
+                        <field name="topcover_material"/>
+                        <field name="topcover_thickness"/>
+                        <field name="topcover_color"/>
+                    </group>
+                    <group invisible="context.get('def_categ_id') in ['Top Covers','Shell / Foundation','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
+                        <field name="xguard_length"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

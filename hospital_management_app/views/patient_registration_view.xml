@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_partner_form_inherit_patient">
+            <field name="name">res.partner.inherited.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_appointment" icon="fa-user-md" attrs="{'invisible': [('is_patient', '=', False)]}">
+                        <field string="Appointment" name="no_of_appointment" widget="statinfo"/>
+                    </button>
+                </div>
+
+                <field name="category_id" position="after">
+                    <field name="is_patient"/>
+                </field>
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page string="Patient Details" name="patient_details" attrs="{'invisible': [('is_patient', '=', False)]}">
+                        <header>
+                            <button name="action_add_reg_no" string="Generate Registration No" type="object" class="oe_highlight" attrs="{'invisible': [('registration_no', '!=', False)]}"/>
+                        </header>
+                        <group string="Registration No">
+                            <field name="registration_no" readonly="1"/>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="patient_registration"/>
+                                <field name="date_of_birth"/>
+                                <field name="months_registration" placeholder="e.g. Discuss proposal"/>
+                                <field name="year_registration"/>
+                                <field name="gender"/>
+                            </group>
+                            <group>
+                                <field name="marital_status"/>
+                                <field name="father_name"/>
+                                <field name="education"/>
+                                <field name="occupation"/>
+                                <field name="family_income"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="nationality"/>
+                                <field name="passport_no"/>
+                                <field name="passport_date"/>
+                            </group>
+                            <group>
+                                <field name="mother_tongue"/>
+                                <field name="pan_no"/>
+                                <field name="aadhaar_no"/>
+                                <field name="religion"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Condition">
+                                <field name="condition_type_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_stage_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_fees"/>
+                            </group>
+                        </group>
+
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hospital_management" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_patient', '=', True)]</field>
+            <field name="context">{'default_is_patient':True}</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!---->
+        <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" />
+
+        <menuitem id="menu_patients" name='Patients' parent="main_menu_management" action="action_hospital_management" groups="group_hospital_user" sequence="0" />
+
+    </data>
+</odoo>

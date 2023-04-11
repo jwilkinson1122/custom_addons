@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="patient_prescription_report_temp_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <center>
+                    <h4>
+                        <b>Prescription</b>
+                    </h4>
+                </center>
+
+                <table width="100%">
+                    <tr>
+                        <th width="15">Patient</th>
+                        <td width="35">
+                            <span t-field="doc.partner_id.name"/>
+                        </td>
+                        <th width="15">Patient Registration No</th>
+                        <td width="35">
+                            <span t-field="doc.registration_no"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="13">Date</th>
+                        <td width="87">
+                            <span t-field="doc.date"/>
+                        </td>
+                        <th width="15">Doctor</th>
+                        <td width="35">
+                            <span t-field="doc.employee_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="13">Condition Type</th>
+                        <td width="87">
+                            <span t-field="doc.condition_type_id.name"/>
+                        </td>
+                        <th width="15">Condition Stage</th>
+                        <td width="35">
+                            <span t-field="doc.condition_stage_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="15"></th>
+                        <td width="35"></td>
+                        <th width="15">Prescription No</th>
+                        <td width="35">
+                            <span t-field="doc.name"/>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <h4>
+                    <b>Device</b>
+                </h4>
+                <t t-if="doc.line_ids">
+                    <table width="100%">
+                        <tr>
+                            <th width="22%" style="border:1px solid black;text-align:center;">Device</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">Unit</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">Quantity</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">LT</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">RT</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">BL</th>
+                            <th width="15%" style="border:1px solid black;text-align:center;">Remark</th>
+                        </tr>
+                        <tr t-foreach="doc.line_ids" t-as="line">
+                            <td width="22%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.uom_id.name"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-right:5px;text-align:right;">
+                                <span t-field="line.quantity"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.lt_only">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.rt_only">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.bl_pair">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="15%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.remark"/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+
+                <h4>
+                    <b>Option</b>
+                </h4>
+                <t t-if="doc.option_line_ids">
+                    <table width="100%">
+                        <tr>
+                            <th width="22%" style="border:1px solid black;text-align:center;">Option</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">Unit</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">Quantity</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">LT</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">RT</th>
+                            <th width="10%" style="border:1px solid black;text-align:center;">BL</th>
+                            <th width="15%" style="border:1px solid black;text-align:center;">Remark</th>
+                        </tr>
+                        <tr t-foreach="doc.option_line_ids" t-as="line">
+                            <td width="22%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.uom_id.name"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-right:5px;text-align:right;">
+                                <span t-field="line.quantity"/>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.lt_only">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.rt_only">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="10%" style="border:1px solid black;padding-left:5px;">
+                                <t t-if="line.bl_pair">
+                                    YES
+                                </t>
+                                <t t-else="">
+                                    NO
+                                </t>
+                            </td>
+                            <td width="15%" style="border:1px solid black;padding-left:5px;">
+                                <span t-field="line.remark"/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="patient_prescription_report_temp">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="hospital_management_app.patient_prescription_report_temp_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

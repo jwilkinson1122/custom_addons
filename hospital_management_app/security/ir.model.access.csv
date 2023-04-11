@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_condition_stage,condition.stage,model_condition_stage,,1,1,1,1
+access_condition_type,condition.type,model_condition_type,,1,1,1,1
+access_employee_degree,employee.degree,model_employee_degree,,1,1,1,1
+access_appointment_management,appointment.management,model_appointment_management,,1,1,1,1
+access_appointment_management_line,appointment.management.line,model_appointment_management_line,,1,1,1,1
+access_patient_evaluation,patient.evaluation,model_patient_evaluation,,1,1,1,1
+access_patient_prescriptions,patient.prescriptions,model_patient_prescriptions,,1,1,1,1
+access_prescription_device_line,prescription.device.line,model_prescription_device_line,,1,1,1,1
+access_prescription_option_line,prescription.option.line,model_prescription_option_line,,1,1,1,1
+access_patient_procedures_type,patient.procedures.type,model_patient_procedures_type,,1,1,1,1
+access_patient_procedures,patient.procedures,model_patient_procedures,,1,1,1,1
+access_patient_procedures_line,patient.procedures.line,model_patient_procedures_line,,1,1,1,1
