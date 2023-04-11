@@ -43,21 +43,21 @@ class BookingOrder(models.Model):
             self.team_leader = team.team_leader.id
             self.team_members = team_members
 
-    def action_check(self):
-        for check in self:
-            wo = self.env['booking.work_order'].search(
-                ['|', '|', '|',
-                 ('team_leader', 'in', [g.id for g in self.team_members]),
-                 ('team_members', 'in', [self.team_leader.id]),
-                 ('team_leader', '=', self.team_leader.id),
-                 ('team_members', 'in', [g.id for g in self.team_members]),
-                 ('state', '!=', 'cancelled'),
-                 ('planned_start', '<=', self.booking_end),
-                 ('planned_end', '>=', self.booking_start)], limit=1)
-            if wo:
-                raise ValidationError('Team already has work order during that period on SOXX')
-            else:
-                raise ValidationError('Team is available for booking')
+    # def action_check(self):
+    #     for check in self:
+    #         wo = self.env['booking.work_order'].search(
+    #             ['|', '|', '|',
+    #              ('team_leader', 'in', [g.id for g in self.team_members]),
+    #              ('team_members', 'in', [self.team_leader.id]),
+    #              ('team_leader', '=', self.team_leader.id),
+    #              ('team_members', 'in', [g.id for g in self.team_members]),
+    #              ('state', '!=', 'cancelled'),
+    #              ('planned_start', '<=', self.booking_end),
+    #              ('planned_end', '>=', self.booking_start)], limit=1)
+    #         if wo:
+    #             raise ValidationError('Team already has work order during that period on SOXX')
+    #         else:
+    #             raise ValidationError('Team is available for booking')
 
     def action_confirm(self):
         res = super(BookingOrder, self).action_confirm()
@@ -68,9 +68,7 @@ class BookingOrder(models.Model):
                  ('team_members', 'in', [self.team_leader.id]),
                  ('team_leader', '=', self.team_leader.id),
                  ('team_members', 'in', [g.id for g in self.team_members]),
-                 ('state', '!=', 'cancelled'),
-                 ('planned_start', '<=', self.booking_end),
-                 ('planned_end', '>=', self.booking_start)], limit=1)
+                 ('state', '!=', 'cancelled')], limit=1)
             if wo:
                 raise ValidationError('Team is not available during this period, already booked on '
                                       'SOXX. Please book on another date.')

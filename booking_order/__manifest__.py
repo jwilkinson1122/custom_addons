@@ -16,13 +16,15 @@
     'application': True,
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'sale_management', 'product_configurator', 'stock'],
+    'depends': ['base', 'sale', 'sale_management', "product", "product_variant_configurator", 'product_configurator', 'stock'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         "data/menu_product.xml",
         'wizard/wizard_cancelled.xml',
+        "wizard/wizard_product_variant_configurator_manual_creation_view.xml",
+        # "views/product_template_view.xml",
         'views/service_team_views.xml',
         'views/work_order_views.xml',
         'views/booking_order_views.xml',

@@ -17,9 +17,9 @@
                 <tree string="Service Team">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <field name="team"/>
-                    <field name="team_leader"/>
-                    <field name="team_members"/>
+                    <!-- <field name="team" invisible="1"/>
+                    <field name="team_leader" invisible="1"/>
+                    <field name="team_members" invisible="1"/> -->
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -40,8 +40,7 @@
                         <button name="start_work" states="pending" string="Start Work" type="object"/>
                         <button name="end_work" states="in_progress" string="End Work" type="object"/>
                         <button name="reset" states="in_progress" string="Reset" type="object"/>
-                        <button name="%(action_cancel)d" states="pending,in_progress,done" string="Cancel"
-                                type="action"/>
+                        <button name="%(action_cancel)d" states="pending,in_progress,done" string="Cancel" type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="pending,in_progress,done,cancelled"/>
                     </header>
                     <sheet>
@@ -49,9 +48,9 @@
                             <group>
                                 <field name="wo_number"/>
                                 <field name="bo_reference"/>
-                                <field name="team"/>
-                                <field name="team_leader"/>
-                                <field name="team_members" widget="many2many_tags"/>
+                                <!-- <field name="team" invisible="1"/>
+                                <field name="team_leader" invisible="1"/>
+                                <field name="team_members" invisible="1" widget="many2many_tags"/> -->
                             </group>
                             <group>
                                 <field name="planned_start"/>
@@ -75,8 +74,8 @@
                 <kanban class="o_kanban_mobile">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <field name="team"/>
-                    <field name="team_leader"/>
+                    <!-- <field name="team" invisible="1"/>
+                    <field name="team_leader" invisible="1"/> -->
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -87,32 +86,40 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <strong><span><t t-esc="wo_number"/></span></strong>
+                                        <strong>
+                                            <span>
+                                                <t t-esc="wo_number"/>
+                                            </span>
+                                        </strong>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
-                                        <strong><field name="planned_start"/></strong>
+                                        <strong>
+                                            <field name="planned_start"/>
+                                        </strong>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <span><t t-esc="bo_reference"/></span>
+                                        <span>
+                                            <t t-esc="bo_reference"/>
+                                        </span>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="planned_end"/>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <!-- <div class="col-xs-6 text-muted">
                                         <span><t t-esc="record.team.value"/></span>
-                                    </div>
+                                    </div> -->
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="date_start"/>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <!-- <div class="col-xs-6 text-muted">
                                         <span><t t-esc="record.team_leader.value"/></span>
-                                    </div>
+                                    </div> -->
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="date_end"/>
                                     </div>
@@ -139,8 +146,8 @@
                 <search string="Search Work Order">
                     <field name="wo_number" string="Work Order"/>
                     <field name="bo_reference"/>
-                    <field name="team"/>
-                    <field name="team_leader"/>
+                    <!-- <field name="team" invisible="1"/>
+                    <field name="team_leader" invisible="1"/> -->
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -148,8 +155,8 @@
                     <field name="state"/>
                     <group expand="0" string="Group By">
                         <filter string="BO Reference" domain="[]" context="{'group_by':'bo_reference'}" name="bo_reference"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'team'}" name="team"/>
-                        <filter string="Team Leader" domain="[]" context="{'group_by':'team_leader'}" name="team_leader"/>
+                        <!-- <filter string="Team" domain="[]" context="{'group_by':'team'}" name="team"/>
+                        <filter string="Team Leader" domain="[]" context="{'group_by':'team_leader'}" name="team_leader"/> -->
                     </group>
                 </search>
             </field>
@@ -161,9 +168,9 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to add a master shift
+                    Click to add a work order
                 </p>
-                <p>Klik Tombol Create Untuk Working Order baru</p>
+                <p>Work Order</p>
             </field>
         </record>
     </data>
