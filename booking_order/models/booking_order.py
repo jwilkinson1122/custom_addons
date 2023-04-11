@@ -86,3 +86,15 @@ class BookingOrder(models.Model):
                             'team_members': order.team_members.ids,
                             'planned_start': order.booking_start,
                             'planned_end': order.booking_end}])
+
+    def action_config_start(self):
+        """Return action to start configuration wizard"""
+        configurator_obj = self.env["product.configurator.sale"]
+        ctx = dict(
+            self.env.context,
+            default_order_id=self.id,
+            wizard_model="product.configurator.sale",
+            allow_preset_selection=True,
+        )
+        return configurator_obj.with_context(ctx).get_wizard_action()
+
