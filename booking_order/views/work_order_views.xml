@@ -3,7 +3,7 @@
     <data>
         <record id="action_view_wo" model="ir.actions.act_window">
             <field name="name">Work Order</field>
-            <field name="res_model">work.order</field>
+            <field name="res_model">booking.work_order</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_bo_reference': [active_id],
                                    'default_bo_reference': active_id}</field>
@@ -11,15 +11,15 @@
 
         <record id="work_order_tree" model="ir.ui.view">
             <field name="name">work.order.tree</field>
-            <field name="model">work.order</field>
+            <field name="model">booking.work_order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Practice">
+                <tree string="Service Team">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <field name="practice_id"/>
-                    <field name="practitioner_id"/>
-                    <field name="patient_id"/>
+                    <field name="team"/>
+                    <field name="team_leader"/>
+                    <field name="team_members"/>
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -32,15 +32,16 @@
 
         <record id="work_order_form" model="ir.ui.view">
             <field name="name">work.order.form</field>
-            <field name="model">work.order</field>
+            <field name="model">booking.work_order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Service">
+                <form string="Service Team">
                     <header>
                         <button name="start_work" states="pending" string="Start Work" type="object"/>
                         <button name="end_work" states="in_progress" string="End Work" type="object"/>
                         <button name="reset" states="in_progress" string="Reset" type="object"/>
-                        <button name="%(cancel_order_action)d" states="pending,in_progress,done" string="Cancel" type="action"/>
+                        <button name="%(action_cancel)d" states="pending,in_progress,done" string="Cancel"
+                                type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="pending,in_progress,done,cancelled"/>
                     </header>
                     <sheet>
@@ -48,9 +49,9 @@
                             <group>
                                 <field name="wo_number"/>
                                 <field name="bo_reference"/>
-                                <field name="practice_id"/>
-                                <field name="practitioner_id"/>
-                                <field name="patient_id" />
+                                <field name="team"/>
+                                <field name="team_leader"/>
+                                <field name="team_members" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="planned_start"/>
@@ -69,14 +70,13 @@
 
         <record model="ir.ui.view" id="view_work_order_kanban">
             <field name="name">work.order.kanban</field>
-            <field name="model">work.order</field>
+            <field name="model">booking.work_order</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <field name="practice_id"/>
-                    <field name="practitioner_id"/>
-                    <field name="patient_id"/>
+                    <field name="team"/>
+                    <field name="team_leader"/>
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -87,23 +87,15 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <strong>
-                                            <span>
-                                                <t t-esc="wo_number"/>
-                                            </span>
-                                        </strong>
+                                        <strong><span><t t-esc="wo_number"/></span></strong>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
-                                        <strong>
-                                            <field name="planned_start"/>
-                                        </strong>
+                                        <strong><field name="planned_start"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="bo_reference"/>
-                                        </span>
+                                        <span><t t-esc="bo_reference"/></span>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="planned_end"/>
@@ -111,9 +103,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="record.practice_id.value"/>
-                                        </span>
+                                        <span><t t-esc="record.team.value"/></span>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="date_start"/>
@@ -121,9 +111,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <span>
-                                            <t t-esc="record.practitioner_id.value"/>
-                                        </span>
+                                        <span><t t-esc="record.team_leader.value"/></span>
                                     </div>
                                     <div class="col-xs-6 pull-right text-right">
                                         <field name="date_end"/>
@@ -146,14 +134,13 @@
 
         <record id="work_order_view_search" model="ir.ui.view">
             <field name="name">work.order.search</field>
-            <field name="model">work.order</field>
+            <field name="model">booking.work_order</field>
             <field name="arch" type="xml">
                 <search string="Search Work Order">
                     <field name="wo_number" string="Work Order"/>
                     <field name="bo_reference"/>
-                    <field name="practice_id"/>
-                    <field name="practitioner_id"/>
-                    <field name="patient_id"/>
+                    <field name="team"/>
+                    <field name="team_leader"/>
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -161,8 +148,8 @@
                     <field name="state"/>
                     <group expand="0" string="Group By">
                         <filter string="BO Reference" domain="[]" context="{'group_by':'bo_reference'}" name="bo_reference"/>
-                        <filter string="Practice" domain="[]" context="{'group_by':'practice_id'}" name="practice_id"/>
-                        <filter string="Practitioner" domain="[]" context="{'group_by':'practitioner_id'}" name="practitioner_id"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'team'}" name="team"/>
+                        <filter string="Team Leader" domain="[]" context="{'group_by':'team_leader'}" name="team_leader"/>
                     </group>
                 </search>
             </field>
@@ -170,7 +157,7 @@
 
         <record id="work_order_action" model="ir.actions.act_window">
             <field name="name">Working Order</field>
-            <field name="res_model">work.order</field>
+            <field name="res_model">booking.work_order</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">

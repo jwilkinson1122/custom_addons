@@ -2,17 +2,9 @@ from odoo import fields, models, api, _
 
 
 class WorkOrder(models.Model):
-    _name = 'work.order'
+    _name = 'booking.work_order'
     _description = 'Work Order'
     _rec_name = "wo_number"
-    
-    practice_id = fields.Many2one(comodel_name='practice.practice_id', string='Practice')
-    
-    practitioner_id = fields.Many2one(comodel_name='practitioner.practitioner_id', string='Practitioner')
-   
-    patient_id = fields.Many2one(comodel_name='patient.patient_id', string='Patient')
-    
-    bo_reference = fields.Many2one(comodel_name='sale.order', readonly=True)
 
     wo_number = fields.Char(
         string='WO Number',
@@ -20,7 +12,19 @@ class WorkOrder(models.Model):
         readonly=True,
         copy=False,
         default=lambda self: _('New'))
-
+    bo_reference = fields.Many2one(
+        comodel_name='sale.order',
+        readonly=True)
+    team = fields.Many2one(
+        comodel_name='booking.service_team',
+        required=True)
+    team_leader = fields.Many2one(
+        comodel_name='res.users',
+        string='Team Leader',
+        required=True)
+    team_members = fields.Many2many(
+        comodel_name='res.users',
+        string='Team Members')
     planned_start = fields.Datetime(
         string="Planned Start",
         required=True)
@@ -46,9 +50,9 @@ class WorkOrder(models.Model):
         if vals.get('wo_number', _('New')) == _('New'):
             if 'company_id' in vals:
                 vals['wo_number'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code(
-                    'work.order') or _('New')
+                    'booking.work_order') or _('New')
             else:
-                vals['wo_number'] = self.env['ir.sequence'].next_by_code('work.order') or _('New')
+                vals['wo_number'] = self.env['ir.sequence'].next_by_code('booking.work_order') or _('New')
         return super(WorkOrder, self).create(vals)
 
     def start_work(self):
