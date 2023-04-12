@@ -17,9 +17,9 @@
                 <tree string="Service Team">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <!-- <field name="team" invisible="1"/>
+                    <field name="team" invisible="1"/>
                     <field name="team_leader" invisible="1"/>
-                    <field name="team_members" invisible="1"/> -->
+                    <field name="team_members" invisible="1"/>
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
@@ -48,9 +48,9 @@
                             <group>
                                 <field name="wo_number"/>
                                 <field name="bo_reference"/>
-                                <!-- <field name="team" invisible="1"/>
+                                <field name="team" invisible="1"/>
                                 <field name="team_leader" invisible="1"/>
-                                <field name="team_members" invisible="1" widget="many2many_tags"/> -->
+                                <field name="team_members" invisible="1" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="planned_start"/>
@@ -74,8 +74,8 @@
                 <kanban class="o_kanban_mobile">
                     <field name="wo_number"/>
                     <field name="bo_reference"/>
-                    <!-- <field name="team" invisible="1"/>
-                    <field name="team_leader" invisible="1"/> -->
+                    <field name="team" invisible="1"/>
+                    <field name="team_leader" invisible="1"/>
                     <field name="planned_start"/>
                     <field name="planned_end"/>
                     <field name="date_start"/>
