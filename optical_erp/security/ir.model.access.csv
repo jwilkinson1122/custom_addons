@@ -10,6 +10,17 @@ access_admin_doctor,access_admin_doctor,model_optical_dr,base.group_system,1,1,1
 access_patient,access_patient,model_optical_patient,group_optical_erp_patients,1,0,0,0
 access_admin_patient,access_admin_patient,model_optical_patient,base.group_system,1,1,1,1
 
+access_assistant_role,access_assistant_role,model_optical_role,group_optical_erp_assistant,1,1,1,0
+access_manager_role,access_manager_role,model_optical_role,group_optical_erp_practice_manager,1,0,0,0
+access_doctor_role,access_doctor_role,model_optical_role,group_optical_erp_doctors,1,1,1,0
+access_user_role,access_user_role,model_optical_role,group_optical_erp_user,1,1,1,0
+access_specialty_user,access_specialty_user,model_optical_specialty,group_optical_erp_practice_manager,0,1,1,0
+access_specialty_manager,access_specialty_manager,model_optical_specialty,group_optical_erp_user,1,1,1,0
+access_assistant_specialty,access_assistant_specialty,model_optical_specialty,group_optical_erp_assistant,1,1,1,0
+access_manager_specialty,access_manager_specialty,model_optical_specialty,group_optical_erp_practice_manager,1,0,0,0
+access_doctor_specialty,access_doctor_specialty,model_optical_specialty,group_optical_erp_doctors,1,1,1,0
+access_user_specialty,access_user_specialty,model_optical_specialty,group_optical_erp_user,1,1,1,0
+
 access_frame_material,access_frame_material,model_frame_material,base.group_system,1,1,1,1
 access_frame_shape,access_frame_shape,model_frame_shape,base.group_system,1,1,1,1
 access_frame_type,access_frame_type,model_frame_type,base.group_system,1,1,1,1

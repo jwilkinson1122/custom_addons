@@ -70,7 +70,6 @@ class Practice(models.Model):
             rec.practitioner_count = practitioner_count
 
     
-
     prescription_id = fields.One2many(comodel_name='dr.prescription', inverse_name='practice_id', string="Prescriptions")
     prescription_count = fields.Integer(string='Prescription Count', compute='_compute_prescription_count')
     def _compute_prescription_count(self):

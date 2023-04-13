@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="optical_specialty_view_form" model="ir.ui.view">
+        <field name="name">optical.specialty.form</field>
+        <field name="model">optical.specialty</field>
+        <field name="arch" type="xml">
+            <form string="Medical Specialty">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_specialty_view_tree" model="ir.ui.view">
+        <field name="name">optical.specialty.tree</field>
+        <field name="model">optical.specialty</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="optical_specialty_view_search" model="ir.ui.view">
+        <field name="name">optical.specialty.search</field>
+        <field name="model">optical.specialty</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_specialties" model="ir.actions.act_window">
+        <field name="name">Specialties</field>
+        <field name="res_model">optical.specialty</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- <menuitem id="optical_specialty_menu" name="Specialties" parent="optical_conf_practitioner_menu" action="action_optical_specialties" sequence="30"/> -->
+</odoo>

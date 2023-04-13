@@ -9,7 +9,7 @@ class InheritedResPartner(models.Model):
 
     is_patient = fields.Boolean(string='Is Patient', tracking=True)
     is_practice = fields.Boolean('Practice')
-    is_practitioner = fields.Boolean('Practitioner')
+    is_doctor = fields.Boolean('Practitioner')
 
     dob = fields.Date()
     age = fields.Integer(compute='_cal_age',store=True,readonly=True)
@@ -17,8 +17,9 @@ class InheritedResPartner(models.Model):
     
       # type = fields.Selection(selection_add=[("patient", "Patient Address"),("sale")])
     
-    type = fields.Selection(selection_add=[('patient','Patient Address')])
+    type = fields.Selection(selection_add=[('patient','Patient Address'), ('practice','Practice Address'), ('practitioner','Practitioner Address'), ("contact")])
     
+    # state = fields.Selection(selection_add=[("to_approve", "To Approve"),("sale",))
     # type = fields.Selection(selection_add=[('early_payment', 'Early payment: Discount early payment')])
 
     def open_customer_prescriptions(self):

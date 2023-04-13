@@ -13,7 +13,7 @@
 					<field name="is_patient" string="Patient" />
 					<!-- <group colspan="6" col="6">
 						<field name="is_patient" />
-						<field name="is_practitioner" />
+						<field name="is_doctor" />
 						<field name="is_practice" />
 					</group> -->
 				</xpath>

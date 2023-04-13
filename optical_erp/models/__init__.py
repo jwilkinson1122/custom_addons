@@ -2,6 +2,8 @@ from . import ir_actions
 from . import practice
 from . import dr_prescription
 from . import doctor
+from . import role
+from . import specialty
 from . import patient
 from . import test_type
 from . import res_partner
