@@ -10,6 +10,8 @@ class Doctor(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
+    _rec_name = 'doctor_id'
+    
     create_users_button = fields.Boolean()
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
@@ -25,7 +27,7 @@ class Doctor(models.Model):
     same_reference_doctor_id = fields.Many2one(comodel_name='optical.dr', string='Doctor with same Identity', compute='_compute_same_reference_doctor_id')
     role_ids = fields.Many2many(string='Role',comodel_name='optical.role')
     specialty_ids = fields.Many2many(string='Specialties', comodel_name='optical.specialty')
-    
+    notes = fields.Text(string="Notes")
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_doctor_prescriptions(self):
@@ -46,6 +48,7 @@ class Doctor(models.Model):
             count = self.env['dr.prescription'].search_count([('dr', '=', records.id)])
             records.prescription_count = count
             
+
     @api.onchange('doctor_id')
     def _onchange_doctor(self):
         '''
@@ -54,7 +57,8 @@ class Doctor(models.Model):
         '''
         address_id = self.doctor_id
         self.address_id = address_id
-
+        
+  
     @api.depends('reference')
     def _compute_same_reference_doctor_id(self):
         for doctor in self:
@@ -80,43 +84,43 @@ class Doctor(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'sort' or super()._valid_field_parameter(field, name)
     
-    # @api.model
-    # def create(self, vals):
-    #     if not vals.get('notes'):
-    #         vals['notes'] = 'New Doctor'
-    #     if vals.get('reference', _('New')) == _('New'):
-    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
-    #             'optical.dr.sequence') or _('New')
-    #     practitioner = super(Doctor, self).create(vals)
-    #     practitioner._add_followers()
-    #     return practitioner
-
-    def create_doctors(self, vals):
-        print('.....res')
-        self.is_doctor = True
-        if len(self.partner_id.user_ids):
-            raise UserError(_('User for this doctor already created.'))
-        else:
-            self.create_users_button = False
-        
+    @api.model
+    def create(self, vals):
+        if not vals.get('notes'):
+            vals['notes'] = 'New Doctor'
         if vals.get('reference', _('New')) == _('New'):
-                vals['reference'] = self.env['ir.sequence'].next_by_code(
-                'optical.dr.sequence') or _('New')  
-            
-        doctor_id = []
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Doctors')]).id)
-        doctor_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
+            vals['reference'] = self.env['ir.sequence'].next_by_code(
+                'optical.dr.sequence') or _('New')
+        practitioner = super(Doctor, self).create(vals)
+        practitioner._add_followers()
+        return practitioner
 
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Name ',
-            'view_mode': 'form',
-            'view_id': self.env.ref("doctor.view_create_user_wizard_form").id,
-            'target': 'new',
-            'res_model': 'res.users',
-            'context': {'default_partner_id': self.partner_id.id, 'default_is_doctor': True,
-                        'default_groups_id': [(6, 0, doctor_id)]}
-        }
+    # def create_doctors(self, vals):
+    #     print('.....res')
+    #     self.is_doctor = True
+    #     if len(self.partner_id.user_ids):
+    #         raise UserError(_('User for this doctor already created.'))
+    #     else:
+    #         self.create_users_button = False
+        
+    #     if vals.get('reference', _('New')) == _('New'):
+    #             vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'optical.dr.sequence') or _('New')  
+            
+    #     doctor_id = []
+    #     doctor_id.append(self.env['res.groups'].search([('name', '=', 'Doctors')]).id)
+    #     doctor_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
+
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Name ',
+    #         'view_mode': 'form',
+    #         'view_id': self.env.ref("doctor.view_create_user_wizard_form").id,
+    #         'target': 'new',
+    #         'res_model': 'res.users',
+    #         'context': {'default_partner_id': self.partner_id.id, 'default_is_doctor': True,
+    #                     'default_groups_id': [(6, 0, doctor_id)]}
+    #     }
     
     def name_get(self):
         result = []

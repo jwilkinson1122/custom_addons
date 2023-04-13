@@ -220,6 +220,7 @@
                 </form>
             </field>
         </record>
+
         <record id="dr_doctor_tree" model="ir.ui.view">
             <field name="name">Optometrist Tree View</field>
             <field name="model">optical.dr</field>
@@ -229,6 +230,7 @@
                 </tree>
             </field>
         </record>
+
         <record model="ir.ui.view" id="res_doctor_kanban_view">
             <field name="name">optical.dr</field>
             <field name="model">optical.dr</field>
@@ -295,6 +297,7 @@
                 </kanban>
             </field>
         </record>
+
         <record id="action_doctor_window" model="ir.actions.act_window">
             <field name="name">Optometrist</field>
             <field name="type">ir.actions.act_window</field>
