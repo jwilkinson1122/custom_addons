@@ -10,6 +10,7 @@ class Doctor(models.Model):
     create_users_button = fields.Boolean()
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
+    practice_id = fields.Many2one(comodel_name='optical.practice', string='Practice')
     is_doctor = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
     prescription_count = fields.Integer(compute='get_prescription_count')

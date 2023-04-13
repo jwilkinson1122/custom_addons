@@ -7,9 +7,19 @@ from odoo import api, fields, models,_
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner'
 
+    is_patient = fields.Boolean(string='Is Patient', tracking=True)
+    is_practice = fields.Boolean('Practice')
+    is_practitioner = fields.Boolean('Practitioner')
+
     dob = fields.Date()
     age = fields.Integer(compute='_cal_age',store=True,readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
+    
+      # type = fields.Selection(selection_add=[("patient", "Patient Address"),("sale")])
+    
+    type = fields.Selection(selection_add=[('patient','Patient Address')])
+    
+    # type = fields.Selection(selection_add=[('early_payment', 'Early payment: Discount early payment')])
 
     def open_customer_prescriptions(self):
         for records in self:

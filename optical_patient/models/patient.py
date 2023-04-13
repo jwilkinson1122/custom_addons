@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
-
 class Patient(models.Model):
     _name = "optical.patient"
     _inherits = {
@@ -15,13 +14,10 @@ class Patient(models.Model):
     # user_id = fields.Many2one('res.users')
     partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
                                  help='Partner-related data of the Doctor')
-    is_patient = fields.Boolean(string='Is Patient', tracking=True)
+    is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
-    
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', required=True, string="Practice")
 
-    
     @api.depends('dob')
     def _cal_age(self):
         for record in self:
@@ -29,7 +25,7 @@ class Patient(models.Model):
                 years = relativedelta(date.today(), record.dob).years
                 record.patient_age = str(int(years))
             else:
-                record.patient_age = 0
+                record.patient_age=0
 
     def create_patient(self):
         self.is_patient = True
@@ -39,10 +35,8 @@ class Patient(models.Model):
             self.create_users_button = False
         patient_id = []
 
-        patient_id.append(self.env['res.groups'].search(
-            [('name', '=', 'Patient')]).id)
-        patient_id.append(self.env['res.groups'].search(
-            [('name', '=', 'Internal User')]).id)
+        patient_id.append(self.env['res.groups'].search([('name', '=', 'Patient')]).id)
+        patient_id.append(self.env['res.groups'].search([('name', '=', 'Internal User')]).id)
         return {
             'type': 'ir.actions.act_window',
             'name': 'Name ',

@@ -3,19 +3,17 @@
     "version": "15.0.0.0.1",
     "category": "Optical",
     'sequence': 1,
-    'live_test_url': 'https://youtu.be/EKacxPASgWc',
-    'summary': "Solution for Optical(EYE) shops and clinics",
+    'summary': "Solution for Podiatry Clinics, Patients, Practitioners, and Prescriptions",
     'description': """
-    odoo Solution for Optical(EYE) shops and clinics.
+    odoo Solution for Podiatry clinic management.
     """,
-    "author": "Alhaditech",
-    "website": "www.alhaditech.com",
+    "author": "NWPL",
+    "website": "www.nwpodiatric.com",
     'license': 'AGPL-3',
     'images': ['static/description/background.png', 'static/description/background2.png'],
     "depends": [
         'base', 'sale','purchase',
     ],
-    'price': 148, 'currency': 'USD',
     "data": [
         'security/groups.xml',
         "security/security.xml",
@@ -32,8 +30,10 @@
         'report/invoice_report.xml',
         'views/inherit_sale_order.xml',
         'wizard/complete_pair_order.xml',
+        'views/practice.xml',
         'views/doctor.xml',
         'views/doctor_wizard.xml',
+        'views/patient.xml',
         "views/prescription.xml",
         "views/res_config_settings_views.xml",
         "views/partner.xml",

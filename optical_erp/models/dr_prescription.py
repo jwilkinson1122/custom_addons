@@ -13,7 +13,9 @@ class DrPrescription(models.Model):
         store=True,
     )
     dr = fields.Many2one('optical.dr', string='Optometrist', readonly=True)
-    customer = fields.Many2one('res.partner', string='Customer', readonly=False)
+    practice_id = fields.Many2one(comodel_name='optical.practice', string='Practice')
+    # customer = fields.Many2one('res.partner', string='Customer', readonly=False)
+    customer = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -294,9 +296,7 @@ class DrPrescription(models.Model):
                 # 'context':{'default_dr':self.id},
                 'type': 'ir.actions.act_window',
             }
-
-
-
+            
         else:
             return {
                 'name': _('Doctor Prescription'),
@@ -311,7 +311,7 @@ class DrPrescription(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('optical.prescription.sequence')
+            vals['name'] = self.env['ir.sequence'].next_by_code('dr.prescription.sequence')
         result = super(DrPrescription, self).create(vals)
         return result
 

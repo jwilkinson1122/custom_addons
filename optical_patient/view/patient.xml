@@ -13,9 +13,7 @@
                         (                    <field name="same_vat_partner_id"/>
 ), are you sure to create a new one?
                 </div>
-                <header>
-                    <!-- <button style="margin-left:10px;" name="create_patient" string="Create User" class="oe_highlight" type="object"/> -->
-                </header>
+                <button style="margin-left:10px;" name="create_patient" string="Create User" class="btn btn-success" type="object"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -26,25 +24,29 @@
                         <field name="active" invisible="1"/>
                         <field name="company_type" invisible="1" widget="radio" class="oe_edit_only" options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Patient Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
-                            <field name="is_patient" string="Is Patient" invisible="1"/>
-                            <field name="parent_id" widget="res_partner_many2one" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                            <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                             <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                            <!-- <button name="create_company" type="object" class="oe_edit_only btn-link" attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
+                                    <span class="fa fa-plus-square"/>
+                                    Create company
+                                </button> -->
                         </div>
                     </div>
+
                     <group>
                         <group>
                             <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
-                            <span class="o_form_label o_td_label" name="address_name">
+                            <label for="" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
                                 <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
-                            </span>
+                            </label>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
@@ -53,17 +55,18 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
-                            <!-- <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/> -->
+                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
                         </group>
                         <group>
-                            <!-- <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/> -->
+                            <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
+
                             <field name="dob" string="Birthdate"/>
                             <field name="patient_age" string="Age"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <!-- <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/> -->
+                            <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="active_lang_count" invisible="1"/>
                             <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
@@ -289,20 +292,11 @@
             </kanban>
         </field>
     </record>
-    <!-- <record id="action_patient_window" model="ir.actions.act_window">
-        <field name="name">Patient</field>
-        <field name="res_model">optical.patient</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">kanban,tree,form</field>
-    </record> -->
     <record id="action_patient_window" model="ir.actions.act_window">
         <field name="name">Patient</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">optical.patient</field>
-        <field name="domain">[('is_patient', '=', True)]</field>
-        <field name="context">{'default_is_patient':True}</field>
+        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
-
 </data>
 </odoo>
