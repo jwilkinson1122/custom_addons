@@ -1,11 +1,12 @@
+import base64
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 
 class Doctor(models.Model):
     _name = "optical.dr"
-    # _inherit = ['mail.thread',
-    #             'mail.activity.mixin', 'image.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _inherits = {
         'res.partner': 'partner_id',
     }
