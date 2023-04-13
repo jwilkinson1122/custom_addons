@@ -17,9 +17,18 @@
                     <!-- <button style="margin-left:10px;" name="create_patient" string="Create User" class="oe_highlight" type="object"/> -->
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_prescriptions" class="oe_stat_button" type="object" icon="fa-file-text">
+                            <field string="Prescription" name="prescription_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <div name="reference">
+                        <h1 class="d-flex">
+                            <field name="reference"/>
+                        </h1>
+                    </div>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -29,9 +38,15 @@
                             <field name="name" default_focus="1" placeholder="Patient Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
+                            <group name="practice_information">
+                                <field name="practice_id"/>
+                            </group>
+                            <group name="practitioner_information">
+                                <field name="doctor_id"/>
+                            </group>
                             <field name="is_patient" string="Is Patient" invisible="1"/>
-                            <field name="parent_id" widget="res_partner_many2one" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
-                            <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                            <field name="parent_id" invisible="1" widget="res_partner_many2one" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                            <field name="company_name" invisible="1" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                         </div>
                     </div>
                     <group>
@@ -198,9 +213,15 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
             </form>
         </field>
     </record>
+
     <record id="dr_patient_tree" model="ir.ui.view">
         <field name="name">Patient Tree View</field>
         <field name="model">optical.patient</field>
@@ -210,6 +231,7 @@
             </tree>
         </field>
     </record>
+
     <record model="ir.ui.view" id="res_patient_kanban_view">
         <field name="name">optical.patient.kanban</field>
         <field name="model">optical.patient</field>
@@ -288,6 +310,37 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="view_podiatry_patient_search" model="ir.ui.view">
+        <field name="name">optical.patient.search</field>
+        <field name="model">optical.patient</field>
+        <field name="arch" type="xml">
+            <search string="Patients">
+                <field name="name"/>
+                <field name="reference" operator="="/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <group name="group_by" string="Group By">
+                    <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}"/>
+                    <!-- <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/> -->
+                    <filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
+                    <separator/>
+                    <filter string="Diagnosis" name="diagnosis" context="{'group_by': 'diagnosis'}"/>
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                    <separator/>
+                    <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
+                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="parent_id" icon="fa-hospital-o" enable_counters="1"/>
+                    <field name="doctor_id" icon="fa-user-md" enable_counters="1"/>
+                </searchpanel>
+
+            </search>
         </field>
     </record>
     <!-- <record id="action_patient_window" model="ir.actions.act_window">

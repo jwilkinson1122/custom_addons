@@ -15,6 +15,8 @@ class DrPrescription(models.Model):
     dr = fields.Many2one('optical.dr', string='Optometrist', readonly=True)
     practice_id = fields.Many2one(comodel_name='optical.practice', string='Practice')
     # customer = fields.Many2one('res.partner', string='Customer', readonly=False)
+    patient_id = fields.Many2one(comodel_name='optical.patient', string='Patient')
+
     customer = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", readonly=False)
     customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())

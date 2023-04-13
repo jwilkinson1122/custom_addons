@@ -18,7 +18,7 @@ class Doctor(models.Model):
     practice_id = fields.Many2one(comodel_name='optical.practice', string='Practice')
     responsible_id = fields.Many2one(comodel_name='res.users', string="Created By", default=lambda self: self.env.user)
     is_doctor = fields.Boolean()
-    doctor_id = fields.Many2one('res.partner', domain=[('is_doctor', '=', True)], string="Doctor", required=True)
+    doctor_id = fields.Many2one('res.partner', domain=[('is_doctor', '=', True)], string="Doctor")
     reference = fields.Char(string='Doctor Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     related_user_id = fields.Many2one(related='partner_id.user_id')
     address_id = fields.Many2one('res.partner', string="Doctor Address", )
