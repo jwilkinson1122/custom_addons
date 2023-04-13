@@ -298,6 +298,35 @@
             </field>
         </record>
 
+        <!--
+    Search
+    -->
+        <record id="view_optical_doctor_search" model="ir.ui.view">
+            <field name="name">optical.dr.search</field>
+            <field name="model">optical.dr</field>
+            <field name="arch" type="xml">
+                <search string="Contacts">
+                    <field name="name"/>
+                    <field name="reference" operator="="/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group name="group_by" string="Group By">
+                        <filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
+                        <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
+                        <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
+                        <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="doctor_id" icon="fa-hospital-user" enable_counters="1"/>
+                        <field name="country_id" icon="fa-globe" enable_counters="1"/>
+                    </searchpanel>
+
+                </search>
+            </field>
+        </record>
+
         <record id="action_doctor_window" model="ir.actions.act_window">
             <field name="name">Optometrist</field>
             <field name="type">ir.actions.act_window</field>
