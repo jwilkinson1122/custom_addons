@@ -15,13 +15,8 @@ class InheritedResPartner(models.Model):
     age = fields.Integer(compute='_cal_age',store=True,readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
     
-      # type = fields.Selection(selection_add=[("patient", "Patient Address"),("sale")])
+    type = fields.Selection(selection_add=[('patient','Patient Address'), ('practice','Practice Address'), ('practitioner','Practitioner Address')])
     
-    type = fields.Selection(selection_add=[('patient','Patient Address'), ('practice','Practice Address'), ('practitioner','Practitioner Address'), ("contact")])
-    
-    # state = fields.Selection(selection_add=[("to_approve", "To Approve"),("sale",))
-    # type = fields.Selection(selection_add=[('early_payment', 'Early payment: Discount early payment')])
-
     def open_customer_prescriptions(self):
         for records in self:
             return {

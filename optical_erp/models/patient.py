@@ -19,7 +19,7 @@ class Patient(models.Model):
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', readonly=True)
     
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', required=True, string="Practice")
+    practice_id = fields.Many2one(comodel_name='optical.practice', required=True, string="Practice")
 
     
     @api.depends('dob')

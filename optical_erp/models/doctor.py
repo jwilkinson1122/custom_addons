@@ -4,8 +4,8 @@ from odoo.exceptions import UserError
 
 class Doctor(models.Model):
     _name = "optical.dr"
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
+    # _inherit = ['mail.thread',
+    #             'mail.activity.mixin', 'image.mixin']
     _inherits = {
         'res.partner': 'partner_id',
     }
