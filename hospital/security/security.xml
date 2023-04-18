@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_category_hospital">
+            <field name="name">Hospital</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <!--        <record id="group_ProjectName_employee" model="res.groups">-->
+        <!--            <field name="name">Employee</field>-->
+        <!--            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>-->
+        <!--            <field name="category_id" ref="ProjectName.ProjectName_category"/>-->
+        <!--        </record>-->
+
+        <!--        <record id="group_ProjectName_manager" model="res.groups">-->
+        <!--            <field name="name">Manager</field>-->
+        <!--            <field name="category_id" ref="ProjectName.ProjectName_category"/>-->
+        <!--            <field name="implied_ids" eval="[(4, ref('group_ProjectName_employee'))]"/>-->
+        <!--            <field name="users" eval="[(4, ref('base.user_root'))]"/>-->
+        <!--        </record>-->
+
+        <record id="hospital_patient_group" model="res.groups">
+            <field name="name">patient</field>
+            <field name="category_id" ref="module_category_hospital"/>
+
+        </record>
+        <record id="hospital_parent_group" model="res.groups">
+            <field name="name">parent</field>
+            <field name="category_id" ref="module_category_hospital"/>
+<!--            <field name="implied_ids" eval="[(4, ref('hospital_patient_group'))]"/>-->
+        </record>
+
+        <record id="patient_record_rule" model="ir.rule">
+            <field name="name">only his patient</field>
+            <field ref="model_hospital_patient" name="model_id"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <!-- You can attach this rule to a specific group, Or make it Global -->
+            <field name="groups" eval="[(4, ref('hospital_patient_group'))]"/>
+            <!--<field name="global" eval="1"/> -->
+        </record>
+
+        <record id="patient_record_rule2" model="ir.rule">
+            <field name="name">all patients</field>
+            <field ref="model_hospital_patient" name="model_id"/>
+            <field name="domain_force">[]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <!-- You can attach this rule to a specific group, Or make it Global -->
+            <field name="groups" eval="[(4, ref('hospital_parent_group'))]"/>
+            <!--<field name="global" eval="1"/> -->
+        </record>
+
+    </data>
+</odoo>

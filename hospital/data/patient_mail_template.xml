@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="patient_mail_template" model="mail.template">
+            <field name="name">patient card: Send by email</field>
+            <field name="model_id" ref="hospital.model_hospital_patient"/>
+            <field name="subject">Hi Patient ${object.patient_name}</field>
+            <field name="email_from">${(object.user_id.email_formatted) | safe}</field>
+            <field name="email_to">${object.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello, ${object.patient_name}
+                        <br/> <br/>
+                        Your age ${object.patient_age}
+                        <br/> <br/>
+                        Do not hesitate to contact us if you have any questions.
+                    </p>
+                </div>
+            </field>
+<!--            <field name="report_template" ref="action_report_saleorder"/>-->
+<!--            <field name="report_name">${(object.name or '').replace('/','_')}</field>-->
+<!--            <field name="lang">${object.partner_id.lang}</field>-->
+<!--            <field name="auto_delete" eval="True"/>-->
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="patient_invoice" model="report.paperformat">
+        <field name="name">Patient Invoice Layout</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">100</field>
+        <field name="page_width">88</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <!--    <data>-->
+
+    <!--        <report-->
+    <!--                id="report_patient2"-->
+    <!--                model="hospital.patient"-->
+    <!--                string="patient report 1"-->
+    <!--                name="hospital.report_patient_view1"-->
+    <!--                file="hospital.report_patient_view1"-->
+    <!--                report_type="qweb-pdf"/>-->
+    <record id="report_patient1" model="ir.actions.report">
+        <field name="name">Print patient report</field>
+        <field name="model">hospital.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hospital.report_patient_view</field>
+        <field name="report_file">hospital.report_patient_view</field>
+        <field name="print_report_name">'%s - report ' % (object.patient_name).replace('/', '')</field>
+        <field name="binding_model_id" ref="model_hospital_patient"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="hospital.patient_invoice"/>
+    </record>
+
+    <record id="wizard_report_patient" model="ir.actions.report">
+        <field name="name">Print wizard report</field>
+        <field name="model">hospital.patient.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hospital.report_patient_wizard</field>
+        <field name="report_file">hospital.report_patient_wizard</field>
+<!--        <field name="print_report_name">'%s - report ' % (object.patient_name).replace('/', '')</field>-->
+        <field name="binding_model_id" ref="model_hospital_patient_report_wizard"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="hospital.patient_invoice"/>
+    </record>
+
+
+    <!--    </data>-->
+</odoo>

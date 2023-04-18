@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_patient_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="object">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <h3>Order Sources Report</h3>
+                        <small>
+                            <b>02/04/2022 03:30:40 - 02/04/2022 03:30:40</b>
+                        </small>
+                        <style>
+                            table, th, td {
+                            border:1px solid black;
+                            border-collapse: collapse;
+                            text-align : center;
+<!--                            display: flex;-->
+<!--                            justify-content : center;-->
+<!--                            align-items : center;-->
+                            vertical-align:middle
+                            }
+                        </style>
+                        <table style="width:100%">
+                            <tr>
+                                <th>
+                                    Source
+                                </th>
+                                <th>
+                                    Orders Count
+                                </th>
+                                <th>
+                                    Amount Total
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span t-field="object.patient_name"/>
+                                </td>
+                                <td>
+                                    <span t-field="object.patient_age"/>
+                                </td>
+                                <td>
+                                    <span t-field="object.appointment_counter"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5> Appointments : </h5>
+                    <t t-foreach="object.rel_appointments" t-as="appoint">
+                        <div>
+                        name <span t-field="appoint.name"/>
+                        </div>
+                        <div>
+                        date <span t-field="appoint.appointment_date"/>
+                        </div>
+                        <div>
+                        checkup date <span t-field="appoint.checkup_date"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sale_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.inherited</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+<!--            <field name="priority" eval="8"/>-->
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='validity_date']" position="before">
+<!--                    <field name="sale_details"/>-->
+                </xpath>
+
+            </field>
+        </record>
+    <record id="sale_form_inherit_tree" model="ir.ui.view">
+        <field name="name">sale_tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='date_order']" position="after">
+                <!-- Add new fields here -->
+                 <field name="sale_details"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="saleQ_form_inherit_tree" model="ir.ui.view">
+        <field name="name">saleQ_tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <!-- Add new fields here -->
+                 <field name="sale_details"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    </data>
+</odoo>

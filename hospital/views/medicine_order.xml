@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="medicine_order_form_view" model="ir.ui.view">
+            <field name="name">hospital.medicine_order.form</field>
+            <field name="model">hospital.sale.medicine</field>
+            <field name="arch" type="xml">
+                <form string="medicine_order">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="medicine_order_seq" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sale_date"/>
+                            </group>
+                            <group>
+                                <field name="quantity"/>
+                                <field name="medicine_name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="medicine_order_tree_view" model="ir.ui.view">
+            <field name="name">hospital.medicine_order.tree</field>
+            <field name="model">hospital.sale.medicine</field>
+            <field name="arch" type="xml">
+                <tree string="medicine_order">
+                    <field name="name"/>
+                    <field name="medicine_order_seq"/>
+                    <field name="sale_date"/>
+                    <field name="quantity"/>
+                    <field name="medicine_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--        <record id="medicine_order_search_view" model="ir.ui.view">-->
+        <!--            <field name="name">ProjectName.medicine_order.search</field>-->
+        <!--            <field name="model">ProjectName.medicine_order</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <search string="ModelTitle">-->
+        <!--                    <group expand="1" string="Group By">-->
+        <!--                        <filter string="Example Field" name="example_field" domain="[]"-->
+        <!--                                context="{'group_by':'example_field'}"/>-->
+        <!--                    </group>-->
+        <!--                </search>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="medicine_order_act_window" model="ir.actions.act_window">
+            <field name="name">medicine_order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.sale.medicine</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new ModelTitle.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem name="Sale Medicine" id="hospital_patient_root4" parent="hospital_root"
+                  action="medicine_order_act_window" sequence="4"/>
+
+
+
+
+    </data>
+</odoo>

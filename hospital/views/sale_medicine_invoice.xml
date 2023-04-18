@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <report
+                id="pharmacy_moves_report"
+                model="hospital.sale.medicine"
+                string="MovesHasan"
+                name="hospital.medicine_sale_order_invoice"
+                file="report_moves_template2"
+                report_type="qweb-pdf"/>
+
+        <template id="medicine_sale_order_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div >
+                            <div class="bg-info d-flex p-2">
+                                <h1>Order Serial : </h1>
+                                <h1 t-field="doc.medicine_order_seq"/>
+                            </div>
+                            <div class="bd-danger d-flex justify-content-between">
+
+                                <div class="bg-danger d-flex p-2">
+                                    <h1>Invoice Name : </h1>
+                                    <h1 t-field="doc.name"/>
+                                </div>
+                                <div class="bg-danger d-flex p-2">
+                                    <h1>Order Date : </h1>
+                                    <h1 t-field="doc.sale_date"/>
+                                </div>
+                            </div>
+
+                            <div class="bg-dark d-flex p-2">
+                                <h1 calss="text-center">Order Details</h1>
+
+                            </div>
+                            <table class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-field="doc.medicine_name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="doc.quantity"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

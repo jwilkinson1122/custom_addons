@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_kids_action" model="ir.actions.act_window">
+            <field name="name">Kids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--            be careful => any context expression like next
+                            one should be exist as filter name lke line : 190 -->
+            <!--            default group by gonna here : -->
+            <field name="context">{}</field>
+            <field name="domain">[('patient_age','&lt;=',15)]</field>
+
+            <field name="help" type="html">
+                <p>
+                    add new patient !
+                </p>
+            </field>
+        </record>
+        <menuitem id="view_kids_patient" name="kids2" parent="hospital_patient_root"
+                  action="view_kids_action"
+                  sequence="4"/>
+    </data>
+</odoo>

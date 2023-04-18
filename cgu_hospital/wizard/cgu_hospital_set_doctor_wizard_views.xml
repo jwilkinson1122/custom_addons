@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="set_doctor_for_patients_wizard_view_form" model="ir.ui.view">
+        <field name="name">cgu_hospital.set_doctor_wizard.view.form</field>
+        <field name="model">cgu_hospital.set.doctor.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="doctor_id" options="{'no_create': True}"/>
+                            <field name="patient_ids"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_set_personal_doctor"
+                            string="Set"
+                            type="object"
+                            icon="fa-plus"
+                            class="btn-primary"/>
+                    <button special="cancel" class="oe_link" string="Close"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+<!--    binding to menu action-->
+    <record id="action_set_doctor_for_patients_wizard" model="ir.actions.act_window">
+        <field name="name">Set Doctor</field>
+        <field name="res_model">cgu_hospital.set.doctor.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_cgu_hospital_patient"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">action</field>
+    </record>
+
+
+</odoo>
+
