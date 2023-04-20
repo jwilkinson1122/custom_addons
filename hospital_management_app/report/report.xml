@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data>
-        <report id="action_patient_prescription_report" string="Print Prescription" model="patient.prescriptions" report_type="qweb-pdf" file="hospital_management_app.patient_prescription_report_temp" name="hospital_management_app.patient_prescription_report_temp" print_report_name="'Prescription - %s' % object.partner_id.name" paperformat="hospital_management_app.patient_prescription_report_paperformat" menu="True" />
-
-    </data>
-</odoo>

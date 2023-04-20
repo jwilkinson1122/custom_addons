@@ -200,14 +200,12 @@ access_medical_insurance,medical.insurance,model_medical_insurance,bi_group_doct
 access_medical_patient_lab_test,medical.patient.lab.test,model_medical_patient_lab_test,bi_group_doctor,1,1,1,0
 access_medical_patient_lab_test_chem,medical.patient.lab.test.chem,model_medical_patient_lab_test,group_chemist,1,0,0,0
 
+access_prescription_shipment_wizard,prescription.shipment.wizard,model_create_prescription_shipment,,1,1,1,1
+access_create_prescription_shipment,create.prescription.shipment,model_create_prescription_shipment,,1,1,1,1
 
 access_medical_appointments_invoice_wizard,medical.appointments.invoice.wizard,model_medical_appointments_invoice_wizard,,1,1,1,1
-
-
 access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1
 
 
 access_medical_lab_test_create,medical.lab.test.create,model_medical_lab_test_create,,1,1,1,1
-
-
 access_medical_lab_test_invoice,medical.lab.test.invoice,model_medical_lab_test_invoice,,1,1,1,1
