@@ -18,6 +18,7 @@ class PracticePatient(models.Model):
     phone = fields.Char(string='Phone', required=True, tracking=True)
     age = fields.Integer(string='Age', required=True, tracking=True)
     email = fields.Char(string='Email', tracking=True)
+    primary_doctor_id = fields.Many2one("res.partner", string="Doctor name", required=True)
     patient_prescription_ids = fields.One2many('pod_erp.prescription', 'patient_id', string="Prescription Count",
                                               readonly=True)
     total_prescriptions = fields.Integer(string='No. of prescriptions', compute='_compute_prescriptions')

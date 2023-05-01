@@ -30,7 +30,7 @@ class PracticePrescription(models.Model):
     checkup_date = fields.Datetime(string='Checkup Date', required=True, tracking=True)
     prescription_medicine_ids = fields.One2many("pod_erp.prescription.prescription.medicine",
                                                 "prescription_medicine_id", string="Prescription Medicine")
-    appointed_doctor_id = fields.Many2one("pod_erp.doctor", string="Doctor name", required=True)
+    appointed_doctor_id = fields.Many2one("res.partner", string="Doctor name", required=True)
     prescription_medical_test_ids = fields.Many2many("pod_erp.medicaltest", "medical_test_ids",
                                                      string="Medical tests")
 

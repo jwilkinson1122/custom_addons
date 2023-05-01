@@ -2,7 +2,7 @@
 <odoo>
     <record id="doctor_tree" model="ir.ui.view">
         <field name="name">pod_erp.doctor.tree</field>
-        <field name="model">pod_erp.doctor</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -14,15 +14,16 @@
                 <field name="status"/>
                 <field name="age"/>
                 <field name="joined_from"/>
-                <field name="partner_id"/>
-                <field name="view_prescription_ids"/>
+                <!-- <field name="partner_id"/> -->
+                <field name="partner_id" domain="[('is_doctor','=',True)]"/>
+                <field name="prescription_ids"/>
             </tree>
         </field>
     </record>
 
     <record id="doctor_form" model="ir.ui.view">
         <field name="name">pod_erp.doctor.form</field>
-        <field name="model">pod_erp.doctor</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -47,13 +48,21 @@
                         <page string="About">
                             <field name='description'/>
                         </page>
+                        <page string="Patients" autofocus="autofocus">
+                            <group string="Total Patients:">
+                                <h2>
+                                    <field name="total_patients"/>
+                                </h2>
+                            </group>
+                            <field name='patient_ids'/>
+                        </page>
                         <page string="Prescriptions" autofocus="autofocus">
                             <group string="Total Prescriptions:">
                                 <h2>
                                     <field name="total_prescriptions"/>
                                 </h2>
                             </group>
-                            <field name='view_prescription_ids'/>
+                            <field name='prescription_ids'/>
                         </page>
                     </notebook>
                 </sheet>
@@ -68,7 +77,7 @@
 
     <record id="doctor_search" model="ir.ui.view">
         <field name="name">pod_erp.doctor.search</field>
-        <field name="model">pod_erp.doctor</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <search string="Doctor">
                 <field name="name"/>
@@ -78,7 +87,7 @@
                 <field name="phone"/>
                 <field name="age"/>
                 <field name="college"/>
-                <field name="partner_id"/>
+                <field name="partner_id" domain="[('is_doctor','=',True)]"/>
             </search>
         </field>
     </record>
@@ -86,7 +95,7 @@
     <record id="doctor_action" model="ir.actions.act_window">
         <field name="name">Doctors</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">pod_erp.doctor</field>
+        <field name="res_model">res.partner</field>
         <field name="view_mode">tree,form,search,kanban</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -97,7 +106,7 @@
 
     <record id="doctor_kanban" model="ir.ui.view">
         <field name="name">pod_erp.doctor.kanban</field>
-        <field name="model">pod_erp.doctor</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <kanban default_group_by="partner_id">
                 <field name="name"/>
@@ -106,7 +115,7 @@
                 <field name="email"/>
                 <field name="status"/>
                 <field name="college"/>
-                <field name="partner_id"/>
+                <field name="partner_id" domain="[('is_doctor','=',True)]"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -143,20 +152,20 @@
     </record>
 
     <record id="action_active_confirm" model="ir.actions.server">
-        <field name="name">Confirm Parttime</field>
+        <field name="name">Confirm Active</field>
         <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_pod_erp_doctor"/>
-        <field name="binding_model_id" ref="model_pod_erp_doctor"/>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="binding_model_id" ref="model_res_partner"/>
         <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">records.action_status_active()</field>
     </record>
 
     <record id="action_inactive_confirm" model="ir.actions.server">
-        <field name="name">Confirm Fulltime</field>
+        <field name="name">Confirm Inactive</field>
         <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_pod_erp_doctor"/>
-        <field name="binding_model_id" ref="model_pod_erp_doctor"/>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="binding_model_id" ref="model_res_partner"/>
         <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">records.action_status_inactive()</field>

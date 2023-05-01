@@ -19,7 +19,7 @@ class PracticePrescriptionWizard(models.TransientModel):
     description = fields.Text()
     prescription_date = fields.Datetime(string='Prescription Date', default=fields.datetime.now())
     checkup_date = fields.Datetime(string='Checkup Date', required=True)
-    appointed_doctor_id = fields.Many2one("pod_erp.doctor", string="Doctor name", required=True)
+    appointed_doctor_id = fields.Many2one("res.partner", string="Doctor name", required=True)
 
     @api.constrains('prescription_date', 'checkup_date')
     def _check_date_validation(self):

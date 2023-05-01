@@ -222,7 +222,7 @@
         <field name="code">records.action_status_done()</field>
     </record>
 
-    <menuitem id="practice_prescription" name="Prescriptions" parent="practice_root"/>
+    <!-- <menuitem id="practice_prescription" name="Prescriptions" parent="practice_root"/>
 
     <menuitem id="all_prescription" name="All Prescriptions" parent="practice_prescription" action="prescription_action"/>
 
@@ -230,6 +230,6 @@
 
     <menuitem id="print_patient_prescription" name="Print Prescription" parent="practice_prescription" action="action_report_prescription"/>
 
-    <menuitem id="create_patient_prescription" name="Create Prescription" parent="practice_prescription" action="action_create_patient_prescription"/>
+    <menuitem id="create_patient_prescription" name="Create Prescription" parent="practice_prescription" action="action_create_patient_prescription"/> -->
 
 </odoo>

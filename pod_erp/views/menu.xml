@@ -6,13 +6,23 @@
         <!-- Partners Root -->
         <menuitem id="partners_root" name="Partners" parent="practice_root" sequence="2"/>
         <menuitem id="all_partner" name="All Partners" parent="partners_root" action="partners_action" sequence='1'/>
+        <!-- <menuitem id="menu_sub_practice" action="practice_action" sequence="1" parent="menu_insurance"/> -->
 
-        <menuitem id="practice_doctor" name="Doctors" parent="partners_root" action="doctor_action" sequence='2'/>
-        <menuitem id="practice_patient" name="Patients" parent="partners_root" action="all_patient_action" groups="pod_erp.group_practice_admin" sequence='3'/>
+        <!-- <menuitem id="practice_practice" name="Practices" parent="partners_root" action="practice_action" sequence='2'/> -->
+        <menuitem id="practice_doctor" name="Doctors" parent="partners_root" action="doctor_action" sequence='3'/>
+        <menuitem id="practice_patient" name="Patients" parent="partners_root" action="all_patient_action" groups="pod_erp.group_practice_admin" sequence='4'/>
 
         <!-- <menuitem id="practice_patient_all" name="All Patients" parent="practice_patient" action="all_patient_action" sequence='6'/> -->
         <!-- <menuitem id="practice_patient_male" name="Male Patients" parent="practice_patient" action="male_patient_action" sequence='7'/>
         <menuitem id="practice_patient_female" name="Female Patients" parent="practice_patient" action="female_patient_action" sequence='8'/> -->
+
+        <menuitem id="practice_prescription" name="Prescriptions" parent="practice_root" sequence="4"/>
+        <menuitem id="all_prescription" name="All Prescriptions" parent="practice_prescription" action="prescription_action" sequence="1"/>
+        <menuitem id="create_patient_prescription" name="Create Prescription" parent="practice_prescription" action="action_create_patient_prescription" sequence="2"/>
+        <menuitem id="print_patient_prescription" name="Print Prescription" parent="practice_prescription" action="action_report_prescription" sequence="3"/>
+
+        <!-- <menuitem id="practice_medicaltest" name="Medical test" parent="practice_root" action="medicaltest_action" /> -->
+
 
         <menuitem id='menu_product' action='action_product' name='Products' parent='practice_root' sequence='10'/>
         <menuitem id='menu_sales' action='action_sales' name='Sales order' parent='practice_root' sequence='11'/>

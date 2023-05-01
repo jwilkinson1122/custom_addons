@@ -48,6 +48,6 @@
         </field>
     </record>
 
-    <menuitem id="practice_medicaltest" name="Medical test" parent="practice_root" action="medicaltest_action" />
+
 
 </odoo>

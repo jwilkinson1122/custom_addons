@@ -4,9 +4,11 @@ import re
 
 
 class PracticeDoctor(models.Model):
-    _name = 'pod_erp.doctor'
-    _description = 'Practice Doctor'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    # _name = 'pod_erp.doctor'
+    # _description = 'Practice Doctor'
+    _inherit = ['res.partner']
+
+    # _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Doctor Name', required=True, tracking=True)
     college = fields.Char(string='College', tracking=True)
@@ -17,9 +19,10 @@ class PracticeDoctor(models.Model):
     ], default='male')
     phone = fields.Char(string='Phone', required=True, tracking=True)
     email = fields.Char(string='Email', required=True, tracking=True)
-    partner_id = fields.Many2one("res.partner", string='Partner', required=True, tracking=True)
-    view_prescription_ids = fields.One2many('pod_erp.prescription', 'appointed_doctor_id', string="Prescription Count",
-                                           readonly=True)
+    partner_id = fields.Many2one('res.partner', domain=[('is_doctor', '=', True)], string="Doctor", required=True, tracking=True)
+    # partner_id = fields.Many2one("res.partner", string='Partner', required=True, tracking=True)
+    patient_ids = fields.One2many('pod_erp.patient', 'primary_doctor_id', string="Patients", readonly=True)
+    prescription_ids = fields.One2many('pod_erp.prescription', 'appointed_doctor_id', string="Prescriptions", readonly=True)
     age = fields.Integer(string='Age', required=True, tracking=True)
     status = fields.Selection([
         ('active', 'Active'),
@@ -28,6 +31,8 @@ class PracticeDoctor(models.Model):
     description = fields.Text()
     joined_from = fields.Date(string='Joined Date', tracking=True)
     image = fields.Binary(string='Image', attachment=True)
+    total_patients = fields.Integer(string='Total patients', compute='_compute_patients')
+
     total_prescriptions = fields.Integer(string='Total prescriptions', compute='_compute_prescriptions')
 
     def action_status_active(self):
@@ -50,8 +55,16 @@ class PracticeDoctor(models.Model):
         for record in self:
             if record.age <= 0:
                 raise ValidationError('Age must be greater than 0')
+            
+            
+    # same as prescription_ids but implemented using computed fields
+    # compute prescriptions of individual doctor
+    def _compute_patients(self):
+        for record in self:
+            record.total_patients = self.env['pod_erp.patient'].search_count(
+                [('primary_doctor_id', '=', record.id)])
 
-    # same as view_prescription_ids but implemented using computed fields
+    # same as prescription_ids but implemented using computed fields
     # compute prescriptions of individual doctor
     def _compute_prescriptions(self):
         for record in self:

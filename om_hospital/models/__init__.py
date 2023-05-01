@@ -1,5 +1,7 @@
 from . import patient
-from . import prescriptions
+from . import appointment
 from . import doctor
-
+from . import lab
+from . import settings
+from . import ir_view
 

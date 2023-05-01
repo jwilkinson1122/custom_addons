@@ -27,7 +27,7 @@ class Practice(http.Controller):
     @http.route('/prescription_webform', type='http', auth='user', website=True)
     def prescription_webform(self, **kw):
         patient_rec = request.env['pod_erp.patient'].sudo().search([])
-        doctor_rec = request.env['pod_erp.doctor'].sudo().search([])
+        doctor_rec = request.env['res.partner'].sudo().search([])
         return http.request.render('pod_erp.create_prescription', {
             'patient_rec': patient_rec,
             'doctor_rec': doctor_rec
