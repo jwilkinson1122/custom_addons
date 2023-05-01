@@ -113,7 +113,8 @@ class ProductConfig(ProductConfiguratorTestCases):
         )
 
         # create product template
-        self.product_tmpl_id = self.productTemplate.create({"name": "Coca-Cola"})
+        self.product_tmpl_id = self.productTemplate.create(
+            {"name": "Coca-Cola"})
         # create attribute 1
         self.attribute_1 = self.productAttribute.create(
             {
@@ -168,7 +169,8 @@ class ProductConfig(ProductConfiguratorTestCases):
             self.config_product_2.config_step_id = 4
 
     def test_02_get_trans_implied(self):
-        self.domain_gasolin.write({"implied_ids": [(6, 0, [self.domain_engine.id])]})
+        self.domain_gasolin.write(
+            {"implied_ids": [(6, 0, [self.domain_engine.id])]})
         trans_implied_ids = self.domain_gasolin.trans_implied_ids.ids
         self.assertEqual(
             trans_implied_ids[-1],
@@ -206,7 +208,8 @@ class ProductConfig(ProductConfiguratorTestCases):
         productConfigSessionCustVals = self.env[
             "product.config.session.custom.value"
         ].create(
-            {"cfg_session_id": self.session_id.id, "attribute_id": self.attr_fuel.id}
+            {"cfg_session_id": self.session_id.id,
+                "attribute_id": self.attr_fuel.id}
         )
         # check for custom type Int
         self.attr_fuel.custom_type = "integer"
@@ -383,7 +386,8 @@ class ProductConfig(ProductConfiguratorTestCases):
     def test_10_check_value_ids(self):
         with self.assertRaises(ValidationError):
             self.config_image_red.write(
-                {"value_ids": [(6, 0, [self.value_gasoline.id, self.value_diesel.id])]}
+                {"value_ids": [
+                    (6, 0, [self.value_gasoline.id, self.value_diesel.id])]}
             )
 
     def test_11_unique_attribute(self):
@@ -672,7 +676,8 @@ class ProductConfig(ProductConfiguratorTestCases):
         productConfigSessionCustVals = self.env[
             "product.config.session.custom.value"
         ].create(
-            {"cfg_session_id": self.session_id.id, "attribute_id": self.attr_fuel.id}
+            {"cfg_session_id": self.session_id.id,
+                "attribute_id": self.attr_fuel.id}
         )
         self.attr_fuel.custom_type = "integer"
         productConfigSessionCustVals.update({"value": 154})

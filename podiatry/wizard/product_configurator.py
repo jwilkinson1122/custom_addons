@@ -1,14 +1,14 @@
 from lxml import etree
 
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.base.models.ir_model import FIELD_TYPES
 from odoo.addons.base.models.ir_ui_view import (
     transfer_field_to_modifiers,
-    transfer_node_to_modifiers,
     transfer_modifiers_to_node,
+    transfer_node_to_modifiers,
 )
-from odoo.addons.base.models.ir_model import FIELD_TYPES
-
-from odoo import models, fields, tools, api, _
-from odoo.exceptions import UserError, ValidationError
 
 
 class FreeSelection(fields.Selection):
@@ -65,8 +65,7 @@ class ProductConfigurator(models.TransientModel):
         # TODO: Update when allowing custom values to influence image
         for configurator in self:
             cfg_sessions = configurator.config_session_id.with_context(
-                bin_size=False
-            )
+                bin_size=False)
             image = cfg_sessions.get_config_image()
             configurator.product_img = image
 
@@ -99,8 +98,7 @@ class ProductConfigurator(models.TransientModel):
 
         if open_lines:
             open_steps = open_lines.mapped(
-                lambda x: (str(x.id), x.config_step_id.name)
-            )
+                lambda x: (str(x.id), x.config_step_id.name))
             steps = open_steps if wiz.product_id else steps + open_steps
         else:
             steps.append(("configure", "Configure"))
@@ -112,8 +110,7 @@ class ProductConfigurator(models.TransientModel):
         template = self.product_tmpl_id
 
         self.config_step_ids = template.config_step_line_ids.mapped(
-            "config_step_id"
-        )
+            "config_step_id")
 
         # Set product preset if exist in session
         if template:
@@ -171,8 +168,7 @@ class ProductConfigurator(models.TransientModel):
             )
             domains[field_name] = [("id", "in", avail_ids)]
             check_avail_ids = list(
-                set(check_avail_ids)
-                - (set(line.value_ids.ids) - set(avail_ids))
+                set(check_avail_ids) - (set(line.value_ids.ids) - set(avail_ids))
             )
             # Include custom value in the domain if attr line permits it
             if line.custom:
@@ -238,15 +234,13 @@ class ProductConfigurator(models.TransientModel):
 
         final_cfg_val_ids = list(dynamic_fields.values())
 
-        vals.update(
-            self.get_onchange_vals(final_cfg_val_ids, config_session_id)
-        )
+        vals.update(self.get_onchange_vals(
+            final_cfg_val_ids, config_session_id))
         # To solve the Multi selection problem removing extra []
         if "value_ids" in vals:
             val_ids = vals["value_ids"][0]
             vals["value_ids"] = [
-                [val_ids[0], val_ids[1], tools.flatten(val_ids[2])]
-            ]
+                [val_ids[0], val_ids[1], tools.flatten(val_ids[2])]]
 
         return vals
 
@@ -304,9 +298,8 @@ class ProductConfigurator(models.TransientModel):
         except Exception:
             cfg_step = self.env["product.config.step.line"]
 
-        dynamic_fields = {
-            k: v for k, v in values.items() if k.startswith(field_prefix)
-        }
+        dynamic_fields = {k: v for k,
+                          v in values.items() if k.startswith(field_prefix)}
 
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
@@ -314,8 +307,7 @@ class ProductConfigurator(models.TransientModel):
             # if isinstance(v, list):
             #    dynamic_fields[k] = v[0][2]
             line_attributes = cfg_step.attribute_line_ids.mapped(
-                "attribute_id"
-            )
+                "attribute_id")
             if not cfg_step or attr_id in line_attributes.ids:
                 view_attribute_ids.add(attr_id)
             else:
@@ -348,7 +340,7 @@ class ProductConfigurator(models.TransientModel):
         return {"value": vals, "domain": domains}
 
     def onchange(self, values, field_name, field_onchange):
-        """ Override the onchange wrapper to return domains to dynamic
+        """Override the onchange wrapper to return domains to dynamic
         fields as onchange isn't triggered for non-db fields
         """
         onchange_values = self.apply_onchange_values(
@@ -411,9 +403,7 @@ class ProductConfigurator(models.TransientModel):
     @api.onchange("product_preset_id")
     def _onchange_product_preset(self):
         """Set value ids as from product preset"""
-        pta_value_ids = (
-            self.product_preset_id.product_template_attribute_value_ids
-        )
+        pta_value_ids = self.product_preset_id.product_template_attribute_value_ids
         attr_value_ids = pta_value_ids.mapped("product_attribute_value_id")
         self.value_ids = attr_value_ids
 
@@ -434,7 +424,7 @@ class ProductConfigurator(models.TransientModel):
 
     @api.model
     def fields_get(self, allfields=None, write_access=True, attributes=None):
-        """ Artificially inject fields which are dynamically created using the
+        """Artificially inject fields which are dynamically created using the
         attribute_ids on the product.template as reference"""
 
         field_prefix = self._prefixes.get("field_prefix")
@@ -487,8 +477,7 @@ class ProductConfigurator(models.TransientModel):
             value_ids = line.value_ids.ids
 
             value_ids = wiz.config_session_id.values_available(
-                check_val_ids=value_ids
-            )
+                check_val_ids=value_ids)
 
             # If attribute lines allows custom values add the
             # generic "Custom" attribute.value to the list of options
@@ -533,7 +522,7 @@ class ProductConfigurator(models.TransientModel):
     def fields_view_get(
         self, view_id=None, view_type="form", toolbar=False, submenu=False
     ):
-        """ Generate view dynamically using attributes stored on the
+        """Generate view dynamically using attributes stored on the
         product.template"""
 
         if view_type == "form" and not view_id:
@@ -560,9 +549,7 @@ class ProductConfigurator(models.TransientModel):
         dynamic_field_prefixes = tuple(self._prefixes.values())
 
         dynamic_fields = {
-            k: v
-            for k, v in fields.items()
-            if k.startswith(dynamic_field_prefixes)
+            k: v for k, v in fields.items() if k.startswith(dynamic_field_prefixes)
         }
         res["fields"].update(dynamic_fields)
 
@@ -573,10 +560,8 @@ class ProductConfigurator(models.TransientModel):
         return res
 
     @api.model
-    def setup_modifiers(
-        self, node, field=None, context=None, in_tree_view=False
-    ):
-        """ Processes node attributes and field descriptors to generate
+    def setup_modifiers(self, node, field=None, context=None, current_node_path=None):
+        """Processes node attributes and field descriptors to generate
         the ``modifiers`` node attribute and set it on the provided node.
 
         Alters its first argument in-place.
@@ -585,7 +570,7 @@ class ProductConfigurator(models.TransientModel):
         :type node: lxml.etree._Element
         :param dict field: field descriptor corresponding to the provided node
         :param dict context: execution context used to evaluate node attributes
-        :param bool in_tree_view: triggers the ``column_invisible`` code
+        :param bool current_node_path: triggers the ``column_invisible`` code
                                   path (separate from ``invisible``): in
                                   tree view there are two levels of
                                   invisibility, cell content (a column is
@@ -602,45 +587,13 @@ class ProductConfigurator(models.TransientModel):
             node=node,
             modifiers=modifiers,
             context=context,
-            in_tree_view=in_tree_view,
         )
         transfer_modifiers_to_node(modifiers=modifiers, node=node)
 
-    @api.model
-    def add_dynamic_fields(self, res, dynamic_fields, wiz):
-        """ Create the configuration view using the dynamically generated
-            fields in fields_get()
-        """
-
-        field_prefix = self._prefixes.get("field_prefix")
-        custom_field_prefix = self._prefixes.get("custom_field_prefix")
-
-        try:
-            # Search for view container hook and add dynamic view and fields
-            xml_view = etree.fromstring(res["arch"])
-            xml_static_form = xml_view.xpath("//group[@name='static_form']")[0]
-            xml_dynamic_form = etree.Element(
-                "group", colspan="2", name="dynamic_form"
-            )
-            xml_parent = xml_static_form.getparent()
-            xml_parent.insert(
-                xml_parent.index(xml_static_form) + 1, xml_dynamic_form
-            )
-            xml_dynamic_form = xml_view.xpath("//group[@name='dynamic_form']")[
-                0
-            ]
-        except Exception:
-            raise UserError(
-                _(
-                    "There was a problem rendering the view "
-                    "(dynamic_form not found)"
-                )
-            )
-
-        # Get all dynamic fields inserted via fields_get method
-        attr_lines = wiz.product_tmpl_id.attribute_line_ids.sorted()
-
-        # Loop over the dynamic fields and add them to the view one by one
+    def prepare_attrs_initial(
+        self, attr_lines, field_prefix, custom_field_prefix, dynamic_fields, wiz
+    ):
+        cfg_step_ids = []
         for attr_line in attr_lines:
 
             attribute_id = attr_line.attribute_id.id
@@ -656,7 +609,7 @@ class ProductConfigurator(models.TransientModel):
             )
 
             # attrs property for dynamic fields
-            attrs = {"readonly": ["|"], "required": [], "invisible": ["|"]}
+            attrs = {"readonly": [], "required": [], "invisible": []}
 
             if config_steps:
                 cfg_step_ids = [str(id) for id in config_steps.ids]
@@ -704,8 +657,7 @@ class ProductConfigurator(models.TransientModel):
                         attr_depends[attr_field] = set()
                     if domain_line.condition == "in":
                         attr_depends[attr_field] |= set(
-                            domain_line.value_ids.ids
-                        )
+                            domain_line.value_ids.ids)
                     elif domain_line.condition == "not in":
                         val_ids = attr_lines.filtered(
                             lambda l: l.attribute_id.id == attr_id
@@ -723,8 +675,53 @@ class ProductConfigurator(models.TransientModel):
 
                     if attr_line.required and not attr_line.custom:
                         attrs["required"].append(
-                            (dependee_field, "in", list(val_ids))
-                        )
+                            (dependee_field, "in", list(val_ids)))
+        return attrs, field_name, custom_field, config_steps, cfg_step_ids
+
+    @api.model
+    def add_dynamic_fields(self, res, dynamic_fields, wiz):
+        """Create the configuration view using the dynamically generated
+        fields in fields_get()
+        """
+
+        field_prefix = self._prefixes.get("field_prefix")
+        custom_field_prefix = self._prefixes.get("custom_field_prefix")
+
+        try:
+            # Search for view container hook and add dynamic view and fields
+            xml_view = etree.fromstring(res["arch"])
+            xml_static_form = xml_view.xpath("//group[@name='static_form']")[0]
+            xml_dynamic_form = etree.Element(
+                "group", colspan="2", name="dynamic_form")
+            xml_parent = xml_static_form.getparent()
+            xml_parent.insert(xml_parent.index(
+                xml_static_form) + 1, xml_dynamic_form)
+            xml_dynamic_form = xml_view.xpath(
+                "//group[@name='dynamic_form']")[0]
+        except Exception as err:
+            raise UserError(
+                _("There was a problem rendering the view " "(dynamic_form not found)")
+            ) from err
+
+        # Get all dynamic fields inserted via fields_get method
+        attr_lines = wiz.product_tmpl_id.attribute_line_ids.sorted()
+
+        # Loop over the dynamic fields and add them to the view one by one
+        for attr_line in attr_lines:
+            (
+                attrs,
+                field_name,
+                custom_field,
+                config_steps,
+                cfg_step_ids,
+            ) = self.prepare_attrs_initial(
+                attr_line, field_prefix, custom_field_prefix, dynamic_fields, wiz
+            )
+
+            if len(attrs["readonly"]) > 1 and attrs["readonly"][0] != "|":
+                attrs["readonly"].insert(0, "|")
+            if len(attrs["invisible"]) > 1 and attrs["invisible"][0] != "|":
+                attrs["invisible"].insert(0, "|")
 
             # Create the new field in the view
             node = etree.Element(
@@ -777,6 +774,12 @@ class ProductConfigurator(models.TransientModel):
                 # TODO: Add a field2widget mapper
                 if attr_line.attribute_id.custom_type == "color":
                     widget = "color"
+
+                if len(attrs["invisible"]) > 1 and attrs["invisible"][0] != "|":
+                    attrs["invisible"].insert(0, "|")
+                if len(attrs["readonly"]) > 1 and attrs["readonly"][0] != "|":
+                    attrs["readonly"].insert(0, "|")
+
                 node = etree.Element(
                     "field", name=custom_field, attrs=str(attrs), widget=widget
                 )
@@ -821,8 +824,7 @@ class ProductConfigurator(models.TransientModel):
 
         attr_vals = [f for f in fields if f.startswith(field_prefix)]
         custom_attr_vals = [
-            f for f in fields if f.startswith(custom_field_prefix)
-        ]
+            f for f in fields if f.startswith(custom_field_prefix)]
 
         dynamic_fields = attr_vals + custom_attr_vals
         fields = self._remove_dynamic_fields(fields)
@@ -849,15 +851,13 @@ class ProductConfigurator(models.TransientModel):
 
             custom_vals = self.custom_value_ids.filtered(
                 lambda x: x.attribute_id.id == attr_id
-            ).with_context({"show_attribute": False})
+            ).with_context(show_attribute=False)
             vals = attr_line.value_ids.filtered(
                 lambda v: v in self.value_ids
             ).with_context(
-                {
-                    "show_attribute": False,
-                    "show_price_extra": True,
-                    "active_id": self.product_tmpl_id.id,
-                }
+                show_attribute=False,
+                show_price_extra=True,
+                active_id=self.product_tmpl_id.id,
             )
 
             if not attr_line.custom and not vals:
@@ -899,12 +899,6 @@ class ProductConfigurator(models.TransientModel):
 
         return super(ProductConfigurator, self).write(vals)
 
-    def unlink(self):
-        """Remove parent configuration session along with wizard"""
-
-        self.mapped("config_session_id").unlink()
-        return super(ProductConfigurator, self).unlink()
-
     def action_next_step(self):
         """Proceeds to the next step of the configuration process. This usually
         implies the next configuration step (if any) defined via the
@@ -924,12 +918,11 @@ class ProductConfigurator(models.TransientModel):
             raise ValidationError(
                 _("Product Template does not have any attribute lines defined")
             )
-
         next_step = self.config_session_id.get_next_step(
             state=self.state,
             product_tmpl_id=self.product_tmpl_id,
-            value_ids=self.value_ids,
-            custom_value_ids=self.custom_value_ids,
+            value_ids=self.config_session_id.value_ids,
+            custom_value_ids=self.config_session_id.custom_value_ids,
         )
         if not next_step:
             return self.action_config_done()
@@ -1003,11 +996,12 @@ class ProductConfigurator(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": self._name,
             "name": "Configure Product",
-            "views": [[
-                    self.env.ref(
-                        "podiatry.product_configurator_form"
-                    ).id, "form",
-                ]],
+            "views": [
+                [
+                    self.env.ref("podiatry.product_configurator_form").id,
+                    "form",
+                ]
+            ],
             "view_mode": "form",
             "context": ctx,
             "target": "new",
@@ -1057,27 +1051,189 @@ class ProductConfigurator(models.TransientModel):
         return action
 
 
-class ProductConfiguratorCustomValue(models.TransientModel):
-    _name = "product.configurator.custom.value"
-    _description = "Product Configurator Custom Value"
+# class ProductConfiguratorCustomValue(models.TransientModel):
+#     _name = "product.configurator.custom.value"
+#     _description = "Product Configurator Custom Value"
 
-    attachment_ids = fields.Many2many(
-        comodel_name="ir.attachment",
-        column1="config_attachment",
-        column2="attachment_id",
-        string="Attachments",
-    )
-    attribute_id = fields.Many2one(
-        string="Attribute", comodel_name="product.attribute", required=True
-    )
-    user_id = fields.Many2one(
-        string="User",
-        comodel_name="res.users",
-        related="wizard_id.create_uid",
-        required=True,
-    )
-    value = fields.Char(string="Value")
-    wizard_id = fields.Many2one(
-        comodel_name="product.configurator", string="Wizard"
-    )
-    # TODO: Current value ids to save frontend/backend session?
+#     attachment_ids = fields.Many2many(
+#         comodel_name="ir.attachment",
+#         column1="config_attachment",
+#         column2="attachment_id",
+#         string="Attachments",
+#     )
+#     attribute_id = fields.Many2one(
+#         string="Attribute", comodel_name="product.attribute", required=True
+#     )
+#     user_id = fields.Many2one(
+#         string="User",
+#         comodel_name="res.users",
+#         related="wizard_id.create_uid",
+#         required=True,
+#     )
+#     value = fields.Char(string="Value")
+#     wizard_id = fields.Many2one(comodel_name="product.configurator", string="Wizard")
+# TODO: Current value ids to save frontend/backend session?
+
+
+class ProductConfiguratorSale(models.TransientModel):
+
+    _name = "product.configurator.sale"
+    _inherit = "product.configurator"
+    _description = "Product Configurator Sale"
+
+    order_id = fields.Many2one(
+        comodel_name="sale.order", required=True, readonly=True)
+    order_line_id = fields.Many2one(
+        comodel_name="sale.order.line", readonly=True)
+
+    def _get_order_line_vals(self, product_id):
+        """Hook to allow custom line values to be put on the newly
+        created or edited lines."""
+        product = self.env["product.product"].browse(product_id)
+        line_vals = {"product_id": product_id, "order_id": self.order_id.id}
+        extra_vals = self.order_line_id._prepare_add_missing_fields(line_vals)
+        line_vals.update(extra_vals)
+        line_vals.update(
+            {
+                "config_session_id": self.config_session_id.id,
+                "name": product._get_mako_tmpl_name(),
+                "customer_lead": product.sale_delay,
+            }
+        )
+        return line_vals
+
+    def action_config_done(self):
+        """Parse values and execute final code before closing the wizard"""
+        res = super(ProductConfiguratorSale, self).action_config_done()
+        if res.get("res_model") == self._name:
+            return res
+        model_name = "sale.order.line"
+        line_vals = self._get_order_line_vals(res["res_id"])
+
+        # Call onchange explicite as write and create
+        # will not trigger onchange automatically
+        order_line_obj = self.env[model_name]
+        cfg_session = self.config_session_id
+        specs = cfg_session.get_onchange_specifications(model=model_name)
+        updates = order_line_obj.onchange(line_vals, ["product_id"], specs)
+        values = updates.get("value", {})
+        values = cfg_session.get_vals_to_write(values=values, model=model_name)
+        values.update(line_vals)
+
+        if self.order_line_id:
+            self.order_line_id.write(values)
+        else:
+            self.order_id.write({"order_line": [(0, 0, values)]})
+        return
+
+    @api.model
+    def create(self, vals):
+        if self.env.context.get("default_order_line_id", False):
+            sale_line = self.env["sale.order.line"].browse(
+                self.env.context["default_order_line_id"]
+            )
+            if sale_line.custom_value_ids:
+                vals["custom_value_ids"] = self._get_custom_values(
+                    sale_line.config_session_id
+                )
+        res = super(ProductConfiguratorSale, self).create(vals)
+        return res
+
+    def _get_custom_values(self, session):
+        custom_values = [(5,)] + [
+            (
+                0,
+                0,
+                {
+                    "attribute_id": value_custom.attribute_id.id,
+                    "value": value_custom.value,
+                    "attachment_ids": [
+                        (4, attach.id) for attach in value_custom.attachment_ids
+                    ],
+                },
+            )
+            for value_custom in session.custom_value_ids
+        ]
+        return custom_values
+
+
+class ProductConfiguratorPrescription(models.TransientModel):
+    
+    _name = "product.configurator.prescription"
+    _inherit = "product.configurator"
+    _description = "Product Configurator Prescription"
+
+    prescription_id = fields.Many2one(
+        comodel_name="podiatry.prescription", required=True, readonly=True)
+    prescription_line_id = fields.Many2one(
+        comodel_name="podiatry.prescription.line", readonly=True)
+
+    def _get_prescription_line_vals(self, product_id):
+        """Hook to allow custom line values to be put on the newly
+        created or edited lines."""
+        product = self.env["product.product"].browse(product_id)
+        line_vals = {"product_id": product_id, "prescription_id": self.prescription_id.id}
+        extra_vals = self.prescription_line_id._prepare_add_missing_fields(line_vals)
+        line_vals.update(extra_vals)
+        line_vals.update(
+            {
+                "config_session_id": self.config_session_id.id,
+                "name": product._get_mako_tmpl_name(),
+                # "customer_lead": product.sale_delay,
+            }
+        )
+        return line_vals
+
+    def action_config_done(self):
+        """Parse values and execute final code before closing the wizard"""
+        res = super(ProductConfiguratorPrescription, self).action_config_done()
+        if res.get("res_model") == self._name:
+            return res
+        model_name = "podiatry.prescription.line"
+        line_vals = self._get_prescription_line_vals(res["res_id"])
+
+        # Call onchange explicit as write and create
+        # will not trigger onchange automatically
+        prescription_line_obj = self.env[model_name]
+        cfg_session = self.config_session_id
+        specs = cfg_session.get_onchange_specifications(model=model_name)
+        updates = prescription_line_obj.onchange(line_vals, ["product_id"], specs)
+        values = updates.get("value", {})
+        values = cfg_session.get_vals_to_write(values=values, model=model_name)
+        values.update(line_vals)
+
+        if self.prescription_line_id:
+            self.prescription_line_id.write(values)
+        else:
+            self.prescription_id.write({"prescription_line": [(0, 0, values)]})
+        return
+
+    @api.model
+    def create(self, vals):
+        if self.env.context.get("default_prescription_line_id", False):
+            prescription_line = self.env["podiatry.prescription.line"].browse(
+                self.env.context["default_prescription_line_id"]
+            )
+            if prescription_line.custom_value_ids:
+                vals["custom_value_ids"] = self._get_custom_values(
+                    prescription_line.config_session_id
+                )
+        res = super(ProductConfiguratorPrescription, self).create(vals)
+        return res
+
+    def _get_custom_values(self, session):
+        custom_values = [(5,)] + [
+            (
+                0,
+                0,
+                {
+                    "attribute_id": value_custom.attribute_id.id,
+                    "value": value_custom.value,
+                    "attachment_ids": [
+                        (4, attach.id) for attach in value_custom.attachment_ids
+                    ],
+                },
+            )
+            for value_custom in session.custom_value_ids
+        ]
+        return custom_values

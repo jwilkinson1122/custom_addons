@@ -284,7 +284,8 @@ class TestProduct(ProductConfiguratorTestCases):
             "Error: If get display_name are different\
             Method: _get_mako_tmpl_name()",
         )
-        self.config_product.write({"mako_tmpl_name": "Test Configuration Product"})
+        self.config_product.write(
+            {"mako_tmpl_name": "Test Configuration Product"})
         mako_tmpl_vals = product_product._get_mako_tmpl_name()
         self.assertEqual(
             self.config_product.mako_tmpl_name,
@@ -702,7 +703,8 @@ class TestProduct(ProductConfiguratorTestCases):
         product_product = self._get_product_id()
         operator = "and"
         value = 10
-        search_product_weight = product_product._search_product_weight(operator, value)
+        search_product_weight = product_product._search_product_weight(
+            operator, value)
         self.assertTrue(
             search_product_weight,
             "Error: If value False\

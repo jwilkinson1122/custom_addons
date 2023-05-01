@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
     <record id="product_template_form_view_config_inherited" model="ir.ui.view">
         <field name="name">product.template.common.form</field>
         <field name="model">product.template</field>
         <field name="priority">16</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <field name="config_ok" invisible="1" />
-            </xpath>
             <xpath expr="//div[@name='options']" position="inside">
                 <field name="is_custom_device"/>
                 <label for="is_custom_device" string="Custom"/>
@@ -17,18 +15,8 @@
                 <field name="is_brace_device"/>
                 <label for="is_brace_device" string="Brace"/>
             </xpath>
-            <xpath expr="//field[@name='uom_po_id']" position="after">
-                <field name="secondary_uom_active" groups="uom.group_uom" />
-                <field name="secondary_uom" groups="uom.group_uom" required="1" attrs="{'invisible': [('secondary_uom_active', '=', False)]}"/>
-            </xpath>
-            <xpath expr="//page[@name='inventory']" position="after">
-                <page name='helpdesk_ticket_product' string='Helpdesk' attrs="{'invisible':[('product_variant_count','&gt;', 1)]}">
-                    <group>
-                        <field name='is_helpdesk'/>
-                        <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
-                        <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
-                    </group>
-                </page>
+            <xpath expr="//header" position="inside">
+                <field name="config_ok" invisible="1" />
             </xpath>
         </field>
     </record>
@@ -39,17 +27,6 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="product.product_template_only_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_open_quants']" position="after">
-                <button type="object" name="action_open_quants" attrs="{'invisible':[('type', '!=', 'product')]}" class="oe_stat_button" icon="fa-cubes">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value" widget="statinfo">
-                            <field name="on_hand_qty" widget="statinfo" nolabel="1" class="mr4"/>
-                            <field name="uom_name" />
-                        </span>
-                        <span class="o_stat_text">Sec On Hand</span>
-                    </div>
-                </button>
-            </xpath>
             <!-- Added related boolean config_ok for invisible Configure button  -->
             <xpath expr="//page[@name='variants']/field[@name='attribute_line_ids']/tree/field[@name='value_count']" position="after">
                 <field name="config_ok" invisible="1" />
@@ -203,61 +180,20 @@
         </field>
     </record>
 
-    <record id="product_form_view_custom_vals_inherit" model="ir.ui.view">
-        <field name="name">product.configurator.form.view.custom.vals</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view" />
-        <field name="arch" type="xml">
-            <xpath expr='//header' position="inside">
-                <field name="product_template_attribute_value_ids" invisible="True" />
-                <button string="Variant Prices" type="object" name="get_product_attribute_values_action" attrs="{'invisible': ['|', ('product_template_attribute_value_ids', '=', False), ('config_ok', '=', False)]}" groups="podiatry.group_product_configurator_manager" />
-                <button name="reconfigure_product" groups="podiatry.group_product_configurator" class="oe_highlight" type="object" string="Reconfigure Product" attrs="{'invisible': [('config_ok','=',False)]}" />
-            </xpath>
-            <!-- <xpath expr="//button[@name='toggle_config']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath> -->
-            <xpath expr="//div[@name='options']" position="inside">
-                <field name="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
-                <label for="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
-            </xpath>
-            <xpath expr="//page[@name='inventory']" position="after">
-                <page name='helpdesk_ticket' string='Helpdesk'>
-                    <group>
-                        <field name='is_helpdesk'/>
-                        <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
-                        <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
-                    </group>
-                </page>
-            </xpath>
-        </field>
-    </record>
+    <!--
+        Standardize the product simplified form with the product template form.
 
-    <record id="inherit_product_tree_view" model="ir.ui.view">
-        <field name="name">product.product.view.list</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_product_tree_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='uom_id']" position="after">
-                <field name="product_sec_product_uom_qty" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
-                <field name="product_secondary_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
+        Because the group `weight` only contains the weight and the volume,
+        we can replace the whole group.
 
-            </xpath>
-        </field>
-    </record>
+        Adding the new elements one by one in this view can not be done without complex xpaths.
+    -->
 
-    <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
-        <field name="name">product.product.view.form.easy</field>
+    <record id="product_form_view_with_dimension_label" model="ir.ui.view">
+        <field name="name">Product Simplified Form With Dimensions</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
-        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='active']" position="after">
-                <field name="config_ok" invisible="1" />
-                <field name="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
-            </xpath>
-            <xpath expr="//field[@name='weight']" position="attributes">
-                <attribute name="attrs">{'readonly': [('config_ok', '=', True)]}</attribute>
-            </xpath>
             <group name="weight" position="replace">
                 <group string="Dimensions" name="dimensions" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
 
@@ -294,6 +230,43 @@
         </field>
     </record>
 
+
+    <record id="product_form_view_custom_vals_inherit" model="ir.ui.view">
+        <field name="name">product.configurator.form.view.custom.vals</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr='//header' position="inside">
+                <field name="product_template_attribute_value_ids" invisible="True" />
+                <button string="Variant Prices" type="object" name="get_product_attribute_values_action" attrs="{'invisible': ['|', ('product_template_attribute_value_ids', '=', False), ('config_ok', '=', False)]}" groups="podiatry.group_product_configurator_manager" />
+                <button name="reconfigure_product" groups="podiatry.group_product_configurator" class="oe_highlight" type="object" string="Reconfigure Product" attrs="{'invisible': [('config_ok','=',False)]}" />
+            </xpath>
+            <!-- <xpath expr="//button[@name='toggle_config']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+            <xpath expr="//div[@name='options']" position="inside">
+                <field name="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
+                <label for="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="config_ok" invisible="1" />
+                <field name="config_preset_ok" attrs="{'invisible': [('config_ok', '=', False)]}" />
+            </xpath>
+            <xpath expr="//field[@name='weight']" position="attributes">
+                <attribute name="attrs">{'readonly': [('config_ok', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="product_kanban_view_inherited" model="ir.ui.view">
         <field name="name">Product Kanban</field>
         <field name="model">product.product</field>
@@ -310,81 +283,4 @@
             </xpath>
         </field>
     </record>
-
-    <record id="product_template_form_view_with_weight_readonly" model="ir.ui.view">
-        <field name="name">Product Template Form With Weight in Kg Readonly</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <field name="weight" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_with_weight_in_kg_label" model="ir.ui.view">
-        <field name="name">Product Template Form With Weight in Kg Label</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <label for="weight" position="attributes">
-                <attribute name="string">Weight (kg)</attribute>
-            </label>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_with_volume_readonly" model="ir.ui.view">
-        <field name="name">Product Template Form With Volume Readonly</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <field name="volume" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_with_dimensions" model="ir.ui.view">
-        <field name="name">Product Template Form With Dimensions</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <label for="weight" position="before">
-                <field name="length" widget="float_with_uom" uom_field="dimension_uom_id"/>
-                <field name="width" widget="float_with_uom" uom_field="dimension_uom_id"/>
-                <field name="height" widget="float_with_uom" uom_field="dimension_uom_id"/>
-                <label for="dimension_uom_id" class="oe_edit_only"/>
-                <field name="dimension_uom_id" class="oe_edit_only" nolabel="1" domain="[('has_category_length', '=', True)]" options="{'no_create': True}" attrs="{'required': ['|', '|', ('length', '!=', 0), ('width', '!=', 0), ('height', '!=', 0)]}"/>
-            </label>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_with_weight_in_uom" model="ir.ui.view">
-        <field name="name">Product Template Form With Weight In UoM</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <label for="weight" position="before">
-                <field name="weight_in_uom" widget="float_with_uom" uom_field="specific_weight_uom_id"/>
-                <label for="specific_weight_uom_id" class="oe_edit_only"/>
-                <field name="specific_weight_uom_id" class="oe_edit_only" nolabel="1" domain="[('has_category_weight', '=', True)]" options="{'no_create': True}" attrs="{'required': [('weight_in_uom', '!=', 0)]}"/>
-            </label>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_with_density" model="ir.ui.view">
-        <field name="name">Product Template Form With Density</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form"/>
-        <field name="arch" type="xml">
-            <div name="volume" position="after">
-                <label for="density"/>
-                <div class="o_row" name="density">
-                    <field name="density" string="Density"/>
-                    <span>kg/m³</span>
-                </div>
-            </div>
-        </field>
-    </record>
-
 </odoo>

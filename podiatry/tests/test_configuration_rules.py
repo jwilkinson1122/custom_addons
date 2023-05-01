@@ -31,7 +31,8 @@ class ConfigurationRules(TransactionCase):
             if ext_id in self.attr_val_ext_ids:
                 value_ids.append(self.attr_val_ext_ids[ext_id])
             elif attr_val_prefix % ext_id in self.attr_val_ext_ids:
-                value_ids.append(self.attr_val_ext_ids[attr_val_prefix % ext_id])
+                value_ids.append(
+                    self.attr_val_ext_ids[attr_val_prefix % ext_id])
 
         return value_ids
 

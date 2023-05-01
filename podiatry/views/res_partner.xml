@@ -1,50 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="res_partner_inherit_form_health_center_view" model="ir.ui.view">
-            <field name="name">res.partner.inherit.form.health.center.view</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="arch" type="xml">
-                <field name="function" position="after">
-                    <field name="relationship" />
-                    <field name="relative_partner_id" />
-                </field>
-                <notebook>
-                    <page string="Podiatry">
-                        <group colspan="6" col="6">
-                            <field name="is_patient" />
-                            <field name="is_doctor" />
-                            <field name="is_institution" />
-                            <field name="is_person" />
-                            <field name="is_insurance_company" />
-                            <field name="is_pharmacy" />
-                        </group>
-                        <field name="company_insurance_ids" colspan="4"
-                            widget="one2many_list" />
-                        <field name="patient_insurance_ids" colspan="4"
-                            widget="one2many_list" />
-                    </page>
-                </notebook>
-            </field>
-        </record>
 
-        <record model="ir.actions.act_window" id="act_res_partner">
-            <field name="name">Insurances Company</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="binding_view_types">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('is_insurance_company','=',1)]</field>
-            <field name="context">{'default_is_insurance_company': 1,'search_default_is_insurance_company': 1}
-            </field>
-        </record>
+    <!-- Action -->
+    <record id="action_pod_patients_from_partner" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record>
 
-        <menuitem id="menu_health_centers1" name="Health Centers"
-            parent="main_menu_configartion" />
 
-        <menuitem id="menu_insurance" name="Insurances"
-            parent="main_menu_configartion" sequence='9' />
-        <menuitem id="menu_insurance_company" action="act_res_partner"
-            sequence="0" parent="menu_insurance" />
+    <!-- Form -->
+    <record id="view_res_partner_form_inherit_podiatry" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.podiatry</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="after">
+                <group colspan="6" col="6">
+                    <field name="is_patient" />
+                    <field name="is_practitioner" />
+                    <field name="is_practice" />
+                </group>
+            </xpath>
+            <!-- <notebook>
+                <page string="Medical">
+                    <group colspan="6" col="6">
+                        <field name="is_patient" />
+                        <field name="is_practitioner" />
+                        <field name="is_practice" />
+                    </group>
+                </page>
+            </notebook> -->
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="More Info" string="More Info">
+                    <field name="info_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="info_name"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="patient_ids" invisible="1"/>
+                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
+                    <field name="patient_count" string="Patients" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_res_partner_search_inherit_podiatry" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.podiatry</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="groups_id" eval="[(4, ref('group_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action > TODO: Add integration with the Contacts module -->
+    <record id="action_res_partner_patients" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="context">{'search_default_is_patient': True}</field>
+    </record>
+
+    <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="podiatry.menu_configuration_root" sequence="20"/> -->
 
 </odoo>

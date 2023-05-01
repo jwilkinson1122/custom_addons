@@ -240,7 +240,8 @@ class ConfigurationWizard(ProductConfiguratorTestCases):
 
     def test_11_onchange(self):
         field_name = ""
-        values = {"__attribute-{}".format(self.attr_fuel.id): self.value_gasoline.id}
+        values = {
+            "__attribute-{}".format(self.attr_fuel.id): self.value_gasoline.id}
         product_config_wizard = self._check_wizard_nxt_step()
         field_prefix = product_config_wizard._prefixes.get("field_prefix")
         field_name = "%s%s" % (field_prefix, field_name)

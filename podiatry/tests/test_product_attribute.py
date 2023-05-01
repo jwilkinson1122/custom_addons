@@ -33,8 +33,10 @@ class ProductAttributes(TransactionCase):
         self.ProductAttributeFuel.max_val = 30
         self.ProductAttributeFuel.custom_type = "char"
         self.ProductAttributeFuel.onchange_custom_type()
-        self.assertEqual(self.ProductAttributeFuel.min_val, 0, "Min value is not False")
-        self.assertEqual(self.ProductAttributeFuel.max_val, 0, "Max value is not False")
+        self.assertEqual(self.ProductAttributeFuel.min_val,
+                         0, "Min value is not False")
+        self.assertEqual(self.ProductAttributeFuel.max_val,
+                         0, "Max value is not False")
 
         self.ProductAttributeFuel.min_val = 20
         self.ProductAttributeFuel.max_val = 30
