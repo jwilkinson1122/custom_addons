@@ -418,7 +418,7 @@ class ProductProduct(models.Model):
             avail_prod_ids = []
             for room in hotel_room_obj.search([]):
                 assigned = False
-                for rm_line in room.room_line_ids:
+                for rm_line in room.folio_line_ids:
                     if rm_line.status != "cancel":
                         if (checkin_date<= rm_line.check_in <= checkout_date) or (
                             checkin_date <= rm_line.check_out <= checkout_date

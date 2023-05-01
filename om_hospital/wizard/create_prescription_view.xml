@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="create_prescription_view_form" model="ir.ui.view">
+        <field name="name">create.prescription.form</field>
+        <field name="model">create.prescription.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lost Reason">
+                <group class="oe_title">
+                    <field name="date_prescription" />
+                    <field name="patient_id" />
+                    <field name="doctor_id" />
+                </group>
+                <footer>
+                    <button name="action_create_prescription" string="Submit" type="object" class="btn-primary"/>
+                    <!--                        <button name="action_get_test" string="get" type="object" class="btn-primary"/>-->
+                    <button name="action_view_prescriptions" string="View Prescriptions" type="object" class="btn-success"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_prescription_action" model="ir.actions.act_window">
+        <field name="name">Create New Prescription</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.prescription.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_prescription_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

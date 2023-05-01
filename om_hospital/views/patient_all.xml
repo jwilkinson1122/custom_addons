@@ -1,0 +1,223 @@
+<odoo>
+    <data>
+
+        <!--
+            add action server to action bottom that open wizard window to create a new prescription
+        -->
+        <record id="action_create_new_prescription" model="ir.actions.server">
+            <field name="name">Create New Prescription</field>
+            <field name="model_id" ref="om_hospital.model_hospital_patient"/>
+            <field name="binding_model_id" ref="om_hospital.model_hospital_patient"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if record:
+                action_values = env.ref('om_hospital.create_prescription_action').sudo().read()[0]
+                action_values.update({'context': env.context})
+                action = action_values
+            </field>
+        </record>
+        <!--Kanban view-->
+        <record id="hospital_patient_kanban" model="ir.ui.view">
+            <field name="name">hospital patient kanban</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="gender"/>
+                    <field name="age"/>
+                    <field name="note"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            Name:
+                                            <field name="name"/>
+                                            Age:
+                                            <field name="age"/>
+                                            Gender:
+                                            <field name="gender"/>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- tree view Main UI -->
+        <record id="hospital_patient_tree" model="ir.ui.view">
+            <field name="name">hospital patient tree</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <!-- multi_edit="1" to enable multi edit in tree view-->
+                <!-- expand="1" to expand by default grouped by in tree view-->
+                <tree multi_edit="1" expand="1">
+                    <!--Dynamic List View optional=''-->
+                    <field name="name"/>
+                    <field name="gender"/>
+                    <field name="responsible_id" optional="hide"/>
+                    <field name="date_of_birth" optional="hide"/>
+                    <field name="age" optional="hide"/>
+                    <field name="note" optional="hide"/>
+                    <field name="prescriptions_count" optional="hide"/>
+                    <!--add colours and widget to status-->
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'confirm' or state == 'done'" decoration-info="state == 'draft'" decoration-danger="state == 'cancel'"/>
+                    <field name="reference" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- form view to create or edit -->
+        <record id="hospital_patient_form" model="ir.ui.view">
+            <field name="name">hospital patient form</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!--StatusBar and some controllers-->
+                    <header>
+                        <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-primary" states="draft" type="object"/>
+                        <button id="action_cancel" name="action_cancel" string="Cancel" class="btn-danger" states="confirm" type="object"/>
+                        <button id="button_done" name="action_done" string="Mark as Done" class="btn-success" states="confirm" type="object" confirm="Are you sure? Mark it as DONE!"/>
+                        <button id="button_create_prescription" name="%(create_prescription_action)d" string="Create New Prescription" class="btn-success" states="confirm" type="action"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '0'}" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+
+                        <!-- add smart bottom -->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_prescription" type="object" class="oe_stat_button" icon="fa-calendar">
+                                <div class="o_stat_info">
+                                    <field name="prescriptions_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Prescriptions</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- add ribbon -->
+                        <widget name="web_ribbon" title="Done" bg_color="bg-success" states="done"/>
+                        <!-- add ribbon -->
+                        <widget name="web_ribbon" title="Cancel" bg_color="bg-danger" states="cancel"/>
+
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reference" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date_of_birth"/>
+                                <field name="age"/>
+                                <field name="responsible_id"/>
+                                <field name="prescriptions_count" readonly="1"/>
+                            </group>
+                            <group>
+                                <!--invisible="context.get('hide_gender', True)"-->
+                                <field name="gender"/>
+                                <field name="note"/>
+                                <field name="email"/>
+                            </group>
+
+                        </group>
+
+                        <!-- add notebook-->
+                        <notebook>
+                            <page string="Prescriptions" name="prescriptions">
+                                <field name="prescription_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <!--Email threats-->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- search Edit -->
+        <record id="hospital_patient_search" model="ir.ui.view">
+            <field name="name">patient.search</field>
+            <field name="model">hospital.patient</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <search string="Patients">
+
+                    <!--search by name & note-->
+                    <field name="name"/>
+                    <field name="note"/>
+                    <separator/>
+
+                    <!--Group By-->
+                    <group expand="1" string="Group By">
+                        <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                        <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/>
+                        <!--                        <filter string="Kids" name="kids" domain="[('age', '&lt;=', 18)]"/>-->
+                    </group>
+                    <!--Filters-->
+                    <filter string="Gender" name="gender" context="{'group_by':'gender'}"/>
+                    <filter string="Patient Name" name="patient_name" context="{'group_by':'name'}"/>
+                    <filter string="Responsible" name="responsible_id" context="{'group_by':'responsible_id'}"/>
+
+                    <!-- how to  add search panel-->
+                    <searchpanel>
+                        <field name="state" select="multi" string="status" icon="fa-cutlery" color="#875A7B" enable_counters="1"/>
+                        <field name="gender" string="Gender" icon="fa-truck" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!--Actions | patient -->
+        <record id="patients_action" model="ir.actions.act_window">
+            <field name="name">Patients</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <!-- add default group by value in main view | add more than value using ,'search_default_patient_name': 1 -->
+            <!-- add default Filter value in main view | add more than value using ,'search_default_patient_name': 1 -->
+            <field name="context">{'search_default_responsible_id': 0 ,'search_default_male': 0 }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new patient!
+                </p>
+            </field>
+        </record>
+
+        <!-- side menu -->
+        <menuitem id="hospital_base_root" name="My Hospital"/>
+
+        <!-- main top menu -->
+        <menuitem id="hospital_doctor_root" name="Doctors" parent="om_hospital.hospital_base_root" sequence="10"/>
+        <menuitem id="hospital_doctor" name="All doctors" parent="om_hospital.hospital_doctor_root" action="doctors_action" sequence="10"/>
+
+
+        <!-- main top menu -->
+        <menuitem id="hospital_patient_root" name="Patients" parent="om_hospital.hospital_base_root" sequence="11"/>
+        <menuitem id="hospital_patient" name="All Patients" parent="om_hospital.hospital_patient_root" action="patients_action" sequence="10"/>
+
+        <!-- main top menu -->
+        <menuitem id="hospital_prescription_root_menu" name="Prescriptions" parent="om_hospital.hospital_base_root" sequence="12"/>
+        <menuitem id="hospital_prescription" name="All Prescriptions" parent="om_hospital.hospital_prescription_root_menu" action="prescriptions_action" sequence="10"/>
+        <menuitem id="create_prescription_wizard" name="Create Prescription" parent="om_hospital.hospital_prescription_root_menu" action="create_prescription_action" sequence="10"/>
+
+        <!-- main top menu -->
+        <menuitem id="hospital_report_root" name="Reports" parent="om_hospital.hospital_base_root" sequence="13"/>
+        <menuitem id="prescription_report_menu" name="Prescriptions Report" parent="om_hospital.hospital_report_root" action="action_prescription_report_view_form_id" sequence="10"/>
+
+
+    </data>
+</odoo>

@@ -26,7 +26,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             HotelFolio = self.env["hotel.folio"]
             folio = HotelFolio.browse(self._context.get("active_ids", []))
-            folio.room_line_ids.mapped("product_id").write({"isroom": True})
+            folio.folio_line_ids.mapped("product_id").write({"isroom": True})
             ctx.update(
                 {
                     "active_ids": folio.order_id.ids,

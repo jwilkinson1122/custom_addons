@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for patient -->
+        <record id="seq_patient" model="ir.sequence">
+            <field name="name">Patient No.</field>
+            <field name="code">patient.no</field>
+            <field name="prefix">P</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for prescriptions -->
+        <record id="seq_prescription" model="ir.sequence">
+            <field name="name">Prescription No.</field>
+            <field name="code">prescription.no</field>
+            <field name="prefix">A</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for doctors -->
+        <record id="seq_doctor" model="ir.sequence">
+            <field name="name">Doctor No.</field>
+            <field name="code">doctor.no</field>
+            <field name="prefix">D</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

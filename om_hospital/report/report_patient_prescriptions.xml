@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_patient_prescriptions">
+            <t t-call="web.html_container">
+
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe.structure">
+                            <div class="text-center">
+                                <h2>Patient Prescriptions</h2>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td>Patient </td>
+                                    <td>: </td>
+                                    <td>
+                                        <t t-if="form_data.get('patient_id')">
+                                            <t t-esc="form_data['patient_id'][1]" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>From </td>
+                                    <td> :</td>
+                                    <td>
+                                        <t t-if="form_data.get('data_from')">
+                                            <t t-esc="form_data['date_from']" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>To </td>
+                                    <td> :</td>
+                                    <td>
+                                        <t t-if="form_data.get('data_to')">
+                                            <t t-esc="form_data['date_to']" />
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <table class="table table-bordered mt32">
+                                <thead>
+                                    <tr>
+                                        <th name="th_reference" class="text-left">
+                                            <span>Reference</span>
+                                        </th>
+                                        <th name="th_age" class="text-left">
+                                            <span>Prescription Date</span>
+                                        </th>
+                                        <th name="th_doctor" class="text-left">
+                                            <span>Doctor</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <t t-set="prescription_count" t-value="0" />
+                                <t t-foreach="prescriptions" t-as="line">
+                                    <t t-set="prescription_count" t-value="prescription_count+1" />
+                                    <tr>
+                                        <td>
+                                            <span t-esc="line['patient_id'][1]" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['date_prescription']" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['doctor_id'][1]" />
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            </table>
+                        </div>
+                    </div>
+                </t>
+
+            </t>
+        </template>
+
+    </data>
+</odoo>

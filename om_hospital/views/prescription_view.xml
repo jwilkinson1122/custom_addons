@@ -1,0 +1,159 @@
+<odoo>
+    <data>
+
+        <!-- add action to action bottom-->
+        <record id="action_confirm_prescriptions" model="ir.actions.server">
+            <field name="name">Confirm Prescription</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hospital_prescription"/>
+            <field name="binding_model_id" ref="model_hospital_prescription"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_confirm()
+            </field>
+        </record>
+
+
+        <!--Kanban view-->
+        <record id="hospital_prescription_kanban" model="ir.ui.view">
+            <field name="name">hospital prescription kanban</field>
+            <field name="model">hospital.prescription</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="patient_id"/>
+                    <field name="note"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            Name:
+                                            <field name="patient_id"/>
+                                            Note:
+                                            <field name="note"/>
+
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- tree view Main UI -->
+        <record id="hospital_prescription_tree" model="ir.ui.view">
+            <field name="name">hospital prescription tree</field>
+            <field name="model">hospital.prescription</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="action_done" type="object" string="Mark As DONE" class="btn-success"/>
+                    </header>
+                    <field name="patient_id"/>
+                    <field name="note"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'confirm' or state == 'done'" decoration-info="state == 'draft'" decoration-danger="state == 'cancel'"/>
+                    <field name="doctor_id"/>
+                    <field name="date_prescription"/>
+                    <field name="date_check"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- form view to create or edit -->
+        <record id="hospital_prescription_form" model="ir.ui.view">
+            <field name="name">hospital prescription form</field>
+            <field name="model">hospital.prescription</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <sheet>
+                        <!--StatusBar and some controllers-->
+                        <header>
+                            <button id="action_confirm_id" name="action_confirm" string="Confirm" class="btn-info" states="draft" type="object"/>
+                            <button id="action_cancel_id" name="action_cancel" string="Cancel" class="btn-danger" states="confirm" type="object"/>
+                            <button id="button_done" name="action_done" string="Mark as Done" class="btn-success" states="confirm" type="object" confirm="Are you sure? Mark it as DONE!"/>
+                            <button name="action_url" string="Git URL" class="btn-primary" type="object"/>
+                            <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,confirm"/>
+                        </header>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reference" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="patient_id"/>
+                                <!-- read only issue (while save the value disappear) => fixed with force_save-->
+                                <field name="gender" readonly="1" force_save="1"/>
+                                <field name="age"/>
+                                <field name="responsible_id"/>
+                            </group>
+                            <group>
+                                <field name="doctor_id"/>
+                                <field name="note"/>
+                                <field name="date_prescription"/>
+                                <field name="date_check"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="medicine">
+                                <field name="medicine_ids">
+                                    <!--editable="1" => to edit record in tree view without open popup window-->
+                                    <tree editable="1">
+                                        <field name="name" />
+                                        <field name="quantity"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <!--Email threats-->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- search Edit -->
+        <record id="hospital_prescription_search" model="ir.ui.view">
+            <field name="name">prescription.search</field>
+            <field name="model">hospital.prescription</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <search string="Prescription">
+
+                    <!--search by name & note-->
+                    <field name="patient_id"/>
+                    <field name="note"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
+
+        <!--Actions | prescription -->
+        <record id="prescriptions_action" model="ir.actions.act_window">
+            <field name="name">Prescriptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.prescription</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new prescription!
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

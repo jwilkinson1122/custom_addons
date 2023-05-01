@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+
+from odoo.exceptions import ValidationError
+from odoo import api, fields, models, _
+
+
+class PrescriptionReportWizard(models.TransientModel):
+    _name = "pod_erp.prescription.report.wizard"
+    _description = "Print Prescription Wizard"
+
+    date_from = fields.Datetime(string='Date from', required=False)
+    date_to = fields.Datetime(string='Date to', required=False)
+    patient_id = fields.Many2one('pod_erp.patient', string="Patient", required=True)
+
+    def action_print_report(self):
+        patient_id = self.patient_id
+        domain = []
+        if patient_id:
+            domain += [('patient_id', '=', patient_id.id)]
+        date_from = self.date_from
+        if date_from:
+            domain += [('checkup_date', '>=', date_from)]
+        date_to = self.date_to
+        if date_to:
+            domain += [('checkup_date', '<=', date_to)]
+        # print("\n\nTest................\n", domain)
+
+        prescriptions = self.env['pod_erp.prescription'].search_read(domain)
+        
+        data = {
+            'form_data': self.read()[0],
+            'prescriptions': prescriptions
+        }
+        return self.env.ref('pod_erp.action_report_prescription_card').report_action(self, data=data)
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_validation(self):
+        for record in self:
+            if record.date_from > record.date_to:
+                raise ValidationError("Date from must be previous than date to.")

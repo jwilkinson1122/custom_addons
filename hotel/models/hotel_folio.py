@@ -63,6 +63,24 @@ class HotelFolio(models.Model):
     # order_id = fields.Many2one("sale.order", "Order", delegate=True, required=True, ondelete="cascade")
     order_id = fields.Many2one("sale.order", "Order", delegate=True, required=True, ondelete="cascade")
     
+    folio_line_ids = fields.One2many(
+        "hotel.folio.line",
+        "folio_id",
+        readonly=True,
+        states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
+        help="Hotel room reservation detail.",
+    )
+    
+    service_line_ids = fields.One2many(
+        "hotel.service.line",
+        "folio_id",
+        readonly=True,
+        states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
+        help="Hotel services details provided to"
+        "Customer and it will included in "
+        "the main Invoice.",
+    )
+    
     checkin_date = fields.Datetime(
         "Check In",
         required=True,
@@ -76,22 +94,6 @@ class HotelFolio(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
         default=_get_checkout_date,
-    )
-    room_line_ids = fields.One2many(
-        "hotel.folio.line",
-        "folio_id",
-        readonly=True,
-        states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
-        help="Hotel room reservation detail.",
-    )
-    service_line_ids = fields.One2many(
-        "hotel.service.line",
-        "folio_id",
-        readonly=True,
-        states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
-        help="Hotel services details provided to"
-        "Customer and it will included in "
-        "the main Invoice.",
     )
     hotel_policy = fields.Selection(
         [
@@ -113,7 +115,7 @@ class HotelFolio(models.Model):
     hotel_invoice_id = fields.Many2one("account.move", "Invoice", copy=False)
     duration_dummy = fields.Float()
 
-    @api.constrains("room_line_ids")
+    @api.constrains("folio_line_ids")
     def _check_duplicate_folio_room_line(self):
         """
         This method is used to validate the room_lines.
@@ -122,11 +124,11 @@ class HotelFolio(models.Model):
         @return: raise warning depending on the validation
         """
         for rec in self:
-            for product in rec.room_line_ids.mapped("product_id"):
-                for line in rec.room_line_ids.filtered(
+            for product in rec.folio_line_ids.mapped("product_id"):
+                for line in rec.folio_line_ids.filtered(
                     lambda l: l.product_id == product
                 ):
-                    record = rec.room_line_ids.search(
+                    record = rec.folio_line_ids.search(
                         [
                             ("product_id", "=", product.id),
                             ("folio_id", "=", rec.id),
@@ -148,7 +150,7 @@ class HotelFolio(models.Model):
         folio_room_line_obj = self.env["folio.room.line"]
         hotel_room_obj = self.env["hotel.room"]
         for rec in folio_id:
-            for room_rec in rec.room_line_ids:
+            for room_rec in rec.folio_line_ids:
                 room = hotel_room_obj.search(
                     [("product_id", "=", room_rec.product_id.id)]
                 )
@@ -170,13 +172,13 @@ class HotelFolio(models.Model):
         @return: new record set for hotel folio.
         """
         if not "service_line_ids" and "folio_id" in vals:
-            tmp_room_lines = vals.get("room_line_ids", [])
+            tmp_room_lines = vals.get("folio_line_ids", [])
             vals["order_policy"] = vals.get("hotel_policy", "manual")
-            vals.update({"room_line_ids": []})
+            vals.update({"folio_line_ids": []})
             folio_id = super(HotelFolio, self).create(vals)
             for line in tmp_room_lines:
                 line[2].update({"folio_id": folio_id.id})
-            vals.update({"room_line_ids": tmp_room_lines})
+            vals.update({"folio_line_ids": tmp_room_lines})
             folio_id.write(vals)
         else:
             if not vals:
@@ -197,12 +199,12 @@ class HotelFolio(models.Model):
         hotel_room_obj = self.env["hotel.room"]
         folio_room_line_obj = self.env["folio.room.line"]
         for rec in self:
-            rooms_list = [res.product_id.id for res in rec.room_line_ids]
+            rooms_list = [res.product_id.id for res in rec.folio_line_ids]
             if vals and vals.get("duration", False):
                 vals["duration"] = vals.get("duration", 0.0)
             else:
                 vals["duration"] = rec.duration
-            room_lst = [folio_rec.product_id.id for folio_rec in rec.room_line_ids]
+            room_lst = [folio_rec.product_id.id for folio_rec in rec.folio_line_ids]
             new_rooms = set(room_lst).difference(set(rooms_list))
             if len(list(new_rooms)) != 0:
                 room_list = product_obj.browse(list(new_rooms))
@@ -260,7 +262,7 @@ class HotelFolio(models.Model):
         for rec in self:
             if not rec.order_id:
                 raise UserError(_("Order id is not available"))
-            for product in rec.room_line_ids.filtered(
+            for product in rec.folio_line_ids.filtered(
                 lambda l: l.order_line_id.product_id == product
             ):
                 rooms = self.env["hotel.room"].search([("product_id", "=", product.id)])
@@ -321,11 +323,13 @@ class HotelFolioLine(models.Model):
         delegate=True,
         ondelete="cascade",
     )
+    
     folio_id = fields.Many2one("hotel.folio", "Folio", ondelete="cascade")
+    order_id = fields.Many2one(related="folio_id.order_id", string="Order")
     checkin_date = fields.Datetime("Check In", required=True)
     checkout_date = fields.Datetime("Check Out", required=True)
     is_reserved = fields.Boolean(help="True when folio line created from Reservation")
-
+    
     @api.model
     def create(self, vals):
         """
@@ -596,6 +600,52 @@ class HotelFolioLine(models.Model):
         sale_line_obj = self.order_line_id
         return sale_line_obj.copy_data(default=default)
 
+    custom_value_ids = fields.One2many(
+        comodel_name="product.config.session.custom.value",
+        inverse_name="cfg_session_id",
+        related="config_session_id.custom_value_ids",
+        string="Configurator Custom Values",
+    )
+    config_ok = fields.Boolean(
+        related="product_id.config_ok", string="Configurable", readonly=True
+    )
+    config_session_id = fields.Many2one(
+        comodel_name="product.config.session", string="Config Session"
+    )
+
+    def reconfigure_product(self):
+        """Creates and launches a product configurator wizard with a linked
+        template and variant in order to re-configure a existing product. It is
+        esetially a shortcut to pre-fill configuration data of a variant"""
+        wizard_model = "product.configurator.sale"
+
+        extra_vals = {
+            "order_id": self.order_id.id,
+            "order_line_id": self.id,
+            "product_id": self.product_id.id,
+        }
+        self = self.with_context(
+            {
+                "default_order_id": self.order_id.id,
+                "default_order_line_id": self.id,
+            }
+        )
+        return self.product_id.product_tmpl_id.create_config_wizard(
+            model_name=wizard_model, extra_vals=extra_vals
+        )
+
+    @api.onchange("product_uom", "product_uom_qty")
+    def product_uom_change(self):
+        if self.config_session_id:
+            account_tax_obj = self.env["account.tax"]
+            self.price_unit = account_tax_obj._fix_tax_included_price_company(
+                self.config_session_id.price,
+                self.product_id.taxes_id,
+                self.tax_id,
+                self.company_id,
+            )
+        else:
+            super(HotelFolioLine, self).product_uom_change()
 
 class HotelServiceLine(models.Model):
 

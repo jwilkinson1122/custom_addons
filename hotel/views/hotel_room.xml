@@ -34,12 +34,7 @@
         <field name="arch" type="xml">
             <form string="Hotel Room">
                 <sheet>
-                    <field
-                        name="image_1920"
-                        widget="image"
-                        class="oe_avatar"
-                        options="{'preview_image': 'image_128'}"
-                    />
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}" />
                     <div class="oe_title">
                         <label for="name" string="Name" />
                         <h1>
@@ -58,23 +53,11 @@
                             <group colspan="4" col="4">
                                 <field name="floor_id" string="Floor" />
                                 <field name="room_categ_id" select="1" />
-                                <field
-                                    name="product_manager"
-                                    select="2"
-                                    string="Room Manager"
-                                />
+                                <field name="product_manager" select="2" string="Room Manager" />
                                 <field name="capacity" />
                                 <field name="uom_id" invisible="1" />
-                                <field
-                                    name="supplier_taxes_id"
-                                    widget="many2many_tags"
-                                    string="Supplier Taxes"
-                                />
-                                <field
-                                    name="taxes_id"
-                                    widget="many2many_tags"
-                                    string="Customer Taxes"
-                                />
+                                <field name="supplier_taxes_id" widget="many2many_tags" string="Supplier Taxes" />
+                                <field name="taxes_id" widget="many2many_tags" string="Customer Taxes" />
                             </group>
                         </page>
                         <page string="Room Amenities">
@@ -94,12 +77,7 @@
                             <newline />
                             <group>
                                 <separator string="Suppliers" />
-                                <field
-                                    name="seller_ids"
-                                    colspan="4"
-                                    nolabel="1"
-                                    widget="one2many_list"
-                                />
+                                <field name="seller_ids" colspan="4" nolabel="1" widget="one2many_list" />
                             </group>
                         </page>
                         <page string="Descriptions">
@@ -107,11 +85,8 @@
                             <field name="description" colspan="4" nolabel="1" />
                         </page>
                         <page string="Folio Room Reservations">
-                            <separator
-                                colspan='4'
-                                string="Folio Room Reservation Line"
-                            />
-                            <field name="room_line_ids" colspan="4" nolabel='1'>
+                            <separator colspan='4' string="Folio Room Reservation Line" />
+                            <field name="folio_line_ids" colspan="4" nolabel='1'>
                                 <form string=" Room line">
                                     <group colspan='4' col='4'>
                                         <field name="room_id" />
@@ -146,16 +121,8 @@
                 <field name="list_price" string="Room rate" />
                 <field name="status" string="Status" />
                 <newline />
-                <filter
-                    name="available"
-                    string="Available"
-                    domain="[('status','=', 'available')]"
-                />
-                <filter
-                    name="reserved"
-                    string="Reserved"
-                    domain="[('status','=', 'occupied')]"
-                />
+                <filter name="available" string="Available" domain="[('status','=', 'available')]" />
+                <filter name="reserved" string="Reserved" domain="[('status','=', 'occupied')]" />
             </search>
         </field>
     </record>
@@ -187,26 +154,12 @@
                 <field name="code" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div
-                            t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"
-                        >
-                            <div
-                                class="o_dropdown_kanban dropdown"
-                                groups="base.group_user"
-                            >
-                                <a
-                                    role="button"
-                                    class="dropdown-toggle btn"
-                                    data-toggle="dropdown"
-                                    href="#"
-                                >
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#">
                                     <span title="fa_icon" class="fa fa-bars fa-lg" />
                                 </a>
-                                <ul
-                                    class="dropdown-menu"
-                                    role="menu"
-                                    aria-labelledby="dLabel"
-                                >
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable">
                                         <li>
                                             <a type="edit">Edit</a>
@@ -218,10 +171,7 @@
                                         </li>
                                     </t>
                                     <li>
-                                        <ul
-                                            class="oe_kanban_colorpicker"
-                                            data-field="color"
-                                        />
+                                        <ul class="oe_kanban_colorpicker" data-field="color" />
                                     </li>
                                 </ul>
                             </div>
@@ -230,16 +180,8 @@
                                     <div class="oe_kanban_project_list">
                                         <H3>
                                             <a type="open">
-                                                <img
-                                                    alt="room_image"
-                                                    t-att-src="kanban_image('hotel.room', 'image_medium', record.id.value)"
-                                                    style="height:70px;width:70px"
-                                                    class="oe_avatar oe_kanban_avatar_smallbox"
-                                                />
-                                                <t
-                                                    t-if="record.code.raw_value"
-                                                    style="margin-right: 10px"
-                                                >
+                                                <img alt="room_image" t-att-src="kanban_image('hotel.room', 'image_medium', record.id.value)" style="height:70px;width:70px" class="oe_avatar oe_kanban_avatar_smallbox" />
+                                                <t t-if="record.code.raw_value" style="margin-right: 10px">
                                                     [
                                                     <field name="code" />
                                                     ]
@@ -265,21 +207,9 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <a
-                                        t-if="record.status.raw_value === 'available'"
-                                        type="object"
-                                        string="Available"
-                                        name="set_room_status_occupied"
-                                        class="oe_kanban_status oe_kanban_status_green "
-                                    >
+                                    <a t-if="record.status.raw_value === 'available'" type="object" string="Available" name="set_room_status_occupied" class="oe_kanban_status oe_kanban_status_green ">
                                     </a>
-                                    <a
-                                        t-if="record.status.raw_value === 'occupied'"
-                                        type="object"
-                                        string="occupied"
-                                        name="set_room_status_available"
-                                        class="oe_kanban_status oe_kanban_status_red "
-                                    >
+                                    <a t-if="record.status.raw_value === 'occupied'" type="object" string="occupied" name="set_room_status_available" class="oe_kanban_status oe_kanban_status_red ">
                                     </a>
                                 </div>
                             </div>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--action for patient report details-->
+        <record id="action_report_patient_details" model="ir.actions.report">
+            <field name="name">Patient Details</field>
+            <field name="model">hospital.patient</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_hospital.report_patient_details</field>
+            <field name="report_file">om_hospital.report_patient_details</field>
+            <!--            <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>-->
+            <field name="binding_model_id" ref="model_hospital_patient"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <!--action for prescription medicine report details-->
+        <record id="action_report_prescription_medicine_details" model="ir.actions.report">
+            <field name="name">Prescription Medicine Details</field>
+            <field name="model">hospital.prescription</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_hospital.report_prescription_medicine_details</field>
+            <field name="report_file">om_hospital.report_prescription_medicine_details</field>
+            <!--            <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>-->
+            <field name="binding_model_id" ref="model_hospital_prescription"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <!--action for patient report details xlsx-->
+        <record id="action_report_patient_details_xlsx" model="ir.actions.report">
+            <field name="name">Patient Details Excel</field>
+            <field name="model">hospital.patient</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">om_hospital.report_patient_details_xlsx</field>
+            <field name="report_file">om_hospital.report_patient_details_xlsx</field>
+            <field name="binding_model_id" ref="model_hospital_patient"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <!--action for patient prescription report -->
+        <record id="action_report_patient_prescriptions" model="ir.actions.report">
+            <field name="name">Patient Prescription Report</field>
+            <field name="model">hospital.prescription</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_hospital.report_patient_prescriptions</field>
+            <field name="report_file">om_hospital.report_patient_prescriptions</field>
+            <field name="binding_model_id" ref="model_hospital_prescription"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

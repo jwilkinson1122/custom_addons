@@ -1,0 +1,78 @@
+<odoo>
+    <data>
+
+
+        <!--Actions | Kids -->
+        <record id="kids_action" model="ir.actions.act_window">
+            <field name="name">Kids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <!-- add domain condition to control kids view action -->
+            <field name="context">{}</field>
+            <field name="domain">[('age', '&lt;=', 18)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Kids patient!
+                </p>
+            </field>
+        </record>
+        <!--Actions | Kids Only Male-->
+        <record id="male_kids_action" model="ir.actions.act_window">
+            <field name="name">Male Kids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <!-- Default Field Value Based On Menu | hide gender field in this view NOTE(edit thin field in form view) -->
+            <field name="context">{'default_gender': 'male' ,'default_age': 18, 'hide_gender': 1}</field>
+            <!-- add domain condition to control kids view action -->
+            <field name="domain">[('age', '&lt;=', 18), ('gender', '=', 'male')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Kids patient!
+                </p>
+            </field>
+        </record>
+
+        <!--Actions | Kids Only Female-->
+        <record id="female_kids_action" model="ir.actions.act_window">
+            <field name="name">Female Kids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <!-- Default Field Value Based On Menu | hide gender field in this view -->
+            <field name="context">{'default_gender': 'female' ,'default_age': 18, 'hide_gender': 1}</field>
+            <!-- add domain condition to control kids view action -->
+            <field name="domain">[('age', '&lt;=', 18), ('gender', '=', 'female')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Kids patient!
+                </p>
+            </field>
+        </record>
+
+
+        <!-- dropdown top menu | Kids -->
+        <menuitem
+                id="hospital_patient_kids"
+                name="Kids"
+                parent="hospital_patient_root"
+                action="kids_action"
+                sequence="20"/>
+        <!-- dropdown top menu | Kids => male -->
+        <menuitem
+                id="hospital_patient_kids_male"
+                name="Male"
+                parent="hospital_patient_kids"
+                action="male_kids_action"
+                sequence="10"/>
+
+        <!-- dropdown top menu | Kids => Female -->
+        <menuitem
+                id="hospital_patient_kids_female"
+                name="Female"
+                parent="hospital_patient_kids"
+                action="female_kids_action"
+                sequence="11"/>
+    </data>
+</odoo>

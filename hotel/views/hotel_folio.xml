@@ -41,17 +41,15 @@
                                 <field name="duration" readonly="1" />
                                 <field name="duration_dummy" invisible="1" />
                             </group>
+                            <separator string="Order Lines" colspan="4" />
                             <separator string="Room Lines" colspan="4" />
-                            <button class="oe_highlight" groups="hotel.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" />
-                            <field name="room_line_ids" colspan="4" string="Room Line" nolabel="1" context="{'default_checkin_date':checkin_date, 'default_checkout_date':checkout_date}">
+                            <field name="folio_line_ids" colspan="4" string="Room Line" nolabel="1" context="{'default_checkin_date':checkin_date,
+                                        'default_checkout_date':checkout_date}">
                                 <tree editable="bottom">
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="1" />
                                     <field name="checkin_date" />
                                     <field name="checkout_date" />
                                     <field name="product_id" string="Room No" required="1" context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'uom':product_uom, 'checkin_date':checkin_date, 'checkout_date':checkout_date}" domain="[('isroom','=',True)]" options="{'no_open': True}" />
-                                    <field invisible="1" name="config_ok" />
-                                    <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','sent'])]}" class="fa-lg" groups="hotel.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                                    <field name="config_session_id" />
                                     <field name="name" />
                                     <field name="product_uom_qty" string="Duration" />
                                     <field name="product_uom_category_id" invisible="1" />

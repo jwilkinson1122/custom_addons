@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_patient_details">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Patient Report</h2>
+
+                            <div class="row mt32 mb32">
+                                <div class="col-2">
+                                    <strong>Employee:</strong>
+                                    <p t-field="o.name"/>
+                                </div>
+                                <div class="col-2">
+                                    <strong>Age:</strong>
+                                    <p t-field="o.age"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Description:</strong>
+                                    <p t-field="o.note"/>
+                                </div>
+
+                                <div class="col-3">
+                                    <strong>Responsible By:</strong>
+                                    <p t-field="o.responsible_id"/>
+                                </div>
+
+                                <div class="col-3">
+                                    <strong>Avatar:</strong>
+                                    <p t-field="o.image" t-options='{"widget": "image" ,"style":"width: 150px;height: 150px"}'/>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor</th>
+                                        <th class="text-center">Ref.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.prescription_ids" t-as="line">
+                                        <td>
+                                            <span t-field="line.date_prescription"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.doctor_id"/>
+                                        </td>
+                                        <td style="text-center">
+                                            <span t-field="line.reference"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <table class="table table-sm">
+                                        <tr class="border-black">
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="o.prescriptions_count" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <p>Certified honest and conform,<br/>
+(Date and signature).
+                            <br/>
+                            <br/>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</data>
+</odoo>

@@ -46,7 +46,7 @@ class HotelRoom(models.Model):
         default="available",
     )
     capacity = fields.Integer(required=True)
-    room_line_ids = fields.One2many(
+    folio_line_ids = fields.One2many(
         "folio.room.line", "room_id", string="Room Reservation Line"
     )
     product_manager = fields.Many2one("res.users")
@@ -105,6 +105,7 @@ class HotelRoom(models.Model):
         @param self: object pointer
         """
         return self.write({"isroom": True, "color": 5})
+    
 
 
 class HotelRoomType(models.Model):
