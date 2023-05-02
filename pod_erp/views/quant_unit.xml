@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="quant_form_view" model="ir.ui.view">
+            <field name="name">podiatry.quant.unit.form.view</field>
+            <field name="model">podiatry.quant.unit</field>
+            <field name="arch" type="xml">
+                <form string="Orthotic Units">
+                    <group colspan="4" col="4">
+                        <field name="name" required="1" />
+                        <field name="description" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="quant_tree_view" model="ir.ui.view">
+            <field name="name">podiatry.quant.unit.tree.view</field>
+            <field name="model">podiatry.quant.unit</field>
+            <field name="arch" type="xml">
+                <tree string="Orthotic Units">
+                    <field name="name" />
+                    <field name="description" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_quant_unit" model="ir.actions.act_window">
+            <field name="name">Orthotic Units</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">podiatry.quant.unit</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+</odoo>

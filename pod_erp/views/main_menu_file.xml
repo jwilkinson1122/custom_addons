@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="main_menu_practice_management" name="Practice Management" web_icon="pod_erp,static/description/icon.png" />
+    <menuitem id="menu_physicians" name='Physicians' action="action_physician" parent="pod_erp.main_menu_practice_management" sequence="2"/>
+    <menuitem id="menu_patients" name='Patients' action="action_patient" parent="pod_erp.main_menu_practice_management" sequence="4" />
+    <menuitem id="menu_prescriptions" name="Prescriptions" action="action_prescription_order" parent="pod_erp.main_menu_practice_management" sequence="6" />
+    <menuitem id="menu_patient_rounding" name='Rounding' parent="pod_erp.main_menu_practice_management" action="action_patient_rounding" sequence="7" />
+
+    <menuitem id="main_menu_configuration" name="Configuration" parent="pod_erp.main_menu_practice_management" sequence='13'/>
+    <menuitem id="menu_conditions" name="Conditions" parent="pod_erp.main_menu_configuration" sequence="1"/>
+    <menuitem id="menu_pathologies" name="Pathology" action="action_pathology" parent="pod_erp.menu_conditions" sequence='1' />
+    <menuitem id="menu_categories" name="Categories" action="action_pathology_category_form" parent="pod_erp.menu_conditions" sequence='2' />
+
+    <!-- <menuitem id="menu_podiatry_clinics" name="Clinics" parent="main_menu_configuration" sequence="1"/> -->
+    <!-- <menuitem id="menu_health_service" name='Podiatry Service' parent="main_menu_practice_management" sequence="11" /> -->
+    <!-- <menuitem id="menu_paper_archive" name='Archive' parent="main_menu_practice_management" sequence="4" /> -->
+
+</odoo>

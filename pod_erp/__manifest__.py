@@ -1,64 +1,79 @@
 # -*- coding: utf-8 -*-
+ 
+
 {
-    'name': "Podiatry Manager",
-    'sequence': 1,
-    'summary': """
-        A podiatry practice management module.""",
 
-    'description': """
-        A podiatry practice management module for creating patient, doctor, 
-        partner, medical test, and prescriptions.
-    """,
+    "name": "Podiatry ERP",
+    "version": "15.0.0.1",
+    "category": "Podiatry",
+    "summary": "Base for custom orthotics manufacturing",
+    "author": "NWPL",
+    "license": "AGPL-3",
+    "website": "https://nwpodiatrtic.com",
+    "description": """
+""",
 
-    'author': "NWPL",
-    'website': "http://www.nwpodiatric.com",
-    'category': 'Services',
-    'version': '0.1',
-    'license': 'LGPL-3',
-    # any module necessary for this one to work correctly
-    'depends': [
-        'base', 
-        'base_setup',
-        'contacts',
-        'website', 
-        'website_sale', 
-        'mail', 
-        'account', 
-        'account_accountant', 
-        'l10n_us', 
-        'sale', 
-        'sale_management', 
-        'stock', 
-        'documents',
-        'data_cleaning',
-        'repair',
-        
-        
+    "depends": [
+        "account", 
+        "account_accountant",
+        "l10n_us",
+        "base",
+        "base_setup",
+        "contacts", 
+        "documents",
+        "data_cleaning",
+        "mrp",
+        "product",
+        "resource",
+        "repair",
+        "sale", 
+        "sale_management", 
+        "stock", 
+        "sale_stock", 
+     
         ],
-
-    # always loaded
-    'data': [
-        'security/security.xml',
+    "data": [
+        'security/practice_groups.xml',
         'security/ir.model.access.csv',
-        'data/prescription_seq.xml',
-        'wizard/create_prescription_view.xml',
-        'wizard/prescription_report_view.xml',
-        'views/patient_view.xml',
-        'views/doctor_view.xml',
-        'views/partner_view.xml',
-        'views/prescription_view.xml',
-        'views/medicaltest_view.xml',
-        'views/website_patient_form.xml',
-        'views/website_patient_view.xml',
-        'views/website_prescription_form.xml',
-        'views/orthotic_sale.xml',
-        'views/sales_order.xml',
-        'views/menu.xml',
-        'reports/report.xml',
-        'reports/sale_report_inherit.xml',
-        'reports/prescription_report.xml',
+        'data/ir_sequence_data.xml',
+        'views/login_page.xml',
+        'wizard/create_prescription_invoice_wizard.xml',
+        'wizard/create_prescription_shipment_wizard.xml',
+        'views/orthotic.xml',
+        'views/device_route.xml',
+        'views/prescription_order.xml',
+        'views/directions.xml',
+        'views/quant_unit.xml',
+        'views/patient_details.xml',
+        'views/pathology_category.xml',
+        'views/pathology_group.xml',
+        'views/pathology.xml',
+        'views/patient_condition.xml',
+        'views/patient_orthotic.xml',
+        'views/patient_orthotic1.xml',
+        'views/patient.xml',
+        'views/patient_rounding.xml',
+        'views/physician.xml',
+        'views/prescription_line.xml',
+        'views/res_partner.xml',
+        'views/main_menu_file.xml',
+        'report/report_view.xml',
+        'report/patient_card_report.xml',
+        'report/patient_conditions_document_report.xml',
+        'report/patient_orthotics_document_report.xml',
+        'report/prescription_demo_report.xml',
     ],
-    'installable': True,
-    'application': True,
-    'auto_install': False,
+    "assets": {
+        "web.assets_backend": [
+            "pod_erp/static/src/css/style.css",
+        ],
+ 
+    },
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+    "images": ["static/description/icon.png"],
+
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

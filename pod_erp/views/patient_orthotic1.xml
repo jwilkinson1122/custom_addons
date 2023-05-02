@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="patient_orthotic1_form_view" model="ir.ui.view">
+            <field name="name">podiatry.patient.orthotic1.form.view</field>
+            <field name="model">podiatry.patient.orthotic1</field>
+            <field name="arch" type="xml">
+                <form string="Orthotic History">
+                    <group>
+                        <group colspan="4" col="4">
+                            <field name="orthotic_id" />
+                            <field name="doctor_physician_id" />
+                            <field name="is_active" />
+                            <field name="indication_pathology_id" />
+                        </group>
+                        <separator colspan="4" string="Admnistration" />
+                        <group colspan="4" col="4">
+                            <field name="device_route_id" />
+                        </group>
+                        <separator colspan="4" string="Measure" />
+                        <group colspan="4" col="4">
+                            <field name="quant" />
+                            <field name="qty" />
+                            <field name="quant_unit_id" />
+                        </group>
+                        <separator colspan="4"
+                            string=" Treatment Duration " />
+                        <group colspan="4" col="4">
+                            <field name="duration" />
+                            <field name="duration_period" />
+                        </group>
+                        <separator colspan="4" string="  Common Measure  " />
+                        <group colspan="4" col="4">
+                            <field name="orthotic_measure_id" />
+                            <field name="admin_times" />
+                        </group>
+                        <separator colspan="4"
+                            string="  Specific Measure  " />
+                        <group colspan="4" col="4">
+                            <field name="frequency" />
+                            <field name="frequency_unit" />
+                        </group>
+                        <separator colspan="4" string=" Notes" />
+                        <group colspan="4" col="4">
+                            <field name="notes" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="patient_orthotic1_tree_view" model="ir.ui.view">
+            <field name="name">podiatry.patient.orthotic1.tree.view</field>
+            <field name="model">podiatry.patient.orthotic1</field>
+            <field name="arch" type="xml">
+                <tree string="Orthotic">
+                    <field name="orthotic_id" />
+                    <field name="doctor_physician_id" />
+                    <field name="is_active" />
+                    <field name="indication_pathology_id" />
+                </tree>
+            </field>
+        </record>
+
+</odoo>
