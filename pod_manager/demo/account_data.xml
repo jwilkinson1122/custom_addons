@@ -1,0 +1,122 @@
+<odoo noupdate="1">
+    <!-- Practice -->
+    <record id="account_practice_ground0" model="account.practice">
+        <field eval="&quot;Ground&quot;" name="name" />
+    </record>
+    <record id="account_practice_first0" model="account.practice">
+        <field eval="&quot;First&quot;" name="name" />
+        <field eval="1" name="sequence" />
+    </record>
+    <record id="account_practice_second0" model="account.practice">
+        <field eval="&quot;Second&quot;" name="name" />
+        <field eval="2" name="sequence" />
+    </record>
+    <record id="account_practice_third0" model="account.practice">
+        <field eval="&quot;Third&quot;" name="name" />
+        <field eval="3" name="sequence" />
+    </record>
+    <!-- account_device_customization_type -->
+    <record id="account_device_customization_type_0" model="account.device.customization.type">
+        <field name="name">All Customizations</field>
+    </record>
+    <record id="account_device_customization_type_1" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'All Customizations')]" />
+        <field name="name">Posting</field>
+    </record>
+    <record id="account_device_customization_type_2" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'All Customizations')]" />
+        <field name="name">Heel</field>
+    </record>
+    <record id="account_device_customization_type_3" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'All Customizations')]" />
+        <field name="name">Arch/Midfoot</field>
+    </record>
+    <record id="account_device_customization_type_4" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'All Customizations')]" />
+        <field name="name">Metatarsal</field>
+    </record>
+    <record id="account_device_customization_type_5" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'All Customizations')]" />
+        <field name="name">Forefoot</field>
+    </record>
+    <!-- account_device_customization_type_name -->
+    <record id="account_device_customization_type_20" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'Posting')]" />
+        <field name="name">Deep Heel Cup</field>
+    </record>
+    <record id="account_device_customization_type_21" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'Posting')]" />
+        <field name="name">Heel Cushion</field>
+    </record>
+    <record id="account_device_customization_type_21" model="account.device.customization.type">
+        <field name="customization_id" search="[('name', '=', 'Posting')]" />
+        <field name="name">Heel Cushion</field>
+    </record>
+    <!-- account_device_type -->
+    <record id="devices" model="account.device.type">
+        <field name="name">All Devices</field>
+    </record>
+    <record id="account_device_type_1" model="account.device.type">
+        <field name="categ_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Superglass</field>
+    </record>
+    <record id="account_device_type_2" model="account.device.type">
+        <field name="categ_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Polypropyline</field>
+    </record>
+    <record id="account_device_type_3" model="account.device.type">
+        <field name="categ_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">NCV</field>
+    </record>
+    <record id="account_device_type_4" model="account.device.type">
+        <field name="categ_id" search="[('name', '=', 'All Devices')]" />
+        <field name="name">Prescription Comfort</field>
+    </record>
+    <!-- account_device -->
+    <record id="account_device_0" model="account.device">
+        <field name="name">Superglass-Flex</field>
+        <field name="is_device">1</field>
+        <field name="device_categ_id" search="[('name', '=', 'Superglass')]" />
+        <field name="list_price">100.00</field>
+        <field name="quantity">1</field>
+    </record>
+    <record id="account_device_1" model="account.device">
+        <field name="name">Superglass-Everyday</field>
+        <field name="is_device">1</field>
+        <field name="device_categ_id" search="[('name', '=', 'Superglass')]" />
+        <field name="list_price">105.00</field>
+        <field name="quantity">2</field>
+    </record>
+    <record id="account_device_2" model="account.device">
+        <field name="name">Superglass-Proformance</field>
+        <field name="is_device">1</field>
+        <field name="device_categ_id" search="[('name', '=', 'Superglass')]" />
+        <field name="list_price">145.00</field>
+        <field name="quantity">2</field>
+    </record>
+    <!-- account_service_type -->
+    <record id="account_service_type_0" model="account.service.type">
+        <field name="name">All Services</field>
+    </record>
+    <record id="account_service_type_1" model="account.service.type">
+        <field name="service_id" search="[('name', '=', 'All Services')]" />
+        <field name="name">Fixed</field>
+    </record>
+    <record id="account_service_type_2" model="account.service.type">
+        <field name="service_id" search="[('name', '=', 'All Services')]" />
+        <field name="name">Variable</field>
+    </record>
+    <!-- account_services -->
+    <record id="account_service_10" model="account.services">
+        <field name="name">Heel Cushion</field>
+        <field name="is_service">1</field>
+        <field name="service_categ_id" search="[('name', '=', 'Fixed')]" />
+        <field name="list_price">20.00</field>
+    </record>
+    <record id="account_service_20" model="account.services">
+        <field name="name">Heel Lift</field>
+        <field name="is_service">1</field>
+        <field name="service_categ_id" search="[('name', '=', 'Variable')]" />
+        <field name="list_price">10.00</field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--Group for account user -->
+    <record id="group_account_user" model="res.groups">
+        <field name="name">Account Management / User</field>
+        <field eval="[(4, ref('base.user_root'))]" name="implied_ids" />
+    </record>
+    <!--Group for account manager -->
+    <record id="group_account_manager" model="res.groups">
+        <field name="name">Account Management/ Manager</field>
+        <field eval="[(4, ref('pod_manager.group_account_user'))]" name="implied_ids" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+</odoo>
