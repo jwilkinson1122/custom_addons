@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Forefoot Values -->
+    <record id="podiatry_forefoot_value_form" model="ir.ui.view">
+        <field name="name">podiatry.forefoot.value.form</field>
+        <field name="model">podiatry.forefoot.value</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="podiatry_forefoot_value_tree" model="ir.ui.view">
+        <field name="name">podiatry.forefoot.value.tree</field>
+        <field name="model">podiatry.forefoot.value</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action Forefoot Values -->
+    <record id="forefoot_values_action" model="ir.actions.act_window">
+        <field name="res_model">podiatry.forefoot.value</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Forefoot Corrections -->
+    <record id="podiatry_forefoot_correction_form" model="ir.ui.view">
+        <field name="name">podiatry.forefoot.correction.form</field>
+        <field name="model">podiatry.forefoot.correction</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="podiatry_forefoot_correction_tree" model="ir.ui.view">
+        <field name="name">podiatry.forefoot.correction.tree</field>
+        <field name="model">podiatry.forefoot.correction</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action Forefoot Corrections -->
+    <record id="forefoot_corrections_action" model="ir.actions.act_window">
+        <field name="res_model">podiatry.forefoot.correction</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Rearfoot Corrections -->
+    <record id="podiatry_rearfoot_correction_form" model="ir.ui.view">
+        <field name="name">podiatry.rearfoot.correction.form</field>
+        <field name="model">podiatry.rearfoot.correction</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="podiatry_rearfoot_correction_tree" model="ir.ui.view">
+        <field name="name">podiatry.rearfoot.correction.tree</field>
+        <field name="model">podiatry.rearfoot.correction</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action Rearfoot Corrections -->
+    <record id="rearfoot_corrections_action" model="ir.actions.act_window">
+        <field name="res_model">podiatry.rearfoot.correction</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Orthotic Measures -->
+    <record id="podiatry_orthotic_measure_form" model="ir.ui.view">
+        <field name="name">podiatry.orthotic.measure.form</field>
+        <field name="model">podiatry.orthotic.measure</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="podiatry_orthotic_measure_tree" model="ir.ui.view">
+        <field name="name">podiatry.orthotic.measure.tree</field>
+        <field name="model">podiatry.orthotic.measure</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action Orthotic Measures -->
+    <record id="orthotic_measures_action" model="ir.actions.act_window">
+        <field name="res_model">podiatry.orthotic.measure</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>
