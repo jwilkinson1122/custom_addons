@@ -28,11 +28,13 @@ class PrescriptionProduct(models.TransientModel):
     def show_btn2(self):
         prescription_line = self.env['podiatry.prescription.line'].with_context(
             tracking_disable=True)
+        
         prescription_line.create({
             'name': 'Product',
             'display_type': 'line_section',
             'prescription_id': self.env.context.get('active_id'),
         })
+        
         prescription_line = self.env['podiatry.prescription.line'].create({
             'name': self.shell_foundation.name,
             'product_id': self.shell_foundation.id,

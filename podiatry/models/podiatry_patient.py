@@ -274,7 +274,7 @@ class Patient(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('notes'):
-            vals['notes'] = 'New Patient'
+            vals['notes'] = 'Notes'
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code(
                 'podiatry.patient') or _('New')

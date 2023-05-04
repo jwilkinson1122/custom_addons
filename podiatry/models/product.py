@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('detailed_type')
     def _onchange_type_product(self):
-        if self.detailed_product == 'product':
+        if self.detailed_type == 'product':
             self.invoice_policy = 'order'
 
     def _detailed_type_mapping(self):
@@ -841,6 +841,13 @@ class ProductProduct(models.Model):
 
     # product preset
     config_preset_ok = fields.Boolean(string="Is Preset")
+    
+    def get_product_multiline_description_prescription(self):
+        name = self.display_name
+        if self.description_prescription:
+            name += '\n' + self.description_prescription
+
+        return name
 
     # Replace action.
     def get_product_attribute_values_action(self):

@@ -42,6 +42,7 @@
         "wizard/create_prescription_invoice_wizard.xml",
         "wizard/create_prescription_shipment_wizard.xml",
         "wizard/prescription_mass_message_wizard_view.xml",
+        "wizard/prescription_import_products.xml",
         "views/mail_activity_type.xml",
         'views/inherit_sale_order.xml',
         "views/podiatry_patient.xml",

@@ -1,5 +1,20 @@
-from odoo import api, fields, models
+import itertools
+import logging
+from collections import defaultdict
 
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.osv import expression
+
+_logger = logging.getLogger(__name__)
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+    
+    description_prescription = fields.Text(
+        'Prescription Description', translate=True,
+        help="A description of the Product. "
+             "This description will be copied to every Prescription Order, Sale Order, Delivery Order and Customer Invoice/Credit Note")
 
 class ProductTemplateWithWeightInKg(models.Model):
     """Rename the field weight to `Weight in Kg`."""

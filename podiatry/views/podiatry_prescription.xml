@@ -22,48 +22,6 @@
         </field>
     </record>
 
-    <record id="prescription_product_view" model="ir.ui.view">
-        <field name="name">Prescription Product</field>
-        <field name="model">prescription.product</field>
-        <field name="arch" type="xml">
-            <form>
-                <field name="patient_id"/>
-                <group>
-                    <field name="prescription_id"/>
-                    <field string="Patient" name="patient_id"/>
-                </group>
-                <group>
-                    <field name="shell_foundation"/>
-                </group>
-                <group>
-                    <field name="arch_height"/>
-                </group>
-                <group>
-                    <field name="x_guard"/>
-                </group>
-                <group>
-                    <field name="top_cover"/>
-                </group>
-                <group>
-                    <field name="cushion"/>
-                    <field name="extension"/>
-                </group>
-                <footer>
-                    <button name="show_btn2" class="oe_highlight" string="Add to Prescription" type="object"/>
-                    <button class="oe_highlight" string="Cancel" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
-    <record id="prescription_product_wizard" model="ir.actions.act_window">
-        <field name="name">Prescription Product wizard</field>
-        <field name="res_model">prescription.product</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="view_id" ref="prescription_product_view"/>
-    </record>
-
     <!-- Form View -->
     <record id="view_podiatry_prescription_form" model="ir.ui.view">
         <field name="name">Prescription</field>
@@ -133,11 +91,11 @@
                     <notebook>
                         <page string="Prescription Lines">
                             <div>
-                                <button name="%(prescription_product_wizard)d" states="draft" class="btn btn-info" type="action" string="Add Product"></button>
-                            </div>
+                            <button name="%(action_import_product_to_prescription)d" class="btn-primary" style="margin:12px 0px 12px 0px;" string="Add Products" icon="fa-plus-circle" Help="Prescription Products to Import" type="action" attrs="{'invisible':[('state','not in', ['draft', 'done'])]}" />
 
+                            </div>
                             <!-- <field name="prescription_line" widget="many2many_kanban" domain="[('prescription_id', '=', False)]" /> -->
-                            <field name="prescription_line" widget="section_and_note_one2many" mode="tree,kanban" domain="[('prescription_id', '=', False)]" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
+                            <field name="prescription_line" widget="section_and_note_one2many" mode="tree,kanban" options="{&quot;always_reload&quot;: 1}" domain="[('prescription_id', '=', False)]" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                 <tree string="Prescription Lines" editable="bottom">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
