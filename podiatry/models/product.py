@@ -48,8 +48,7 @@ class ProductTemplate(models.Model):
         type_mapping['product'] = 'consu'
         return type_mapping
 
-    shell_type = fields.Many2one(
-        'shell.type', string='Shell / Foundation Type')
+    shell_type = fields.Many2one('shell.type', string='Shell / Foundation Type')
     shell_collection = fields.Many2one(
         'shell.collection', string='Shell Collection')
     topcover_type = fields.Many2one('topcover.type', string='Top Cover Type')
@@ -85,8 +84,11 @@ class ProductTemplate(models.Model):
     
     @api.model
     def default_get(self, vals):
-        if self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Shell / Foundation':
-            self.categ_id = self.env.ref('podiatry.product_category_shells').id
+        if self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Athletic':
+            self.categ_id = self.env.ref('podiatry.product_category_athletic').id
+        elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Shell / Foundation':
+                self.categ_id = self.env.ref(
+                'podiatry.product_category_shells').id
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Top Covers':
             self.categ_id = self.env.ref(
                 'podiatry.product_category_top_covers').id

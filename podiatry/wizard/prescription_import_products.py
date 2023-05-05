@@ -7,7 +7,7 @@ class PrescriptionImportProducts(models.TransientModel):
 
     products = fields.Many2many(comodel_name="product.product")
     items = fields.One2many(comodel_name="prescription.import.products.items", inverse_name="wizard_id")
-
+ 
     def create_items(self):
         for wizard in self:
             for product in wizard.products:
@@ -60,6 +60,7 @@ class prescriptionImportProductsItem(models.TransientModel):
     _name = "prescription.import.products.items"
     _description = "prescription Import Products Items"
 
+    prescription_id = fields.Many2one("podiatry.prescription", "Prescription Number", ondelete="cascade")
     wizard_id = fields.Many2one(string="Wizard", comodel_name="prescription.import.products")
     product_id = fields.Many2one(
         string="Product", comodel_name="product.product", required=True
@@ -67,3 +68,8 @@ class prescriptionImportProductsItem(models.TransientModel):
     quantity = fields.Float(
         digits="Product Unit of Measure", default=1.0, required=True
     )
+   
+    
+ 
+    
+    # type = fields.Selection(string='Type', selection=[('lt', 'LT'), ('rt', 'RT')])

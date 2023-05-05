@@ -11,6 +11,8 @@ class Patient(models.Model):
     _inherits = {
         'res.partner': 'partner_id',
     }
+    
+    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient")
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Patient Name", index=True)
@@ -119,9 +121,6 @@ class Patient(models.Model):
         string="Created by",
     )
 
-    # partner_id = fields.Many2one(
-    #     comodel_name='res.partner', string="Contact",
-    # )
     partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
                                  help='Partner-related data of the Patient')
 

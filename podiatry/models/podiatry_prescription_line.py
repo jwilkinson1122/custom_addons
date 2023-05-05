@@ -92,6 +92,19 @@ class PrescriptionLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     state = fields.Selection(
         related='prescription_id.state', string='Prescription Status', copy=False, store=True)
+    
+    #     foot_selection = fields.Selection([('left_only', 'Left Only'), (
+    #     'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
+
+    # left_only = fields.Boolean('Left Only')
+    # right_only = fields.Boolean('Right Only')
+    
+    # active = fields.Boolean(string="Active", default=True, tracking=True)
+    
+ 
+    left_only = fields.Boolean(related='prescription_id.left_only', string='LT')
+     
+    right_only = fields.Boolean(related='prescription_id.right_only', string='RT')
 
     
     price = fields.Float(
