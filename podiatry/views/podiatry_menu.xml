@@ -16,6 +16,9 @@
         <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" />
         <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="contacts.menu_contacts" sequence="5" />
 
+        <menuitem id="menu_partner_types" parent="contacts.res_partner_menu_config" sequence="2" action="action_partner_types"/>
+
+
         <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
             <field name="name">Configuration</field>
             <field name="sequence">6</field>

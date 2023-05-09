@@ -94,7 +94,7 @@
                     <notebook>
                         <page name="practitioners_list" string="Contacts">
                             <group>
-                                <field name="practitioner_id"/>
+                                <field name="practitioner_ids"/>
                             </group>
                         </page>
                         <page name="practice_patients_list" string="Patients">
@@ -104,7 +104,7 @@
                         </page>
                         <page name="practice_prescriptions_list" string="Prescriptions">
                             <group>
-                                <field name="practice_prescription_id"/>
+                                <field name="prescription_ids"/>
                             </group>
                         </page>
                         <page name="practice_affiliate_list" string="Affiliates">

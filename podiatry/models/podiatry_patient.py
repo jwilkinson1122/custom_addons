@@ -88,7 +88,7 @@ class Patient(models.Model):
     )
 
     practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
+        comodel_name='res.partner',
         required=True,
         string="Practice",
     )

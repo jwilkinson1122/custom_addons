@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.osv import expression
 
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):

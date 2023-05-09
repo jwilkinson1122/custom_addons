@@ -4,16 +4,10 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
-from . import podiatry_practice
-
-# from lxml import etree
-# added import statement in try-except because when server runs on
-# windows operating system issue arise because this library is not in Windows.
 try:
     from odoo.tools import image_colorize
 except:
     image_colorize = False
-
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
@@ -22,20 +16,10 @@ class Practitioner(models.Model):
     _rec_name = 'practitioner_id'
 
     _description = 'practitioner'
-
-    patient_ids = fields.One2many(
-        comodel_name='podiatry.patient',
-        inverse_name='practitioner_id',
-        string='Patients'
-    )
-
-    is_practitioner = fields.Boolean()
-
-    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
-
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
-        string='Practice')
+    # is_practitioner = fields.Boolean()
+    practice_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string='Practice')
+    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner", required=True)
+    patient_ids = fields.One2many(comodel_name='podiatry.patient', inverse_name='practitioner_id', string='Patients')
 
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
@@ -50,7 +34,6 @@ class Practitioner(models.Model):
         return base64.b64encode(open(image_path, 'rb').read())
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,

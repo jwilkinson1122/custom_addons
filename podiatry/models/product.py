@@ -8,9 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
-_logger = logging.getLogger(__name__)
-
-
+logger = logging.getLogger(__name__)
 
 class ProductWithWeightInKg(models.Model):
     """Rename the field weight to `Weight in kg`."""
@@ -309,7 +307,7 @@ class ProductProduct(models.Model):
                 mytemplate.render_context(ctx)
                 return buf.getvalue()
             except Exception:
-                _logger.error(
+                logger.error(
                     _("Error while calculating mako product name: %s")
                     % self.display_name
                 )

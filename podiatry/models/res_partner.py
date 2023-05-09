@@ -1,262 +1,310 @@
 # -*- coding: utf-8 -*-
+import base64
+import json
+from lxml import etree
+from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, _
+from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 
+import logging
 
-class Partner(models.Model):
-    _name = 'res.partner'
+logger = logging.getLogger(__name__)
+
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    info_ids = fields.One2many(
-        'res.partner.info', 'partner_id', string="More Info")
-    reference = fields.Char('ID Number')
-    name = fields.Char(index=True)
-
+    parent_id = fields.Many2one(ondelete='restrict')
+    type = fields.Selection(default=False)
+    partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
+    can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
+    parent_is_required = fields.Boolean(compute='_compute_partner_type_infos')
+    parent_type_ids = fields.Many2many(
+        'res.partner.type', string='Company types authorized for parent',
+        compute='_compute_parent_types')
+    contact_ids = fields.One2many(
+        'res.partner', 'parent_id', 'Contacts & Addresses',
+        domain=[('is_company', '=', False)])
+    subcompanies_count = fields.Integer(
+        'Number of sub-companies', compute='_compute_subcompanies_count')
+    subcompanies_label = fields.Char(
+        related='partner_type_id.subcompanies_label', readonly=True)
+    parent_relation_label = fields.Char(
+        related='partner_type_id.parent_relation_label', readonly=True)
+    customer = fields.Boolean(string='Is a Practice', default=True,
+                              help="Check this box if this contact is a customer. It can be selected in sales orders.")
+    supplier = fields.Boolean(string='Is a Vendor',
+                              help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
+    
     is_practice = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
-
-    practice_ids = fields.One2many(
-        comodel_name='podiatry.practice',
-        inverse_name='partner_id',
-        string="Practices",
+    is_patient = fields.Boolean(string='Patient')
+    notes = fields.Text(string="Notes")
+    practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
+    practice_ids = fields.Many2many(comodel_name='res.partner', relation='practice_partners_rel', column1='practice_id', column2='partner_id', string="Practices")
+    # practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
+    patient_ids = fields.One2many(comodel_name='podiatry.patient', inverse_name='practice_id', string="Patients")
+    practitioner_ids = fields.One2many(comodel_name='podiatry.practitioner', inverse_name='practice_id', string="Practice Contacts")
+    prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='practice_id', string="Prescriptions")
+    reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    practice_type = fields.Selection([('clinic', 'Clinic'),
+                                      ('hospital', 'Hospital'),
+                                      ('multi', 'Multi-Hospital'),
+                                      ('military', 'Military Medical Center'),
+                                      ('other', 'Other')],
+                                     string="Practice Type")
+    
+    same_reference_practice_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Practice with same Identity',
+        compute='_compute_same_reference_practice_id',
     )
+    
+    @api.depends('reference')
+    def _compute_same_reference_practice_id(self):
+        for practice in self:
+            domain = [
+                ('reference', '=', practice.reference),
+            ]
 
-    patient_ids = fields.One2many(
-        comodel_name='podiatry.patient',
-        inverse_name='partner_id',
-        string="Patients",
+            origin_id = practice._origin.id
+
+            if origin_id:
+                domain += [('id', '!=', origin_id)]
+
+            practice.same_reference_practice_id = bool(practice.reference) and \
+                self.with_context(active_test=False).sudo().search(
+                    domain, limit=1)
+    
+    child_count = fields.Integer(
+        string="Subpractice Count",
+        compute='_compute_child_count',
     )
-
-    patient_count = fields.Integer(
-        string="Patient Count", store=False,
-        compute='_compute_patient_count',
-    )
-
-    @api.depends('patient_ids')
-    def _compute_patient_count(self):
+    
+    @api.depends('child_ids')
+    def _compute_child_count(self):
         for partner in self:
-            partner.patient_count = partner.patient_ids
+            partner.child_count = len(partner.child_ids)
         return
 
-    is_patient = fields.Boolean(
-        string="Patient", store=False,
-        search='_search_is_patient',
-    )
+    full_name = fields.Char(string="Full Name", compute='_compute_full_name', store=True)
 
-    def _search_is_patient(self, operator, value):
-        assert operator in ('=', '!=', '<>') and value in (
-            True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = '!='
-        else:
-            search_operator = '='
-        return [('patient_ids', search_operator, False)]
-
-    practitioner_id = fields.Many2one(
-        "res.partner",
-        string="Main Practitioner",
-        domain=[("is_company", "=", False),
-                ("practitioner_type", "=", "standalone")],
-    )
-
-    other_practitioner_ids = fields.One2many(
-        "res.partner",
-        "practitioner_id",
-        string="Others Positions",
-    )
-
-    practitioner_count = fields.Integer(
-        string="Practitioner Count", store=False,
-        compute='_compute_practitioner_count',
-    )
-
-    @api.depends('practitioner_id')
-    def _compute_practitioner_count(self):
-        for partner in self:
-            partner.practitioner_count = partner.practitioner_id
+    
+    @api.depends('name', 'parent_id.full_name')
+    def _compute_full_name(self):
+        for practice in self:
+            if practice.parent_id:
+                practice.full_name = "%s / %s" % (
+                    practice.parent_id.full_name, practice.name)
+            else:
+                practice.full_name = practice.name
         return
+    
+    @api.depends('partner_type_id')
+    def _compute_parent_types(self):
+        self.parent_type_ids = self.partner_type_id.parent_type_ids
 
-    # is_practitioner = fields.Boolean(
-    #     string="Practitioner", store=False,
-    #     search='_search_is_practitioner',
-    # )
+    @api.depends('child_ids')
+    def _compute_subcompanies_count(self):
+        subcompanies = self.mapped('child_ids').filtered(
+            lambda child: child.is_company)
+        self.subcompanies_count = len(subcompanies)
 
-    def _search_is_practitioner(self, operator, value):
-        assert operator in ('=', '!=', '<>') and value in (
-            True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = '!='
-        else:
-            search_operator = '='
-        return [('practitioner_id', search_operator, False)]
+    @api.depends('partner_type_id')
+    def _compute_partner_type_infos(self):
+        self.can_have_parent = True
+        self.parent_is_required = False
+        if self.partner_type_id:
+            self.can_have_parent = self.partner_type_id.can_have_parent
+            if self.partner_type_id.can_have_parent:
+                self.parent_is_required = \
+                    self.partner_type_id.parent_is_required
 
-    practitioner_type = fields.Selection(
-        [
-            ("standalone", "Standalone Practitioner"),
-            ("attached", "Attached to existing Practitioner"),
-        ],
-        compute="_compute_practitioner_type",
-        store=True,
-        index=True,
-        default="standalone",
-    )
+    @api.onchange('company_type')
+    def _onchange_company_type(self):
+        code = 'CONTACT'
+        if self.company_type == 'company':
+            code = 'SUPPLIER' if self.supplier else 'CLIENT'
+        self.partner_type_id = self.partner_type_id.search(
+            [('code', '=', code)], limit=1)
 
-    @api.depends("practitioner_id")
-    def _compute_practitioner_type(self):
-        for rec in self:
-            rec.practitioner_type = "attached" if rec.practitioner_id else "standalone"
+    @api.onchange('partner_type_id')
+    def _onchange_partner_type(self):
+        self.update(self._get_inherit_values(self.partner_type_id))
 
-    def _basepractitioner_check_context(self, mode):
-        """Remove "search_show_all_positions" for non-search mode.
-        Keeping it in context can result in unexpected behaviour (ex: reading
-        one2many might return wrong result - i.e with "attached practitioner"
-        removed even if it"s directly linked to a company).
-        Actually, is easier to override a dictionary value to indicate it
-        should be ignored...
-        """
-        if mode != "search" and "search_show_all_positions" in self.env.context:
-            result = self.with_context(
-                search_show_all_positions={"is_set": False})
-        else:
-            result = self
-        return result
+    def _get_inherit_values(self, partner_type, not_null=False):
+        if not partner_type:
+            return {}
+        inherit_fields = getattr(
+            partner_type, '_%s_inherit_fields' % partner_type.company_type)
+        inherit_values = partner_type.read(inherit_fields)[0]
+        if 'id' in inherit_values:
+            del inherit_values['id']
+        if not_null:
+            for fname in list(inherit_values.keys()):
+                if not inherit_values[fname]:
+                    del inherit_values[fname]
+        return inherit_values
+
+    def _update_children(self, vals):
+        for partner in self:
+            if partner.child_ids and partner.partner_type_id.field_ids:
+                children_vals = {
+                    key: value for key, value in vals.items()
+                    if key in partner.partner_type_id.field_ids.mapped('name')}
+                if children_vals:
+                    partner.child_ids.write(children_vals)
 
     @api.model
     def create(self, vals):
-        """When creating, use a modified self to alter the context (see
-        comment in _basepractitioner_check_context).  Also, we need to ensure
-        that the name on an attached practitioner is the same as the name on the
-        practitioner it is attached to."""
-        modified_self = self._basepractitioner_check_context("create")
-        if not vals.get("name") and vals.get("practitioner_id"):
-            vals["name"] = modified_self.browse(vals["practitioner_id"]).name
-        return super(Partner, modified_self).create(vals)
-
-    def read(self, fields=None, load="_classic_read"):
-        modified_self = self._basepractitioner_check_context("read")
-        return super(Partner, modified_self).read(fields=fields, load=load)
-
+        partner_type = self.env['res.partner.type'].browse(vals.get('partner_type_id'))
+        vals.update(self._get_inherit_values(partner_type))
+        if vals.get('reference', _('New')) == _('New'):
+            vals['reference'] = self.env['ir.sequence'].next_by_code('podiatry.practice') or _('New')
+        new_partner = super(ResPartner, self).create(vals)
+        new_partner._update_children(vals)
+        return new_partner
+    
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('reference', _('New')) == _('New'):
+    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.practice') or _('New')
+    #     practice = super(Practice, self).create(vals)
+    #     return practice
     def write(self, vals):
-        modified_self = self._basepractitioner_check_context("write")
-        return super(Partner, modified_self).write(vals)
+        partners_by_type = {}
+        if vals.get('partner_type_id'):
+            partner_type = self.env['res.partner.type'].browse(
+                vals['partner_type_id'])
+            partners_by_type[partner_type] = self
+        else:
+            for partner in self:
+                partners_by_type.setdefault(
+                    partner.partner_type_id, self.browse())
+                partners_by_type[partner.partner_type_id] |= partner
+        for partner_type in partners_by_type:
+            if list(vals.keys()) != ['is_company']:  # To avoid infinite loop
+                vals.update(self._get_inherit_values(
+                    partner_type, not_null=True))
+            super(ResPartner, partners_by_type[partner_type]).write(vals)
+        self._update_children(vals)
+        return True
 
-    def unlink(self):
-        modified_self = self._basepractitioner_check_context("unlink")
-        return super(Partner, modified_self).unlink()
+    def view_subcompanies(self):
+        return {
+            'name': _('Sub-companies'),
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'view_mode': 'tree,form',
+            'view_id': False,
+            'domain': [
+                ('parent_id', 'in', self.ids),
+                ('is_company', '=', True)
+            ],
+            'target': 'current',
+        }
 
-    def _compute_commercial_partner(self):
-        """Returns the partner that is considered the commercial
-        entity of this partner. The commercial entity holds the master data
-        for all commercial fields (see :py:meth:`~_commercial_fields`)"""
-        result = super(Partner, self)._compute_commercial_partner()
-        for partner in self:
-            if partner.practitioner_type == "attached" and not partner.parent_id:
-                partner.commercial_partner_id = partner.practitioner_id
+    def _update_fields_view_get_result(self, result, view_type='form'):
+        if view_type == 'form' and not self._context.get(
+            'display_original_view'):
+            # In order to inherit all views based on the field order_line
+            doc = etree.XML(result['arch'])
+            for node in doc.xpath("//field[@name='child_ids']"):
+                node.set('name', 'contact_ids')
+                node.set('modifiers', json.dumps(
+                    {'default_customer': False, 'default_supplier': False}))
+                result['fields']['contact_ids'] = result['fields']['child_ids']
+                result['fields']['contact_ids'].update(
+                    self.fields_get(['contact_ids'])['contact_ids'])
+            result['arch'] = etree.tostring(doc)
         return result
 
-    def _practitioner_fields(self):
-        """Returns the list of practitioner fields that are synced from the parent
-        when a partner is attached to him."""
-        return ["name", "title"]
-
-    def _practitioner_sync_from_parent(self):
-        """Handle sync of practitioner fields when a new parent practitioner entity
-        is set, as if they were related fields
-        """
-        self.ensure_one()
-        if self.practitioner_id:
-            practitioner_fields = self._practitioner_fields()
-            sync_vals = self.practitioner_id._update_fields_values(
-                practitioner_fields)
-            self.write(sync_vals)
-
-    def update_practitioner(self, vals):
-        if self.env.context.get("__update_practitioner_lock"):
-            return
-        practitioner_fields = self._practitioner_fields()
-        practitioner_vals = {field: vals[field]
-                             for field in practitioner_fields if field in vals}
-        if practitioner_vals:
-            self.with_context(__update_practitioner_lock=True).write(
-                practitioner_vals)
-
-    def _fields_sync(self, update_values):
-        """Sync commercial fields and address fields from company and to
-        children, practitioner fields from practitioner and to attached practitioner
-        after create/update, just as if those were all modeled as
-        fields.related to the parent
-        """
-        self.ensure_one()
-        super(Partner, self)._fields_sync(update_values)
-        practitioner_fields = self._practitioner_fields()
-        # 1. From UPSTREAM: sync from parent practitioner
-        if update_values.get("practitioner_id"):
-            self._practitioner_sync_from_parent()
-        # 2. To DOWNSTREAM: sync practitioner fields to parent or related
-        elif any(field in practitioner_fields for field in update_values):
-            update_ids = self.other_practitioner_ids.filtered(
-                lambda p: not p.is_company)
-            if self.practitioner_id:
-                update_ids |= self.practitioner_id
-            update_ids.update_practitioner(update_values)
-
-    @api.onchange("practitioner_id")
-    def _onchange_practitioner_id(self):
-        if self.practitioner_id:
-            self.name = self.practitioner_id.name
-
-    @api.onchange("practitioner_type")
-    def _onchange_practitioner_type(self):
-        if self.practitioner_type == "standalone":
-            self.practitioner_id = False
+    def get_view(self, view_id=None, view_type='form', **options):
+        result = super(ResPartner, self).get_view(view_id, view_type, **options)
+        node = etree.fromstring(result['arch'])
+        view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
+        result['fields'] = self.fields_get(view_fields)
+        return self._update_fields_view_get_result(result, view_type)
 
     @api.model
-    def create_partner_from_ui(self, partner, extraPartner):
-        """ create or modify a partner from the point of sale ui.
-            partner contains the partner's fields. """
-        # image is a dataurl, get the data after the comma
-        extraPartner_id = partner.pop('id', False)
-        if extraPartner:
-            if extraPartner.get('image_1920'):
-                extraPartner['image_1920'] = extraPartner['image_1920'].split(',')[
-                    1]
-            if extraPartner_id:  # Modifying existing extraPartner
-                custom_info = self.env['custom.partner.field'].search([])
-                for i in custom_info:
-                    if i.name in extraPartner.keys():
-                        info_data = self.env['res.partner.info'].search(
-                            [('partner_id', '=', extraPartner_id), ('name', '=', i.name)])
-                        if info_data:
-                            info_data.write(
-                                {'info_name': extraPartner[i.name], 'partner_id': extraPartner_id})
-                        else:
-                            self.browse(extraPartner_id).write(
-                                {'info_ids': [(0, 0, {'name': i.name, 'info_name': extraPartner[i.name]})]})
-            else:
-                extraPartner_id = self.create(extraPartner).id
+    def _format_args(self, args):
+        for cond in (args or []):
+            if len(cond) == 3 and cond[2] and isinstance(cond[2], list) and \
+                isinstance(cond[2][0], list):
+                for index, item in enumerate(cond[2]):
+                    if item[0] == 1:
+                        cond[2][index] = item[1]
+                    elif item[0] == 6:
+                        cond[2] = item[2]
+                        break
 
-        if partner:
-            if partner.get('image_1920'):
-                partner['image_1920'] = partner['image_1920'].split(',')[1]
-            if extraPartner_id:  # Modifying existing partner
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        self._format_args(args)
+        return super(ResPartner, self).name_search(name, args, operator, limit)
 
-                self.browse(extraPartner_id).write(partner)
-            else:
-                extraPartner_id = self.create(partner).id
-        return extraPartner_id
+    @api.model
+    def _search(
+        self, args, offset=0, limit=None, order=None, count=False,
+        access_rights_uid=None):
+        self._format_args(args)
+        return super(ResPartner, self)._search(
+            args, offset, limit, order, count, access_rights_uid)
+        
+    # def name_get(self):
+    #     result = []
+    #     for rec in self:
+    #         name = '[' + rec.reference + '] ' + rec.name
+    #         result.append((rec.id, name))
+    #     return result
 
+    def _get_display_name_context(self):
+        self.ensure_one()
+        partner = self.with_context(
+            show_address=None, show_address_only=None, show_email=None)
+        return {'partner': partner, '_': _}
 
-class CustomPartnerField(models.Model):
-    _name = "custom.partner.field"
+    @api.depends('partner_type_id.partner_display_name')
+    def _compute_display_name(self):
+        rule = self.partner_type_id.partner_display_name
+        if rule:
+            self.display_name = safe_eval(
+                rule, self._get_display_name_context())
+        else:
+            super(ResPartner, self)._compute_display_name()
 
-    name = fields.Char(string="Custom Partner Fields")
-    config_id = fields.Many2one("pos.config", string="Pos Config")
-
-
-class ResPartnerInfo(models.Model):
-    _name = "res.partner.info"
-
-    name = fields.Char(string="Extra Info", required=True)
-    info_name = fields.Char(string="Info Name")
-    partner_id = fields.Many2one("res.partner", string="Partner Info")
-    field_id = fields.Many2one("custom.partner.field", string="Custom Filed")
+    def action_open_prescriptions(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'podiatry.prescription',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+            
+    def action_open_patients(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Patients',
+            'res_model': 'podiatry.patient',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
+            
+    def action_open_practitioners(self):
+            return {
+            'type': 'ir.actions.act_window',
+            'name': 'Practitioners',
+            'res_model': 'podiatry.practitioner',
+            'domain': [('practice_id', '=', self.id)],
+            'context': {'default_practice_id': self.id},
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }

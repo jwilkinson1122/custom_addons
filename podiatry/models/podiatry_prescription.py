@@ -58,11 +58,8 @@ class Prescription(models.Model):
     company_id = fields.Many2one(
         comodel_name="res.company", default=lambda self: self.env.company, store=True)
 
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-
-    practice_name = fields.Char(
-        string='Practitioner', related='practice_id.name')
+    practice_id = fields.Many2one(comodel_name='res.partner', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    practice_name = fields.Char(string='Practice', related='practice_id.name')
 
     practitioner_id = fields.Many2one(
         comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})

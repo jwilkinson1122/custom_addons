@@ -2,7 +2,7 @@ import logging
 from odoo import api, exceptions, fields, models
 
 
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class PrescriptionMassMessage(models.TransientModel):
@@ -42,13 +42,13 @@ class PrescriptionMassMessage(models.TransientModel):
                 subject=self.message_subject,
                 subtype_xmlid='mail.mt_comment',
             )
-            _logger.debug(
+            logger.debug(
                 "Message on %d to followers: %s",
                 prescription.id,
                 prescription.message_follower_ids,
             )
 
-        _logger.info(
+        logger.info(
             "Posted %d messages to the Prescriptions: %s",
             len(self.prescription_ids),
             str(self.prescription_ids),

@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_partner_type,access_res_partner_type,model_res_partner_type,,1,0,0,0
+access_res_partner_type_manager,access_res_partner_type,model_res_partner_type,base.group_partner_manager,1,1,1,0
 access_s3_credentials,s3.credentials,model_s3_credentials,base.group_user,1,1,1,1
 product_configurator_config_line,Config Line,model_product_config_line,group_product_configurator,1,0,0,0
 product_configurator_config_image,Config Image,model_product_config_image,group_product_configurator,1,0,0,0
@@ -42,7 +44,6 @@ access_product_configurator_group,product_configurator,model_product_configurato
 access_product_configurator_sale,product_configurator_sale,model_product_configurator_sale,base.group_user,1,0,0,0
 access_product_configurator_sale_manager,product_configurator_sale,model_product_configurator_sale,podiatry.group_product_configurator_manager,1,1,1,1
 access_product_change_uom,access_product_change_uom,model_product_change_uom,base.group_user,1,1,1,1
-access_podiatry_practice,podiatry.practice,model_podiatry_practice,base.group_user,1,1,1,1
 access_podiatry_practitioner,podiatry.practitioner,model_podiatry_practitioner,base.group_user,1,1,1,1
 access_podiatry_patient,podiatry.patient,model_podiatry_patient,base.group_user,1,1,1,1
 access_podiatry_prescription,podiatry.prescription,model_podiatry_prescription,base.group_user,1,1,1,1

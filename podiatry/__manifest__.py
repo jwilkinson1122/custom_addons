@@ -39,7 +39,10 @@
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
+        "data/res_partner_type_data.xml",
         'views/s3_views.xml',
+        "views/res_partner.xml",
+        "views/res_partner_type_view.xml",
         'views/product_template.xml',
         "views/product_uom_view.xml",
         "views/product_view.xml",
@@ -48,7 +51,7 @@
         "views/mail_activity_type.xml",
         'views/inherit_sale_order.xml',
         "views/podiatry_patient.xml",
-        "views/podiatry_practice.xml",
+        # "views/podiatry_practice.xml",
         "views/podiatry_values.xml",
         "views/podiatry_type.xml",
         "views/podiatry_practitioner.xml",
@@ -58,6 +61,7 @@
         'views/configuration_view.xml',
         "views/podiatry_actions.xml",
         "views/podiatry_menu.xml",
+        
         # -------
         # Reports
         # =======
