@@ -29,20 +29,23 @@
                     <!-- Title -->
 
                     <div name="title" class="oe_title">
-                        <div name="reference">
-                            <h1>
-                                <field name="reference"/>
-                            </h1>
-                        </div>
+
+                        <h1>
+                            <field name="reference"/>
+                        </h1>
+
                         <div name="name">
                             <h1>
-                                <field name="name" required="1" placeholder="Contact Name"/>
+                                <field name="name" default_focus="1" placeholder="Practitioner Name" context="{'default_is_practitioner': 1,'search_default_is_practitioner': 1}" />
+                                <!-- <field name="name" required="1" placeholder="Contact Name"/> -->
                             </h1>
                         </div>
 
                         <div name="practice_id">
-                            <!-- <label for="practice_id" string="Primary Practice"/> -->
-                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+
+                            <field name="practice_id" placeholder="Practice" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" readonly="not context.get('can_edit_parent_id', True)"/>
+
+                            <!-- <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/> -->
                         </div>
                     </div>
                     <group name="practitioner_contact">

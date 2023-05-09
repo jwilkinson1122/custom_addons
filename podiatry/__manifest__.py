@@ -32,9 +32,9 @@
         "data/ir_sequence_data.xml",
         "data/ir_config_parameter_data.xml",
         "data/stage_data.xml",
-        # 'views/product.xml',
         'views/s3_views.xml',
         'views/product_template.xml',
+        "views/product_uom_view.xml",
         "views/product_view.xml",
         "views/product_attribute_view.xml",
         "views/product_config_view.xml",
@@ -54,7 +54,6 @@
         # "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
-        # 'views/inherit_product_template.xml',
         "views/podiatry_actions.xml",
         "views/podiatry_menu.xml",
         # -------

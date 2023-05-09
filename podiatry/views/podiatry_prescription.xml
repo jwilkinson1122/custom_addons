@@ -31,17 +31,12 @@
                 <header>
                     <field name="state" invisible="True" />
                     <field name="stage_id" widget="statusbar" options="{'clickable': True, 'fold_field': 'fold'}" />
-
-                    <!-- <button name="open_customer" class="btn btn-success" states="in_process" string="Create Order" type="object"></button> -->
-
+                    <button name="open_customer" class="btn btn-success" states="in_process" string="Create Order" type="object"></button>
                     <!-- <button name="print_prescription_report_ticket_size" class="btn btn-success" string="Print RX" type="object"></button>
                     <button name="print_podiatry_prescription_report_ticket_size" class="btn btn-success" string="Print WO" type="object"></button> -->
-
                     <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />
-                    <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" />
+                    <!-- <button name="%(action_create_prescription_invoice1)d" type="action" string="Create Invoice" class="oe_highlight" /> -->
                     <!-- <button name="%(action_create_prescription_shipment1)d" type="action" string="Create Shipment" class="oe_highlight" /> -->
-
-
                 </header>
                 <sheet>
                     <!-- <div class="oe_button_box" name="button_box">

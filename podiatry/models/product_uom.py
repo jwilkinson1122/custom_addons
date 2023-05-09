@@ -1,5 +1,41 @@
 from odoo import api, fields, models
 
+class ProductUom(models.Model):
+    _inherit = "uom.uom"
+
+    measure_type = fields.Selection(
+        string="Type of Measure",
+        related="category_id.measure_type",
+        store=True,
+        readonly=True,
+    )
+
+class ProductUomCategory(models.Model):
+    _inherit = "uom.category"
+
+    measure_type = fields.Selection(
+        string="Type of Measure",
+        selection=[
+            ("unit", "Units"),
+            ("weight", "Weight"),
+            ("working_time", "Working Time"),
+            ("length", "Length"),
+            ("height", "Height"),
+            ("surface", "Surface"),
+            ("volume", "Volume"),
+        ],
+        required=True,
+    )
+
+    _sql_constraints = [
+        (
+            "uom_category_unique_type",
+            "UNIQUE(measure_type)",
+            "You can have only one category per measurement type.",
+        ),
+    ]
+
+
 
 class ProductUoMWithHasCategoryLength(models.Model):
     """Add a boolean to isolate units of measure of category length."""

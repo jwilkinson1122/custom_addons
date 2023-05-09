@@ -17,13 +17,8 @@ except:
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
-    _inherit = ['mail.thread',
-                'mail.activity.mixin', 'image.mixin']
-
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
-
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+    _inherits = {'res.partner': 'partner_id'}
     _rec_name = 'practitioner_id'
 
     _description = 'practitioner'
@@ -36,8 +31,7 @@ class Practitioner(models.Model):
 
     is_practitioner = fields.Boolean()
 
-    practitioner_id = fields.Many2many('res.partner', domain=[(
-        'is_practitioner', '=', True)], string="practitioner_id", required=True)
+    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
 
     practice_id = fields.Many2one(
         comodel_name='podiatry.practice',
