@@ -54,7 +54,9 @@
                         </div>
                         <div name="name">
                             <h1 class="d-flex">
-                                <field name="name" required="1" placeholder="Contact Name"/>
+                                <!-- <field name="name" required="1" placeholder="Contact Name"/> -->
+                                <field name="name" required="1" default_focus="1" placeholder="Practice Name" context="{'default_is_practice': 1,'search_default_is_practice': 1}" />
+
                             </h1>
                         </div>
 
@@ -284,5 +286,14 @@
         </field>
     </record>
 
+
+    <!-- <record id="contacts.menu_contacts" model="ir.ui.menu">
+        <field name="name">All Contacts</field>
+    </record>
+
+    <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
+        <field name="name">Configuration</field>
+        <field name="sequence">6</field>
+    </record> -->
 
 </odoo>

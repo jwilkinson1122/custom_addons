@@ -92,9 +92,9 @@ class Practice(models.Model):
     practice_id = fields.Many2many('res.partner', domain=[(
         'is_company', '=', True)], string="Practice", required=True)
 
-    practice_type = fields.Selection([('hospital', 'Hospital'),
+    practice_type = fields.Selection([('clinic', 'Clinic'),
+                                      ('hospital', 'Hospital'),
                                       ('multi', 'Multi-Hospital'),
-                                      ('clinic', 'Clinic'),
                                       ('military', 'Military Medical Center'),
                                       ('other', 'Other')],
                                      string="Practice Type")

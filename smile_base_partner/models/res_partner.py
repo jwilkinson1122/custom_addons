@@ -29,10 +29,14 @@ class ResPartner(models.Model):
         related='partner_type_id.subcompanies_label', readonly=True)
     parent_relation_label = fields.Char(
         related='partner_type_id.parent_relation_label', readonly=True)
-    customer = fields.Boolean(string='Is a Customer', default=True,
+    customer = fields.Boolean(string='Is a Practice', default=True,
                               help="Check this box if this contact is a customer. It can be selected in sales orders.")
     supplier = fields.Boolean(string='Is a Vendor',
                               help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
+    
+    is_patient = fields.Boolean(string='Patient')
+    # is_person = fields.Boolean(string="Person")
+    is_practitioner = fields.Boolean(string="Doctor")
 
     @api.depends('partner_type_id')
     def _compute_parent_types(self):

@@ -61,7 +61,8 @@
                         </div>
                         <div name="name">
                             <h1>
-                                <field name="name" required="1" placeholder="Patient's Name"/>
+                                <field name="name" default_focus="1" required="1" placeholder="Patient Name" context="{'default_is_patient': 1,'search_default_is_patient': 1}" />
+                                <!-- <field name="name" required="1" placeholder="Patient's Name"/> -->
                             </h1>
                         </div>
                     </div>

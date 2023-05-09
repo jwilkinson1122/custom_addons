@@ -115,7 +115,7 @@ msgstr "Créé le"
 
 #. module: smile_base_partner
 #: model:res.partner.type,name:smile_base_partner.partner_type_customer
-msgid "Customer"
+msgid "Practice"
 msgstr "Client"
 
 #. module: smile_base_partner
@@ -140,7 +140,7 @@ msgstr "ID"
 
 #. module: smile_base_partner
 #: selection:res.partner.type,company_type:0
-msgid "Individual"
+msgid "Contact"
 msgstr "Particulier"
 
 #. module: smile_base_partner
@@ -151,7 +151,7 @@ msgstr "Adresse de facturation"
 
 #. module: smile_base_partner
 #: model:ir.model.fields,field_description:smile_base_partner.field_res_partner_type_customer
-msgid "Is a Customer"
+msgid "Is a Practice"
 msgstr "Est un Client"
 
 #. module: smile_base_partner

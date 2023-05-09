@@ -2,23 +2,37 @@
 <odoo>
     <data>
         <!-- Main Menu Root -->
-        <menuitem id="menu_main_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" />
+        <!-- <menuitem id="menu_main_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" /> -->
+
+
 
         <!-- Accounts Root -->
-        <menuitem id="menu_accounts_root" name="Accounts" parent="podiatry.menu_main_root" sequence="10"/>
-        <!-- Accounts Root - Clinics -->
-        <menuitem id="menu_clinics" name="Clinics" action="action_pod_clinics" parent="podiatry.menu_accounts_root" sequence="1" />
-        <!-- Accounts Root - Contacts -->
-        <menuitem id="menu_contacts" name="Contacts" action="action_pod_contacts" parent="podiatry.menu_accounts_root" sequence="2" />
-        <!-- Accounts Root - Patients -->
-        <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="podiatry.menu_accounts_root" sequence="3" />
+
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="name">All Contacts</field>
+        </record>
+
+        <menuitem id="menu_clinics" name="Clinics" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
+        <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" />
+        <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="contacts.menu_contacts" sequence="5" />
+
+        <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
+            <field name="name">Configuration</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <!-- <menuitem id="sale_menu_root" name="Sales" web_icon="sale_management,static/description/icon.png" active="False" sequence="30"/> -->
 
         <!-- Prescriptions Root -->
-        <menuitem id="menu_prescriptions_root" name="Prescriptions" action="action_pod_prescriptions" parent="podiatry.menu_main_root" sequence="15"/>
+        <menuitem id="menu_prescriptions_root" name="Prescriptions" action="action_pod_prescriptions" parent="sale.sale_menu_root" sequence="1"/>
 
+
+        <!-- <menuitem id="product_menu_catalog" name="Products" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/> -->
 
         <!-- Products Root -->
-        <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/>
+        <!-- <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/> -->
+
+        <menuitem id="menu_products_root" name="Custom" parent="sale.product_menu_catalog" sequence="100"/>
         <!-- Products Root - Preconfigured Devices -->
         <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>
         <menuitem id="menu_shell_foundation" name="Shell/Foundation" parent="podiatry.menu_products_root" action="pod_shell_foundation_action" sequence="2"/>
@@ -31,12 +45,15 @@
         <!-- <menuitem id="menu_service" name="Service" parent="podiatry.menu_products_root" action="pod_service_action" sequence="9"/>
         <menuitem id="menu_miscellaneous" name="Miscellaneous" parent="podiatry.menu_products_root" action="pod_miscellaneous_action" sequence="10"/> -->
 
+
+        <!-- <menuitem id="menu_tag_config" name="Tags" parent="sale.menu_sales_config" action="sales_team.sales_team_crm_tag_action" sequence="2"/> -->
+
         <!-- Configuration Root -->
-        <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_main_root" sequence="30" />
+        <!-- <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_main_root" sequence="30" /> -->
         <!-- Configuration Sub Menu - Settings  -->
-        <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/>
+        <!-- <menuitem id="menu_config_settings" name="Settings" parent="podiatry.menu_configuration_root" action="action_res_config_settings_inherit_podiatry" sequence="1"/> -->
         <!-- Configuration Sub Menu - Stages  -->
-        <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
+        <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="sale.menu_sales_config" sequence="10"/>
 
         <!-- Configuration Sub Menu - Product Categories  -->
         <!-- <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>
@@ -65,14 +82,17 @@
         <menuitem id="products_extension_thickness" name="Thickness" parent="podiatry.products_extensions" action="extension_thickness_action" sequence="4"/>
          -->
         <!-- Settings Sub Menu - Measures  -->
-        <menuitem id="menu_podiatry_prescription_values" name="Measures" parent="podiatry.menu_configuration_root" sequence="200"/>
+        <menuitem id="menu_podiatry_prescription_values" name="Measures" parent="sale.menu_sales_config" sequence="200"/>
         <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_prescription_values" action="forefoot_values_action" sequence="1"/>
         <menuitem id="menu_podiatry_forefoot_corrections" name="Forefoot Corrections" parent="podiatry.menu_podiatry_prescription_values" action="forefoot_corrections_action" sequence="2"/>
         <menuitem id="menu_podiatry_rearfoot_corrections" name="Rearfoot Corrections" parent="podiatry.menu_podiatry_prescription_values" action="rearfoot_corrections_action" sequence="3"/>
         <menuitem id="menu_podiatry_orthotic_measures" name="Orthotic Measures" parent="podiatry.menu_podiatry_prescription_values" action="orthotic_measures_action" sequence="4"/>
 
         <!-- Product Configurator - Main Menu -->
-        <menuitem id="menu_configurator_root" name="Configurator" web_icon="podiatry,static/description/configurator.png" groups="podiatry.group_product_configurator_manager" sequence="55"/>
+        <!-- <menuitem id="menu_products_root" name="Custom" parent="sale.product_menu_catalog" sequence="100"/> -->
+        <menuitem id="menu_configurator_root" name="Configurator" parent="sale.product_menu_catalog" sequence="200"/>
+
+        <!-- <menuitem id="menu_configurator_root" name="Configurator" web_icon="podiatry,static/description/configurator.png" groups="podiatry.group_product_configurator_manager" sequence="55"/> -->
         <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="podiatry.menu_configurator_root" sequence="100" />
         <menuitem id="menu_product_configurable_template_action" action="product_configurable_template_action" parent="podiatry.menu_product_configurable_product_main" sequence="1" />
         <menuitem id="menu_product_configurable_variants_action" action="product_configurable_variant_action" parent="podiatry.menu_product_configurable_product_main" sequence="2" />

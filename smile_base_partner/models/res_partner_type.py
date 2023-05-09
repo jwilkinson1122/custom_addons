@@ -27,19 +27,19 @@ class ResPartnerType(models.Model):
         column1="child_type_id", column2="parent_type_id")
     parent_relation_label = fields.Char(
         'Parent relation label', translate=True, required=True,
-        default='attached to')
+        default='Attached To:')
     subcompanies_label = fields.Char(
         'Sub-companies label', translate=True, required=True,
         default='Sub-companies')
 
     # Inherited fields for partners of this type
     company_type = fields.Selection([
-        ('person', 'Individual'),
-        ('company', 'Company'),
+        ('person', 'Contact'),
+        ('company', 'Practice'),
     ], 'Company Type', required=True, default='company')
     customer = fields.Boolean(
-        string='Is a Customer', default=True,
-        help="Check this box if this contact is a customer.")
+        string='Is a Pratice', default=True,
+        help="Check this box if this contact is a practice.")
     supplier = fields.Boolean(
         string='Is a Vendor',
         help="Check this box if this contact is a vendor. "

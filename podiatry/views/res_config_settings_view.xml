@@ -57,22 +57,6 @@
                     </div>
 
                 </div>
-                <div class="app_settings_block" data-string="Product Configurator" string="Product Configurator" data-key="product_configurator">
-                    <!-- <h2>Product Configurator</h2> -->
-                    <!-- <div class="row mt16 o_settings_container" name="products_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" id="product_configurator_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_podiatry_product_configurator"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_podiatry_product_configurator" string="Product Configurator"/>
-                                <div class="text-muted">
-                                        Manage and Configure Products
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
             </xpath>
         </field>
     </record>
