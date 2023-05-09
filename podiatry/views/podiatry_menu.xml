@@ -9,7 +9,12 @@
         <!-- Accounts Root -->
 
         <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="name">Contacts</field>
+        </record>
+
+        <record id="contacts.res_partner_menu_contacts" model="ir.ui.menu">
             <field name="name">All Contacts</field>
+            <field name="sequence">2</field>
         </record>
 
         <menuitem id="menu_clinics" name="Clinics" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />

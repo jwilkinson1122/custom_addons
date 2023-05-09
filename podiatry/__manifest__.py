@@ -54,7 +54,7 @@
         # "views/podiatry_practice.xml",
         "views/podiatry_values.xml",
         "views/podiatry_type.xml",
-        "views/podiatry_practitioner.xml",
+        # "views/podiatry_practitioner.xml",
         "views/podiatry_prescription.xml",
         # "views/podiatry_prescription_line.xml",
         "views/prescription_kanban_view.xml",
