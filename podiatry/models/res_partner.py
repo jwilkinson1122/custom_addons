@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
+import numbers
 import base64
 import json
 from lxml import etree
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import _, api, exceptions, fields, models
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
+from odoo.osv.expression import FALSE_LEAF, OR, is_leaf
 
 import logging
 
@@ -17,6 +19,19 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     parent_id = fields.Many2one(ondelete='restrict')
+     # force "active_test" domain to bypass _search() override
+    child_ids = fields.One2many(
+        domain=[("active", "=", True), ("is_company", "=", False)]
+    )
+
+    # force "active_test" domain to bypass _search() override
+    affiliate_ids = fields.One2many(
+        "res.partner",
+        "parent_id",
+        string="Affiliates",
+        domain=[("active", "=", True), ("is_company", "=", True)],
+    )
+    
     type = fields.Selection(default=False)
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
@@ -171,15 +186,6 @@ class ResPartner(models.Model):
         new_partner._update_children(vals)
         return new_partner
     
-    
-    # @api.model
-    # def create(self, vals):
-    #     vals['application_no1'] = self.env['ir.sequence'].next_by_code('education_application1') or _('New')
-    #     vals['application_no2'] = self.env['ir.sequence'].next_by_code('education_application2') or _('New')
-    #     res = super(StudentApplication, self).create(vals)
-    #     return res
-    
- 
     def write(self, vals):
         partners_by_type = {}
         if vals.get('partner_type_id'):
@@ -259,14 +265,7 @@ class ResPartner(models.Model):
         self._format_args(args)
         return super(ResPartner, self)._search(
             args, offset, limit, order, count, access_rights_uid)
-        
-    # def name_get(self):
-    #     result = []
-    #     for rec in self:
-    #         name = '[' + rec.reference + '] ' + rec.name
-    #         result.append((rec.id, name))
-    #     return result
-
+    
     def _get_display_name_context(self):
         self.ensure_one()
         partner = self.with_context(
@@ -314,8 +313,7 @@ class ResPartner(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
-            
-            
+                 
 class ResPartnerType(models.Model):
     _name = 'res.partner.type'
     _description = 'Contact Type'
@@ -347,14 +345,17 @@ class ResPartnerType(models.Model):
         ('person', 'Contact'),
         ('company', 'Practice'),
     ], 'Company Type', required=True, default='company')
+    
     customer = fields.Boolean(
         string='Is a Pratice', default=True,
         help="Check this box if this contact is a practice.")
+    
     supplier = fields.Boolean(
         string='Is a Vendor',
         help="Check this box if this contact is a vendor. "
         "If it's not checked, purchase people will not see it "
         "when encoding a purchase order.")
+    
     type = fields.Selection(
         [
             ('contact', 'Contact'),
@@ -399,3 +400,177 @@ class PartnerCategory(models.Model):
             (category.id, "{} ({})".format(category.name, str(category.partner_count)))
             for category in self
         ]
+
+class ResPartnerExtend(models.Model):
+    """Extend partner with relations and allow to search for relations
+    in various ways.
+    """
+
+    # pylint: disable=invalid-name
+    # pylint: disable=no-member
+    _inherit = "res.partner"
+
+    relation_count = fields.Integer( string="Relation Count", compute="_compute_relation_count"
+    )
+    relation_all_ids = fields.One2many( comodel_name="res.partner.relation.all", inverse_name="this_partner_id", string="All relations with current partner", auto_join=True, search=False, copy=False,
+    )
+    search_relation_type_id = fields.Many2one( comodel_name="res.partner.relation.type.selection", compute=lambda self: self.update({"search_relation_type_id": None}), search="_search_relation_type_id", string="Has relation of type",
+    )
+    search_relation_partner_id = fields.Many2one( comodel_name="res.partner", compute=lambda self: self.update({"search_relation_partner_id": None}), search="_search_related_partner_id", string="Has relation with",
+    )
+    search_relation_date = fields.Date( compute=lambda self: self.update({"search_relation_date": None}), search="_search_relation_date", string="Relation valid",
+    )
+    search_relation_partner_category_id = fields.Many2one( comodel_name="res.partner.category", compute=lambda self: self.update({"search_relation_partner_category_id": None}), search="_search_related_partner_category_id", string="Has relation with a partner in category",
+    )
+
+    @api.depends("relation_all_ids")
+    def _compute_relation_count(self):
+        """Count the number of relations this partner has for Smart Button
+
+        Don't count inactive relations.
+        """
+        for rec in self:
+            rec.relation_count = len(rec.relation_all_ids.filtered("active"))
+
+    @api.model
+    def _search_relation_type_id(self, operator, value):
+        """Search partners based on their type of relations."""
+        result = []
+        SUPPORTED_OPERATORS = (
+            "=",
+            "!=",
+            "like",
+            "not like",
+            "ilike",
+            "not ilike",
+            "in",
+            "not in",
+        )
+        if operator not in SUPPORTED_OPERATORS:
+            raise exceptions.ValidationError(
+                _('Unsupported search operator "%s"') % operator
+            )
+        type_selection_model = self.env["res.partner.relation.type.selection"]
+        relation_type_selection = []
+        if operator == "=" and isinstance(value, numbers.Integral):
+            relation_type_selection += type_selection_model.browse(value)
+        elif operator == "!=" and isinstance(value, numbers.Integral):
+            relation_type_selection = type_selection_model.search(
+                [("id", operator, value)]
+            )
+        else:
+            relation_type_selection = type_selection_model.search(
+                [
+                    "|",
+                    ("type_id.name", operator, value),
+                    ("type_id.name_inverse", operator, value),
+                ]
+            )
+        if not relation_type_selection:
+            result = [FALSE_LEAF]
+        for relation_type in relation_type_selection:
+            result = OR(
+                [
+                    result,
+                    [("relation_all_ids.type_selection_id.id", "=", relation_type.id)],
+                ]
+            )
+        return result
+
+    @api.model
+    def _search_related_partner_id(self, operator, value):
+        """Find partner based on relation with other partner."""
+        # pylint: disable=no-self-use
+        return [("relation_all_ids.other_partner_id", operator, value)]
+
+    @api.model
+    def _search_relation_date(self, operator, value):
+        """Look only for relations valid at date of search."""
+        # pylint: disable=no-self-use
+        return [
+            "&",
+            "|",
+            ("relation_all_ids.date_start", "=", False),
+            ("relation_all_ids.date_start", "<=", value),
+            "|",
+            ("relation_all_ids.date_end", "=", False),
+            ("relation_all_ids.date_end", ">=", value),
+        ]
+
+    @api.model
+    def _search_related_partner_category_id(self, operator, value):
+        """Search for partner related to a partner with search category."""
+        # pylint: disable=no-self-use
+        return [("relation_all_ids.other_partner_id.category_id", operator, value)]
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        """Inject searching for current relation date if we search for
+        relation properties and no explicit date was given.
+        """
+        # pylint: disable=arguments-differ
+        # pylint: disable=no-value-for-parameter
+        date_args = []
+        for arg in args:
+            if (
+                is_leaf(arg)
+                and isinstance(arg[0], str)
+                and arg[0].startswith("search_relation")
+            ):
+                if arg[0] == "search_relation_date":
+                    date_args = []
+                    break
+                if not date_args:
+                    date_args = [("search_relation_date", "=", fields.Date.today())]
+        # because of auto_join, we have to do the active test by hand
+        active_args = []
+        if self.env.context.get("active_test", True):
+            for arg in args:
+                if (
+                    is_leaf(arg)
+                    and isinstance(arg[0], str)
+                    and arg[0].startswith("search_relation")
+                ):
+                    active_args = [("relation_all_ids.active", "=", True)]
+                    break
+        return super(ResPartner, self).search(
+            args + date_args + active_args, offset=offset, limit=limit, order=order, count=count,
+        )
+
+    def get_partner_type(self):
+        """Get partner type for relation.
+        :return: 'c' for company or 'p' for person
+        :rtype: str
+        """
+        self.ensure_one()
+        return "c" if self.is_company else "p"
+
+    def action_view_relations(self):
+        for contact in self:
+            relation_model = self.env["res.partner.relation.all"]
+            relation_ids = relation_model.search(
+                [
+                    "|",
+                    ("this_partner_id", "=", contact.id),
+                    ("other_partner_id", "=", contact.id),
+                ]
+            )
+            action = self.env["ir.actions.act_window"]._for_xml_id(
+                "podiatry.action_res_partner_relation_all"
+            )
+            action["domain"] = [("id", "in", relation_ids.ids)]
+            context = action.get("context", "{}").strip()[1:-1]
+            elements = context.split(",") if context else []
+            to_add = [
+                """'search_default_this_partner_id': {0},
+                        'default_this_partner_id': {0},
+                        'active_model': 'res.partner',
+                        'active_id': {0},
+                        'active_ids': [{0}],
+                        'active_test': False""".format(
+                    contact.id
+                )
+            ]
+            context = "{" + ", ".join(elements + to_add) + "}"
+            action["context"] = context
+            return action

@@ -18,13 +18,13 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
             <field name="comment">The manager will be able to access the patients configuration and statistical reports.</field>
         </record>
-        
+
         <!--Dummy Group-->
         <record id="make_invisible" model="res.groups">
-            <field name="name">Invisible</field>
+            <field name="name">All Contacts</field>
         </record>
 
-        
+
 
     </data>
 </odoo>

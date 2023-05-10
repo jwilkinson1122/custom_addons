@@ -1,42 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Main Menu Root -->
-        <!-- <menuitem id="menu_main_root" name="POD ERP" sequence="50" web_icon="podiatry,static/description/icon.png" /> -->
-
-
-
-        <!-- Accounts Root -->
-
         <record id="make_invisible" model="res.groups">
-            <field name="name">Invisible</field>
+            <field name="name">All Contacts</field>
         </record>
-
 
         <record id="contacts.menu_contacts" model="ir.ui.menu">
             <field name="name">Contacts</field>
         </record>
 
-        <!-- <record id="contacts.res_partner_menu_contacts" model="ir.ui.menu">
-            <field name="name">All Contacts</field>
-            <field name="sequence">2</field>
-        </record> -->
-
-        <!-- <record model="ir.ui.menu" id="module.menu_name">
-            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
-        </record> -->
-
         <record model="ir.ui.menu" id="contacts.res_partner_menu_contacts">
             <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
         </record>
 
-
-        <!-- <menuitem id="menu_contacts_root" name="Custom" parent="contacts.menu_contacts" sequence="1"/> -->
-
         <menuitem id="menu_account_groups" name="Accounts" action="action_partner_categories" parent="contacts.menu_contacts" sequence="2" />
         <menuitem id="menu_account_clinics" name="Clinics" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
         <menuitem id="menu_account_contacts" name="Contacts" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" />
-        <!-- <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" /> -->
+
         <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="contacts.menu_contacts" sequence="5" />
 
         <menuitem id="menu_partner_types" parent="contacts.res_partner_menu_config" sequence="2" action="action_partner_types"/>
@@ -47,17 +27,20 @@
             <field name="sequence">6</field>
         </record>
 
+        <menuitem id="menu_res_partner_relation" name="Relations" sequence="5" parent="contacts.res_partner_menu_config" />
+        <menuitem id="menu_res_partner_relation_all" sequence="5" parent="menu_res_partner_relation" action="action_res_partner_relation_all" />
+        <record id="action_res_partner_relation_type" model="ir.actions.act_window">
+            <field name="name">Partner Relations Types</field>
+            <field name="res_model">res.partner.relation.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_res_partner_relation_type" name="Relation Types" parent="menu_res_partner_relation" action="action_res_partner_relation_type" />
+
+
         <!-- <menuitem id="sale_menu_root" name="Sales" web_icon="sale_management,static/description/icon.png" active="False" sequence="30"/> -->
-
-        <!-- Prescriptions Root -->
         <menuitem id="menu_prescriptions_root" name="Prescriptions" action="action_pod_prescriptions" parent="sale.sale_menu_root" sequence="1"/>
-
-
         <!-- <menuitem id="product_menu_catalog" name="Products" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/> -->
-
-        <!-- Products Root -->
         <!-- <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/> -->
-
         <menuitem id="menu_products_root" name="Custom" parent="sale.product_menu_catalog" sequence="100"/>
         <!-- Products Root - Preconfigured Devices -->
         <menuitem id="menu_preconfigured_devices" name="Preconfigured Devices" parent="podiatry.menu_products_root" sequence="1"/>

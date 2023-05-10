@@ -24,5 +24,9 @@ from . import podiatry_prescription
 from . import podiatry_prescription_line
 from . import podiatry_prescription_stage
 from . import podiatry_contact_mixin
+from . import res_partner_relation_type
+from . import res_partner_relation_type_selection
+from . import res_partner_relation
+from . import res_partner_relation_all
 from . import res_partner
 from . import res_config_settings
