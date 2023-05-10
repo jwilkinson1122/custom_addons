@@ -9,6 +9,7 @@
 
 from . import (
     test_sftp,
+    test_res_partner_category,
     test_partner_contact_in_several_companies,
     test_product_configurator_test_cases,
     test_product,

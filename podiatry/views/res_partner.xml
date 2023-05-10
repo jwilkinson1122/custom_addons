@@ -17,6 +17,17 @@
         </field>
     </record> -->
 
+    <record id="view_partner_simple_form" model="ir.ui.view">
+        <field name="name">res.partner.simple.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_simple_form" />
+        <field name="arch" type="xml">
+            <field name="function" position="after">
+                <field name="fax" placeholder="Fax..." />
+            </field>
+        </field>
+    </record>
+
     <record id="view_partner_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -62,6 +73,12 @@
             </xpath>
             <xpath expr="//field[@name='child_ids']/form//field[@name='type']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="function" position="after">
+                <field name="fax" placeholder="Fax..." widget="phone" />
+            </field>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='mobile']" position="after">
+                <field name="fax" placeholder="Fax..." widget="phone" />
             </xpath>
         </field>
     </record>
@@ -128,7 +145,7 @@
         </field>
     </record>
 
-        <!--Action: Contacts-->
+    <!--Action: Contacts-->
     <record id="action_pod_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>

@@ -44,6 +44,7 @@
         'views/s3_views.xml',
         "views/res_partner.xml",
         "views/res_partner_type_view.xml",
+        "views/res_partner_category.xml",
         'views/product_template.xml',
         "views/product_uom_view.xml",
         "views/product_view.xml",
@@ -84,12 +85,8 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "/podiatry/static/src/js/pdf_viewer.js",
-            # "/podiatry/static/src/less/pdf_viewer.less",
-            "/podiatry/static/scss/form_widget.scss",
-            "/podiatry/static/js/form_widgets.js",
-            "/podiatry/static/js/data_manager.js",
-            "/podiatry/static/js/relational_fields.js",
+            "podiatry/static/scss/form_widget.scss",
+            "podiatry/static/src/js/*.js",
         ],
         "point_of_sale.assets": [
             "podiatry/static/src/css/style.css",

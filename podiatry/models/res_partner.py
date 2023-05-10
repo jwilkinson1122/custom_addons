@@ -41,7 +41,6 @@ class ResPartner(models.Model):
     is_practice = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
     is_patient = fields.Boolean(string='Patient')
-    notes = fields.Text(string="Notes")
     practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
     practice_ids = fields.Many2many(comodel_name='res.partner', relation='practice_partners_rel', column1='practice_id', column2='partner_id', string="Practices")
     # practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
@@ -52,6 +51,8 @@ class ResPartner(models.Model):
     # prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='practice_id', string="Prescriptions")
     prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='partner_id', string='Prescriptions')
     reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    notes = fields.Text(string="Notes")
+    fax = fields.Char()
     practice_type = fields.Selection([('clinic', 'Clinic'),
                                       ('hospital', 'Hospital'),
                                       ('multi', 'Multi-Hospital'),
@@ -313,3 +314,88 @@ class ResPartner(models.Model):
             'view_mode': 'kanban,tree,form',
             'target': 'current',
         }
+            
+            
+class ResPartnerType(models.Model):
+    _name = 'res.partner.type'
+    _description = 'Contact Type'
+    _company_inherit_fields = ['company_type', 'customer', 'supplier']
+    _person_inherit_fields = ['company_type', 'type']
+
+    id = fields.Integer(readonly=True)
+    name = fields.Char(required=True, translate=True)
+    code = fields.Char(required=True)  # Readonly if id
+    sequence = fields.Integer('Priority', default=10)
+    active = fields.Boolean(default=True)
+
+    # Partners hierarchy
+    can_have_parent = fields.Boolean(default=True)
+    parent_is_required = fields.Boolean(default=False)
+    parent_type_ids = fields.Many2many(
+        'res.partner.type', string='Company types authorized for parent',
+        relation="res_partner_type_parent_types_rel",
+        column1="child_type_id", column2="parent_type_id")
+    parent_relation_label = fields.Char(
+        'Parent relation label', translate=True, required=True,
+        default='Attached To:')
+    subcompanies_label = fields.Char(
+        'Sub-companies label', translate=True, required=True,
+        default='Sub-companies')
+
+    # Inherited fields for partners of this type
+    company_type = fields.Selection([
+        ('person', 'Contact'),
+        ('company', 'Practice'),
+    ], 'Company Type', required=True, default='company')
+    customer = fields.Boolean(
+        string='Is a Pratice', default=True,
+        help="Check this box if this contact is a practice.")
+    supplier = fields.Boolean(
+        string='Is a Vendor',
+        help="Check this box if this contact is a vendor. "
+        "If it's not checked, purchase people will not see it "
+        "when encoding a purchase order.")
+    type = fields.Selection(
+        [
+            ('contact', 'Contact'),
+            ('invoice', 'Invoice address'),
+            ('delivery', 'Shipping address'),
+            ('other', 'Other address'),
+        ], 'Address Type', default='contact',
+        help="Used to select automatically the right address "
+        "according to the context in sales and purchases documents.")
+
+    # Inherited fields for the children with a parent of this type
+    field_ids = fields.Many2many(
+        'ir.model.fields', domain=[
+            ('model', '=', 'res.partner'),
+            ('store', '=', True),
+            ('ttype', '!=', 'one2many'),
+        ], string="Fields to update in children")
+
+    partner_display_name = fields.Char(
+        default='partner.name_get()[0][1]',
+        help="The variable 'partner' represents the partner "
+        "for which we compute the display name")
+
+class PartnerCategory(models.Model):
+    _inherit = "res.partner.category"
+
+    partner_count = fields.Integer(
+        string="Partners", compute="_compute_partner_count", store=False
+    )
+
+    @api.depends("partner_ids", "partner_ids.category_id")
+    def _compute_partner_count(self):
+        """Count Partners in category"""
+        for rec in self:
+            rec.partner_count = len(rec.partner_ids)
+
+    def name_get(self):
+        """Show Partner Count if required"""
+        if not self._context.get("partner_count_display", False):
+            return super(PartnerCategory, self).name_get()
+        return [
+            (category.id, "{} ({})".format(category.name, str(category.partner_count)))
+            for category in self
+        ]
