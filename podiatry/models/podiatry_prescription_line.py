@@ -71,7 +71,9 @@ class PrescriptionLine(models.Model):
     name = fields.Text(string='Description')
     prescription_id = fields.Many2one("podiatry.prescription", "Prescription Number", ondelete="cascade")
     # prescription_line_id = fields.Many2one("podiatry.prescription.line","Prescription Line", required=True, delegate=True, ondelete="cascade")
-    practitioner_id = fields.Many2one("podiatry.practitioner")
+    # practitioner_id = fields.Many2one("podiatry.practitioner")
+    practitioner_id = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner")
+
     practitioner = fields.Char(
         related='prescription_id.practitioner_id.name')
     patient_id = fields.Many2one("podiatry.patient")

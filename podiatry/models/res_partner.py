@@ -45,9 +45,12 @@ class ResPartner(models.Model):
     practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
     practice_ids = fields.Many2many(comodel_name='res.partner', relation='practice_partners_rel', column1='practice_id', column2='partner_id', string="Practices")
     # practice_id = fields.Many2one('res.partner', domain=[('is_company', '=', True), ('is_practice', '=', True)], string="Practice", required=True)
+    practitioner_id = fields.Many2one('res.partner', domain=[('is_company', '=', False), ('is_practitioner', '=', True)], string="Practitioner", required=True)
+    practitioner_ids = fields.Many2many(comodel_name='res.partner', relation='practitioner_partners_rel', column1='practitioner_id', column2='partner_id', string="Practitioners")
     patient_ids = fields.One2many(comodel_name='podiatry.patient', inverse_name='practice_id', string="Patients")
-    practitioner_ids = fields.One2many(comodel_name='podiatry.practitioner', inverse_name='practice_id', string="Practice Contacts")
-    prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='practice_id', string="Prescriptions")
+    # practitioner_ids = fields.One2many(comodel_name='podiatry.practitioner', inverse_name='practice_id', string="Practice Contacts")
+    # prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='practice_id', string="Prescriptions")
+    prescription_ids = fields.One2many(comodel_name='podiatry.prescription', inverse_name='partner_id', string='Prescriptions')
     reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     practice_type = fields.Selection([('clinic', 'Clinic'),
                                       ('hospital', 'Hospital'),
@@ -56,25 +59,25 @@ class ResPartner(models.Model):
                                       ('other', 'Other')],
                                      string="Practice Type")
     
-    same_reference_practice_id = fields.Many2one(
+    same_reference_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Practice with same Identity',
-        compute='_compute_same_reference_practice_id',
+        compute='same_reference_partner_id',
     )
     
     @api.depends('reference')
-    def _compute_same_reference_practice_id(self):
-        for practice in self:
+    def same_reference_partner_id(self):
+        for partner in self:
             domain = [
-                ('reference', '=', practice.reference),
+                ('reference', '=', partner.reference),
             ]
 
-            origin_id = practice._origin.id
+            origin_id = partner._origin.id
 
             if origin_id:
                 domain += [('id', '!=', origin_id)]
 
-            practice.same_reference_practice_id = bool(practice.reference) and \
+            partner.same_reference_partner_id = bool(partner.reference) and \
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
     
@@ -91,7 +94,6 @@ class ResPartner(models.Model):
 
     full_name = fields.Char(string="Full Name", compute='_compute_full_name', store=True)
 
-    
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
         for practice in self:
@@ -163,17 +165,20 @@ class ResPartner(models.Model):
         vals.update(self._get_inherit_values(partner_type))
         if vals.get('reference', _('New')) == _('New'):
             vals['reference'] = self.env['ir.sequence'].next_by_code('podiatry.practice') or _('New')
+            vals['reference'] = self.env['ir.sequence'].next_by_code('podiatry.practitioner') or _('New')
         new_partner = super(ResPartner, self).create(vals)
         new_partner._update_children(vals)
         return new_partner
     
+    
     # @api.model
     # def create(self, vals):
-    #     if vals.get('reference', _('New')) == _('New'):
-    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
-    #             'podiatry.practice') or _('New')
-    #     practice = super(Practice, self).create(vals)
-    #     return practice
+    #     vals['application_no1'] = self.env['ir.sequence'].next_by_code('education_application1') or _('New')
+    #     vals['application_no2'] = self.env['ir.sequence'].next_by_code('education_application2') or _('New')
+    #     res = super(StudentApplication, self).create(vals)
+    #     return res
+    
+ 
     def write(self, vals):
         partners_by_type = {}
         if vals.get('partner_type_id'):
@@ -302,7 +307,7 @@ class ResPartner(models.Model):
             return {
             'type': 'ir.actions.act_window',
             'name': 'Practitioners',
-            'res_model': 'podiatry.practitioner',
+            'res_model': 'res.partner',
             'domain': [('practice_id', '=', self.id)],
             'context': {'default_practice_id': self.id},
             'view_mode': 'kanban,tree,form',

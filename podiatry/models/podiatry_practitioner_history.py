@@ -12,9 +12,12 @@ class PractitionerHistory(models.Model):
     date = fields.Date()
 
     # (practitioner)
-    practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        string='Practitioner')
+    # practitioner_id = fields.Many2one(
+    #     comodel_name='podiatry.practitioner',
+    #     string='Practitioner')
+    
+    practitioner_id = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner")
+
 
     # patient
     patient_id = fields.Many2one(

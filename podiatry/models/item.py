@@ -30,7 +30,9 @@ class Item(models.Model):
         'podiatry.item.category', string='Category')
 
     # Practitioner
-    practitioner = fields.Many2one('podiatry.practitioner')
+    # practitioner = fields.Many2one('podiatry.practitioner')
+    practitioner = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner")
+
 
     @api.depends('name', 'internal_reference')
     def _compute_fields_rec_name(self):

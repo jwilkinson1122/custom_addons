@@ -8,25 +8,16 @@ class Patient(models.Model):
     _name = 'podiatry.patient'
     _description = "Patient"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
+    _inherits = {'res.partner': 'partner_id'}
     
     patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient")
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    # name = fields.Char(string="Patient Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
-
     code = fields.Char(string="Code", copy=False)
-
     identification = fields.Char(string="Identification", index=True)
-
-    reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
-
+    reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     birthdate = fields.Datetime(string="Birthdate")
-
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -87,16 +78,9 @@ class Patient(models.Model):
         default=lambda self: self.env.user,
     )
 
-    practice_id = fields.Many2one(
-        comodel_name='res.partner',
-        required=True,
-        string="Practice",
-    )
+    practice_id = fields.Many2one(comodel_name='res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
 
-    practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        required=True,
-        string='Practitioner')
+    practitioner_id = fields.Many2one(comodel_name='res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner", required=True)
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')

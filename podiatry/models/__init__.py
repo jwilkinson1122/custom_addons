@@ -20,7 +20,6 @@ from . import x_guard_elements
 from . import podiatry_values
 from . import podiatry_type
 from . import podiatry_patient
-from . import podiatry_practitioner
 from . import podiatry_prescription
 from . import podiatry_prescription_line
 from . import podiatry_prescription_stage
