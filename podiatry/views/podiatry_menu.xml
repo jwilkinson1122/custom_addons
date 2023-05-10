@@ -8,17 +8,30 @@
 
         <!-- Accounts Root -->
 
+        <record id="make_invisible" model="res.groups">
+            <field name="name">Invisible</field>
+        </record>
+
+
         <record id="contacts.menu_contacts" model="ir.ui.menu">
             <field name="name">Contacts</field>
         </record>
 
-        <record id="contacts.res_partner_menu_contacts" model="ir.ui.menu">
+        <!-- <record id="contacts.res_partner_menu_contacts" model="ir.ui.menu">
             <field name="name">All Contacts</field>
             <field name="sequence">2</field>
-        </record>
+        </record> -->
 
-        <menuitem id="menu_clinics" name="Clinics" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
-        <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" />
+          <!-- <record model="ir.ui.menu" id="module.menu_name">
+            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+        </record> -->
+
+        <record model="ir.ui.menu" id="contacts.res_partner_menu_contacts">
+            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+        </record>
+        
+        <menuitem id="menu_clinics" name="Contacts" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
+        <!-- <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" /> -->
         <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="contacts.menu_contacts" sequence="5" />
 
         <menuitem id="menu_partner_types" parent="contacts.res_partner_menu_config" sequence="2" action="action_partner_types"/>

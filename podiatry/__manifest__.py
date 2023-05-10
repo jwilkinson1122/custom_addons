@@ -9,6 +9,7 @@
     "depends": [
         "account",
         "account_accountant",
+        "l10n_us",
         "base",
         "base_setup",
         "contacts",

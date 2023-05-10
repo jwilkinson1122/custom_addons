@@ -111,7 +111,7 @@
 
     <!--Action: Practices-->
     <record id="action_pod_clinics" model="ir.actions.act_window">
-        <field name="name">Clinics</field>
+        <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_practice', '=', True)]</field>
@@ -124,6 +124,25 @@
             </p>
             <p>
                 Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
+        <!--Action: Contacts-->
+    <record id="action_pod_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_practitioner', '=', True)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="view_res_partner_search"/>
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_practitioner': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practitioner
+            </p>
+            <p>
+                Organize and manage practitioners at a glance.
             </p>
         </field>
     </record>
