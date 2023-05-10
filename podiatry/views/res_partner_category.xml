@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-    <!--####################
-        # Partner Category #
-        ####################-->
-    <!--## Tree ##-->
-    <!-- TODO fix the view, does not work out the display, gives a Critical Error  -->
     <record id="partner_category_tree" model="ir.ui.view">
         <field name="name">res.partner.category.tree</field>
         <field name="model">res.partner.category</field>

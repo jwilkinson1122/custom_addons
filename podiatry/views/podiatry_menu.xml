@@ -34,7 +34,8 @@
         <!-- <menuitem id="menu_contacts_root" name="Custom" parent="contacts.menu_contacts" sequence="1"/> -->
 
         <menuitem id="menu_account_groups" name="Accounts" action="action_partner_categories" parent="contacts.menu_contacts" sequence="2" />
-        <menuitem id="menu_contacts" name="Contacts" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
+        <menuitem id="menu_account_clinics" name="Clinics" action="action_pod_clinics" parent="contacts.menu_contacts" sequence="3" />
+        <menuitem id="menu_account_contacts" name="Contacts" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" />
         <!-- <menuitem id="menu_contacts" name="Practitioners" action="action_pod_contacts" parent="contacts.menu_contacts" sequence="4" /> -->
         <menuitem id="menu_patients" name="Patients" action="action_pod_patients" parent="contacts.menu_contacts" sequence="5" />
 

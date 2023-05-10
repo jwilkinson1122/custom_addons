@@ -32,6 +32,7 @@
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
+        <!-- <field name="mode">primary</field> -->
         <field name="arch" type="xml">
             <field name="parent_id" position="after">
                 <field name="can_have_parent" invisible="1"/>
@@ -96,6 +97,7 @@
             </field>
         </field>
     </record>
+
     <record id="view_res_partner_filter" model="ir.ui.view">
         <field name="name">res.partner.select</field>
         <field name="model">res.partner</field>
@@ -128,13 +130,13 @@
 
     <!--Action: Practices-->
     <record id="action_pod_clinics" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
+        <field name="name">Clinics</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_practice', '=', True)]</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_res_partner_search"/>
-        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+        <field name="context">{'res_partner_search_mode': 'customer', 'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new practice
@@ -146,7 +148,7 @@
     </record>
 
     <!--Action: Contacts-->
-    <record id="action_pod_contacts" model="ir.actions.act_window">
+    <!-- <record id="action_pod_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -160,6 +162,43 @@
             </p>
             <p>
                 Organize and manage practitioners at a glance.
+            </p>
+        </field>
+    </record> -->
+
+    <record id="view_partner_contact_form" model="ir.ui.view">
+        <field name="name">res.partner.contact.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <!--             
+            <field name="company_type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field> -->
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_pod_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="context">{'res_partner_search_mode': 'person', 'default_company_type':'person', 'default_is_company':False, 'default_is_practitioner': True}</field>
+        <field name="search_view_id" ref="view_res_partner_search"/>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+          (0, 0, {'view_mode': 'kanban', 'view_id': ref('base.res_partner_kanban_view')}),
+          (0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_partner_tree')}),
+          (0, 0, {'view_mode': 'form', 'view_id': ref('view_partner_contact_form')})]" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new contact
+            </p>
+            <p>
+                Organize and manage contacts at a glance.
             </p>
         </field>
     </record>
