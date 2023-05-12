@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inh_pos" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.pos</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Frame Elements" name="frame_elements" autofocus="autofocus"
+                          invisible="context.get('def_categ_id') in ['Lens','Contact Lens','Service','Lens Treatment', 'Miscellaneous']">
+
+                        <group>
+                            <field name="frame_material"/>
+                            <field name="frame_shape"/>
+                            <field name="frame_type"/>
+                            <field name="rim"/>
+                            <field name="gender"/>
+                        </group>
+
+                    </page>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="after">
+                    <group invisible="context.get('def_categ_id') in ['Lens','Contact Lens','Service','Lens Treatment', 'Miscellaneous']">
+                        <field name="manufacturer"/>
+                        <field name="brand"/>
+                        <field name="collection"/>
+                    </group>
+                    <group invisible="context.get('def_categ_id') in ['Frames','Contact Lens','Service','Lens Treatment', 'Miscellaneous']">
+                        <field name="lens_type"/>
+                        <field name="lens_style"/>
+                        <field name="lens_material"/>
+                    </group>
+                    <group invisible="context.get('def_categ_id') in ['Lens','Frames',' Service','Lens Treatment', 'Miscellaneous']">
+                        <field name="contact_lens_manufacturer"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

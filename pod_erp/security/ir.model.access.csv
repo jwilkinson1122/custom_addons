@@ -1,79 +1,27 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_chemist_line,chemist.prescription.line,model_podiatry_prescription_line,group_chemist,1,0,0,0
-access_conditions_category,podiatry.group.conditions.category,model_podiatry_pathology_category,group_group,1,0,0,0
-access_conditions,podiatry.group.conditions,model_podiatry_pathology,group_group,1,0,0,0
-access_conditions_category_doc,podiatry.group.conditions.category.doc,model_podiatry_pathology_category,bi_group_doctor,1,1,1,0
-access_conditions_doc,podiatry.group.conditions.doc,model_podiatry_pathology,bi_group_doctor,1,1,1,0
-access_patient_doctor,podiatry.group.patient.doctor,model_podiatry_patient,bi_group_doctor,1,1,1,1
-access_patient_chemist,podiatry.group.patient.chemist,model_podiatry_patient,group_chemist,1,0,0,0
-access_patient_group,podiatry.group.patient.podiatry.group,model_podiatry_patient,group_group,1,0,0,0
-access_doctor_patient_condition_chemist,podiatry.doctor.group.podiatry.patient.condition.chemist,model_podiatry_patient_condition,group_chemist,1,0,0,0
-access_physician,podiatry.group.physician,model_podiatry_physician,group_group,1,1,1,
-access_physician_doctor,podiatry.group.physician.doctor,model_podiatry_physician,bi_group_doctor,1,1,1,
-access_quant_unit,podiatry.group.quant.unit,model_podiatry_quant_unit,group_group,1,1,1,1
-access_patient_orthotic,podiatry.group.patient.orthotic,model_podiatry_patient_orthotic,group_group,1,0,0,0
-access_patient_orthotic,podiatry.group.patient,model_podiatry_patient,group_group,1,0,0,0
-access_patient_conditions,podiatry.group.patient.conditions,model_podiatry_patient_condition,group_group,1,1,1,0
-access_orthotic_measure,podiatry.group.orthotic.measure,model_podiatry_orthotic_measure,group_group,1,1,1,0
-access_physician,podiatry.group.podiatry.physician,model_podiatry_physician,group_group,1,0,0,0
-access_physician_ch,podiatry.group.podiatry.physician.ch,model_podiatry_physician,group_chemist,1,0,0,0
-access_receptionist_physician,podiatry.group.physician,model_podiatry_physician,group_receptionist,0,0,0,0
-access_receptionist_line,receptionist.prescription.line,model_podiatry_prescription_line,group_receptionist,1,0,0,0
-access_receptionist_patient_orthotic,receptionist.group.patient,model_podiatry_patient,group_receptionist,1,1,1,0
-access_receptionist_physician,receptionist.group.physician,model_podiatry_physician,group_receptionist,1,1,1,0
-access_doctor_patient_condition,podiatry.doctor.group.podiatry.patient.condition,model_podiatry_patient_condition,bi_group_doctor,1,1,1,1
-access_doctor_patient_condition_line,podiatry.doctor.group.podiatry.patient.condition.line,model_podiatry_prescription_line,bi_group_doctor,1,1,1,1
-access_doctor_quant_unit,podiatry.doctor.group.quant_unit,model_podiatry_quant_unit,bi_group_doctor,1,1,1,1
-access_sale_order,sale.order,sale.model_sale_order,bi_group_doctor,1,1,1,0
-access_sale_order_line,sale.order.line,sale.model_sale_order_line,bi_group_doctor,1,1,1,1
-access_sale_order_line_accountant,sale.order.line accountant,sale.model_sale_order_line,bi_group_doctor,1,1,0,0
-access_account_move_salesman,account_move salesman,account.model_account_move,bi_group_doctor,1,1,1,0
-access_account_move_manager,account_move manager,account.model_account_move,bi_group_doctor,1,1,1,1
-access_account_move_line_salesman,account_move.line salesman,account.model_account_move_line,bi_group_doctor,1,1,1,0
-access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,bi_group_doctor,1,0,0,0
-access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,bi_group_doctor,1,1,1,0
-access_sale_order_manager,sale.order.manager,sale.model_sale_order,bi_group_doctor,1,1,1,1
-access_sale_order_accountant,sale.order.accountant,sale.model_sale_order,bi_group_doctor,1,1,0,0
-access_sale_report_salesman,sale.report,sale.model_sale_report,bi_group_doctor,1,1,1,0
-access_sale_report_manager,sale.report,sale.model_sale_report,bi_group_doctor,1,1,1,1
-access_ir_property_sales,ir.property.sales,base.model_ir_property,bi_group_doctor,1,1,1,1
-access_sale_account_journal,account.journal sale order.user,account.model_account_journal,bi_group_doctor,1,0,0,0
-access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,bi_group_doctor,1,1,1,1
-access_res_partner_sale_manager_m,res.partner.sale.manager.m,base.model_res_partner,group_group,1,0,0,0
-access_product_template_sale_user,product.template sale use,product.model_product_template,bi_group_doctor,1,0,0,0
-access_product_product_sale_user,product.product sale use,product.model_product_product,bi_group_doctor,1,0,0,0
-access_account_tax_user,account.tax.user,account.model_account_tax,bi_group_doctor,1,0,0,0
-access_ir_attachment_sales,ir.attachment.sales,base.model_ir_attachment,bi_group_doctor,1,1,1,0
-access_ir_attachment_manager,ir.attachment.manager,base.model_ir_attachment,bi_group_doctor,1,1,1,1
-access_product_uom_user,product.uom.user,uom.model_uom_uom,bi_group_doctor,1,0,0,0
-access_product_pricelist_sale_user,product.pricelist.sale.user,product.model_product_pricelist,bi_group_doctor,1,0,0,0
-access_account_account_salesman,account_account salesman,account.model_account_account,bi_group_doctor,1,0,0,0
-access_product_uom_categ_sale_manager,product.uom.categ salemanager,uom.model_uom_category,bi_group_doctor,1,1,1,1
-access_product_uom_sale_manager,product.uom salemanager,uom.model_uom_uom,bi_group_doctor,1,1,1,1
-access_product_category_sale_manager,product.category salemanager,product.model_product_category,bi_group_doctor,1,1,1,1
-access_product_supplierinfo_user,product.supplierinfo.user,product.model_product_supplierinfo,bi_group_doctor,1,0,0,0
-access_product_supplierinfo_sale_manager,product.supplierinfo salemanager,product.model_product_supplierinfo,bi_group_doctor,1,1,1,1
-access_product_pricelist_sale_manager,product.pricelist salemanager,product.model_product_pricelist,bi_group_doctor,1,1,1,1
-access_product_group_res_partner_sale_manager,res_partner group_sale_manager,base.model_res_partner,bi_group_doctor,1,1,1,0
-access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,bi_group_doctor,1,0,0,0
-access_sale_order_invoicing_payments,sale.order,sale.model_sale_order,bi_group_doctor,1,1,0,0
-access_sale_order_line_invoicing_payments,sale.order.line,sale.model_sale_order_line,bi_group_doctor,1,1,0,0
-access_diagnostic_hypotesis,access_diagnostic_hypotesis,model_podiatry_diagnostic_hypotesis,,1,1,1,1
-access_directions,access_directions,model_podiatry_directions,,1,1,1,1
-access_pathology_group_member,access_pathology_group_member,model_podiatry_pathology_group_member,,1,1,1,1
-access_pathology_group,access_pathology_group,model_podiatry_pathology_group,,1,1,1,1
-access_patient_orthotic1,access_patient_orthotic1,model_podiatry_patient_orthotic1,,1,1,1,1
-access_patient_rounding_supply,access_patient_rounding_supply,model_podiatry_patient_rounding_supply,,1,1,1,1
-access_patient_rounding_orthotic,access_patient_rounding_orthotic,model_podiatry_patient_rounding_orthotic,,1,1,1,1
-access_patient_rounding,access_patient_rounding,model_podiatry_patient_rounding,,1,1,1,1
-access_secondary_condition,access_secondary_condition,model_podiatry_secondary_condition,,1,1,1,1
-access_signs_and_sympotoms,access_signs_and_sympotoms,model_podiatry_signs_and_sympotoms,,1,1,1,1
-access_patient_orthotic,access_patient_orthotic,model_podiatry_patient_orthotic,,1,1,1,1
-access_device_route,access_device_route,model_podiatry_device_route,,1,0,0,0
-access_orthotic,access_orthotic,model_podiatry_orthotic,,1,0,0,0
-access_prescription_order,access_prescription_order,model_podiatry_prescription_order,,1,0,0,0
-access_prescription_order_doctor,access_prescription_order_doctor,model_podiatry_prescription_order,bi_group_doctor,1,1,1,1
-access_orthotic_doctor,access_orthotic_doctor,model_podiatry_orthotic,bi_group_doctor,1,1,1,
-access_patient_details,access_patient_details,model_podiatry_patient_details,,1,0,0,0
-access_create_prescription_invoice,create.prescription.invoice,model_create_prescription_invoice,,1,1,1,1
-access_create_prescription_shipment,create.prescription.shipment,model_create_prescription_shipment,,1,1,1,1
+access_practitioner_prescription,access_practitioner_prescription,model_practitioner_prescription,group_pod_erp_practitioners,1,1,1,1
+access_admin_prescription,access_admin_prescription,model_practitioner_prescription,base.group_system,1,1,1,1
+access_admin_config,access_admin_config,model_eye_test_type,base.group_system,1,1,1,1
+access_practitioner_eye_test,access_practitioner_eye_test,model_eye_test_type,group_pod_erp_practitioners,1,0,0,0
+access_practitioner,access_practitioner,model_pod_practitioner,group_pod_erp_practitioners,1,0,0,0
+access_patient,access_patient,model_pod_patient,group_pod_erp_patients,1,0,0,0
+access_admin_practitioner,access_admin_practitioner,model_pod_practitioner,base.group_system,1,1,1,1
+access_admin_patient,access_admin_patient,model_pod_patient,base.group_system,1,1,1,1
+access_frame_material,access_frame_material,model_frame_material,base.group_system,1,1,1,1
+access_frame_shape,access_frame_shape,model_frame_shape,base.group_system,1,1,1,1
+access_frame_type,access_frame_type,model_frame_type,base.group_system,1,1,1,1
+access_frame_manufacturer,access_manufacturer,model_frame_manufacturer,base.group_system,1,1,1,1
+access_frame_brand,access_frame_brand,model_frame_brand,base.group_system,1,1,1,1
+access_frame_collection,access_frame_collection,model_frame_collection,base.group_system,1,1,1,1
+
+access_lens_type,access_lens_type,model_lens_type,base.group_system,1,1,1,1
+access_lens_style,access_lens_style,model_lens_style,base.group_system,1,1,1,1
+access_lens_material,access_lens_material,model_lens_material,base.group_system,1,1,1,1
+access_contact_lens_manufacturer,access_contact_lens_manufacturer,model_contact_lens_manufacturer,base.group_system,1,1,1,1
+access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
+
+
+
+
+
+
