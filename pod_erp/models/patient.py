@@ -8,16 +8,16 @@ from dateutil.relativedelta import relativedelta
 
 class Patient(models.Model):
     _name = "pod.patient"
-    _inherits = {
-        'res.partner': 'partner_id',
-    }
+    _inherits = {'res.partner': 'partner_id'}
+    _rec_name = 'patient_id'
+
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practitioner')
+    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", required= True)
+    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict', help='Partner-related data of the Practitioner')
     is_patient = fields.Boolean()
     dob = fields.Date()
-    patient_age = fields.Integer(compute='_cal_age', readonly=True)
+    patient_age = fields.Integer(compute='_cal_age', store=True, readonly=True)
 
     @api.depends('dob')
     def _cal_age(self):
@@ -51,3 +51,8 @@ class Patient(models.Model):
                         'default_groups_id': [(6, 0, patient_id)]}
 
         }
+        
+    def unlink(self):
+        self.partner_id.unlink()
+        return super(Patient, self).unlink()
+

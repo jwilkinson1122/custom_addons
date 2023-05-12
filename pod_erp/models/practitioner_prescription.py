@@ -6,6 +6,7 @@ class DrPrescription(models.Model):
     _name = 'practitioner.prescription'
     _description = 'Practitioner Prescription'
     _rec_name = 'name'
+    
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -13,8 +14,11 @@ class DrPrescription(models.Model):
         store=True,
     )
     practitioner = fields.Many2one('pod.practitioner', string='Podiatrist', readonly=True)
+    practice_partner_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string="Practice")
+    patient = fields.Many2one('pod.patient', string='Patient', readonly=True)
+    patient_age = fields.Integer(related='patient.patient_age')
     customer = fields.Many2one('res.partner', string='Customer', readonly=False)
-    customer_age = fields.Integer(related='customer.age')
+    # customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
     diagnosis_client = fields.Text()

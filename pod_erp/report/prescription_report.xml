@@ -47,7 +47,7 @@
                                             <tr>
                                                 <td class="headings">PatientAge:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.customer_age"></span>
+                                                    <span t-field="doc.patient_age"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -742,7 +742,7 @@
                                             <tr>
                                                 <td class="headings">PatientAge:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer_age"></span>
+                                                    <span t-field="doc.prescription_id.patient_age"></span>
                                                 </td>
                                             </tr>
                                             <tr>
