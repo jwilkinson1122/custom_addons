@@ -4,9 +4,15 @@
 		<record id="practitioner_view_form" model="ir.ui.view">
 			<field name="name">practitioner.view.form</field>
 			<field name="model">pod.practitioner</field>
-			<field name="inherit_id" ref="practitioner_practitioner"/>
+			<field name="inherit_id" ref="pod_erp.view_practitioner_form"/>
 			<field name="arch" type="xml">
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+					<button class="oe_stat_button" type="object" name="action_view_patients" icon="fa-pencil-square-o" context="{'default_partner_id': id}">
+                                <div class="o_stat_info">
+                                    <field name="patient_count" class="o_stat_value" />
+                                    <span class="o_stat_text"> Patients</span>
+                                </div>
+                    </button>
 					<button name="open_practitioner_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>

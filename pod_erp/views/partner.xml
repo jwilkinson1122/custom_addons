@@ -17,6 +17,18 @@
 					</group>
 				</xpath> -->
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+					<button class="oe_stat_button" type="object" name="action_view_practitioners" icon="fa-pencil-square-o" context="{'default_partner_id': id}">
+                    <div class="o_stat_info">
+                        <field name="practitioner_count" class="o_stat_value" />
+                        <span class="o_stat_text"> Practitioners</span>
+                    </div>
+                	</button>
+					<button class="oe_stat_button" type="object" name="action_view_patients" icon="fa-pencil-square-o" context="{'default_partner_id': id}">
+                    <div class="o_stat_info">
+                        <field name="patient_count" class="o_stat_value" />
+                        <span class="o_stat_text"> Patients</span>
+                    </div>
+                	</button>
 					<button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
@@ -104,24 +116,6 @@
 		</record>
 
 		<!--Action: Practices-->
-		<!-- <record id="action_practice_window" model="ir.actions.act_window">
-			<field name="name">Clinics</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">res.partner</field>
-			<field name="view_mode">kanban,tree,form</field>
-			<field name="view_id" eval="False"/>
-			<field name="domain">[('is_company', '=', 1), ('is_practice', '=', 1)]</field>
-			<field name="context">{'default_is_practice': 1,'search_default_is_practice': 1}</field>
-			<field name="help" type="html">
-				<p class="o_view_nocontent_smiling_face">
-                Create a new practice
-				</p>
-				<p>
-                Organize and manage practices at a glance.
-				</p>
-			</field>
-		</record> -->
-
 		<record id="action_practice_window" model="ir.actions.act_window">
 			<field name="name">Clinics</field>
 			<field name="res_model">res.partner</field>

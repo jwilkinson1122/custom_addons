@@ -142,7 +142,7 @@
             <field name="context">{'def_categ_id':'Miscellaneous' }</field>
             <field name="view_mode">tree,form</field>
         </record>
-
+<!-- 
         <menuitem id="product_frames" name="Frame" parent="pod_erp_config"
                   sequence="4"/>
         <menuitem id="product_lenses" name="Lens" parent="pod_erp_config"
@@ -196,6 +196,6 @@
                   sequence="5"/>
         <menuitem id="pod_erp_product_miscellaneous" name="Miscellaneous" parent="pod_erp_products"
                   action="erp_miscellaneous_action"
-                  sequence="6"/>
+                  sequence="6"/> -->
     </data>
 </odoo>

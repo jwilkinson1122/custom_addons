@@ -40,10 +40,10 @@
 <!--            <field name="view_mode">tree,form</field>-->
 <!--        </record>-->
 
-        <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp_config" action="action_config"
+        <!-- <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp_config" action="action_config"
                   sequence="1"/>
         <menuitem id="pod_erp_product_categories" name="Product Categories" parent="pod_erp_config" action="product.product_category_action_form"
-                  sequence="2"/>
+                  sequence="2"/> -->
 
     </data>
 </odoo>

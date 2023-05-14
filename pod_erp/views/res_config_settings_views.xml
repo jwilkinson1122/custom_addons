@@ -37,6 +37,6 @@
         <field name="context">{'module':'pod_erp', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="menu_pod_erp_settings" name="Settings" parent="pod_erp_config" sequence="2" action="action_pod_erp_config_settings" groups="base.group_system"/>
+    <!-- <menuitem id="menu_pod_erp_settings" name="Settings" parent="pod_erp_config" sequence="2" action="action_pod_erp_config_settings" groups="base.group_system"/> -->
 
 </odoo>

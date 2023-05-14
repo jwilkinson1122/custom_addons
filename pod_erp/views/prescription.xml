@@ -409,7 +409,7 @@
             </field>
         </record>
 
-        <record id="action_prescriptions_window" model="ir.actions.act_window">
+        <record id="action_prescription_window" model="ir.actions.act_window">
             <field name="name">Prescriptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">practitioner.prescription</field>
@@ -421,13 +421,13 @@
         <!-- <menuitem id="menu_orders_customers" name="Customers" action="base.action_partner_customer_form" parent="menu_orders" sequence="4"/> -->
 
 
-        <menuitem id="pod_erp_root" name="POD ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
+        <!-- <menuitem id="pod_erp_root" name="POD ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
         <menuitem id="pod_erp_customer" name="Clinics" parent="pod_erp_root" action="action_practice_window" sequence="1"/>
         <menuitem id="pod_erp_practitioner" name="Practitioners" parent="pod_erp_root" action="action_practitioner_window" groups="group_pod_erp_practitioners,base.group_system" sequence="2"/>
         <menuitem id="pod_erp_patient" name="Patients" parent="pod_erp_root" action="action_patient_window" groups="group_pod_erp_patients,base.group_system" sequence="3"/>
-        <menuitem id="pod_erp_prescriptions" name="Prescriptions" parent="pod_erp_root" action="action_prescriptions_window" groups="group_pod_erp_practitioners,base.group_system" sequence="4"/>
+        <menuitem id="pod_erp_prescriptions" name="Prescriptions" parent="pod_erp_root" action="action_prescription_window" groups="group_pod_erp_practitioners,base.group_system" sequence="4"/>
         <menuitem id="pod_erp_sale_order" name="Sale Orders" parent="pod_erp_root" action="sale.action_orders" sequence="6"/>
-        <menuitem id="pod_erp_config" name="Configuration" parent="pod_erp_root" sequence="7"/>
+        <menuitem id="pod_erp_config" name="Configuration" parent="pod_erp_root" sequence="7"/> -->
 
 
     </data>

@@ -1,0 +1,25 @@
+id,name,species_id/id
+beagle,Beagle,patient.dog
+boxer,Boxer,patient.dog
+bull_terrier,Bull Terrier,patient.dog
+bulldog,Bulldog,patient.dog
+chihuahua,Chihuahua,patient.dog
+cocker,Cocker,patient.dog
+collie,Collie,patient.dog
+dalmatian,Dalmatian,patient.dog
+dachshund,Dachshund,patient.dog
+doberman,Doberman,patient.dog
+english_cocker_spaniel,English Cocker Spaniel,patient.dog
+french_bulldog,French Bulldog,patient.dog
+german_shepard,German Shepard,patient.dog
+golden_retriever,Golden Retriever,patient.dog
+great_dane,Great Dane,patient.dog
+jack_russell,Jack Russell,patient.dog
+labrador,Labrador,patient.dog
+pomeranian,Pomeranian,patient.dog
+pug,Pug,patient.dog
+rottweiler,Rottweiler,patient.dog
+schnauzer,Schnauzer,patient.dog
+shih_tzu,Shih Tzu,patient.dog
+siberian_husky,Siberian Husky,patient.dog
+yorkshire_terrier,Yorkshire Terrier,patient.dog

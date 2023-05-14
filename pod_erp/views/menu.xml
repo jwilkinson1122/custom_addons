@@ -1,0 +1,42 @@
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="pod_erp_root" name="POD ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
+    <menuitem id="pod_erp_customer" name="Clinics" parent="pod_erp.pod_erp_root" action="action_practice_window" sequence="1"/>
+    <menuitem id="pod_erp_practitioner" name="Practitioners" parent="pod_erp.pod_erp_root" action="action_practitioner_window" groups="group_pod_erp_practitioners,base.group_system" sequence="2"/>
+    <menuitem id="pod_erp_patient" name="Patients" parent="pod_erp.pod_erp_root" action="action_patient_window" groups="group_pod_erp_patients,base.group_system" sequence="3"/>
+    <menuitem id="pod_erp_prescriptions" name="Prescriptions" parent="pod_erp.pod_erp_root" action="action_prescription_window" groups="group_pod_erp_practitioners,base.group_system" sequence="4"/>
+    <menuitem id="pod_erp_sale_order" name="Sale Orders" parent="pod_erp.pod_erp_root" action="sale.action_orders" sequence="6"/>
+    <!-- Configuration -->
+    <menuitem id="pod_erp_config" name="Configuration" parent="pod_erp.pod_erp_root" sequence="7"/>
+    <menuitem id="pod_erp_settings" name="Settings" parent="pod_erp.pod_erp_config" sequence="2" action="action_pod_erp_config_settings" groups="base.group_system"/>
+
+    <!-- <menuitem id="pod_erp_test_type" name="Lab Test Type" parent="pod_erp.pod_erp_config" action="action_config" sequence="1"/> -->
+    <menuitem id="pod_erp_product_categories" name="Product Categories" parent="pod_erp.pod_erp_config" action="product.product_category_action_form" sequence="2"/>
+
+
+    <menuitem id="product_frames" name="Frame" parent="pod_erp.pod_erp_config" sequence="4"/>
+    <menuitem id="product_frames_brand" name="Brands" parent="pod_erp.product_frames" action="frame_brand_action" sequence="4"/>
+    <menuitem id="product_frames_collection" name="Collections" parent="pod_erp.product_frames" action="frame_collection_action" sequence="5"/>
+    <menuitem id="product_frames_type" name="Types" parent="pod_erp.product_frames" action="frame_type_action" sequence="6"/>
+    <menuitem id="product_frames_material" name="Materials" parent="pod_erp.product_frames" action="frame_material_action" sequence="7"/>
+    <menuitem id="product_frames_manufacturer" name="Manufacturer" parent="pod_erp.product_frames" action="frame_manufacturer_action" sequence="8"/>
+    <menuitem id="product_frames_shape" name="Shape" parent="pod_erp.product_frames" action="frame_shape_action" sequence="9"/>
+    
+    <menuitem id="product_lenses" name="Lens" parent="pod_erp.pod_erp_config" sequence="10"/>
+    <menuitem id="product_lenses_type" name="Type" parent="pod_erp.product_lenses" action="lens_type_action" sequence="11"/>
+    <menuitem id="product_lenses_style" name="Style" parent="pod_erp.product_lenses" action="lens_style_action" sequence="12"/>
+    <menuitem id="product_lenses_material" name="Material" parent="pod_erp.product_lenses" action="lens_material_action" sequence="13"/>
+    
+    <menuitem id="product_contact_lenses" name="Contact Lens" parent="pod_erp.pod_erp_config" sequence="14"/>
+    <menuitem id="product_contact_lenses_manufacturer" name="Manufacturer" parent="pod_erp.product_contact_lenses" action="contact_lens_manufacturer_action" sequence="14"/>
+
+
+    <menuitem id="pod_erp_products" name="Products" parent="pod_erp.pod_erp_root" sequence="5"/>
+    <menuitem id="pod_erp_product_frame" name="Frames" parent="pod_erp.pod_erp_products" action="erp_frames_action" sequence="1"/>
+    <menuitem id="pod_erp_product_lens" name="Lens" parent="pod_erp.pod_erp_products" action="erp_lens_action" sequence="2"/>
+    <menuitem id="pod_erp_product_contactLens" name="Contact Lens" parent="pod_erp.pod_erp_products" action="erp_contactLens_action" sequence="3"/>
+    <menuitem id="pod_erp_product_treatment" name="Lens Treatment" parent="pod_erp.pod_erp_products" action="erp_treatment_action" sequence="4"/>
+    <menuitem id="pod_erp_product_service" name="Service" parent="pod_erp.pod_erp_products" action="erp_service_action" sequence="5"/>
+    <menuitem id="pod_erp_product_miscellaneous" name="Miscellaneous" parent="pod_erp.pod_erp_products" action="erp_miscellaneous_action" sequence="6"/>
+
+</odoo>

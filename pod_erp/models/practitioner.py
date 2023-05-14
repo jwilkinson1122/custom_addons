@@ -5,13 +5,38 @@ from odoo.exceptions import UserError
 class Practitioner(models.Model):
     _name = "pod.practitioner"
     _inherits = {'res.partner': 'partner_id'}
-    _rec_name = 'partner_id'
+
     create_users_button = fields.Boolean()
-    partner_id = fields.Many2one('res.partner', string='Practitioner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practitioner')
+    partner_id = fields.Many2one('res.partner', string='Practitioner', required=True, index=True, tracking=True, help='Partner-related data of the Practitioner')
     practice_partner_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string='Practice')
+    patient_ids = fields.One2many("pod.patient", "partner_id", string="Patients", domain=[("active", "=", True), ("is_patient", "=", True), ("is_company", "=", False)])
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')
+    active = fields.Boolean(default=True)
+    image = fields.Binary(
+        "Image", attachment=True, help="This field holds the photo of the practitioner."
+    )
+    
+        # Partner Patients
+    @api.depends("patient_ids")
+    def _compute_patient_count(self):
+        for rec in self:
+            rec.patient_count = len(rec.patient_ids)
+
+    patient_count = fields.Integer(
+        compute=_compute_patient_count, string="Number of Patients", store=True
+    )
+
+    def action_view_patients(self):
+        xmlid = "patient.action_patient_window"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+        if self.patient_count > 1:
+            action["domain"] = [("id", "in", self.patient_ids.ids)]
+        else:
+            action["views"] = [(self.env.ref("patient.view_patient_form").id, "form")]
+            action["res_id"] = self.patient_ids and self.patient_ids.ids[0] or False
+        return action
+    
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_practitioner_prescriptions(self):
@@ -31,7 +56,7 @@ class Practitioner(models.Model):
         for records in self:
             count = self.env['practitioner.prescription'].search_count([('practitioner', '=', records.id)])
             records.prescription_count = count
-
+            
     def create_practitioners(self):
         print('.....res')
         self.is_practitioner = True

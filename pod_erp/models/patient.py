@@ -9,15 +9,33 @@ from dateutil.relativedelta import relativedelta
 class Patient(models.Model):
     _name = "pod.patient"
     _inherits = {'res.partner': 'partner_id'}
-    _rec_name = 'patient_id'
-
+    # _rec_name = 'partner_id'
+    # _order = "name"
+    
     create_users_button = fields.Boolean()
     # user_id = fields.Many2one('res.users')
-    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)],string="Patient", required= True)
-    partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, ondelete='restrict', help='Partner-related data of the Practitioner')
+        # partner_id = fields.Many2one('res.partner', string='Related Partner', required=True, index=True, tracking=True, help='Partner-related data of the Practitioner')
+    partner_id = fields.Many2one('res.partner', string='Patient', required=True, index=True, tracking=True, help='Patient')
+    patient_id = fields.Many2one('res.partner',domain=[('is_patient','=',True)])
+    practitioner_id = fields.Many2one('res.partner', string='Practitioner', domain=[('is_practitioner','=',True)], required=True, index=True, tracking=True, help='Patient Practitioner')
+
+    # name = fields.Char(string="Name")
     is_patient = fields.Boolean()
     dob = fields.Date()
     patient_age = fields.Integer(compute='_cal_age', store=True, readonly=True)
+    gender = fields.Selection(
+        string="Gender",
+        selection=[
+            ("female", "Female"),
+            ("male", "Male"),
+            ("other", "Other"),
+        ],
+        required=True,
+    )
+    active = fields.Boolean(default=True)
+    image = fields.Binary(
+        "Image", attachment=True, help="This field holds the photo of the patient."
+    )
 
     @api.depends('dob')
     def _cal_age(self):

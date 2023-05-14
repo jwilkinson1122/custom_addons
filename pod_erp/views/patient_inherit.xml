@@ -4,7 +4,7 @@
 		<record id="patient_view_form" model="ir.ui.view">
 			<field name="name">patient.view.form</field>
 			<field name="model">pod.patient</field>
-			<field name="inherit_id" ref="patient.practitioner_patient"/>
+			<field name="inherit_id" ref="pod_erp.view_patient_form"/>
 			<field name="arch" type="xml">
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
 					<button name="open_practitioner_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_patient_user,patient.user,model_patient,base.group_user,1,1,1,1
+access_patient_color_user,patient.color.user,model_patient_color,base.group_user,1,0,0,0
+access_patient_color_manager,patient.color.manaager,model_patient_color,patient.group_patient_manager,1,1,1,1
+access_patient_breed_user,patient.breed.user,model_patient_breed,base.group_user,1,0,0,0
+access_patient_breed_manager,patient.breed.manager,model_patient_breed,patient.group_patient_manager,1,1,1,1
+access_patient_species_user,patient.species.user,model_patient_species,base.group_user,1,0,0,0
+access_patient_species_manager,patient.species.manager,model_patient_species,patient.group_patient_manager,1,1,1,1

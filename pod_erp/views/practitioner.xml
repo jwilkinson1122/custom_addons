@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="practitioner_practitioner" model="ir.ui.view">
+        <!-- Practitioner Views -->
+        <record id="view_practitioner_tree" model="ir.ui.view">
+            <field name="name">Podiatrist Tree View</field>
+            <field name="model">pod.practitioner</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_practitioner_form" model="ir.ui.view">
             <field name="name">Practitioner</field>
             <field name="model">pod.practitioner</field>
             <field name="arch" type="xml">
@@ -20,6 +30,12 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_patients" icon="fa-pencil-square-o" context="{'default_partner_id': id}">
+                                <div class="o_stat_info">
+                                    <field name="patient_count" class="o_stat_value" />
+                                    <span class="o_stat_text"> Patients</span>
+                                </div>
+                            </button>
                             <button name="open_practitioner_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
                                 <field string="Prescription" name="prescription_count" widget="statinfo"/>
                             </button>
@@ -37,6 +53,8 @@
                             <div class="o_row">
                                 <field name="parent_id" widget="res_partner_many2one" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                                <field name="partner_id" required="1" context="{'default_is_practitioner': 1, 'search_default_is_practitioner': 1}" />
+                                <field name="practice_partner_id" context="{'default_is_practice': 1, 'search_default_is_practice': 1}" />
                             </div>
                         </div>
                         <group>
@@ -206,16 +224,7 @@
                 </form>
             </field>
         </record>
-        <record id="practitioner_practitioner_tree" model="ir.ui.view">
-            <field name="name">Podiatrist Tree View</field>
-            <field name="model">pod.practitioner</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="res_practitioner_kanban_view">
+        <record id="view_practitioner_kanban" model="ir.ui.view">
             <field name="name">pod.practitioner</field>
             <field name="model">pod.practitioner</field>
             <field name="arch" type="xml">

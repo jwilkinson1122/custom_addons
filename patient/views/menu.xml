@@ -1,0 +1,50 @@
+<odoo>
+
+    <!-- Main Menu -->
+    <menuitem
+        id="menu_root"
+        name="Patients"
+        action="action_patient"
+        sequence="10"
+        web_icon="patient,static/description/icon.png"
+    />
+    <menuitem
+        id="menu_patient"
+        name="Patients"
+        action="action_patient"
+        sequence="10"
+        parent="menu_root"
+    />
+    <menuitem
+        id="menu_config"
+        name="Configuration"
+        sequence="100"
+        parent="menu_root"
+        groups="group_patient_manager"
+    />
+
+    <!-- Configuration -->
+    <menuitem id="menu_settings" name="Settings" sequence="10" parent="menu_config" />
+    <menuitem
+        id="menu_species"
+        name="Species"
+        action="action_patient_species"
+        sequence="20"
+        parent="menu_config"
+    />
+    <menuitem
+        id="menu_breed"
+        name="Breeds"
+        action="action_patient_breed"
+        sequence="30"
+        parent="menu_config"
+    />
+    <menuitem
+        id="menu_color"
+        name="Colors"
+        action="action_patient_color"
+        sequence="40"
+        parent="menu_config"
+    />
+
+</odoo>
