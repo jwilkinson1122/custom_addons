@@ -54,8 +54,7 @@ class HospitalPatient(models.Model):
 
     disease_type_id = fields.Many2one('disease.type', string='Disease Type', tracking=True)
     disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage', tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', related='disease_type_id.fees', store=True,
-                                tracking=True)
+    disease_fees = fields.Float(string='Disease Fees Per Visit', related='disease_type_id.fees', store=True, tracking=True)
     no_of_appointment = fields.Integer('No Of Appointment', compute='compute_no_of_appointment')
 
     def compute_no_of_appointment(self):
