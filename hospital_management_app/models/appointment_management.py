@@ -14,7 +14,7 @@ class AppointmentManagement(models.Model):
 
     # Identification Details
 
-    partner_id = fields.Many2one('res.partner', string='Patient')
+    patient_id = fields.Many2one('res.partner', string='Patient')
     father_name = fields.Char(string="Father/Spouse's Name")
     name = fields.Char(string="Name", )
     street = fields.Char(string='Street', )
@@ -29,7 +29,7 @@ class AppointmentManagement(models.Model):
     disease_fees = fields.Float(string='Disease Fees Per Visit', tracking=True)
     appointment_date = fields.Datetime(string='Date')
     next_visit = fields.Date(string='Next Visit')
-    employee_id = fields.Many2one('hr.employee', string='Doctor')
+    partner_id = fields.Many2one('res.partner', string='Doctor')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     state = fields.Selection([('new', 'New'), ('complete', 'Complete'), ('invoice', 'Invoice')], default='new',
                              tracking=True)
@@ -66,7 +66,7 @@ class AppointmentManagement(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        company_id = self.employee_id.company_id
+        company_id = self.partner_id.company_id
         self.ensure_one()
         active_id = self.env.context.get('active_id')
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
@@ -92,7 +92,7 @@ class AppointmentManagement(models.Model):
             'invoice_origin': self.name,
             'invoice_line_ids': invoice_lines,
             #'journal_id': journal.id,  # company comes from the journal
-            'company_id': self.employee_id.company_id.id,
+            'company_id': self.partner_id.company_id.id,
         }
         return invoice_vals
 
@@ -136,7 +136,7 @@ class AppointmentManagement(models.Model):
                         'disease_stage_id': treatment_id.disease_stage_id.id,
                         'disease_fees': treatment_id.disease_fees,
                         'appointment_date': treatment_id.appointment_date,
-                        'employee_id': treatment_id.employee_id.id,
+                        'partner_id': treatment_id.partner_id.id,
                         'invoice_id': treatment_id.invoice_id.id,
                         'state': treatment_id.state,
                         'doc_type': treatment_id.doc_type,
@@ -155,7 +155,7 @@ class AppointmentManagement(models.Model):
                         'disease_stage_id': appointment_id.disease_stage_id.id,
                         'disease_fees': appointment_id.disease_fees,
                         'appointment_date': appointment_id.appointment_date,
-                        'employee_id': appointment_id.employee_id.id,
+                        'partner_id': appointment_id.partner_id.id,
                         'invoice_id': appointment_id.invoice_id.id,
                         'state': appointment_id.state,
                         'doc_type': appointment_id.doc_type,
@@ -179,7 +179,7 @@ class AppointmentManagementLine(models.Model):
     disease_fees = fields.Float(string='Disease Fees Per Visit', store=True, related='disease_type_id.fees',
                                 tracking=True)
     appointment_date = fields.Datetime(string='Date')
-    employee_id = fields.Many2one('hr.employee', string='Doctor')
+    partner_id = fields.Many2one('res.partner', string='Doctor')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     state = fields.Selection([('new', 'New'), ('complete', 'Complete'), ('invoice', 'Invoice')], default='new',
                              tracking=True)

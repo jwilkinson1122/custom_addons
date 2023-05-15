@@ -8,15 +8,15 @@ from odoo.exceptions import ValidationError
 class DentalQuestionnaire(models.Model):
     _name = 'dental.questionnaire'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _rec_name = 'partner_id'
+    _rec_name = 'patient_id'
     _description = 'Dental Questionnaire'
 
     # Identification Details
 
     # name = fields.Char(string="Name")
-    partner_id = fields.Many2one('res.partner', string='Patient')
+    patient_id = fields.Many2one('res.partner', string='Patient')
     date = fields.Datetime(string='Date', default=fields.Datetime.now())
-    employee_id = fields.Many2one('hr.employee', string='Referring')
+    partner_id = fields.Many2one('res.partner', string='Referring')
     treatment = fields.Boolean(string='Have you ever taken an anti-biotic prior to dental treatment?')
     previously = fields.Boolean(string='Have you previously had any Dental treatments?')
     previously_note = fields.Text(string="If Yes Describe")

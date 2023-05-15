@@ -19,7 +19,7 @@ class PatientPrescriptions(models.Model):
     disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
                                        tracking=True)
     date = fields.Datetime(string='Date')
-    employee_id = fields.Many2one('hr.employee', string='Doctor')
+    partner_id = fields.Many2one('res.partner', string='Doctor')
     remark = fields.Text(string='Remark')
     line_ids = fields.One2many('patient.prescriptions.line', 'prescriptions_id', string="Lines")
 

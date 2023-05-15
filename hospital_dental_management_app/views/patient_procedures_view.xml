@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-		 <record model="ir.ui.view" id="inherited_patient_procedures_view_form">
+        <record model="ir.ui.view" id="inherited_patient_procedures_view_form">
             <field name="name">patient.procedures.inherited.form</field>
             <field name="model">patient.procedures</field>
             <field name="inherit_id" ref="hospital_management_app.patient_procedures_view_form_new"/>
             <field name="arch" type="xml">
-                <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -22,7 +22,7 @@
             <field name="model">patient.procedures</field>
             <field name="inherit_id" ref="hospital_management_app.patient_procedures_view_tree_new"/>
             <field name="arch" type="xml">
-               <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -38,7 +38,7 @@
             <field name="model">patient.procedures</field>
             <field name="inherit_id" ref="hospital_management_app.patient_procedures_view_search_new"/>
             <field name="arch" type="xml">
-               <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -47,7 +47,7 @@
                 <field name="disease_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
-                <xpath expr="//search/group/filter[@name='employee_id']" position="attributes">
+                <xpath expr="//search/group/filter[@name='partner_id']" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </xpath>
                 <xpath expr="//search/group/filter[@name='disease_type_id']" position="attributes">
@@ -60,5 +60,5 @@
         </record>
 
 
-	</data>
+    </data>
 </odoo>

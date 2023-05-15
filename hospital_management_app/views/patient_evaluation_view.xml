@@ -1,160 +1,158 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-		<record id="patient_evaluation_view_tree_new" model="ir.ui.view">
-			<field name="name">patient.evaluation.view.form.popup</field>
-			<field name="model">patient.evaluation</field>
-			<field name="priority">20</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="partner_id"/>
-					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
-					<field name="date"/>
-					<field name="reason"/>
-					<field name="employee_id"/>
-					<field name="nurse_id"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-<!---->
-		<record id="patient_evaluation_view_form_new" model="ir.ui.view">
-        <field name="name">patient.evaluation.view.form.popup</field>
-        <field name="model">patient.evaluation</field>
-        <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <form><!---->
-				<header>
-					<button name="action_evaluated" states="draft" string="Evaluated" type="object" class="oe_highlight"/>
-					<button name="action_create_invoice" states="evaluated" string="Create Invoice" type="object" class="oe_highlight"/>
-					<field name="state" readonly="1" widget="statusbar"/>
-				</header>
-                <sheet>
-					<div class="oe_title">
-						<h1><field name="name" readonly="1"/></h1>
-					</div>
-                    <group>
+        <record id="patient_evaluation_view_tree_new" model="ir.ui.view">
+            <field name="name">patient.evaluation.view.form.popup</field>
+            <field name="model">patient.evaluation</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="registration_no"/>
+                    <field name="disease_type_id"/>
+                    <field name="disease_stage_id"/>
+                    <field name="date"/>
+                    <field name="reason"/>
+                    <field name="partner_id"/>
+                    <field name="nurse_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!---->
+        <record id="patient_evaluation_view_form_new" model="ir.ui.view">
+            <field name="name">patient.evaluation.view.form.popup</field>
+            <field name="model">patient.evaluation</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form>                    <!---->
+                    <header>
+                        <button name="action_evaluated" states="draft" string="Evaluated" type="object" class="oe_highlight"/>
+                        <button name="action_create_invoice" states="evaluated" string="Create Invoice" type="object" class="oe_highlight"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1" domain="[('is_patient','=', True)]"/>
-                            <field name="registration_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="disease_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="disease_stage_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="employee_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1" domain="[('staff_type','=', 'doctor')]"/>
-                            <field name="nurse_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('staff_type','=', 'nurse')]"/>
+                            <group>
+                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1" domain="[('is_patient','=', True)]"/>
+                                <field name="registration_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="disease_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="disease_stage_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1" domain="[('partner_type','=', 'doctor')]"/>
+                                <field name="nurse_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('partner_type','=', 'nurse')]"/>
 
+                            </group>
+                            <group>
+                                <field name="father_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="street" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="street2" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="zip" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="city" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="invoice_id" attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="1"/>
+                            </group>
                         </group>
                         <group>
-                            <field name="father_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="street" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="street2" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="zip" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="city" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-							<field name="invoice_id" attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="1"/>
+                            <group>
+                                <field name="reason" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="other_reason" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('reason', '!=', 'other')],'required': [('reason', '=', 'other')]}"/>
+                                <field name="primary_diagnosis" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="secondary_diagnosis" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group string="Vital Sign">
+                                <field name="bp" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="pulse" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="t" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="height" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
                         </group>
-                    </group>
-                    <group>
                         <group>
-                            <field name="reason" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                            <field name="other_reason" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('reason', '!=', 'other')],'required': [('reason', '=', 'other')]}"/>
-                            <field name="primary_diagnosis" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="secondary_diagnosis" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <group>
+                                <field name="is_allergies" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="allergies" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('is_allergies', '=', False)],'required': [('is_allergies', '=', True)]}"/>
+                                <field name="diet" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="regular" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="no_added_salt" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="no_sweet" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="other" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="other_plan" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('other', '=', False)], 'required': [('other', '=', True)]}"/>
+                                <field name="immunization" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="influenza_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
                         </group>
-                        <group string="Vital Sign">
-                            <field name="bp" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="pulse" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="t" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="height" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <group class="oe_subtotal_footer" string="Fees Collection">
+                            <field name="basic_fees" required="1"/>
+                            <field name="bed_charge"/>
+                            <field name="other_fees"/>
+                            <field name="discount"/>
+                            <field name="total_fees" class="oe_subtotal_footer_separator"/>
                         </group>
-                    </group>
-                    <group>
-                        <group>
-                        <field name="is_allergies" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="allergies" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('is_allergies', '=', False)],'required': [('is_allergies', '=', True)]}"/>
-                        <field name="diet" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="regular" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="no_added_salt" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                    </group>
-                    <group>
-                        <field name="no_sweet" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="other" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="other_plan" attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('other', '=', False)], 'required': [('other', '=', True)]}"/>
-                        <field name="immunization" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="influenza_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                    </group>
-                    </group>
-                    <group class="oe_subtotal_footer" string="Fees Collection">
-						<field name="basic_fees" required="1"/>
-						<field name="bed_charge"/>
-						<field name="other_fees"/>
-						<field name="discount"/>
-						<field name="total_fees" class="oe_subtotal_footer_separator"/>
-					</group>
 
-                </sheet>
-				<div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-            </form>
-        </field>
-    	</record> 
-<!---->
-    	<record id="patient_evaluation_view_search_new" model="ir.ui.view">
-        <field name="name">patient.evaluation.view.search</field>
-        <field name="model">patient.evaluation</field>
-        <field name="arch" type="xml">
-            <search string="Activity">
-               		<field name="partner_id"/>
-					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
-					<field name="date"/>
-					<field name="reason"/>
-					<field name="employee_id"/>
-					<field name="nurse_id"/>
-					<field name="state"/>
-                <group expand="0" string="Group By">
-                    <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-                    <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
-                    <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Doctor" name="employee_id" context="{'group_by': 'employee_id'}"/>
-                    <filter string="Reason" name="reason" context="{'group_by': 'reason'}"/>
-                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!---->
+        <record id="patient_evaluation_view_search_new" model="ir.ui.view">
+            <field name="name">patient.evaluation.view.search</field>
+            <field name="model">patient.evaluation</field>
+            <field name="arch" type="xml">
+                <search string="Activity">
+                    <field name="partner_id"/>
+                    <field name="registration_no"/>
+                    <field name="disease_type_id"/>
+                    <field name="disease_stage_id"/>
+                    <field name="date"/>
+                    <field name="reason"/>
+                    <field name="partner_id"/>
+                    <field name="nurse_id"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+                        <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                        <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Reason" name="reason" context="{'group_by': 'reason'}"/>
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="patient_evaluation_view_graph" model="ir.ui.view">
-			 <field name="name">patient.evaluation.graph.view</field>
-			 <field name="model">patient.evaluation</field>
-			 <field name="arch" type="xml">
-				<graph>
-					<field name="partner_id" type="row"/>
-					<field name="total_fees" type="measure"/>
-				</graph>
-			 </field>
-		</record>
+            <field name="name">patient.evaluation.graph.view</field>
+            <field name="model">patient.evaluation</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="partner_id" type="row"/>
+                    <field name="total_fees" type="measure"/>
+                </graph>
+            </field>
+        </record>
 
-		<record id="action_patient_evaluation" model="ir.actions.act_window">
-			<field name="name">Evaluation</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">patient.evaluation</field>
-			<field name="view_mode">tree,kanban,search,graph,form</field>
-		</record>
-
-
-
-		 <menuitem id="menu_patient_evaluation"
-                  name='Evaluation'
-                  parent="main_menu_hospitalization"
-                  action="action_patient_evaluation"
-                  sequence="6" />
+        <record id="action_patient_evaluation" model="ir.actions.act_window">
+            <field name="name">Evaluation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">patient.evaluation</field>
+            <field name="view_mode">tree,kanban,search,graph,form</field>
+        </record>
 
 
-	</data>
+
+        <menuitem id="menu_patient_evaluation" name='Evaluation' parent="main_menu_hospitalization" action="action_patient_evaluation" sequence="6" />
+
+
+    </data>
 </odoo>

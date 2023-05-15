@@ -19,7 +19,7 @@ class PatientProcedures(models.Model):
     disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
                                        tracking=True)
     date = fields.Datetime(string='Date')
-    employee_id = fields.Many2one('hr.employee', string='Doctor')
+    partner_id = fields.Many2one('res.partner', string='Doctor')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     line_ids = fields.One2many('patient.procedures.line', 'procedures_id', string="Lines")
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('invoice', 'Invoice')], tracking=True, default='draft')
@@ -76,7 +76,7 @@ class PatientProcedures(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        company_id = self.employee_id.company_id
+        company_id = self.partner_id.company_id
         self.ensure_one()
         active_id = self.env.context.get('active_id')
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
@@ -103,7 +103,7 @@ class PatientProcedures(models.Model):
             'invoice_origin': self.name,
             'invoice_line_ids': invoice_lines,
             #'journal_id': journal.id,  # company comes from the journal
-            'company_id': self.employee_id.company_id.id,
+            'company_id': self.partner_id.company_id.id,
         }
         return invoice_vals
 

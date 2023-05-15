@@ -22,7 +22,7 @@ class LaboratoryManagement(models.Model):
     total_fees = fields.Float(string='Total Fees', store=True, compute='compute_total_fees',
                               tracking=True)
     invoice_id = fields.Many2one('account.move', string='Invoice')
-    employee_id = fields.Many2one('hr.employee', string='Referring Doctor')
+    partner_id = fields.Many2one('res.partner', string='Referring Doctor')
     state = fields.Selection([('draft', 'Draft'), ('process', 'In Process'), ('done', 'Done'), ('invoice', 'Invoice')],
                              default='draft',
                              tracking=True)
@@ -92,7 +92,7 @@ class LaboratoryManagement(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        company_id = self.employee_id.company_id
+        company_id = self.partner_id.company_id
         self.ensure_one()
         active_id = self.env.context.get('active_id')
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
@@ -118,7 +118,7 @@ class LaboratoryManagement(models.Model):
             'invoice_origin': self.name,
             'invoice_line_ids': invoice_lines,
             #'journal_id': journal.id,  # company comes from the journal
-            'company_id': self.employee_id.company_id.id,
+            'company_id': self.partner_id.company_id.id,
         }
         return invoice_vals
 

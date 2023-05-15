@@ -17,7 +17,7 @@ class BloodRequest(models.Model):
     partner_id = fields.Many2one('res.partner', string='Patient')
     name = fields.Char(string="Name")
     registration_no = fields.Char(string='Registration Card')
-    employee_id = fields.Many2one('hr.employee', string='Referring Doctor')
+    partner_id = fields.Many2one('res.partner', string='Referring Doctor')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     state = fields.Selection(
         [('draft', 'Draft'), ('issue', 'Issue'), ('cancel', 'cancel'), ('invoice', 'Invoice')], default='draft',
@@ -98,7 +98,7 @@ class BloodRequest(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        company_id = self.employee_id.company_id
+        company_id = self.partner_id.company_id
         self.ensure_one()
         active_id = self.env.context.get('active_id')
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
@@ -125,7 +125,7 @@ class BloodRequest(models.Model):
             'invoice_origin': self.name,
             'invoice_line_ids': invoice_lines,
             #'journal_id': journal.id,  # company comes from the journal
-            'company_id': self.employee_id.company_id.id,
+            'company_id': self.partner_id.company_id.id,
         }
         return invoice_vals
 

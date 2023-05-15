@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-		<record model="ir.ui.view" id="inherited_appointment_management_view_form">
+        <record model="ir.ui.view" id="inherited_appointment_management_view_form">
             <field name="name">appointment.management.inherited.form</field>
             <field name="model">appointment.management</field>
             <field name="inherit_id" ref="hospital_management_app.appointment_management_view_form_new"/>
             <field name="arch" type="xml">
-                <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -25,7 +25,7 @@
             <field name="model">appointment.management</field>
             <field name="inherit_id" ref="hospital_management_app.appointment_management_view_tree_new"/>
             <field name="arch" type="xml">
-                <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -41,7 +41,7 @@
             <field name="model">appointment.management</field>
             <field name="inherit_id" ref="hospital_management_app.appointment_management_view_search_new"/>
             <field name="arch" type="xml">
-                <field name="employee_id" position="attributes">
+                <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
                 <field name="disease_type_id" position="attributes">
@@ -50,7 +50,7 @@
                 <field name="disease_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
-                <xpath expr="//search/group/filter[@name='employee_id']" position="attributes">
+                <xpath expr="//search/group/filter[@name='partner_id']" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </xpath>
                 <xpath expr="//search/group/filter[@name='disease_type_id']" position="attributes">
@@ -66,7 +66,7 @@
         <record model="ir.actions.act_window" id="hospital_management_app.action_disease_type">
             <field name="name">Teeth Problem</field>
         </record>
-        <record model="ir.actions.act_window" id="hospital_management_app.action_hr_employee_doctor">
+        <record model="ir.actions.act_window" id="hospital_management_app.action_res_partner_doctor">
             <field name="name">Dentist</field>
         </record>
         <record model="ir.ui.menu" id="hospital_management_app.menu_disease_type">
@@ -75,7 +75,7 @@
         <record model="ir.ui.menu" id="hospital_management_app.menu_disease_stage">
             <field name="action" eval="False"/>
         </record>
-        <record model="ir.ui.menu" id="hospital_management_app.menu_employee_doctor">
+        <record model="ir.ui.menu" id="hospital_management_app.menu_partner_doctor">
             <field name="name">Dentist</field>
         </record>
         <record model="ir.ui.menu" id="hospital_management_app.main_menu_hospital_management">
@@ -83,5 +83,5 @@
         </record>
 
 
-	</data>
+    </data>
 </odoo>
