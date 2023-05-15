@@ -13,8 +13,9 @@
                     </button>
                 </div>
 
+                <!-- <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}"></page> -->
                 <field name="category_id" position="after">
-                    <field name="is_patient"/>
+                    <field name="is_patient" attrs="{'invisible': [('is_patient', '=', False)]}"/>
                 </field>
                 <xpath expr="//page[@name='internal_notes']" position="after">
                     <page string="Patient Details" name="patient_details" attrs="{'invisible': [('is_patient', '=', False)]}">
