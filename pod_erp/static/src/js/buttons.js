@@ -75,15 +75,15 @@ odoo.define('pod_erp.Main_Page_Buttons',function(require) {
         button_click() {
             var self = this;
             if (this.env.pos.get_order().attributes.client)
-                this.customer = this.env.pos.get_order().attributes.client.name;
+                this.practice = this.env.pos.get_order().attributes.client.name;
             else
-                this.customer = false;
+                this.practice = false;
             if (this.env.pos.get_order().pod_reference != undefined)
                 this.pod_reference = this.env.pos.get_order().pod_reference.name;
             else
                 this.pod_reference = false;
 
-            if (!this.customer || !this.pod_reference){
+            if (!this.practice || !this.pod_reference){
                 self.showPopup('ErrorPopup', {
                         title: this.env._t('No Customer or Prescription found'),
                         body: this.env._t('You need to select Customer & Prescription to continue'),

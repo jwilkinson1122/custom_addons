@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 from odoo.tools import datetime
 
 
-class DrPrescription(models.Model):
+class Prescription(models.Model):
     _name = 'practitioner.prescription'
     _description = 'Practitioner Prescription'
     _rec_name = 'name'
@@ -15,9 +15,11 @@ class DrPrescription(models.Model):
     )
     practitioner = fields.Many2one('pod.practitioner', string='Podiatrist', readonly=True)
     practice_partner_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string="Practice")
+    practitioner_id = fields.Many2one('res.partner',domain=[('is_practitioner','=',True)],string='Practitioner')
+    prescription_line_ids = fields.One2many('practitioner.prescription.line', 'prescription_id', string='Products')
     patient = fields.Many2one('pod.patient', string='Patient', readonly=True)
     patient_age = fields.Integer(related='patient.patient_age')
-    customer = fields.Many2one('res.partner', string='Customer', readonly=False)
+    practice = fields.Many2one('res.partner', domain=[('is_company','=',True)], string='Practice', readonly=False)
     # customer_age = fields.Integer(related='customer.age')
     checkup_date = fields.Date('Checkup Date', default=fields.Datetime.now())
     test_type = fields.Many2one('eye.test.type')
@@ -284,7 +286,7 @@ class DrPrescription(models.Model):
         if self.os_av_distance and self.os_av_distance.isdigit():
             self.os_av_distance = "20/" + self.os_av_distance
 
-    def open_customer(self):
+    def create_sale_order(self):
         sale_order = self.env['sale.order'].search([('prescription_id', '=', self.id)], limit=1)
         print('fire', sale_order)
         if sale_order:
@@ -308,7 +310,7 @@ class DrPrescription(models.Model):
                 'res_model': 'sale.order',
                 'view_id': False,
                 'view_mode': 'form',
-                'context': {'default_prescription_id': self.id, 'default_partner_id': self.customer.id},
+                'context': {'default_prescription_id': self.id, 'default_partner_id': self.practice.id},
                 'type': 'ir.actions.act_window',
             }
 
@@ -316,7 +318,7 @@ class DrPrescription(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('pod.prescription.sequence')
-        result = super(DrPrescription, self).create(vals)
+        result = super(Prescription, self).create(vals)
         return result
 
     def prescription_report(self):
@@ -328,3 +330,19 @@ class DrPrescription(models.Model):
  
     def print_podiatry_prescription_report_ticket_size(self):
         return self.env.ref("pod_erp.practitioner_prescription_ticket_size2").report_action(self)
+
+# class PrescriptionLine(models.Model):
+#     _name = 'practitioner.prescription.line'
+#     _description = 'Prescription Line'
+#     prescription_id = fields.Many2one('practitioner.prescription', string="Prescription")
+#     name = fields.Text(string='Description', required=True)
+#     sequence = fields.Integer(string='Sequence', default=10)
+
+#     product_id = fields.Many2one('product.product', string='Product', change_default=True) 
+#     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
+#     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
+#     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+#     description = fields.Text(string="Description")
+#     product_qty = fields.Integer(string='Quantity', default=1)
+#     unit_price = fields.Float(string='Unit Price')
+#     sub_total = fields.Float(string='Sub Total')

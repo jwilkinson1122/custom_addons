@@ -8,7 +8,7 @@
                 <field name="sal" invisible="1"/>
                 <field name="customer_id" invisible="1"/>
                 <group>
-                    <field name="prescription" domain="[('customer', '=', customer_id)]"/>
+                    <field name="prescription" domain="[('practice', '=', customer_id)]"/>
                 </group>
                 <group>
                     <field name="frame"/>

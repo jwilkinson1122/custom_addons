@@ -43,9 +43,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="headings">Patient :</td>
+                                                <td class="headings">Practice :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.customer"></span>
+                                                    <span t-field="doc.practice"></span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -55,22 +55,22 @@
                                             <tr>
                                                 <td class="headings">Phone :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.customer.phone"></span>
+                                                    <span t-field="doc.practice.phone"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="headings">Address :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.customer.street"></span>
-                                                    <!--                                                    <span t-field="doc.customer.state_id"></span>-->
-                                                    <!--                                                    <span t-field="doc.customer.city"></span>-->
-                                                    <!--                                                    <span t-field="doc.customer.zip"></span>-->
+                                                    <span t-field="doc.practice.street"></span>
+                                                    <!--                                                    <span t-field="doc.practice.state_id"></span>-->
+                                                    <!--                                                    <span t-field="doc.practice.city"></span>-->
+                                                    <!--                                                    <span t-field="doc.practice.zip"></span>-->
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="headings">Email :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.customer.zip"></span>
+                                                    <span t-field="doc.practice.zip"></span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -473,17 +473,12 @@
                                     <td width="50%">
                                         <table width="60%">
                                             <tr>
-                                                <td class="headings">Patient Name :</td>
+                                                <td class="headings">Practice Name :</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer"></span>
+                                                    <span t-field="doc.prescription_id.practice"></span>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="headings">PatientAge:</td>
-                                                <td class="text">
-                                                    <span t-field="doc.prescription_id.patient_age"></span>
-                                                </td>
-                                            </tr>
+                                           
                                             <tr>
                                                 <td class="headings">Test Type:</td>
                                                 <td class="text">
@@ -493,7 +488,7 @@
                                             <tr>
                                                 <td class="headings">Phone:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer.phone"></span>
+                                                    <span t-field="doc.prescription_id.practice.phone"></span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -503,25 +498,25 @@
                                             <tr>
                                                 <td class="headings">Street:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer.street"></span>
+                                                    <span t-field="doc.prescription_id.practice.street"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="headings">City:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer.city"></span>
+                                                    <span t-field="doc.prescription_id.practice.city"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="headings">Zip Code:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer.zip"></span>
+                                                    <span t-field="doc.prescription_id.practice.zip"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="headings">Email:</td>
                                                 <td class="text">
-                                                    <span t-field="doc.prescription_id.customer.email"></span>
+                                                    <span t-field="doc.prescription_id.practice.email"></span>
                                                 </td>
                                             </tr>
                                         </table>

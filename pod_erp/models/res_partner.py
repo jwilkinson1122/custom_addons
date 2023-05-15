@@ -28,22 +28,22 @@ class InheritedResPartner(models.Model):
     
     prescription_count = fields.Integer(compute='get_prescription_count')
 
-    def open_customer_prescriptions(self):
+    def create_sale_order_prescriptions(self):
         for records in self:
             return {
                 'name':_('Prescriptions'),
                 'view_type': 'form',
-                'domain': [('customer', '=',records.id)],
+                'domain': [('practice', '=',records.id)],
                 'res_model': 'practitioner.prescription',
                 'view_id': False,
                 'view_mode':'tree,form',
-                'context':{'default_customer':self.id},
+                'context':{'default_practice':self.id},
                 'type': 'ir.actions.act_window',
             }
 
     def get_prescription_count(self):
         for records in self:
-            count = self.env['practitioner.prescription'].search_count([('customer','=',records.id)])
+            count = self.env['practitioner.prescription'].search_count([('practice','=',records.id)])
             records.prescription_count = count
 
   

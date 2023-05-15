@@ -180,7 +180,7 @@
 
 
         <menuitem id="pod_erp_products" name="Products" parent="pod_erp_root"
-                  sequence="5"/>
+                  sequence="6"/>
         <menuitem id="pod_erp_product_frame" name="Frames" parent="pod_erp_products" action="erp_frames_action"
                   sequence="1"/>
         <menuitem id="pod_erp_product_lens" name="Lens" parent="pod_erp_products" action="erp_lens_action"

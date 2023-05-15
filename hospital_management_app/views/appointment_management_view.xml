@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+		<record id="appointment_management_view_tree_new" model="ir.ui.view">
+			<field name="name">appointment.management.view.form.popup</field>
+			<field name="model">appointment.management</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="partner_id"/>
+					<field name="registration_no"/>
+					<field name="disease_type_id"/>
+					<field name="disease_stage_id"/>
+					<field name="appointment_date"/>
+					<field name="next_visit"/>
+					<field name="employee_id"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+<!---->
+		<record id="appointment_management_view_form_new" model="ir.ui.view">
+        <field name="name">appointment.management.view.form.popup</field>
+        <field name="model">appointment.management</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form><!---->
+				<header>
+					<button name="action_complete" states="new" string="Complete" type="object" class="oe_highlight"/>
+					<button name="action_create_invoice" states="complete" string="Create Invoice" type="object" class="oe_highlight"/>
+					<button name="action_create_history" attrs="{'invisible': [('is_history_created', '=', True)]}" string="History" type="object" class="oe_highlight"/>
+					<field name="state" readonly="1" widget="statusbar"/>
+				</header>
+                <sheet>
+					<div class="oe_title">
+						<h1><field name="name" readonly="1"/></h1>
+					</div>
+                    <group>
+                        <group>
+                            <field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('is_patient','=', True)]"/>
+                            <field name="registration_no" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="disease_type_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="disease_fees" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="disease_stage_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="appointment_date" required="1" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="employee_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('staff_type','=', 'doctor')]"/>
+                        </group>
+                        <group>
+                            <field name="father_name" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="street" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="street2" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="zip" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="city" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+							<field name="next_visit" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="doc_type" invisible="1"/>
+                            <field name="is_history_created" invisible="1"/>
+                        </group>
+                    </group>
+					<notebook>
+						<page string="Patient History">
+							<field name="line_ids">
+								<tree create="0" delete="0">
+									<field name="appointment_id" invisible="1"/>
+									<field name="name"/>
+									<field name="disease_type_id"/>
+									<field name="disease_stage_id"/>
+									<field name="disease_fees"/>
+									<field name="appointment_date"/>
+									<field name="employee_id"/>
+									<field name="invoice_id"/>
+									<field name="state"/>
+								</tree>
+							</field>
+						</page>
+                        </notebook>
+
+                </sheet>
+				<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    	</record> 
+<!---->
+    	<record id="appointment_management_view_search_new" model="ir.ui.view">
+        <field name="name">appointment.management.view.search</field>
+        <field name="model">appointment.management</field>
+        <field name="arch" type="xml">
+            <search string="Activity">
+               		<field name="partner_id"/>
+					<field name="registration_no"/>
+					<field name="disease_type_id"/>
+					<field name="disease_stage_id"/>
+					<field name="next_visit"/>
+					<field name="employee_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+                    <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                    <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Doctor" name="employee_id" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+<!---->
+<!---->
+<!---->
+		<record id="appointment_management_kanban_view" model="ir.ui.view">
+			<field name="name">appointment.kanban.view</field>
+			<field name="model">appointment.management</field>
+			<field name="arch" type="xml">
+				<kanban class="o_res_partner_kanban">
+					<field name="partner_id"/>
+					<field name="registration_no"/>
+					<field name="disease_type_id"/>
+					<field name="disease_stage_id"/>
+					<field name="next_visit"/>
+					<field name="employee_id"/>
+					<templates>
+						<t t-name="kanban-box">
+							<div class="oe_kanban_global_click">
+								<div class="oe_kanban_details">
+										<strong class="o_kanban_record_title">
+												<div>
+													<strong><field name="partner_id"/></strong><field name="registration_no"/>
+												</div>
+												<div>
+													<strong><field name="disease_type_id"/></strong>Next Visit:<field name="next_visit"/>
+												</div>
+												<div>
+													Doctor<field name="employee_id"/>
+												</div>
+
+										</strong>
+								</div> 
+							</div>
+						</t>
+					</templates>
+				</kanban>
+			</field>
+	</record>
+
+		<record id="action_appointment_management" model="ir.actions.act_window">
+			<field name="name">Appointment</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">appointment.management</field>
+			<field name="domain">[('doc_type', '=', 'appointment')]</field>
+			<field name="context">{'default_doc_type':'appointment'}</field>
+			<field name="view_mode">tree,kanban,search,form</field>
+		</record>
+
+
+			<menuitem id="main_menu_hospitalization"
+					  name='Hospitalization'
+					  groups="group_hospital_user"
+					  parent="main_menu_hospital_management"
+					  sequence="2" />
+		<!---->
+		 <menuitem id="menu_appointment_management"
+                  name='Appointment'
+                  parent="main_menu_hospitalization"
+                  action="action_appointment_management"
+                  sequence="1" />
+
+		<record id="action_treatment_management" model="ir.actions.act_window">
+			<field name="name">Treatment</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">appointment.management</field>
+			<field name="domain">[('doc_type', '=', 'treatment')]</field>
+			<field name="context">{'default_doc_type':'treatment'}</field>
+
+			<field name="view_mode">tree,kanban,search,form</field>
+		</record>
+		 <menuitem id="menu_treatment"
+                  name='Treatment'
+                  parent="main_menu_hospitalization"
+                  action="action_treatment_management"
+                  sequence="2" />
+
+	</data>
+</odoo>

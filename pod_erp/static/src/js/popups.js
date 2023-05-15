@@ -20,9 +20,9 @@ odoo.define('pod_erp.popups', function (require) {
             this.partners = this.env.pos.db.get_partners_sorted();
             this.test_type = this.env.pos.pod.test_type;
             if (this.env.pos.get_order().attributes.client)
-                this.customer = this.env.pos.get_order().attributes.client.id;
+                this.practice = this.env.pos.get_order().attributes.client.id;
             else
-                this.customer = false;
+                this.practice = false;
             var abc = [];
             for (var i = 0; i < 180; i++)
                 abc.push(i);
@@ -38,7 +38,7 @@ odoo.define('pod_erp.popups', function (require) {
             var order = this.env.pos.get_order();
             var vals = $("#prescription_form").serializeObject();
             vals["practitioner"] = $('option:selected', $('[name=practitioner]')).data('id');
-            vals["customer"] = $('option:selected', $('[name=customer]')).data('id');
+            vals["practice"] = $('option:selected', $('[name=practice]')).data('id');
             vals["test_type"] = $('option:selected', $('[name=test_type]')).data('id');
             vals = JSON.stringify(vals);
             var checkup_date = $('[name=checkup_date]').val();
@@ -74,7 +74,7 @@ odoo.define('pod_erp.popups', function (require) {
                         self.env.pos.pod.order_by_id[products.id] = products;
                         $('.pod_prescription').text(products.name);
                         order.set_pod_reference(products);
-                        order.set_client(self.env.pos.db.partner_by_id[products.customer[0]]);
+                        order.set_client(self.env.pos.db.partner_by_id[products.practice[0]]);
                     });
                 }
             };
@@ -101,7 +101,7 @@ odoo.define('pod_erp.popups', function (require) {
             this.variants2 = self.env.pos.pod.variants2;
             this.variants3 = self.env.pos.pod.variants3;
             this.variants4 = self.env.pos.pod.variants4;
-            this.customer = this.env.pos.get_order().attributes.client.name;
+            this.practice = this.env.pos.get_order().attributes.client.name;
             this.pod_reference = this.env.pos.get_order().pod_reference.name;
         }
         mounted() {

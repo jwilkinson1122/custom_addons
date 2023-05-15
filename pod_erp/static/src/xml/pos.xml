@@ -685,14 +685,14 @@ Description
                             </td>
                             <th>Client:</th>
                             <td>
-                                <select name="customer">
+                                <select name="practice">
                                     <t t-foreach="partners || []" t-as="item" t-key="item.id">
-                                        <t t-if="customer == item.id">
+                                        <t t-if="practice == item.id">
                                             <option t-attf-data-id="{{ item.id }}" t-attf-selected="">
                                                 <t t-esc='item.name'/>
                                             </option>
                                         </t>
-                                        <t t-if="customer != item.id">
+                                        <t t-if="practice != item.id">
                                             <option t-attf-data-id="{{ item.id }}">
                                                 <t t-esc='item.name'/>
                                             </option>
@@ -1193,9 +1193,9 @@ Description
                 <form id="order_form">
                     <table>
                         <tr>
-                            <th>Client:</th>
+                            <th>Practice:</th>
                             <td colspan="3">
-                                <t t-esc="customer"/>
+                                <t t-esc="practice"/>
                             </td>
                         </tr>
                         <tr>
@@ -1375,7 +1375,7 @@ Glass left</td>
                                                         <t t-esc='product.name' />
                                                     </td>
                                                     <td>
-                                                        <t t-esc='product.customer[1]' />
+                                                        <t t-esc='product.practice[1]' />
                                                     </td>
                                                     <td>
                                                         <t t-esc='product.checkup_date' />
@@ -1423,8 +1423,8 @@ Glass left</td>
                             <t t-esc="pod_order.name"/>
                         </td>
                         <td>
-                            <span>Client Name:</span>
-                            <t t-esc="pod_order.customer[1]"/>
+                            <span>Practice Name:</span>
+                            <t t-esc="pod_order.practice[1]"/>
                         </td>
                     </tr>
                     <tr>

@@ -32,7 +32,7 @@ odoo.define('pod_erp.screens',function(require) {
             var self = this;
             this.search.client = event.target.value;
             if (this.search.client != '')
-                this.pod_orders = this.pod_orders.filter(function(el){return el.customer[1].toLowerCase().includes(self.search.client.toLowerCase())})
+                this.pod_orders = this.pod_orders.filter(function(el){return el.practice[1].toLowerCase().includes(self.search.client.toLowerCase())})
             else if (this.search.client == ''){
                 this.pod_orders = this.props.all_orders;
                 if (this.search.date != '' && this.search.date != null)
@@ -49,7 +49,7 @@ odoo.define('pod_erp.screens',function(require) {
             else if (this.search.date == ''){
                 this.pod_orders = this.props.all_orders;
                 if (this.search.client != '' && this.search.client != null)
-                    this.pod_orders = this.pod_orders.filter(function(el){return el.customer[1].toLowerCase().includes(self.search.client.toLowerCase())})
+                    this.pod_orders = this.pod_orders.filter(function(el){return el.practice[1].toLowerCase().includes(self.search.client.toLowerCase())})
             }
             this.render();
         }
@@ -68,7 +68,7 @@ odoo.define('pod_erp.screens',function(require) {
             var pod_order = self.env.pos.pod.order_by_id[parseInt(data.id)];
             $('.pod_prescription').text(data.name);
             order.set_pod_reference(data);
-            order.set_client(self.env.pos.db.partner_by_id[pod_order.customer[0]]);
+            order.set_client(self.env.pos.db.partner_by_id[pod_order.practice[0]]);
             this.close();
 
         }

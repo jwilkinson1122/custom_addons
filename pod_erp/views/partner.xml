@@ -17,7 +17,7 @@
 					</group>
 				</xpath> -->
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-					<button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
+					<button name="create_sale_order_prescriptions" class="oe_stat_button" type="object" icon="fa-tasks">
 						<field string="Prescription" name="prescription_count" widget="statinfo"/>
 					</button>
 				</xpath>

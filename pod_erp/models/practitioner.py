@@ -7,8 +7,7 @@ class Practitioner(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _rec_name = 'partner_id'
     create_users_button = fields.Boolean()
-    partner_id = fields.Many2one('res.partner', string='Practitioner', required=True, ondelete='restrict',
-                                 help='Partner-related data of the Practitioner')
+    partner_id = fields.Many2one('res.partner', string='Practitioner', required=True, help='Partner-related data of the Practitioner')
     practice_partner_id = fields.Many2one('res.partner',domain=[('is_practice','=',True)],string='Practice')
     is_practitioner = fields.Boolean()
     related_user_id = fields.Many2one(related='partner_id.user_id')

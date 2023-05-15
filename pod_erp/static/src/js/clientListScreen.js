@@ -10,13 +10,13 @@ odoo.define('pod_erp.ClientListScreen', function(require) {
         get prescription_count(){
             self = this;
             if (this.state.selectedClient)
-                return self.env.pos.pod.all_orders.filter(function(el){return el.customer[0] === self.state.selectedClient.id}).length
+                return self.env.pos.pod.all_orders.filter(function(el){return el.practice[0] === self.state.selectedClient.id}).length
             else
                 return 0
         }
 
         prescription_count_click(data){
-            var pod_orders = this.env.pos.pod.all_orders.filter(function(el){return el.customer[0] === data.id})
+            var pod_orders = this.env.pos.pod.all_orders.filter(function(el){return el.practice[0] === data.id})
             this.trigger('close-temp-screen');
             this.showScreen('PrescriptionListScreenWidget',{all_orders:pod_orders});
         }

@@ -9,7 +9,7 @@
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Confirm"/>
                         <button name="confirm_request" type="object" string="Confirm" class="oe_highlight" states="Draft"/>
-                        <button name="open_customer" class="oe_highlight" states="Confirm" string="Create Sale Order" type="object"></button>
+                        <button name="create_sale_order" class="oe_highlight" states="Confirm" string="Create Sale Order" type="object"></button>
                         <button name="print_prescription_report_ticket_size" class="oe_highlight" string="Print Measure" type="object"></button>
                         <button name="print_podiatry_prescription_report_ticket_size" class="oe_highlight" string="Print Ophtalmologic" type="object"></button>
                     </header>
@@ -21,8 +21,9 @@
                     <group>
                         <group>
                             <field name="practitioner" attrs="{'readonly': [('state','=','confirm')]}" options='{"no_open": True, "no_create": True}' required="1"/>
-                            <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
+                            <field name="practice" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','confirm')]}" required="1"/>
                             <field name="company_id"/>
+                            <!-- <field name="practice_partner_id"/> -->
                             <field name="eye_examination_chargeable" attrs="{'readonly': [('state','=','confirm')]}" String="Examination" required="1"/>
 
                         </group>
@@ -257,6 +258,18 @@
                                 </group>
                             </group>
                         </page>
+                        <!-- <page string="Product Test">
+                            <field name="prescription_line_ids" widget="section_and_note_one2many">
+                                <tree editable="bottom">
+                                    <field name="product_id" widget="product_configurator" />
+                                    <field name="name" widget="section_and_note_text" optional="show"/>
+                                    <field name="description"/>
+                                    <field name="product_qty"/>
+                                    <field name="unit_price"/>
+                                    <field name="sub_total"/>
+                                </tree>
+                            </field>
+                        </page> -->
                         <page string="Ophthalmology">
                             <div class="row">
                                 <div class="col-8">
@@ -399,7 +412,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="practitioner"/>
-                    <field name="customer"/>
+                    <field name="practice"/>
                     <field name="checkup_date" string="Prescription Date"/>
                     <field name="test_type"/>
                     <field name="prescription_type"/>
@@ -422,11 +435,11 @@
 
 
         <menuitem id="pod_erp_root" name="POD ERP" sequence="1" web_icon="pod_erp,static/description/icon.png"/>
-        <menuitem id="pod_erp_customer" name="Clinics" parent="pod_erp_root" action="action_practice_window" sequence="1"/>
+        <menuitem id="pod_erp_practice" name="Clinics" parent="pod_erp_root" action="action_practice_window" sequence="1"/>
         <menuitem id="pod_erp_practitioner" name="Practitioners" parent="pod_erp_root" action="action_practitioner_window" groups="group_pod_erp_practitioners,base.group_system" sequence="2"/>
         <menuitem id="pod_erp_patient" name="Patients" parent="pod_erp_root" action="action_patient_window" groups="group_pod_erp_patients,base.group_system" sequence="3"/>
         <menuitem id="pod_erp_prescriptions" name="Prescriptions" parent="pod_erp_root" action="action_prescriptions_window" groups="group_pod_erp_practitioners,base.group_system" sequence="4"/>
-        <menuitem id="pod_erp_sale_order" name="Sale Orders" parent="pod_erp_root" action="sale.action_orders" sequence="6"/>
+        <menuitem id="pod_erp_sale_order" name="Sale Orders" parent="pod_erp_root" action="sale.action_orders" sequence="5"/>
         <menuitem id="pod_erp_config" name="Configuration" parent="pod_erp_root" sequence="7"/>
 
 

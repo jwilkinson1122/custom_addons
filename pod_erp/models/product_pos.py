@@ -17,9 +17,9 @@ class ProductFromPos(models.Model):
         vals["test_type"] = {}
         vals["test_type"][0] = new_vals.id
         vals["test_type"][1] = new_vals.name
-        new_vals = self.env['res.partner'].search([('id', '=', vals["customer"])])
-        vals["customer"] = {}
-        vals["customer"][0] = new_vals.id
-        vals["customer"][1] = new_vals.name
+        new_vals = self.env['res.partner'].search([('id', '=', vals["practice"])])
+        vals["practice"] = {}
+        vals["practice"][0] = new_vals.id
+        vals["practice"][1] = new_vals.name
         vals["id"] = rec.id
         return vals
