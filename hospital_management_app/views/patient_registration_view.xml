@@ -14,6 +14,9 @@
                 </div>
 
                 <!-- <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}"></page> -->
+                <field name="phone" position="before">
+                    <field name="function" attrs="{'invisible': [('is_patient', '=', True)]}"/>
+                </field>
                 <field name="category_id" position="after">
                     <field name="is_patient" attrs="{'invisible': [('is_patient', '=', False)]}"/>
                 </field>

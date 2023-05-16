@@ -42,7 +42,7 @@
 								<field name="partner_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" required="1" domain="[('is_patient','=', True)]" options="{'no_open': True, 'no_create': True}"/>
 								<field name="registration_no" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}"/>
 								<field name="admit_date" readonly="1"/>
-								<field name="partner_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" required="1" domain="[('partner_type','=', 'doctor')]" options="{'no_open': True, 'no_create': True}"/>
+								<field name="partner_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" required="1" domain="[('partner_type_id','=', 'doctor')]" options="{'no_open': True, 'no_create': True}"/>
 								<field name="disease_type_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" options="{'no_open': True, 'no_create': True}"/>
 
 							</group>
@@ -50,7 +50,7 @@
 								<field name="ward_id" required="1" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" options="{'no_open': True, 'no_create': True}"/>
 								<field name="bed_id" required="1" domain="[('state', '=', 'free'),('ward_id', '=', ward_id)]" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" options="{'no_open': True, 'no_create': True}"/>
 								<field name="discharge_date" readonly="1"/>
-								<field name="operating_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" domain="[('partner_type','=', 'doctor')]" options="{'no_open': True, 'no_create': True}"/>
+								<field name="operating_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" domain="[('partner_type_id','=', 'doctor')]" options="{'no_open': True, 'no_create': True}"/>
 								<field name="invoice_id" readonly="1"/>
 							</group>
 						</group>

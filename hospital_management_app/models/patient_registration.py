@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class HospitalPatient(models.Model):
     _inherit = 'res.partner'
 
-    is_patient = fields.Boolean(string='Is Patient', tracking=True)
+    # is_patient = fields.Boolean(string='Is Patient', tracking=True)
 
     # Personal Information
     registration_no = fields.Char(string='Registration_no')

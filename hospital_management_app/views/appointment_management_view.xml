@@ -45,7 +45,7 @@
 								<field name="disease_fees" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="disease_stage_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="appointment_date" required="1" attrs="{'readonly': [('state', '!=', 'new')]}"/>
-								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('partner_type','=', 'doctor')]"/>
+								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
 							</group>
 							<group>
 								<field name="father_name" attrs="{'readonly': [('state', '!=', 'new')]}"/>

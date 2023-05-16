@@ -6,8 +6,10 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='parent_id']" position="after">
-                <field name="partner_type" placeholder="Name" attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
-                <field name="practice_type" attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
+                <!-- <field name="partner_company_type_id" options='{"no_open": True}' attrs="{'invisible': [('is_company', '=', False)]}" /> -->
+
+                <field name="partner_type_id" attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
+                <field name="practice_type_id" attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
             </xpath>
         </field>
     </record>
@@ -20,15 +22,32 @@
             <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
                 <attribute name="attrs" />
             </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="invisible">False</attribute>
+                <attribute name="placeholder">Practice</attribute>
             </xpath>
-            <xpath expr="//field[@name='parent_id']" position="after">
-                <field name="partner_type" attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
-                <field name="practice_type" attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
+            <xpath expr="//field[@name='parent_id']" position="before">
+                <field name="partner_type_id" placeholder="Partner Type" class="oe_inline" options='{"no_open": True}' attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
+                <field name="practice_type_id" placeholder="Practice Type" class="oe_inline" options='{"no_open": True}' attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
+                <!-- <field name="parent_relation_label" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('partner_type_id', '=', False)]}"/> -->
+                <field name="parent_relation_label" class="oe_inline" nolabel="1"/>
+
             </xpath>
-            <xpath expr='//page[@name="internal_notes"]' position="before">
-                <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}">
+<!-- 
+             <field name="parent_id" position="before">
+                <field name="customer" invisible="1"/>
+                <field name="supplier" invisible="1"/>
+                <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]"/>
+                <field name="parent_relation_label" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('partner_type_id', '=', False)]}"/>
+            </field> -->
+            <!-- <xpath expr="//field[@name='phone']" position="before">
+                <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" attrs="{'invisible': [('is_company', '=', True)]}"/>
+            </xpath> -->
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}" autofocus="autofocus">
                     <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'other'}" mode="kanban">
                         <kanban on_create="base.view_partner_form">
                             <field name="id" />
@@ -101,7 +120,6 @@
 
     <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" />
 
-
     <record id="open_view_partner_all_list" model="ir.actions.act_window">
         <field name="name">All Contacts</field>
         <field name="type">ir.actions.act_window</field>
@@ -110,73 +128,73 @@
     </record>
 
     <menuitem id="menu_res_partner_user_all" name="All Contacts" action="open_view_partner_all_list" parent="main_menu_management" sequence="1"/>
-    <!-- 
-    <record id="action_res_partner_practice" model="ir.actions.act_window">
+
+    <record id="action_res_partner_clinic" model="ir.actions.act_window">
         <field name="name">Clinics</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('practice_type', '=', 'clinic')]</field>
-        <field name="context">{'default_practice_type':'clinic'}</field>
+        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="context">{'default_is_company':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_practice" name="Practices" action="action_res_partner_practice" parent="main_menu_management" sequence="2"/> -->
-
+    <menuitem id="menu_partner_clinic" name="Clinics" action="action_res_partner_clinic" parent="main_menu_management" sequence="2"/>
 
     <record id="action_res_partner_administrator" model="ir.actions.act_window">
         <field name="name">Administrator</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('partner_type', '=', 'administrator')]</field>
-        <field name="context">{'default_partner_type':'administrator'}</field>
+        <field name="domain">[('is_administrator', '=', True)]</field>
+        <field name="context">{'default_is_administrator':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_administrator" name='Administrator' parent="main_menu_management" action="action_res_partner_administrator" sequence="3" />
+    <menuitem id="menu_partner_administrator" name='Administrator' parent="main_menu_management" action="action_res_partner_administrator" sequence="4" />
 
     <record id="action_res_partner_doctor" model="ir.actions.act_window">
         <field name="name">Doctor</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('partner_type', '=', 'doctor')]</field>
-        <field name="context">{'default_partner_type':'doctor'}</field>
+        <field name="domain">[('is_doctor', '=', True)]</field>
+        <field name="context">{'default_is_doctor':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_doctor" name='Doctor' parent="main_menu_management" action="action_res_partner_doctor" sequence="4" />
+    <menuitem id="menu_partner_doctor" name='Doctor' parent="main_menu_management" action="action_res_partner_doctor" sequence="5" />
 
     <record id="action_res_partner_nurse" model="ir.actions.act_window">
         <field name="name">Nurse</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('partner_type', '=', 'nurse')]</field>
-        <field name="context">{'default_partner_type':'nurse'}</field>
+        <field name="domain">[('is_nurse', '=', True)]</field>
+        <field name="context">{'default_is_nurse':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_nurse" name='Nurse' parent="main_menu_management" action="action_res_partner_nurse" sequence="5" />
+    <menuitem id="menu_partner_nurse" name='Nurse' parent="main_menu_management" action="action_res_partner_nurse" sequence="6" />
 
     <record id="action_res_partner_receptionist" model="ir.actions.act_window">
         <field name="name">Receptionist</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('partner_type', '=', 'receptionist')]</field>
-        <field name="context">{'default_partner_type':'receptionist'}</field>
+        <field name="domain">[('is_receptionist', '=', True)]</field>
+        <field name="context">{'default_is_receptionist':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_receptionist" name='Receptionist' parent="main_menu_management" action="action_res_partner_receptionist" sequence="6" />
+    <menuitem id="menu_partner_receptionist" name='Receptionist' parent="main_menu_management" action="action_res_partner_receptionist" sequence="7" />
 
     <record id="action_res_partner_other" model="ir.actions.act_window">
         <field name="name">Other Partner</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="domain">[('partner_type', '=', 'other')]</field>
-        <field name="context">{'default_partner_type':'other'}</field>
+        <field name="domain">[('is_other', '=', True)]</field>
+        <field name="context">{'default_is_other':True}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <menuitem id="menu_partner_other" name='Other Partner' parent="main_menu_management" action="action_res_partner_other" sequence="7" />
+    <menuitem id="menu_partner_other" name='Other Partner' parent="main_menu_management" action="action_res_partner_other" sequence="8" />
 
+    
 
 </odoo>

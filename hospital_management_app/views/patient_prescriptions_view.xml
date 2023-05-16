@@ -39,7 +39,7 @@
                             <group>
                                 <field name="registration_no" />
                                 <field name="date" required="1"/>
-                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('partner_type','=', 'doctor')]"/>
+                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
                             </group>
                         </group>
                         <notebook>
