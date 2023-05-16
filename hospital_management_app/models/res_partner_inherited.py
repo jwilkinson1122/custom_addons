@@ -39,6 +39,11 @@ class Partner(models.Model):
         comodel_name="practice.type", string="Practice Type"
     )
     
+    partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
+    practice_relation_label = fields.Char('Practice relation label', translate=True, default='Attached To:', readonly=True)
+
+    
+    
 
 
     # employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -78,8 +83,6 @@ class PartnerType(models.Model):
     patient = fields.Boolean(string='Is a Patient', help="Check this box if this contact is a patient.")
     other = fields.Boolean(string='Is Other', help="Check this box if this contact is other.")
     
-    parent_relation_label = fields.Char('Parent relation label', translate=True, required=True, default='Attached To:')
-
     _sql_constraints = [
         ("name_uniq", "unique (name)", "Partner Type already exists!")
     ]

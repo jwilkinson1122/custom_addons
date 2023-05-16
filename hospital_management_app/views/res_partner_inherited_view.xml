@@ -32,20 +32,11 @@
             <xpath expr="//field[@name='parent_id']" position="before">
                 <field name="partner_type_id" placeholder="Partner Type" class="oe_inline" options='{"no_open": True}' attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
                 <field name="practice_type_id" placeholder="Practice Type" class="oe_inline" options='{"no_open": True}' attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
-                <!-- <field name="parent_relation_label" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('partner_type_id', '=', False)]}"/> -->
-                <field name="parent_relation_label" class="oe_inline" nolabel="1"/>
+                <field name="partner_relation_label" class="text-center" nolabel="1" attrs="{'required' : [('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
+                <field name="practice_relation_label" class="text-center" nolabel="1" attrs="{'required' : [('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
 
             </xpath>
-<!-- 
-             <field name="parent_id" position="before">
-                <field name="customer" invisible="1"/>
-                <field name="supplier" invisible="1"/>
-                <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]"/>
-                <field name="parent_relation_label" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('partner_type_id', '=', False)]}"/>
-            </field> -->
-            <!-- <xpath expr="//field[@name='phone']" position="before">
-                <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" attrs="{'invisible': [('is_company', '=', True)]}"/>
-            </xpath> -->
+
             <xpath expr='//page[@name="contact_addresses"]' position="before">
                 <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}" autofocus="autofocus">
                     <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'other'}" mode="kanban">
