@@ -122,9 +122,9 @@
         </field>
     </record>
 
-       <!-- Parent Menu - All Companies -->
+       <!-- Parent Menu - Companies -->
     <record id="action_company_all_list" model="ir.actions.act_window">
-        <field name="name">All Companies</field>
+        <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="domain">[('is_company', '=', True)]</field>
@@ -132,9 +132,9 @@
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-    <!-- Parent Menu - All Contacts -->
+    <!-- Parent Menu - Contacts -->
     <record id="action_contact_all_list" model="ir.actions.act_window">
-        <field name="name">All Contacts</field>
+        <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="domain">[('is_company', '=', False)]</field>
@@ -245,9 +245,9 @@
     <!-- Main Menu Account Manangement -->
     <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" />
     
-    <!-- Menus - All Contacts - All Companies -->
-    <menuitem id="menu_companies_all" name="All Companies" action="action_company_all_list" parent="main_menu_management" sequence="1"/>
-    <menuitem id="menu_contacts_all" name="All Contacts" action="action_contact_all_list" parent="main_menu_management" sequence="2"/>
+    <!-- Menus - Contacts - Companies -->
+    <menuitem id="menu_companies_all" name="Companies" action="action_company_all_list" parent="main_menu_management" sequence="1"/>
+    <menuitem id="menu_contacts_all" name="Contacts" action="action_contact_all_list" parent="main_menu_management" sequence="2"/>
 
         <!-- Sub menu Company Types -->
     <menuitem id="submenu_company_types" name='Company Types' parent="main_menu_management" sequence="3"/>
