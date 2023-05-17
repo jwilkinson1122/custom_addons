@@ -70,17 +70,17 @@
             </field>
         </record>
 
-        <record id="action_hospital_management" model="ir.actions.act_window">
-            <field name="name">Patient</field>
+        <record id="action_patient_management" model="ir.actions.act_window">
+            <field name="name">Patients</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('is_patient', '=', True)]</field>
-            <field name="context">{'default_is_patient':True}</field>
+            <field name="context">{'default_is_patient':True, 'default_partner_type_id': 5}</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!---->
-        <menuitem id="main_menu_patients" name='Patients' parent="main_menu_hospital_management" action="action_hospital_management" groups="group_hospital_user" sequence="1" />
+        <menuitem id="main_menu_patients" name='Patients' parent="main_menu_hospital_management" action="action_patient_management" groups="group_hospital_user" sequence="1" />
 
         <!-- <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" /> -->
 

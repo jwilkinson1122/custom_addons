@@ -32,13 +32,9 @@ class Partner(models.Model):
         domain=[("active", "=", True), ("is_company", "=", True)],
     )
     
-    partner_type_id = fields.Many2one(
-        comodel_name="partner.type", string="Partner Type"
-    )
+    partner_type_id = fields.Many2one(comodel_name="partner.type", string="Partner Type")
     
-    practice_type_id = fields.Many2one(
-        comodel_name="practice.type", string="Company Type"
-    )
+    practice_type_id = fields.Many2one(comodel_name="practice.type", string="Company Type")
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     practice_relation_label = fields.Char('Company relation label', translate=True, default='Attached To:', readonly=True)
