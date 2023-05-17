@@ -9,13 +9,13 @@
                 <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
-                <field name="disease_type_id" position="attributes">
+                <field name="condition_type_id" position="attributes">
                     <attribute name="string">Teeth Problem</attribute>
                 </field>
-                <field name="disease_stage_id" position="attributes">
+                <field name="condition_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
-                <field name="disease_fees" position="attributes">
+                <field name="condition_fees" position="attributes">
                     <attribute name="string">Fees Per Visit</attribute>
                 </field>
             </field>
@@ -28,10 +28,10 @@
                 <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
-                <field name="disease_type_id" position="attributes">
+                <field name="condition_type_id" position="attributes">
                     <attribute name="string">Teeth Problem</attribute>
                 </field>
-                <field name="disease_stage_id" position="attributes">
+                <field name="condition_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
             </field>
@@ -44,35 +44,35 @@
                 <field name="partner_id" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </field>
-                <field name="disease_type_id" position="attributes">
+                <field name="condition_type_id" position="attributes">
                     <attribute name="string">Teeth Problem</attribute>
                 </field>
-                <field name="disease_stage_id" position="attributes">
+                <field name="condition_stage_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
                 <xpath expr="//search/group/filter[@name='partner_id']" position="attributes">
                     <attribute name="string">Dentist</attribute>
                 </xpath>
-                <xpath expr="//search/group/filter[@name='disease_type_id']" position="attributes">
+                <xpath expr="//search/group/filter[@name='condition_type_id']" position="attributes">
                     <attribute name="string">Teeth Problem</attribute>
                 </xpath>
-                <xpath expr="//search/group/filter[@name='disease_stage_id']" position="attributes">
+                <xpath expr="//search/group/filter[@name='condition_stage_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>
 
 
-        <record model="ir.actions.act_window" id="hospital_management_app.action_disease_type">
+        <record model="ir.actions.act_window" id="hospital_management_app.action_condition_type">
             <field name="name">Teeth Problem</field>
         </record>
         <record model="ir.actions.act_window" id="hospital_management_app.action_contact_doctor">
             <field name="name">Dentist</field>
         </record>
-        <record model="ir.ui.menu" id="hospital_management_app.menu_disease_type">
+        <record model="ir.ui.menu" id="hospital_management_app.menu_condition_type">
             <field name="name">Teeth Problem</field>
         </record>
-        <record model="ir.ui.menu" id="hospital_management_app.menu_disease_stage">
+        <record model="ir.ui.menu" id="hospital_management_app.menu_condition_stage">
             <field name="action" eval="False"/>
         </record>
         <record model="ir.ui.menu" id="hospital_management_app.menu_contact_doctor">

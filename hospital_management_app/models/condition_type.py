@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class DiseaseType(models.Model):
+class ConditionType(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
     _description = 'Condition Type'

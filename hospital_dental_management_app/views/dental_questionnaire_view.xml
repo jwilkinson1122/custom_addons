@@ -71,7 +71,7 @@
                         <br/>
                         <notebook>
                             <page string="History of Any Condition">
-                                <field name="disease_type_ids" widget="many2many_checkboxes" nolabel="True"/>
+                                <field name="condition_type_ids" widget="many2many_checkboxes" nolabel="True"/>
                             </page>
                             <page string="Dental Procedures">
                                 <field name="procedures_ids" widget="many2many_checkboxes" nolabel="True"/>

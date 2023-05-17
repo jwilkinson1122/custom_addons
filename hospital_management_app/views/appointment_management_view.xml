@@ -9,8 +9,8 @@
 				<tree>
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
+					<field name="condition_type_id"/>
+					<field name="condition_stage_id"/>
 					<field name="appointment_date"/>
 					<field name="next_visit"/>
 					<field name="partner_id"/>
@@ -41,9 +41,9 @@
 							<group>
 								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('is_patient','=', True)]"/>
 								<field name="registration_no" attrs="{'readonly': [('state', '!=', 'new')]}"/>
-								<field name="disease_type_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
-								<field name="disease_fees" attrs="{'readonly': [('state', '!=', 'new')]}"/>
-								<field name="disease_stage_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+								<field name="condition_type_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+								<field name="condition_fees" attrs="{'readonly': [('state', '!=', 'new')]}"/>
+								<field name="condition_stage_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="appointment_date" required="1" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
 							</group>
@@ -65,9 +65,9 @@
 									<tree create="0" delete="0">
 										<field name="appointment_id" invisible="1"/>
 										<field name="name"/>
-										<field name="disease_type_id"/>
-										<field name="disease_stage_id"/>
-										<field name="disease_fees"/>
+										<field name="condition_type_id"/>
+										<field name="condition_stage_id"/>
+										<field name="condition_fees"/>
 										<field name="appointment_date"/>
 										<field name="partner_id"/>
 										<field name="invoice_id"/>
@@ -94,13 +94,13 @@
 				<search string="Activity">
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
+					<field name="condition_type_id"/>
+					<field name="condition_stage_id"/>
 					<field name="next_visit"/>
 					<field name="partner_id"/>
 					<group expand="0" string="Group By">
-						<filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-						<filter string="Condition Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+						<filter string="Condition Type" name="condition_type_id" context="{'group_by': 'condition_type_id'}"/>
+						<filter string="Condition Stage" name="condition_stage_id" context="{'group_by': 'condition_stage_id'}"/>
 						<filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
 						<filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
 					</group>
@@ -117,8 +117,8 @@
 				<kanban class="o_res_partner_kanban">
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
-					<field name="disease_stage_id"/>
+					<field name="condition_type_id"/>
+					<field name="condition_stage_id"/>
 					<field name="next_visit"/>
 					<field name="partner_id"/>
 					<templates>
@@ -134,7 +134,7 @@
 										</div>
 										<div>
 											<strong>
-												<field name="disease_type_id"/>
+												<field name="condition_type_id"/>
 											</strong>Next Visit:<field name="next_visit"/>
 										</div>
 										<div>

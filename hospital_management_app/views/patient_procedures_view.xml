@@ -10,8 +10,8 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="registration_no"/>
-                    <field name="disease_type_id"/>
-                    <field name="disease_stage_id"/>
+                    <field name="condition_type_id"/>
+                    <field name="condition_stage_id"/>
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="state"/>
@@ -39,8 +39,8 @@
                         <group>
                             <group>
                                 <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
-                                <field name="disease_type_id" />
-                                <field name="disease_stage_id" />
+                                <field name="condition_type_id" />
+                                <field name="condition_stage_id" />
                                 <field name="registration_no" />
                             </group>
                             <group>
@@ -81,14 +81,14 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="registration_no"/>
-                    <field name="disease_type_id"/>
-                    <field name="disease_stage_id"/>
+                    <field name="condition_type_id"/>
+                    <field name="condition_stage_id"/>
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="state"/>
                     <group expand="0" string="Group By">
-                        <filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-                        <filter string="Condition Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                        <filter string="Condition Type" name="condition_type_id" context="{'group_by': 'condition_type_id'}"/>
+                        <filter string="Condition Stage" name="condition_stage_id" context="{'group_by': 'condition_stage_id'}"/>
                         <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
                         <filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
                         <filter string="State" name="state" context="{'group_by': 'state'}"/>

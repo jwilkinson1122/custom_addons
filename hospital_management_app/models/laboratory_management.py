@@ -15,9 +15,9 @@ class LaboratoryManagement(models.Model):
 
     name = fields.Char(string="Name")
     partner_id = fields.Many2one('res.partner', string='Patient')
-    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
+    condition_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
+    condition_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
     total_fees = fields.Float(string='Total Fees', store=True, compute='compute_total_fees',
                               tracking=True)
@@ -137,8 +137,8 @@ class LaboratoryManagement(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for rec in self:
-            rec.disease_type_id = rec.partner_id.disease_type_id
-            rec.disease_stage_id = rec.partner_id.disease_stage_id
+            rec.condition_type_id = rec.partner_id.condition_type_id
+            rec.condition_stage_id = rec.partner_id.condition_stage_id
 
 
 class LaboratoryManagementLine(models.Model):

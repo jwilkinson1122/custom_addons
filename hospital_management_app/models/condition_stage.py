@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class DiseaseStage(models.Model):
+class ConditionStage(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
     _description = 'Condition Stage'

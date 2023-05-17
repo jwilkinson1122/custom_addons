@@ -3,7 +3,7 @@
 	<data>
 
 
-		<record id="disease_stage_view_tree_new" model="ir.ui.view">
+		<record id="condition_stage_view_tree_new" model="ir.ui.view">
 			<field name="name">condition.stage.view.form.popup</field>
 			<field name="model">condition.stage</field>
 			<field name="priority">20</field>
@@ -14,7 +14,7 @@
 			</field>
 		</record>
 
-		<record id="disease_stage_view_form_new" model="ir.ui.view">
+		<record id="condition_stage_view_form_new" model="ir.ui.view">
 			<field name="name">condition.stage.view.form.popup</field>
 			<field name="model">condition.stage</field>
 			<field name="priority">20</field>
@@ -46,7 +46,7 @@
 
 
 
-		<record id="action_disease_stage" model="ir.actions.act_window">
+		<record id="action_condition_stage" model="ir.actions.act_window">
 			<field name="name">Condition Stage</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">condition.stage</field>
@@ -58,7 +58,7 @@
 		<!---->
 		<menuitem id="menu_hospital_configuration" name='Configuration' parent="main_menu_hospital_management" groups="group_hospital_manager" sequence="100" />
 
-		<menuitem id="menu_disease_stage" name='Condition Stage' parent="menu_hospital_configuration" action="action_disease_stage" sequence="1" />
+		<menuitem id="menu_condition_stage" name='Condition Stage' parent="menu_hospital_configuration" action="action_condition_stage" sequence="1" />
 
 
 	</data>

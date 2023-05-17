@@ -9,7 +9,7 @@
 				<tree>
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
+					<field name="condition_type_id"/>
 					<field name="partner_id"/>
 					<field name="operating_id"/>
 					<field name="admit_date"/>
@@ -43,7 +43,7 @@
 								<field name="registration_no" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}"/>
 								<field name="admit_date" readonly="1"/>
 								<field name="partner_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" required="1" domain="[('partner_type_id','=', 'doctor')]" options="{'no_open': True, 'no_create': True}"/>
-								<field name="disease_type_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" options="{'no_open': True, 'no_create': True}"/>
+								<field name="condition_type_id" attrs="{'readonly': [('state', 'in', ['discharge','invoice'])]}" options="{'no_open': True, 'no_create': True}"/>
 
 							</group>
 							<group>
@@ -84,14 +84,14 @@
 				<search string="Activity">
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
+					<field name="condition_type_id"/>
 					<field name="partner_id"/>
 					<field name="operating_id"/>
 					<field name="admit_date"/>
 					<field name="discharge_date"/>
 					<field name="state"/>
 					<group expand="0" string="Group By">
-						<filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+						<filter string="Condition Type" name="condition_type_id" context="{'group_by': 'condition_type_id'}"/>
 						<filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
 						<filter string="Attending Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
 						<filter string="Operating Doctor" name="operating_id" context="{'group_by': 'operating_id'}"/>
@@ -110,7 +110,7 @@
 				<kanban class="o_res_partner_kanban">
 					<field name="partner_id"/>
 					<field name="registration_no"/>
-					<field name="disease_type_id"/>
+					<field name="condition_type_id"/>
 					<field name="partner_id"/>
 					<field name="operating_id"/>
 					<field name="admit_date"/>
@@ -129,7 +129,7 @@
 										</div>
 										<div>
 											<strong>
-												<field name="disease_type_id"/>
+												<field name="condition_type_id"/>
 											</strong>
 										</div>
 										<div>

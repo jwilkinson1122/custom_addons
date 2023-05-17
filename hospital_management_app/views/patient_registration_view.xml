@@ -59,9 +59,9 @@
                         </group>
                         <group>
                             <group string="Condition">
-                                <field name="disease_type_id" options="{'no_create': True, 'no_open': True}"/>
-                                <field name="disease_stage_id" options="{'no_create': True, 'no_open': True}"/>
-                                <field name="disease_fees"/>
+                                <field name="condition_type_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_stage_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="condition_fees"/>
                             </group>
                         </group>
 

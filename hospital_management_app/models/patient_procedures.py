@@ -14,9 +14,9 @@ class PatientProcedures(models.Model):
     partner_id = fields.Many2one('res.partner', string='Patient')
     name = fields.Char(string="Name", )
     registration_no = fields.Char(string="Registration No")
-    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
+    condition_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
+    condition_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
     date = fields.Datetime(string='Date')
     partner_id = fields.Many2one('res.partner', string='Doctor')
@@ -42,8 +42,8 @@ class PatientProcedures(models.Model):
     def onchange_partner_id(self):
         for rec in self:
             rec.registration_no = rec.partner_id.registration_no
-            # rec.disease_type_id = rec.partner_id.disease_type_id
-            # rec.disease_stage_id = rec.partner_id.disease_stage_id
+            # rec.condition_type_id = rec.partner_id.condition_type_id
+            # rec.condition_stage_id = rec.partner_id.condition_stage_id
 
     def action_done(self):
         for rec in self:

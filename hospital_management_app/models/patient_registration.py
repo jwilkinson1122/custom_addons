@@ -48,9 +48,9 @@ class HospitalPatient(models.Model):
     registration_card = fields.Char(string="Registration Card")
     aadhaar_no = fields.Char(string="Aadhaar Number.")
 
-    disease_type_id = fields.Many2one('condition.type', string='Condition Type', tracking=True)
-    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage', tracking=True)
-    disease_fees = fields.Float(string='Condition Fees Per Visit', related='disease_type_id.fees', store=True, tracking=True)
+    condition_type_id = fields.Many2one('condition.type', string='Condition Type', tracking=True)
+    condition_stage_id = fields.Many2one('condition.stage', string='Condition Stage', tracking=True)
+    condition_fees = fields.Float(string='Condition Fees Per Visit', related='condition_type_id.fees', store=True, tracking=True)
     no_of_appointment = fields.Integer('No Of Appointment', compute='compute_no_of_appointment')
 
     def compute_no_of_appointment(self):
@@ -72,8 +72,8 @@ class HospitalPatient(models.Model):
             'res_model': 'appointment.management',
             'context': {
                 'default_partner_id': self.id,
-                'default_disease_stage_id': self.disease_stage_id.id,
-                'default_disease_type_id': self.disease_type_id.id,
+                'default_condition_stage_id': self.condition_stage_id.id,
+                'default_condition_type_id': self.condition_type_id.id,
                 'default_father_name': self.father_name,
                 'default_street': self.street,
                 'default_street2': self.street2,

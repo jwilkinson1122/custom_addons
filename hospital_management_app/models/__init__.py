@@ -1,5 +1,5 @@
-from . import disease_stage
-from . import disease_type
+from . import condition_stage
+from . import condition_type
 from . import patient_registration
 from . import res_partner_inherited
 from . import appointment_management
