@@ -1,0 +1,18 @@
+<data noupdate="1">
+    <record model="eclinic.pharmacist" id="pharmacist_demo_1">
+        <field name="name">Jane Smith</field>
+        <field name="age">35</field>
+        <field name="gender">female</field>
+        <field name="address">456 Oak St, Anytown USA</field>
+        <field name="contact_number">+1-202-555-0120</field>
+        <field name="email">janesmith@example.com</field>
+    </record>
+    <record model="eclinic.pharmacist" id="pharmacist_demo_2">
+        <field name="name">Bob Johnson</field>
+        <field name="age">40</field>
+        <field name="gender">male</field>
+        <field name="address">789 Pine Ave, Anytown USA</field>
+        <field name="contact_number">+1-202-555-0130</field>
+        <field name="email">bobjohnson@example.com</field>
+    </record>
+</data>

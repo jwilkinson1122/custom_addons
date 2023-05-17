@@ -1,0 +1,9 @@
+<odoo>
+  <data>
+    <record id="action_download_pdf_hello_world" model="ir.actions.act_url">
+      <field name="name">Download PDF with Hello World</field>
+      <field name="type">ir.actions.act_url</field>
+      <field name="url">/eclinic/download_pdf_hello_world</field>
+    </record>
+  </data>
+</odoo>

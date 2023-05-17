@@ -6,6 +6,10 @@ from odoo import api, fields, models, _
 
 class HospitalPatient(models.Model):
     _inherit = 'res.partner'
+    
+    doctor_id = fields.Many2one("res.partner", domain=[('is_doctor','=',True)], string="Doctor", index=True, tracking=True)
+    patient_id = fields.Many2one("res.partner", domain=[('is_patient','=',True)], string="Patient", index=True, tracking=True)
+    practice_id = fields.Many2one("res.partner", domain=[('is_clinic','=',True)], string="Clinic", index=True, tracking=True)
 
     registration_no = fields.Char(string='Registration_no')
     patient_registration = fields.Selection([('date_of_birth', 'DOB'), ('age_at_registration', 'Age at Registration')],
@@ -56,7 +60,7 @@ class HospitalPatient(models.Model):
     def compute_no_of_appointment(self):
         for rec in self:
             appointment_ids = self.env['appointment.management'].search(
-                [('partner_id', '=', rec.id), ('doc_type', '=', 'appointment')])
+                [('patient_id', '=', rec.id), ('doc_type', '=', 'appointment')])
             self.no_of_appointment = len(appointment_ids)
 
     def action_view_appointment(self):
@@ -71,7 +75,7 @@ class HospitalPatient(models.Model):
             'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
             'res_model': 'appointment.management',
             'context': {
-                'default_partner_id': self.id,
+                'default_patient_id': self.id,
                 'default_condition_stage_id': self.condition_stage_id.id,
                 'default_condition_type_id': self.condition_type_id.id,
                 'default_father_name': self.father_name,
@@ -82,7 +86,7 @@ class HospitalPatient(models.Model):
                 'default_type': 'appointment',
                 'default_registration_no': self.registration_no,
             },
-            'domain': [('partner_id', '=', self.id), ('type', '=', 'appointment')],
+            'domain': [('patient_id', '=', self.id), ('type', '=', 'appointment')],
             'type': 'ir.actions.act_window',
         }
 
@@ -162,6 +166,16 @@ class HospitalPatient(models.Model):
             #     'target': 'new',
             #     'context': ctx,
             # }
+
+    @api.onchange('parent_id')
+    def onchange_practice_id(self):
+        for rec in self:
+            return {'domain': {'doctor_id': [('parent_id', '=', rec.parent_id.id)]}}
+
+    # @api.onchange('practitioner_id')
+    # def onchange_practitioner_id(self):
+    #     for rec in self:
+    #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
 
     # Permanent Address
     # street = fields.Char(string='Street')

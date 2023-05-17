@@ -7,13 +7,13 @@
 			<field name="priority">20</field>
 			<field name="arch" type="xml">
 				<tree>
-					<field name="partner_id"/>
+					<field name="patient_id"/>
 					<field name="registration_no"/>
 					<field name="condition_type_id"/>
 					<field name="condition_stage_id"/>
 					<field name="appointment_date"/>
 					<field name="next_visit"/>
-					<field name="partner_id"/>
+					<field name="doctor_id"/>
 					<field name="state"/>
 				</tree>
 			</field>
@@ -39,13 +39,13 @@
 						</div>
 						<group>
 							<group>
-								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('is_patient','=', True)]"/>
+								<field name="patient_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('is_patient','=', True)]"/>
 								<field name="registration_no" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="condition_type_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="condition_fees" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="condition_stage_id" attrs="{'readonly': [('state', '!=', 'new')]}"/>
 								<field name="appointment_date" required="1" attrs="{'readonly': [('state', '!=', 'new')]}"/>
-								<field name="partner_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
+								<field name="doctor_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'new')]}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
 							</group>
 							<group>
 								<field name="father_name" attrs="{'readonly': [('state', '!=', 'new')]}"/>
@@ -69,7 +69,7 @@
 										<field name="condition_stage_id"/>
 										<field name="condition_fees"/>
 										<field name="appointment_date"/>
-										<field name="partner_id"/>
+										<field name="doctor_id"/>
 										<field name="invoice_id"/>
 										<field name="state"/>
 									</tree>
@@ -92,17 +92,17 @@
 			<field name="model">appointment.management</field>
 			<field name="arch" type="xml">
 				<search string="Activity">
-					<field name="partner_id"/>
+					<field name="patient_id"/>
 					<field name="registration_no"/>
 					<field name="condition_type_id"/>
 					<field name="condition_stage_id"/>
 					<field name="next_visit"/>
-					<field name="partner_id"/>
+					<field name="doctor_id"/>
 					<group expand="0" string="Group By">
 						<filter string="Condition Type" name="condition_type_id" context="{'group_by': 'condition_type_id'}"/>
 						<filter string="Condition Stage" name="condition_stage_id" context="{'group_by': 'condition_stage_id'}"/>
-						<filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
-						<filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
+						<filter string="Patient" name="patient_id" context="{'group_by': 'patient_id'}"/>
+						<filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
 					</group>
 				</search>
 			</field>
@@ -115,12 +115,12 @@
 			<field name="model">appointment.management</field>
 			<field name="arch" type="xml">
 				<kanban class="o_res_partner_kanban">
-					<field name="partner_id"/>
+					<field name="patient_id"/>
 					<field name="registration_no"/>
 					<field name="condition_type_id"/>
 					<field name="condition_stage_id"/>
 					<field name="next_visit"/>
-					<field name="partner_id"/>
+					<field name="doctor_id"/>
 					<templates>
 						<t t-name="kanban-box">
 							<div class="oe_kanban_global_click">
@@ -128,7 +128,7 @@
 									<strong class="o_kanban_record_title">
 										<div>
 											<strong>
-												<field name="partner_id"/>
+												<field name="patient_id"/>
 											</strong>
 											<field name="registration_no"/>
 										</div>
@@ -138,7 +138,7 @@
 											</strong>Next Visit:<field name="next_visit"/>
 										</div>
 										<div>
-													Doctor<field name="partner_id"/>
+													Doctor<field name="doctor_id"/>
 										</div>
 
 									</strong>

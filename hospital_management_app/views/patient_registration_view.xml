@@ -18,10 +18,12 @@
                     <field name="function" attrs="{'invisible': [('is_patient', '=', True)]}"/>
                 </field>
                 <field name="category_id" position="after">
-                    <field name="is_patient" attrs="{'invisible': [('is_patient', '=', False)]}"/>
+                    <field name="is_patient" invisible="1"/>
+                    <field name="doctor_id" attrs="{'invisible': [('is_patient', '=', False)]}"/>
+                    <!-- <field name="is_patient" attrs="{'invisible': [('is_patient', '=', False)]}"/> -->
                 </field>
-                <xpath expr="//page[@name='internal_notes']" position="after">
-                    <page string="Patient Details" name="patient_details" attrs="{'invisible': [('is_patient', '=', False)]}">
+                <xpath expr="//page[@name='contact_addresses']" position="before">
+                    <page string="Patient Details" name="patient_details" attrs="{'invisible': [('is_patient', '=', False)]}" autofocus="autofocus">
                         <header>
                             <button name="action_add_reg_no" string="Generate Registration No" type="object" class="oe_highlight" attrs="{'invisible': [('registration_no', '!=', False)]}"/>
                         </header>

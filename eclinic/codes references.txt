@@ -1,0 +1,193 @@
+class ClinicManagementSystem:
+    def __init__(self):
+        self.patients = []
+        self.doctors = []
+        self.appointments = []
+        self.visits = []
+        self.billing = []
+        self.inventory = []
+
+    def add_patient(self, patient):
+        self.patients.append(patient)
+
+    def add_doctor(self, doctor):
+        self.doctors.append(doctor)
+
+    def schedule_appointment(self, appointment):
+        self.appointments.append(appointment)
+
+    def check_in_patient(self, patient):
+        visit = Visit(patient)
+        self.visits.append(visit)
+        return visit
+
+    def check_out_patient(self, visit):
+        visit.check_out()
+
+    def conduct_medical_consultation(self, visit, doctor):
+        consultation = Consultation(doctor)
+        visit.add_consultation(consultation)
+
+    def create_treatment_plan(self, consultation, treatment_plan):
+        consultation.add_treatment_plan(treatment_plan)
+
+    def order_prescription(self, treatment_plan, prescription):
+        treatment_plan.add_prescription(prescription)
+
+    def dispense_prescription(self, prescription):
+        prescription.dispense()
+
+    def add_to_billing(self, visit, doctor, item, cost):
+        billing_item = BillingItem(doctor, item, cost)
+        visit.add_billing_item(billing_item)
+        self.billing.append(billing_item)
+
+    def add_to_inventory(self, item, quantity):
+        inventory_item = InventoryItem(item, quantity)
+        self.inventory.append(inventory_item)
+
+    def generate_patient_appointments_report(self, patient):
+        patient_appointments = []
+        for appointment in self.appointments:
+            if appointment.patient == patient:
+                patient_appointments.append(appointment)
+        return patient_appointments
+
+    def generate_doctor_appointments_report(self, doctor):
+        doctor_appointments = []
+        for appointment in self.appointments:
+            if appointment.doctor == doctor:
+                doctor_appointments.append(appointment)
+        return doctor_appointments
+
+    def generate_patient_visits_report(self, patient):
+        patient_visits = []
+        for visit in self.visits:
+            if visit.patient == patient:
+                patient_visits.append(visit)
+        return patient_visits
+
+    def generate_doctor_visits_report(self, doctor):
+        doctor_visits = []
+        for visit in self.visits:
+            for consultation in visit.consultations:
+                if consultation.doctor == doctor:
+                    doctor_visits.append(visit)
+                    break
+        return doctor_visits
+
+    def generate_patient_billing_report(self, patient):
+        patient_billing = []
+        for billing_item in self.billing:
+            if billing_item.visit.patient == patient:
+                patient_billing.append(billing_item)
+        return patient_billing
+
+    def generate_doctor_billing_report(self, doctor):
+        doctor_billing = []
+        for billing_item in self.billing:
+            if billing_item.doctor == doctor:
+                doctor_billing.append(billing_item)
+        return doctor_billing
+
+    def generate_inventory_report(self):
+        return self.inventory
+
+    def generate_patient_history_report(self, patient):
+        patient_history = []
+        for visit in self.visits:
+            if visit.patient == patient:
+                patient_history.append(visit)
+        return patient_history
+
+    def generate_doctor_performance_report(self, doctor):
+        doctor_visits = self.generate_doctor_visits_report(doctor)
+        revenue = 0
+        for visit in doctor_visits:
+            for billing_item in visit.billing:
+                if billing_item.doctor == doctor:
+                    revenue += billing_item.cost
+        return (len(doctor_visits), revenue)
+
+    def generate_revenue_report(self):
+        revenue = 0
+        for billing_item in self.billing:
+            revenue += billing_item.cost
+        return revenue
+
+class Appointment:
+    def __init__(self, patient, doctor, date_time):
+        self.patient = patient
+        self.doctor = doctor
+        self.date_time = date_time
+
+class Person:
+    def __init__(self, name, age, gender, phone_number):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.phone_number = phone_number
+
+class Patient(Person):
+    def __init__(self, name, age, gender, phone_number):
+        super().__init__(name, age, gender, phone_number)
+
+class Doctor(Person):
+    def __init__(self, name, age, gender, phone_number, specialty):
+        super().__init__(name, age, gender, phone_number)
+        self.specialty = specialty
+
+class Visit:
+    def __init__(self, patient):
+        self.patient = patient
+        self.consultations = []
+        self.billing = []
+        self.check_in_time = datetime.now()
+        self.check_out_time = None
+
+    def add_consultation(self, consultation):
+        self.consultations.append(consultation)
+
+    def add_billing_item(self, billing_item):
+        self.billing.append(billing_item)
+
+    def check_out(self):
+        self.check_out_time = datetime.now()
+
+class Consultation:
+    def __init__(self, doctor):
+        self.doctor = doctor
+        self.treatment_plans = []
+
+    def add_treatment_plan(self, treatment_plan):
+        self.treatment_plans.append(treatment_plan)
+
+class TreatmentPlan:
+    def __init__(self, description):
+        self.description = description
+        self.prescriptions = []
+
+    def add_prescription(self, prescription):
+        self.prescriptions.append(prescription)
+
+class Prescription:
+    def __init__(self, medication, dosage, quantity):
+        self.medication = medication
+        self.dosage = dosage
+        self.quantity = quantity
+        self.dispensed = False
+
+    def dispense(self):
+        self.dispensed = True
+
+class BillingItem:
+    def __init__(self, doctor, item, cost):
+        self.doctor = doctor
+        self.item = item
+        self.cost = cost
+        self.visit = None
+
+class InventoryItem:
+    def __init__(self, item, quantity):
+        self.item = item
+        self.quantity = quantity

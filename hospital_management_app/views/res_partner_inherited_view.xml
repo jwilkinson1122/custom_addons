@@ -122,7 +122,7 @@
         </field>
     </record>
 
-       <!-- Parent Menu - Companies -->
+    <!-- Parent Menu - Companies -->
     <record id="action_company_all_list" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
@@ -141,7 +141,7 @@
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-        <!-- Company - Clinic -->
+    <!-- Company - Clinic -->
     <record id="action_company_clinic" model="ir.actions.act_window">
         <field name="name">Clinics</field>
         <field name="type">ir.actions.act_window</field>
@@ -150,6 +150,17 @@
         <field name="context">{'default_is_company':True, 'default_is_clinic':True, 'default_practice_type_id': 1}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
+
+    <!-- <record model="ir.actions.act_window" id="act_res_partner">
+        <field name="name">Insurances Company</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_insurance_company','=',1)]</field>
+        <field name="context">{'default_is_insurance_company': 1,'search_default_is_insurance_company': 1}
+        </field>
+    </record> -->
 
     <!-- Company - Hospital -->
     <record id="action_company_hospital" model="ir.actions.act_window">
@@ -170,7 +181,7 @@
         <field name="context">{'default_is_company':True, 'default_is_military':True, 'default_practice_type_id': 3}</field>
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
-    
+
     <!-- Company - Other -->
     <record id="action_company_other" model="ir.actions.act_window">
         <field name="name">Other Company Type</field>
@@ -191,7 +202,7 @@
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-     <!-- Contact - Receptionist -->
+    <!-- Contact - Receptionist -->
     <record id="action_contact_receptionist" model="ir.actions.act_window">
         <field name="name">Receptionists</field>
         <field name="type">ir.actions.act_window</field>
@@ -201,7 +212,7 @@
         <field name="view_mode">kanban,tree,form,activity</field>
     </record>
 
-        <!-- Contact - Administrator -->
+    <!-- Contact - Administrator -->
     <record id="action_contact_administrator" model="ir.actions.act_window">
         <field name="name">Administrators</field>
         <field name="type">ir.actions.act_window</field>
@@ -244,12 +255,12 @@
 
     <!-- Main Menu Account Manangement -->
     <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" />
-    
+
     <!-- Menus - Contacts - Companies -->
     <menuitem id="menu_companies_all" name="Companies" action="action_company_all_list" parent="main_menu_management" sequence="1"/>
     <menuitem id="menu_contacts_all" name="Contacts" action="action_contact_all_list" parent="main_menu_management" sequence="2"/>
 
-        <!-- Sub menu Company Types -->
+    <!-- Sub menu Company Types -->
     <menuitem id="submenu_company_types" name='Company Types' parent="main_menu_management" sequence="3"/>
     <!-- Menus - Clinic - Hospital - Military -  Other -->
     <menuitem id="menu_company_clinic" name='Clinics' parent="submenu_company_types" action="action_company_clinic" sequence="1" />
