@@ -8,12 +8,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="patient_id"/>
                     <field name="registration_no"/>
                     <field name="disease_type_id"/>
                     <field name="disease_stage_id"/>
                     <field name="date"/>
-                    <field name="partner_id"/>
+                    <field name="doctor_id"/>
                 </tree>
             </field>
         </record>
@@ -32,14 +32,14 @@
                         </div>
                         <group>
                             <group>
-                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
+                                <field name="patient_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_patient','=', True)]"/>
                                 <field name="disease_type_id" />
                                 <field name="disease_stage_id" />
                             </group>
                             <group>
                                 <field name="registration_no" />
                                 <field name="date" required="1"/>
-                                <field name="partner_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('partner_type_id','=', 'doctor')]"/>
+                                <field name="doctor_id" options="{'no_create': True, 'no_open': True}" required="1" domain="[('is_doctor','=', True)]"/>
                             </group>
                         </group>
                         <notebook>
@@ -79,17 +79,17 @@
             <field name="arch" type="xml">
                 <search string="Activity">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="patient_id"/>
                     <field name="registration_no"/>
                     <field name="disease_type_id"/>
                     <field name="disease_stage_id"/>
                     <field name="date"/>
-                    <field name="partner_id"/>
+                    <field name="doctor_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-                        <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
-                        <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
-                        <filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+                        <filter string="Condition Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                        <filter string="Patient" name="patient_id" context="{'group_by': 'patient_id'}"/>
+                        <filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
                     </group>
                 </search>
             </field>

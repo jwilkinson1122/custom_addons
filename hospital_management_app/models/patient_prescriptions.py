@@ -10,16 +10,17 @@ class PatientPrescriptions(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
     _description = 'Patient Prescriptions'
-
-    partner_id = fields.Many2one('res.partner', string='Patient')
+    
+    doctor_id = fields.Many2one("res.partner", domain=[('is_doctor','=',True)], string="Doctor", index=True, tracking=True)
+    patient_id = fields.Many2one("res.partner", domain=[('is_patient','=',True)], string="Patient", index=True, tracking=True)
+    practice_id = fields.Many2one("res.partner", domain=[('is_clinic','=',True)], string="Clinic", index=True, tracking=True)
     name = fields.Char(string="Name", )
     registration_no = fields.Char(string="Registration No")
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
     date = fields.Datetime(string='Date')
-    partner_id = fields.Many2one('res.partner', string='Doctor')
     remark = fields.Text(string='Remark')
     line_ids = fields.One2many('patient.prescriptions.line', 'prescriptions_id', string="Lines")
 
@@ -28,10 +29,10 @@ class PatientPrescriptions(models.Model):
         vals['name'] = self.env['ir.sequence'].next_by_code('patient.prescriptions') or 'New'
         return super(PatientPrescriptions, self).create(vals)
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
+    @api.onchange('patient_id')
+    def onchange_patient_id(self):
         for rec in self:
-            rec.registration_no = rec.partner_id.registration_no
+            rec.registration_no = rec.patient_id.registration_no
             # rec.disease_type_id = rec.partner_id.disease_type_id
             # rec.disease_stage_id = rec.partner_id.disease_stage_id
 

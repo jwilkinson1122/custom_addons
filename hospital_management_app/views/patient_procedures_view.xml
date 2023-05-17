@@ -87,8 +87,8 @@
                     <field name="partner_id"/>
                     <field name="state"/>
                     <group expand="0" string="Group By">
-                        <filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
-                        <filter string="Disease Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
+                        <filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+                        <filter string="Condition Stage" name="disease_stage_id" context="{'group_by': 'disease_stage_id'}"/>
                         <filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
                         <filter string="Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
                         <filter string="State" name="state" context="{'group_by': 'state'}"/>

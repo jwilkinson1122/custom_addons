@@ -22,11 +22,11 @@ class AppointmentManagement(models.Model):
     zip = fields.Char(string='Zip')
     city = fields.Char(string='City')
     registration_no = fields.Char(string='Registration Card')
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', tracking=True)
+    disease_fees = fields.Float(string='Condition Fees Per Visit', tracking=True)
     appointment_date = fields.Datetime(string='Date')
     next_visit = fields.Date(string='Next Visit')
     partner_id = fields.Many2one('res.partner', string='Doctor')
@@ -172,11 +172,11 @@ class AppointmentManagementLine(models.Model):
     # Identification Details
     appointment_id = fields.Many2one('appointment.management', string="Appointment")
     name = fields.Char(string="Name")
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', store=True, related='disease_type_id.fees',
+    disease_fees = fields.Float(string='Condition Fees Per Visit', store=True, related='disease_type_id.fees',
                                 tracking=True)
     appointment_date = fields.Datetime(string='Date')
     partner_id = fields.Many2one('res.partner', string='Doctor')

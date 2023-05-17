@@ -4,8 +4,8 @@
 
 
 		<record id="disease_stage_view_tree_new" model="ir.ui.view">
-			<field name="name">disease.stage.view.form.popup</field>
-			<field name="model">disease.stage</field>
+			<field name="name">condition.stage.view.form.popup</field>
+			<field name="model">condition.stage</field>
 			<field name="priority">20</field>
 			<field name="arch" type="xml">
 				<tree>
@@ -15,8 +15,8 @@
 		</record>
 
 		<record id="disease_stage_view_form_new" model="ir.ui.view">
-			<field name="name">disease.stage.view.form.popup</field>
-			<field name="model">disease.stage</field>
+			<field name="name">condition.stage.view.form.popup</field>
+			<field name="model">condition.stage</field>
 			<field name="priority">20</field>
 			<field name="arch" type="xml">
 				<form>
@@ -47,9 +47,9 @@
 
 
 		<record id="action_disease_stage" model="ir.actions.act_window">
-			<field name="name">Disease Stage</field>
+			<field name="name">Condition Stage</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">disease.stage</field>
+			<field name="res_model">condition.stage</field>
 			<!--			<field name="domain">[('user_id', '=', uid)]</field>-->
 			<field name="view_mode">tree,form</field>
 		</record>
@@ -58,7 +58,7 @@
 		<!---->
 		<menuitem id="menu_hospital_configuration" name='Configuration' parent="main_menu_hospital_management" groups="group_hospital_manager" sequence="100" />
 
-		<menuitem id="menu_disease_stage" name='Disease Stage' parent="menu_hospital_configuration" action="action_disease_stage" sequence="1" />
+		<menuitem id="menu_disease_stage" name='Condition Stage' parent="menu_hospital_configuration" action="action_disease_stage" sequence="1" />
 
 
 	</data>

@@ -4,8 +4,8 @@
 		
 
 		<record id="disease_type_view_tree_new" model="ir.ui.view">
-			<field name="name">disease.type.view.form.popup</field>
-			<field name="model">disease.type</field>
+			<field name="name">condition.type.view.form.popup</field>
+			<field name="model">condition.type</field>
 			<field name="priority">20</field>
 			<field name="arch" type="xml">
 				<tree>
@@ -16,8 +16,8 @@
 		</record>
 
 		<record id="disease_type_view_form_new" model="ir.ui.view">
-        <field name="name">disease.type.view.form.popup</field>
-        <field name="model">disease.type</field>
+        <field name="name">condition.type.view.form.popup</field>
+        <field name="model">condition.type</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form>
@@ -48,15 +48,15 @@
 
 
 		<record id="action_disease_type" model="ir.actions.act_window">
-			<field name="name">Disease Type</field>
+			<field name="name">Condition Type</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">disease.type</field>
+			<field name="res_model">condition.type</field>
 <!--			<field name="domain">[('user_id', '=', uid)]</field>-->
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		 <menuitem id="menu_disease_type"
-                  name='Disease Type'
+                  name='Condition Type'
                   parent="menu_hospital_configuration"
                   action="action_disease_type"
                   sequence="1" />

@@ -13,53 +13,26 @@ class Partner(models.Model):
     is_nurse = fields.Boolean(string='Is Nurse', tracking=True)
     is_patient = fields.Boolean(string='Is Patient', tracking=True)
     is_other_company = fields.Boolean(string='Is Other Company Type', tracking=True)
-    
     is_clinic = fields.Boolean(string='Is Clinic', tracking=True)
     is_hospital = fields.Boolean(string='Is Hospital', tracking=True)
     is_military = fields.Boolean(string='Is Military', tracking=True)
     is_other_contact = fields.Boolean(string='Is Other Contact Type', tracking=True)
+    # doctor_id = fields.Many2one("res.partner", domain=[('is_doctor','=',True)], string="Doctor", index=True, tracking=True)
+    # patient_id = fields.Many2one("res.partner", domain=[('is_patient','=',True)], string="Patient", index=True, tracking=True)
+    # practice_id = fields.Many2one("res.partner", domain=[('is_clinic','=',True)], string="Clinic", index=True, tracking=True)
 
     # force "active_test" domain to bypass _search() override
-    child_ids = fields.One2many(
-        domain=[("active", "=", True), ("is_company", "=", False)]
-    )
-
+    child_ids = fields.One2many(domain=[("active", "=", True), ("is_company", "=", False)])
     # force "active_test" domain to bypass _search() override
-    affiliate_ids = fields.One2many(
-        "res.partner",
-        "parent_id",
-        string="Affiliates",
-        domain=[("active", "=", True), ("is_company", "=", True)],
-    )
+    affiliate_ids = fields.One2many("res.partner", "parent_id", string="Affiliates", domain=[("active", "=", True), ("is_company", "=", True)])
     
     partner_type_id = fields.Many2one(comodel_name="partner.type", string="Partner Type")
-    
     practice_type_id = fields.Many2one(comodel_name="practice.type", string="Company Type")
-    
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     practice_relation_label = fields.Char('Company relation label', translate=True, default='Attached To:', readonly=True)
 
-    
-    
+   
 
-
-    # employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-
-
-
-    # partner_type = fields.Selection([
-    #     ('doctor', 'Doctor'), 
-    #     ('receptionist', 'Receptionist'), 
-    #     ('nurse', 'Nurse'), 
-    #     ('administrator', 'Administrator'),
-    #     ('other', 'Other')
-    #      ], string='Partner Type', tracking=True)
- 
-    # practice_type = fields.Selection([('clinic', 'Clinic'),
-    #                                   ('hospital', 'Hospital'),
-    #                                   ('military', 'Military (VA)'),
-    #                                   ('other', 'Other')],
-    #                                  default='clinic', string="Company Type", tracking=True)
 
 class PartnerType(models.Model):
 

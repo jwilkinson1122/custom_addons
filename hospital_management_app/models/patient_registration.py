@@ -7,11 +7,7 @@ from odoo import api, fields, models, _
 class HospitalPatient(models.Model):
     _inherit = 'res.partner'
 
-    # is_patient = fields.Boolean(string='Is Patient', tracking=True)
-
-    # Personal Information
     registration_no = fields.Char(string='Registration_no')
-
     patient_registration = fields.Selection([('date_of_birth', 'DOB'), ('age_at_registration', 'Age at Registration')],
                                             string="Registration Type", tracking=True)
     date_of_birth = fields.Date(string="Date of Birth")
@@ -52,9 +48,9 @@ class HospitalPatient(models.Model):
     registration_card = fields.Char(string="Registration Card")
     aadhaar_no = fields.Char(string="Aadhaar Number.")
 
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type', tracking=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage', tracking=True)
-    disease_fees = fields.Float(string='Disease Fees Per Visit', related='disease_type_id.fees', store=True, tracking=True)
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type', tracking=True)
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage', tracking=True)
+    disease_fees = fields.Float(string='Condition Fees Per Visit', related='disease_type_id.fees', store=True, tracking=True)
     no_of_appointment = fields.Integer('No Of Appointment', compute='compute_no_of_appointment')
 
     def compute_no_of_appointment(self):

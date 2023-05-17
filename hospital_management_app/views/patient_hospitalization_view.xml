@@ -91,7 +91,7 @@
 					<field name="discharge_date"/>
 					<field name="state"/>
 					<group expand="0" string="Group By">
-						<filter string="Disease Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
+						<filter string="Condition Type" name="disease_type_id" context="{'group_by': 'disease_type_id'}"/>
 						<filter string="Patient" name="partner_id" context="{'group_by': 'partner_id'}"/>
 						<filter string="Attending Doctor" name="partner_id" context="{'group_by': 'partner_id'}"/>
 						<filter string="Operating Doctor" name="operating_id" context="{'group_by': 'operating_id'}"/>

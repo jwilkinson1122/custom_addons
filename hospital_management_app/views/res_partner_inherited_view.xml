@@ -19,7 +19,6 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            
             <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
                 <attribute name="attrs">{'required': [('is_company', '=', False)]}</attribute>
                 <attribute name="invisible">False</attribute>

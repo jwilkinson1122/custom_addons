@@ -15,9 +15,9 @@ class LaboratoryManagement(models.Model):
 
     name = fields.Char(string="Name")
     partner_id = fields.Many2one('res.partner', string='Patient')
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
     total_fees = fields.Float(string='Total Fees', store=True, compute='compute_total_fees',
                               tracking=True)

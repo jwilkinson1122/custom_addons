@@ -37,7 +37,7 @@ class DentalQuestionnaire(models.Model):
 
 
 
-    disease_type_ids = fields.Many2many('disease.type', 'rel_disease_dental_question', 'queation_id', 'disease_type_id',
+    disease_type_ids = fields.Many2many('condition.type', 'rel_disease_dental_question', 'queation_id', 'disease_type_id',
                                         string='History of Any Teeth Problem')
     procedures_ids = fields.Many2many('patient.procedures.type', 'rel_procedures_dental_question', 'queation_id',
                                       'procedures_id', string='What Dental Procedures are you intersted in?')

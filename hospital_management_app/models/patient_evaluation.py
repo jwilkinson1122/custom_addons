@@ -22,9 +22,9 @@ class PatientEvaluation(models.Model):
     zip = fields.Char(string='Street')
     city = fields.Char(string='Street')
     registration_no = fields.Char(string='Registration Card')
-    disease_type_id = fields.Many2one('disease.type', string='Disease Type',
+    disease_type_id = fields.Many2one('condition.type', string='Condition Type',
                                       tracking=True, required=True)
-    disease_stage_id = fields.Many2one('disease.stage', string='Disease Stage',
+    disease_stage_id = fields.Many2one('condition.stage', string='Condition Stage',
                                        tracking=True)
     date = fields.Datetime(string='Date')
     partner_id = fields.Many2one('res.partner', string='Doctor')

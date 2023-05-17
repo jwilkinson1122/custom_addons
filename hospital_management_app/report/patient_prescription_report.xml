@@ -33,11 +33,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th width="13">Disease Type</th>
+                        <th width="13">Condition Type</th>
                         <td width="87">
                             <span t-field="doc.disease_type_id.name"/>
                         </td>
-                        <th width="15">Disease Stage</th>
+                        <th width="15">Condition Stage</th>
                         <td width="35">
                             <span t-field="doc.disease_stage_id.name"/>
                         </td>

@@ -7,8 +7,8 @@ from odoo import api, fields, models, _
 class DiseaseType(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
-    _description = 'Disease Type'
-    _name = 'disease.type'
+    _description = 'Condition Type'
+    _name = 'condition.type'
 
     name = fields.Char(string='Name', required=True, tracking=True)
     fees = fields.Float(string='Fees')
