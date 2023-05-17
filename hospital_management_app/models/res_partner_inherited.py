@@ -5,18 +5,19 @@ from odoo import api, fields, models, _
 
 class Partner(models.Model):
     _inherit = "res.partner"
-    _description = "Practice Partner"
+    _description = "Partner"
     
     is_doctor = fields.Boolean(string='Is Doctor', tracking=True)
     is_receptionist = fields.Boolean(string='Is Receptionist', tracking=True)
     is_administrator = fields.Boolean(string='Is Administrator', tracking=True)
     is_nurse = fields.Boolean(string='Is Nurse', tracking=True)
     is_patient = fields.Boolean(string='Is Patient', tracking=True)
+    is_other_company = fields.Boolean(string='Is Other Company Type', tracking=True)
     
     is_clinic = fields.Boolean(string='Is Clinic', tracking=True)
     is_hospital = fields.Boolean(string='Is Hospital', tracking=True)
     is_military = fields.Boolean(string='Is Military', tracking=True)
-    is_other = fields.Boolean(string='Is Other', tracking=True)
+    is_other_contact = fields.Boolean(string='Is Other Contact Type', tracking=True)
 
     # force "active_test" domain to bypass _search() override
     child_ids = fields.One2many(
@@ -36,11 +37,11 @@ class Partner(models.Model):
     )
     
     practice_type_id = fields.Many2one(
-        comodel_name="practice.type", string="Practice Type"
+        comodel_name="practice.type", string="Company Type"
     )
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
-    practice_relation_label = fields.Char('Practice relation label', translate=True, default='Attached To:', readonly=True)
+    practice_relation_label = fields.Char('Company relation label', translate=True, default='Attached To:', readonly=True)
 
     
     
@@ -62,7 +63,7 @@ class Partner(models.Model):
     #                                   ('hospital', 'Hospital'),
     #                                   ('military', 'Military (VA)'),
     #                                   ('other', 'Other')],
-    #                                  default='clinic', string="Practice Type", tracking=True)
+    #                                  default='clinic', string="Company Type", tracking=True)
 
 class PartnerType(models.Model):
 
@@ -90,7 +91,7 @@ class PartnerType(models.Model):
 class PracticeType(models.Model):
 
     _name = "practice.type"
-    _description = "Practice Type"
+    _description = "Company Type"
 
     id = fields.Integer(readonly=True)
     name = fields.Char(string="Title", required=True, translate=True)
@@ -105,5 +106,5 @@ class PracticeType(models.Model):
     other = fields.Boolean(string='Is Other', help="Check this box if this type is other.")
     
     _sql_constraints = [
-        ("name_uniq", "unique (name)", "Practice Type already exists!")
+        ("name_uniq", "unique (name)", "Company Type already exists!")
     ]

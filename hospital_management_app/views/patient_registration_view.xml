@@ -80,7 +80,7 @@
         </record>
 
         <!---->
-        <menuitem id="main_menu_patients" name='Patients' parent="main_menu_hospital_management" action="action_hospital_management" groups="group_hospital_user" sequence="0" />
+        <menuitem id="main_menu_patients" name='Patients' parent="main_menu_hospital_management" action="action_hospital_management" groups="group_hospital_user" sequence="1" />
 
         <!-- <menuitem id="main_menu_management" name='Management' parent="main_menu_hospital_management" groups="group_hospital_user" sequence="0" /> -->
 

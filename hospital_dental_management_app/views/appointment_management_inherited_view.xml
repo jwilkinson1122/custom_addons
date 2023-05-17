@@ -66,7 +66,7 @@
         <record model="ir.actions.act_window" id="hospital_management_app.action_disease_type">
             <field name="name">Teeth Problem</field>
         </record>
-        <record model="ir.actions.act_window" id="hospital_management_app.action_res_partner_doctor">
+        <record model="ir.actions.act_window" id="hospital_management_app.action_contact_doctor">
             <field name="name">Dentist</field>
         </record>
         <record model="ir.ui.menu" id="hospital_management_app.menu_disease_type">
@@ -75,7 +75,7 @@
         <record model="ir.ui.menu" id="hospital_management_app.menu_disease_stage">
             <field name="action" eval="False"/>
         </record>
-        <record model="ir.ui.menu" id="hospital_management_app.menu_partner_doctor">
+        <record model="ir.ui.menu" id="hospital_management_app.menu_contact_doctor">
             <field name="name">Dentist</field>
         </record>
         <record model="ir.ui.menu" id="hospital_management_app.main_menu_hospital_management">

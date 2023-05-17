@@ -37,7 +37,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="practice_type_act_window">
-        <field name="name">Practice Types</field>
+        <field name="name">Company Types</field>
         <field name="res_model">practice.type</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
@@ -46,6 +46,6 @@
 
     <!-- <menuitem id="menu_hospital_configuration" name='Configuration' parent="main_menu_hospital_management" groups="group_hospital_manager" sequence="100" /> -->
 
-    <menuitem action="practice_type_act_window" id="menu_practice_type" name="Practice Types" parent="menu_hospital_configuration" sequence="4" />
+    <menuitem action="practice_type_act_window" id="menu_practice_type" name="Company Types" parent="menu_hospital_configuration" sequence="4" />
 
 </odoo>

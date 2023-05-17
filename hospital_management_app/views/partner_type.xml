@@ -46,6 +46,6 @@
 
     <!-- <menuitem id="menu_hospital_configuration" name='Configuration' parent="main_menu_hospital_management" groups="group_hospital_manager" sequence="100" /> -->
 
-    <menuitem action="partner_type_act_window" id="menu_partner_type" name="Partner Types" parent="menu_hospital_configuration" sequence="3" />
+    <menuitem action="partner_type_act_window" id="menu_contact_type" name="Partner Types" parent="menu_hospital_configuration" sequence="3" />
 
 </odoo>
