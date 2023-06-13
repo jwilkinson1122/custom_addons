@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<odoo>
-    <record id="transaction_increment" model="ir.sequence">
-        <field name="name">Transaction Sequence</field>
-        <field name="code">transaction_increment</field>
-        <field name="prefix">TRX</field>
-        <field name="padding">7</field>
-    </record>
-</odoo>
