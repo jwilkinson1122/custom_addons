@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+        <report id="report_student_student"
+                string="Identity Card"
+                model="student.student"
+                report_type="qweb-pdf"
+                file="podiatry.identity_card"
+                name="podiatry.identity_card" groups="podiatry.group_podiatry_administration,podiatry.group_podiatry_teacher,podiatry.group_podiatry_student"/>
+</odoo>
