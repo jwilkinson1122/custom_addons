@@ -40,10 +40,10 @@
                             <field name="student_code" readonly="1" />
                             <field name="roll_no" help="Roll number of Student" readonly="1"/>
                             <field name="year" placeholder="Year" widget="selection" help="Academic year of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
-                            <field name="podiatry_id" placeholder="Podiatry" widget="selection" help="Podiatry of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
+                            <field name="clinic_id" placeholder="Podiatry" widget="selection" help="Podiatry of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
-                            <field name="standard_id" placeholder="Standard" readonly="1" domain="[('podiatry_id','=',podiatry_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            <field name="standard_id" placeholder="Standard" readonly="1" domain="[('clinic_id','=',clinic_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             <field name="medium_id" placeholder="Medium"  readonly="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                         </group>
@@ -126,7 +126,7 @@
                             </field>
                         </page>
                         <page string="Previous Clinic">
-                            <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
+                            <field name="previous_clinic_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                 <tree string="Previous Clinic Details">
                                     <field name="name" />
                                     <field name="registration_no" />
@@ -294,7 +294,7 @@
                 <field name="admission_date" />
                 <field name="gender" />
                 <field name="state" />
-                <field name="podiatry_id" />
+                <field name="clinic_id" />
             </tree>
         </field>
     </record>
@@ -309,14 +309,14 @@
                     <field name="student_name" invisible="1" />
                     <field name="year" />
                     <field name="gender" />
-                    <field name="podiatry_id" placeholder="Podiatry"/>
+                    <field name="clinic_id" placeholder="Podiatry"/>
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'clinic_id'}" />
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
                 <separator/>
@@ -355,7 +355,7 @@
                                                         <field name="last" />
                                                         <field name="student_name" invisible="1" />
                                                         <field name="standard_id" invisible="1" />
-                                                        <field name="podiatry_id" invisible="1" />
+                                                        <field name="clinic_id" invisible="1" />
                                                         <field name="gender" invisible="1" />
                                                         <field name="state" invisible="1" />
                                                     </a>
@@ -452,14 +452,14 @@
                     </div>
                     <group>
                         <group string="Clinic Information">
-                            <field name="podiatry_id" placeholder="Clinic Name" required="1" 
+                            <field name="clinic_id" placeholder="Clinic Name" required="1" 
                                 attrs="{'readonly':[('state','=','alumni')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             <field name="year" widget="selection" placeholder="Academic Year" readonly="1"/>
                             <field name="partner_id" invisible="1"/>
                         </group>
                         <group string="Class Information">
                             <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
-                            <field name="standard_id" placeholder="Class" domain="[('podiatry_id','=',podiatry_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
+                            <field name="standard_id" placeholder="Class" domain="[('clinic_id','=',clinic_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
                             <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}" invisible="1"/>
                             
                         </group>
@@ -537,7 +537,7 @@
                             </field>
                         </page>
                         <page string="Previous Clinic">
-                            <field name="previous_podiatry_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
+                            <field name="previous_clinic_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
                                 <tree string="Previous Clinic Details">
                                     <field name="name" />
                                     <field name="registration_no" />
@@ -619,7 +619,7 @@
                 <field name="student_name" invisible="1" />
                 <field name="year" widget="selection" />
                 <field name="standard_id" widget="selection" />
-                <field name="podiatry_id" />
+                <field name="clinic_id" />
                 <field name="admission_date" />
                 <field name="gender" />
                 <field name="state" />
@@ -638,13 +638,13 @@
                 <field name="year" />
                 <field name="standard_id" />
                 <field name="gender" />
-                <field name="podiatry_id" />
+                <field name="clinic_id" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="gender" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
                     <filter name="name" string="Name" domain="[]" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Podiatry" help="By Podiatry" context="{'group_by':'clinic_id'}" />
                 </group>
             </search>
         </field>

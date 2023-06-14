@@ -530,7 +530,7 @@
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_teacher_1"/> -->
             <field name="name">10th-A</field>
             <field name="class_room_id" ref="class_room1"/>
@@ -541,7 +541,7 @@
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_teacher_2"/> -->
             <field name="class_room_id" ref="class_room2"/>
             <field name="name">11th-B</field>
@@ -552,7 +552,7 @@
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <!-- <field name="user_id" ref="demo_podiatry_teacher_3"/> -->
             <field name="class_room_id" ref="class_room3"/>
             <field name="name">12th-A</field>
@@ -565,7 +565,7 @@
         <record id="demo_podiatry_teacher_1" model="podiatry.teacher">
             <field name="name">Winely</field>
             <field name="email">winely@demo.com</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="standard_id" ref="demo_podiatry_standard_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5')])]" name="subject_id"/>
         </record>
@@ -573,7 +573,7 @@
         <record id="demo_podiatry_teacher_2" model="podiatry.teacher">
             <field name="name">Peter White</field>
             <field name="email">peter@demo.com</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="standard_id" ref="demo_podiatry_standard_2"/>
             <field eval="[(6,0,[ref('demo_subject_subject_5'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
@@ -581,7 +581,7 @@
         <record id="demo_podiatry_teacher_3" model="podiatry.teacher">
             <field name="name">Winparker Gabriel</field>
             <field name="email">winparker@demo.com</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="standard_id" ref="demo_podiatry_standard_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
@@ -618,7 +618,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-11-02 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">12</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">London</field>
             <field name="standard_id" ref="demo_podiatry_standard_1"/>
@@ -636,7 +636,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-03-24 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Manchester</field>
             <field name="standard_id" ref="demo_podiatry_standard_2"/>
@@ -654,7 +654,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=14)).strftime('%Y-05-12 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Headingly</field>
             <field name="standard_id" ref="demo_podiatry_standard_3"/>
@@ -672,7 +672,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-06-02 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">3</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">Johesburg</field>
             <field name="standard_id" ref="demo_podiatry_standard_1"/>
@@ -690,7 +690,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-06-06 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">3</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">CapeTown</field>
             <field name="standard_id" ref="demo_podiatry_standard_2"/>
@@ -709,7 +709,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-04-03 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">1</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Melbourne</field>
             <field name="standard_id" ref="demo_podiatry_standard_1"/>
@@ -726,7 +726,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=12)).strftime('%Y-02-14 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">1</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Sydney</field>
             <field name="standard_id" ref="demo_podiatry_standard_2"/>
@@ -743,7 +743,7 @@
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-09-24 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">1</field>
-            <field name="podiatry_id" ref="demo_podiatry_1"/>
+            <field name="clinic_id" ref="demo_podiatry_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Adelaide</field>
             <field name="standard_id" ref="demo_podiatry_standard_3"/>

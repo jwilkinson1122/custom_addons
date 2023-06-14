@@ -1,13 +1,19 @@
-# See LICENSE file for full copyright and licensing details.
-
-# import time
+# -*- coding: utf-8 -*-
 import calendar
 import re
+import ast
+import logging
+import base64
+import time
+import json
 
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from datetime import date, datetime, timedelta
+from odoo.modules.module import get_module_resource
+from odoo import _, api, fields, exceptions, models, SUPERUSER_ID
+from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import get_lang
 from odoo.tools.translate import _
 
 EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
@@ -217,15 +223,15 @@ class PodiatryStandard(models.Model):
     _description = 'Podiatry Standards'
     _rec_name = "standard_id"
 
-    @api.depends('standard_id', 'podiatry_id', 'division_id', 'medium_id',
-                 'podiatry_id')
+    @api.depends('standard_id', 'clinic_id', 'division_id', 'medium_id',
+                 'clinic_id')
     def _compute_student(self):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
         for rec in self:
             rec.student_ids = student_obj.\
                 search([('standard_id', '=', rec.id),
-                        ('podiatry_id', '=', rec.podiatry_id.id),
+                        ('clinic_id', '=', rec.clinic_id.id),
                         ('division_id', '=', rec.division_id.id),
                         ('medium_id', '=', rec.medium_id.id),
                         ('state', '=', 'done')])
@@ -248,7 +254,7 @@ class PodiatryStandard(models.Model):
         for rec in self:
             rec.remaining_seats = rec.capacity - rec.total_students
 
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry', required=True,
+    clinic_id = fields.Many2one('podiatry.podiatry', 'Podiatry', required=True,
                                 help='Podiatry of the following standard')
     standard_id = fields.Many2one('standard.standard', 'Standard',
                                   required=True, help='Standard')
@@ -268,7 +274,7 @@ class PodiatryStandard(models.Model):
                                   )
     color = fields.Integer('Color Index', help='Index of color')
     cmp_id = fields.Many2one('res.partner', 'Partner Name',
-                             related='podiatry_id.partner_id', store=True,
+                             related='clinic_id.partner_id', store=True,
                              help='Partner_id of the podiatry')
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
                                    'Syllabus',
@@ -301,7 +307,7 @@ class PodiatryStandard(models.Model):
         if self.env['podiatry.standard'].search([
                                 ('standard_id', '=', self.standard_id.id),
                                 ('division_id', '=', self.division_id.id),
-                                ('podiatry_id', '=', self.podiatry_id.id),
+                                ('clinic_id', '=', self.clinic_id.id),
                                 ('id', 'not in', self.ids)]):
             raise ValidationError(_("Division and class should be unique!"))
   
@@ -327,17 +333,26 @@ class PodiatryStandard(models.Model):
 
 class PodiatryPodiatry(models.Model):
     ''' Defining Podiatry Information'''
-
     _name = 'podiatry.podiatry'
     _description = 'Podiatry Information'
+    _inherits = {'res.partner': 'partner_id'}
     _rec_name = "com_name"
-
+    _order = 'sequence,id'
+    _parent_name = 'parent_id'
+    _parent_store = True
+    
+    _sql_constraints = [(
+        'podiatry_clinic_unique_code',
+        'UNIQUE (code)',
+        'Internal ID must be unique',
+    )]
+    
     @api.constrains('code')
     def _check_code(self):
         for record in self:
             if self.env["podiatry.podiatry"].search(
                 [('code', '=', record.code), ('id', '!=', record.id)]):
-                raise ValidationError("Podiatry Code must be Unique")
+                raise ValidationError("Clinic Code must be Unique")
 
     @api.model
     def _lang_get(self):
@@ -345,30 +360,235 @@ class PodiatryPodiatry(models.Model):
         languages = self.env['res.lang'].search([])
         return [(language.code, language.name) for language in languages]
 
-    partner_id = fields.Many2one('res.partner', 'Partner', ondelete="cascade",
-                                 required=True, delegate=True,
-                                 help='Partner related data')
-    com_name = fields.Char('Clinic Name', related='partner_id.name',
-                           store=True, help='Podiatry name')
-    code = fields.Char('Code', required=True, help='Podiatry code')
-    standards = fields.One2many('podiatry.standard', 'podiatry_id',
-                                'Standards', help='Podiatry standard')
+    parent_path = fields.Char(string="Parent Path", index=True)
+
+    parent_id = fields.Many2one(
+        comodel_name='podiatry.podiatry',
+        string="Clinic",
+        index=True,
+        ondelete='cascade',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
+    
+    child_ids = fields.One2many(
+        comodel_name='podiatry.podiatry',
+        inverse_name='parent_id',
+        string="Clinics",
+    )
+    child_count = fields.Integer(
+        string="Sub-clinic Count",
+        compute='_compute_child_count',
+    )
+
+    @api.depends('child_ids')
+    def _compute_child_count(self):
+        for clinic in self:
+            clinic.child_count = len(clinic.child_ids)
+        return
+    
+    sequence = fields.Integer(string="Sequence", required=True, default=5)
+    is_clinic = fields.Boolean('Is Clinic')
+    partner_id = fields.Many2one('res.partner', 'Partner', ondelete="cascade", required=True, delegate=True, help='Partner related data')
+    # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade', help='Partner-related data of the Clinic')
+    company_id = fields.Many2many('res.partner', domain=[('is_clinic', '=', True)], string="Clinic")
+    user_id = fields.Many2one(comodel_name='res.users', string="Created by")
+    # company = fields.Many2one(comodel_name='res.company', string="Company", index=True, default=lambda self: self.env.company)
+    active_id = fields.Boolean(string="Active", default=True, tracking=True)
+    com_name = fields.Char('Clinic Name', related='partner_id.name', store=True, help='Clinic name')
+    full_name = fields.Char(string="Full Name", compute='_compute_full_name', store=True)
+    code = fields.Char(string='Code', help="Unique Reference Code", readonly=True, default='/')
+
+    standards = fields.One2many('podiatry.standard', 'clinic_id', 'Standards', help='Podiatry standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
+    # Orders 
+    sale_order_ids = fields.One2many(comodel_name='sale.order', inverse_name='partner_id', string='Sale Order')
+    sale_order_count = fields.Integer(string='Sale Order Count', compute='_compute_sale_order_count')
+    sale_order_date = fields.Datetime('Sale Order Date', default=fields.Datetime.now)
+    
+    def _compute_sale_order_count(self):
+        for rec in self:
+            sale_order_count = self.env['sale.order'].search_count(
+                [('partner_id', '=', rec.id)])
+            rec.sale_order_count = sale_order_count
+
+    street = fields.Char()
+    street2 = fields.Char()
+    zip = fields.Char(change_default=True)
+    city = fields.Char()
+    # state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
+    state_id = fields.Many2one(comodel_name='res.country.state', string="State", default=lambda self: self.env.company.state_id)
+    # country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    country_id = fields.Many2one(comodel_name='res.country', string="Country", default=lambda self: self.env.company.country_id)
+    country_code = fields.Char(related='country_id.code', string="Country Code")
+
+    clinic_type = fields.Selection(
+        string='Clinic Type',
+        selection=[('internal', 'Internal Entity'),
+                   ('external', 'External Entity')],
+        readonly=False)
+    
+    sale_type = fields.Many2one(
+        comodel_name="sale.order.type", string="Sale Order Type", company_dependent=True
+    )
+    
     required_age = fields.Integer("Student Admission Age Required", default=6,
                                   help='''Minimum required age for 
                                   student admission''')
+    
+    clinic_address_id = fields.Many2one('res.partner', 'Clinic Address', 
+                                      help='Enter here the address of the clinic.', 
+                                      tracking=True,
+                                      domain="['|', ('company_id', '=', True), ('company_id', '=', company_id)]")
+    
+    is_address_a_company = fields.Boolean('The clinic address has a company linked', compute='_compute_is_address_a_company')
 
-    @api.model
-    def create(self, vals):
-        '''Inherited create method to assign partner_id to podiatry'''
+    @api.depends('clinic_address_id.parent_id')
+    def _compute_is_address_a_company(self):
+        """Checks whether chosen address is linked to a company.
+        """
+        for clinic in self:
+            try:
+                clinic.is_address_a_company = clinic.clinic_address_id.parent_id.id is not False
+            except AccessError:
+                clinic.is_address_a_company = False
+                
+    @api.onchange('clinic_address_id')
+    def _on_change_clinic_address_id(self):
+        if self.clinic_address_id and self.clinic_id.partner_id != self.clinic_address_id:
+            self.clinic_id = self.clinic_address_id.clinic_ids[:1]
+            
+    @api.onchange('clinic_id')
+    def _on_change_clinic_id(self):
+        if self.clinic_id and self.clinic_id.partner_id != self.clinic_address_id:
+            self.clinic_address_id = self.clinic_id.partner_id
+
+    @api.constrains('clinic_id', 'clinic_address_id') 
+    def _check_clinic_id(self):
+        for record in self:
+            if record.clinic_id and record.clinic_address_id:
+                if record.clinic_id.partner_id != record.clinic_address_id:
+                    raise ValidationError(_('Clinic and Address do not match'))
+            if record.clinic_id and record.clinic_id.clinic_ids != record:
+                raise ValidationError(_('Contact %s already link to a clinic' % (record.clinic_id.name)))           
+                                    
+    @api.constrains('clinic_address_id') 
+    def _check_clinic_address_id(self):
+        for record in self:
+            if record.clinic_address_id:
+                if record.clinic_address_id.clinic_ids != record:
+                    raise ValidationError(_('Contact %s already link to an clinic' % (record.clinic_address_id.name)))
+
+
+    @api.depends('name', 'parent_id.full_name')
+    def _compute_full_name(self):
+        for partner in self:
+            if partner.parent_id:
+                partner.full_name = "%s / %s" % (
+                    partner.parent_id.full_name, partner.name)
+            else:
+                partner.full_name = partner.name
+        return
+    
+    def _get_next_ref(self, vals=None):
+        return self.env["ir.sequence"].next_by_code("podiatry.podiatry")
+    
+    # @api.model
+    # def create(self, vals):
+    #     '''Inherited create method to assign partner_id to clinic'''
+    #     res = super(PodiatryPodiatry, self).create(vals)
+    #     main_partner = self.env.ref('base.main_partner')
+    #     res.partner_id.parent_id = main_partner.id
+    #     return res
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        '''Inherited create method to assign partner_id to clinic'''
+        for vals in vals_list:
+            if not vals.get("code") and self._needs_ref(vals=vals):
+                vals["code"] = self._get_next_ref(vals=vals)
         res = super(PodiatryPodiatry, self).create(vals)
         main_partner = self.env.ref('base.main_partner')
         res.partner_id.parent_id = main_partner.id
+        if res.customer_rank > 0 and res.code == '/':
+            if main_partner.next_code:
+                res.code = main_partner.next_code
+                res.name = '[' + str(main_partner.next_code) + ']' + str(res.name)
+                main_partner.write({'next_code': main_partner.next_code + 1})
+            else:
+                res.code = main_partner.customer_code
+                res.name = '[' + str(main_partner.customer_code) + ']' + str(res.name)
+                main_partner.write({'next_code': main_partner.customer_code + 1})
         return res
+    
+    def copy_data(self, default=None):
+        result = super(PodiatryPodiatry, self).copy_data(default=default)
+        for idx, partner in enumerate(self):
+            values = result[idx]
+            if partner.sale_type and not values.get("sale_type"):
+                values["sale_type"] = partner.sale_type
+            if self._needs_ref():
+                default["code"] = self._get_next_ref()
+        return result
+    # def copy(self, default=None):
+    #     default = default or {}
+    #     if self._needs_ref():
+    #         default["ref"] = self._get_next_ref()
+    #     return super(PodiatryPodiatry, self).copy(default=default)
+
+    def write(self, vals):
+        for partner in self:
+            partner_vals = vals.copy()
+            if (
+                not partner_vals.get("code")
+                and partner._needs_ref(vals=partner_vals)
+                and not partner.ref
+            ):
+                partner_vals["code"] = partner._get_next_ref(vals=partner_vals)
+            super(PodiatryPodiatry, partner).write(partner_vals)
+        return True
+
+    def _needs_ref(self, vals=None):
+        """
+        Checks whether a sequence value should be assigned to a partner's 'ref'
+
+        :param vals: known field values of the partner object
+        :return: true iff a sequence value should be assigned to the\
+                      partner's 'ref'
+        """
+        if not vals and not self:  # pragma: no cover
+            raise exceptions.UserError(
+                _("Either field values or an id must be provided.")
+            )
+        # only assign a 'ref' to commercial partners
+        if self:
+            vals = {"is_clinic": self.is_clinic, "parent_id": self.parent_id}
+        return vals.get("is_clinic") or not vals.get("parent_id")
+
+    @api.model
+    def _commercial_fields(self):
+        """
+        Make the partner reference a field that is propagated
+        to the partner's contacts
+        """
+        return super(PodiatryPodiatry, self)._commercial_fields() + ["code"]
+    
+    def action_open_sale_orders(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Sale Orders',
+            'res_model': 'sale.order',
+            'domain': [('partner_id', '=', self.id)],
+            'context': {
+                'default_partner_id': self.id,
+                # 'default_reference_no': self.reference_no,
+                },
+            'view_mode': 'kanban,tree,form',
+            'target': 'current',
+        }
 
 
 class SubjectSubject(models.Model):
@@ -609,7 +829,7 @@ class StudentPreviousPodiatry(models.Model):
     _name = "student.previous.podiatry"
     _description = "Student Previous Podiatry"
 
-    previous_podiatry_id = fields.Many2one('student.student', 'Student',
+    previous_clinic_id = fields.Many2one('student.student', 'Student',
                                          help='Related student')
     name = fields.Char('Name', required=True,
             help='Student previous podiatry name')

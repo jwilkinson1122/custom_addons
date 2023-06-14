@@ -13,5 +13,60 @@
             </field>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <!-- Sale Order-specific activities, for automatic generation mainly -->
+        <record id="mail_act_sale_order_request" model="mail.activity.type">
+            <field name="name">Sale Order Request</field>
+            <field name="icon">fa-wrench</field>
+            <field name="res_model">sale.order.request</field>
+        </record>
+
+        <!-- email alias for sale order requests -->
+        <record id="mail_alias_product" model="mail.alias">
+            <field name="alias_name">helpdesk</field>
+            <field name="alias_model_id" ref="model_sale_order_request"/>
+            <field name="alias_user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- Sale Order Request-related subtypes for messaging / Chatter -->
+        <record id="ord_req_created" model="mail.message.subtype">
+            <field name="name">Request Created</field>
+            <field name="res_model">sale.order.request</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Sale Order Request created</field>
+        </record>
+        <record id="ord_req_status" model="mail.message.subtype">
+            <field name="name">Status Changed</field>
+            <field name="res_model">sale.order.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Status changed</field>
+        </record>
+
+        <!-- Product-related subtypes for messaging / Chatter -->
+        <record id="ord_mat_assign" model="mail.message.subtype">
+            <field name="name">Product Assigned</field>
+            <field name="res_model">sale.order.product</field>
+            <field name="description">Product Assigned</field>
+        </record>
+
+        <!-- Product Category-related subtypes for messaging / Chatter -->
+        <record id="ord_cat_req_created" model="mail.message.subtype">
+            <field name="name">Sale Order Request Created</field>
+            <field name="res_model">sale.order.product.category</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="ord_req_created"/>
+            <field name="relation_field">category_id</field>
+        </record>
+        <record id="ord_cat_mat_assign" model="mail.message.subtype">
+            <field name="name">Product Assigned</field>
+            <field name="res_model">sale.order.product.category</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="ord_mat_assign"/>
+            <field name="relation_field">category_id</field>
+        </record>
+        <record id="sale_order_team_order" model="sale.order.team">
+            <field name="name">Internal Sale Order</field>
+        </record>
     </data>
 </odoo>

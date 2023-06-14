@@ -14,7 +14,7 @@ class TestPodiatry(common.TransactionCase):
         self.podiatry_standard_obj = self.env['podiatry.standard']
         self.res_partner_obj = self.env['res.partner']
         self.assign_roll_obj = self.env['assign.roll.no']
-        self.podiatry_id = self.env.ref('podiatry.demo_podiatry_1')
+        self.clinic_id = self.env.ref('podiatry.demo_podiatry_1')
         self.standard_medium = self.env.ref('podiatry.demo_standard_medium_1')
         self.year = self.env.ref('podiatry.demo_academic_year_2')
         self.currency_id = self.env.ref('base.INR')
@@ -61,5 +61,5 @@ class TestPodiatry(common.TransactionCase):
         self.assign_roll_no.assign_rollno()
 
     def test_podiatry(self):
-        self.assertEqual(self.student_student.podiatry_id,
-                         self.student_student.standard_id.podiatry_id)
+        self.assertEqual(self.student_student.clinic_id,
+                         self.student_student.standard_id.clinic_id)

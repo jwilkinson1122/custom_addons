@@ -1,0 +1,201 @@
+<odoo noupdate="1">
+    <record id="sale.sale_order_1" model="sale.order">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_2">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_3">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_4">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_5">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_6">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_7">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <record model="sale.order" id="sale.sale_order_8">
+        <field name="type_id" ref="normal_sale_type" />
+    </record>
+    <!--  Sale Order teams -->
+    <record id="sale_order_team_metrology" model="sale.order.team">
+        <field name="name">Metrology</field>
+    </record>
+    <record id="sale_order_team_bu" model="sale.order.team">
+        <field name="name">Business Unit</field>
+    </record>
+
+    <!-- Product categories -->
+    <record id="product_shell_foundation" model="sale.order.product.category">
+        <field name="name">Shell / Foundation</field>
+    </record>
+    <record id="product_arch_height" model="sale.order.product.category">
+        <field name="name">Arch Height</field>
+    </record>
+    <record id="product_xguard" model="sale.order.product.category">
+        <field name="name">X-Guard</field>
+    </record>
+    <record id="product_top_cover" model="sale.order.product.category">
+        <field name="name">Top Cover</field>
+        <!-- <field name="tech_user_id" ref="base.user_admin"/> -->
+        <field name="color">3</field>
+    </record>
+    <record id="product_cushion" model="sale.order.product.category">
+        <field name="name">Cushion</field>
+        <!-- <field name="tech_user_id" ref="base.user_admin"/> -->
+    </record>
+
+    <!-- Products -->
+    <record id="product_top_cover1" model="sale.order.product">
+        <field name="name">Vinyl</field>
+        <field name="category_id" ref="product_top_cover"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="tech_user_id" ref="base.user_admin"/>
+        <field name="assign_date" eval="time.strftime('%Y-%m-10')"/>
+        <field name="serial_no">VIN/122/11112222</field>
+        <field name="model">VIN300E5X</field>
+    </record>
+    <record id="product_top_cover4" model="sale.order.product">
+        <field name="name">Neoprene</field>
+        <field name="category_id" ref="product_top_cover"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="tech_user_id" ref="base.user_admin"/>
+        <field name="assign_date" eval="time.strftime('%Y-01-01')"/>
+        <field name="serial_no">NEO/125/22778837</field>
+        <field name="model">NEO355E5X</field>
+    </record>
+    <record id="product_top_cover6" model="sale.order.product">
+        <field name="name">EVA</field>
+        <field name="category_id" ref="product_top_cover"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="tech_user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-02-01')"/>
+        <field name="serial_no">EVA/127/18291018</field>
+        <field name="model">EVA355E5X</field>
+        <field name="color">3</field>
+    </record>
+    <record id="product_shell_foundation3" model="sale.order.product">
+        <field name="name">Superglass</field>
+        <field name="category_id" ref="product_shell_foundation"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="tech_user_id" ref="base.user_admin"/>
+        <field name="assign_date" eval="time.strftime('%Y-03-08')"/>
+        <field name="serial_no">SG/203/19281928</field>
+        <field name="model">SG56R</field>
+    </record>
+    <record id="product_shell_foundation5" model="sale.order.product">
+        <field name="name">NCV</field>
+        <field name="category_id" ref="product_shell_foundation"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="tech_user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-04-08')"/>
+        <field name="serial_no">NCV/205/12928291</field>
+        <field name="model">NCV5131</field>
+    </record>
+    <record id="product_shell_foundation9" model="sale.order.product">
+        <field name="name">Prescription Comfort</field>
+        <field name="category_id" ref="product_shell_foundation"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="tech_user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-%m-11')"/>
+        <field name="serial_no">PC/303/28292090</field>
+        <field name="model">PCj059nr</field>
+    </record>
+    <record id="product_xguard1" model="sale.order.product">
+        <field name="name">X-Guard</field>
+        <field name="category_id" ref="product_xguard"/>
+        <field name="tech_user_id" ref="base.user_demo"/>
+        <field name="serial_no">XG/011/2928191889</field>
+    </record>
+
+    <!--Sale Order Request-->
+    <record id="m_request_3" model="sale.order.request">
+        <field name="name">Top Cover Seperating</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_top_cover6"/>
+        <field name="color">7</field>
+        <field name="stage_id" ref="stage_3"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_4" model="sale.order.request">
+        <field name="name">Raise Arch Height</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_shell_foundation3"/>
+        <field name="stage_id" ref="stage_0"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_6" model="sale.order.request">
+        <field name="name">Add Cushion</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_shell_foundation5"/>
+        <field name="stage_id" ref="stage_4"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_7" model="sale.order.request">
+        <field name="name">Add Extension</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="product_id" ref="product_shell_foundation9"/>
+        <field name="stage_id" ref="stage_1"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_8" model="sale.order.request">
+        <field name="name">Flatten Plantar Medial</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="product_id" ref="product_shell_foundation11"/>
+        <field name="stage_id" ref="stage_1"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+
+    <!-- <record id="m_request_3" model="sale.order.request">
+        <field name="name">Resolution is bad</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_top_cover6"/>
+        <field name="color">7</field>
+        <field name="stage_id" ref="stage_3"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_4" model="sale.order.request">
+        <field name="name">Some keys are not working</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_shell_foundation3"/>
+        <field name="stage_id" ref="stage_0"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_6" model="sale.order.request">
+        <field name="name">Motherboard failed</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_admin"/>
+        <field name="product_id" ref="product_shell_foundation5"/>
+        <field name="stage_id" ref="stage_4"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_7" model="sale.order.request">
+        <field name="name">Battery drains fast</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="product_id" ref="product_shell_foundation9"/>
+        <field name="stage_id" ref="stage_1"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record>
+    <record id="m_request_8" model="sale.order.request">
+        <field name="name">Touchpad not working</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="owner_user_id" ref="base.user_demo"/>
+        <field name="product_id" ref="product_shell_foundation11"/>
+        <field name="stage_id" ref="stage_1"/>
+        <field name="sale_order_team_id" ref="sale_order_team_order"/>
+    </record> -->
+</odoo>

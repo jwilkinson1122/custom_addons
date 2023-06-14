@@ -3,6 +3,32 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="product_config_category" model="ir.module.category">
+            <field name="name">Product Configurator</field>
+        </record>
+
+        <record id="group_product_configurator" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="product_config_category" />
+            <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]" />
+        </record>
+
+        <record id="group_product_configurator_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="product_config_category" />
+            <field name="implied_ids" eval="[(4, ref('podiatry.group_product_configurator'))]" />
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <!-- Set default to all employees -->
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('podiatry.group_product_configurator'))]" />
+        </record>
+        <record model="res.users" id="base.user_root">
+            <field eval="[(4, ref('podiatry.group_product_configurator_manager'))]" name="groups_id" />
+        </record>
+
+
         <record id="module_category_podiatry" model="ir.module.category">
             <field name="name">Podiatry Management</field>
             <field name="sequence">22</field>
@@ -75,14 +101,14 @@
 
         <!-- Rule For Student Profile Record As A Parent -->
 
-<!--         <record id="rule_student_profile_record_as_parent" model="ir.rule"> -->
-<!--             <field name="name">Rule Student Profile Record As A Parent</field> -->
-<!--             <field name="model_id" ref="model_student_student"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force"> [('id','in', user.partner_id.student_ids.ids)]</field> -->
-<!--             <field name="groups" eval="[(4, ref('group_podiatry_parent'))]"/> -->
-<!--         </record> -->
-        
+        <!--         <record id="rule_student_profile_record_as_parent" model="ir.rule"> -->
+        <!--             <field name="name">Rule Student Profile Record As A Parent</field> -->
+        <!--             <field name="model_id" ref="model_student_student"/> -->
+        <!--             <field name="global" eval="True"/> -->
+        <!--             <field name="domain_force"> [('id','in', user.partner_id.student_ids.ids)]</field> -->
+        <!--             <field name="groups" eval="[(4, ref('group_podiatry_parent'))]"/> -->
+        <!--         </record> -->
+
         <record id="rule_student_profile_record_as_parent" model="ir.rule">
             <field name="name">Rule Student Profile Record As A Parent</field>
             <field name="model_id" ref="model_student_student"/>
@@ -105,7 +131,7 @@
             <field name="name">Teacher Podiatry Standard Record Rule</field>
             <field name="model_id" ref="model_podiatry_standard"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('podiatry_id.partner_id','=',user.partner_id.id)]</field>
+            <field name="domain_force">[('clinic_id.partner_id','=',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_podiatry_teacher'))]"/>
         </record>
 
@@ -134,41 +160,41 @@
             <field name="global" eval="True"/>
             <field name="domain_force">[('stu_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('podiatry.group_podiatry_student'))]"/>
-       </record>
-       
-       <!--  Rule For Podiatry Teacher -->
-<!--        <record id="rule_podiatry_teacher_own" model="ir.rule"> -->
-<!--            <field name="name">Rule Podiatry Teacher Self</field> -->
-<!--            <field name="model_id" ref="hr.model_partner"/> -->
-<!--            <field name="global" eval="True"/> -->
-<!--            <field name="domain_force"> [('user_id','=',user.id)]</field> -->
-<!--            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_teacher'))]"/> -->
-<!--        </record> -->
-       <record id="rule_personal_podiatry_teacher" model="ir.rule">
-           <field name="name">Rule Personal teacher Record</field>
-           <field name="model_id" ref="model_podiatry_teacher"/>
-           <field name="domain_force">[('partner_id.user_id.id', '=', user.id)]</field>
-           <field name="groups" eval="[(4, ref('group_podiatry_teacher'))]"/>
-       </record>
-       
-       <!--  Rule For Parent Profile Record As A Parent -->
-       <record id="rule_podiatry_parents" model="ir.rule">
-           <field name="name">Rule Parent Profile Record As A Parent</field>
-           <field name="model_id" ref="model_podiatry_parent"/>
-           <field name="global" eval="True"/>
-           <field name="domain_force"> [('partner_id','=', user.partner_id.id)]</field>
-           <field name="groups" eval="[(4, ref('podiatry.group_podiatry_parent'))]"/>
-       </record>
-       <!-- Record Rule student can see own parent -->
-       <record id="rule_stud_parent" model="ir.rule">
-           <field name="name">Record rule student can see own parent</field>
-           <field name="model_id" ref="model_podiatry_parent"/>
-           <field name="global" eval="True"/>
-           <field name="domain_force"> [('student_id.user_id','=', user.id)]</field>
-           <field name="groups" eval="[(4, ref('podiatry.group_podiatry_student'))]"/>
-       </record>
-       
-       <!-- Rule For Student Profile Record in Adminssion -->
+        </record>
+
+        <!--  Rule For Podiatry Teacher -->
+        <!--        <record id="rule_podiatry_teacher_own" model="ir.rule"> -->
+        <!--            <field name="name">Rule Podiatry Teacher Self</field> -->
+        <!--            <field name="model_id" ref="hr.model_partner"/> -->
+        <!--            <field name="global" eval="True"/> -->
+        <!--            <field name="domain_force"> [('user_id','=',user.id)]</field> -->
+        <!--            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_teacher'))]"/> -->
+        <!--        </record> -->
+        <record id="rule_personal_podiatry_teacher" model="ir.rule">
+            <field name="name">Rule Personal teacher Record</field>
+            <field name="model_id" ref="model_podiatry_teacher"/>
+            <field name="domain_force">[('partner_id.user_id.id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_podiatry_teacher'))]"/>
+        </record>
+
+        <!--  Rule For Parent Profile Record As A Parent -->
+        <record id="rule_podiatry_parents" model="ir.rule">
+            <field name="name">Rule Parent Profile Record As A Parent</field>
+            <field name="model_id" ref="model_podiatry_parent"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('partner_id','=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_parent'))]"/>
+        </record>
+        <!-- Record Rule student can see own parent -->
+        <record id="rule_stud_parent" model="ir.rule">
+            <field name="name">Record rule student can see own parent</field>
+            <field name="model_id" ref="model_podiatry_parent"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('student_id.user_id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_student'))]"/>
+        </record>
+
+        <!-- Rule For Student Profile Record in Adminssion -->
 
         <record id="rule_student_profile_record_as_student_in_admisssion" model="ir.rule">
             <field name="name">Rule Student Profile Record As A Student for in Adminssion </field>
@@ -177,5 +203,16 @@
             <field name="domain_force">[('user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('group_is_admission'))]"/>
         </record>
+
+        <record id="sale_order_type_comp_rule" model="ir.rule">
+            <field name="name">Sale Order Type multi-company</field>
+            <field name="model_id" ref="podiatry.model_sale_order_type" />
+            <field name="domain_force">['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+            <field name="perm_read" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_unlink" eval="1" />
+        </record>
+
     </data>
 </odoo>

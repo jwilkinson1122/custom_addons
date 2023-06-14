@@ -44,7 +44,7 @@
                                         </strong>
                                         <div class="o_kanban_tags_section oe_kanban_partner_categories" />
                                         <ul>
-                                            <li t-if="record.podiatry_id.raw_value"><field name="podiatry_id" /></li>
+                                            <li t-if="record.clinic_id.raw_value"><field name="clinic_id" /></li>
                                             <li t-if="record.role_id.raw_value"><field name="role_id" /></li>
                                             <li t-if="record.phone.raw_value"><field name="phone" /></li>
                                             <li t-if="record.email.raw_value"><field name="email" /></li>
@@ -101,7 +101,7 @@
                             <field name="standard_id" widget="selection"/>
                             <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
                             <field name="subject_id" required="1" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field name="podiatry_id" required="1" widget="selection"/>
+                            <field name="clinic_id" required="1" widget="selection"/>
                         </group>
                         <group>
                             <field name="is_parent" widget="boolean_toggle"/>

@@ -18,7 +18,7 @@
                             <tr>
                                 <td width="100%" align="center" height="30">
                                     <strong>
-                                        <span t-field="student.podiatry_id.name" />
+                                        <span t-field="student.clinic_id.name" />
                                     </strong>
                                 </td>
                             </tr>

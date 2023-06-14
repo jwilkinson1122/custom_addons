@@ -41,8 +41,8 @@ class PodiatryTeacher(models.Model):
     subject_id = fields.Many2many('subject.subject', 'subject_teacher_rel',
         'teacher_id', 'subject_id', 'Course-Subjects',
         help='Select subject of teacher')
-    podiatry_id = fields.Many2one('podiatry.podiatry', "Campus",
-        help='Select podiatry')
+    clinic_id = fields.Many2one('podiatry.podiatry', "Clinic",
+        help='Select Clinic')
     category_ids = fields.Many2many('res.partner.category',
         'teacher_category_rel', 'emp_id', 'categ_id', 'Tags',
         help='Select partner category')
@@ -84,8 +84,8 @@ class PodiatryTeacher(models.Model):
     @api.onchange('standard_id')
     def _onchange_standard_id(self):
         for rec in self:
-            rec.podiatry_id = (rec.standard_id and rec.standard_id.podiatry_id and
-                            rec.standard_id.podiatry_id.id or False)
+            rec.clinic_id = (rec.standard_id and rec.standard_id.clinic_id and
+                            rec.standard_id.clinic_id.id or False)
 
     @api.onchange('is_parent')
     def _onchange_isparent(self):
@@ -103,7 +103,7 @@ class PodiatryTeacher(models.Model):
                      'email': teacher_id.email,
                      }
         ctx_vals = {'teacher_create': True,
-                    'podiatry_id': teacher_id.podiatry_id.partner_id.id}
+                    'clinic_id': teacher_id.clinic_id.partner_id.id}
         user_rec = user_obj.with_context(ctx_vals).create(user_vals)
         teacher_id.partner_id.write({'user_id': user_rec.id})
 #        if vals.get('is_parent'):
@@ -216,10 +216,10 @@ class PodiatryTeacher(models.Model):
             self.email = self.user_id.email
             self.image = self.image or self.user_id.image
 
-    @api.onchange('podiatry_id')
+    @api.onchange('clinic_id')
     def onchange_podiatry(self):
         """Onchange method for podiatry."""
-        partner = self.podiatry_id.partner_id.partner_id
+        partner = self.clinic_id.partner_id.partner_id
         self.address_id = partner.id or False
         self.mobile = partner.mobile or False
         self.location_id = partner.id or False

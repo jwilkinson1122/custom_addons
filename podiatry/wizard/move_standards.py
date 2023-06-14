@@ -34,7 +34,7 @@ The Acedemic year from which you need to move the student to next Year.""")
                 next_stand = podiatry_stand_obj.search([
                             ('standard_id', '=', next_class_id),
                             ('division_id', '=', division),
-                            ('podiatry_id', '=', stud.podiatry_id.id),
+                            ('clinic_id', '=', stud.clinic_id.id),
                             ('medium_id', '=', stud.medium_id.id)])
                 if next_stand:
                     std_vals = {'year': next_year_id.id,

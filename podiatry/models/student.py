@@ -132,8 +132,8 @@ class StudentStudent(models.Model):
     reference_ids = fields.One2many('student.reference', 'reference_id',
         'References', states={'done': [('readonly', True)]},
         help='Enter student references')
-    previous_podiatry_ids = fields.One2many('student.previous.podiatry',
-        'previous_podiatry_id', 'Previous Podiatry Detail',
+    previous_clinic_ids = fields.One2many('student.previous.podiatry',
+        'previous_clinic_id', 'Previous Podiatry Detail',
         states={'done': [('readonly', True)]},
         help='Enter student podiatry details')
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]},
@@ -161,7 +161,7 @@ class StudentStudent(models.Model):
         help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
         help='Remark can be entered if any')
-    podiatry_id = fields.Many2one('podiatry.podiatry', 'Podiatry',
+    clinic_id = fields.Many2one('podiatry.podiatry', 'Podiatry',
         states={'done': [('readonly', True)]}, help='Select podiatry', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
         ('terminate', 'Terminate'), ('cancel', 'Cancel'),
@@ -254,10 +254,10 @@ class StudentStudent(models.Model):
             start = self.date_of_birth
             age_calc = ((fields.Date.today() - start).days / 365)
             # Check if age less than required age
-            if age_calc < self.podiatry_id.required_age:
+            if age_calc < self.clinic_id.required_age:
                 raise ValidationError(_(
                 "Age of student should be greater than %s years!"% (\
-                                                self.podiatry_id.required_age)))
+                                                self.clinic_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''
@@ -299,7 +299,7 @@ class StudentStudent(models.Model):
             if rec.standard_id.remaining_seats <= 0:
                 raise ValidationError(_('Seats of class %s are full'
                                         ) % rec.standard_id.standard_id.name)
-            domain = [('podiatry_id', '=', rec.podiatry_id.id)]
+            domain = [('clinic_id', '=', rec.clinic_id.id)]
             # Checks the standard if not defined raise error
             if not podiatry_standard_obj.search(domain):
                 raise UserError(_(
@@ -314,12 +314,12 @@ class StudentStudent(models.Model):
                 number += 1
             # Assign registration code to student
             reg_code = ir_sequence.next_by_code('student.registration')
-            registation_code = (str(rec.podiatry_id.state_id.name) + str('/') +
-                                str(rec.podiatry_id.city) + str('/') +
-                                str(rec.podiatry_id.name) + str('/') +
+            registation_code = (str(rec.clinic_id.state_id.name) + str('/') +
+                                str(rec.clinic_id.city) + str('/') +
+                                str(rec.clinic_id.name) + str('/') +
                                 str(reg_code))
             stu_code = ir_sequence.next_by_code('student.code')
-            student_code = (str(rec.podiatry_id.code) + str('/') +
+            student_code = (str(rec.clinic_id.code) + str('/') +
                             str(rec.year.code) + str('/') +
                             str(stu_code))
             rec.write({'state': 'done',
@@ -336,7 +336,7 @@ class StudentStudent(models.Model):
                         <div>
                             <p>Dear """ + str(user.display_name) + """,
                             <br/><br/>
-                            Admission of """+str(rec.display_name)+""" has been confirmed in """+str(rec.podiatry_id.name)+""".
+                            Admission of """+str(rec.display_name)+""" has been confirmed in """+str(rec.clinic_id.name)+""".
                             <br></br>
                             Thank You.
                         </div>

@@ -115,11 +115,60 @@
         <field name="arch" type="xml">
             <form string="Clinic Information">
                 <sheet>
+                    <!-- <div class="oe_title">
+                        <h1>
+                            <field name="code" default_focus="1" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/>
+                        </h1>
+                    </div> -->
+                     <div class="oe_button_box" name="button_box">
+                        <!-- <button name="action_add_communication" string="Send Registration No" type="object" class="oe_highlight"/> -->
+
+                        <!-- <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_stat_info">
+                                <field name="patient_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Patients</span>
+                            </div>
+                        </button> -->
+                        <button name="action_open_sale_orders" type="object" class="oe_stat_button" icon="fa-file-text">
+                            <div class="o_stat_info">
+                                <field name="sale_order_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Sale Orders</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active_id', '=', True)]}"/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
+                    <div name="code">
+                        <h1 class="d-flex">
+                            <field name="code" default_focus="1" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/>
+                        </h1>
+                    </div>
+                    <div name="title" class="oe_title">
+                        <h1>
+                            <field name="name" required="1" placeholder="Practice Name"/>
+                        </h1>
+                    </div>
+                    <field name="is_clinic" invisible="1"/>
+                    <field name="commercial_partner_id" invisible="1"/>
+                    <field name="active_id" invisible="1"/>
                     <separator string="Clinic Configuration" />
                     <group col="4" colspan="4">
                         <field name="name" string="Name" placeholder="Clinic Name" />
-                        <field name="code" placeholder="Code" />
+                        <field name="code" default_focus="1" placeholder="Code" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/>
+                        <!-- <field name="code" placeholder="Code" /> -->
+                        <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_clinic', '=', True)]" context="{'default_is_clinic': True}" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': ['|', '&amp;', ('is_clinic','=', False),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                        <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_clinic', '=', True)]" readonly="not context.get('can_edit_parent_id', True)"/> -->
+
+                        <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_clinic', '=', True)]}"/>
+
+                        <!-- <field name="x_studio_field_1zo8y" domain="[('parent_id', '=', x_studio_field_KdnyA)]" /> -->
                     </group>
+                    <!-- <div class="o_row">
+                            <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_clinic', '=', True)]" context="{'default_is_clinic': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_clinic','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                            <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_clinic', '=', True)]}"/>
+                            <button name="create_company" icon="fa-plus-square" string="Create company" type="object" class="oe_edit_only btn-link" attrs="{'invisible': ['|', '|', ('is_clinic','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                        </div> -->
                     <group>
                         <label for="street" string="Address" />
                         <div class="o_address_format">
@@ -140,6 +189,37 @@
                         <page string="Standards">
                             <field name="standards" nolabel="1" colspan="4" readonly="1"/>
                         </page>
+                        <!-- <page name="practitioners_list" string="Contacts">
+                            <group>
+                                <field name="practitioner_id"/>
+                            </group>
+                        </page>
+                        <page name="practice_patients_list" string="Patients">
+                            <group>
+                                <field name="patient_ids"/>
+                            </group>
+                        </page> -->
+                        <!-- <page name="practice_prescriptions_list" string="Prescriptions">
+                            <group>
+                                <field name="practice_prescription_id"/>
+                            </group>
+                        </page> -->
+                        <page name="sale_orders_list" string="Sale Orders">
+                            <div name="alert_no_sale_orders" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('sale_order_ids', '!=', ())]}">
+                                No Sale Orders
+                            </div>
+                            <field name="sale_order_ids" mode="kanban">
+                            <field name="sale_type" />
+                            </field>
+                        </page>
+                        <!-- <page name="practice_affiliate_list" string="Affiliates">
+                            <group>
+                                <field name="child_ids"/>
+                            </group>
+                        </page>
+                        <page name="public" string="Additional Notes">
+                            <field name="notes" placeholder="Notes" class="o_address_city"/>
+                        </page> -->
                     </notebook>
                 </sheet>
             </form>
@@ -152,7 +232,17 @@
         <field name="arch" type="xml">
             <tree string="Clinic Information">
                 <field name="name" string="Clinic Name" />
+                <field name="com_name" string="Company Name"/>
                 <field name="code" />
+                <field name="active_id"/>
+                <field name="parent_name"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="city"/>
+                <field name="state_id"/>
+                <field name="zip"/>
+                <field name="phone"/>
+                <field name="email"/>
             </tree>
         </field>
     </record>
@@ -182,7 +272,7 @@
                         <field name="standard_id" widget="selection" placeholder="Standard"/>
                         <field name="division_id" widget="selection" placeholder="Division"/>
                         <field name="medium_id" widget="selection" placeholder="Medium"/>
-                        <field name="podiatry_id" widget="selection" placeholder="Podiatry"/>
+                        <field name="clinic_id" widget="selection" placeholder="Podiatry"/>
                         <field name="user_id" placeholder="Select Faculty Name" widget="selection"/>
                         <field name="capacity"/>
                         <field name="total_students"/>
@@ -256,7 +346,7 @@
         <field name="model">podiatry.standard</field>
         <field name="arch" type="xml">
             <kanban default_group_by="standard_id">
-                <field name="podiatry_id" />
+                <field name="clinic_id" />
                 <field name="standard_id" />
                 <field name="division_id" />
                 <field name="medium_id" />
@@ -264,7 +354,7 @@
                 <field name="color" />
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.podiatry_id.value)" />
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.clinic_id.value)" />
                         <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
@@ -273,7 +363,7 @@
                                             <td class="oe_kanban_title1" align="left" valign="middle">
                                                 <div>
                                                     Clinic :-
-                                                    <field name="podiatry_id" />
+                                                    <field name="clinic_id" />
                                                 </div>
                                             </td>
                                         </tr>
@@ -336,7 +426,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="podiatry" string="Clinic" help="By Clinic" context="{'group_by':'podiatry_id'}" />
+                    <filter name="podiatry" string="Clinic" help="By Clinic" context="{'group_by':'clinic_id'}" />
                     <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
                     <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
@@ -790,10 +880,59 @@
         <field name="act_window_id" ref="action_student_reminder" />
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Information -->
+    <!-- <record id="action_podiatry_form" model="ir.actions.act_window">
+        <field name="name">Clinics</field>
+        <field name="res_model">podiatry.podiatry</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record> -->
+
+    <!-- <record id="action_pod_clinics_by_parent" model="ir.actions.act_window">
+        <field name="name">Clinics</field>
+        <field name="res_model">podiatry.podiatry</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="context">{'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new clinic
+            </p>
+            <p>
+                Organize and manage clinics at a glance.
+            </p>
+        </field>
+    </record> -->
+    <record id="product_request_action_from_product" model="ir.actions.act_window">
+        <field name="name">Sale Order Requests</field>
+        <field name="res_model">sale.order.request</field>
+        <field name="binding_model_id" ref="podiatry.model_sale_order_product"/>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="context">{'default_product_id': active_id}</field>
+        <field name="domain">[('product_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new sale order request
+            </p>
+            <p>
+                Follow the process of the request and communicate with the collaborator.
+            </p>
+        </field>
+    </record>
+
     <record id="action_podiatry_form" model="ir.actions.act_window">
         <field name="name">Clinics</field>
         <field name="res_model">podiatry.podiatry</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_clinic', '=', True)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="context">{'default_company_type':'company', 'default_is_clinic':True, 'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new clinic
+            </p>
+            <p>
+                Organize and manage clinics at a glance.
+            </p>
+        </field>
     </record>
     <!-- Action Of Form & Tree Views Of Podiatry Standard -->
     <record id="action_podiatry_standard_form" model="ir.actions.act_window">
@@ -999,6 +1138,29 @@
     <!-- <menuitem id="hr.menu_partner_root" name="Partners" groups="base.group_erp_manager,-base.group_user,-base.group_user,podiatry.group_podiatry_administration" web_icon="hr,static/description/icon.png" sequence="75"/> -->
     <!-- MenuItem For Configurations->Subject -->
 
+    <!-- <menuitem name="Sale" id="sale_main" parent="sale.sale_menu_root" sequence="1"/> -->
+    <!-- <menuitem id="menu_sale_quotations" action="action_quotations_with_onboarding" parent="sale_order_menu" sequence="1" groups="sales_team.group_sale_salesman"/> -->
+
+    <!-- <menuitem name="Sale Order" id="sale_order_main" parent="sale.sale_order_menu" sequence="1" action="sale_order_action"/> -->
+    <!-- <menuitem name="Work Order" id="work_order_main" parent="sale.sale_order_menu" sequence="2" action="work_order_action"/> -->
+
+    <!-- <menuitem id="menu_products_root" name="Products" parent="podiatry.menu_main_root" sequence="20"/> -->
+    <!-- <menuitem id="menu_product_custom_devices" name="Custom Devices" parent="podiatry.menu_products_root" action="action_product_custom_device" sequence="1" />
+        <menuitem id="menu_product_device_options" name="Device Options" parent="podiatry.menu_products_root" action="action_product_option_device" sequence="2" />
+  -->
+    <!-- Configuration Root -->
+    <!-- <menuitem id="menu_configuration_root" name="Configuration" parent="podiatry.menu_main_root" sequence="30" /> -->
+    <!-- <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/> -->
+    <!-- <menuitem id="menu_specialties" name="Specialties" parent="podiatry.menu_configuration_root" action="action_podiatry_specialties" sequence="3"/> -->
+    <!-- <menuitem id="menu_podiatry_book_order_values" name="Measures" parent="sale.menu_sale_config" sequence="20"/>
+        <menuitem id="menu_podiatry_forefoot_values" name="Forefoot Values" parent="podiatry.menu_podiatry_book_order_values" action="forefoot_values_action" sequence="1"/>
+        <menuitem id="menu_podiatry_forefoot_corrections" name="Forefoot Corrections" parent="podiatry.menu_podiatry_book_order_values" action="forefoot_corrections_action" sequence="2"/>
+        <menuitem id="menu_podiatry_rearfoot_corrections" name="Rearfoot Corrections" parent="podiatry.menu_podiatry_book_order_values" action="rearfoot_corrections_action" sequence="3"/>
+        <menuitem id="menu_podiatry_orthotic_measures" name="Orthotic Measures" parent="podiatry.menu_podiatry_book_order_values" action="orthotic_measures_action" sequence="4"/> -->
+
+    <!-- Product Configurator -->
+
+
     <!-- Inherited Form View Of Partner -->
     <record id="view_partner_form_inherit" model="ir.ui.view">
         <field name="name">res.partner.form</field>
@@ -1012,5 +1174,91 @@
     </record>
 
     <!-- removed the inherited reports and act_windows of account which has been deprecated since V12-->
+
+    <menuitem id="menu_product_configurable" name="Configurator" web_icon="podiatry,static/description/configurator.png" sequence="20" groups="podiatry.group_product_configurator_manager" />
+    <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="podiatry.menu_product_configurable" sequence="10" />
+    <menuitem id="menu_product_configurable_settings" name="Configuration" parent="podiatry.menu_product_configurable" sequence="20" />
+
+    <record id="product_configurable_template_action" model="ir.actions.act_window">
+        <field name="name">Configurable Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="product.product_template_kanban_view" />
+        <field name="context">{'default_config_ok': True, 'custom_create_variant': True, 'search_default_filter_config_ok': 1}</field>
+    </record>
+
+    <menuitem id="menu_product_configurable_template_action" action="product_configurable_template_action" parent="podiatry.menu_product_configurable_product_main" sequence="20" />
+
+    <record id="product_configurable_variant_action" model="ir.actions.act_window">
+        <field name="name">Configured Variants</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="search_view_id" ref="product.product_search_form_view" />
+        <field name="view_id" eval="False" />
+        <!-- Force empty -->
+        <field name="context">{'default_config_ok': True, 'custom_create_variant': True, 'search_default_filter_config_ok': 1}</field>
+    </record>
+
+    <menuitem id="menu_product_configurable_variants_action" action="product_configurable_variant_action" name="Configurable Variants" parent="podiatry.menu_product_configurable_product_main" sequence="25" />
+    
+    <record id="action_product_configurator_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="view_id" ref="podiatry.configurator_settings_view_form" />
+        <field name="context">{'module' : 'product_configurator'}</field>
+    </record>
+
+    <menuitem id="menu_action_product_configurator_configuration" action="action_product_configurator_configuration" name="Settings" active="False" parent="podiatry.menu_product_configurable_settings" sequence="0" />
+    
+    <record model="ir.actions.act_window" id="action_attributes_view">
+            <field name="name">Attributes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'flag_config_ok': True}</field>
+    </record>
+    
+    <menuitem id="menu_attribute_action_configuration" action="action_attributes_view" parent="podiatry.menu_product_configurable_settings" sequence="10" groups="product.group_product_variant" />
+    
+     <record id="variants_action" model="ir.actions.act_window">
+            <field name="name">Attribute Values</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute.value</field>
+            <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem id="menu_variants_action_configuration" action="variants_action" parent="podiatry.menu_product_configurable_settings" sequence="20" groups="product.group_product_variant" />
+
+    <record id="product_config_steps_action" model="ir.actions.act_window">
+        <field name="name">Configuration Steps</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.config.step</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_product_config_steps_action" action="product_config_steps_action" name="Configuration Steps" parent="podiatry.menu_product_configurable_settings" sequence="40" />
+
+    <record id="product_config_domain_action" model="ir.actions.act_window">
+        <field name="name">Configuration Restrictions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.config.domain</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_product_config_domain_action" action="product_config_domain_action" name="Configuration Restrictions" parent="podiatry.menu_product_configurable_settings" sequence="50" />
+
+    <record id="product_config_session" model="ir.actions.act_window">
+        <field name="name">Configuration Sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.config.session</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_product_config_session" action="product_config_session" name="Configuration Sessions" parent="podiatry.menu_product_configurable_settings" sequence="60" />
 
 </odoo>
