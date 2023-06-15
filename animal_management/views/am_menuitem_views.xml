@@ -1,0 +1,19 @@
+<odoo>
+  <data>
+
+    <menuitem id="menu_dashboard_animal_management" name="Animal Management"/>
+
+    <menuitem id="menu_bar_appointment" name="Appointment" parent="menu_dashboard_animal_management"/>
+
+    <menuitem id="menu_item_appointment" name="Appointment" parent="menu_bar_appointment" action="am_appointment_action" sequence="1"/>
+
+    <menuitem id="menu_item_stage" name="Stage" parent="menu_bar_appointment" action="am_stage_action" sequence="2"/>
+
+    <menuitem id="menu_item_service" name="Service" parent="menu_bar_appointment" action="am_service_action" sequence="3"/>
+
+    <menuitem id="menu_item_pemeriksaan" name="Hasil Pemeriksaan" parent="menu_bar_appointment" action="am_pemeriksaan_action" sequence="4"/>
+
+    <menuitem id="menu_item_resep" name="Resep" parent="menu_bar_appointment" action="am_resep_action" sequence="5"/>
+
+  </data>
+</odoo>

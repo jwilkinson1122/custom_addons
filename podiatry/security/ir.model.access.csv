@@ -217,5 +217,5 @@ access_product_product_product_config_manager,product.product Product Config Man
 access_product_attribute_line_product_config_manager,product.attribute line Product Config Manager,product.model_product_template_attribute_line,podiatry.group_product_configurator_manager,1,1,1,1
 access_product_configurator_group,product_configurator,model_product_configurator,podiatry.group_product_configurator,1,1,1,1
 access_res_company,access_res_company,model_res_company,base.group_user,1,1,1,0
-
+access_res_partner_info,access_res_partner_info,model_res_partner_info,base.group_user,1,1,1,1
 

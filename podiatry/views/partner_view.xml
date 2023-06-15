@@ -34,7 +34,7 @@
                 <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'sale')]}">Sale Contact Address</b>
             </xpath>
             <xpath expr="//field[@name='company_type']" position="after">
-                <field name="is_clinic" />
+                <field name="is_clinic" invisible="1"/>
             </xpath>
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page name="More Info" string="More Info">

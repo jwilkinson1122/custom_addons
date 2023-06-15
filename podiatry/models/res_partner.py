@@ -13,18 +13,20 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
     
-    
-    code = fields.Char(string='Unique Id', help="The Unique Sequence no", readonly=True, default='/')
+    code = fields.Char(string='Code', required=True, copy=False, readonly=True,
+                            default=lambda self: _('New'))
+    # code = fields.Char(string='Unique Id', help="The Unique Sequence no", readonly=True, default='/')
     info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
     name = fields.Char(index=True)
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
-
     clinic_id = fields.Many2one("podiatry.podiatry",string="Clinic")
     clinic_ids = fields.One2many('podiatry.podiatry', 'clinic_address_id', string='Clinics')
     # clinic_ids = fields.One2many('podiatry.podiatry', 'clinic_id', string='Related Clinic')
     other_clinic_ids = fields.One2many("res.partner", "clinic_id", string="Others Clinics")
     is_clinic = fields.Boolean(compute = '_calc_clinic', compute_sudo = True, store = True, string='Is Clinic', search='_search_is_clinic')
     clinics_count = fields.Integer(string="Clinics Count", compute='_compute_clinics_count')
+    clinic_code = fields.Integer(string='Clinic code', required=True)
+    next_code = fields.Integer(string='Next code')
 
     use_parent_invoice_address = fields.Boolean()
  
@@ -32,7 +34,7 @@ class ResPartner(models.Model):
     def _calc_clinic(self):
         for record in self:
             record.is_clinic = bool(record.clinic_ids)
-    
+            
     # Clinics
     @api.depends('clinic_ids')
     def _compute_clinics_count(self):
@@ -49,18 +51,50 @@ class ResPartner(models.Model):
             search_operator = '='
         return [('clinic_id', search_operator, False)]
     
+    
+    
+    # def name_get(self):
+    #     result = []
+    #     for rec in self:
+    #         name = '[' + rec.code + '] ' + rec.name
+    #         result.append((rec.id, name))
+    #     return result
+    
+    # def name_get(self):
+    #     '''Method to display name and code'''
+    #     return [(rec.id, ' [' + rec.code + ']' + rec.name) for rec in self]
+
+        # @api.model
+    # def create(self, vals):
+    #     '''Inherited create method to assign partner_id to clinic'''
+    #     res = super(PodiatryPodiatry, self).create(vals)
+    #     main_partner = self.env.ref('base.main_partner')
+    #     res.partner_id.parent_id = main_partner.id
+    #     return res
+    
     def name_get(self):
-        """ Override to allow a clinic to see its address in his profile.
-            This avoids to relax access rules on `res.parter` and to add an `ir.rule`.
-            (advantage in both security and performance).
-            Use a try/except instead of systematically checking to minimize the impact on performance.
-            """
+        res = super(ResPartner, self).name_get()
+        for rec in self:
+            name = '[' + rec.code +'] ' + rec.name
+            res.append((rec.id, name))
         try:
-            return super(ResPartner, self).name_get()
+            return res 
         except AccessError as e:
             if len(self) == 1 and self in self.env.user.clinic_ids.mapped('clinic_address_id'):
                 return super(ResPartner, self.sudo()).name_get()
             raise e
+    # def name_get(self):
+    #     """ Override to allow a clinic to see its address in his profile.
+    #         This avoids to relax access rules on `res.parter` and to add an `ir.rule`.
+    #         (advantage in both security and performance).
+    #         Use a try/except instead of systematically checking to minimize the impact on performance.
+    #         """
+    #     try:
+    #         return super(ResPartner, self).name_get()
+    #     except AccessError as e:
+    #         if len(self) == 1 and self in self.env.user.clinic_ids.mapped('clinic_address_id'):
+    #             return super(ResPartner, self.sudo()).name_get()
+    #         raise e
         
         
     def _compute_clinics_count(self):
@@ -107,6 +141,45 @@ class ResPartner(models.Model):
         else:
             result = self
         return result
+    
+    #     @api.model
+    # def create(self, vals):
+    #     if not vals.get('notes'):
+    #         vals['notes'] = 'Practice Notes'
+    #     if vals.get('reference', _('New')) == _('New'):
+    #         vals['reference'] = self.env['ir.sequence'].next_by_code(
+    #             'podiatry.practice') or _('New')
+    #     practice = super(Practice, self).create(vals)
+    #     return practice
+    
+    
+    # @api.model
+    # def create(self,val):
+    #     booking_order = self._context.get('order_id')
+    #     res_partner_obj = self.env['res.partner']
+    #     if booking_order:
+    #         val_1 = {'name': self.env['res.partner'].browse(val['patient_id']).name}
+    #         patient= res_partner_obj.create(val_1)
+    #         val.update({'patient_id': patient.id})
+    #     patient_id  = self.env['ir.sequence'].next_by_code('account.patient')
+    #     if patient_id:
+    #         val.update({'name':patient_id})
+    #     result = super(Patient, self).create(val)
+    #     return result
+    
+    # @api.model
+    # def create(self,val):
+    #     sale_order = self._context.get('order_id')
+    #     res_partner_obj = self.env['res.partner']
+    #     if sale_order:
+    #         val_1 = {'name': self.env['res.partner'].browse(val['clinic_id']).name}
+    #         partner= res_partner_obj.create(val_1)
+    #         val.update({'clinic_id': partner.id})
+    #     clinic_id  = self.env['ir.sequence'].next_by_code('res.partner')
+    #     if clinic_id:
+    #         val.update({'name':clinic_id})
+    #     result = super(ResPartner, self).create(val)
+    #     return result
 
     @api.model
     def create(self, vals):
@@ -119,7 +192,7 @@ class ResPartner(models.Model):
             vals["name"] = modified_self.browse(vals["clinic_id"]).name
         res = super(ResPartner, modified_self).create(vals)
         company_seq = self.env.company
-        if res.customer_rank > 0 and res.code == '/':
+        if res.customer_rank > 0 and res.code == 'New':
             if company_seq.next_code:
                 res.code = company_seq.next_code
                 res.name = '[' + str(company_seq.next_code) + ']' + str(res.name)
@@ -129,7 +202,16 @@ class ResPartner(models.Model):
                 res.name = '[' + str(company_seq.customer_code) + ']' + str(res.name)
                 company_seq.write({'next_code': company_seq.customer_code + 1})
         return res
-
+    
+    #     @api.model
+    # def create(self, vals):
+    #     if not vals.get('notes'):
+    #         vals['notes'] = 'Practice Notes'
+    #     if vals.get('code', _('New')) == _('New'):
+    #         vals['code'] = self.env['ir.sequence'].next_by_code('podiatry.practice') or _('New')
+    #     practice = super(Practice, self).create(vals)
+    #     return practice
+    
     
     def read(self, fields=None, load="_classic_read"):
         modified_self = self._base_clinic_check_context("read")

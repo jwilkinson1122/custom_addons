@@ -1,0 +1,38 @@
+<odoo>
+  <data>
+
+    <record id="am_stage_tree_view" model="ir.ui.view">
+      <field name="name">am.stage.tree</field>
+      <field name="model">am.stage</field>
+      <field name="arch" type="xml">
+        <tree string="Stage">
+          <field name="sequence" widget="handle"/>
+          <field name="name"/>
+          <field name="requirements"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="am_stage_form_view" model="ir.ui.view">
+      <field name="name">am.stage.form</field>
+      <field name="model">am.stage</field>
+      <field name="arch" type="xml">
+        <form string="Stage Form">
+          <sheet >
+            <group >
+              <field name="name"/>
+              <field name="requirements" placeholder='Deskripsi requirement yang di perlukan untuk sampai di stage ini'/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="am_stage_action" model="ir.actions.act_window">
+      <field name="name">Stage</field>
+      <field name="res_model">am.stage</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  </data>
+</odoo>

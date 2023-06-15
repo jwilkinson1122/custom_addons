@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_animal_resep,animal.resep,model_am_resep,base.group_user,1,1,1,1
+access_animal_pemeriksaan,animal.pemeriksaan,model_am_pemeriksaan,base.group_user,1,1,1,1
+access_animal_service,animal.service,model_am_service,base.group_user,1,1,1,1
+access_animal_stage,animal.stage,model_am_stage,base.group_user,1,1,1,1
+access_animal_appointment,animal.appointment,model_am_appointment,base.group_user,1,1,1,1

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="customer_code" widget="integer" options="{'format': 0}"/>
-                    <field name="next_code"/>
+                    <field name="next_code" widget="integer" options="{'format': 0}"/>
                 </xpath>
             </field>
         </record>
@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="base.view_company_tree"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="customer_code"/>
+                    <field name="customer_code" widget="integer" options="{'format': 0}"/>
                 </field>
             </field>
         </record>

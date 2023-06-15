@@ -367,7 +367,7 @@ class PodiatryPodiatry(models.Model):
         string="Clinic",
         index=True,
         ondelete='cascade',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', ('clinic_ic', '=', False), ('clinic_ic', '=', clinic_ic)]",
     )
     
     child_ids = fields.One2many(
@@ -390,14 +390,14 @@ class PodiatryPodiatry(models.Model):
     is_clinic = fields.Boolean('Is Clinic')
     partner_id = fields.Many2one('res.partner', 'Partner', ondelete="cascade", required=True, delegate=True, help='Partner related data')
     # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade', help='Partner-related data of the Clinic')
-    company_id = fields.Many2many('res.partner', domain=[('is_clinic', '=', True)], string="Clinic")
+    clinic_ic = fields.Many2many('res.partner', domain=[('is_clinic', '=', True)], string="Clinic")
     user_id = fields.Many2one(comodel_name='res.users', string="Created by")
     # company = fields.Many2one(comodel_name='res.company', string="Company", index=True, default=lambda self: self.env.company)
     active_id = fields.Boolean(string="Active", default=True, tracking=True)
     com_name = fields.Char('Clinic Name', related='partner_id.name', store=True, help='Clinic name')
     full_name = fields.Char(string="Full Name", compute='_compute_full_name', store=True)
-    code = fields.Char(string='Code', help="Unique Reference Code", readonly=True, default='/')
-
+    # code = fields.Char(string='Code', help="Unique Reference Code", readonly=True, default='/')
+    code = fields.Char(string='Code', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     standards = fields.One2many('podiatry.standard', 'clinic_id', 'Standards', help='Podiatry standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
@@ -442,7 +442,7 @@ class PodiatryPodiatry(models.Model):
     clinic_address_id = fields.Many2one('res.partner', 'Clinic Address', 
                                       help='Enter here the address of the clinic.', 
                                       tracking=True,
-                                      domain="['|', ('company_id', '=', True), ('company_id', '=', company_id)]")
+                                      domain="['|', ('clinic_ic', '=', True), ('clinic_ic', '=', clinic_ic)]")
     
     is_address_a_company = fields.Boolean('The clinic address has a company linked', compute='_compute_is_address_a_company')
 
@@ -504,25 +504,60 @@ class PodiatryPodiatry(models.Model):
     #     res.partner_id.parent_id = main_partner.id
     #     return res
     
-    @api.model_create_multi
-    def create(self, vals_list):
-        '''Inherited create method to assign partner_id to clinic'''
-        for vals in vals_list:
-            if not vals.get("code") and self._needs_ref(vals=vals):
-                vals["code"] = self._get_next_ref(vals=vals)
-        res = super(PodiatryPodiatry, self).create(vals)
+    #     @api.model
+    # @api.returns('self')
+    # def main_partner(self):
+    #     ''' Return the main partner '''
+    #     return self.env.ref('base.main_partner')
+    
+    @api.model
+    def create(self, vals):
+        modified_self = self._base_clinic_check_context("create")
+        if not vals.get("name") and vals.get("code") and vals.get("clinic_id") and self._needs_ref(vals=vals):
+            vals["name"] = modified_self.browse(vals["clinic_id"]).name
+            vals["code"] = self._get_next_ref(vals=vals)
+        res = super(PodiatryPodiatry, modified_self).create(vals)
         main_partner = self.env.ref('base.main_partner')
         res.partner_id.parent_id = main_partner.id
-        if res.customer_rank > 0 and res.code == '/':
+        # company_seq = self.env.company
+        if res.customer_rank > 0 and res.code == 'New':
             if main_partner.next_code:
                 res.code = main_partner.next_code
                 res.name = '[' + str(main_partner.next_code) + ']' + str(res.name)
                 main_partner.write({'next_code': main_partner.next_code + 1})
             else:
-                res.code = main_partner.customer_code
-                res.name = '[' + str(main_partner.customer_code) + ']' + str(res.name)
-                main_partner.write({'next_code': main_partner.customer_code + 1})
+                res.code = main_partner.clinic_code
+                res.name = '[' + str(main_partner.clinic_code) + ']' + str(res.name)
+                main_partner.write({'next_code': main_partner.clinic_code + 1})
         return res
+    
+    # @api.model
+    # def create(self, vals):
+    #     '''Inherited create method to assign partner_id to clinic'''
+    #     res = super(PodiatryPodiatry, self).create(vals)
+    #     main_partner = self.env.ref('base.main_partner')
+    #     res.partner_id.parent_id = main_partner.id
+    #     return res
+    
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     '''Inherited create method to assign partner_id to clinic'''
+    #     for vals in vals_list:
+    #         if not vals.get("code") and self._needs_ref(vals=vals):
+    #             vals["code"] = self._get_next_ref(vals=vals)
+    #     res = super(PodiatryPodiatry, self).create(vals)
+    #     main_partner = self.env.ref('base.main_partner')
+    #     res.partner_id.parent_id = main_partner.id
+    #     if res.customer_rank > 0 and res.code == 'New':
+    #         if main_partner.next_code:
+    #             res.code = main_partner.next_code
+    #             res.name = '[' + str(main_partner.next_code) + ']' + str(res.name)
+    #             main_partner.write({'next_code': main_partner.next_code + 1})
+    #         else:
+    #             res.code = main_partner.customer_code
+    #             res.name = '[' + str(main_partner.customer_code) + ']' + str(res.name)
+    #             main_partner.write({'next_code': main_partner.customer_code + 1})
+    #     return res
     
     def copy_data(self, default=None):
         result = super(PodiatryPodiatry, self).copy_data(default=default)

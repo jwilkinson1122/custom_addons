@@ -1,0 +1,37 @@
+<odoo>
+  <data>
+
+    <record id="am_service_tree_view" model="ir.ui.view">
+      <field name="name">am.service.tree</field>
+      <field name="model">am.service</field>
+      <field name="arch" type="xml">
+        <tree string="Service">
+          <field name="name"/>
+          <field name="color" widget="color_picker"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="am_service_form_view" model="ir.ui.view">
+      <field name="name">am.service.form</field>
+      <field name="model">am.service</field>
+      <field name="arch" type="xml">
+        <form string="Service Form">
+          <sheet >
+            <group >
+              <field name="name"/>
+              <field name="color" widget="color_picker"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="am_service_action" model="ir.actions.act_window">
+      <field name="name">Service</field>
+      <field name="res_model">am.service</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  </data>
+</odoo>
