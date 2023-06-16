@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
     
     helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
     helpdesk_tickets_count = fields.Integer(string='# of Delivery Order', compute='_get_helpdesk_tickets_count')
-    clinic_id = fields.Many2one(comodel_name='podiatry.podiatry', string='Clinic')
+    # clinic_id = fields.Many2one(comodel_name='podiatry.podiatry', string='Clinic')
     is_clinic = fields.Boolean(string='Is Clinic')
     is_joint_venture = fields.Boolean(string='Is Joint Venture')
     order_start = fields.Datetime(string='Order Start')
@@ -21,100 +21,6 @@ class SaleOrder(models.Model):
                                 readonly=True, 
                                 states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, 
                                 domain="[('is_clinic', '=', 'True')]")
-
-    type_id = fields.Many2one(
-        comodel_name="sale.order.type",
-        string="Type",
-        compute="_compute_sale_type_id",
-        store=True,
-        readonly=False,
-        states={
-            "sale": [("readonly", True)],
-            "done": [("readonly", True)],
-            "cancel": [("readonly", True)],
-        },
-        default=lambda so: so._default_type_id(),
-        ondelete="restrict",
-        copy=True,
-        check_company=True,
-    )
-
-    @api.model
-    def _default_type_id(self):
-        return self.env["sale.order.type"].search(
-            [("company_id", "in", [self.env.company.id, False])], limit=1
-        )
-
-    @api.model
-    def _default_sequence_id(self):
-        """We get the sequence in same way the core next_by_code method does so we can
-        get the proper default sequence"""
-        force_company = self.company_id.id or self.env.company.id
-        return self.env["ir.sequence"].search(
-            [
-                ("code", "=", "sale.order"),
-                "|",
-                ("company_id", "=", force_company),
-                ("company_id", "=", False),
-            ],
-            order="company_id",
-            limit=1,
-        )
-
-    @api.depends("partner_id", "company_id")
-    @api.depends_context("partner_id", "company_id", "company")
-    def _compute_sale_type_id(self):
-        for record in self:
-            if not record.partner_id:
-                record.type_id = self.env["sale.order.type"].search(
-                    [("company_id", "in", [self.env.company.id, False])], limit=1
-                )
-            else:
-                sale_type = (
-                    record.partner_id.with_company(record.company_id).sale_type
-                    or record.partner_id.commercial_partner_id.with_company(
-                        record.company_id
-                    ).sale_type
-                )
-                if sale_type:
-                    record.type_id = sale_type
-
-    @api.onchange("type_id")
-    def onchange_type_id(self):
-        # TODO: To be changed to computed stored readonly=False if possible in v14?
-        vals = {}
-        for order in self:
-            order_type = order.type_id
-            # Order values
-            vals = {}
-            if order_type.warehouse_id:
-                vals.update({"warehouse_id": order_type.warehouse_id})
-            if order_type.picking_policy:
-                vals.update({"picking_policy": order_type.picking_policy})
-            if order_type.payment_term_id:
-                vals.update({"payment_term_id": order_type.payment_term_id})
-            if order_type.pricelist_id:
-                vals.update({"pricelist_id": order_type.pricelist_id})
-            if order_type.incoterm_id:
-                vals.update({"incoterm": order_type.incoterm_id})
-            if order_type.analytic_account_id:
-                vals.update({"analytic_account_id": order_type.analytic_account_id})
-            if order_type.quotation_validity_days:
-                vals.update(
-                    {
-                        "validity_date": fields.Date.to_string(
-                            datetime.now()
-                            + timedelta(order_type.quotation_validity_days)
-                        )
-                    }
-                )
-            if vals:
-                order.update(vals)
-            # Order line values
-            line_vals = {}
-            line_vals.update({"route_id": order_type.route_id.id})
-            order.order_line.update(line_vals)
-
 
     @api.onchange('tax_id')
     def on_change_tax_id(self):
@@ -136,75 +42,13 @@ class SaleOrder(models.Model):
             action['res_id'] = tickets.id
         return action
     
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get("name", _("New")) == _("New") and vals.get("type_id"):
-                sale_type = self.env["sale.order.type"].browse(vals["type_id"])
-                if sale_type.sequence_id:
-                    vals["name"] = sale_type.sequence_id.next_by_id(
-                        sequence_date=vals.get("date_order"))
-        result = super(SaleOrder, self).create(vals_list)
+    @api.model
+    def create(self, vals):
+        result = super(SaleOrder, self).create(vals)
         if not vals.get('is_joint_venture') or vals.get('is_joint_venture') == False:
             result.copy({'is_joint_venture': True})
-        return result      
-        # return super().create(vals_list)
-    
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if vals.get("name", _("New")) == _("New") and vals.get("type_id"):
-    #             sale_type = self.env["sale.order.type"].browse(vals["type_id"])
-    #             if sale_type.sequence_id:
-    #                 vals["name"] = sale_type.sequence_id.next_by_id(
-    #                     sequence_date=vals.get("date_order")
-    #                 )
-    #     return super().create(vals_list)
-    
-    #  @api.model
-    # def create(self, vals):
-    #     result = super(SaleOrder, self).create(vals)
-    #     if not vals.get('is_joint_venture') or vals.get('is_joint_venture') == False:
-    #         result.copy({'is_joint_venture': True})
-    #     return result
+        return result
 
-    def write(self, vals):
-        """A sale type could have a different order sequence, so we could
-        need to change it accordingly"""
-        default_sequence = self._default_sequence_id()
-        if vals.get("type_id"):
-            sale_type = self.env["sale.order.type"].browse(vals["type_id"])
-            if sale_type.sequence_id:
-                for record in self:
-                    # An order with a type without sequence would get the default one.
-                    # We want to avoid changing the order reference when the new
-                    # sequence has the same default sequence.
-                    ignore_default_sequence = (
-                        not record.type_id.sequence_id
-                        and sale_type.sequence_id == default_sequence
-                    )
-                    if (
-                        record.state in {"draft", "sent"}
-                        and record.type_id.sequence_id != sale_type.sequence_id
-                        and not ignore_default_sequence
-                    ):
-                        new_vals = vals.copy()
-                        new_vals["name"] = sale_type.sequence_id.next_by_id(
-                            sequence_date=vals.get("date_order")
-                        )
-                        super(SaleOrder, record).write(new_vals)
-                    else:
-                        super(SaleOrder, record).write(vals)
-                return True
-        return super().write(vals)
-
-    def _prepare_invoice(self):
-        res = super(SaleOrder, self)._prepare_invoice()
-        if self.type_id.journal_id:
-            res["journal_id"] = self.type_id.journal_id.id
-        if self.type_id:
-            res["sale_type_id"] = self.type_id.id
-        return res
     
     def action_config_start(self):
         """Return action to start configuration wizard"""
@@ -446,8 +290,8 @@ class SaleOrderRequest(models.Model):
 
     def _add_followers(self):
         for request in self:
-            partner_ids = (request.owner_user_id.partner_id + request.user_id.partner_id).ids
-            request.message_subscribe(partner_ids=partner_ids)
+            clinic_ids = (request.owner_user_id.clinic_id + request.user_id.clinic_id).ids
+            request.message_subscribe(clinic_ids=clinic_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -591,7 +435,7 @@ class SaleOrderProduct(models.Model):
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
     category_id = fields.Many2one('sale.order.product.category', string='Product Category',
                                   tracking=True, group_expand='_read_group_category_ids')
-    partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
+    clinic_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')
@@ -724,12 +568,12 @@ class SaleOrderProduct(models.Model):
     def create(self, vals):
         product = super(SaleOrderProduct, self).create(vals)
         if product.owner_user_id:
-            product.message_subscribe(partner_ids=[product.owner_user_id.partner_id.id])
+            product.message_subscribe(clinic_ids=[product.owner_user_id.clinic_id.id])
         return product
 
     def write(self, vals):
         if vals.get('owner_user_id'):
-            self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
+            self.message_subscribe(clinic_ids=self.env['res.users'].browse(vals['owner_user_id']).clinic_id.ids)
         return super(SaleOrderProduct, self).write(vals)
 
     @api.model

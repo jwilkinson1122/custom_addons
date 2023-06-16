@@ -341,19 +341,15 @@ class PodiatryPodiatry(models.Model):
     _parent_name = 'parent_id'
     _parent_store = True
     
-    _sql_constraints = [(
-        'podiatry_clinic_unique_code',
-        'UNIQUE (code)',
-        'Internal ID must be unique',
-    )]
-    
-    @api.constrains('code')
+    @api.constrains("code")
     def _check_code(self):
         for record in self:
             if self.env["podiatry.podiatry"].search(
-                [('code', '=', record.code), ('id', '!=', record.id)]):
-                raise ValidationError("Clinic Code must be Unique")
+                [("code", "=", record.code), ("id", "!=", record.id)]
+            ):
+                raise ValidationError(_("Code must be Unique"))
 
+    
     @api.model
     def _lang_get(self):
         '''Method to get language'''
@@ -367,7 +363,7 @@ class PodiatryPodiatry(models.Model):
         string="Clinic",
         index=True,
         ondelete='cascade',
-        domain="['|', ('clinic_ic', '=', False), ('clinic_ic', '=', clinic_ic)]",
+        domain="['|', ('clinic_id', '=', False), ('clinic_id', '=', clinic_id)]",
     )
     
     child_ids = fields.One2many(
@@ -382,37 +378,37 @@ class PodiatryPodiatry(models.Model):
 
     @api.depends('child_ids')
     def _compute_child_count(self):
-        for clinic in self:
-            clinic.child_count = len(clinic.child_ids)
+        for partner in self:
+            partner.child_count = len(partner.child_ids)
         return
     
     sequence = fields.Integer(string="Sequence", required=True, default=5)
     is_clinic = fields.Boolean('Is Clinic')
     partner_id = fields.Many2one('res.partner', 'Partner', ondelete="cascade", required=True, delegate=True, help='Partner related data')
     # partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade', help='Partner-related data of the Clinic')
-    clinic_ic = fields.Many2many('res.partner', domain=[('is_clinic', '=', True)], string="Clinic")
+    clinic_id = fields.Many2many('res.partner', domain=[('is_clinic', '=', True)], string="Clinic")
     user_id = fields.Many2one(comodel_name='res.users', string="Created by")
     # company = fields.Many2one(comodel_name='res.company', string="Company", index=True, default=lambda self: self.env.company)
     active_id = fields.Boolean(string="Active", default=True, tracking=True)
-    com_name = fields.Char('Clinic Name', related='partner_id.name', store=True, help='Clinic name')
+    com_name = fields.Char('Clinic Name', related='clinic_id.name', store=True, help='Clinic name')
     full_name = fields.Char(string="Full Name", compute='_compute_full_name', store=True)
-    # code = fields.Char(string='Code', help="Unique Reference Code", readonly=True, default='/')
-    code = fields.Char(string='Code', required=True, copy=False, readonly=True, default=lambda self: _('New'))
-    standards = fields.One2many('podiatry.standard', 'clinic_id', 'Standards', help='Podiatry standard')
+    # code = fields.Char(string='Code', required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    code = fields.Char("Code", required=True, help="code")
+    # standards = fields.One2many('podiatry.standard', 'clinic_id', 'Standards', help='Podiatry standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
     # Orders 
-    sale_order_ids = fields.One2many(comodel_name='sale.order', inverse_name='partner_id', string='Sale Order')
+    sale_order_ids = fields.One2many(comodel_name='sale.order', inverse_name='clinic_id', string='Sale Order')
     sale_order_count = fields.Integer(string='Sale Order Count', compute='_compute_sale_order_count')
     sale_order_date = fields.Datetime('Sale Order Date', default=fields.Datetime.now)
     
     def _compute_sale_order_count(self):
         for rec in self:
             sale_order_count = self.env['sale.order'].search_count(
-                [('partner_id', '=', rec.id)])
+                [('clinic_id', '=', rec.id)])
             rec.sale_order_count = sale_order_count
 
     street = fields.Char()
@@ -431,18 +427,14 @@ class PodiatryPodiatry(models.Model):
                    ('external', 'External Entity')],
         readonly=False)
     
-    sale_type = fields.Many2one(
-        comodel_name="sale.order.type", string="Sale Order Type", company_dependent=True
-    )
-    
-    required_age = fields.Integer("Student Admission Age Required", default=6,
-                                  help='''Minimum required age for 
-                                  student admission''')
+    # required_age = fields.Integer("Student Admission Age Required", default=6,
+    #                               help='''Minimum required age for 
+    #                               student admission''')
     
     clinic_address_id = fields.Many2one('res.partner', 'Clinic Address', 
                                       help='Enter here the address of the clinic.', 
                                       tracking=True,
-                                      domain="['|', ('clinic_ic', '=', True), ('clinic_ic', '=', clinic_ic)]")
+                                      domain="['|', ('clinic_id', '=', True), ('clinic_id', '=', clinic_id)]")
     
     is_address_a_company = fields.Boolean('The clinic address has a company linked', compute='_compute_is_address_a_company')
 
@@ -450,11 +442,11 @@ class PodiatryPodiatry(models.Model):
     def _compute_is_address_a_company(self):
         """Checks whether chosen address is linked to a company.
         """
-        for clinic in self:
+        for partner in self:
             try:
-                clinic.is_address_a_company = clinic.clinic_address_id.parent_id.id is not False
+                partner.is_address_a_company = partner.clinic_address_id.parent_id.id is not False
             except AccessError:
-                clinic.is_address_a_company = False
+                partner.is_address_a_company = False
                 
     @api.onchange('clinic_address_id')
     def _on_change_clinic_address_id(self):
@@ -482,7 +474,6 @@ class PodiatryPodiatry(models.Model):
                 if record.clinic_address_id.clinic_ids != record:
                     raise ValidationError(_('Contact %s already link to an clinic' % (record.clinic_address_id.name)))
 
-
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
         for partner in self:
@@ -493,132 +484,23 @@ class PodiatryPodiatry(models.Model):
                 partner.full_name = partner.name
         return
     
-    def _get_next_ref(self, vals=None):
-        return self.env["ir.sequence"].next_by_code("podiatry.podiatry")
-    
-    # @api.model
-    # def create(self, vals):
-    #     '''Inherited create method to assign partner_id to clinic'''
-    #     res = super(PodiatryPodiatry, self).create(vals)
-    #     main_partner = self.env.ref('base.main_partner')
-    #     res.partner_id.parent_id = main_partner.id
-    #     return res
-    
-    #     @api.model
-    # @api.returns('self')
-    # def main_partner(self):
-    #     ''' Return the main partner '''
-    #     return self.env.ref('base.main_partner')
     
     @api.model
     def create(self, vals):
-        modified_self = self._base_clinic_check_context("create")
-        if not vals.get("name") and vals.get("code") and vals.get("clinic_id") and self._needs_ref(vals=vals):
-            vals["name"] = modified_self.browse(vals["clinic_id"]).name
-            vals["code"] = self._get_next_ref(vals=vals)
-        res = super(PodiatryPodiatry, modified_self).create(vals)
+        '''Inherited create method to assign partner_id to clinic'''
+        res = super(PodiatryPodiatry, self).create(vals)
         main_partner = self.env.ref('base.main_partner')
         res.partner_id.parent_id = main_partner.id
-        # company_seq = self.env.company
-        if res.customer_rank > 0 and res.code == 'New':
-            if main_partner.next_code:
-                res.code = main_partner.next_code
-                res.name = '[' + str(main_partner.next_code) + ']' + str(res.name)
-                main_partner.write({'next_code': main_partner.next_code + 1})
-            else:
-                res.code = main_partner.clinic_code
-                res.name = '[' + str(main_partner.clinic_code) + ']' + str(res.name)
-                main_partner.write({'next_code': main_partner.clinic_code + 1})
         return res
-    
-    # @api.model
-    # def create(self, vals):
-    #     '''Inherited create method to assign partner_id to clinic'''
-    #     res = super(PodiatryPodiatry, self).create(vals)
-    #     main_partner = self.env.ref('base.main_partner')
-    #     res.partner_id.parent_id = main_partner.id
-    #     return res
-    
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     '''Inherited create method to assign partner_id to clinic'''
-    #     for vals in vals_list:
-    #         if not vals.get("code") and self._needs_ref(vals=vals):
-    #             vals["code"] = self._get_next_ref(vals=vals)
-    #     res = super(PodiatryPodiatry, self).create(vals)
-    #     main_partner = self.env.ref('base.main_partner')
-    #     res.partner_id.parent_id = main_partner.id
-    #     if res.customer_rank > 0 and res.code == 'New':
-    #         if main_partner.next_code:
-    #             res.code = main_partner.next_code
-    #             res.name = '[' + str(main_partner.next_code) + ']' + str(res.name)
-    #             main_partner.write({'next_code': main_partner.next_code + 1})
-    #         else:
-    #             res.code = main_partner.customer_code
-    #             res.name = '[' + str(main_partner.customer_code) + ']' + str(res.name)
-    #             main_partner.write({'next_code': main_partner.customer_code + 1})
-    #     return res
-    
-    def copy_data(self, default=None):
-        result = super(PodiatryPodiatry, self).copy_data(default=default)
-        for idx, partner in enumerate(self):
-            values = result[idx]
-            if partner.sale_type and not values.get("sale_type"):
-                values["sale_type"] = partner.sale_type
-            if self._needs_ref():
-                default["code"] = self._get_next_ref()
-        return result
-    # def copy(self, default=None):
-    #     default = default or {}
-    #     if self._needs_ref():
-    #         default["ref"] = self._get_next_ref()
-    #     return super(PodiatryPodiatry, self).copy(default=default)
-
-    def write(self, vals):
-        for partner in self:
-            partner_vals = vals.copy()
-            if (
-                not partner_vals.get("code")
-                and partner._needs_ref(vals=partner_vals)
-                and not partner.ref
-            ):
-                partner_vals["code"] = partner._get_next_ref(vals=partner_vals)
-            super(PodiatryPodiatry, partner).write(partner_vals)
-        return True
-
-    def _needs_ref(self, vals=None):
-        """
-        Checks whether a sequence value should be assigned to a partner's 'ref'
-
-        :param vals: known field values of the partner object
-        :return: true iff a sequence value should be assigned to the\
-                      partner's 'ref'
-        """
-        if not vals and not self:  # pragma: no cover
-            raise exceptions.UserError(
-                _("Either field values or an id must be provided.")
-            )
-        # only assign a 'ref' to commercial partners
-        if self:
-            vals = {"is_clinic": self.is_clinic, "parent_id": self.parent_id}
-        return vals.get("is_clinic") or not vals.get("parent_id")
-
-    @api.model
-    def _commercial_fields(self):
-        """
-        Make the partner reference a field that is propagated
-        to the partner's contacts
-        """
-        return super(PodiatryPodiatry, self)._commercial_fields() + ["code"]
     
     def action_open_sale_orders(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Sale Orders',
             'res_model': 'sale.order',
-            'domain': [('partner_id', '=', self.id)],
+            'domain': [('clinic_id', '=', self.id)],
             'context': {
-                'default_partner_id': self.id,
+                'default_clinic_id': self.id,
                 # 'default_reference_no': self.reference_no,
                 },
             'view_mode': 'kanban,tree,form',

@@ -139,11 +139,11 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active_id', '=', True)]}"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
-                    <div name="code">
+                    <!-- <div name="code">
                         <h1 class="d-flex">
                             <field name="code" default_focus="1" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/>
                         </h1>
-                    </div>
+                    </div> -->
                     <div name="title" class="oe_title">
                         <h1>
                             <field name="name" required="1" placeholder="Practice Name"/>
@@ -155,8 +155,8 @@
                     <separator string="Clinic Configuration" />
                     <group col="4" colspan="4">
                         <field name="name" string="Name" placeholder="Clinic Name" />
-                        <field name="code" default_focus="1" placeholder="Code" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/>
-                        <!-- <field name="code" placeholder="Code" /> -->
+                        <!-- <field name="code" default_focus="1" placeholder="Code" attrs="{'readonly' : [('is_clinic', '=', False), ('parent_id', '!=', False)]}"/> -->
+                        <field name="code" placeholder="Code" />
                         <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_clinic', '=', True)]" context="{'default_is_clinic': True}" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': ['|', '&amp;', ('is_clinic','=', False),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                         <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_clinic', '=', True)]" readonly="not context.get('can_edit_parent_id', True)"/> -->
 
@@ -183,12 +183,12 @@
                     <group col="4" colspan="4">
                         <field name="currency_id" placeholder="Select Or Create Currency" />
                         <field name="lang" placeholder="Language"/>
-                        <field name="required_age" required="1"/>
+                        <!-- <field name="required_age" required="1"/> -->
                     </group>
                     <notebook colspan="4">
-                        <page string="Standards">
+                        <!-- <page string="Standards">
                             <field name="standards" nolabel="1" colspan="4" readonly="1"/>
-                        </page>
+                        </page> -->
                         <!-- <page name="practitioners_list" string="Contacts">
                             <group>
                                 <field name="practitioner_id"/>
@@ -209,7 +209,6 @@
                                 No Sale Orders
                             </div>
                             <field name="sale_order_ids" mode="kanban">
-                            <field name="sale_type" />
                             </field>
                         </page>
                         <!-- <page name="practice_affiliate_list" string="Affiliates">

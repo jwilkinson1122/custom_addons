@@ -16,9 +16,7 @@ from . import podiatry
 from . import student
 from . import teacher
 from . import parent
-from . import sale_order_type
 from . import sale_order
 from . import res_users
 from . import res_partner
-from . import res_company
-from . import account_move
+

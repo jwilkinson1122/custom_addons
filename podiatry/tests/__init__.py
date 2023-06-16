@@ -5,9 +5,6 @@
 # ----------------------------------------------------------
 from . import test_podiatry
 from . import test_base_partner_sequence
-from . import test_account_invoice_report
-from . import test_sale_order_report
-from . import test_sale_order_type
 from . import test_product_configurator_test_cases
 # from . import test_create
 # from . import test_configuration_rules

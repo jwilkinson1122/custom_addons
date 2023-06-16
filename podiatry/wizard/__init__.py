@@ -3,7 +3,6 @@
 from . import assign_roll_no
 from . import move_standards
 from . import teriminate_reason
-from . import sale_make_invoice_advance
 from . import create_prescription_invoice_wizard
 from . import create_prescription_shipment_wizard
 from . import product_configurator

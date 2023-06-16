@@ -60,9 +60,6 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                    <field name="type_id" required="1" />
-                </field>
                 <xpath expr="//button[@name='action_view_invoice']" position="after">
                     <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
                         <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
