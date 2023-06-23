@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="tooth1" model="tooth.tooth">
+          <field name="name">18</field>
+          <field name="sequence">1</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth1.png"/>
+        </record>
+
+        <record id="tooth2" model="tooth.tooth">
+          <field name="name">17</field>
+          <field name="sequence">2</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth2.png"/>
+        </record>
+
+        <record id="tooth3" model="tooth.tooth">
+          <field name="name">16</field>
+          <field name="sequence">3</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth3.png"/>
+        </record>
+
+
+
+        <record id="tooth4" model="tooth.tooth">
+          <field name="name">15</field>
+          <field name="sequence">4</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth4.png"/>
+        </record>
+
+
+        <record id="tooth5" model="tooth.tooth">
+          <field name="name">14</field>
+          <field name="sequence">5</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth5.png"/>
+        </record>
+
+
+
+
+         <record id="tooth6" model="tooth.tooth">
+          <field name="name">13</field>
+          <field name="sequence">6</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth6.png"/>
+        </record>
+
+         <record id="tooth7" model="tooth.tooth">
+          <field name="name">12</field>
+          <field name="sequence">7</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth7.png"/>
+        </record>
+
+         <record id="tooth8" model="tooth.tooth">
+          <field name="name">11</field>
+          <field name="sequence">8</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth8.png"/>
+        </record>
+
+         <record id="tooth9" model="tooth.tooth">
+          <field name="name">21</field>
+          <field name="sequence">9</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth8.png"/>
+        </record>
+
+         <record id="tooth10" model="tooth.tooth">
+          <field name="name">22</field>
+          <field name="sequence">10</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth7.png"/>
+        </record>
+
+
+
+         <record id="tooth11" model="tooth.tooth">
+          <field name="name">23</field>
+          <field name="sequence">11</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth6.png"/>
+        </record>
+
+
+         <record id="tooth12" model="tooth.tooth">
+          <field name="name">24</field>
+          <field name="sequence">12</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth5.png"/>
+        </record>
+
+
+         <record id="tooth13" model="tooth.tooth">
+          <field name="name">25</field>
+          <field name="sequence">13</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth4.png"/>
+        </record>
+
+         <record id="tooth14" model="tooth.tooth">
+          <field name="name">26</field>
+          <field name="sequence">14</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth3.png"/>
+        </record>
+
+
+         <record id="tooth15" model="tooth.tooth">
+          <field name="name">27</field>
+          <field name="sequence">15</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth2.png"/>
+        </record>
+
+
+         <record id="tooth16" model="tooth.tooth">
+          <field name="name">28</field>
+          <field name="sequence">16</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth1.png"/>
+        </record>
+
+
+         <record id="tooth17" model="tooth.tooth">
+          <field name="name">48</field>
+          <field name="sequence">17</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth17.png"/>
+        </record>
+
+
+
+         <record id="tooth18" model="tooth.tooth">
+          <field name="name">47</field>
+          <field name="sequence">18</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth18.png"/>
+        </record>
+
+
+
+         <record id="tooth19" model="tooth.tooth">
+          <field name="name">46</field>
+          <field name="sequence">19</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth19.png"/>
+        </record>
+
+
+         <record id="tooth20" model="tooth.tooth">
+          <field name="name">45</field>
+          <field name="sequence">20</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth20.png"/>
+        </record>
+
+
+         <record id="tooth21" model="tooth.tooth">
+          <field name="name">44</field>
+          <field name="sequence">21</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth21.png"/>
+        </record>
+
+         <record id="tooth22" model="tooth.tooth">
+          <field name="name">43</field>
+          <field name="sequence">22</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth22.png"/>
+        </record>
+
+
+
+         <record id="tooth23" model="tooth.tooth">
+          <field name="name">42</field>
+          <field name="sequence">23</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth23.png"/>
+        </record>
+
+
+         <record id="tooth24" model="tooth.tooth">
+          <field name="name">41</field>
+          <field name="sequence">24</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth24.png"/>
+        </record>
+
+
+         <record id="tooth25" model="tooth.tooth">
+          <field name="name">31</field>
+          <field name="sequence">25</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth24.png"/>
+        </record>
+
+
+         <record id="tooth26" model="tooth.tooth">
+          <field name="name">32</field>
+          <field name="sequence">26</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth23.png"/>
+        </record>
+
+
+         <record id="tooth27" model="tooth.tooth">
+          <field name="name">33</field>
+          <field name="sequence">27</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth22.png"/>
+        </record>
+
+
+         <record id="tooth28" model="tooth.tooth">
+          <field name="name">34</field>
+          <field name="sequence">28</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth21.png"/>
+        </record>
+
+
+
+         <record id="tooth29" model="tooth.tooth">
+          <field name="name">35</field>
+          <field name="sequence">29</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth20.png"/>
+        </record>
+
+         <record id="tooth30" model="tooth.tooth">
+          <field name="name">36</field>
+          <field name="sequence">30</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth19.png"/>
+        </record>
+
+         <record id="tooth31" model="tooth.tooth">
+          <field name="name">37</field>
+          <field name="sequence">31</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth18.png"/>
+        </record>
+
+
+         <record id="tooth32" model="tooth.tooth">
+          <field name="name">38</field>
+          <field name="sequence">32</field>
+          <field name="image" type="base64" file="tooth_select_widget/static/src/img/newtooth17.png"/>
+        </record>
+
+
+
+
+
+
+    </data>
+</odoo>

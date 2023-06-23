@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="tooth_select_widget.ToothSelectField" owl="1">
+		<CustomModal  treatmentIds="treatmentIds" onChangeTraitement="(traitement,ev) => this.onChangeTraitement(traitement,ev)" confirm="() => this.confirm()">
+		</CustomModal>
+        <input
+                class="o_input invisible"
+                t-att-id="props.id"
+                type="text"
+                t-ref="input"
+                t-on-change="() => this.onChange(props.value)"
+        />
+        <div class="toothControl d-flex">
+        	<div class="form-check form-switch">
+			  <input class="form-check-input" type="checkbox" id="multiSelect" t-on-change="(ev) => this.onMultiSelectChange(ev)"/>
+			  <label class="form-check-label" for="multiSelect">Multi select</label>
+			</div>
+	        
+	        <div t-attf-class="{{ state.multiSelect ? '' : 'invisible' }}" class="multi-select btn btn-outline-primary" t-on-click="selectAllTooth">
+					 <i class="fa fa-list"></i>
+					 <span>Select traitement</span>
+			</div>
+        </div>
+        
+        <div class="d-flex tooth-group" t-att-class="state.loading?'invisible':''">
+        	
+		        <ToothComponent   ToothIds="topToothIds" top="true" clickTooth="(toothId) => this.selectTooth(toothId)">
+		        </ToothComponent>
+       	</div>
+        <hr/>
+        <div class="d-flex tooth-group" t-att-class="state.loading?'invisible':''">
+	        <ToothComponent  ToothIds="bottomToothIds" top="false" clickTooth="(toothId) => this.selectTooth(toothId)">
+	        </ToothComponent>
+        </div>
+    </t>
+    
+</templates>
+
