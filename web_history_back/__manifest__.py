@@ -10,6 +10,11 @@
     "author": "CreuBlanca",
     "website": "https://github.com/tegin/cb-addons",
     "depends": ["web"],
-    "data": ["views/templates.xml"],
+    "data": [],
+    "assets": {
+      "web.assets_backend": [
+          "web_history_back/static/src/js/action.js",
+      ]  
+    },
     "demo": ["demo/res_partner.xml"],
 }

@@ -25,7 +25,7 @@
         "wizards/patient_concept_evolution.xml",
         "wizards/medical_diagnostic_report_template_print.xml",
         "wizards/medical_diagnostic_report_expand.xml",
-        "templates/assets.xml",
+        # "templates/assets.xml",
         "views/medical_uom.xml",
         "data/uom.xml",
         "wizards/medical_encounter_create_diagnostic_report.xml",
@@ -43,6 +43,16 @@
         "reports/medical_diagnostic_report_template_preview.xml",
         "reports/medical_diagnostic_report_report_preview.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "medical_diagnostic_report/static/src/js/list_renderer.js",
+            "medical_diagnostic_report/static/src/js/field_dynamic_options_dropdown.js",
+            "medical_diagnostic_report/static/src/js/fields.js",
+        ],
+        'web.report_assets_common': [
+            "medical_diagnostic_report/static/src/scss/medical_report_layout.scss",
+        ],
+    },
     "demo": ["demo/medical_diagnostic_report.xml"],
     "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.4.2"]},
 }

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template
-        id="assets_backend"
-        name="sale_commission_formula_assets_backend"
-        inherit_id="web.assets_backend"
-    >
-        <xpath expr="." position="inside">
-            <link
-                rel="stylesheet"
-                href="/sale_commission_formula/static/src/css/sale_commission_formula.css"
-            />
-        </xpath>
-    </template>
     <record id="sale_commission_form" model="ir.ui.view">
         <field name="name">sale.commission.form.inherit</field>
         <field name="model">sale.commission</field>
@@ -19,11 +7,8 @@
         <field name="arch" type="xml">
             <field name="section_ids" position="after">
                 <group>
-                    <field
-                        name="formula"
-                        attrs="{'invisible':[('commission_type','!=','formula')]}"
-                    >
-                      </field>
+                    <field name="formula" attrs="{'invisible':[('commission_type','!=','formula')]}">
+                    </field>
                 </group>
                 <group>
                     <div attrs="{'invisible':[('commission_type','!=','formula')]}">

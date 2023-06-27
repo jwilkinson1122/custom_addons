@@ -35,8 +35,16 @@
         "views/medical_sale_discount_views.xml",
         "views/theme_default_templates.xml",
     ],
+    
+    "assets": {
+        "web.report_assets_common": [
+            "cb_medical_careplan_sale/static/src/scss/layout_boxed.scss",
+        ],
+    },
     "website": "https://github.com/tegin/cb-medical",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,
 }
+
+

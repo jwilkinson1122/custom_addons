@@ -10,8 +10,8 @@
         "account",
         "barcode_action",
         "cb_medical_careplan_sale",
-        "l10n_es_partner",
-        "l10n_es",
+        # "l10n_es_partner",
+        # "l10n_es",
     ],
     "data": [
         "security/medical_encounter_create_group.xml",
