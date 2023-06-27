@@ -12,8 +12,7 @@
                     <strong>Total Services</strong>
                 </td>
                 <td class="text-right">
-                    <span t-esc="sum(line.price_subtotal for line in o.invoice_line_ids.filtered(lambda r: not r.down_payment_line_id))" t-options='{"widget":"monetary", "display_currency": o.currency_id}'
-                    />
+                    <span t-esc="sum(line.price_subtotal for line in o.invoice_line_ids.filtered(lambda r: not r.down_payment_line_id))" t-options='{"widget":"monetary", "display_currency": o.currency_id}'/>
 </td>
 </tr>
 <tr style="border-bottom:0px">
