@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 Creu Blanca
+    Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <record model="ir.ui.menu" id="medical_center_menu">
+        <field name="name">Centers</field>
+        <field name="parent_id" ref="medical_base.medical_root_administration" />
+        <field name="action" ref="medical_center_action" />
+        <field name="sequence" eval="30" />
+    </record>
+</odoo>
