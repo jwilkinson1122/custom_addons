@@ -12,13 +12,7 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="id" invisible="True"/>
                 <field name="person_ids" invisible="True"/>
-                <button name="clv_person.clv_person_action"
-                        type="action"
-                        class="oe_stat_button"
-                        icon="fa-list"
-                        context="{'search_default_partner_id': id}"
-                        attrs="{'invisible': [('person_ids', '=', [])]}"
-                        >
+                <button name="clv_person.clv_person_action" type="action" class="oe_stat_button" icon="fa-list" context="{'search_default_partner_id': id}" attrs="{'invisible': [('person_ids', '=', [])]}">
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_text">
                             <field name="type"/>

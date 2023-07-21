@@ -1,20 +1,3 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-   :alt: License: AGPL-3
-
-================
-Person Relations
-================
-
-Person Relations Module used in CLVsol Solutions. This module aims to provide generic means to model relations between partners.
-
-Examples would be 'is sibling of' or 'is friend of', but also 'has contract X
-with' or 'is assistant of'. This way, you can encode your knowledge about your
-partners directly in your partner list.
-
-Usage
-=====
-
 Relation Types
 ~~~~~~~~~~~~~~
 
@@ -117,5 +100,3 @@ A smart button is available on the partner form view to display the list of rela
 .. image:: https://raw.githubusercontent.com/OCA/partner-contact/12.0/partner_multi_relation/static/description/partner_form_view_smart_button.png
 
 .. image:: https://raw.githubusercontent.com/OCA/partner-contact/12.0/partner_multi_relation/static/description/partner_form_view_smart_button_2.png
-
- 
