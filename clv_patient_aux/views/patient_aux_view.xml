@@ -35,19 +35,15 @@
                 <attribute name="string">Patient (Aux)</attribute>
             </xpath>
             <div name="button_box" position="inside">
-                <h1><separator name="separator_patient_aux" string="[  Patient (Aux)  ]" style="color:Black; background:White;"/></h1>
+                <h1>
+                    <separator name="separator_patient_aux" string="[  Patient (Aux)  ]" style="color:Black; background:White;"/>
+                </h1>
                 <field name="notes" placeholder="Notes..." colspan="2" style="color:Maroon;background:White;text-align:left;"/>
             </div>
             <group name="group_contact_right" position="after">
                 <group name="group_clear_address_data">
                     <!--separator/-->
-                    <button name="do_patient_aux_clear_address_data"
-                            type="object"
-                            class="oe_stat_button, oe_edit_only"
-                            icon="fa-eraser"
-                            string=" Clear Address Data"
-                            confirm="Are you sure you want to clear the 'Address' data?"
-                            >
+                    <button name="do_patient_aux_clear_address_data" type="object" class="oe_stat_button, oe_edit_only" icon="fa-eraser" string=" Clear Address Data" confirm="Are you sure you want to clear the 'Address' data?">
                     </button>
                 </group>
             </group>
@@ -110,14 +106,12 @@
                 <!--field name="identification_code" /-->
             </xpath>
             <xpath expr="//filter" position="after">
-                <!--filter string="DoB"
-                        domain="[]"
-                        context="{'group_by':'birthdate_date'}" /-->
+                <!--filter string="DoB" domain="[]" context="{'group_by':'birthdate_date'}" /-->
             </xpath>
-            <field name="entity_code" position="after">
+            <!-- <field name="entity_code" position="after">
                 <field name="is_deceased"/>
                 <field name="is_absent"/>
-            </field>
+            </field> -->
             <filter name="filter_deactivated" position="after">
                 <filter string="Is Deceased" name="filter_is_deceased" domain="[('is_deceased','=',True)]"/>
                 <filter string="Is Absent" name="filter_is_absent" domain="[('is_absent','=',True)]"/>
@@ -134,9 +128,9 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
+            <p class="oe_view_nocontent_create">
             Click to add a new patient (Aux).
-          </p>
+            </p>
         </field>
     </record>
 

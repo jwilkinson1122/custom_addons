@@ -35,7 +35,9 @@
                 <attribute name="string">Patient</attribute>
             </xpath>
             <div name="button_box" position="inside">
-                <h1><separator name="separator_patient" string="[  Patient  ]" style="color:Black; background:White;"/></h1>
+                <h1>
+                    <separator name="separator_patient" string="[  Patient  ]" style="color:Black; background:White;"/>
+                </h1>
                 <field name="notes" placeholder="Notes..." colspan="2" style="color:Maroon;background:White;text-align:left;"/>
             </div>
             <page name="page_general_info" position="after">
@@ -79,10 +81,10 @@
                 <!--field name="birthdate_date" /-->
                 <field name="age_reference_years"/>
             </xpath>
-            <field name="entity_code" position="after">
+            <!-- <field name="entity_code" position="after">
                 <field name="is_deceased"/>
                 <field name="is_absent"/>
-            </field>
+            </field> -->
             <filter name="filter_deactivated" position="after">
                 <filter string="Is Deceased" name="filter_is_deceased" domain="[('is_deceased','=',True)]"/>
                 <filter string="Is Absent" name="filter_is_absent" domain="[('is_absent','=',True)]"/>
@@ -102,9 +104,9 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
+            <p class="oe_view_nocontent_create">
             Click to add a new patient.
-          </p>
+            </p>
         </field>
     </record>
 

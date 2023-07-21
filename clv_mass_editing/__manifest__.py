@@ -6,7 +6,7 @@
     'author': 'Serpent Consulting Services Pvt. Ltd., '
               'Odoo Community Association (OCA)',
     'contributors': [
-        'Oihane Crucelaegui <oihanecrucelaegi@gmail.com>',
+        'Oihane Crucelaegui<oihanecrucelaegi@gmail.com>',
         'Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>',
         'Jay Vora <jay.vora@serpentcs.com>'
     ],
@@ -21,8 +21,12 @@
     'data': [
         'security/ir.model.access.csv',
         'views/mass_editing_view.xml',
-        'views/template.xml'
     ],
+    "assets": {
+        "web.assets_backend": [
+            "/clv_mass_editing/static/src/js/mass_editing.js",
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,
