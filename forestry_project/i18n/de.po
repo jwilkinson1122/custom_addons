@@ -1,0 +1,163 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* forestry_project
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-16 09:35+0000\n"
+"PO-Revision-Date: 2023-06-16 09:35+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: forestry_project
+#: model_terms:ir.ui.view,arch_db:forestry_project.view_task_form2
+msgid ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                        Open map.geo.admin.ch"
+msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                        map.geo.admin.ch öffnen"
+
+#. module: forestry_project
+#: model_terms:ir.ui.view,arch_db:forestry_project.project_task_view_gantt
+msgid "<strong>Deadline — </strong>"
+msgstr "<strong>Frist — </strong>"
+
+#. module: forestry_project
+#: model:ir.actions.act_window,name:forestry_project.action_view_all_task2
+#: model:ir.ui.menu,name:forestry_project.menu_project_management_all
+msgid "All Tasks"
+msgstr "Alle Aufgaben"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__order_type__chopping
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__order_type__chopping
+msgid "Chopping Order"
+msgstr "Hackauftrag"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__order_type__collection
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__order_type__collection
+msgid "Collection Order"
+msgstr "Regieauftrag"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__color
+msgid "Color Index"
+msgstr "Farbkennzeichnung"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__work_type__crane
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__work_type__crane
+msgid "Crane Work"
+msgstr "Kranarbeit"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__order_type__default
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__order_type__default
+msgid "Default"
+msgstr "Standard"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__location_dest_id
+msgid "Destination Location"
+msgstr "Zielort"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__location_dest_link
+msgid "Destination Location Link"
+msgstr "Zielort-Link"
+
+#. module: forestry_project
+#: model_terms:ir.ui.view,arch_db:forestry_project.view_task_form2
+msgid "Insert link here"
+msgstr "Link hier einfügen"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_project__order_type
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__order_type
+msgid "Order Type"
+msgstr "Auftragstyp"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__order_type__pile
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__order_type__pile
+msgid "Pile Order"
+msgstr "Polterauftrag"
+
+#. module: forestry_project
+#: model:ir.model,name:forestry_project.model_project_project
+msgid "Project"
+msgstr "Projekt"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_project__code
+msgid "Project Code"
+msgstr "Projektnummer"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__location_id
+msgid "Source Location"
+msgstr "Abgangsort"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__location_link
+msgid "Source Location Link"
+msgstr "Abgangsort-Link"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__product_id
+msgid "Source Product"
+msgstr "Abgangs-Polter"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__product_dest_id
+msgid "Target Product"
+msgstr "Ziel-Polter"
+
+#. module: forestry_project
+#: model:ir.model,name:forestry_project.model_project_task
+msgid "Task"
+msgstr "Aufgabe"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__code
+msgid "Task Code"
+msgstr "Auftragsnummer"
+
+#. module: forestry_project
+#: code:addons/forestry_project/models/project.py:0
+#: code:addons/forestry_project/models/project_task.py:0
+#: model:ir.model.constraint,message:forestry_project.constraint_project_project_project_project_unique_code
+#: model:ir.model.constraint,message:forestry_project.constraint_project_task_project_task_unique_code
+#, python-format
+msgid "The code must be unique!"
+msgstr "Die Auftragsnummer existiert bereits!"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__trailer
+msgid "Trailer"
+msgstr "Anhänger"
+
+#. module: forestry_project
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_project__work_type__transport
+#: model:ir.model.fields.selection,name:forestry_project.selection__project_task__work_type__transport
+msgid "Transport"
+msgstr ""
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__vehicle_id
+msgid "Vehicle"
+msgstr "Fahrzeug"
+
+#. module: forestry_project
+#: model:ir.model.fields,field_description:forestry_project.field_project_project__work_type
+#: model:ir.model.fields,field_description:forestry_project.field_project_task__work_type
+msgid "Work Type"
+msgstr "Arbeitsart"

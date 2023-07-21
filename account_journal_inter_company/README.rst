@@ -1,4 +1,0 @@
-Intercompany journals
-=====================
-
-Intercompany Journals
