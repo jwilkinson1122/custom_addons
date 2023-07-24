@@ -38,7 +38,8 @@ class AbstractPartnerEntity(models.AbstractModel):
         default=lambda s: s._name,
         related='partner_id.type',
     )
-    name = fields.Char(index=True)
+    # name = fields.Char(index=True)
+    name = fields.Char(string='Title', required=False, translate=True)
     code = fields.Char(string='Partner Entity Code', required=False)
     email = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
