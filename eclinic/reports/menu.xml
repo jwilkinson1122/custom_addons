@@ -1,0 +1,53 @@
+<odoo>
+  <data>
+    <menuitem
+        id="report_parent_menu" 
+        name="Reports" 
+        sequence="110"
+        parent="clinic_parent_menu" 
+    />
+
+    <menuitem
+        id="menu_report_doctor_appointment" 
+        name="Doctor Appointments Report" 
+        action="action_download_pdf_hello_world" 
+        sequence="10" 
+        parent="report_parent_menu"
+    />
+
+    <menuitem 
+        id="menu_report_medical_history" 
+        name="Medical history" 
+        action="action_download_pdf_hello_world" 
+        sequence="20" 
+        parent="report_parent_menu"
+    />
+
+
+    <menuitem 
+        id="menu_report_patient_appointment" 
+        name="Patient Appointments Report" 
+        action="action_download_pdf_hello_world" 
+        sequence="30" 
+        parent="report_parent_menu"
+    />
+
+    <menuitem 
+        id="menu_report_patient_billing" 
+        name="Patient Billing Report" 
+        action="action_download_pdf_hello_world" 
+        sequence="40" 
+        parent="report_parent_menu"
+    />
+
+    <menuitem 
+        id="menu_report_revenue" 
+        name="Revenue Report" 
+        action="action_download_pdf_hello_world" 
+        sequence="50" 
+        parent="report_parent_menu"
+    />
+  
+
+  </data>
+</odoo>

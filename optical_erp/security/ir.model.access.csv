@@ -17,8 +17,8 @@ access_lens_style,access_lens_style,model_lens_style,base.group_system,1,1,1,1
 access_lens_material,access_lens_material,model_lens_material,base.group_system,1,1,1,1
 access_contact_lens_manufacturer,access_contact_lens_manufacturer,model_contact_lens_manufacturer,base.group_system,1,1,1,1
 access_complete_pair_order,access_complete_pair_order,model_complete_pair_order,base.group_system,1,1,1,1
-
-
+access_practice_type,access_practice_type,model_practice_type,base.group_system,1,1,1,1
+access_role_type,access_role_type,model_role_type,base.group_system,1,1,1,1
 
 
 

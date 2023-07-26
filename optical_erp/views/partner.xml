@@ -37,6 +37,27 @@
 				</xpath> -->
 				<!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Practice Name..." domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')], 'required': [('company_type', '=', 'person')]}"/> -->
 
+				<!-- <xpath expr="//field[@name='company_type']" position="before">
+					<field name="ref" attrs="{'readonly': ['|', ('company_type', '=', 'person'), ('company_type', '=', 'company')]}"/>
+				</xpath> -->
+
+				<xpath expr="//h1" position="replace">
+					<h1 style="margin-bottom:5px; width:100%">
+						<field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" attrs="{'invisible': [('is_company','=', False)]}"/>
+						<field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Doogie Howser" attrs="{'invisible': [('is_company','=', True)]}"/>
+
+						<!-- <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}" style="margin-bottom:5px; width:100%"/>
+						<field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Doogie Howser" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}" style="margin-bottom:5px; width:100%"/> -->
+					</h1>
+				</xpath>
+				<xpath expr="//field[@name='parent_id']" position="before">
+					<field name="practice_type_id" placeholder="Clinic Type" attrs="{'invisible': [('is_company','=', False)], 'required': [('company_type', '=', 'company')]}"/>
+					<field name="role_type_id" placeholder="Role Type" attrs="{'invisible': [('is_company','=', True)], 'required': [('company_type', '=', 'person')]}"/>
+					<field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1"/>
+				</xpath>
+				<xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+					<attribute name="attrs" />
+				</xpath>
 				<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
 					<button name="open_customer_prescriptions" class="oe_stat_button" type="object" icon="fa-file-text-o">
 						<field string="Prescriptions" name="prescription_count" widget="statinfo"/>
@@ -45,22 +66,22 @@
 				<field name="title" position="after">
 					<field name="ref"/>
 				</field>
-				<xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
-					<attribute name="attrs" />
-				</xpath>
 				<!-- <xpath expr="//field[@name='type']" position="attributes">
 					<attribute name="attrs">{'invisible': [('is_company','=',False)], 'required': [('is_company', '=', False)]}</attribute>
 				</xpath> -->
 				<xpath expr="//span[@name='address_name']" position="replace">
 					<span class="o_form_label o_td_label" name="clinic_address">
-						<field name="type" attrs="{'invisible': [('is_company','=', False)], 'required': [('is_company','=', False)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+						<field name="type" placeholder="Address Type" class="font-weight-bold"/>
+
+						<!-- <field name="type" placeholder="Address Type" context="{'default_type': ''}" class="font-weight-bold"/> -->
+						<!-- <field name="type" attrs="{'invisible': [('is_company','=', False)], 'required': [('is_company','=', False)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/> -->
 						<!-- <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b> -->
 					</span>
 				</xpath>
 				<field name="function" position="after">
 					<field name="fax" placeholder="Fax..." widget="phone" />
 				</field>
-				<xpath expr="//field[@name='child_ids']/form//field[@name='mobile']" position="after">
+				<xpath expr="//field[@name='child_ids']/form//field[@name='function']" position="after">
 					<field name="fax" placeholder="Fax..." widget="phone" />
 				</xpath>
 				<xpath expr='//page[@name="contact_addresses"]' position="before">

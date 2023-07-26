@@ -2,6 +2,8 @@ from . import dr_prescription
 from . import doctor
 from . import patient
 from . import test_type
+from . import practice_type
+from . import role_type
 from . import res_company
 from . import res_partner
 from . import inherit_saleorder

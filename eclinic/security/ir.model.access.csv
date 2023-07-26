@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_clinic,Clinic,model_clinic,base.group_system,1,1,1,1
+access_appointment,Appointment,model_eclinic_appointment,base.group_user,1,1,1,1
+access_doctor,Doctor,model_eclinic_doctor,base.group_user,1,1,1,1
+access_insurance,Insurance,model_eclinic_insurance,base.group_user,1,1,1,1
+access_policy,Insurance Policy,model_eclinic_insurance_policy,base.group_user,1,1,1,1
+access_medicine,Medicine,model_eclinic_medicine,base.group_user,1,1,1,1
+access_patient,Patient,model_eclinic_patient,base.group_user,1,1,1,1
+access_pharmacist,Pharmacist,model_eclinic_pharmacist,base.group_user,1,1,1,1
+access_staff,Staff,model_eclinic_staff,base.group_user,1,1,1,1
+access_transaction,Transaction,model_eclinic_transaction,base.group_user,1,1,1,1
+access_transaction_detail,Transaction Detail,model_eclinic_transaction_detail,base.group_user,1,1,1,1

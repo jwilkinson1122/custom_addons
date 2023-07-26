@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <!-- Demo Doctor Data -->
+        <record id="doctor_demo_data_1" model="eclinic.doctor">
+            <field name="name">Dr. John Smith</field>
+            <field name="age">42</field>
+            <field name="specialization">Cardiology</field>
+            <field name="gender">male</field>
+            <field name="phone">555-1234</field>
+            <field name="email">johnsmith@example.com</field>
+        </record>
+
+        <record id="doctor_demo_data_2" model="eclinic.doctor">
+            <field name="name">Dr. Sarah Lee</field>
+            <field name="age">34</field>
+            <field name="specialization">Dermatology</field>
+            <field name="gender">female</field>
+            <field name="phone">555-4321</field>
+            <field name="email">sarahlee@example.com</field>
+        </record>
+
+        <record id="doctor_demo_data_3" model="eclinic.doctor">
+            <field name="name">Dr. Michael Chen</field>
+            <field name="age">50</field>
+            <field name="specialization">Gastroenterology</field>
+            <field name="gender">male</field>
+            <field name="phone">555-5678</field>
+            <field name="email">michaelchen@example.com</field>
+        </record>
+
+        <record id="doctor_demo_data_4" model="eclinic.doctor">
+            <field name="name">Dr. Emily Johnson</field>
+            <field name="age">38</field>
+            <field name="specialization">Internal Medicine</field>
+            <field name="gender">female</field>
+            <field name="phone">555-8765</field>
+            <field name="email">emilyjohnson@example.com</field>
+        </record>
+
+        <record id="doctor_demo_data_5" model="eclinic.doctor">
+            <field name="name">Dr. Kevin Kim</field>
+            <field name="age">45</field>
+            <field name="specialization">Orthopedics</field>
+            <field name="gender">male</field>
+            <field name="phone">555-2345</field>
+            <field name="email">kevinkim@example.com</field>
+        </record>
+    </data>
+</odoo>

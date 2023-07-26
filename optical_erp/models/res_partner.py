@@ -19,6 +19,9 @@ class InheritedResPartner(models.Model):
         domain=[("active", "=", True), ("is_company", "=", True)],
     )
     
+    # reference = fields.Char(string='Clinic Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    ref = fields.Char(string='Reference', index=True, required=True)
+
     # type = fields.Selection(selection_add=[('main_address', 'Main Address'), ('contact')])
     # address_type = fields.Selection(
     #      ('invoice', 'Invoice Address'),
@@ -26,10 +29,23 @@ class InheritedResPartner(models.Model):
     #     string='Address Type',
     #     default='invoice',
     #     help="Invoice & Delivery addresses are used in sales orders.")
-
+    # type = fields.Selection(
+    #     [('contact', 'Contact'),
+    #      ('invoice', 'Invoice Address'),
+    #      ('delivery', 'Delivery Address'),
+    #      ('other', 'Other Address'),
+    #      ("private", "Private Address"),
+    #     ], string='Address Type',
+    #     default='contact',
+    #     required=True,
+    #     help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    
     fax = fields.Char()
     dob = fields.Date()
     age = fields.Integer(compute='_cal_age',store=True,readonly=True)
+    practice_type_id = fields.Many2one(string='Clinic Type',comodel_name='practice.type')
+    role_type_id = fields.Many2one(string='Role Type',comodel_name='role.type')
+    partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     prescription_count = fields.Integer(compute='get_prescription_count')
 
     def open_customer_prescriptions(self):

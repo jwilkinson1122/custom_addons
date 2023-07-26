@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+    <record model="role.type" id="practitioner">
+        <field name="name">Physician</field>
+        <field name="description">Physician</field>
+    </record>
+    <record model="role.type" id="pt">
+        <field name="name">Physical Therapist</field>
+        <field name="description">Physical Therapist</field>
+    </record>
+    <record model="role.type" id="nurse">
+        <field name="name">Assistant/Nurse</field>
+        <field name="description">Assistant/Nurse</field>
+    </record>
+    <record model="role.type" id="orthotist">
+        <field name="name">Orthotist</field>
+        <field name="description">Orthotist</field>
+    </record>
+    <record model="role.type" id="prosthetist">
+        <field name="name">Prosthetist</field>
+        <field name="description">Prosthetist</field>
+    </record>
+    <record model="role.type" id="receptionist">
+        <field name="name">Receptionist</field>
+        <field name="description">Receptionist</field>
+    </record>
+    <record model="role.type" id="manager">
+        <field name="name">Office Manager</field>
+        <field name="description">Office Manager</field>
+    </record>
+    <record model="role.type" id="ap_manager">
+        <field name="name">A/P Manager</field>
+        <field name="description">A/P Manager</field>
+    </record>
+    <record model="role.type" id="purchasing">
+        <field name="name">Purchasing</field>
+        <field name="description">Purchasing</field>
+    </record>
+    <record model="role.type" id="technical">
+        <field name="name">IT</field>
+        <field name="description">IT Professional</field>
+    </record>
+    <record model="role.type" id="technician">
+        <field name="name">Technician</field>
+        <field name="description">Technician</field>
+    </record>
+    <record model="role.type" id="administrative">
+        <field name="name">Administrative</field>
+        <field name="description">Administrative</field>
+    </record>
+    <record model="role.type" id="general">
+        <field name="name">General Staff</field>
+        <field name="description">General Staff</field>
+    </record>
+</odoo>
