@@ -1,0 +1,22 @@
+{
+    "name": "Product Configurator Purchase",
+    "version": "15.0.1.0.0",
+    "category": "Generic Modules/Purchase",
+    "summary": "Product configuration interface for Purchase",
+    "author": "Pledra, Odoo Community Association (OCA), Glo Networks",
+    "license": "AGPL-3",
+    "website": "https://github.com/GlodoUK/product-configurator",
+    "depends": ["purchase", "product_configurator"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/menu_product.xml",
+        "views/purchase_view.xml",
+    ],
+    "demo": ["demo/product_template.xml"],
+    "images": [],
+    "test": [],
+    "installable": True,
+    "auto_install": False,
+    "development_status": "Beta",
+    "maintainers": ["PCatinean"],
+}

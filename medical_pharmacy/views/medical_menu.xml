@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 LasLabs Inc.
+     License GPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<odoo>
+
+    <menuitem id="medical_pharmacy_menu"
+              name="Pharmacies"
+              sequence="30"
+              parent="medical_center.medical_facilities_menu"
+              action="medical_pharmacy_action"
+              />
+
+    <menuitem id="medical_pharmacist_menu"
+              name="Pharmacists"
+              sequence="20"
+              parent="medical_physician.health_professionals_menu"
+              action="medical_pharmacist_action"
+              />
+
+</odoo>

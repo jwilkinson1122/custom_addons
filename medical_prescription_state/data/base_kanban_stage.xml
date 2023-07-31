@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License GPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<odoo noupdate="1">
+
+
+    <!-- Prescription Order States -->
+
+    <record id="prescription_order_state_unverified" model="base.kanban.stage">
+        <field name="name">Unverified</field>
+        <field name="description">This is the starting point for all incoming prescriptions.</field>
+        <field name="sequence" eval="1" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <record id="prescription_order_state_started" model="base.kanban.stage">
+        <field name="name">In Progress</field>
+        <field name="description">These prescriptions are in the process of having their information validated.</field>
+        <field name="sequence" eval="2" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <record id="prescription_order_state_pv1" model="base.kanban.stage">
+        <field name="name">PV1</field>
+        <field name="description">These prescriptions are in PV1 (Prescription Verification Stage 1).</field>
+        <field name="sequence" eval="3" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <record id="prescription_order_state_verified" model="base.kanban.stage">
+        <field name="name">Verified</field>
+        <field name="description">These prescriptions have passed initial verification.</field>
+        <field name="sequence" eval="4" />
+        <field name="fold" eval="True" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <record id="prescription_order_state_cancelled" model="base.kanban.stage">
+        <field name="name">Cancelled</field>
+        <field name="description">These prescriptions have been cancelled, or are otherwise invalid.</field>
+        <field name="sequence" eval="5" />
+        <field name="fold" eval="True" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <record id="prescription_order_state_exception" model="base.kanban.stage">
+        <field name="name">Exception</field>
+        <field name="description">Indicates that the Prescription has an issue that needs to be manually resolved.</field>
+        <field name="sequence" eval="6" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order" />
+    </record>
+
+    <!-- Prescription Order Line States -->
+
+    <record id="prescription_order_line_state_unverified" model="base.kanban.stage">
+        <field name="name">Unverified</field>
+        <field name="description">These prescription lines are awaiting validation at the prescription level (PV1).</field>
+        <field name="sequence" eval="1" />
+        <field name="fold" eval="True" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+    <record id="prescription_order_line_state_hold" model="base.kanban.stage">
+        <field name="name">Hold</field>
+        <field name="description">These prescription lines have passed initial validation (PV1), and are awaiting their first matched sale order.</field>
+        <field name="sequence" eval="2" />
+        <field name="fold" eval="True" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+    <record id="prescription_order_line_state_ordered" model="base.kanban.stage">
+        <field name="name">Ordered</field>
+        <field name="description">These prescription lines have passed initial validation (PV1), and have at least one matched sale order.</field>
+        <field name="sequence" eval="3" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+       <record id="prescription_order_line_state_exception" model="base.kanban.stage">
+        <field name="name">Exception</field>
+        <field name="description">These prescription lines or their parent prescription have an issue that needs to be manually resolved.</field>
+        <field name="sequence" eval="4" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+    <record id="prescription_order_line_state_pv2" model="base.kanban.stage">
+        <field name="name">PV2</field>
+        <field name="description">These prescription lines are ready for RPH verification for dispense.</field>
+        <field name="sequence" eval="5" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+    <record id="prescription_order_line_state_complete" model="base.kanban.stage">
+        <field name="name">Complete</field>
+        <field name="description">These prescription lines have passed PV2 &amp; DUR.</field>
+        <field name="sequence" eval="6" />
+        <field name="fold" eval="False" />
+        <field name="res_model_id" ref="medical_prescription.model_medical_prescription_order_line" />
+    </record>
+
+</odoo>

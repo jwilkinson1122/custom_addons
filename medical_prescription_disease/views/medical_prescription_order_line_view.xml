@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014-[Now] LasLabs [https://laslabs.com]
+    @author Dave Lasley <dave@laslabs.com>
+    @license GPL-3
+-->
+
+<odoo>
+
+    <record id="medical_prescription_order_line_view_form" model="ir.ui.view">
+        <field name="name">Prescription Order Line</field>
+        <field name="model">medical.prescription.order.line</field>
+        <field name='inherit_id' ref='medical_prescription.medical_prescription_order_line_view_form'/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='patient_id']" position="after">
+                <field name="disease_id"
+                       context="{'default_patient_id': patient_id}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="medical_prescription_order_line_view_search" model="ir.ui.view">
+        <field name="name">Prescription Order Line Search</field>
+        <field name="model">medical.prescription.order.line</field>
+        <field name='inherit_id' ref='medical_prescription.medical_prescription_order_line_view_search'/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='patient_id']" position="after">
+                <field name="disease_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_by_disease"
+                        string="Disease"
+                        domain="[]" 
+                        context="{'group_by':'disease_id'}"
+                        />
+            </xpath>
+        </field>
+    </record>
+        
+</odoo>

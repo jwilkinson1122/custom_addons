@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- # Copyright 2008 Luis Falcon <lfalcon@gnusolidario.org>
+     Copyright 2016 LasLabs Inc.
+     License GPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<odoo>
+
+    <record id="medical_patient_disease_view_search" model="ir.ui.view">
+        <field name="name">medical.patient.disease.search</field>
+        <field name="model">medical.patient.disease</field>
+        <field name="arch" type="xml">
+            <search string="Medical Patient Disease">
+                <field name="name" />
+                <field name="treatment_description" />
+                <field name="date_healed" />
+                <field name="pathology_id" />
+                <field name="physician_id" />
+                <field name="weeks_of_pregnancy" />
+                <field name="date_diagnosed" />
+                <field name="notes" />
+                <field name="date_treatment_end" />
+                <field name="patient_id" />
+                <field name="age" />
+                <field name="date_treatment_start" />
+                <field name="short_comment" />
+                <filter name="is_on_treatment"
+                        string="Is on Treatment"
+                        domain="[('is_on_treatment', '=', True)]" />
+                <separator />
+                <filter name="is_allergy"
+                        string="Is Allergy"
+                        domain="[('is_allergy', '=', True)]" />
+                <separator />
+                <filter name="inactive"
+                        string="Inactive"
+                        domain="[('active', '=', False)]" />
+                <separator />
+                <filter name="is_pregnant"
+                        string="Pregnancy Warning"
+                        domain="[('is_pregnant', '=', True)]" />
+                <separator />
+                <filter name="is_infectious"
+                        string="Is Infectious"
+                        domain="[('is_infectious', '=', True)]" />
+                <filter name="is_not_infectious"
+                        string="Not Infectious"
+                        domain="[('is_infectious', '=', False)]" />
+                <newline />
+                <group expand="0" string="Group By...">
+                    <filter name="group_by_date_healed"
+                            string="Healed"
+                            domain="[]"
+                            context="{'group_by':'date_healed'}" />
+                    <filter name="group_by_pathology_id"
+                            string="Disease"
+                            domain="[]"
+                            context="{'group_by':'pathology_id'}" />
+                    <filter name="group_by_is_allergy"
+                            string="Allergic Disease"
+                            domain="[]"
+                            context="{'group_by':'is_allergy'}" />
+                    <filter name="group_by_physician_id"
+                            string="Physician"
+                            domain="[]"
+                            context="{'group_by':'physician_id'}" />
+                    <filter name="group_by_is_pregnant"
+                            string="Pregnancy warning"
+                            domain="[]"
+                            context="{'group_by':'is_pregnant'}" />
+                    <filter name="group_by_weeks_of_pregnancy"
+                            string="Contracted in pregnancy week #"
+                            domain="[]"
+                            context="{'group_by':'weeks_of_pregnancy'}" />
+                    <filter name="group_by_is_on_treatment"
+                            string="Currently on Treatment"
+                            domain="[]"
+                            context="{'group_by':'is_on_treatment'}" />
+                    <filter name="group_by_diagnosed"
+                            string="Date of Diagnosis"
+                            domain="[]"
+                            context="{'group_by':'date_diagnosed'}" />
+                    <filter name="group_by_is_infectious"
+                            string="Infectious Disease"
+                            domain="[]"
+                            context="{'group_by':'is_infectious'}" />
+                    <filter name="group_by_patient_id"
+                            string="Patient"
+                            domain="[]"
+                            context="{'group_by':'patient_id'}" />
+                    <filter name="group_by_age"
+                            string="Age when diagnosed"
+                            domain="[]"
+                            context="{'group_by':'age'}" />
+                    <filter name="group_by_date_treatment_start"
+                            string="Start"
+                            domain="[]"
+                            context="{'group_by':'date_treatment_start'}" />
+                    <filter name="group_by_state"
+                            string="State"
+                            domain="[]"
+                            context="{'group_by':'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="medical_patient_disease_view_tree" model="ir.ui.view">
+        <field name="name">medical.patient.disease.tree</field>
+        <field name="model">medical.patient.disease</field>
+        <field name="arch" type="xml">
+            <tree string="Medical Patient Disease">
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="physician_id" />
+                <field name="date_treatment_start" />
+                <field name="date_treatment_end" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="medical_patient_disease_view_form" model="ir.ui.view">
+        <field name="name">medical.patient.disease.form</field>
+        <field name="model">medical.patient.disease</field>
+        <field name="arch" type="xml">
+            <form string="Medical Patient Disease">
+                <header>
+                    <field name="state" widget="statusbar" clickable="True" />
+                </header>
+                <sheet>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="edit_only" />
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="oe_button_box" name="buttons">
+                        <button name="toggle_active"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-archive"
+                                >
+                            <field name="active"
+                                   widget="boolean_button"
+                                   options='{"terminology": "archive"}'
+                                   />
+                        </button>
+                    </div>
+                    <group name="data">
+                        <group name="main">
+                            <field name="patient_id" />
+                            <field name="short_comment" />
+                            <field name="treatment_description" />
+                            <field name="pathology_id" />
+                            <field name="physician_id" />
+                            <field name="allergy_type"
+                                   attrs="{'invisible': [('is_allergy', '=', False)]}" />
+                            <field name="weeks_of_pregnancy"
+                                   attrs="{'invisible': [('is_pregnant', '=', False)]}" />
+                        </group>
+                        <group name="supplementary">
+                            <field name="age" />
+                            <field name="is_infectious" />
+                            <field name="is_allergy" />
+                            <field name="is_pregnant" />
+                            <field name="date_diagnosed" />
+                            <field name="date_treatment_start" />
+                            <field name="date_treatment_end" />
+                            <field name="is_on_treatment" />
+                            <field name="date_healed" />
+                            <field name="id" invisible="1" />
+                        </group>
+                    </group>
+                    <group name="state" attrs="{'invisible': [('id','=',False)]}">
+                        <group name="group_validity">
+                            <group>
+                                <field name="create_date" />
+                            </group>
+                            <group>
+                                <field name="date_expire"
+                                       attrs="{'invisible': [('active','=',True)]}"
+                                       />
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Others" name="notes" autofocus="autofocus">
+                            <separator string="Notes" />
+                            <field name="notes" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="medical_patient_disease_action" model="ir.actions.act_window">
+        <field name="name">Patient Diseases</field>
+        <field name="res_model">medical.patient.disease</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
