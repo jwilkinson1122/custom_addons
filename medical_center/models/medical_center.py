@@ -15,7 +15,7 @@ class MedicalCenter(models.Model):
     def _create_vals(self, vals):
         vals.update({
             'is_company': True,
-            'customer': False,
+            # 'customer': False,
         })
         return super(MedicalCenter, self)._create_vals(vals)
 

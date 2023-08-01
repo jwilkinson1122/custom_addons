@@ -12,6 +12,7 @@ class MedicalMedicament(models.Model):
     _inherit = ['mail.thread']
     _inherits = {'product.product': 'product_id'}
 
+    name = fields.Char('Name', index=True, required=True)
     indications = fields.Text()
     therapeutic_action = fields.Char()
     presentation = fields.Text()
@@ -108,11 +109,11 @@ class MedicalMedicament(models.Model):
         comodel_name='product.uom',
         help='Strength unit of measure',
     )
-    display_name = fields.Char(
-        compute='_compute_display_name',
-        readonly=True,
-        store=True,
-    )
+    # display_name = fields.Char(
+    #     compute='_compute_display_name',
+    #     readonly=True,
+    #     store=True,
+    # )
 
     @api.depends('component_ids')
     def _compute_active_ingredient_ids(self):
@@ -128,15 +129,16 @@ class MedicalMedicament(models.Model):
                  'drug_form_id.code',
                  'drug_form_id.name',
                  )
-    def _compute_display_name(self):
-        for record in self:
-            name = '{name} {strength:g} {uom}{form}'.format(
-                name=record.product_id.name,
-                strength=record.strength,
-                uom=record.strength_uom_id.name or '',
-                form=' - %s' % record.drug_form_id.code,
-            )
-            record.display_name = name
+    
+    # def _compute_display_name(self):
+    #     for record in self:
+    #         name = '{name} {strength:g} {uom}{form}'.format(
+    #             name=record.product_id.name,
+    #             strength=record.strength,
+    #             uom=record.strength_uom_id.name or '',
+    #             form=' - %s' % record.drug_form_id.code,
+    #         )
+    #         record.display_name = name
 
     def _onchange_uom(self, uom_id, uom_po_id):
         return self.product_id._onchange_uom(uom_id, uom_po_id)
@@ -147,10 +149,10 @@ class MedicalMedicament(models.Model):
         vals['is_medicament'] = True
         return super(MedicalMedicament, self).create(vals)
 
-    def name_get(self):
-        return [
-            (r.id, r.display_name) for r in self
-        ]
+    # def name_get(self):
+    #     return [
+    #         (r.id, r.display_name) for r in self
+    #     ]
 
     @api.model
     @api.returns('self')

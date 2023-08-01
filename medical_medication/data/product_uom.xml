@@ -5,31 +5,31 @@
 <odoo>
 
     <!-- Volume -->
-    <record id="product_uom_litre" model="product.uom">
+    <record id="product_uom_litre" model="uom.uom">
         <field name="name">Litre(s)</field>
         <field name="category_id" ref="product.product_uom_categ_vol"/>
         <field name="uom_type">reference</field>
         <field name="factor">1.0</field>
     </record>
-    <record id="product_uom_ml" model="product.uom">
+    <record id="product_uom_ml" model="uom.uom">
         <field name="name">mL</field>
         <field name="category_id" ref="product.product_uom_categ_vol"/>
         <field name="uom_type">smaller</field>
         <field name="factor" eval="1000"/>
     </record>
-    <record id="product_uom_mg" model="product.uom">
+    <record id="product_uom_mg" model="uom.uom">
         <field name="name">mg</field>
         <field name="factor" eval="10000"/>
         <field name="category_id" ref="product.product_uom_categ_kgm"/>
         <field name="uom_type">smaller</field>
     </record>
-    <record id="product_uom_mmol" model="product.uom">
+    <record id="product_uom_mmol" model="uom.uom">
         <field name="name">mmol</field>
         <field name="factor" eval="1"/>
         <field name="category_id" ref="product.product_uom_categ_unit"/>
         <field name="uom_type">smaller</field>
     </record>
-    <record id="product_uom_ug" model="product.uom">
+    <record id="product_uom_ug" model="uom.uom">
         <field name="name">ug</field>
         <field name="factor" eval="100000"/>
         <field name="category_id" ref="product.product_uom_categ_kgm"/>
@@ -37,40 +37,40 @@
     </record>
 
     <!-- Time -->
-    <record id="product_uom_categ_time" model="product.uom.categ">
+    <record id="product_uom_categ_time" model="uom.uom.categ">
         <field name="name">Time</field>
     </record>
-    <record id="product_uom_hour" model="product.uom">
+    <record id="product_uom_hour" model="uom.uom">
         <field name="name">Hour(s)</field>
         <field name="factor" eval="24"/>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">smaller</field>
     </record>
-    <record id="product_uom_minute" model="product.uom">
+    <record id="product_uom_minute" model="uom.uom">
         <field name="name">Minute(s)</field>
         <field name="factor" eval="1440"/>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">smaller</field>
     </record>
-    <record id="product_uom_day" model="product.uom">
+    <record id="product_uom_day" model="uom.uom">
         <field name="name">Day(s)</field>
         <field name="factor">1.0</field>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">reference</field>
     </record>
-    <record id="product_uom_month" model="product.uom">
+    <record id="product_uom_month" model="uom.uom">
         <field name="name">Month(s)</field>
         <field name="factor_inv" eval="30.4375"/>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">bigger</field>
     </record>
-    <record id="product_uom_year" model="product.uom">
+    <record id="product_uom_year" model="uom.uom">
         <field name="name">Year(s)</field>
         <field name="factor_inv" eval="365.25"/>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">bigger</field>
     </record>
-    <record id="product_uom_indef" model="product.uom">
+    <record id="product_uom_indef" model="uom.uom">
         <field name="name">Indefinitely</field>
         <field name="factor_inv" eval="40000"/>
         <field name="category_id" ref="product_uom_categ_time"/>

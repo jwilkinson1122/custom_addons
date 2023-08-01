@@ -7,7 +7,21 @@
     'version': '13.0.0.0.0',
     'category': 'Medical',
     'depends': [
-        'product', 'base'
+        'base', 
+        'base_setup', 
+        'contacts', 
+        'sale_management', 
+        'account', 
+        'l10n_us', 
+        'stock', 
+        'product', 
+        'product_configurator',
+        'product_configurator_mrp',
+        'product_configurator_sale_mrp',
+        'product_configurator_mrp_component',
+        'product_configurator_purchase',
+        'mail'
+        
     ],
     'author': 'LasLabs, Odoo Community Association (OCA)',
     'website': 'https://odoo-community.org/',
