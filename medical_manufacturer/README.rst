@@ -17,7 +17,7 @@ manufacturer-typed partner similar to pharmacy & other medical partners.
 Usage
 =====
 
-#. Go to Medical -> Configuration -> Medicaments -> Manufacturers
+#. Go to Medical -> Configuration -> Products -> Manufacturers
 #. Press "Create" to create a new manufacturer
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas

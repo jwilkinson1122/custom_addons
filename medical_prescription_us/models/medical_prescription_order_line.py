@@ -31,11 +31,11 @@ class MedicalPrescriptionOrderLine(models.Model):
     )
     ndc_id = fields.Many2one(
         string='NDC',
-        comodel_name='medical.medicament.ndc',
+        comodel_name='product.product.ndc',
     )
     gcn_id = fields.Many2one(
         string='GCN',
-        comodel_name='medical.medicament.gcn',
+        comodel_name='product.product.gcn',
     )
 
     @api.model
@@ -45,11 +45,11 @@ class MedicalPrescriptionOrderLine(models.Model):
                 date_start = fields.Datetime.from_string(
                     vals['date_start_treatment']
                 )
-                medicament = self.env['medical.medicament'].browse(
-                    vals['medicament_id']
+                product = self.env['product.product'].browse(
+                    vals['product_id']
                 )
                 delta = relativedelta(
-                    months=DELTA_MAP[medicament.control_code]
+                    months=DELTA_MAP[product.control_code]
                 )
                 vals['date_stop_treatment'] = fields.Datetime.to_string(
                     date_start + delta

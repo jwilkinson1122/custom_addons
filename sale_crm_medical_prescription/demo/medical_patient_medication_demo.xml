@@ -5,7 +5,7 @@
 <odoo>
 
     <record id="medical_medication_template_template_9" model="medical.medication.template">
-        <field name="medicament_id" ref="sale_crm_medical_prescription.medical_medicament_penicillin_1" />
+        <field name="product_id" ref="sale_crm_medical_prescription.medical_product_penicillin_1" />
         <field name="quantity">1</field>
         <field name="dose_uom_id" ref="product.product_uom_categ_unit" />
         <field name="frequency">8</field>
@@ -20,7 +20,7 @@
         <field name="patient_id" ref="sale_crm_medical_prescription.medical_patient_patient_10" />
         <field name="physician_id" ref="sale_crm_medical_prescription.medical_physician_physician_6" />
         <field name="date_start_treatment">1980-10-10</field>
-        <field name="medicament_id" ref="sale_crm_medical_prescription.medical_medicament_penicillin_1" />
+        <field name="product_id" ref="sale_crm_medical_prescription.medical_product_penicillin_1" />
     </record>
 
 </odoo>

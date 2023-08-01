@@ -16,19 +16,11 @@
                 <field name="patient_id" />
             </xpath>
             <xpath expr="//filter[@name='frequency_prn']" position="after">
-                <filter name="is_substitutable"
-                        string="Is Substitutable"
-                        domain="[('is_substitutable', '=', True)]" />
+                <filter name="is_substitutable" string="Is Substitutable" domain="[('is_substitutable', '=', True)]" />
             </xpath>
             <xpath expr="//group" position="inside">
-                <filter name="group_by_prescription_order"
-                        string="Prescription Order"
-                        domain="[]"
-                        context="{'group_by':'prescription_order_id'}" />
-                <filter name="group_by_medical_medication"
-                        string="Medication"
-                        domain="[]"
-                        context="{'group_by':'medical_medication_id'}" />
+                <filter name="group_by_prescription_order" string="Prescription Order" domain="[]" context="{'group_by':'prescription_order_id'}" />
+                <filter name="group_by_medical_medication" string="Medication" domain="[]" context="{'group_by':'medical_medication_id'}" />
             </xpath>
         </field>
     </record>
@@ -73,7 +65,7 @@
         </field>
     </record>
 
-    <record id="medical_prescription_order_line_view_kanban" model="ir.ui.view" >
+    <record id="medical_prescription_order_line_view_kanban" model="ir.ui.view">
         <field name="name">medical.prescription.order.line.kanban</field>
         <field name="model">medical.prescription.order.line</field>
         <field name="type">kanban</field>
@@ -83,7 +75,7 @@
                 <field name="prescription_order_id" />
                 <field name="patient_id" />
                 <field name="physician_id" />
-                <field name="medicament_id" />
+                <field name="product_id" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="kanban_content">
@@ -103,9 +95,9 @@
                                             <strong>Physician:</strong>
                                             <field name="physician_id" />
                                         </li>
-                                        <li t-if="record.medicament_id.raw_value">
-                                            <strong>Medicament:</strong>
-                                            <field name="medicament_id" />
+                                        <li t-if="record.product_id.raw_value">
+                                            <strong>Product:</strong>
+                                            <field name="product_id" />
                                         </li>
                                     </ul>
                                 </div>

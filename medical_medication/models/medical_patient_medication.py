@@ -29,7 +29,7 @@ class MedicalPatientMedication(models.Model):
         string='Physician',
         comodel_name='medical.physician',
         index=True,
-        help='Physician who prescribed the medicament',
+        help='Physician who prescribed the product',
     )
     active = fields.Boolean(
         help='Check if the patient is currently taking the medication',

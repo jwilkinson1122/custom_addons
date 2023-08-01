@@ -24,7 +24,7 @@ class TestAbstractMedicalMedication(TransactionCase):
         self.medication_template_6.quantity = 200
 
         comparison_keys = [
-            'medicament_id',
+            'product_id',
             'quantity',
             'dose_uom_id',
             'frequency',

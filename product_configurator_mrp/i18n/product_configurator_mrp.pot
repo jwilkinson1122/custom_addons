@@ -105,7 +105,7 @@ msgid "Configurations"
 msgstr ""
 
 #. module: product_configurator_mrp
-#. openerp-web
+#. odoo-web
 #: code:addons/product_configurator_mrp/static/src/xml/mrp_production_views.xml:0
 #: code:addons/product_configurator_mrp/static/src/xml/mrp_production_views.xml:0
 #: code:addons/product_configurator_mrp/static/src/xml/mrp_production_views.xml:0

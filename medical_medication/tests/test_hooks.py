@@ -19,7 +19,7 @@ class TestHooks(TransactionCase):
     def test_post_init_hook_magic_columns(self):
         """ Test template vals and medication vals are set the same """
         comparison_keys = [
-            'medicament_id',
+            'product_id',
             'quantity',
             'dose_uom_id',
             'frequency',

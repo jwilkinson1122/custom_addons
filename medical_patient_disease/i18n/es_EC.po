@@ -151,7 +151,7 @@ msgstr "Nombre a Mostrar"
 #. module: medical_patient_disease
 #: selection:medical.patient.disease,allergy_type:0
 msgid "Drug Allergy"
-msgstr "Alergia a un medicamento"
+msgstr "Alergia a un producto"
 
 #. module: medical_patient_disease
 #: selection:medical.patient.disease,allergy_type:0

@@ -288,23 +288,23 @@ class TestMedicalPrescriptionOrderMerge(SingleTransactionCase):
         test_rx_line_1 = self.env['medical.prescription.order.line'].create({
             'prescription_order_id': test_rx_order_1.id,
             'patient_id': self.env.ref('medical.medical_patient_patient_1').id,
-            'medicament_id': self.env.ref(
-                'medical_medicament.medical_medicament_advil_1'
+            'product_id': self.env.ref(
+                'medical_product.medical_product_advil_1'
             ).id,
         })
         test_rx_order_2 = self._new_rx_order()
         test_rx_line_2 = self.env['medical.prescription.order.line'].create({
             'prescription_order_id': test_rx_order_2.id,
             'patient_id': self.env.ref('medical.medical_patient_patient_1').id,
-            'medicament_id': self.env.ref(
-                'medical_medicament.medical_medicament_advil_1'
+            'product_id': self.env.ref(
+                'medical_product.medical_product_advil_1'
             ).id,
         })
         test_rx_line_3 = self.env['medical.prescription.order.line'].create({
             'prescription_order_id': test_rx_order_2.id,
             'patient_id': self.env.ref('medical.medical_patient_patient_1').id,
-            'medicament_id': self.env.ref(
-                'medical_medicament.medical_medicament_advil_1'
+            'product_id': self.env.ref(
+                'medical_product.medical_product_advil_1'
             ).id,
         })
         test_wiz = self.env['medical.prescription.order.merge']

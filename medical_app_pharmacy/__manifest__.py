@@ -13,7 +13,7 @@
     'installable': True,
     'depends': [
         'medical_insurance',
-        'medical_medicament_storage',
+        'medical_product_storage',
         'medical_prescription_disease_state',
         'medical_prescription_merge',
         'medical_prescription_state',

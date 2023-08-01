@@ -4,7 +4,7 @@
 
 <odoo>
     <record id="medical_patient_medication_1_demo" model="medical.patient.medication">
-        <field name="medicament_id" ref="medical_medicament_1_demo"/>
+        <field name="product_id" ref="medical_product_1_demo"/>
         <field name="patient_id" ref="medical_patient_1_demo"/>
     </record>
 </odoo>

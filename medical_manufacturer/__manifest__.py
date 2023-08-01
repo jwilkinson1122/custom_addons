@@ -13,7 +13,7 @@
     "application": False,
     "installable": True,
     "depends": [
-        "medical_medicament",
+        "medical_product",
     ],
     "data": [
         "views/medical_manufacturer_view.xml",

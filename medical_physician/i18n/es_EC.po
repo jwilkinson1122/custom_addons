@@ -158,9 +158,9 @@ msgid "Check if the contact is a company, otherwise it is a person"
 msgstr "Marque esta casilla si el contacto es una compañía. En caso contrario, será una persona"
 
 #. module: medical_physician
-#: model:ir.model.fields,help:medical_physician.field_medical_physician_service_is_medicament
-msgid "Check if the product is a medicament"
-msgstr "Compruebe si el producto es un medicamento"
+#: model:ir.model.fields,help:medical_physician.field_medical_physician_service_is_product
+msgid "Check if the product is a product"
+msgstr "Compruebe si el producto es un producto"
 
 #. module: medical_physician
 #: model:ir.model.fields,help:medical_physician.field_medical_physician_service_is_vaccine
@@ -615,9 +615,9 @@ msgid "Is a Vendor"
 msgstr "Es un Proveedor"
 
 #. module: medical_physician
-#: model:ir.model.fields,field_description:medical_physician.field_medical_physician_service_is_medicament
-msgid "Is medicament"
-msgstr "Es medicamento"
+#: model:ir.model.fields,field_description:medical_physician.field_medical_physician_service_is_product
+msgid "Is product"
+msgstr "Es producto"
 
 #. module: medical_physician
 #: model:ir.model.fields,field_description:medical_physician.field_medical_physician_function

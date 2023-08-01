@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="medical_insurance_template_view_tree" model="ir.ui.view">
             <field name="name">medical.insurance.template.tree</field>
@@ -48,21 +48,12 @@
                     <field name="insurance_affiliation" />
                 </xpath>
                 <xpath expr="//group" position="inside">
-                    <filter name="group_by_group_number"
-                            string="Group Number"
-                            domain="[]"
-                            context="{'group_by': 'group_number', }" />
-                    <filter name="group_by_insurance_type"
-                            string="Insurance Type"
-                            domain="[]"
-                            context="{'group_by': 'insurance_type', }" />
-                    <filter name="group_by_insurance_affiliation"
-                            string="Insurance Affiliation"
-                            domain="[]"
-                            context="{'group_by': 'insurance_affiliation', }" />
+                    <filter name="group_by_group_number" string="Group Number" domain="[]" context="{'group_by': 'group_number', }" />
+                    <filter name="group_by_insurance_type" string="Insurance Type" domain="[]" context="{'group_by': 'insurance_type', }" />
+                    <filter name="group_by_insurance_affiliation" string="Insurance Affiliation" domain="[]" context="{'group_by': 'insurance_affiliation', }" />
                 </xpath>
             </field>
         </record>
 
     </data>
-</openerp>
+</odoo>

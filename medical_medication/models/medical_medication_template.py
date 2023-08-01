@@ -11,15 +11,15 @@ class MedicalMedicationTemplate(models.Model):
     _description = 'Medical Medication Template'
     _rec_name = 'pathology_id'
 
-    medicament_id = fields.Many2one(
-        string='Medicament',
-        comodel_name='medical.medicament',
+    product_id = fields.Many2one(
+        string='Product',
+        comodel_name='product.product',
         required=True,
     )
     pathology_id = fields.Many2one(
         string='Pathology',
         comodel_name='medical.pathology',
-        help='Choose a disease for this medicament from the disease list.'
+        help='Choose a disease for this product from the disease list.'
              ' It can be an existing disease of the patient or a'
              ' prophylactic.',
     )
@@ -48,14 +48,14 @@ class MedicalMedicationTemplate(models.Model):
     medication_dosage_id = fields.Many2one(
         string='Common Dose',
         comodel_name='medical.medication.dosage',
-        help='Common / standard dosage frequency for this medicament',
+        help='Common / standard dosage frequency for this product',
     )
     suggested_administration_hours = fields.Char(
         help='Time that medication should typically be administered',
     )
     quantity = fields.Float(
         string='Dose Quantity',
-        help='Quantity of units (eg, 2 capsules) of the medicament',
+        help='Quantity of units (eg, 2 capsules) of the product',
     )
     dose_uom_id = fields.Many2one(
         string='Dose Unit',
@@ -75,6 +75,6 @@ class MedicalMedicationTemplate(models.Model):
             elif rec_id.pathology_id:
                 name = rec_id.pathology_id.name
             else:
-                name = rec_id.medicament_id.name
+                name = rec_id.product_id.name
             res.append((rec_id.id, name))
         return res

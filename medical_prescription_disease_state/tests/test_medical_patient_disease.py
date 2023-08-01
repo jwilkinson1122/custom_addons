@@ -23,9 +23,9 @@ class TestMedicalPatientDisease(TransactionCase):
             'name': 'Specialty',
             'code': 'SPEC',
         }
-        self.medicament_vals = {
+        self.product_vals = {
             'name': 'simvastatin',
-            'drug_form_id': self.env.ref('medical_medicament.AEM').id,
+            'drug_form_id': self.env.ref('medical_product.AEM').id,
         }
         self.order_vals = {}
         self.vals = {}
@@ -41,8 +41,8 @@ class TestMedicalPatientDisease(TransactionCase):
         self.specialty_id = self.env['medical.specialty'].create(
             self.specialty_vals,
         )
-        self.medicament_id = self.env['medical.medicament'].create(
-            self.medicament_vals
+        self.product_id = self.env['product.product'].create(
+            self.product_vals
         )
         self.physician_vals.update({
             'specialty_id': self.specialty_id.id,
@@ -64,7 +64,7 @@ class TestMedicalPatientDisease(TransactionCase):
         )
         self.vals.update({
             'disease_id': self.disease_id.id,
-            'medicament_id': self.medicament_id.id,
+            'product_id': self.product_id.id,
             'prescription_order_id': self.rx_id.id,
             'patient_id': self.patient_id.id,
             'physician_id': self.physician_id.id,
@@ -83,7 +83,7 @@ class TestMedicalPatientDisease(TransactionCase):
         line_1 = self._new_record()
         line_2 = self.env['medical.prescription.order.line'].create({
             'disease_id': self.disease_id.id,
-            'medicament_id': self.medicament_id.id,
+            'product_id': self.product_id.id,
             'prescription_order_id': self.rx_id.id,
             'patient_id': self.patient_id.id,
             'physician_id': self.physician_id.id,

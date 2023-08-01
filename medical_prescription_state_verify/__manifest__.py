@@ -19,7 +19,7 @@
         'data/base_kanban_stage.xml',
     ],
     'demo': [
-        'demo/medical_medicament.xml',
+        'demo/medical_product.xml',
         'demo/medical_patient.xml',
         'demo/medical_patient_medication.xml',
         'demo/medical_physician.xml',

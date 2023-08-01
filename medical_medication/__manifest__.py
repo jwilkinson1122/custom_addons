@@ -16,7 +16,7 @@
     "post_init_hook": "_inherit_medication_template_vals",
     "depends": [
         "medical_patient_disease",
-        "medical_medicament",
+        "product",
     ],
     "data": [
         "data/product_uom.xml",
@@ -30,7 +30,7 @@
     ],
     "demo": [
         "demo/medical_patient_demo.xml",
-        "demo/medical_medicament_demo.xml",
+        "demo/medical_product_demo.xml",
         "demo/medical_pathology_demo.xml",
         "demo/medical_patient_medication_demo.xml",
     ],

@@ -168,10 +168,10 @@ msgid "Check if the contact is a company, otherwise it is a person"
 msgstr "Marque esta casilla si el contacto es una compañía. En caso contrario, será una persona"
 
 #. module: medical_insurance
-#: model:ir.model.fields,help:medical_insurance.field_medical_insurance_plan_is_medicament
-#: model:ir.model.fields,help:medical_insurance.field_medical_insurance_template_is_medicament
-msgid "Check if the product is a medicament"
-msgstr "Compruebe si el producto es un medicamento"
+#: model:ir.model.fields,help:medical_insurance.field_medical_insurance_plan_is_product
+#: model:ir.model.fields,help:medical_insurance.field_medical_insurance_template_is_product
+msgid "Check if the product is a product"
+msgstr "Compruebe si el producto es un producto"
 
 #. module: medical_insurance
 #: model:ir.model.fields,help:medical_insurance.field_medical_insurance_plan_is_vaccine
@@ -203,7 +203,7 @@ msgstr "Marque esto si el plan debe ser el predeterminado cuando se asigna una c
 #. module: medical_insurance
 #: model:ir.model.fields,help:medical_insurance.field_medical_insurance_plan_is_insurance_plan
 #: model:ir.model.fields,help:medical_insurance.field_medical_insurance_template_is_insurance_plan
-#: model:ir.model.fields,help:medical_insurance.field_medical_medicament_is_insurance_plan
+#: model:ir.model.fields,help:medical_insurance.field_medical_product_is_insurance_plan
 #: model:ir.model.fields,help:medical_insurance.field_medical_physician_service_is_insurance_plan
 #: model:ir.model.fields,help:medical_insurance.field_product_product_is_insurance_plan
 msgid "Check this if the product is an insurance plan"
@@ -610,7 +610,7 @@ msgstr "Compañía de seguros"
 #. module: medical_insurance
 #: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_plan_is_insurance_plan
 #: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_template_is_insurance_plan
-#: model:ir.model.fields,field_description:medical_insurance.field_medical_medicament_is_insurance_plan
+#: model:ir.model.fields,field_description:medical_insurance.field_medical_product_is_insurance_plan
 #: model:ir.model.fields,field_description:medical_insurance.field_medical_physician_service_is_insurance_plan
 #: model:ir.model.fields,field_description:medical_insurance.field_product_product_is_insurance_plan
 #: model:ir.ui.view,arch_db:medical_insurance.medical_insurance_plan_view_form
@@ -730,10 +730,10 @@ msgid "Is a Vendor"
 msgstr "Es un Proveedor"
 
 #. module: medical_insurance
-#: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_plan_is_medicament
-#: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_template_is_medicament
-msgid "Is medicament"
-msgstr "Es el medicamento"
+#: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_plan_is_product
+#: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_template_is_product
+msgid "Is product"
+msgstr "Es el producto"
 
 #. module: medical_insurance
 #: model:ir.model.fields,field_description:medical_insurance.field_medical_insurance_company_function

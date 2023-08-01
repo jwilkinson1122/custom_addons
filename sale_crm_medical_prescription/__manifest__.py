@@ -21,7 +21,7 @@
         "views/crm_lead_view.xml",
     ],
     "demo": [
-        "demo/medical_medicament_demo.xml",
+        "demo/medical_product_demo.xml",
         "demo/medical_patient_demo.xml",
         "demo/medical_pharmacy_demo.xml",
         "demo/medical_physician_demo.xml",

@@ -18,34 +18,14 @@
                 <field name="suggested_administration_hours" />
                 <field name="dose_uom_id" />
                 <newline />
-                <filter string="Is Frequency PRN"
-                        name="frequency_prn"
-                        domain="[('frequency_prn', '=', True)]" />
+                <filter string="Is Frequency PRN" name="frequency_prn" domain="[('frequency_prn', '=', True)]" />
                 <group expand="0" string="Group By...">
-                    <filter name="group_by_duration"
-                            string="Treatment duration"
-                            domain="[]"
-                            context="{'group_by':'duration'}" />
-                    <filter name="group_by_frequency"
-                            string="Frequency"
-                            domain="[]"
-                            context="{'group_by':'frequency'}" />
-                    <filter name="group_by_pathology_id"
-                            string="Pathology"
-                            domain="[]"
-                            context="{'group_by':'pathology_id'}" />
-                    <filter name="group_by_medication_dosage_id"
-                            string="Frequency"
-                            domain="[]"
-                            context="{'group_by':'medication_dosage_id'}" />
-                    <filter name="group_by_suggested_admin_hours"
-                            string="Administration hours"
-                            domain="[]"
-                            context="{'group_by':'suggested_administration_hours'}" />
-                    <filter name="group_by_dose_uom_id"
-                            string="Dose Unit"
-                            domain="[]"
-                            context="{'group_by':'dose_uom_id'}" />
+                    <filter name="group_by_duration" string="Treatment duration" domain="[]" context="{'group_by':'duration'}" />
+                    <filter name="group_by_frequency" string="Frequency" domain="[]" context="{'group_by':'frequency'}" />
+                    <filter name="group_by_pathology_id" string="Pathology" domain="[]" context="{'group_by':'pathology_id'}" />
+                    <filter name="group_by_medication_dosage_id" string="Frequency" domain="[]" context="{'group_by':'medication_dosage_id'}" />
+                    <filter name="group_by_suggested_admin_hours" string="Administration hours" domain="[]" context="{'group_by':'suggested_administration_hours'}" />
+                    <filter name="group_by_dose_uom_id" string="Dose Unit" domain="[]" context="{'group_by':'dose_uom_id'}" />
                 </group>
             </search>
         </field>
@@ -57,7 +37,7 @@
         <field name="arch" type="xml">
             <tree string="Medical Medication Template">
                 <field name="pathology_id"/>
-                <field name="medicament_id"/>
+                <field name="product_id"/>
                 <field name="duration_uom_id"/>
             </tree>
         </field>
@@ -70,8 +50,10 @@
             <form string="Medical Medication Template">
                 <header />
                 <sheet>
-                    <label for="medicament_id" class="oe_edit_only"/>
-                    <h1><field name="medicament_id"/></h1>
+                    <label for="product_id" class="oe_edit_only"/>
+                    <h1>
+                        <field name="product_id"/>
+                    </h1>
                     <div class="oe_right oe_button_box" name="buttons"/>
                     <group name="data">
                         <field name="pathology_id"/>

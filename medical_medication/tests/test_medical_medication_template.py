@@ -52,11 +52,11 @@ class TestMedicalMedicationTemplate(TransactionCase):
             )
         )
 
-    def test_name_get_medicament_id(self):
-        """ Test display_name if medicament_id name chosen """
+    def test_name_get_product_id(self):
+        """ Test display_name if product_id name chosen """
         self.assertEquals(
             self.med_template_3.display_name, 'Advil',
-            'Should show medicament name.\rGot: %s\rExpected: %s' % (
+            'Should show product name.\rGot: %s\rExpected: %s' % (
                 self.med_template_3.display_name, 'Advil'
             )
         )

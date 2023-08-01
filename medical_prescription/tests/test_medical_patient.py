@@ -21,7 +21,7 @@ class TestMedicalPatient(TransactionCase):
             'medical_prescription_order_order_line_1'
         )
         self.dispense_uom_id = \
-            self.rx_line_1.medical_medication_id.medicament_id.uom_id.id
+            self.rx_line_1.medical_medication_id.uom_id.id
 
     def test_compute_prescription_order_line_ids(self):
         """ It should properly calculate order lines """

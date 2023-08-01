@@ -623,7 +623,7 @@ msgid "Male"
 msgstr "Masculino"
 
 #. module: medical
-#. openerp-web
+#. odoo-web
 #: code:addons/medical/static/src/js/medical.tour.js:16
 #, python-format
 msgid "Manage electronic medical records using the <b>Medical</b> app."

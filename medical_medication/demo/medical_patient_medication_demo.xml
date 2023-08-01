@@ -5,7 +5,7 @@
 <odoo>
 
     <record id="medical_medication_template_template_1" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
         <field name="quantity">2</field>
         <field name="dose_uom_id" ref="product.product_uom_unit" />
         <field name="frequency">2</field>
@@ -19,11 +19,11 @@
         <field name="patient_id" ref="medical.medical_patient_patient_1" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_1" />
         <field name="date_start_treatment">2016-01-01</field>
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
     </record>
 
     <record id="medical_medication_template_template_2" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_2" />
+        <field name="product_id" ref="medical_product.medical_product_advil_2" />
         <field name="quantity">1</field>
         <field name="dose_uom_id" ref="product.product_uom_unit" />
         <field name="pathology_id" ref="medical_medication.medical_pathology_pathology_4" />
@@ -33,14 +33,14 @@
 
     <record id="medical_patient_medication_medication_2" model="medical.patient.medication">
         <field name="medication_template_id" ref="medical_medication.medical_medication_template_template_2" />
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_2" />
+        <field name="product_id" ref="medical_product.medical_product_advil_2" />
         <field name="patient_id" ref="medical.medical_patient_patient_1" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_1" />
         <field name="date_start_treatment">2015-01-01</field>
     </record>
 
     <record id="medical_medication_template_template_3" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
         <field name="quantity">2</field>
         <field name="dose_uom_id" ref="product.product_uom_unit" />
         <field name="duration">1</field>
@@ -52,11 +52,11 @@
         <field name="patient_id" ref="medical.medical_patient_patient_2" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_1" />
         <field name="date_start_treatment">2016-01-01</field>
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
     </record>
 
     <record id="medical_medication_template_template_4" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
         <field name="pathology_id" ref="medical_medication.medical_pathology_pathology_4" />
         <field name="frequency_prn" eval="True" />
         <field name="medication_dosage_id" ref="medical_medication.420449005" />
@@ -69,14 +69,14 @@
 
     <record id="medical_patient_medication_medication_4" model="medical.patient.medication">
         <field name="medication_template_id" ref="medical_medication.medical_medication_template_template_4" />
-        <field name="medicament_id" ref="medical_medicament.medical_medicament_advil_1" />
+        <field name="product_id" ref="medical_product.medical_product_advil_1" />
         <field name="patient_id" ref="medical_medication.medical_patient_patient_6" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_3" />
         <field name="date_start_treatment">2010-01-02</field>
     </record>
 
     <record id="medical_medication_template_template_5" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medication.medical_medicament_truvada_1" />
+        <field name="product_id" ref="medical_medication.medical_product_truvada_1" />
         <field name="pathology_id" ref="medical_pathology.medical_pathology_medical_pathology_1" />
         <field name="duration">3</field>
         <field name="duration_uom_id" ref="medical_medication.product_uom_year" />
@@ -90,14 +90,14 @@
 
     <record id="medical_patient_medication_medication_5" model="medical.patient.medication">
         <field name="medication_template_id" ref="medical_medication.medical_medication_template_template_5" />
-        <field name="medicament_id" ref="medical_medication.medical_medicament_truvada_1" />
+        <field name="product_id" ref="medical_medication.medical_product_truvada_1" />
         <field name="patient_id" ref="medical_patient_disease.medical_patient_patient_4" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_2" />
         <field name="date_start_treatment">2012-02-14</field>
     </record>
 
     <record id="medical_medication_template_template_6" model="medical.medication.template">
-        <field name="medicament_id" ref="medical_medication.medical_medicament_aralen_1" />
+        <field name="product_id" ref="medical_medication.medical_product_aralen_1" />
         <field name="pathology_id" ref="medical_pathology.medical_pathology_medical_pathology_2" />
         <field name="duration">30</field>
         <field name="duration_uom_id" ref="medical_medication.product_uom_day" />
@@ -111,7 +111,7 @@
 
     <record id="medical_patient_medication_medication_6" model="medical.patient.medication">
         <field name="medication_template_id" ref="medical_medication.medical_medication_template_template_6" />
-        <field name="medicament_id" ref="medical_medication.medical_medicament_aralen_1" />
+        <field name="product_id" ref="medical_medication.medical_product_aralen_1" />
         <field name="patient_id" ref="medical.medical_patient_patient_3" />
         <field name="physician_id" ref="medical_physician.medical_physician_physician_1" />
         <field name="date_start_treatment">2016-12-02</field>

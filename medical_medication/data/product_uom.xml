@@ -5,13 +5,13 @@
 <odoo>
 
     <!-- Volume -->
-    <record id="product_uom_litre" model="uom.uom">
+    <!-- <record id="product_uom_litre" model="uom.uom">
         <field name="name">Litre(s)</field>
         <field name="category_id" ref="product.product_uom_categ_vol"/>
         <field name="uom_type">reference</field>
         <field name="factor">1.0</field>
-    </record>
-    <record id="product_uom_ml" model="uom.uom">
+    </record> -->
+    <!-- <record id="product_uom_ml" model="uom.uom">
         <field name="name">mL</field>
         <field name="category_id" ref="product.product_uom_categ_vol"/>
         <field name="uom_type">smaller</field>
@@ -34,10 +34,10 @@
         <field name="factor" eval="100000"/>
         <field name="category_id" ref="product.product_uom_categ_kgm"/>
         <field name="uom_type">smaller</field>
-    </record>
+    </record> -->
 
     <!-- Time -->
-    <record id="product_uom_categ_time" model="uom.uom.categ">
+    <!-- <record id="product_uom_categ_time" model="uom.category">
         <field name="name">Time</field>
     </record>
     <record id="product_uom_hour" model="uom.uom">
@@ -75,6 +75,6 @@
         <field name="factor_inv" eval="40000"/>
         <field name="category_id" ref="product_uom_categ_time"/>
         <field name="uom_type">bigger</field>
-    </record>
+    </record> -->
 
 </odoo>

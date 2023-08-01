@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="medical_product_view_form" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name='inherit_id' ref='medical_product.medical_product_view_form' />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='therapeutic_action']" position="after">
+                <field name="is_prescription" />
+                <field name="is_controlled" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

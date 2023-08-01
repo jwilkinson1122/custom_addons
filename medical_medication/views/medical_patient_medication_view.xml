@@ -20,30 +20,15 @@
                 <field name="discontinued_reason" />
             </xpath>
             <xpath expr="//filter[@name='frequency_prn']" position="after">
-                <filter name="inactive"
-                        string="Inactive"
-                        domain="[('active', '=', False)]" />
-                <filter name="is_course_complete"
-                        domain="[('is_course_complete', '=', True)]" />
-                <filter name="is_discontinued"
-                        domain="[('is_discontinued', '=', True)]" />
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]" />
+                <filter name="is_course_complete" domain="[('is_course_complete', '=', True)]" />
+                <filter name="is_discontinued" domain="[('is_discontinued', '=', True)]" />
             </xpath>
             <xpath expr="//group" position="inside">
-                <filter name="group_by_patient_id"
-                        string="Patient"
-                        domain="[]"
-                        context="{'group_by':'patient_id'}" />
-                <filter name="group_by_physician_id"
-                        string="Physician"
-                        domain="[]"
-                        context="{'group_by':'physician_id'}" />
-                <filter name="group_by_notes"
-                        string="Extra Info"
-                        domain="[]" context="{'group_by':'notes'}" />
-                <filter name="group_by_medication_template"
-                        string="Medication Template"
-                        domain="[]"
-                        context="{'group_by':'medication_template_id'}" />
+                <filter name="group_by_patient_id" string="Patient" domain="[]" context="{'group_by':'patient_id'}" />
+                <filter name="group_by_physician_id" string="Physician" domain="[]" context="{'group_by':'physician_id'}" />
+                <filter name="group_by_notes" string="Extra Info" domain="[]" context="{'group_by':'notes'}" />
+                <filter name="group_by_medication_template" string="Medication Template" domain="[]" context="{'group_by':'medication_template_id'}" />
             </xpath>
         </field>
     </record>
@@ -70,8 +55,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='pathology_id']" position="replace">
                 <group>
-                    <field name="medication_template_id"
-                           domain="[('medicament_id','=', medicament_id)]" />
+                    <field name="medication_template_id" domain="[('product_id','=', product_id)]" />
                     <field name="date_start_treatment" />
                     <field name="physician_id" />
                 </group>
@@ -89,15 +73,14 @@
                 <page name="notes" string="Notes">
                     <field name="notes" nolabel="1" />
                 </page>
-                <page name="discontinued_reason" string="Discontinued Reason"
-                    attrs="{'invisible': [('is_discontinued', '=', False)]}">
+                <page name="discontinued_reason" string="Discontinued Reason" attrs="{'invisible': [('is_discontinued', '=', False)]}">
                     <field name="discontinued_reason" nolabel="1" />
                 </page>
             </xpath>
         </field>
     </record>
 
-    <record  id="medical_patient_medication_action" model="ir.actions.act_window">
+    <record id="medical_patient_medication_action" model="ir.actions.act_window">
         <field name="name">Medications</field>
         <field name="res_model">medical.patient.medication</field>
         <field name="view_mode">tree,form</field>

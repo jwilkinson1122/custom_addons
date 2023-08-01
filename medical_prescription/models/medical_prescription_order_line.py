@@ -52,11 +52,12 @@ class MedicalPrescriptionOrderLine(models.Model):
 
         args = args or []
         domain = [
-            '|', '|', '|', '|',
-            ('medicament_id.product_id.name', operator, name),
-            ('medicament_id.strength', operator, name),
-            ('medicament_id.strength_uom_id.name', operator, name),
-            ('medicament_id.drug_form_id.code', operator, name),
+            '|',
+            ('product_id.name', operator, name),
+            # ('product_id.product_id.name', operator, name),
+            # ('product_id.strength', operator, name),
+            # ('product_id.strength_uom_id.name', operator, name),
+            # ('product_id.drug_form_id.code', operator, name),
             ('patient_id.name', operator, name),
         ]
 
@@ -66,7 +67,7 @@ class MedicalPrescriptionOrderLine(models.Model):
     @api.onchange('medical_medication_id')
     def _onchange_medical_medication_id(self):
         self.dispense_uom_id = \
-            self.medical_medication_id.medicament_id.uom_id.id
+            self.medical_medication_id.uom_id.id
 
     def _compute_is_expired(self):
         now = datetime.datetime.now()
