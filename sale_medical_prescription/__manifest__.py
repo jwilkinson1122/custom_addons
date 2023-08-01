@@ -22,14 +22,14 @@
     "data": [
         "data/product_category_data.xml",
         "views/medical_pharmacy_view.xml",
-        "views/medical_product_view.xml",
+        # "views/medical_product_view.xml",
         "views/prescription_order_line_view.xml",
         "views/prescription_order_view.xml",
         "views/sale_order_view.xml",
         "views/medical_physician_view.xml",
         "views/medical_patient_view.xml",
-        "wizards/medical_sale_wizard_view.xml",
-        "wizards/medical_sale_temp_view.xml",
+        "wizard/medical_sale_wizard_view.xml",
+        "wizard/medical_sale_temp_view.xml",
     ],
     "demo": [
         "demo/product_category_demo.xml",

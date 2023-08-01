@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="medical_rx_lead_wizard_view_form" model="ir.ui.view">
+        <field name="name">medical.rx.lead.wizard.view.form</field>
+        <field name="model">medical.lead.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rx => Lead(s)">
+                <sheet>
+                    <group name="data">
+                        <field name="pharmacy_id" />
+                        <field name="split_orders" />
+                    </group>
+                    <group name="rx">
+                        <field name="prescription_line_ids" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button special="cancel"
+                            string="Cancel" />
+                    <button name="action_create_leads"
+                            type="object"
+                            string="Create Lead(s)"
+                            class="oe_highlight" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window id="medical_rx_lead_wizard_action"
+                binding_model="medical.prescription.order.line"
+                res_model="medical.lead.wizard"
+                name="Create_Lead"
+                view_mode="form"
+                target="new"/>
+</odoo>

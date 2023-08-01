@@ -17,7 +17,7 @@
         "sale_medical_prescription",
     ],
     "data": [
-        "wizards/medical_lead_wizard_view.xml",
+        "wizard/medical_lead_wizard_view.xml",
         "views/crm_lead_view.xml",
     ],
     "demo": [

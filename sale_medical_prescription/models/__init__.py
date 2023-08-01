@@ -3,7 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html)
 
 
-from . import medical_product
+# from . import medical_product
 from . import medical_patient
 from . import medical_pharmacy
 from . import medical_physician
