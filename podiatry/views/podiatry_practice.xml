@@ -17,11 +17,34 @@
         </field>
     </record>
 
+    <record id="action_pod_practitioners_by_parent" model="ir.actions.act_window">
+        <field name="name">Practitioners</field>
+        <field name="res_model">podiatry.practitioner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('practice_id', 'child_of', target_partner_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practitioner
+            </p>
+            <p>
+                Organize and manage practitioners at a glance.
+            </p>
+        </field>
+    </record>
+
     <record id="action_pod_patients_by_parent" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="res_model">podiatry.patient</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('practice_id', 'child_of', target_partner_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new patient
+            </p>
+            <p>
+                Organize and manage patients at a glance.
+            </p>
+        </field>
     </record>
 
     <!--Form-->
@@ -37,11 +60,15 @@
                         <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
-                        <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
+                        <!-- <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
                             <div class="o_stat_info">
                                 <field name="practitioner_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Contacts</span>
                             </div>
+                        </button> -->
+                        <button type="action" name="%(action_pod_practitioners_by_parent)d" class="oe_stat_button" icon="fa-address-book" context="{'target_partner_id': active_id}" attrs="{'invisible': [('practitioner_count', '=', 0)]}">
+                            <field name="practitioner_count" widget="statinfo" string="Practitioners" />
+                            <field name='practitioner_ids' invisible="1" />
                         </button>
                         <button type="action" name="%(action_pod_patients_by_parent)d" class="oe_stat_button" icon="fa-users" context="{'target_partner_id': active_id}" attrs="{'invisible': [('patient_count', '=', 0)]}">
                             <field name="patient_count" widget="statinfo" string="Patients" />
@@ -197,7 +224,7 @@
                             </field>
                         </page>
                         <page name="practitioners_list" string="Contacts">
-                            <field name="practitioner_id" mode="kanban">
+                            <field name="practitioner_ids" mode="kanban">
 
                             </field>
                         </page>
