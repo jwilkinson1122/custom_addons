@@ -21,7 +21,17 @@
         'sale_stock_medical_prescription',
     ],
     'data': [
-        'templates/assets.xml',
+        # 'templates/assets.xml',
         'views/medical_app_pharmacy_menu.xml',
     ],
+    "assets": {
+        "web.assets_backend": [
+            "medical_app_pharmacy/static/src/js/medical_app_pharmacy.tour.js",
+        ],
+        'web.assets_qweb': [
+        ],
+    },
 }
+
+
+            # <script type="text/javascript" src="/medical_app_pharmacy/static/src/js/medical_app_pharmacy.tour.js"/>

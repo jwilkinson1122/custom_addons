@@ -1,0 +1,152 @@
+<odoo>
+
+    <record id="podiatry_prescription_kanban" model="ir.ui.view">
+        <field name="model">podiatry.prescription</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" quick_create="true">
+                <!-- Field list to ensure is loaded ... -->
+                <field name="color" />
+                <field name="prescription_ids" />
+                <field name="num_prescription_items" />
+                <field name="state" />
+
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="prescription_count" />
+
+                <!-- <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="num_prescription_items" /> -->
+
+                <templates>
+                    <!-- 
+                    <t t-name="foot_images">
+                    
+                        <div>
+                            <t t-foreach="record.prescription_ids.raw_value.slice(0, limit)" t-as="line">
+                                <img t-att-src="kanban_image('podiatry.prescription', 'foot_image1', line)" class="oe_avatar" height="60" alt="Left Image"/>
+                                <img t-att-src="kanban_image('podiatry.prescription', 'foot_image2', line)" class="oe_avatar" height="60" alt="Right Image"/>
+                            </t>
+                        </div>
+                    </t> -->
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click
+         {{!selection_mode ? 'oe_kanban_color_' +
+           kanban_getcolor(record.color.raw_value) : ''}}">
+
+                            <div class="o_dropdown_kanban dropdown">
+                                <!-- Top-right drop down menu ... -->
+                                <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" title="Dropdown menu" href="#">
+                                    <span class="fa fa-ellipsis-v" />
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+
+                                    <!-- Edit menu option -->
+                                    <t t-if="widget.editable">
+                                        <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                    </t>
+                                    <!-- Delete menu option -->
+                                    <t t-if="widget.deletable">
+                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    </t>
+
+                                    <!-- Separator line -->
+                                    <div role="separator" class="dropdown-divider" />
+
+                                    <!-- Color picker option: -->
+                                    <ul class="oe_kanban_colorpicker" data-field="color" />
+
+                                    <!-- Set as Done menu option -->
+                                    <a t-if="widget.editable and record.state != 'done'" role="menuitem" class="dropdown-item" name="button_done" type="object">Set as Done</a>
+
+                                    <!-- Set on hold menu option -->
+                                    <a t-if="widget.editable and record.state != 'hold'" role="menuitem" class="dropdown-item" name="button_hold" type="object">Place on hold</a>
+
+                                </div>
+
+                            </div>
+
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <t t-set="red_or_black" t-value="record.num_prescription_items == 0 ? '' : 'oe_kanban_text_red'" />
+                                    <strong t-att-class="red_or_black">
+                                        <field name="name" />
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div t-att-class="record.priority.raw_value &lt; '2' ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
+                                        <!-- <field name="request_date"/> -->
+                                        <strong>
+                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date" />
+                                            <field name="request_date" />
+                                        </strong>
+                                    </div>
+                                    <!-- <div>
+                                        <t t-out="'Requested on ' + record.request_date.value" />
+                                        <t t-set="calendar_sign">
+                                            <i class="fa fa-calendar" title="Calendar" />
+                                        </t>
+                                        <t t-out="calendar_sign" />
+                                    </div> -->
+
+                                    <div t-if="record.num_prescription_items.raw_value == 0">No items!</div>
+                                    <div t-elif="record.num_prescription_items.raw_value == 1">One item</div>
+                                    <div t-else="">
+                                        <field name="num_prescription_items"/>
+items
+                                    </div>
+                                    <div>
+                                        <!-- <field name="practice_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Practice:</span>
+                                        <label for="practice_name" class="oe_edit_only" />
+                                        <field name="practice_name" class="oe_inline" />
+                                    </div>
+                                    <div>
+                                        <!-- <field name="practitioner_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Practitioner:</span>
+                                        <label for="practitioner_name" class="oe_edit_only" />
+                                        <field name="practitioner_name" class="oe_inline" />
+                                    </div>
+                                    <div>
+                                        <!-- <field name="patient_id" widget="many2one_avatar"/> -->
+                                        <span class="oe_read_only">Patient:</span>
+                                        <label for="patient_name" class="oe_edit_only" />
+                                        <field name="patient_name" class="oe_inline" />
+                                    </div>
+                                    <!-- <t t-call="foot_images">
+                                        <t t-set="limit" t-value="3" />
+                                    </t> -->
+
+                                </div>
+
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <!-- Left side footer... -->
+                                        <field name="priority" widget="priority"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="float-right" style="font-size:16px;">
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'done': 'success', 'canceled': 'danger'}}" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="oe_clear"/>
+                            </div>                            <!-- oe_kanban_content -->
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+
+    <record id="res_partner_kanban_inherit" model="ir.ui.view">
+        <field name="name">Contact Kanban modification</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="before">
+                <span>Name: </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

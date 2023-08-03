@@ -14,11 +14,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter" position="after">
                 <field name="id" invisible="1" />
-                <filter name="group_by_medication"
-                        string="Medications"
-                        domain="[('id', 'in', id)]"
-                        invisible="1"
-                        />
+                <filter name="group_by_medication" string="Medications" domain="[('id', 'in', id)]" invisible="1" />
             </xpath>
         </field>
     </record>

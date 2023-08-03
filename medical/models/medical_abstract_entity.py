@@ -30,6 +30,7 @@ class MedicalAbstractEntity(models.AbstractModel):
     _description = 'Medical Abstract Entity'
     _inherits = {'res.partner': 'partner_id'}
     _inherit = ['mail.thread', 'image.mixin']
+    # _rec_name = 'name'
     
     def _default_category(self):
             return self.env['res.partner.category'].browse(self._context.get('category_id'))

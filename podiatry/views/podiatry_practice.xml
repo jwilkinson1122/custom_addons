@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_pod_clinics_by_parent" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="context">{'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!--Form-->
+    <record id="view_podiatry_practice_form" model="ir.ui.view">
+        <field name="name">podiatry.practice.form</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <form string="Practice">
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <!-- Button Box -->
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
+                            <field name="child_count" string="Practices" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
+                            <div class="o_stat_info">
+                                <field name="practitioner_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Contacts</span>
+                            </div>
+                        </button>
+                        <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_stat_info">
+                                <field name="patient_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Patients</span>
+                            </div>
+                        </button>
+                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
+                            <div class="o_stat_info">
+                                <field name="prescription_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Prescriptions</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
+                    <div class="oe_title mb24">
+                        <field name="practice_rel_type" widget="radio" options="{'horizontal': true}" style="margin-bottom:10px;"/>
+
+                        <h2 class="d-flex">
+                            <field name="reference"/>
+                        </h2>
+
+                        <h1 style="margin-bottom:10px; width:100%">
+                            <!-- <field name="reference"/> -->
+                            <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Fab Foot Clinic"/>
+                        </h1>
+                        <div class="o_row" style="margin-top:20px; margin-bottom:20px">
+                            <field name="practice_type_id" placeholder="Practice Type" required="True"/>
+                            <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                            <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                        </div>
+                    </div>
+                    <separator/>
+                    <notebook>
+                        <page name="page_general_info" string="Details">
+                            <!-- <div class="oe_button_box" name="buttons" /> -->
+                            <group name="group_contact_info">
+                                <group name="group_contact_left">
+                                    <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one" />
+                                    <label for="street" string="Address" />
+                                    <div class="o_address_format">
+                                        <div class="oe_edit_only">
+                                            <button name="open_parent" type="object" string="(edit)" class="oe_link" attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" />
+                                        </div>
+                                        <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
+                                        <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}" domain="[('country_id', '=', country_id)]" />
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
+                                    </div>
+                                    <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                                    <!-- <field name="category_id" widget="many2many_tags" placeholder="Tags..." options="{'no_create_edit': True}" /> -->
+                                </group>
+                                <group name="group_contact_right">
+                                    <field name="phone" widget="phone" />
+                                    <field name="mobile" widget="phone" />
+                                    <field name="user_ids" invisible="1" />
+                                    <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}" />
+                                    <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="active_lang_count" invisible="1"/>
+                                    <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                                    <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
+                                        <field name="lang"/>
+                                        <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
+                                    </div>
+                                    <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                                </group>
+                            </group>
+                            <group name="main_data">
+                                <group name="left" />
+                                <group name="right" />
+                            </group>
+                        </page>
+                        <!-- <page name="practice_affiliate_list" string="Affiliates">
+                            <field name="child_ids" mode="kanban">
+
+                            </field>
+                        </page> -->
+                        <page name="practice_affiliate_list" string="Affiliates">
+                            <!-- <field name="location_ids" context="{'default_parent_id': active_id, 'default_is_account': True, 'default_type':'other'}" mode="kanban"> -->
+                            <field name="child_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'other'}" domain="[('id', '!=', active_id)]" mode="kanban">
+                                <kanban on_create="base.view_partner_form">
+                                    <field name="id" />
+                                    <field name="color" />
+                                    <field name="name" />
+                                    <field name="title" />
+                                    <field name="type" />
+                                    <field name="email" />
+                                    <field name="parent_id" />
+                                    <field name="is_company" />
+                                    <field name="function" />
+                                    <field name="phone" />
+                                    <field name="street" />
+                                    <field name="street2" />
+                                    <field name="zip" />
+                                    <field name="city" />
+                                    <field name="country_id" />
+                                    <field name="mobile" />
+                                    <field name="state_id" />
+                                    <field name="image_128" />
+                                    <field name="lang" />
+                                    <!-- fields in form x2many view to diminish requests -->
+                                    <field name="comment" />
+                                    <field name="display_name" />
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)" />
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                                <div class="o_kanban_image">
+                                                    <img alt="Contact image" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)" />
+                                                    <t t-if="!record.image_128.raw_value">
+                                                        <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
+                                                        <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
+                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                            <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
+                                                            <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar_grey.png"'/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name" />
+                                                    <div t-if="record.function.raw_value">
+                                                        <field name="function" />
+                                                    </div>
+                                                    <div t-if="record.email.raw_value">
+                                                        <field name="email" widget="email" />
+                                                    </div>
+                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                        <div>
+                                                            <field name="zip" />
+                                                            <field name="city" />
+                                                        </div>
+                                                        <field t-if="record.state_id.raw_value" name="state_id" />
+                                                        <field name="country_id" />
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value" />
+                                                    </div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                        <page name="practitioners_list" string="Contacts">
+                            <field name="practitioner_id" mode="kanban">
+
+                            </field>
+                        </page>
+                        <page name="practice_patients_list" string="Patients">
+                            <field name="patient_ids" mode="kanban">
+
+                            </field>
+                        </page>
+                        <page name="practice_prescriptions_list" string="Prescriptions">
+                            <field name="practice_prescription_id" mode="kanban">
+
+                            </field>
+                        </page>
+                        <page name="public" string="Additional Notes">
+                            <field name="notes" placeholder="Notes" class="o_address_city"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--
+    Tree
+    -->
+    <record id="view_podiatry_practice_tree" model="ir.ui.view">
+        <field name="name">podiatry.practice.tree</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <tree string="Practices" decoration-muted="not active">
+                <field name="active" invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="full_name" string="Practice Name"/>
+                <field name="practice_type_id"/>
+                <field name="code" decoration-bf="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--
+    Kanban
+    -->
+    <record id="view_podiatry_practice_kanban" model="ir.ui.view">
+        <field name="name">podiatry.practice.kanban</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <kanban string="Medical Clinics" class="o_res_partner_kanban">
+                <field name="id"/>
+                <field name="color"/>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="practice_type_id"/>
+                <field name="title"/>
+                <field name="email"/>
+                <field name="parent_id"/>
+                <field name="is_company"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="avatar_128"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
+                            <t t-if="!record.is_company.raw_value">
+                                <t t-set="background_image" t-value="kanban_image('podiatry.practice', 'avatar_128', record.id.raw_value)"/>
+                                <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('podiatry.practice', 'avatar_128', record.parent_id.raw_value)"/>
+                                </div>
+                                <div class="o_kanban_image d-md-none" t-attf-style="background-image: url(#{background_image})">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('podiatry.practice', 'avatar_128', record.parent_id.raw_value)"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('podiatry.practice', 'avatar_128', record.id.raw_value)})" role="img"/>
+                            </t>
+                            <div class="oe_kanban_details d-flex flex-column">
+                                <strong class="o_kanban_record_title oe_partner_heading">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <ul>
+                                    <!-- <li t-if="record.parent_id.raw_value and !record.function.raw_value">
+                                        <field name="reference"/>
+                                    </li> -->
+                                    <li>ID : 
+                                        <field name="reference"/>
+                                    </li>
+                                    <li t-if="record.parent_id.raw_value and !record.function.raw_value">Parent :
+                                        <field name="parent_id"/>
+                                    </li>
+                                    <li t-if="!record.parent_id.raw_value and record.function.raw_value">
+                                        <field name="function"/>
+                                    </li>
+                                    <li t-if="record.parent_id.raw_value and record.function.raw_value">
+                                        <field name="function"/>
+ at <field name="parent_id"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                        <t t-if="record.city.raw_value">
+                                            <field name="city"/>
+                                            <t t-if="record.country_id.raw_value">, </t>
+                                        </t>
+                                        <t t-if="record.country_id.raw_value">
+                                            <field name="country_id"/>
+                                        </t>
+                                    </li>
+                                    <li t-if="record.email.raw_value" class="o_text_overflow">
+                                        <field name="email"/>
+                                    </li>
+                                </ul>
+                                <div class="o_row">
+                                    <span class="oe_kanban_partner_links"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--
+    Search
+    -->
+    <record id="view_podiatry_practice_search" model="ir.ui.view">
+        <field name="name">podiatry.practice.search</field>
+        <field name="model">podiatry.practice</field>
+        <field name="arch" type="xml">
+            <search string="Practices">
+                <field name="parent_id" invisible="1"/>
+
+                <!-- Fields -->
+                <!-- <field name="name" filter_domain="['|', ('fullname', 'ilike', self), ('code', 'ilike', self)]"/> -->
+                <field name="name"/>
+                <field name="display_name"/>
+                <field name="reference"/>
+                <field name="parent_id" operator="child_of"/>
+                <separator/>
+
+                <!-- Filters -->
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+
+                <!-- Searchpanel -->
+                <searchpanel>
+                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                    <field name="parent_id" string="Practice" icon="fa fa-cubes" enable_counters="1" hierarchize="1" expand="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!--
+    Action: Practices
+    -->
+    <record id="action_pod_clinics" model="ir.actions.act_window">
+        <field name="name">Clinics</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_practice', '=', True)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="view_podiatry_practice_search"/>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

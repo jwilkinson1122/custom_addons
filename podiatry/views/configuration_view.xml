@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Arch Height -->
+        <record id="arch_height_type_action" model="ir.actions.act_window">
+            <field name="name">Arch Height Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">arch.height.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- X-Guard -->
+        <record id="x_guard_length_action" model="ir.actions.act_window">
+            <field name="name">X-Guard Length</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">x_guard.length</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- Shell / Foundation Tree View -->
+        <record model="ir.ui.view" id="shell_type_tree_view">
+            <field name="name">shell.type.tree.view</field>
+            <field name="model">shell.type</field>
+            <field name="arch" type="xml">
+                <tree string="Item">
+                    <field name="internal_reference" />
+                    <field name="name" />
+                    <field name="item_type" />
+                    <field name="item_category" />
+                    <!-- <field name="amount" /> -->
+                    <field name="price" />
+                </tree>
+            </field>
+        </record>
+        <!-- Shell / Foundation Form View -->
+        <record id="shell_type_form_view" model="ir.ui.view">
+            <field name="name">shell.type.form.view</field>
+            <field name="model">shell.type</field>
+            <field name="arch" type="xml">
+                <form string="Shell / Foundation">
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" />
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Item Name" />
+                            <h1>
+                                <field name="name" placeholder="Item Name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="internal_reference" />
+                                <field name="item_type" />
+                                <field name="item_category" />
+                            </group>
+                            <group>
+                                <!-- <field name="amount" /> -->
+                                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}" string="Price" readonly="False" />
+                                <field name="product_uom_id"/>
+                                <field name="description" placeholder="Item Description" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- Shell / Foundation Kanban View -->
+        <record id="shell_type_kanban_view" model="ir.ui.view">
+            <field name="name">shell.type.kanban.view</field>
+            <field name="model">shell.type</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="image"/>
+                    <field name="name"/>
+                    <field name="internal_reference" />
+                    <field name="price" />
+                    <!-- <field name="amount" /> -->
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_custom_orthotics_practitioner_kanban">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('item.template', 'image', record.id.raw_value)" alt="Item" />
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name" />
+                                        <small>
+                                            [
+                                            <field name="internal_reference" />
+                                            ]
+                                        </small>
+                                    </strong>
+                                    <div name="tags" />
+                                    <ul>
+                                        <li>
+                                            Price:
+                                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                                        </li>
+                                    </ul>
+                                    <!-- <div name="tags" />
+                                    <field name="amount" /> -->
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Shell / Foundation Search View -->
+        <record id="shell_type_search_view" model="ir.ui.view">
+            <field name="name">shell.type.search.view</field>
+            <field name="model">shell.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Item">
+                    <field name="name" filter_domain="['|',('name', 'ilike', self),('internal_reference', 'ilike', self)]" />
+                    <separator />
+                    <filter string="Services" name="services" domain="[('item_type','=','service')]" />
+                    <filter string="Accommodations" name="accommodations" domain="[('item_type','=','accommodation')]" />
+                    <filter string="Products" name="product" domain="[('item_type', '=', 'product')]" />
+                    <!-- <filter string="Available Items" name="amount" domain="[('amount','&gt;',0)]" /> -->
+                    <separator />
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="item_type" context="{'group_by':'item_type'}" />
+                        <filter string="Category" name="item_category" context="{'group_by':'item_category'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Shell Length Action-->
+        <record id="shell_length_action" model="ir.actions.act_window">
+            <field name="name">Shell Length</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shell.length</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <record id="shell_type_action" model="ir.actions.act_window">
+            <field name="name">Shell Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shell.type</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <!-- Shell / Foundation Collection View -->
+        <record id="shell_collection_view_form" model="ir.ui.view">
+            <field name="name">shell.collection.view.form</field>
+            <field name="model">shell.collection</field>
+            <field name="arch" type="xml">
+                <form string="Shell Collections">
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" />
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Collection Name" />
+                            <h1>
+                                <field name="name" placeholder="Collection Name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="type" widget="many2many_tags"/>
+                                <field name="description" placeholder="Collection Description" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Shell Collection Kanban View -->
+        <!-- <record id="shell_collection_kanban_view" model="ir.ui.view">
+            <field name="name">shell.collection.kanban.view</field>
+            <field name="model">shell.collection</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="image"/>
+                    <field name="name"/>
+                    <field name="type" widget="many2many_tags"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_custom_orthotics_practitioner_kanban">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('item.template', 'image', record.id.raw_value)" alt="Item" />
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name" />
+                                    </strong>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <field name="type" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record> -->
+
+
+
+        <record id="shell_collection_action" model="ir.actions.act_window">
+            <field name="name">Shell Collection</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shell.collection</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <!-- Cushion -->
+        <record id="cushion_type_view_form" model="ir.ui.view">
+            <field name="name">cushion.type.view.form</field>
+            <field name="model">cushion.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="cushion_type_action" model="ir.actions.act_window">
+            <field name="name">Cushion Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cushion.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="cushion_material_action" model="ir.actions.act_window">
+            <field name="name">Cushion Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cushion.material</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="cushion_length_action" model="ir.actions.act_window">
+            <field name="name">Cushion Length</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cushion.length</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="cushion_thickness_action" model="ir.actions.act_window">
+            <field name="name">Cushion Thickness</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cushion.thickness</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- Extension -->
+        <record id="extension_type_view_form" model="ir.ui.view">
+            <field name="name">extension.type.view.form</field>
+            <field name="model">extension.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="extension_type_action" model="ir.actions.act_window">
+            <field name="name">Extension Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">extension.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="extension_material_action" model="ir.actions.act_window">
+            <field name="name">Extension Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">extension.material</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="extension_length_action" model="ir.actions.act_window">
+            <field name="name">Extension Length</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">extension.length</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="extension_thickness_action" model="ir.actions.act_window">
+            <field name="name">Extension Thickness</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">extension.thickness</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- Top Cover -->
+        <record id="top_cover_type_view_form" model="ir.ui.view">
+            <field name="name">top.cover.type.view.form</field>
+            <field name="model">topcover.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="top_cover_type_action" model="ir.actions.act_window">
+            <field name="name">Top Cover Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">topcover.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="top_cover_material_action" model="ir.actions.act_window">
+            <field name="name">Top Cover Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">topcover.material</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="top_cover_length_action" model="ir.actions.act_window">
+            <field name="name">Top Cover Length</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">topcover.length</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="top_cover_thickness_action" model="ir.actions.act_window">
+            <field name="name">Top Cover Thickness</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">topcover.thickness</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="top_cover_color_action" model="ir.actions.act_window">
+            <field name="name">Top Cover Color</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">topcover.color</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+        <record id="pod_shell_foundation_action" model="ir.actions.act_window">
+            <field name="name">Shell / Foundation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Shell / Foundation')]</field>
+            <field name="context">{'def_categ_id':'Shell / Foundation' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_arch_height_action" model="ir.actions.act_window">
+            <field name="name">Arch Height</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Arch Height')]</field>
+            <field name="context">{'def_categ_id':'Arch Height' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_x_guard_action" model="ir.actions.act_window">
+            <field name="name">X-Guard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','X-Guard')]</field>
+            <field name="context">{'def_categ_id':'X-Guard' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_top_cover_action" model="ir.actions.act_window">
+            <field name="name">Top Covers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Top Covers')]</field>
+            <field name="context">{'def_categ_id':'Top Covers' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_cushion_action" model="ir.actions.act_window">
+            <field name="name">Cushion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Cushion')]</field>
+            <field name="context">{'def_categ_id':'Cushion' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_extension_action" model="ir.actions.act_window">
+            <field name="name">Extension</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Extension')]</field>
+            <field name="context">{'def_categ_id':'Extension' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_accommodation_action" model="ir.actions.act_window">
+            <field name="name">Accommodation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Accommodation')]</field>
+            <field name="context">{'def_categ_id':'Accommodation' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_service_action" model="ir.actions.act_window">
+            <field name="name">Service</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Service')]</field>
+            <field name="context">{'def_categ_id':'Service' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="pod_miscellaneous_action" model="ir.actions.act_window">
+            <field name="name">Miscellaneous</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('categ_id','=','Miscellaneous')]</field>
+            <field name="context">{'def_categ_id':'Miscellaneous' }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
