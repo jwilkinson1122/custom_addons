@@ -83,23 +83,38 @@ class Practice(models.Model):
                 practice.full_name = practice.name
         return
 
+    # patient_ids = fields.One2many(
+    #     comodel_name='podiatry.patient',
+    #     inverse_name='practice_id',
+    #     string="Patients",
+    # )
+    
+    # patient_count = fields.Integer(
+    #     string='Patient Count', compute='_compute_patient_count')
+
+    # def _compute_patient_count(self):
+    #     for rec in self:
+    #         patient_count = self.env['podiatry.patient'].search_count(
+    #             [('practice_id', '=', rec.id)])
+    #         rec.patient_count = patient_count
     patient_ids = fields.One2many(
+        string='Patients',
         comodel_name='podiatry.patient',
         inverse_name='practice_id',
-        string="Patients",
+        compute='_compute_patient_count',
     )
     
-    patient_count = fields.Integer(
-        string='Patient Count', compute='_compute_patient_count')
-
+    patient_count = fields.Integer(string='Patient Count', compute='_compute_patient_count')
+    
     def _compute_patient_count(self):
-        for rec in self:
-            patient_count = self.env['podiatry.patient'].search_count(
-                [('practice_id', '=', rec.id)])
-            rec.patient_count = patient_count
+        for record in self:
+            patients = self.env['podiatry.patient'].search([
+                ('practice_id', 'child_of', record.id),
+            ])
+            record.patient_count = len(patients)
+            record.patient_ids = [(6, 0, patients.ids)]
 
-    practice_id = fields.Many2many('res.partner', domain=[(
-        'is_practice', '=', True)], string="Practice", required=True)
+    practice_id = fields.Many2many('res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
 
     # practice_type = fields.Selection([('clinic', 'Clinic'),
     #                                   ('hospital', 'Hospital'),
@@ -286,16 +301,16 @@ class Practice(models.Model):
             'target': 'current',
         }
             
-    def action_open_patients(self):
-            return {
-            'type': 'ir.actions.act_window',
-            'name': 'Patients',
-            'res_model': 'podiatry.patient',
-            'domain': [('practice_id', '=', self.id)],
-            'context': {'default_practice_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }
+    # def action_open_patients(self):
+    #         return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Patients',
+    #         'res_model': 'podiatry.patient',
+    #         'domain': [('practice_id', '=', self.id)],
+    #         'context': {'default_practice_id': self.id},
+    #         'view_mode': 'kanban,tree,form',
+    #         'target': 'current',
+    #     }
             
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner

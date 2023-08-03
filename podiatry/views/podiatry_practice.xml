@@ -17,6 +17,13 @@
         </field>
     </record>
 
+    <record id="action_pod_patients_by_parent" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('practice_id', 'child_of', target_partner_id)]</field>
+    </record>
+
     <!--Form-->
     <record id="view_podiatry_practice_form" model="ir.ui.view">
         <field name="name">podiatry.practice.form</field>
@@ -36,12 +43,16 @@
                                 <span class="o_stat_text">Contacts</span>
                             </div>
                         </button>
-                        <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
+                        <button type="action" name="%(action_pod_patients_by_parent)d" class="oe_stat_button" icon="fa-users" context="{'target_partner_id': active_id}" attrs="{'invisible': [('patient_count', '=', 0)]}">
+                            <field name="patient_count" widget="statinfo" string="Patients" />
+                            <field name='patient_ids' invisible="1" />
+                        </button>
+                        <!-- <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
                             <div class="o_stat_info">
                                 <field name="patient_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Patients</span>
                             </div>
-                        </button>
+                        </button> -->
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
