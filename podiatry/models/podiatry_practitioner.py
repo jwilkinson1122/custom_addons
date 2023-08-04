@@ -28,6 +28,8 @@ class Practitioner(models.Model):
         'Internal ID must be unique',
     )]
     
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+                                 help='Partner-related data of the Practitioner')
 
     patient_ids = fields.One2many(
         comodel_name='podiatry.patient',
@@ -47,10 +49,11 @@ class Practitioner(models.Model):
     is_practitioner = fields.Boolean()
     
     # Personal Information
-    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
+    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner", required=True)
     reference_no = fields.Char(string='Reference No.')
-    
-    role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
+    practitioner_relation_label = fields.Char('Practitioner relation label', translate=True, default='Attached To:', readonly=True)
+
+    role_ids = fields.Many2many(string='Role Type',comodel_name='podiatry.role')
     
     specialty_ids = fields.Many2many(string='Specialties', comodel_name='podiatry.specialty')
     
@@ -61,16 +64,22 @@ class Practitioner(models.Model):
         readonly=False,
     )
     
+    parent_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Practice', index=True)
 
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
-
+    
     other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
-
+    
+    # @api.onchange("parent_id")
+    # def _onchange_parent_id(self):
+    #     if self.parent_id:
+    #         self.practice_id = self.parent_id
+            
     practitioner_prescription_id = fields.One2many(
         comodel_name='podiatry.prescription',
         inverse_name='practitioner_id',
         string='Prescriptions')
-
+    
     @api.model
     def _default_image(self):
         '''Method to get default Image'''
@@ -82,26 +91,49 @@ class Practitioner(models.Model):
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
-    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
-                            default=lambda self: _('New'))
+    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
     street = fields.Char(string="Street")
     street2 = fields.Char(string="Street 2")
-
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
-
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
-
+    country_id = fields.Many2one(comodel_name='res.country', string="Country", default=lambda self: self.env.company.country_id)
+    state_id = fields.Many2one(comodel_name='res.country.state', string="State", default=lambda self: self.env.company.state_id)
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")
+    
+#     partner_id = fields.Many2one('res.partner', string="Partner")
+# country_id = fields.Many2one('res.country', related='partner_id.country_id', string="Country")
+# street,street2,state.. so on
+    practice_type = fields.Selection(related='parent_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
+    practice_email = fields.Char(related='parent_id.email', string="Email")
+    practice_phone = fields.Char(related='parent_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='parent_id.street', string="Street")
+    practice_street2 = fields.Char(related='parent_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='parent_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
+    practice_city= fields.Char(related='parent_id.city', string="City")
+    practice_zip = fields.Char(related='parent_id.zip', string="Zip")
+    # email = fields.Char(string="E-mail")
+    # phone = fields.Char(string="Telephone")
+    # mobile = fields.Char(string="Mobile")
+    # street = fields.Char(string="Street")
+    # street2 = fields.Char(string="Street 2")
+
+    # country_id = fields.Many2one(
+    #     comodel_name='res.country', string="Country",
+    #     default=lambda self: self.env.company.country_id,
+    # )
+
+    # state_id = fields.Many2one(
+    #     comodel_name='res.country.state', string="State",
+    #     default=lambda self: self.env.company.state_id,
+    # )
+
+    # city = fields.Char(string="City")
+    # zip = fields.Char(string="ZIP Code")
 
     notes = fields.Text(string="Notes")
 
@@ -155,10 +187,7 @@ class Practitioner(models.Model):
 
     practitioner_address_id = fields.Many2one(
         'res.partner', string="Practitioner Address", )
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
-                                 help='Partner-related data of the Practitioner')
-
+    
     def unlink(self):
         self.partner_id.unlink()
         return super(Practitioner, self).unlink()
@@ -224,6 +253,7 @@ class Practitioner(models.Model):
                 self.with_context(active_test=False).sudo().search(
                     domain, limit=1)
 
+
     @api.model
     def _default_image(self):
         image_path = get_module_resource(
@@ -249,6 +279,25 @@ class Practitioner(models.Model):
         practitioner = super(Practitioner, self).create(vals)
         practitioner._add_followers()
         return practitioner
+    
+    def create_practitioners(self):
+        print('.....res')
+        self.is_practitioner=True
+        if len(self.partner_id.id):
+            raise UserError(_('User for this practitioner already created.'))
+        else: False
+        practitioner_id = []
+        practitioner_id.append(self.env['res.groups'].search([('name', '=','Practitioner')]).id)
+        practitioner_id.append(self.env['res.groups'].search([('name', '=','Internal User')]).id)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Name ',
+            'view_mode': 'form',
+            'view_id': self.env.ref("podiatry_practitioner.view_podiatry_practitioner_form").id,
+            'target': 'new',
+            'res_model': 'res.partner',
+            'context': {'default_partner_id':self.partner_id.id,'default_is_practitioner':True,'default_groups_id':[(6,0,practitioner_id)]}
+        }
 
     def name_get(self):
         result = []

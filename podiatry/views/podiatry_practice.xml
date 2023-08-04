@@ -60,12 +60,6 @@
                         <button type="action" name="%(action_pod_clinics_by_parent)d" class="oe_stat_button" icon="fa-sitemap" context="{'default_parent_id': active_id}">
                             <field name="child_count" string="Practices" widget="statinfo"/>
                         </button>
-                        <!-- <button name="action_open_practitioners" type="object" class="oe_stat_button" icon="fa-address-book">
-                            <div class="o_stat_info">
-                                <field name="practitioner_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Contacts</span>
-                            </div>
-                        </button> -->
                         <button type="action" name="%(action_pod_practitioners_by_parent)d" class="oe_stat_button" icon="fa-address-book" context="{'target_partner_id': active_id}" attrs="{'invisible': [('practitioner_count', '=', 0)]}">
                             <field name="practitioner_count" widget="statinfo" string="Practitioners" />
                             <field name='practitioner_ids' invisible="1" />
@@ -74,12 +68,6 @@
                             <field name="patient_count" widget="statinfo" string="Patients" />
                             <field name='patient_ids' invisible="1" />
                         </button>
-                        <!-- <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
-                            <div class="o_stat_info">
-                                <field name="patient_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Patients</span>
-                            </div>
-                        </button> -->
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
                             <div class="o_stat_info">
                                 <field name="prescription_count" class="o_stat_value"/>
@@ -90,15 +78,12 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
-                    <div class="oe_title mb24">
+                    <!-- <div class="oe_title mb24">
                         <field name="practice_rel_type" widget="radio" options="{'horizontal': true}" style="margin-bottom:10px;"/>
-
-                        <h2 class="d-flex">
+                        <h1 class="d-flex">
                             <field name="reference"/>
-                        </h2>
-
+                        </h1>
                         <h1 style="margin-bottom:10px; width:100%">
-                            <!-- <field name="reference"/> -->
                             <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Fab Foot Clinic"/>
                         </h1>
                         <div class="o_row" style="margin-top:20px; margin-bottom:20px">
@@ -107,10 +92,53 @@
                             <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
                         </div>
                     </div>
+                    <separator/> -->
+                    <div class="oe_title mb24">
+                        <field name="practice_rel_type" widget="radio" options="{'horizontal': true}" style="margin-bottom:10px;"/>
+                        <h1>
+                            <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Fab Foot Clinic"/>
+                        </h1>
+                        <div class="o_row" style="margin-top:20px; margin-bottom:20px">
+                            <field name="practice_type_id" placeholder="Practice Type" required="True"/>
+                            <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                            <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <span class="o_form_label o_td_label" name="address_name">
+                                <field name="type" required="True" placeholder="Address Type" attrs="{'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                            </div>
+                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="reference" class="font-weight-bold"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active_lang_count" invisible="1"/>
+                            <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
+                                <field name="lang"/>
+                                <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
+                            </div>
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                        </group>
+                    </group>
                     <separator/>
-                    <notebook>
-                        <page name="page_general_info" string="Details">
-                            <!-- <div class="oe_button_box" name="buttons" /> -->
+                    <notebook colspan="4">
+                        <!-- <page name="page_general_info" string="Details">
                             <group name="group_contact_info">
                                 <group name="group_contact_left">
                                     <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one" />
@@ -127,7 +155,6 @@
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" />
                                     </div>
                                     <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
-                                    <!-- <field name="category_id" widget="many2many_tags" placeholder="Tags..." options="{'no_create_edit': True}" /> -->
                                 </group>
                                 <group name="group_contact_right">
                                     <field name="phone" widget="phone" />
@@ -149,14 +176,8 @@
                                 <group name="left" />
                                 <group name="right" />
                             </group>
-                        </page>
-                        <!-- <page name="practice_affiliate_list" string="Affiliates">
-                            <field name="child_ids" mode="kanban">
-
-                            </field>
                         </page> -->
-                        <page name="practice_affiliate_list" string="Affiliates">
-                            <!-- <field name="location_ids" context="{'default_parent_id': active_id, 'default_is_account': True, 'default_type':'other'}" mode="kanban"> -->
+                        <page name="practice_affiliate_list" string="Affiliates" autofocus="autofocus">
                             <field name="child_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'other'}" domain="[('id', '!=', active_id)]" mode="kanban">
                                 <kanban on_create="base.view_partner_form">
                                     <field name="id" />
@@ -225,13 +246,14 @@
                         </page>
                         <page name="practitioners_list" string="Contacts">
                             <field name="practitioner_ids" mode="kanban">
-
                             </field>
+
                         </page>
                         <page name="practice_patients_list" string="Patients">
                             <field name="patient_ids" mode="kanban">
-
                             </field>
+
+
                         </page>
                         <page name="practice_prescriptions_list" string="Prescriptions">
                             <field name="practice_prescription_id" mode="kanban">
@@ -401,7 +423,7 @@
         <field name="domain">[('is_practice', '=', True)]</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_practice_search"/>
-        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True, 'default_type':''}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new practice

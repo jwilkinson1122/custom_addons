@@ -52,23 +52,23 @@ class Practice(models.Model):
     )
 
     identification = fields.Char(string="Identification", index=True)
-    reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Practice ID:', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    email = fields.Char(string="E-mail")
-    phone = fields.Char(string="Telephone")
-    mobile = fields.Char(string="Mobile")
-    street = fields.Char(string="Street")
-    street2 = fields.Char(string="Street 2")
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
-    city = fields.Char(string="City")
-    zip = fields.Char(string="ZIP Code")
+    # email = fields.Char(string="E-mail")
+    # phone = fields.Char(string="Telephone")
+    # mobile = fields.Char(string="Mobile")
+    # street = fields.Char(string="Street")
+    # street2 = fields.Char(string="Street 2")
+    # country_id = fields.Many2one(
+    #     comodel_name='res.country', string="Country",
+    #     default=lambda self: self.env.company.country_id,
+    # )
+    # state_id = fields.Many2one(
+    #     comodel_name='res.country.state', string="State",
+    #     default=lambda self: self.env.company.state_id,
+    # )
+    # city = fields.Char(string="City")
+    # zip = fields.Char(string="ZIP Code")
 
     notes = fields.Text(string="Notes")
     image_129 = fields.Image(max_width=128, max_height=128)
@@ -94,8 +94,23 @@ class Practice(models.Model):
         ('child', 'Child'),
     ], 'Company Type', required=True, default='parent')
     
+
+    # @api.onchange('practice_rel_type')
+    # def onchange_company_type(self):
+    #     for partner in self:
+    #         if self.practice_rel_type == 'parent':
+    #             partner.type = 'invoice'
+    #         if self.practice_rel_type == 'child':
+    #             partner.type = 'delivery'
+
+    
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string="Created by",
+    )
+        
     practitioner_ids = fields.One2many(
         string='Practitioners',
         comodel_name='podiatry.practitioner',
@@ -113,26 +128,6 @@ class Practice(models.Model):
             record.practitioner_count = len(practitioners)
             record.practitioner_ids = [(6, 0, practitioners.ids)]
 
-    # practitioner_id = fields.One2many(
-    #     comodel_name='podiatry.practitioner',
-    #     inverse_name='practice_id',
-    #     string="Contacts",
-    # )
-    
-    # practitioner_count = fields.Integer(
-    #     string='Practitioner Count', compute='_compute_practitioner_count')
-    
-    # def _compute_practitioner_count(self):
-    #     for rec in self:
-    #         practitioner_count = self.env['podiatry.practitioner'].search_count(
-    #             [('practice_id', '=', rec.id)])
-    #         rec.practitioner_count = practitioner_count
-
-    user_id = fields.Many2one(
-        comodel_name='res.users',
-        string="Created by",
-    )
-    
     patient_ids = fields.One2many(
         string='Patients',
         comodel_name='podiatry.patient',
@@ -263,13 +258,6 @@ class Practice(models.Model):
             result.append((rec.id, name))
         return result
     
-    # def name_get(self):
-    #     res = []
-    #     for partner in self:
-    #         name = partner._get_name()
-    #         res.append((partner.id, name))
-    #     return res
-
     def write(self, values):
         result = super(Practice, self).write(values)
         return result
@@ -289,28 +277,6 @@ class Practice(models.Model):
             'target': 'current',
         }
         
-    # def action_open_practitioners(self):
-    #         return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Practitioners',
-    #         'res_model': 'podiatry.practitioner',
-    #         'domain': [('practice_id', '=', self.id)],
-    #         'context': {'default_practice_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }
-            
-    # def action_open_patients(self):
-    #         return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Patients',
-    #         'res_model': 'podiatry.patient',
-    #         'domain': [('practice_id', '=', self.id)],
-    #         'context': {'default_practice_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }
-            
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner
         views"""
