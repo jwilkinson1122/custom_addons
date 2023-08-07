@@ -145,10 +145,16 @@ class Practice(models.Model):
             record.patient_count = len(patients)
             record.patient_ids = [(6, 0, patients.ids)]
 
-    practice_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practice_id',
-        string="Prescriptions",
+    # practice_prescription_id = fields.One2many(
+    #     comodel_name='podiatry.prescription',
+    #     inverse_name='practice_id',
+    #     string="Prescriptions",
+    # )
+    prescription_ids = fields.One2many(
+        "podiatry.prescription",
+        "practice_id",
+        string="Practice Prescriptions",
+        domain=[("active", "=", True)],
     )
     
     prescription_count = fields.Integer(

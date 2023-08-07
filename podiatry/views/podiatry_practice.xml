@@ -256,7 +256,7 @@
 
                         </page>
                         <page name="practice_prescriptions_list" string="Prescriptions">
-                            <field name="practice_prescription_id" mode="kanban">
+                            <field name="prescription_ids" mode="kanban">
 
                             </field>
                         </page>

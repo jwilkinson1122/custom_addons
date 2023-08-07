@@ -132,10 +132,10 @@
                         </page>
                         <page name="perscriptions_list" string="Prescriptions">
                             <separator name="prescriptions" string="Prescriptions"/>
-                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_id', '!=', ())]}">
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('prescription_ids', '!=', ())]}">
                                 No Prescriptions
                             </div>
-                            <field name="practitioner_prescription_id" mode="kanban"/>
+                            <field name="prescription_ids" mode="kanban"/>
                         </page>
                         <page name="notes" string="Notes">
                             <separator name="notes" string="Notes"/>

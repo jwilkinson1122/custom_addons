@@ -128,11 +128,19 @@ class Patient(models.Model):
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
 
-    patient_prescription_ids = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='patient_id',
-        string="Prescriptions",
+    # patient_prescription_ids = fields.One2many(
+    #     comodel_name='podiatry.prescription',
+    #     inverse_name='patient_id',
+    #     string="Prescriptions",
+    # )
+    
+    prescription_ids = fields.One2many(
+        "podiatry.prescription",
+        "patient_id",
+        string="Patient Prescriptions",
+        domain=[("active", "=", True)],
     )
+    
     
 
     prescription_device_lines = fields.One2many(

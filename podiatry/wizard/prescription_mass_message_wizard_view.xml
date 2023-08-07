@@ -9,7 +9,7 @@
         <group>
           <field name="message_subject" />
           <field name="message_body" />
-          <field name="prescription_ids" />
+          <!-- <field name="prescription_ids" /> -->
         </group>
         <footer>
           <button type="object" name="button_send" string="Send Messages" />

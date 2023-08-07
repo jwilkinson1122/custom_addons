@@ -64,16 +64,18 @@ class Practitioner(models.Model):
         readonly=False,
     )
     
+    prescription_ids = fields.One2many(
+        "podiatry.prescription",
+        "practitioner_id",
+        string="Practitioner Prescriptions",
+        domain=[("active", "=", True)],
+    )
+    
     # @api.onchange("parent_id")
     # def _onchange_parent_id(self):
     #     if self.parent_id:
     #         self.practice_id = self.parent_id
             
-    practitioner_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practitioner_id',
-        string='Prescriptions')
-    
     @api.model
     def _default_image(self):
         '''Method to get default Image'''
@@ -121,23 +123,23 @@ class Practitioner(models.Model):
 
     signature = fields.Binary(string="Signature")
 
-    prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count')
-
-    practitioner_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practitioner_id',
-        string="Prescriptions",
-    )
-
+    
     prescription_device_lines = fields.One2many(
         'prescription.device.line', 'prescription_id', 'Prescription Line')
+    
+    prescription_count = fields.Integer(
+        string='Prescription Count', compute='_compute_prescription_count')
 
     def _compute_prescription_count(self):
         for rec in self:
             prescription_count = self.env['podiatry.prescription'].search_count(
                 [('practitioner_id', '=', rec.id)])
             rec.prescription_count = prescription_count
+    # @api.depends("prescription_ids")
+    # def _compute_prescription_count(self):
+    #     for record in self:
+    #         record.prescription_count = len(record.prescription_ids.filtered(lambda r: r.is_practitioner))
+        
 
     prescription_date = fields.Datetime(
         'Prescription Date', default=fields.Datetime.now)

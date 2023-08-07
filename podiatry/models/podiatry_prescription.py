@@ -53,16 +53,23 @@ class Prescription(models.Model):
     podiatric_history = fields.Text()
 
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True)
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
+    # practice_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Practice', index=True)
+    practice_id = fields.Many2one('res.partner', string='Related Practice', index=True, required=True)
+    # practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
     practice_name = fields.Char(string='Practitioner', related='practice_id.name')
-    practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    practitioner_id = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string="Related Practitioner", required=True)
+    # practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
     practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
     practitioner_phone = fields.Char(string='Phone', related='practitioner_id.phone')
     practitioner_email = fields.Char(string='Email', related='practitioner_id.email')
-    patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    patient_id = fields.Many2one('res.partner', domain=[('is_patient', '=', True)], string="Related Patient", required=True)
+    # patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
     patient_name = fields.Char(string='Practitioner', related='patient_id.name')
     prescription = fields.Text(string="Prescription")
-    prescription_ids = fields.One2many('podiatry.prescription', 'practitioner_id', string="Prescriptions")
+    # prescription_relation_label = fields.Char('Prescription relation label', translate=True, default='Attached To:', readonly=True)
+
+    # prescription_ids = fields.One2many('podiatry.prescription', 'practitioner_id', string="Prescriptions")
     prescription_device_lines = fields.One2many('prescription.device.line', 'prescription_id', string="Devices")
     prescription_option_lines = fields.One2many('prescription.option.line', 'prescription_id', string="Options")
     helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket',string='Helpdesk Tickets')
@@ -70,11 +77,11 @@ class Prescription(models.Model):
 
     test_file = fields.Binary(string='Test')
 
-    foot_image1 = fields.Binary(related="patient_id.image1")
-    foot_image2 = fields.Binary(related="patient_id.image2")
+    # foot_image1 = fields.Binary(related="patient_id.image1")
+    # foot_image2 = fields.Binary(related="patient_id.image2")
 
-    left_obj_model = fields.Binary(related="patient_id.left_obj_model")
-    right_obj_model = fields.Binary(related="patient_id.right_obj_model")
+    # left_obj_model = fields.Binary(related="patient_id.left_obj_model")
+    # right_obj_model = fields.Binary(related="patient_id.right_obj_model")
 
     foot_selection = fields.Selection([('left_only', 'Left Only'), (
         'right_only', 'Right Only'), ('bilateral', 'Bilateral')], default='bilateral')
@@ -95,8 +102,9 @@ class Prescription(models.Model):
 
     gender = fields.Selection([
         ('male', 'Male'),
-        ('female', 'Female')
-    ], related='patient_id.gender')
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ])
 
     patient_phone = fields.Char(string='Phone', related='patient_id.phone')
     patient_email = fields.Char(string='Email', related='patient_id.email')
@@ -295,17 +303,6 @@ class Prescription(models.Model):
                         helpdesk_ticket_list.append(helpdesk_ticket_id.id)
                         self.helpdesk_tickets_ids = helpdesk_ticket_list
         return True
-
-
-    @api.onchange('practice_id')
-    def onchange_practice_id(self):
-        for rec in self:
-            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
-
-    @api.onchange('practitioner_id')
-    def onchange_practitioner_id(self):
-        for rec in self:
-            return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
 
     # Forefoot Values
     ff_varus_lt = fields.Many2one(

@@ -57,7 +57,7 @@
         "views/podiatry_practitioner.xml",
         'views/podiatry_role.xml',
         "views/podiatry_prescription.xml",
-        "views/prescription_kanban_view.xml",
+        # "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
         # 'views/inherit_product_template.xml',
         'views/res_partner.xml',
