@@ -17,7 +17,6 @@
 
                     <div class="oe_button_box" name="button_box">
                         <!-- <button name="action_add_communication" string="Send Registration No" type="object" class="oe_highlight"/> -->
-
                         <button name="action_open_patients" type="object" class="oe_stat_button" icon="fa-users">
                             <div class="o_stat_info">
                                 <field name="patient_count" class="o_stat_value"/>
@@ -34,7 +33,7 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
-                    <div class="oe_title mb24">
+                    <div class="oe_title mb24" style="margin:20px;">
                         <h1>
                             <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Doogie Howser"/>
                         </h1>
@@ -45,7 +44,7 @@
                         </div>
                     </div>
                     <field name="type" invisible="1" widget="radio" options="{'horizontal': true}"/>
-                    <group>
+                    <group style="margin:20px;">
                         <group>
                             <field name="reference" class="font-weight-bold"/>
                             <!-- <field name="title" options="{'no_open': True}" placeholder="e.g. Mr." attrs="{'invisible': [('type','!=', 'contact')]}"/> -->
@@ -118,9 +117,9 @@
                                     </div> -->
                                 </group>
                                 <group>
+                                    <field name="practice_email" placeholder="Practice Email" widget="email" context="{'gravatar_image': True}" attrs="{'readonly': [('practice_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="practice_phone" placeholder="Practice Telephone" widget="phone" attrs="{'readonly': [('practice_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="practice_mobile" placeholder="Practice Mobile" widget="phone" attrs="{'readonly': [('practice_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                                    <field name="practice_email" placeholder="Practice Email" widget="email" context="{'gravatar_image': True}" attrs="{'readonly': [('practice_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 </group>
                             </group>
                         </page>

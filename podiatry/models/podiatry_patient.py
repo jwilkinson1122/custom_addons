@@ -27,7 +27,8 @@ class Patient(models.Model):
     reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
 
-    
+    patient_relation_label = fields.Char('Patient relation label', translate=True, default='Attached To:', readonly=True)
+
     birthdate = fields.Date(string="Date of Birth")
 
     email = fields.Char(string="E-mail")
