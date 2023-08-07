@@ -48,7 +48,7 @@ class Practitioner(models.Model):
 
     is_practitioner = fields.Boolean()
     
-    # Personal Information
+    practice_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Practice', index=True)
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="Practitioner", required=True)
     reference_no = fields.Char(string='Reference No.')
     practitioner_relation_label = fields.Char('Practitioner relation label', translate=True, default='Attached To:', readonly=True)
@@ -63,12 +63,6 @@ class Practitioner(models.Model):
                    ('external', 'External Entity')],
         readonly=False,
     )
-    
-    parent_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Practice', index=True)
-
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
-    
-    other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
     
     # @api.onchange("parent_id")
     # def _onchange_parent_id(self):
@@ -93,6 +87,7 @@ class Practitioner(models.Model):
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     
+    # Personal Information
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
     mobile = fields.Char(string="Mobile")
@@ -103,9 +98,7 @@ class Practitioner(models.Model):
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")
     
-#     partner_id = fields.Many2one('res.partner', string="Partner")
-# country_id = fields.Many2one('res.country', related='partner_id.country_id', string="Country")
-# street,street2,state.. so on
+    # Related Practice Information
     practice_type = fields.Selection(related='parent_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
     practice_email = fields.Char(related='parent_id.email', string="Email")
     practice_phone = fields.Char(related='parent_id.phone', string="Telephone")
@@ -116,25 +109,7 @@ class Practitioner(models.Model):
     practice_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
     practice_city= fields.Char(related='parent_id.city', string="City")
     practice_zip = fields.Char(related='parent_id.zip', string="Zip")
-    # email = fields.Char(string="E-mail")
-    # phone = fields.Char(string="Telephone")
-    # mobile = fields.Char(string="Mobile")
-    # street = fields.Char(string="Street")
-    # street2 = fields.Char(string="Street 2")
-
-    # country_id = fields.Many2one(
-    #     comodel_name='res.country', string="Country",
-    #     default=lambda self: self.env.company.country_id,
-    # )
-
-    # state_id = fields.Many2one(
-    #     comodel_name='res.country.state', string="State",
-    #     default=lambda self: self.env.company.state_id,
-    # )
-
-    # city = fields.Char(string="City")
-    # zip = fields.Char(string="ZIP Code")
-
+    
     notes = fields.Text(string="Notes")
 
     salutation = fields.Selection(selection=[
@@ -302,7 +277,7 @@ class Practitioner(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = rec.name
             result.append((rec.id, name))
         return result
 

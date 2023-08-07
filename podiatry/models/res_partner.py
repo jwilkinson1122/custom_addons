@@ -131,6 +131,13 @@ class Partner(models.Model):
         if not vals.get("name") and vals.get("practitioner_id"):
             vals["name"] = modified_self.browse(vals["practitioner_id"]).name
         return super(Partner, modified_self).create(vals)
+    
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name
+            result.append((rec.id, name))
+        return result
 
     def read(self, fields=None, load="_classic_read"):
         modified_self = self._basepractitioner_check_context("read")

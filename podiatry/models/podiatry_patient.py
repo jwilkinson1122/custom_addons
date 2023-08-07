@@ -104,17 +104,25 @@ class Patient(models.Model):
         comodel_name='res.users', string="Created By",
         default=lambda self: self.env.user,
     )
-
-    practice_id = fields.Many2one(
-        comodel_name='podiatry.practice',
-        required=True,
-        string="Practice",
-    )
-
-    practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        required=True,
-        string='Practitioner')
+    
+    # parent_id = fields.Many2one('res.partner', domain=[('is_practice', '=', True)], string='Related Practice', index=True)
+    # child_ids = fields.One2many('res.partner', 'parent_id', string='Practitioner', domain=[('is_practitioner', '=', True)]) 
+    practice_id = fields.Many2one('res.partner', string='Related Practice', index=True, required=True)
+    practitioner_id = fields.Many2one('res.partner', string='Related Practitioner', index=True, required=True)
+    
+    # Related Practice Information
+    practice_type = fields.Selection(related='practice_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
+    practice_email = fields.Char(related='practice_id.email', string="Email")
+    practice_phone = fields.Char(related='practice_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='practice_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='practice_id.street', string="Street")
+    practice_street2 = fields.Char(related='practice_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='practice_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='practice_id.state_id', string="State")
+    practice_city= fields.Char(related='practice_id.city', string="City")
+    practice_zip = fields.Char(related='practice_id.zip', string="Zip")
+    practice_website = fields.Char(related='practice_id.website', string="Website")
+    practice_category_id = fields.Many2many(related='practice_id.category_id', string="Tags")
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
@@ -192,10 +200,10 @@ class Patient(models.Model):
     patient_address_id = fields.Many2one(
         'res.partner', string="Patient Address", )
 
-    @api.onchange('practice_id')
-    def onchange_practice_id(self):
-        for rec in self:
-            return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
+    # @api.onchange('practice_id')
+    # def onchange_practice_id(self):
+    #     for rec in self:
+    #         return {'domain': {'practitioner_id': [('practice_id', '=', rec.practice_id.id)]}}
 
     @api.model
     def _relativedelta_to_text(self, delta):
@@ -341,7 +349,7 @@ class Patient(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = rec.name
             result.append((rec.id, name))
         return result
 

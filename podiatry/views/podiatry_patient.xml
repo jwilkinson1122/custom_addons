@@ -66,34 +66,37 @@
                     </div>
                     <group name="responsible" string="Responsible">
                         <group name="practice_information">
-                            <field name="practice_id" required="1"/>
+                            <!-- <field name="practice_id" required="1"/> -->
+                            <field name="practice_id" widget="res_partner_many2one" placeholder="Related Practice..." domain="[('is_practice', '=', True)]" context="{'default_is_practice': True}"/>
+
                         </group>
                         <group name="practitioner_information">
-                            <field name="practitioner_id" required="1"/>
+                            <field name="practitioner_id" widget="res_partner_many2one" placeholder="Related Practitioner..." domain="[('is_practitioner', '=', True), ('parent_id', '=', practice_id)]" context="{'default_is_practice': True}"/>
+
+                            <!-- <field name="practitioner_id" required="1"/> -->
                         </group>
                     </group>
-                    <group name="patient_contact">
-                        <group name="address_information" string="Address Info">
-                            <field name="street" class="o_address_street"/>
-                            <field name="street2" class="o_address_street"/>
-                            <field name="city" class="o_address_city"/>
-                            <field name="state_id" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
-                            <field name="zip" class="o_address_zip"/>
-                            <field name="country_id" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
+                    <group name="practice_information" string="Practice Info">
+                        <group name="address_information">
+                            <field name="practice_street" class="o_address_street"/>
+                            <field name="practice_street2" class="o_address_street"/>
+                            <field name="practice_city" class="o_address_city"/>
+                            <field name="practice_state_id" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
+                            <field name="practice_zip" class="o_address_zip"/>
+                            <field name="practice_country_id" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
                         </group>
-                        <group name="contact_information" string="Contact Info">
-                            <field name="mobile" widget="phone" help="help"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <!-- <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/> -->
-                            <field name="company_id" groups="base.group_multi_company"/>
+                        <group name="contact_information">
+                            <field name="practice_mobile" widget="phone" help="help"/>
+                            <field name="practice_phone" widget="phone"/>
+                            <field name="practice_email" widget="email"/>
+                            <field name="practice_website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="active_lang_count" invisible="1"/>
-                            <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                            <!-- <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
                             <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
                                 <field name="lang"/>
                                 <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
-                            </div>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                            </div> -->
+                            <field name="practice_category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                     </group>
                     <!-- <group name="personal_contact">
@@ -116,6 +119,24 @@
                     </group> -->
                     <separator/>
                     <notebook>
+                        <page name="personal_contact" string="Patient Details">
+                            <group name="address_information" string="Address Information">
+                                <span class="o_form_label o_td_label" name="address">Address</span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state_id" placeholder="State" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
+                                </div>
+                            </group>
+                            <group name="contact_information" string="Contact Information">
+                                <field name="mobile" widget="phone" help="help"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="email" widget="email"/>
+                            </group>
+                        </page>
                         <page name="patient_attributes" string="Attributes">
                             <group name="attributes" string="Attributes">
                                 <field name="gender"/>
