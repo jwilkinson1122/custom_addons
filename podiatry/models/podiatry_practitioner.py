@@ -49,7 +49,8 @@ class Practitioner(models.Model):
     # Personal Information
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
     reference_no = fields.Char(string='Reference No.')
-    
+    practitioner_relation_label = fields.Char('Practitioner relation label', translate=True, default='Attached To:', readonly=True)
+
     role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
     
     specialty_ids = fields.Many2many(string='Specialties', comodel_name='podiatry.specialty')
@@ -61,15 +62,10 @@ class Practitioner(models.Model):
         readonly=False,
     )
     
-
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
     other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
 
-    # practitioner_prescription_id = fields.One2many(
-    #     comodel_name='podiatry.prescription',
-    #     inverse_name='practitioner_id',
-    #     string='Prescriptions')
     practitioner_prescription_id = fields.One2many(
         "podiatry.prescription",
         "practitioner_id",
@@ -95,19 +91,23 @@ class Practitioner(models.Model):
     mobile = fields.Char(string="Mobile")
     street = fields.Char(string="Street")
     street2 = fields.Char(string="Street 2")
-
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
-
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
-
+    country_id = fields.Many2one(comodel_name='res.country', string="Country", default=lambda self: self.env.company.country_id)
+    state_id = fields.Many2one(comodel_name='res.country.state', string="State", default=lambda self: self.env.company.state_id)
     city = fields.Char(string="City")
     zip = fields.Char(string="ZIP Code")
+    
+    # Related Practice Information
+    practice_type = fields.Selection(related='parent_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
+    practice_email = fields.Char(related='parent_id.email', string="Email")
+    practice_phone = fields.Char(related='parent_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='parent_id.street', string="Street")
+    practice_street2 = fields.Char(related='parent_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='parent_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
+    practice_city= fields.Char(related='parent_id.city', string="City")
+    practice_zip = fields.Char(related='parent_id.zip', string="Zip")
+    
 
     notes = fields.Text(string="Notes")
 
