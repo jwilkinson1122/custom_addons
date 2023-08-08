@@ -66,10 +66,16 @@ class Practitioner(models.Model):
 
     other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
 
+    # practitioner_prescription_id = fields.One2many(
+    #     comodel_name='podiatry.prescription',
+    #     inverse_name='practitioner_id',
+    #     string='Prescriptions')
     practitioner_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practitioner_id',
-        string='Prescriptions')
+        "podiatry.prescription",
+        "practitioner_id",
+        string="Practitioner Prescriptions",
+        domain=[("active", "=", True)],
+    )
 
     @api.model
     def _default_image(self):
@@ -116,12 +122,6 @@ class Practitioner(models.Model):
 
     prescription_count = fields.Integer(
         string='Prescription Count', compute='_compute_prescription_count')
-
-    practitioner_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practitioner_id',
-        string="Prescriptions",
-    )
 
     prescription_device_lines = fields.One2many(
         'prescription.device.line', 'prescription_id', 'Prescription Line')

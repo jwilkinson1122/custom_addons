@@ -6,7 +6,7 @@
             <kanban default_group_by="stage_id" quick_create="true">
                 <!-- Field list to ensure is loaded ... -->
                 <field name="color" />
-                <field name="prescription_ids" />
+                <!-- <field name="prescription_ids" /> -->
                 <field name="num_prescription_items" />
                 <field name="state" />
 

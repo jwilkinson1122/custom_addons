@@ -55,11 +55,14 @@
                     <group>
                         <group string="Account Info">
                             <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/> -->
-                            <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" />
-                            <field name="practitioner_id" required="1" />
+                            <field name="practice_id" widget="res_partner_many2one" placeholder="Related Practice..." domain="[('is_practice', '=', True)]" context="{'default_is_practice': True}"/>
+                            <!-- <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" /> -->
+                            <field name="practitioner_id" widget="res_partner_many2one" placeholder="Related Practitioner..." domain="[('is_practitioner', '=', True), ('parent_id', '=', practice_id)]" context="{'default_is_practitioner': True}"/>
+                            <!-- <field name="practitioner_id" required="1" /> -->
                         </group>
                         <group string="Patient Info">
-                            <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" />
+                            <field name="patient_id" widget="res_partner_many2one" placeholder="Related Patient..." domain="[('is_patient', '=', True), ('parent_id', '=', practice_id)]" context="{'default_is_patient': True}"/>
+                            <!-- <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" /> -->
                             <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>
@@ -284,7 +287,7 @@
                         </page>
 
                         <page string="Documents">
-                            <group name="photo_group_tlOo2">
+                            <!-- <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
                                     <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
                                 </group>
@@ -300,7 +303,7 @@
                                 <group name="obj_group_DPydw_right">
                                     <field name="right_obj_model" string="Right Scan" />
                                 </group>
-                            </group>
+                            </group> -->
                             <group string="Rx Attachement">
                                 <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
                             </group>

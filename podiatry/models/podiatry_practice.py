@@ -33,6 +33,9 @@ class Practice(models.Model):
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
+    
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
+                                 help='Partner-related data of the Practice')
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
     # name = fields.Char(string="Practice Name", index=True, translate=True)
@@ -54,25 +57,24 @@ class Practice(models.Model):
     identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    email = fields.Char(string="E-mail")
-    phone = fields.Char(string="Telephone")
-    mobile = fields.Char(string="Mobile")
-    street = fields.Char(string="Street")
-    street2 = fields.Char(string="Street 2")
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
-    city = fields.Char(string="City")
-    zip = fields.Char(string="ZIP Code")
-
+    # email = fields.Char(string="E-mail")
+    # phone = fields.Char(string="Telephone")
+    # mobile = fields.Char(string="Mobile")
+    # street = fields.Char(string="Street")
+    # street2 = fields.Char(string="Street 2")
+    # country_id = fields.Many2one(
+    #     comodel_name='res.country', string="Country",
+    #     default=lambda self: self.env.company.country_id,
+    # )
+    # state_id = fields.Many2one(
+    #     comodel_name='res.country.state', string="State",
+    #     default=lambda self: self.env.company.state_id,
+    # )
+    # city = fields.Char(string="City")
+    # zip = fields.Char(string="ZIP Code")
+    # image_129 = fields.Image(max_width=128, max_height=128)
     notes = fields.Text(string="Notes")
-    image_129 = fields.Image(max_width=128, max_height=128)
-
+    
     @api.depends('name', 'parent_id.full_name')
     def _compute_full_name(self):
         for practice in self:
@@ -83,9 +85,7 @@ class Practice(models.Model):
                 practice.full_name = practice.name
         return
 
- 
-  
-
+    user_id = fields.Many2one(comodel_name='res.users', string="Created by")
     practice_id = fields.Many2many('res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
     practice_type_id = fields.Many2one(string='Practice Type', comodel_name='podiatry.practice.type')
     
@@ -113,26 +113,6 @@ class Practice(models.Model):
             record.practitioner_count = len(practitioners)
             record.practitioner_ids = [(6, 0, practitioners.ids)]
 
-    # practitioner_id = fields.One2many(
-    #     comodel_name='podiatry.practitioner',
-    #     inverse_name='practice_id',
-    #     string="Contacts",
-    # )
-    
-    # practitioner_count = fields.Integer(
-    #     string='Practitioner Count', compute='_compute_practitioner_count')
-    
-    # def _compute_practitioner_count(self):
-    #     for rec in self:
-    #         practitioner_count = self.env['podiatry.practitioner'].search_count(
-    #             [('practice_id', '=', rec.id)])
-    #         rec.practitioner_count = practitioner_count
-
-    user_id = fields.Many2one(
-        comodel_name='res.users',
-        string="Created by",
-    )
-    
     patient_ids = fields.One2many(
         string='Patients',
         comodel_name='podiatry.patient',
@@ -150,10 +130,17 @@ class Practice(models.Model):
             record.patient_count = len(patients)
             record.patient_ids = [(6, 0, patients.ids)]
 
+    # practice_prescription_id = fields.One2many(
+    #     comodel_name='podiatry.prescription',
+    #     inverse_name='practice_id',
+    #     string="Prescriptions",
+    # )
+    
     practice_prescription_id = fields.One2many(
-        comodel_name='podiatry.prescription',
-        inverse_name='practice_id',
-        string="Prescriptions",
+        "podiatry.prescription",
+        "practice_id",
+        string="Practice Prescriptions",
+        domain=[("active", "=", True)],
     )
     
     prescription_count = fields.Integer(
@@ -175,9 +162,6 @@ class Practice(models.Model):
         '''
         address_id = self.practice_id
         self.practice_address_id = address_id
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
-                                 help='Partner-related data of the Practice')
 
     def unlink(self):
         self.partner_id.unlink()
@@ -263,13 +247,6 @@ class Practice(models.Model):
             result.append((rec.id, name))
         return result
     
-    # def name_get(self):
-    #     res = []
-    #     for partner in self:
-    #         name = partner._get_name()
-    #         res.append((partner.id, name))
-    #     return res
-
     def write(self, values):
         result = super(Practice, self).write(values)
         return result
