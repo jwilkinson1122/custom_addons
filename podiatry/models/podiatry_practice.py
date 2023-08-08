@@ -87,6 +87,8 @@ class Practice(models.Model):
 
     user_id = fields.Many2one(comodel_name='res.users', string="Created by")
     practice_id = fields.Many2many('res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
+    type = fields.Many2many(string='Address Type', comodel_name='podiatry.address.type', required=True)
+
     practice_type_id = fields.Many2one(string='Practice Type', comodel_name='podiatry.practice.type')
     
     practice_rel_type = fields.Selection([
@@ -162,10 +164,16 @@ class Practice(models.Model):
         '''
         address_id = self.practice_id
         self.practice_address_id = address_id
+        
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id and self.country_id != self.state_id.country_id:
+            self.state_id = False
 
-    def unlink(self):
-        self.partner_id.unlink()
-        return super(Practice, self).unlink()
+    @api.onchange('state_id')
+    def _onchange_state(self):
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
@@ -303,5 +311,8 @@ class Practice(models.Model):
             "flags": {"form": {"action_buttons": True}},
         }
 
+    def unlink(self):
+        self.partner_id.unlink()
+        return super(Practice, self).unlink()
 
  

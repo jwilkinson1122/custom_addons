@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+    <record model="podiatry.address.type" id="contact">
+        <field name="name">Contact Address</field>
+        <field name="description">Contact Address</field>
+    </record>
+    <record model="podiatry.address.type" id="invoice">
+        <field name="name">Invoice Address</field>
+        <field name="description">Invoice Address</field>
+    </record>
+    <record model="podiatry.address.type" id="delivery">
+        <field name="name">Delivery Address</field>
+        <field name="description">Delivery Address</field>
+    </record>
+    <record model="podiatry.address.type" id="other">
+        <field name="name">Other Address</field>
+        <field name="description">Other Address</field>
+    </record>
+    <record model="podiatry.address.type" id="private">
+        <field name="name">Private Address</field>
+        <field name="description">Private Address</field>
+    </record>
+</odoo>
+
+<!-- 
+type = fields.Selection(
+        [('contact', 'Contact'),
+         ('invoice', 'Invoice Address'),
+         ('delivery', 'Delivery Address'),
+         ('other', 'Other Address'),
+         ("private", "Private Address"),
+        ], string='Address Type', default='contact', help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.") -->

@@ -48,6 +48,9 @@
         <!-- Configuration Sub Menu - Stages  -->
         <menuitem id="menu_config_stages" name="Stages" action="action_podiatry_stage" parent="podiatry.menu_configuration_root" sequence="2"/>
         <!-- <menuitem id="menu_specialties" name="Specialties" parent="podiatry.menu_configuration_root" action="action_podiatry_specialties" sequence="3"/> -->
+        <menuitem id="menu_config_roles" name="Roles" action="action_podiatry_role" parent="podiatry.menu_configuration_root" sequence="3"/>
+        <menuitem id="menu_config_practice_types" name="Practice Types" action="action_podiatry_practice_type" parent="podiatry.menu_configuration_root" sequence="4"/>
+        <menuitem id="menu_config_address_types" name="Address Types" action="action_podiatry_address_type" parent="podiatry.menu_configuration_root" sequence="5"/>
 
         <!-- Configuration Sub Menu - Product Categories  -->
         <!-- <menuitem id="menu_config_product_categories" name="Product Categories" parent="podiatry.menu_configuration_root" action="product.product_category_action_form" sequence="3"/>

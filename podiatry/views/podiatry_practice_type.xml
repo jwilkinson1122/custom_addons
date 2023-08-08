@@ -30,7 +30,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="podiatry_practice_type_action">
+    <record model="ir.actions.act_window" id="action_podiatry_practice_type">
         <field name="name">Account Types</field>
         <field name="res_model">podiatry.practice.type</field>
         <field name="view_mode">tree,form</field>

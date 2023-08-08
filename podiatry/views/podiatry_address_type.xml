@@ -2,9 +2,9 @@
 
 <odoo>
 
-    <record id="podiatry_role_view_form" model="ir.ui.view">
-        <field name="name">podiatry.role.view.form</field>
-        <field name="model">podiatry.role</field>
+    <record id="podiatry_address_type_view_form" model="ir.ui.view">
+        <field name="name">podiatry.address.type.view.form</field>
+        <field name="model">podiatry.address.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Role">
@@ -17,12 +17,12 @@
         </field>
     </record>
 
-    <record id="podiatry_role_view_tree" model="ir.ui.view">
-        <field name="name">podiatry.role.view.tree</field>
-        <field name="model">podiatry.role</field>
+    <record id="podiatry_address_type_view_tree" model="ir.ui.view">
+        <field name="name">podiatry.address.type.view.tree</field>
+        <field name="model">podiatry.address.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <tree string="Roles">
+            <tree string="Account Types">
                 <field name="name"/>
                 <field name="description"/>
                 <field name="active"/>
@@ -30,9 +30,9 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_podiatry_role">
-        <field name="name">Roles</field>
-        <field name="res_model">podiatry.role</field>
+    <record model="ir.actions.act_window" id="action_podiatry_address_type">
+        <field name="name">Address Types</field>
+        <field name="res_model">podiatry.address.type</field>
         <field name="view_mode">tree,form</field>
     </record>
 

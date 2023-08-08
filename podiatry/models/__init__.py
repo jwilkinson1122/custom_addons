@@ -19,6 +19,7 @@ from . import podiatry_type
 from . import podiatry_patient
 from . import podiatry_practice
 from . import podiatry_practice_type
+from . import podiatry_address_type
 from . import podiatry_practitioner
 from . import podiatry_prescription
 from . import podiatry_prescription_stage

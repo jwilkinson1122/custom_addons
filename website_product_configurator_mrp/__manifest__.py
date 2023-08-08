@@ -1,7 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Website Configurator Manufacturing",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Website",
     "summary": "Website integration of MRP",
     "author": "Pledra, Odoo Community Association (OCA)",
