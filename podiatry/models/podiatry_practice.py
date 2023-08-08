@@ -28,7 +28,7 @@ class Practice(models.Model):
 
     parent_id = fields.Many2one(
         comodel_name='podiatry.practice',
-        string="Practice",
+        string="Parent Practice",
         index=True,
         ondelete='cascade',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
