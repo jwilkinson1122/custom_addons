@@ -15,6 +15,10 @@ class Partner(models.Model):
     is_practice = fields.Boolean('Practice')
     is_practitioner = fields.Boolean('Practitioner')
     
+    # type = fields.Selection(selection_add=[
+    #     ('main', 'Main Address'),
+    # ])
+    
     practice_ids = fields.One2many(
         comodel_name='podiatry.practice',
         inverse_name='partner_id',
