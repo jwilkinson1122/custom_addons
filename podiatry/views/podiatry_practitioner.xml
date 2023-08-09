@@ -37,39 +37,26 @@
                         <h1>
                             <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Doogie Howser"/>
                         </h1>
-                        <div class="o_row" style="margin-top:20px; margin-bottom:20px">
+                        <!-- <div class="o_row" style="margin-top:20px; margin-bottom:20px">
                             <field name="role_ids" placeholder="Role Type" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
                             <field name="practitioner_relation_label" class="text-center font-weight-bold" nolabel="1"/>
                             <field name="parent_id" placeholder="Company Name" widget="res_partner_many2one" domain="[('is_practice', '=', True)]" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                        </div> -->
+                        <div class="o_row" style="margin-top:10px; margin-bottom:10px">
+                            <field name="role_ids" placeholder="Role Type" required="True" widget="many2many_tags" class="font-weight-bold" options="{'no_create_edit': True}"/>
+                            <span class="fa fa-long-arrow-right" role="img"></span>
+                            <field name="practitioner_relation_label" class="text-center font-weight-bold" nolabel="1"/>
+                            <span class="fa fa-long-arrow-right" role="img"></span>
+                            <field name="parent_id" placeholder="Company Name" widget="res_partner_many2one" domain="[('is_practice', '=', True)]" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
-                    <!-- <field name="type" invisible="1" widget="radio" options="{'horizontal': true}"/>
                     <group style="margin:20px;">
                         <group>
-                            <field name="reference" class="font-weight-bold"/>
-                            <label for="street" string="Address" attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                            <div>
-                                <div class="o_address_format" name="div_address">
-                                    <field name="street" placeholder="Street..." class="o_address_street"/>
-                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="city" placeholder="City" class="o_address_city"/>
-                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                </div>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="title" options="{'no_open': True}" placeholder="e.g. Mr." attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                            <field name="email" widget="email"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
-                        </group>
-                    </group> -->
-                    <group style="margin:20px;">
-                        <group>
-                            <span class="o_form_label o_td_label" name="address_name">
+                            <!-- <span class="o_form_label o_td_label" name="address_name">
                                 <field name="type" widget="many2many_checkboxes" required="True" placeholder="Address Type" class="font-weight-bold"/>
+                            </span> -->
+                            <span class="o_form_label o_td_label" name="address_name">
+                                <field name="type" placeholder="Address" class="font-weight-bold"/>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -103,9 +90,7 @@
                         <page name="practice_information" string="Practice Details" autofocus="autofocus">
                             <group style="margin:20px;">
                                 <group>
-                                    <!-- <field name="parent_type" placeholder="Practice Address Type" class="font-weight-bold"/> -->
-                                    <field name="parent_type" widget="many2many_checkboxes" required="True" placeholder="Address Type" class="font-weight-bold"/>
-
+                                    <field name="parent_type" placeholder="Address Type" class="font-weight-bold" attrs="{'readonly': [('parent_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="parent_street" placeholder="Practice Street" class="o_address_street" attrs="{'readonly': [('parent_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="parent_street2" placeholder="Practice Street 2" class="o_address_street" attrs="{'readonly': [('parent_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                     <field name="parent_city" placeholder="Practice City" class="o_address_city" attrs="{'readonly': [('parent_type', '=', 'contact'),('parent_id', '!=', False)]}"/>

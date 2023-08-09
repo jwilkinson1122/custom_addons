@@ -8,7 +8,6 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     info_ids = fields.One2many('res.partner.info', 'partner_id', string="More Info")
-    type = fields.Many2many(string='Address Type', comodel_name='podiatry.address.type', required=True)
     reference = fields.Char('ID Number')
     name = fields.Char(index=True)
 

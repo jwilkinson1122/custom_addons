@@ -70,14 +70,28 @@ class Practice(models.Model):
         return
 
     user_id = fields.Many2one(comodel_name='res.users', string="Created by")
+    location_link = fields.Char()
+    # is_location = fields.Boolean('Is Location')
+
+    type = fields.Selection(selection_add=[('parent', 'Parent Address')])
     practice_id = fields.Many2many('res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
-    type = fields.Many2many(string='Address Type', comodel_name='podiatry.address.type', required=True)
     practice_type_id = fields.Many2one(string='Practice Type', comodel_name='podiatry.practice.type')
     
-    practice_rel_type = fields.Selection([
-        ('parent', 'Parent'),
-        ('child', 'Child'),
-    ], 'Company Type', required=True, default='parent')
+    # practice_rel_type = fields.Selection([
+    #     ('parent', 'Parent'),
+    #     ('child', 'Child'),
+    # ], 'Company Type', required=True, default='parent')
+    
+    practice_rel_type = fields.Selection(string='Company Type',
+        selection=[('parent', 'Parent'), ('child', 'Child')],
+        compute='_compute_practice_rel_type', inverse='_write_practice_rel_type')
+    # practice_rel_type = fields.Selection(string='Company Type',
+    #     selection=[('parent', 'Parent'), ('child', 'Child')],
+    #     compute='_compute_practice_rel_type', inverse='_write_practice_rel_type')
+    
+    # company_type = fields.Selection(string='Company Type',
+    #     selection=[('person', 'Individual'), ('company', 'Company')],
+    #     compute='_compute_company_type', inverse='_write_company_type')
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     
@@ -141,10 +155,6 @@ class Practice(models.Model):
         
     @api.onchange('practice_id')
     def _onchange_practice(self):
-        '''
-        The purpose of the method is to define a domain for the available
-        purchase orders.
-        '''
         address_id = self.practice_id
         self.practice_address_id = address_id
         
@@ -157,7 +167,7 @@ class Practice(models.Model):
     def _onchange_state(self):
         if self.state_id.country_id:
             self.country_id = self.state_id.country_id
-
+     
     other_partner_ids = fields.Many2many(
         comodel_name='res.partner',
         relation='podiatry_practice_partners_rel',

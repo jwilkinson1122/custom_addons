@@ -99,8 +99,7 @@ class Practitioner(models.Model):
     # Related Practice Information
     # practice_type = fields.Many2many(related='partner_id.many2many_field_name')
 
-    # parent_type = fields.Many2many(related='parent_id.type', string="Address Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
-    parent_type = fields.Many2many('podiatry.address.type', related='parent_id.type', string="Address Type")
+    parent_type = fields.Selection(related='parent_id.type', string="Address Type", readonly=True)
     parent_email = fields.Char(related='parent_id.email', string="Email")
     parent_phone = fields.Char(related='parent_id.phone', string="Telephone")
     parent_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
