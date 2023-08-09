@@ -97,7 +97,7 @@ class Practitioner(models.Model):
     zip = fields.Char(string="ZIP Code")
     
     # Related Practice Information
-    practice_type = fields.Selection(related='parent_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
+    practice_type = fields.Selection(related='parent_id.type', string="Type", readonly=True, default=lambda self: _('Address Type'))
     practice_email = fields.Char(related='parent_id.email', string="Email")
     practice_phone = fields.Char(related='parent_id.phone', string="Telephone")
     practice_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
