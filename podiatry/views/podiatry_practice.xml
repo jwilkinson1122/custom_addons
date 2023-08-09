@@ -83,19 +83,23 @@
                         <h1>
                             <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Fab Foot Clinic"/>
                         </h1>
-                        <div class="o_row" style="margin-top:20px; margin-bottom:20px">
+                        <!-- <div class="o_row" style="margin-top:20px; margin-bottom:20px">
                             <field name="practice_type_id" placeholder="Practice Type" required="True"/>
                             <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
                             <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                        </div> -->
+                        <div class="o_row" style="margin-top:10px; margin-bottom:10px">
+                            <field name="practice_type_id" placeholder="Practice Type" required="True" class="font-weight-bold"/>
+                            <span class="fa fa-long-arrow-right" role="img" attrs="{'invisible': [('practice_rel_type', '=', 'parent')]}"></span>
+                            <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                            <span class="fa fa-long-arrow-right" role="img" attrs="{'invisible': [('practice_rel_type', '=', 'parent')]}"></span>
+                            <field name="parent_id" placeholder="Company Name" class="font-weight-bold" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')], 'required': [('practice_rel_type', '=', 'child')] }"/>
                         </div>
                     </div>
                     <group style="margin:20px;">
                         <group>
-                            <!-- <span class="o_form_label o_td_label" name="address_name">
-                                <field name="type" required="True" placeholder="Address Type" attrs="{'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
-                            </span> -->
                             <span class="o_form_label o_td_label" name="address_name">
-                                <field name="type" attrs="{'invisible': [('practice_rel_type','=', 'parent')], 'required': [('practice_rel_type','!=', 'parent')], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                                <field name="type" placeholder="Address" attrs="{'invisible': [('practice_rel_type','=', 'parent')], 'required': [('practice_rel_type','!=', 'parent')], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
                                 <b attrs="{'invisible': [('practice_rel_type', '=', 'child')]}">Address</b>
                             </span>
                             <div class="o_address_format">
@@ -372,7 +376,7 @@
         <field name="domain">[('is_practice', '=', True)]</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_podiatry_practice_search"/>
-        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True}</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_practice': True, 'default_type': '',}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new practice
