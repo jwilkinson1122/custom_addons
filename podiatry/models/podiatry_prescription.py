@@ -34,7 +34,7 @@ class Prescription(models.Model):
     def _group_expand_stage_id(self, stages, domain, order):
         return stages.search([], order=order)
 
-    name = fields.Char(string='Order Reference', required=True,
+    name = fields.Char(string='Reference:', required=True,
                        copy=False, index=True, readonly=True, default=lambda self: _('New'))
 
     active = fields.Boolean(default=True)

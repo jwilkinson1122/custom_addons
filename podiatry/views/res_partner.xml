@@ -17,13 +17,28 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="groups_id" eval="[(4, ref('group_medical_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_type']" position="after">
+            <!-- <xpath expr="//field[@name='company_type']" position="after">
                 <group colspan="6" col="6">
                     <field name="is_patient" />
                     <field name="is_practitioner" />
                     <field name="is_practice" />
                 </group>
+            </xpath> -->
+            <!-- <xpath expr="//field[@name='type']" position="replace">
+                <field name="type" widget="many2many_checkboxes" required="True" placeholder="Address Type" class="font-weight-bold"/>
+            </xpath> -->
+
+            <xpath expr="//span[@name='address_name']" position="replace">
+                <span class="o_form_label o_td_label" name="address_name">
+                    <field name="type" widget="many2many_checkboxes" required="True" placeholder="Address Type" class="font-weight-bold"/>
+                </span>
             </xpath>
+
+
+            <!-- <span class="o_form_label o_td_label" name="address_name">
+                <field name="type" attrs="{'invisible': [('is_company','=', True)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
+            </span> -->
             <!-- <notebook>
                 <page string="Medical">
                     <group colspan="6" col="6">
@@ -35,6 +50,11 @@
             </notebook> -->
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page name="More Info" string="More Info">
+                    <group colspan="6" col="6">
+                        <field name="is_patient" />
+                        <field name="is_practitioner" />
+                        <field name="is_practice" />
+                    </group>
                     <field name="info_ids">
                         <tree editable="bottom">
                             <field name="name"/>

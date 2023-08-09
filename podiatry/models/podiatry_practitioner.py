@@ -48,7 +48,7 @@ class Practitioner(models.Model):
     
     # Personal Information
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
-    reference_no = fields.Char(string='Reference No.')
+    reference_no = fields.Char(string='Reference:')
     practitioner_relation_label = fields.Char('Practitioner relation label', translate=True, default='Attached To:', readonly=True)
 
     role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
@@ -84,7 +84,7 @@ class Practitioner(models.Model):
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
-    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Reference:', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
@@ -97,16 +97,19 @@ class Practitioner(models.Model):
     zip = fields.Char(string="ZIP Code")
     
     # Related Practice Information
-    practice_type = fields.Selection(related='parent_id.type', string="Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
-    practice_email = fields.Char(related='parent_id.email', string="Email")
-    practice_phone = fields.Char(related='parent_id.phone', string="Telephone")
-    practice_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
-    practice_street = fields.Char(related='parent_id.street', string="Street")
-    practice_street2 = fields.Char(related='parent_id.street2', string="Street")
-    practice_country_id = fields.Many2one('res.country', related='parent_id.country_id', string="Country")
-    practice_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
-    practice_city= fields.Char(related='parent_id.city', string="City")
-    practice_zip = fields.Char(related='parent_id.zip', string="Zip")
+    # practice_type = fields.Many2many(related='partner_id.many2many_field_name')
+
+    # parent_type = fields.Many2many(related='parent_id.type', string="Address Type", required=True, copy=False, readonly=True, default=lambda self: _('Address Type'))
+    parent_type = fields.Many2many('podiatry.address.type', related='parent_id.type', string="Address Type")
+    parent_email = fields.Char(related='parent_id.email', string="Email")
+    parent_phone = fields.Char(related='parent_id.phone', string="Telephone")
+    parent_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
+    parent_street = fields.Char(related='parent_id.street', string="Street")
+    parent_street2 = fields.Char(related='parent_id.street2', string="Street")
+    parent_country_id = fields.Many2one('res.country', related='parent_id.country_id', string="Country")
+    parent_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
+    parent_city= fields.Char(related='parent_id.city', string="City")
+    parent_zip = fields.Char(related='parent_id.zip', string="Zip")
     
 
     notes = fields.Text(string="Notes")

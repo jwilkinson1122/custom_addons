@@ -57,22 +57,6 @@ class Practice(models.Model):
     identification = fields.Char(string="Identification", index=True)
     reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    # email = fields.Char(string="E-mail")
-    # phone = fields.Char(string="Telephone")
-    # mobile = fields.Char(string="Mobile")
-    # street = fields.Char(string="Street")
-    # street2 = fields.Char(string="Street 2")
-    # country_id = fields.Many2one(
-    #     comodel_name='res.country', string="Country",
-    #     default=lambda self: self.env.company.country_id,
-    # )
-    # state_id = fields.Many2one(
-    #     comodel_name='res.country.state', string="State",
-    #     default=lambda self: self.env.company.state_id,
-    # )
-    # city = fields.Char(string="City")
-    # zip = fields.Char(string="ZIP Code")
-    # image_129 = fields.Image(max_width=128, max_height=128)
     notes = fields.Text(string="Notes")
     
     @api.depends('name', 'parent_id.full_name')
@@ -88,7 +72,6 @@ class Practice(models.Model):
     user_id = fields.Many2one(comodel_name='res.users', string="Created by")
     practice_id = fields.Many2many('res.partner', domain=[('is_practice', '=', True)], string="Practice", required=True)
     type = fields.Many2many(string='Address Type', comodel_name='podiatry.address.type', required=True)
-
     practice_type_id = fields.Many2one(string='Practice Type', comodel_name='podiatry.practice.type')
     
     practice_rel_type = fields.Selection([
