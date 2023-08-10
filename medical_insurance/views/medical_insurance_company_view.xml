@@ -13,9 +13,7 @@
             <xpath expr="//h1" position="after">
                 <field name="is_company" invisible="True" />
                 <h3>
-                    <field name="parent_id" placeholder="Parent Company"
-                           domain="[('is_company', '=', True)]"
-                           context="{'default_is_company': True,
+                    <field name="parent_id" placeholder="Parent Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True,
                                      'default_type': 'medical.insurance.company'}" />
                 </h3>
             </xpath>
@@ -33,10 +31,10 @@
             </xpath>
             <xpath expr="//field[@name='email']" position="after">
                 <field name="parent_id" />
-                 <field name="street" />
-                 <field name="city" />
-                 <field name="state_id" />
-                 <field name="zip" />
+                <field name="street" />
+                <field name="city" />
+                <field name="state_id" />
+                <field name="zip" />
             </xpath>
         </field>
     </record>
@@ -69,25 +67,16 @@
             </xpath>
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="name" />
-                 <field name="parent_id" />
-                 <field name="street" />
-                 <field name="city" />
-                 <field name="state_id" />
-                 <field name="zip" />
+                <field name="parent_id" />
+                <field name="street" />
+                <field name="city" />
+                <field name="state_id" />
+                <field name="zip" />
             </xpath>
             <xpath expr="//filter" position="after">
-                <filter name="group_by_parent_id"
-                        string="Company"
-                        domain="[]"
-                        context="{'group_by':'parent_id'}" />
-                <filter name="group_by_state_id"
-                        string="State"
-                        domain="[]"
-                        context="{'group_by': 'state_id'}" />
-                <filter name="group_by_zip"
-                        string="Zip"
-                        domain="[]"
-                        context="{'group_by': 'zip'}" />
+                <filter name="group_by_parent_id" string="Company" domain="[]" context="{'group_by':'parent_id'}" />
+                <filter name="group_by_state_id" string="State" domain="[]" context="{'group_by': 'state_id'}" />
+                <filter name="group_by_zip" string="Zip" domain="[]" context="{'group_by': 'zip'}" />
             </xpath>
         </field>
     </record>
@@ -97,13 +86,11 @@
         <field name="res_model">medical.insurance.company</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="medical_insurance_company_view_search" />
-        <field name="view_ids"
-               eval="[(5, 0, 0),
+        <field name="view_ids" eval="[(5, 0, 0),
                       (0, 0, {'view_mode': 'kanban', 'view_id': ref('medical_insurance_company_view_kanban')}),
                       (0, 0, {'view_mode': 'tree', 'view_id': ref('medical_insurance_company_view_tree')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('medical_insurance_company_view_form')}),
-                     ]"
-        />
+                     ]" />
     </record>
 
 </odoo>

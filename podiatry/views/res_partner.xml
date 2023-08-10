@@ -2,12 +2,79 @@
 <odoo>
 
     <!-- Action -->
-    <record id="action_pod_patients_from_partner" model="ir.actions.act_window">
+    <!-- <record id="action_pod_patient_from_partner" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="res_model">podiatry.patient</field>
         <field name="context">{'default_partner_id': active_id}</field>
         <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record> -->
+
+    <!-- <record id="action_pod_practice_from_partner" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('partner_id', 'child_of', target_partner_id)]</field>
     </record>
+    <record id="action_pod_practitioner_from_partner" model="ir.actions.act_window">
+        <field name="name">Practitioners</field>
+        <field name="res_model">podiatry.practitioner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('partner_id', 'child_of', target_partner_id)]</field>
+    </record>
+    <record id="action_pod_patient_from_partner" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('partner_id', 'child_of', target_partner_id)]</field>
+    </record> -->
+
+    <!-- <record id="action_pod_practice_by_parent" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="res_model">podiatry.practice</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="context">{'can_edit_parent_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practice
+            </p>
+            <p>
+                Organize and manage practices at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_pod_practitioners_by_parent" model="ir.actions.act_window">
+        <field name="name">Practitioners</field>
+        <field name="res_model">podiatry.practitioner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('practice_id', 'child_of', target_partner_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new practitioner
+            </p>
+            <p>
+                Organize and manage practitioners at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_pod_patients_by_parent" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">podiatry.patient</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('practice_id', 'child_of', target_partner_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new patient
+            </p>
+            <p>
+                Organize and manage patients at a glance.
+            </p>
+        </field>
+    </record> -->
+
+
 
 
     <!-- Form -->
@@ -44,10 +111,15 @@
                 </page>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="patient_ids" invisible="1"/>
-                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
+
+                <!-- <button type="action" name="%(action_pod_patient_from_partner)d" class="oe_stat_button" icon="fa-users" context="{'target_partner_id': active_id}" attrs="{'invisible': [('is_practice', '=', False), ('patient_count', '=', 0)]}">
+                    <field name="patient_count" widget="statinfo" string="Patients" />
+                    <field name='patient_ids' invisible="1" />
+                </button> -->
+                <!-- <field name="patient_ids" invisible="1"/>
+                <button type="action" name="%(action_pod_patient_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
                     <field name="patient_count" string="Patients" widget="statinfo"/>
-                </button>
+                </button> -->
             </xpath>
         </field>
     </record>

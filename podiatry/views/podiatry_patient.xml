@@ -32,16 +32,11 @@
                 <header>
 
                 </header>
-                <div name="alert_patient_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_patient_id', '=', False)]}">
+                <!-- <div name="alert_patient_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_patient_id', '=', False)]}">
                     A patient with the same reference already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_patient_id"/>
-                </div>
-                <div name="alert_patient_identification_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_identification_patient_id', '=', False)]}">
-                    A patient with the same identification already exists, are you sure you want to create a new one?
-                    <br/>
-                    •                    <field name="same_identification_patient_id"/>
-                </div>
+                </div> -->
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text">
@@ -286,7 +281,6 @@
                 Fields
                 -->
                 <field name="name"/>
-                <field name="identification" operator="="/>
                 <field name="reference" operator="="/>
                 <separator/>
 
@@ -356,7 +350,6 @@
             <pivot string="Patients" sample="1">
                 <field name="name" invisible="1"/>
                 <field name="color" invisible="1"/>
-                <field name="identification" invisible="1"/>
                 <field name="reference" invisible="1"/>
                 <field name="mobile" invisible="1"/>
                 <field name="phone" invisible="1"/>

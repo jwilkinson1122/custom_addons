@@ -4,16 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
-from . import podiatry_practice
-
-# from lxml import etree
-# added import statement in try-except because when server runs on
-# windows operating system issue arise because this library is not in Windows.
-try:
-    from odoo.tools import image_colorize
-except:
-    image_colorize = False
-
+# from . import podiatry_practice
 
 class Practitioner(models.Model):
     _name = 'podiatry.practitioner'
@@ -28,54 +19,16 @@ class Practitioner(models.Model):
         'Internal ID must be unique',
     )]
     
+    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade', help='Partner-related data of the Patient')
+    user_id = fields.Many2one(comodel_name='res.users', string="Created By", default=lambda self: self.env.user)
 
-    patient_ids = fields.One2many(
-        comodel_name='podiatry.patient',
-        inverse_name='practitioner_id',
-        string='Patients'
-    )
-    
-    patient_count = fields.Integer(
-        string='Patient Count', compute='_compute_patient_count')
+    practitioner_id = fields.Many2one('res.partner',domain=[('is_practitioner','=',True)],string='Practitioner')
+    practice_ids = fields.Many2many('podiatry.practice', 'practitioner_practice_rel', string='Practices')
+    patient_ids = fields.Many2many('podiatry.patient', 'practitioner_patient_rel', string='Patients')
 
-    def _compute_patient_count(self):
-        for rec in self:
-            patient_count = self.env['podiatry.patient'].search_count(
-                [('practitioner_id', '=', rec.id)])
-            rec.patient_count = patient_count
-
-    is_practitioner = fields.Boolean()
-    
-    # Personal Information
-    practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
-    reference_no = fields.Char(string='Reference No.')
-    
+    practitioner_prescription_ids = fields.One2many("podiatry.prescription", "practitioner_id", string="Practitioner Prescriptions", domain=[("active", "=", True)])
     role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
-    
     specialty_ids = fields.Many2many(string='Specialties', comodel_name='podiatry.specialty')
-    
-    practitioner_type = fields.Selection(
-        string='Entity Type',
-        selection=[('internal', 'Internal Entity'),
-                   ('external', 'External Entity')],
-        readonly=False,
-    )
-    
-
-    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
-
-    other_practice_ids = fields.Many2many(string='Other', comodel_name='podiatry.practice')
-
-    # practitioner_prescription_id = fields.One2many(
-    #     comodel_name='podiatry.prescription',
-    #     inverse_name='practitioner_id',
-    #     string='Prescriptions')
-    practitioner_prescription_id = fields.One2many(
-        "podiatry.prescription",
-        "practitioner_id",
-        string="Practitioner Prescriptions",
-        domain=[("active", "=", True)],
-    )
 
     @api.model
     def _default_image(self):
@@ -90,24 +43,17 @@ class Practitioner(models.Model):
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    email = fields.Char(string="E-mail")
-    phone = fields.Char(string="Telephone")
-    mobile = fields.Char(string="Mobile")
-    street = fields.Char(string="Street")
-    street2 = fields.Char(string="Street 2")
-
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
-
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
-
-    city = fields.Char(string="City")
-    zip = fields.Char(string="ZIP Code")
+    
+    # parent_type = fields.Selection(related='parent_id.type', string="Address Type", readonly=True)
+    # parent_email = fields.Char(related='parent_id.email', string="Email")
+    # parent_phone = fields.Char(related='parent_id.phone', string="Telephone")
+    # parent_mobile = fields.Char(related='parent_id.mobile', string="Mobile")
+    # parent_street = fields.Char(related='parent_id.street', string="Street")
+    # parent_street2 = fields.Char(related='parent_id.street2', string="Street")
+    # parent_country_id = fields.Many2one('res.country', related='parent_id.country_id', string="Country")
+    # parent_state_id = fields.Many2one('res.country.state', related='parent_id.state_id', string="State")
+    # parent_city= fields.Char(related='parent_id.city', string="City")
+    # parent_zip = fields.Char(related='parent_id.zip', string="Zip")
 
     notes = fields.Text(string="Notes")
 
@@ -119,30 +65,11 @@ class Practitioner(models.Model):
     ], string="Salutation")
 
     signature = fields.Binary(string="Signature")
-
-    prescription_count = fields.Integer(
-        string='Prescription Count', compute='_compute_prescription_count')
-
-    prescription_device_lines = fields.One2many(
-        'prescription.device.line', 'prescription_id', 'Prescription Line')
-
-    def _compute_prescription_count(self):
-        for rec in self:
-            prescription_count = self.env['podiatry.prescription'].search_count(
-                [('practitioner_id', '=', rec.id)])
-            rec.prescription_count = prescription_count
+    
+    prescription_device_lines = fields.One2many('prescription.device.line', 'prescription_id', 'Prescription Line')
 
     prescription_date = fields.Datetime(
         'Prescription Date', default=fields.Datetime.now)
-
-    user_id = fields.Many2one(
-        comodel_name='res.users', string="User",
-    )
-
-    responsible_id = fields.Many2one(
-        comodel_name='res.users', string="Created By",
-        default=lambda self: self.env.user,
-    )
 
     @api.onchange('practitioner_id')
     def _onchange_practitioner(self):
@@ -155,21 +82,7 @@ class Practitioner(models.Model):
 
     practitioner_address_id = fields.Many2one(
         'res.partner', string="Practitioner Address", )
-
-    partner_id = fields.Many2one('res.partner', string='Related Partner', ondelete='cascade',
-                                 help='Partner-related data of the Practitioner')
-
-    def unlink(self):
-        self.partner_id.unlink()
-        return super(Practitioner, self).unlink()
-
-    other_partner_ids = fields.Many2many(
-        comodel_name='res.partner',
-        relation='podiatry_practitioner_partners_rel',
-        column1='practitioner_id', column2='partner_id',
-        string="Other Contacts",
-    )
-
+    
     @api.model
     def _relativedelta_to_text(self, delta):
         result = []
@@ -202,27 +115,27 @@ class Practitioner(models.Model):
 
         return bool(result) and " ".join(result)
 
-    same_reference_practitioner_id = fields.Many2one(
-        comodel_name='podiatry.practitioner',
-        string='Practitioner with same Identity',
-        compute='_compute_same_reference_practitioner_id',
-    )
+    # same_reference_practitioner_id = fields.Many2one(
+    #     comodel_name='res.partner',
+    #     string='Practitioner with same Identity',
+    #     compute='_compute_same_reference_practitioner_id',
+    # )
 
-    @api.depends('reference')
-    def _compute_same_reference_practitioner_id(self):
-        for practitioner in self:
-            domain = [
-                ('reference', '=', practitioner.reference),
-            ]
+    # @api.depends('reference')
+    # def _compute_same_reference_practitioner_id(self):
+    #     for practitioner in self:
+    #         domain = [
+    #             ('reference', '=', practitioner.reference),
+    #         ]
 
-            origin_id = practitioner._origin.id
+    #         origin_id = practitioner._origin.id
 
-            if origin_id:
-                domain += [('id', '!=', origin_id)]
+    #         if origin_id:
+    #             domain += [('id', '!=', origin_id)]
 
-            practitioner.same_reference_practitioner_id = bool(practitioner.reference) and \
-                self.with_context(active_test=False).sudo().search(
-                    domain, limit=1)
+    #         practitioner.same_reference_practitioner_id = bool(practitioner.reference) and \
+    #             self.with_context(active_test=False).sudo().search(
+    #                 domain, limit=1)
 
     @api.model
     def _default_image(self):
@@ -249,13 +162,6 @@ class Practitioner(models.Model):
         practitioner = super(Practitioner, self).create(vals)
         practitioner._add_followers()
         return practitioner
-
-    def name_get(self):
-        result = []
-        for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
-            result.append((rec.id, name))
-        return result
 
     def write(self, values):
         result = super(Practitioner, self).write(values)
@@ -294,12 +200,16 @@ class Practitioner(models.Model):
         }
         
         
-        # def name_get(self):
-        #     result = []
-        # for rec in self:
-        #     name = '[' + rec.reference + '] ' + rec.name
-        #     result.append((rec.id, name))
-        # return result
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name
+            result.append((rec.id, name))
+        return result
+        
+    def unlink(self):
+        self.partner_id.unlink()
+        return super(Practitioner, self).unlink()
     
     def action_add_communication(self):
         for rec in self:

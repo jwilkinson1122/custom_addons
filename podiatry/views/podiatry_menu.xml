@@ -7,7 +7,7 @@
         <!-- Accounts Root -->
         <menuitem id="menu_accounts_root" name="Accounts" parent="podiatry.menu_main_root" sequence="10"/>
         <!-- Accounts Root - Clinics -->
-        <menuitem id="menu_clinics" name="Clinics" action="action_pod_clinics" parent="podiatry.menu_accounts_root" sequence="1" />
+        <menuitem id="menu_clinics" name="Clinics" action="action_pod_practice" parent="podiatry.menu_accounts_root" sequence="1" />
         <!-- Accounts Root - Contacts -->
         <menuitem id="menu_contacts" name="Contacts" action="action_pod_contacts" parent="podiatry.menu_accounts_root" sequence="2" />
         <!-- Accounts Root - Patients -->

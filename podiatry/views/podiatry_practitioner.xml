@@ -8,11 +8,11 @@
             <form string="Practitioner">
                 <field name="active" invisible="1"/>
                 <header/>
-                <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_practitioner_id', '=', False)]}">
+                <!-- <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" attrs="{'invisible': [('same_reference_practitioner_id', '=', False)]}">
                     A practitioner with the same reference already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_practitioner_id"/>
-                </div>
+                </div> -->
                 <sheet>
 
                     <div class="oe_button_box" name="button_box">
@@ -44,15 +44,17 @@
                             <field name="name" required="1" placeholder="Practitioner Name"/>
                         </h1>
                     </div>
-                    <!-- <separator/> -->
                     <group name="primary_practice">
                         <group name="primary_practice" string="Practice Info">
                             <field name="practice_id" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
-                            <field name="other_practice_ids" widget="many2many_tags"/>
+                            <field name="practice_ids" widget="many2many_tags"/>
                         </group>
                         <group name="practice_role" string="Role Info">
                             <field name="role_ids" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
+                            <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)"/>
+
                         </group>
+
                     </group>
                     <group name="practitioner_contact">
                         <group name="address_information" string="Address Info">
@@ -89,10 +91,10 @@
                         </page>
                         <page name="perscriptions_list" string="Prescriptions">
                             <separator name="prescriptions" string="Prescriptions"/>
-                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_id', '!=', ())]}">
+                            <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_ids', '!=', ())]}">
                                 No Prescriptions
                             </div>
-                            <field name="practitioner_prescription_id" mode="kanban"/>
+                            <field name="practitioner_prescription_ids" mode="kanban"/>
                         </page>
                         <page name="notes" string="Notes">
                             <separator name="notes" string="Notes"/>
@@ -200,9 +202,9 @@
                                     <li t-if="record.email.raw_value" class="o_text_overflow">
                                         <field name="email"/>
                                     </li>
-                                    <li>Prescriptions: 
+                                    <!-- <li>Prescriptions: 
                                         <field name="prescription_count"/>
-                                    </li>
+                                    </li> -->
                                 </ul>
                                 <div class="o_row">
                                     <span class="oe_kanban_partner_links"/>
