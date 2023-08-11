@@ -62,6 +62,7 @@ class Practitioner(models.Model):
         readonly=False,
     )
     
+    # practice_email = fields.Char(related='parent_id.email', string="Email")
 
     practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice')
 
@@ -91,24 +92,23 @@ class Practitioner(models.Model):
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
-    email = fields.Char(string="E-mail")
-    phone = fields.Char(string="Telephone")
-    mobile = fields.Char(string="Mobile")
-    street = fields.Char(string="Street")
-    street2 = fields.Char(string="Street 2")
 
-    country_id = fields.Many2one(
-        comodel_name='res.country', string="Country",
-        default=lambda self: self.env.company.country_id,
-    )
+    # Related Practice Information
+    # practice_type = fields.Selection(related='parent_id.type', string="Type", readonly=True, default=lambda self: _('Address Type'))
+    practice_type = fields.Selection(related='practice_id.type', string="Type", readonly=True, default=lambda self: _('Address Type'))
 
-    state_id = fields.Many2one(
-        comodel_name='res.country.state', string="State",
-        default=lambda self: self.env.company.state_id,
-    )
+    practice_email = fields.Char(related='practice_id.email', string="Email")
+    practice_phone = fields.Char(related='practice_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='practice_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='practice_id.street', string="Street")
+    practice_street2 = fields.Char(related='practice_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='practice_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='practice_id.state_id', string="State")
+    practice_city= fields.Char(related='practice_id.city', string="City")
+    practice_zip = fields.Char(related='practice_id.zip', string="Zip")
+    
 
-    city = fields.Char(string="City")
-    zip = fields.Char(string="ZIP Code")
+    
 
     notes = fields.Text(string="Notes")
 
@@ -170,6 +170,16 @@ class Practitioner(models.Model):
         column1='practitioner_id', column2='partner_id',
         string="Other Contacts",
     )
+    
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id and self.country_id != self.state_id.country_id:
+            self.state_id = False
+
+    @api.onchange('state_id')
+    def _onchange_state(self):
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     @api.model
     def _relativedelta_to_text(self, delta):

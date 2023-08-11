@@ -52,12 +52,12 @@
                                 <field name="type" placeholder="Address" class="font-weight-bold"/>
                             </span>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
-                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}" context="{'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </group>
                         <group>
@@ -79,44 +79,24 @@
                         </group>
                     </group>
                     <notebook>
-                        <!-- <page name="page_general_info" string="Details">
-                            <group name="group_contact_info">
-                                <group name="group_contact_left">
-                                    <field name="type" groups="base.group_no_one" />
-                                    <label for="street" string="Address" />
-                                    <div class="o_address_format">
-                                        <div class="oe_edit_only">
-                                            <button name="open_parent" type="object" string="(edit)" class="oe_link" attrs="{'invisible': ['|', ('practice_id', '=', False), ('type', '!=', 'contact')]}"/>
-                                        </div>
-                                        <field name="street" placeholder="Street..." class="o_address_street" />
-                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                        <field name="city" placeholder="City" class="o_address_city" />
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' context="{'default_country_id': country_id, 'zip': zip}"/>
-                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                    </div>
+                    <page name="practice_information" string="Practice Details" autofocus="autofocus">
+                            <group style="margin:20px;">
+                                <group>
+                                    <field name="practice_type" placeholder="Practice Address Type" class="font-weight-bold"/>
+                                    <field name="practice_street" placeholder="Practice Street" class="o_address_street"/>
+                                    <field name="practice_street2" placeholder="Practice Street 2" class="o_address_street" />
+                                    <field name="practice_city" placeholder="Practice City" class="o_address_city"/>
+                                    <field name="practice_state_id" placeholder="Practice State" class="o_address_state" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                    <field name="practice_zip" placeholder="Practice ZIP" class="o_address_zip"/>
+                                    <field name="practice_country_id" placeholder="Practice Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </group>
-                                <group name="group_contact_right">
-                                    <field name="function" placeholder="e.g. Sales Director"/>
-                                    <field name="phone" widget="phone" />
-                                    <field name="mobile" widget="phone" />
-                                    <field name="user_ids" invisible="1" />
-                                    <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}" />
-                                    <field name="company_id" groups="base.group_multi_company" invisible='True'/>
-                                    <field name="active_lang_count" invisible="1"/>
-                                    <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
-                                    <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
-                                        <field name="lang"/>
-                                        <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
-                                    </div>
-                                    <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                                <group>
+                                    <field name="practice_email" placeholder="Practice Email" widget="email" context="{'gravatar_image': True}"/>
+                                    <field name="practice_phone" placeholder="Practice Telephone" widget="phone"/>
+                                    <field name="practice_mobile" placeholder="Practice Mobile" widget="phone"/>
                                 </group>
                             </group>
-                            <group name="main_data">
-                                <group name="left" />
-                                <group name="right" />
-                            </group>
-                        </page> -->
+                        </page>
                         <page name="patients_list" string="Patient List">
                             <separator name="patients" string="Patients"/>
                             <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">
