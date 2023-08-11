@@ -344,8 +344,8 @@ class Partner(models.Model):
         'customer.due.statement', 'partner_id', string='Customer Overdue Statements')
     customer_compute_boolean = fields.Boolean(
         'Boolean', compute='_compute_customer_statements')
-    company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', 'Company', index=True)
+    # company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     cfs_statement_report_url = fields.Char(compute='_compute_cfs_report_url')
     cust_statement_report_url = fields.Char(compute='_compute_cust_report_url')
     cust_due_statement_report_url = fields.Char(compute='_compute_cust_due_report_url')
