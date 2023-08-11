@@ -34,40 +34,40 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
-                    <div name="reference">
-                        <h1 class="d-flex">
-                            <field name="reference"/>
-                        </h1>
-                    </div>
-                    <div name="title" class="oe_title">
+                    <div class="oe_title mb24" style="margin:20px;">
                         <h1>
-                            <field name="name" required="1" placeholder="Practitioner Name"/>
+                            <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Doogie Howser"/>
                         </h1>
+                        <div class="o_row" style="margin-top:20px; margin-bottom:20px">
+                            <field name="role_ids" placeholder="Role Type" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
+                            <span class="fa fa-long-arrow-right" role="img"></span>
+                            <field name="practitioner_relation_label" class="text-center font-weight-bold" nolabel="1"/>
+                            <span class="fa fa-long-arrow-right" role="img"></span>
+                            <field name="practice_id" placeholder="Company Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                        </div>
                     </div>
-                    <!-- <separator/> -->
-                    <group name="primary_practice">
-                        <group name="primary_practice" string="Practice Info">
-                            <field name="practice_id" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
-                            <field name="other_practice_ids" widget="many2many_tags"/>
+                    <group style="margin:20px;">
+                        <group>
+                            <span class="o_form_label o_td_label" name="address_name">
+                                <field name="type" placeholder="Address" class="font-weight-bold"/>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}" context="{'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type', '=', 'contact'),('practice_id', '!=', False)]}"/>
+                            </div>
                         </group>
-                        <group name="practice_role" string="Role Info">
-                            <field name="role_ids" widget="many2many_tags" required="1" options="{'no_create_edit': True}"/>
-                        </group>
-                    </group>
-                    <group name="practitioner_contact">
-                        <group name="address_information" string="Address Info">
-                            <field name="street" class="o_address_street"/>
-                            <field name="street2" class="o_address_street"/>
-                            <field name="city" class="o_address_city"/>
-                            <field name="state_id" class="o_address_state" context="{'default_country_id': country_id, 'country_id': country_id, 'zip': zip}" options="{'no_open': true, 'no_quick_create': true}" />
-                            <field name="zip" class="o_address_zip"/>
-                            <field name="country_id" class="o_address_country" options="{'no_open': 1, 'no_create': 1}" />
-                        </group>
-                        <group name="contact_information" string="Contact Info">
-                            <field name="mobile" widget="phone" help="help"/>
+                        <group>
+                            <field name="reference" class="font-weight-bold"/>
+                            <field name="title" options="{'no_open': True}" placeholder="e.g. Mr." attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                            <field name="function" placeholder="e.g. Physician" attrs="{'invisible': [('type','!=', 'contact')]}"/>
                             <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="active_lang_count" invisible="1"/>
                             <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
@@ -78,8 +78,45 @@
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                     </group>
-                    <separator/>
                     <notebook>
+                        <!-- <page name="page_general_info" string="Details">
+                            <group name="group_contact_info">
+                                <group name="group_contact_left">
+                                    <field name="type" groups="base.group_no_one" />
+                                    <label for="street" string="Address" />
+                                    <div class="o_address_format">
+                                        <div class="oe_edit_only">
+                                            <button name="open_parent" type="object" string="(edit)" class="oe_link" attrs="{'invisible': ['|', ('practice_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                        </div>
+                                        <field name="street" placeholder="Street..." class="o_address_street" />
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city" />
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' context="{'default_country_id': country_id, 'zip': zip}"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </group>
+                                <group name="group_contact_right">
+                                    <field name="function" placeholder="e.g. Sales Director"/>
+                                    <field name="phone" widget="phone" />
+                                    <field name="mobile" widget="phone" />
+                                    <field name="user_ids" invisible="1" />
+                                    <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}" />
+                                    <field name="company_id" groups="base.group_multi_company" invisible='True'/>
+                                    <field name="active_lang_count" invisible="1"/>
+                                    <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                                    <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
+                                        <field name="lang"/>
+                                        <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
+                                    </div>
+                                    <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                                </group>
+                            </group>
+                            <group name="main_data">
+                                <group name="left" />
+                                <group name="right" />
+                            </group>
+                        </page> -->
                         <page name="patients_list" string="Patient List">
                             <separator name="patients" string="Patients"/>
                             <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">

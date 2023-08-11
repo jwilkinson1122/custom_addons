@@ -24,7 +24,7 @@ class Patient(models.Model):
 
     identification = fields.Char(string="Identification", index=True)
 
-    reference = fields.Char(string='Patient Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
 
     

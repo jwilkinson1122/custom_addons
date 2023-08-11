@@ -49,7 +49,8 @@ class Practitioner(models.Model):
     # Personal Information
     practitioner_id = fields.Many2many('res.partner', domain=[('is_practitioner', '=', True)], string="practitioner_id", required=True)
     reference_no = fields.Char(string='Reference No.')
-    
+    practitioner_relation_label = fields.Char('Practitioner relation label', translate=True, default='Attached To:', readonly=True)
+
     role_ids = fields.Many2many(string='Type',comodel_name='podiatry.role')
     
     specialty_ids = fields.Many2many(string='Specialties', comodel_name='podiatry.specialty')
@@ -88,7 +89,7 @@ class Practitioner(models.Model):
     # name = fields.Char(string="Name", index=True)
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
-    reference = fields.Char(string='Practitioner Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
     email = fields.Char(string="E-mail")
     phone = fields.Char(string="Telephone")
@@ -291,6 +292,21 @@ class Practitioner(models.Model):
                 },
             'view_mode': 'kanban,tree,form',
             'target': 'current',
+        }
+        
+    def open_parent(self):
+        """Utility method used to add an "Open Parent" button in partner
+        views"""
+        self.ensure_one()
+        address_form_id = self.env.ref("base.view_partner_address_form").id
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner",
+            "view_mode": "form",
+            "views": [(address_form_id, "form")],
+            "res_id": self.parent_id.id,
+            "target": "new",
+            "flags": {"form": {"action_buttons": True}},
         }
         
         

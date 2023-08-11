@@ -55,7 +55,7 @@ class Practice(models.Model):
     )
 
     identification = fields.Char(string="Identification", index=True)
-    reference = fields.Char(string='Practice Reference', required=True, copy=False, readonly=True,
+    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
 
     notes = fields.Text(string="Notes")
