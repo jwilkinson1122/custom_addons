@@ -107,9 +107,6 @@ class Practitioner(models.Model):
     practice_city= fields.Char(related='practice_id.city', string="City")
     practice_zip = fields.Char(related='practice_id.zip', string="Zip")
     
-
-    
-
     notes = fields.Text(string="Notes")
 
     salutation = fields.Selection(selection=[
@@ -264,7 +261,7 @@ class Practitioner(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = rec.name
             result.append((rec.id, name))
         return result
 

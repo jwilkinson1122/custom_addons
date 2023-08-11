@@ -68,7 +68,7 @@
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             <field name="active_lang_count" invisible="1"/>
                             <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
                             <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
@@ -79,7 +79,7 @@
                         </group>
                     </group>
                     <notebook>
-                    <page name="practice_information" string="Practice Details" autofocus="autofocus">
+                        <page name="practice_information" string="Practice Details" autofocus="autofocus">
                             <group style="margin:20px;">
                                 <group>
                                     <field name="practice_type" placeholder="Practice Address Type" class="font-weight-bold"/>

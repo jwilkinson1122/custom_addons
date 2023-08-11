@@ -27,7 +27,8 @@ class Patient(models.Model):
     reference = fields.Char(string='Reference', required=True, copy=False, readonly=True,
                             default=lambda self: _('New'))
 
-    
+    patient_relation_label = fields.Char('Patient relation label', translate=True, default='Attached To:', readonly=True)
+
     birthdate = fields.Date(string="Date of Birth")
 
     email = fields.Char(string="E-mail")
@@ -176,6 +177,17 @@ class Patient(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
                                       'manager_id', 'attachment_id', string="Attachments",
                                       help="Patient Image / File Attachments")
+    
+    practice_type = fields.Selection(related='practice_id.type', string="Type", readonly=True, default=lambda self: _('Address Type'))
+    practice_email = fields.Char(related='practice_id.email', string="Email")
+    practice_phone = fields.Char(related='practice_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='practice_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='practice_id.street', string="Street")
+    practice_street2 = fields.Char(related='practice_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='practice_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='practice_id.state_id', string="State")
+    practice_city= fields.Char(related='practice_id.city', string="City")
+    practice_zip = fields.Char(related='practice_id.zip', string="Zip")
 
     image1 = fields.Binary("Right photo")
     image2 = fields.Binary("Left photo")
@@ -346,7 +358,7 @@ class Patient(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = '[' + rec.reference + '] ' + rec.name
+            name = rec.name
             result.append((rec.id, name))
         return result
 

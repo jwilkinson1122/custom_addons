@@ -113,7 +113,7 @@
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             <field name="active_lang_count" invisible="1"/>
                             <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
                             <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
