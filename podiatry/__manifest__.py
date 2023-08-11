@@ -26,11 +26,12 @@
         'sale',
         'sale_management',
         'mrp',
-        # 'point_of_sale',
+        'point_of_sale',
         "product",
         'purchase',
         'sale_stock',
         'stock',
+        'web',
         'website',
         'website_sale',
         
@@ -77,10 +78,19 @@
         'report/sale_order_report.xml',
     ],
     "assets": {
+        'web.assets_common': [
+            'podiatry/static/scss/style.scss'
+        ],
         "web.assets_backend": [
+            'podiatry/static/js/navbar.js',
             "podiatry/static/src/css/main.css",
             "podiatry/static/src/js/pdf_viewer.js",
-            "podiatry/static/js/float_with_uom.js",
+            # "podiatry/static/src/js/float_with_uom.js",
+            
+        ],
+        'web.assets_qweb': [
+            'podiatry/static/xml/navbar.xml',
+            'podiatry/static/src/xml/pos.xml',
         ],
         "point_of_sale.assets": [
             "podiatry/static/src/css/style.css",
@@ -97,9 +107,7 @@
             "podiatry/static/src/js/OrderReceipt.js",
             "podiatry/static/src/lib/qrcode.js",
         ],
-        'web.assets_qweb': [
-            'podiatry/static/src/xml/pos.xml',
-        ],
+
 
     },
     "demo": [

@@ -31,7 +31,7 @@
         </field>
     </record> -->
 
-
+    <!-- 
     <record id="product_form_view_with_dimension_label" model="ir.ui.view">
         <field name="name">Product Simplified Form With Dimensions</field>
         <field name="model">product.product</field>
@@ -72,6 +72,6 @@
             </group>
         </field>
     </record>
-
+ -->
 
 </odoo>
