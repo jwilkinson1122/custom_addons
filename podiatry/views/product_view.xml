@@ -18,7 +18,7 @@
         </field>
     </record>
 
-    <record id="inherit_product_tree_view" model="ir.ui.view">
+    <!-- <record id="inherit_product_tree_view" model="ir.ui.view">
         <field name="name">product.product.view.list</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_tree_view"/>
@@ -29,7 +29,7 @@
 
             </xpath>
         </field>
-    </record>
+    </record> -->
 
 
     <record id="product_form_view_with_dimension_label" model="ir.ui.view">

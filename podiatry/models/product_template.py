@@ -3,8 +3,22 @@
 from odoo import api, fields, models, tools, _
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplateInherit(models.Model):
+    _inherit = ['multi.company.abstract', 'product.template']
+    _name = "product.template"
+    
+    taxes_id = fields.Many2many('account.tax', 'product_taxes_partner_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
+        domain=[('type_tax_use', '=', 'sale')], default=lambda self: self.env.company.account_sale_tax_id)
+    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_partner_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
+        domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.company.account_purchase_tax_id)
+    route_ids = fields.Many2many(
+        'stock.location.route', 'stock_route_product_rel', 'product_id', 'route_id', 'Routes',
+        domain=[('product_selectable', '=', True)],
+        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
+    
+   
+class ProductTemplateDevice(models.Model):
+    _inherit = 'product.template'
 
     is_prescription = fields.Boolean(default=False)
     is_device = fields.Boolean(string='Is Device')
@@ -73,7 +87,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
-        templates = super (ProductTemplate,self).create(vals)
+        templates = super (ProductTemplateInherit,self).create(vals)
         if templates.product_variant_count <= 1:
             if templates.product_variant_id:
                 templates.product_variant_id.is_helpdesk = templates.is_helpdesk
@@ -82,7 +96,7 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
-        res = super(ProductTemplate, self).write(vals)
+        res = super(ProductTemplateInherit, self).write(vals)
         if not self.product_variant_count > 1:
             if self.product_variant_id:
                 self.product_variant_id.is_helpdesk = self.is_helpdesk
@@ -159,7 +173,7 @@ class ProductTemplate(models.Model):
         elif self._context.get('def_categ_id') and self._context.get('def_categ_id') == 'Miscellaneous':
             self.categ_id = self.env.ref(
                 'podiatry.product_category_miscellaneous').id
-        return super(ProductTemplate, self).default_get(vals)
+        return super(ProductTemplateInherit, self).default_get(vals)
 
    
 class ProductTemplateWithWeightInKg(models.Model):

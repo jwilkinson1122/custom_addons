@@ -1,8 +1,13 @@
 # from . import s3
 # from . import s3_constants
 # from . import s3_models
-from . import product
+# from . import product_uom
+# from . import product
+
+from . import multi_company_abstract
 from . import product_template
+from . import product_category
+from . import product
 from . import product_uom
 from . import ir_actions
 from . import inherit_saleorder
@@ -26,4 +31,5 @@ from . import podiatry_contact_mixin
 from . import podiatry_role
 from . import podiatry_specialty
 from . import res_partner
+from . import res_users
 from . import res_config_settings

@@ -54,15 +54,11 @@
                     </div>
                     <group>
                         <group string="Account Info">
-                            <!-- <field name="customer" domain="[('company_id', '=', False)]" attrs="{'readonly': [('state','=','done')]}" required="1"/> -->
-                            <field name="practice_id" widget="res_partner_many2one" placeholder="Related Practice..." domain="[('is_practice', '=', True)]" context="{'default_is_practice': True}"/>
-                            <!-- <field name="practice_id" required="1" options="{&quot;always_reload&quot;: 1}" /> -->
-                            <field name="practitioner_id" widget="res_partner_many2one" placeholder="Related Practitioner..." domain="[('is_practitioner', '=', True), ('parent_id', '=', practice_id)]" context="{'default_is_practitioner': True}"/>
-                            <!-- <field name="practitioner_id" required="1" /> -->
+                            <field name="practice_id" placeholder="Company Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
+                            <field name="practitioner_id" placeholder="Practitioner Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
                         </group>
                         <group string="Patient Info">
-                            <field name="patient_id" widget="res_partner_many2one" placeholder="Related Patient..." domain="[('is_patient', '=', True), ('parent_id', '=', practice_id)]" context="{'default_is_patient': True}"/>
-                            <!-- <field name="patient_id" required="1" options="{&quot;always_reload&quot;: 1}" /> -->
+                            <field name="patient_id" placeholder="Patient Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
                             <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>

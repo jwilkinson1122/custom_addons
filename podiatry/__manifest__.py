@@ -13,6 +13,7 @@
         "l10n_us",
         "base",
         "base_setup",
+        # "base_multi_company",
         "resource",
         "mail",
         'helpdesk',
@@ -24,11 +25,15 @@
         'data_merge_helpdesk',
         'sale',
         'sale_management',
-        'point_of_sale',
+        'mrp',
+        # 'point_of_sale',
         "product",
         'purchase',
         'sale_stock',
         'stock',
+        'website',
+        'website_sale',
+        
     ],
     "data": [
         'security/podiatry_security.xml',
@@ -102,6 +107,8 @@
 
     ],
     # "external_dependencies": {"python": ["boto3"]},
+    "post_init_hook": "post_init_hook",
+    "uninstall_hook": "uninstall_hook",
     "images": ["static/description/orders.png"],
     "development_status": "Beta",
     "maintainers": ["NWPL"],

@@ -100,11 +100,11 @@
                             <field class="text-break" name="name" required="1" default_focus="1" placeholder="e.g. Vinny Boombotz"/>
                         </h1>
                         <div class="o_row" style="margin-top:20px; margin-bottom:20px">
-                            <field name="practice_id" placeholder="Company Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="practice_id" placeholder="Company Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
                             <span class="fa fa-long-arrow-right" role="img"></span>
                             <field name="patient_relation_label" class="text-center font-weight-bold" nolabel="1"/>
                             <span class="fa fa-long-arrow-right" role="img"></span>
-                            <field name="practitioner_id" placeholder="Practitioner Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="practitioner_id" placeholder="Practitioner Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
                         </div>
                     </div>
                     <group style="margin:20px;">

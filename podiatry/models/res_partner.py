@@ -4,8 +4,14 @@ from odoo import _, api, fields, models, tools
 
 
 class Partner(models.Model):
+    _inherit = ["multi.company.abstract", "res.partner"]
     _name = 'res.partner'
-    _inherit = 'res.partner'
+
+    display_name = fields.Char(
+        compute="_compute_display_name",
+        store=True,
+        index=True,
+    )
 
     info_ids = fields.One2many(
         'res.partner.info', 'partner_id', string="More Info")
@@ -130,6 +136,7 @@ class Partner(models.Model):
         modified_self = self._basepractitioner_check_context("create")
         if not vals.get("name") and vals.get("practitioner_id"):
             vals["name"] = modified_self.browse(vals["practitioner_id"]).name
+        vals = self._amend_company_id(vals)
         return super(Partner, modified_self).create(vals)
 
     def read(self, fields=None, load="_classic_read"):
@@ -153,6 +160,38 @@ class Partner(models.Model):
             if partner.practitioner_type == "attached" and not partner.parent_id:
                 partner.commercial_partner_id = partner.practitioner_id
         return result
+    
+    @api.model
+    def _commercial_fields(self):
+        """Add company_ids to the commercial fields that will be synced with
+         childs. Ideal would be that this field is isolated from company field,
+         but it involves a lot of development (default value, incoherences
+         parent/child...).
+        :return: List of field names to be synced.
+        """
+        fields = super(Partner, self)._commercial_fields()
+        fields += ["company_ids"]
+        return fields
+
+    @api.model
+    def _amend_company_id(self, vals):
+        if "company_ids" in vals:
+            if not vals["company_ids"]:
+                vals["company_id"] = False
+            else:
+                for item in vals["company_ids"]:
+                    if item[0] in (1, 4):
+                        vals["company_id"] = item[1]
+                    elif item[0] in (2, 3, 5):
+                        vals["company_id"] = False
+                    elif item[0] == 6:
+                        if item[2]:
+                            vals["company_id"] = item[2][0]
+                        else:  # pragma: no cover
+                            vals["company_id"] = False
+        elif "company_id" not in vals:
+            vals["company_ids"] = False
+        return vals
 
     def _practitioner_fields(self):
         """Returns the list of practitioner fields that are synced from the parent

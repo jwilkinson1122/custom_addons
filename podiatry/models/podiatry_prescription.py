@@ -53,19 +53,23 @@ class Prescription(models.Model):
     podiatric_history = fields.Text()
 
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company, store=True)
-    # practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    practice_id = fields.Many2one('res.partner', string='Related Practice', index=True, required=True)
-    practice_name = fields.Char(string='Practitioner', related='practice_id.name')
+
+
+    practice_id = fields.Many2one(comodel_name='podiatry.practice', string='Practice', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    practice_type = fields.Selection(related='practice_id.type', string="Type", readonly=True, default=lambda self: _('Address Type'))
+    practice_email = fields.Char(related='practice_id.email', string="Email")
+    practice_phone = fields.Char(related='practice_id.phone', string="Telephone")
+    practice_mobile = fields.Char(related='practice_id.mobile', string="Mobile")
+    practice_street = fields.Char(related='practice_id.street', string="Street")
+    practice_street2 = fields.Char(related='practice_id.street2', string="Street")
+    practice_country_id = fields.Many2one('res.country', related='practice_id.country_id', string="Country")
+    practice_state_id = fields.Many2one('res.country.state', related='practice_id.state_id', string="State")
+    practice_city= fields.Char(related='practice_id.city', string="City")
+    practice_zip = fields.Char(related='practice_id.zip', string="Zip")
     
-    # practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    practitioner_id = fields.Many2one('res.partner', domain=[('is_practitioner', '=', True)], string="Related Practitioner", required=True)
-    practitioner_name = fields.Char(string='Practitioner', related='practitioner_id.name')
-    practitioner_phone = fields.Char(string='Phone', related='practitioner_id.phone')
-    practitioner_email = fields.Char(string='Email', related='practitioner_id.email')
+    practitioner_id = fields.Many2one(comodel_name='podiatry.practitioner', string='Practitioner', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
+    patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
     
-    patient_id = fields.Many2one('res.partner', domain=[('is_patient', '=', True)], string="Related Patient", required=True)
-    # patient_id = fields.Many2one(comodel_name='podiatry.patient', string='Patient', states={"draft": [("readonly", False)], "done": [("readonly", True)]})
-    patient_name = fields.Char(string='Practitioner', related='patient_id.name')
     prescription = fields.Text(string="Prescription")
     # prescription_ids = fields.One2many('podiatry.prescription', 'practitioner_id', string="Prescriptions")
     prescription_device_lines = fields.One2many('prescription.device.line', 'prescription_id', string="Devices")
@@ -301,8 +305,15 @@ class Prescription(models.Model):
                         helpdesk_ticket_list.append(helpdesk_ticket_id.id)
                         self.helpdesk_tickets_ids = helpdesk_ticket_list
         return True
+    
+    @api.onchange('practice_id')
+    def onchange_set_domain_practitioner_id(self):
+        # for rec in self:
+            practice_obj = self.env['podiatry.practice'].search([['full_name', '=' , self.practice_id.full_name]])
+            print(practice_obj.practitioner_id)
+            self.practitioner_id = practice_obj.practitioner_id.id
 
-
+   
     # @api.onchange('practice_id')
     # def onchange_practice_id(self):
     #     for rec in self:
@@ -312,7 +323,7 @@ class Prescription(models.Model):
     # def onchange_practitioner_id(self):
     #     for rec in self:
     #         return {'domain': {'patient_id': [('practitioner_id', '=', rec.practitioner_id.id)]}}
-
+    
     # Forefoot Values
     ff_varus_lt = fields.Many2one(
         'podiatry.forefoot.value', rel='rx_ff_varus_lt', ondelete='restrict', copy=True)

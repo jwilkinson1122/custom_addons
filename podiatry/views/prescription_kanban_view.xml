@@ -94,20 +94,23 @@ items
                                     <div>
                                         <!-- <field name="practice_id" widget="many2one_avatar"/> -->
                                         <span class="oe_read_only">Practice:</span>
-                                        <label for="practice_name" class="oe_edit_only" />
-                                        <field name="practice_name" class="oe_inline" />
+                                        <field name="practice_id" widget="many2one_avatar"/> 
+                                        <!-- <label for="practice_name" class="oe_edit_only" />
+                                        <field name="practice_name" class="oe_inline" /> -->
                                     </div>
                                     <div>
                                         <!-- <field name="practitioner_id" widget="many2one_avatar"/> -->
                                         <span class="oe_read_only">Practitioner:</span>
-                                        <label for="practitioner_name" class="oe_edit_only" />
-                                        <field name="practitioner_name" class="oe_inline" />
+                                        <field name="practitioner_id" widget="many2one_avatar"/>
+                                        <!-- <label for="practitioner_name" class="oe_edit_only" />
+                                        <field name="practitioner_name" class="oe_inline" /> -->
                                     </div>
                                     <div>
                                         <!-- <field name="patient_id" widget="many2one_avatar"/> -->
                                         <span class="oe_read_only">Patient:</span>
-                                        <label for="patient_name" class="oe_edit_only" />
-                                        <field name="patient_name" class="oe_inline" />
+                                        <field name="patient_id" widget="many2one_avatar"/>
+                                        <!-- <label for="patient_name" class="oe_edit_only" />
+                                        <field name="patient_name" class="oe_inline" /> -->
                                     </div>
                                     <!-- <t t-call="foot_images">
                                         <t t-set="limit" t-value="3" />
