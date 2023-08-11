@@ -145,8 +145,7 @@ class Practitioner(models.Model):
 
     def _add_followers(self):
         for practitioner in self:
-            partner_ids = (practitioner.user_id.partner_id |
-                           practitioner.responsible_id.partner_id).ids
+            partner_ids = (practitioner.user_id.partner_id).ids
             practitioner.message_subscribe(partner_ids=partner_ids)
 
     def _valid_field_parameter(self, field, name):

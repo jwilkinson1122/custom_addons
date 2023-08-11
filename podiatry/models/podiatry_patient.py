@@ -156,8 +156,7 @@ class Patient(models.Model):
 
     def _add_followers(self):
         for patient in self:
-            partner_ids = (patient.user_id.partner_id |
-                           patient.responsible_id.partner_id).ids
+            partner_ids = (patient.user_id.partner_id).ids
             patient.message_subscribe(partner_ids=partner_ids)
 
     @api.model

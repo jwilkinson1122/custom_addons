@@ -35,7 +35,7 @@ class Partner(models.Model):
     )
     
     practice_id = fields.Many2one(
-        "podiatry.practice",
+        "res.partner",
         string="Main Practice",
         index=True,
         ondelete='cascade',
@@ -43,16 +43,17 @@ class Partner(models.Model):
     )
     
     parent_id = fields.Many2one(
-        comodel_name='podiatry.practice',
+        comodel_name='res.partner',
         string="Practice",
         index=True,
         ondelete='cascade',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', ('company_id', '=', False), ('practice_id', '=', company_id)]",
     )
     
-    practice_ids = fields.Many2many('podiatry.practice', 'partner_practice_rel', 'practice_id', string='Practices')
+    practice_ids = fields.Many2many('res.partner', 'partner_practice_rel', 'practice_id', string='Practices')
     practitioner_ids = fields.Many2many('podiatry.practitioner', 'partner_practitioner_rel', 'practitioner_id', string='Practitioners')
     patient_ids = fields.Many2many('podiatry.patient', 'partner_patient_rel', 'patient_id', string='Patients')
+    prescription_ids = fields.One2many("podiatry.prescription", 'practice_id', string="Practice Prescriptions", domain=[("active", "=", True)])
 
     highest_parent_id = fields.Many2one(
         "res.partner",
@@ -213,7 +214,7 @@ class Partner(models.Model):
         result = super(Partner, self)._compute_commercial_partner()
         for partner in self:
             if partner.practice_type == "attached" and not partner.parent_id:
-                partner.commercial_partner_id = partner.practitioner_id
+                partner.commercial_partner_id = partner.practice_id
         return result
 
     def _practice_fields(self):

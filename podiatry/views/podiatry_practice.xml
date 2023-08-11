@@ -61,6 +61,8 @@
                             <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
                             <span class="fa fa-long-arrow-right" role="img" attrs="{'invisible': [('practice_rel_type', '=', 'parent')]}"></span>
                             <field name="parent_id" placeholder="Company Name" readonly="not context.get('can_edit_parent_id', True)" attrs="{'invisible': [('practice_rel_type','!=', 'child')]}"/>
+                            <!-- <field name="practice_id" placeholder="Practice Name"/> -->
+
                         </div>
                     </div>
                     <separator/>
