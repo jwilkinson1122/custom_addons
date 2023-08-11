@@ -97,7 +97,7 @@ class Prescription(models.Model):
     shell_foundation = fields.Selection([('cataract_eye', 'Cataract Eye'), ('pterygium', "Pterygium"), ('glaucoma', 'Glaucoma'), ('squint', 'Squint'), ('detachment', 'Detachment'), (
         'laser_myopia', 'laser_myopia'), ('ocular_prosthesis', 'Ocular Prosthesis'), ('chalazion', 'Chalazion'), ('conjunctivitis', 'Conjunctivitis')], string='CIE 10')
 
-    rush_order = fields.Boolean('3-day rush')
+    ruorder = fields.Boolean('3-day rush')
     make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
     qty = fields.Integer('pairs to make')
     ship_to_patient = fields.Boolean('Ship to patient')

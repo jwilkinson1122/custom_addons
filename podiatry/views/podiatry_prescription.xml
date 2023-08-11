@@ -68,7 +68,7 @@
                             <field name="user_id" />
                         </group>
                         <group>
-                            <field name="rush_order" />
+                            <field name="ruorder" />
                             <field name="ship_to_patient" />
                             <field name="prior_rx"/>
                         </group>

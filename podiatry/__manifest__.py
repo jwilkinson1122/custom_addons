@@ -39,7 +39,7 @@
     "data": [
         'security/podiatry_security.xml',
         "security/ir.model.access.csv",
-        "views/res_config_settings_view.xml",
+        # "views/res_config_settings_view.xml",
         "data/product_category.xml",
         'data/decimal_precision.xml',
         "data/ir_sequence_data.xml",
@@ -67,7 +67,7 @@
         "views/prescription_kanban_view.xml",
         'views/configuration_view.xml',
         # 'views/inherit_product_template.xml',
-        'views/res_partner.xml',
+        # 'views/res_partner.xml',
         "views/podiatry_menu.xml",
         'views/podiatry_specialty.xml',
         "report/report_view.xml",
@@ -76,20 +76,34 @@
         "report/prescription_report.xml",
         'report/pod_prescription_report.xml',
         'report/sale_order_report.xml',
+        'views/res_user.xml',
+        'wizard/mail_compose_view.xml',
+        'wizard/customer_statement_mass_action.xml',
+        'wizard/customer_config_update_wizard.xml',
+        'views/mail_history.xml',
+        'views/res_config_settings_view.xml',
+        # 'views/mail_history.xml',
+        # 'views/res_config_settings_view.xml',
+        'views/res_partner.xml',
+        'views/customer_statement_menu.xml',
+        'report/customer_statement_report.xml',
+        'report/customer_due_statement_report.xml',
+        'report/customer_filter_statement_report.xml',
+        'data/email_data.xml',
+        'data/statement_cron.xml',
+        'views/customer_statement_portal_templates.xml',
     ],
     "assets": {
-        'web.assets_common': [
-            'podiatry/static/scss/style.scss'
+        'web.assets_frontend': [
+            'podiatry/static/src/js/portal.js',
         ],
         "web.assets_backend": [
-            'podiatry/static/js/navbar.js',
             "podiatry/static/src/css/main.css",
             "podiatry/static/src/js/pdf_viewer.js",
             # "podiatry/static/src/js/float_with_uom.js",
             
         ],
         'web.assets_qweb': [
-            'podiatry/static/xml/navbar.xml',
             'podiatry/static/src/xml/pos.xml',
         ],
         "point_of_sale.assets": [

@@ -1,23 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from odoo import api, models, fields
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
-    
-    navbar_color = fields.Char(default="#7C7BAD")
-    
-    def sudo_write(self, vals):
-        """
-        Bypass user access right
-        """
-        return self.sudo().write(vals)
 
-    def sudo_read(self):
-        """
-        Bypass user access right
-        """
-        return self.sudo().read()
-
+    company_sign = fields.Text('Signature')
+    
     @api.model
     def create(self, vals):
         res = super(ResUsers, self).create(vals)
@@ -38,3 +28,8 @@ class ResUsers(models.Model):
                 if user.partner_id.company_ids:
                     user.partner_id.company_ids = [(4, vals["company_id"])]
         return res
+
+class UserApiKey(models.Model):
+    _inherit = 'res.users.apikeys'
+
+    company_sign = fields.Text('Signature ')

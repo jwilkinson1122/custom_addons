@@ -30,6 +30,10 @@ from . import podiatry_prescription_stage
 from . import podiatry_contact_mixin
 from . import podiatry_role
 from . import podiatry_specialty
-from . import res_partner
 from . import res_users
+from . import mail_history
 from . import res_config_settings
+from . import res_company
+from . import res_partner
+from . import customer_statement
+from . import mass_update

@@ -50,6 +50,10 @@
     <record id="group_option_management" model="res.groups">
         <field name="name">Option Management</field>
     </record> -->
+    <record id="customer_statement_group_whatsapp" model="res.groups">
+        <field name="name">Send customer statement by whatsapp feature</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
 
     <record id="base.group_erp_manager" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('group_medical_configurator'))]"/>
