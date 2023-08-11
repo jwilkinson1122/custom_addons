@@ -116,9 +116,9 @@
                             </group>
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT VALUES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold">FOREFOOT VALUES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
                                 </tr>
                                 <tr name="varus_forefoot_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
@@ -144,9 +144,9 @@
 
                             <table name="forefoot_corrections_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">FOREFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold">FOREFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
                                 </tr>
                                 <tr name="forefoot_varus_intrinsic_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS INTRINSIC</td>
@@ -190,9 +190,9 @@
 
                             <table name="rearfoot_corrections_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">REARFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold">REARFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
                                 </tr>
                                 <tr name="rearfoot_varus_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">VARUS</td>
@@ -230,9 +230,9 @@
 
                             <table name="orthotic_measure_table" border="1" bordercolor="gray" style="width:100%" attrs="{'readonly': [('state', '=', 'done')]}">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold">ORTHOTIC MEASURES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#d2d2ff; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold">ORTHOTIC MEASURES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('right_only', '=', True)]}">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; font-weight:bold" attrs="{'invisible': [('left_only', '=', True)]}">RIGHT</td>
                                 </tr>
                                 <tr name="forefoot_length_values">
                                     <td style="padding:4px; text-align:center; font-weight:bold">FOREFOOT LENGTH</td>
@@ -306,10 +306,10 @@
                         </page>
                         <page string="Special Instructions">
                         </page>
-                        <page string="Casting">
+                        <!-- <page string="Casting">
                         </page>
                         <page string="Process">
-                        </page>
+                        </page> -->
                         <page string='Helpdesk Tickets' name='helpdesk_ticket'>
                             <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
                         </page>

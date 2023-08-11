@@ -253,28 +253,6 @@ class Patient(models.Model):
 
         return
 
-    same_identification_patient_id = fields.Many2one(
-        comodel_name='podiatry.patient',
-        string='Patient with same Identity',
-        compute='_compute_same_identification_patient_id',
-    )
-
-    @api.depends('identification')
-    def _compute_same_identification_patient_id(self):
-        for patient in self:
-            domain = [
-                ('identification', '=', patient.identification),
-            ]
-
-            origin_id = patient._origin.id
-
-            if origin_id:
-                domain += [('id', '!=', origin_id)]
-
-            patient.same_identification_patient_id = bool(patient.identification) and \
-                self.with_context(active_test=False).sudo().search(
-                    domain, limit=1)
-
     same_reference_patient_id = fields.Many2one(
         comodel_name='podiatry.patient',
         string='Patient with same Identity',
