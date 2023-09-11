@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="pod_specialty_view_form" model="ir.ui.view">
+        <field name="name">pod.specialty.view.form</field>
+        <field name="model">pod.specialty</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <header />
+                <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                    <field name="active" invisible="1" />
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                        <field name="sct_code" options="{'no_create': True, 'no_open': True}" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pod_specialty_view_tree" model="ir.ui.view">
+        <field name="name">pod.specialty.view.tree</field>
+        <field name="model">pod.specialty</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pod_specialty_action">
+        <field name="name">Specialties</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.specialty</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_root_configuration" action="pod_specialty_action" sequence="60" />
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="seq_pod_practitioner" model="ir.sequence">
+        <field name="name">Practitioner sequence</field>
+        <field name="code">pod.practitioner</field>
+        <field name="prefix">PRA</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

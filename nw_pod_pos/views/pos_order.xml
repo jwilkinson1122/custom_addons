@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+    <record model="ir.ui.view" id="pos_order_form_view">
+        <field name="name">pos.order.form (in nw_pod_pos)</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="TODO othermodule.form_view"/>
+        <field name="arch" type="xml">
+
+        </field>
+    </record>
+-->
+
+
+</odoo>

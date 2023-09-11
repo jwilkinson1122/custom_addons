@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sct_ibuprofen" model="pod.sct.concept">
+        <field name="name">Ibuprofen</field>
+        <field name="code">387207008</field>
+        <field name="is_podiatric_product" eval="True" />
+    </record>
+    <record id="sct_pollen" model="pod.sct.concept">
+        <field name="name">Pollen</field>
+        <field name="code">256259004</field>
+        <field name="is_clinical_substance" eval="True" />
+    </record>
+    <record id="sct_pregnant" model="pod.sct.concept">
+        <field name="name">Pregnant</field>
+        <field name="code">77386006</field>
+        <field name="is_clinical_finding" eval="True" />
+    </record>
+    <record id="sct_knee_joint_prosthesis_present" model="pod.sct.concept">
+        <field name="name">Knee Joint Prosthesis Present</field>
+        <field name="code">911000119102</field>
+        <field name="is_clinical_finding" eval="True" />
+    </record>
+    <record id="allergy_substance_ibuprofen" model="pod.allergy.substance">
+        <field name="name">Ibuprofen</field>
+        <field name="description">Ibuprofen</field>
+        <field name="sct_code_id" ref="pod_clinical_condition.sct_ibuprofen" />
+        <field name="create_warning" eval="True" />
+    </record>
+    <record id="allergy_substance_pollen" model="pod.allergy.substance">
+        <field name="name">Pollen</field>
+        <field name="description">Pollen</field>
+        <field name="sct_code_id" ref="pod_clinical_condition.sct_pollen" />
+        <field name="create_warning" eval="False" />
+    </record>
+    <record id="finding_pregnant" model="pod.clinical.finding">
+        <field name="name">Pregnant</field>
+        <field name="description">Pregnant</field>
+        <field name="sct_code_id" ref="pod_clinical_condition.sct_pregnant" />
+        <field name="create_warning" eval="True" />
+    </record>
+    <record id="finding_knee_joint_prosthesis_present" model="pod.clinical.finding">
+        <field name="name">Knee Joint Prosthesis Present</field>
+        <field name="description">Knee Joint Prosthesis Present</field>
+        <field name="sct_code_id" ref="pod_clinical_condition.sct_knee_joint_prosthesis_present" />
+        <field name="create_warning" eval="False" />
+    </record>
+    <record id="patient_01_pregnant" model="pod.condition">
+        <field name="patient_id" ref="pod_base.patient_01" />
+        <field name="clinical_finding_id" ref="pod_clinical_condition.finding_pregnant" />
+    </record>
+    <record id="patient_01_knee_joint_prosthesis_present" model="pod.condition">
+        <field name="patient_id" ref="pod_base.patient_01" />
+        <field name="clinical_finding_id" ref="pod_clinical_condition.finding_knee_joint_prosthesis_present" />
+    </record>
+    <record id="patient_01_ibuprofen_allergy" model="pod.condition">
+        <field name="patient_id" ref="pod_base.patient_01" />
+        <field name="is_allergy" eval="True" />
+        <field name="criticality">high</field>
+        <field name="allergy_id" ref="pod_clinical_condition.allergy_substance_ibuprofen" />
+    </record>
+    <record id="patient_01_ibuprofen_pollen" model="pod.condition">
+        <field name="patient_id" ref="pod_base.patient_01" />
+        <field name="is_allergy" eval="True" />
+        <field name="criticality">low</field>
+        <field name="allergy_id" ref="pod_clinical_condition.allergy_substance_pollen" />
+    </record>
+</odoo>

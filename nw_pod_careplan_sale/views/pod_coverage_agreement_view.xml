@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="pod_coverage_agreement_view" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.form</field>
+        <field name="model">pod.coverage.agreement</field>
+        <field
+            name="inherit_id"
+            ref="pod_financial_coverage_agreement.pod_coverage_agreement_view"
+        />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="invoice_group_method_id" options="{'no_create': True}" />
+            </field>
+            <field name="principal_concept" position="after">
+                <field name="file_reference" />
+                <field name="discount" />
+            </field>
+        </field>
+    </record>
+</odoo>

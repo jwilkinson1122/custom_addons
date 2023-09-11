@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="pod_add_plan_definition_form">
+        <field name="name">pod.careplan.add.plan.definition.form</field>
+        <field name="model">pod.careplan.add.plan.definition</field>
+        <field
+            name="inherit_id"
+            ref="pod_clinical_careplan.pod_add_plan_definition_form"
+        />
+        <field name="arch" type="xml">
+            <field name="plan_definition_id" position="after">
+                <field name="qty" />
+            </field>
+        </field>
+    </record>
+</odoo>

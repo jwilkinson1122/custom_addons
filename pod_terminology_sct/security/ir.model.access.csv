@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+pod_sct_concept_display,pod_sct_concept_display,model_pod_sct_concept,pod_base.group_pod_user,1,0,0,0

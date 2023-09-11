@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="seq_pod_product_request_order" model="ir.sequence">
+        <field name="name">Podiatry Product Request Order</field>
+        <field name="code">pod.product.request.order</field>
+        <field name="prefix">MPRO</field>
+        <field name="padding">6</field>
+    </record>
+    <record id="seq_pod_product_request" model="ir.sequence">
+        <field name="name">Podiatry Product Request</field>
+        <field name="code">pod.product.request</field>
+        <field name="prefix">MPR</field>
+        <field name="padding">6</field>
+    </record>
+    <record id="seq_pod_product_administration" model="ir.sequence">
+        <field name="name">Podiatry Product Administration</field>
+        <field name="code">pod.product.administration</field>
+        <field name="prefix">MPA</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

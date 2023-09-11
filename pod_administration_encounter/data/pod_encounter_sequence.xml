@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="seq_pod_encounter" model="ir.sequence">
+        <field name="name">Podiatry Encounter</field>
+        <field name="code">pod.encounter</field>
+        <field name="prefix">E</field>
+        <field name="padding">8</field>
+    </record>
+</odoo>
