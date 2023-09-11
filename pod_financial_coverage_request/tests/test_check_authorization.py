@@ -43,14 +43,7 @@ class TestNWP(TransactionCase):
                 "authorization_format": "^[0-9]*$",
             }
         )
-        self.method = self.env["pod.authorization.method"].create(
-            {
-                "name": "Testing method",
-                "code": "testing",
-                "check_required": True,
-                "always_authorized": True,
-            }
-        )
+        self.method = self.browse_ref("pod_financial_coverage_request.only_number")
         self.agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Agreement",
@@ -90,16 +83,17 @@ class TestNWP(TransactionCase):
                 "name": "Action",
             }
         )
-        self.agreement_line = (
-            self.env["pod.coverage.agreement.item"]
-            .with_context(default_coverage_agreement_id=self.agreement.id)
-            .create(
-                {
-                    "product_id": self.product_01.id,
-                    "plan_definition_id": self.plan_definition.id,
-                    "total_price": 100,
-                }
-            )
+        self.agreement_line = self.env["pod.coverage.agreement.item"].create(
+            {
+                "product_id": self.product_01.id,
+                "coverage_agreement_id": self.agreement.id,
+                "plan_definition_id": self.plan_definition.id,
+                "total_price": 100,
+                "authorization_method_id": self.browse_ref(
+                    "pod_financial_coverage_request.only_number"
+                ).id,
+                "authorization_format_id": self.format.id,
+            }
         )
 
     def create_patient(self, name):
@@ -110,12 +104,7 @@ class TestNWP(TransactionCase):
 
     def create_practitioner(self, name):
         return self.env["res.partner"].create(
-            {
-                "name": name,
-                "is_practitioner": True,
-                "agent": True,
-                "commission": self.browse_ref("nw_pod_commission.commission_01").id,
-            }
+            {"name": name, "is_practitioner": True, "agent": True}
         )
 
     def create_careplan_and_group(self, number=False):
@@ -147,25 +136,42 @@ class TestNWP(TransactionCase):
     def test_check_authorization(self):
         self.plan_definition.is_breakdown = False
         self.plan_definition.is_billable = True
-        encounter, careplan, group = self.create_careplan_and_group()
+        number = "AAA"
+        encounter, careplan, group = self.create_careplan_and_group(number)
         self.assertEqual(group.authorization_status, "pending")
         self.env["pod.request.group.check.authorization"].with_context(
             default_request_group_id=group.id
         ).create({"authorization_number": "1234"}).run()
         group.refresh()
-        self.assertEqual(group.authorization_status, "pending")
-        self.env["pod.request.group.check.authorization"].with_context(
-            default_request_group_id=group.id
-        ).create({"authorization_number": "1234a"}).run()
-        group.refresh()
-        self.assertEqual(group.authorization_status, "pending")
-        self.env["pod.request.group.check.authorization"].with_context(
-            default_request_group_id=group.id
-        ).create({"authorization_checked": True}).run()
-        group.refresh()
         self.assertEqual(group.authorization_status, "authorized")
-        self.env["pod.request.group.check.authorization"].with_context(
-            default_request_group_id=group.id
-        ).create({"authorization_checked": False}).run()
+        wizard = (
+            self.env["pod.request.group.check.authorization"]
+            .with_context(default_request_group_id=group.id)
+            .create({"authorization_number": "1234a"})
+        )
+        self.assertEqual(wizard.authorization_method_id, self.method)
+        self.assertEqual(wizard.authorization_method_ids, self.method)
+        wizard.run()
         group.refresh()
         self.assertEqual(group.authorization_status, "pending")
+
+    def test_check_authorization_without(self):
+        self.plan_definition.is_breakdown = False
+        self.plan_definition.is_billable = True
+        self.agreement_line.write(
+            {
+                "authorization_method_id": self.browse_ref(
+                    "pod_financial_coverage_request.without"
+                ).id
+            }
+        )
+        number = "AAA"
+        encounter, careplan, group = self.create_careplan_and_group(number)
+        self.assertEqual(group.authorization_status, "authorized")
+
+    def test_check_authorization_correct(self):
+        self.plan_definition.is_breakdown = False
+        self.plan_definition.is_billable = True
+        number = "1234"
+        encounter, careplan, group = self.create_careplan_and_group(number)
+        self.assertEqual(group.authorization_status, "authorized")

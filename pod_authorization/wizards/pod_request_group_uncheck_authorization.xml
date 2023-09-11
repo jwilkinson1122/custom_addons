@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="pod_request_group_uncheck_authorization_form_view">
-        <field name="name">pod.request.group.uncheck.authorization.form (in cb_pod_authorization)</field>
+        <field name="name">pod.request.group.uncheck.authorization.form (in nw_pod_authorization)</field>
         <field name="model">pod.request.group.uncheck.authorization</field>
         <field name="arch" type="xml">
             <form string="Podiatry Request Group Uncheck Authorization">

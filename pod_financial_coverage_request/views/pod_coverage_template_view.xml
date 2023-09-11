@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="pod_coverage_template_view_form" model="ir.ui.view">
+        <field name="name">pod.coverage.template.form</field>
+        <field name="model">pod.coverage.template</field>
+        <field name="inherit_id" ref="pod_financial_coverage.pod_coverage_template_view_form" />
+        <field name="arch" type="xml">
+            <group name="payor" position="after">
+                <group>
+                    <field name="subscriber_required" />
+                    <field name="subscriber_information" attrs="{'invisible': [('subscriber_required', '=', False)]}" />
+                    <field name="subscriber_format" attrs="{'invisible': [('subscriber_required', '=', False)]}" />
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

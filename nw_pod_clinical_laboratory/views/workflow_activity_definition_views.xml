@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="workflow_plan_definition_action_form" model="ir.ui.view">
+        <field name="name">workflow.plan.definition.action.view.form</field>
+        <field name="model">workflow.plan.definition.action</field>
+        <field name="inherit_id" ref="pod_financial_coverage_request.workflow_plan_definition_action_form" />
+        <field name="arch" type="xml">
+            <field name="activity_definition_id" position="after">
+                <field name="laboratory_service_ids" widget="many2many_tags" attrs="{'invisible': [('model_id', '!=', %(pod_clinical_laboratory.model_pod_laboratory_request)s)]}" />
+                <field name="model_id" invisible="1" />
+            </field>
+            <field name="performer_id" position="attributes">
+                <attribute name="attrs">{'required': [('model_id', '=', %(pod_clinical_laboratory.model_pod_laboratory_request)s)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

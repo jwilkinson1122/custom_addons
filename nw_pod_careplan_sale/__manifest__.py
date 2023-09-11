@@ -6,7 +6,7 @@
     "depends": [
         "sale_third_party",
         "pod_authorization",
-        "nw_sale_report_invoice",
+        "nw_pod_sale_report_invoice",
     ],
     "data": [
         "security/ir.model.access.csv",
