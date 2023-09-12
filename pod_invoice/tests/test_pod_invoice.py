@@ -1,4 +1,4 @@
-from odoo.addons.nw_pod_pos.tests import common
+from odoo.addons.pod_pos.tests import common
 
 
 class TestPosValidation(common.PodiatrySavePointCase):

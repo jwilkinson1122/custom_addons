@@ -1,0 +1,22 @@
+from odoo import api, models
+
+
+class PosConfig(models.Model):
+    _inherit = "pos.config"
+
+    def closed_states(self):
+        return ["closed"]
+
+    @api.depends("session_ids")
+    def _compute_current_session(self):
+        for pos_config in self:
+            session = pos_config.session_ids.filtered(
+                lambda r: r.state not in self.closed_states()
+            )
+            pos_config.current_session_id = session
+            pos_config.current_session_state = session.state
+            pos_config.has_active_session = session and True or False
+
+    def open_ui(self):
+        self.ensure_one()
+        return self._open_session(self.current_session_id.id)

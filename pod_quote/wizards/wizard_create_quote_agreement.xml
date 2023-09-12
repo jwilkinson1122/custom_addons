@@ -2,7 +2,7 @@
 <odoo>
 
     <record model="ir.ui.view" id="wizard_create_quote_agreement_form_view">
-        <field name="name">wizard.create.quote.agreement.form (in nw_pod_quote)</field>
+        <field name="name">wizard.create.quote.agreement.form (in pod_quote)</field>
         <field name="model">wizard.create.quote.agreement</field>
         <field name="arch" type="xml">
             <form string="Podiatry Quote">

@@ -114,7 +114,7 @@ class TestNWP(TransactionCase):
                 "name": name,
                 "is_practitioner": True,
                 "agent": True,
-                "commission": self.browse_ref("nw_pod_commission.commission_01").id,
+                "commission": self.browse_ref("pod_commission.commission_01").id,
             }
         )
 

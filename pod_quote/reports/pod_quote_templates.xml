@@ -172,7 +172,7 @@
     <template id="report_pod_quote_patient">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
-                <t t-call="nw_pod_quote.report_pod_quote_document" t-lang="doc.payor_id.lang" />
+                <t t-call="pod_quote.report_pod_quote_document" t-lang="doc.payor_id.lang" />
             </t>
         </t>
     </template>
@@ -180,7 +180,7 @@
     <template id="report_pod_quote">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
-                <t t-call="nw_pod_quote.report_pod_quote_document_payor" t-lang="doc.payor_id.lang" />
+                <t t-call="pod_quote.report_pod_quote_document_payor" t-lang="doc.payor_id.lang" />
             </t>
         </t>
     </template>

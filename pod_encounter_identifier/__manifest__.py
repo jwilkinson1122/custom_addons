@@ -9,7 +9,7 @@
         "pod_clinical_procedure",
         "pod_prescription_request",
         "pod_document",
-        "nw_pod_clinical_laboratory",
+        "pod_clinical_laboratory",
         "sequence_parser",
         # "pod_diagnostic_report",
         "pod_administration_center",

@@ -1,29 +1,24 @@
 {
-    "name": "Podiatry Prescription",
-    "summary": "Podiatry prescription base",
+    "name": "Podiatry sequence configuration",
     "version": "15.0.1.0.0",
     "author": "NWPL",
-    "category": "Podiatry",
-    "website": "https://nwpodiatric.com",
-    "license": "LGPL-3",
     "depends": [
-        "pod_base",
-        "pod_terminology_sct",
-        "pod_terminology_atc",
-        "product",
-        "stock",
-    ],
-    "data": [
-        "data/sct_data.xml",
-        "views/pod_menu.xml",
-        "views/product_views.xml",
-        "views/res_config_settings_views.xml",
-    ],
-    "demo": [
-        "demo/sct_data.xml", 
-        "demo/prescription.xml"
+        "mrp", 
+        "pod_block_request", 
+        "stock_move_line_auto_fill"
         ],
-    "application": False,
+    "data": [
+        "data/location_type_data.xml",
+        "security/ir.model.access.csv",
+        "wizard/pod_encounter_prescription_views.xml",
+        "views/product_category_views.xml",
+        "views/pod_encounter_views.xml",
+        "views/res_partner_views.xml",
+        "views/workflow_plan_definition_action.xml",
+        "report/pod_encounter_prescription_report.xml",
+    ],
+    "website": "https://nwpodiatric.com",
+    "license": "AGPL-3",
     "installable": True,
     "auto_install": False,
 }

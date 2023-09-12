@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- <record id="pod_laboratory_event_view_tree" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.tree</field>
+        <field name="model">pod.laboratory.event</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="pod_workflow.pod_event_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="string">Laboratory Event</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="pod_laboratory_event_view_tree" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.tree</field>
+        <field name="model">pod.laboratory.event</field>
+        <!-- <field name="mode">primary</field> -->
+        <field name="inherit_id" eval="False" />
+        <!-- <field name="inherit_id" ref="pod_workflow.pod_event_tree" /> -->
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" string="Laboratory Event" decoration-danger="state in ['entered-in-error', 'aborted']">
+                <field name="laboratory_request_id" invisible="1" />
+                <field name="patient_id" invisible="1" />
+                <field name="encounter_id" invisible="1" readonly="0" />
+                <field name="service_id" invisible="1" />
+                <field name="performer_id" invisible="1" />
+                <field name="laboratory_service_id" />
+                <field name="laboratory_code" invisible="1" readonly="0" />
+                <field name="private_amount" sum="Private Amount" />
+                <field name="coverage_amount" sum="Coverage Amount" />
+                <field name="is_sellable_insurance" invisible="1" />
+                <field name="is_sellable_private" invisible="1" />
+                <field name="private_cost" />
+                <field name="coverage_cost" />
+                <field name="fhir_state" invisible="1" />
+                <field name="state" invisible="1" />
+                <field name="coverage_agreement_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="pod_laboratory_event_view_form" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.form</field>
+        <field name="model">pod.laboratory.event</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="pod_workflow.pod_event_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Laboratory Event</attribute>
+            </xpath>
+            <field name="performer_id" position="after">
+                <field name="delay" />
+                <field name="laboratory_service_id" />
+                <field name="laboratory_code" invisible="1" readonly="0" />
+            </field>
+            <group name="inheritance" position="inside">
+                <field name="laboratory_request_id" />
+            </group>
+        </field>
+    </record>
+
+    <!-- <record id="pod_laboratory_event_view_form" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.form</field>
+        <field name="model">pod.laboratory.event</field>
+        <field name="inherit_id" ref="pod_clinical_laboratory.pod_laboratory_event_view_form" />
+        <field name="arch" type="xml">
+            <field name="performer_id" position="after">
+                <field name="delay" />
+                <field name="laboratory_service_id" />
+                <field name="laboratory_code" invisible="1" readonly="0" />
+            </field>
+        </field>
+    </record> -->
+
+    <record id="pod_laboratory_event_view_search" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.search</field>
+        <field name="model">pod.laboratory.event</field>
+        <field name="arch" type="xml">
+            <search string="Podiatry Laboratory Event">
+                <field name="internal_identifier" />
+                <field name="patient_id" />
+                <field name="performer_id" />
+                <field name="laboratory_request_id" />
+                <field name="name" />
+                <field name="state" />
+                <newline />
+                <filter domain="[('state', '=', 'preparation')]" help="Preparation" name="Preparation" />
+                <filter domain="[('state', '=', 'in-progress')]" help="In progress" name="In progress" />
+                <filter domain="[('state', '=', 'completed')]" help="Completed" name="Completed" />
+                <filter domain="[('state', '=', 'suspended')]" help="Suspended" name="Suspended" />
+                <filter domain="[('state', '=', 'entered-in-error')]" help="Error" name="Error" />
+                <filter domain="[('state', '=', 'aborted')]" help="Aborted" name="Aborted" />
+                <filter domain="[('state', '=', 'unknown')]" help="Unknown" name="Unknown" />
+                <newline />
+                <group expand="0" name="groupby" string="Group By...">
+                    <filter string="Patient" name="Patient" domain="[]" context="{'group_by':'patient_id'}" />
+                    <filter string="Performer" name="Performer" domain="[]" context="{'group_by':'performer_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pod_laboratory_event_action">
+        <field name="name">Laboratory Events</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.laboratory.event</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="pod_laboratory_event" name="Laboratory events" parent="pod_base.pod_clinical_event" sequence="10" action="pod_laboratory_event_action" />
+
+</odoo>

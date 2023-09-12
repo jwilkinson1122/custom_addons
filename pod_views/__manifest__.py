@@ -5,7 +5,7 @@
     "depends": [
         "account",
         "barcode_action",
-        "nw_pod_careplan_sale",
+        "pod_careplan_sale",
     ],
     "data": [
         "security/pod_encounter_create_group.xml",

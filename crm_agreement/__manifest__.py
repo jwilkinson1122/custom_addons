@@ -7,9 +7,9 @@
     "website": "https://nwpodiatric.com",
     "depends": [
         "sale_crm",
-        "nw_pod_quote",
+        "pod_quote",
         "pod_financial_coverage_agreement",
-        "nw_pod_administration_requester",
+        "pod_administration_requester",
     ],
     "data": [
         "security/ir.model.access.csv",

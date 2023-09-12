@@ -17,7 +17,7 @@ class PodiatryEncounter(models.Model):
                 encounter = document.encounter_id
         if not encounter:
             result = self.env["ir.actions.act_window"]._for_xml_id(
-                "nw_pod_views.encounter_find_by_barcode"
+                "pod_views.encounter_find_by_barcode"
             )
             context = safe_eval(result["context"])
             context.update(

@@ -324,7 +324,7 @@ class PodiatryQuote(models.Model):
     def send_quote_by_email(self):
         self.ensure_one()
         try:
-            template_id = self.env.ref("nw_pod_quote.email_pod_quote").id
+            template_id = self.env.ref("pod_quote.email_pod_quote").id
         except ValueError:
             template_id = False
         try:

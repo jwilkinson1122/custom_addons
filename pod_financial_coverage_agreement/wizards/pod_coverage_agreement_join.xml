@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="pod_coverage_agreement_join_form_view">
-        <field name="name">pod.coverage.agreement.join.form (in nw_pod_financial_coverage_agreement)</field>
+        <field name="name">pod.coverage.agreement.join.form (in pod_financial_coverage_agreement)</field>
         <field name="model">pod.coverage.agreement.join</field>
         <field name="arch" type="xml">
             <form string="Podiatry Coverage Agreement Join">

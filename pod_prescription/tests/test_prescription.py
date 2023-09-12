@@ -1,36 +1,43 @@
 from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestPrescription(TransactionCase):
     def setUp(self):
-        super(TestPrescription, self).setUp()
-        self.product_obj = self.env["product.template"]
-        self.sct_obj = self.env["pod.sct.concept"]
-        self.sct_code = self.sct_obj.search(
-            [("is_prescription_code", "=", True)], limit=1
+        super().setUp()
+        self.category = self.env["product.category"].create({"name": "Category"})
+        self.service = self.env["product.product"].create(
+            {"name": "Service", "type": "service"}
         )
-        self.sct_obj = self.env["pod.sct.concept"]
-        self.atc_code = self.env["pod.atc.concept"].search(
-            [("parent_id", "!=", False)], limit=1
+        self.partner = self.env["res.partner"].create({"name": "supplier"})
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Product",
+                "type": "product",
+                "categ_id": self.category.id,
+            }
         )
-        self.form = self.sct_obj.search(
-            [("is_prescription_form", "=", True)], limit=1
+        self.env["product.supplierinfo"].create(
+            {
+                "name": self.partner.id,
+                "product_name": "SUPPROD",
+                "product_tmpl_id": self.product.product_tmpl_id.id,
+                "product_id": self.product.id,
+            }
         )
-        self.vals = {
-            "name": "Name",
-            "type": "consu",
-            "is_prescription": True,
-            "form_id": self.form.id,
-            "sct_code_id": self.sct_code.id,
-            "atc_code_id": self.atc_code.id,
-        }
 
-    def test_classification(self):
-        product = self.product_obj.create(self.vals)
-        self.assertTrue(product.is_prescription)
+    def test_search(self):
+        self.assertFalse(self.env["product.product"]._name_search("SUPPROD"))
+        search = (
+            self.env["product.product"]
+            .with_context(search_on_supplier=True)
+            ._name_search("SUPPROD")
+        )
+        self.assertTrue(search)
+        self.assertEqual(self.product.id, search[0][0])
 
-    def test_constrains(self):
-        self.vals["type"] = "service"
+    def test_constrains_service(self):
         with self.assertRaises(ValidationError):
-            self.product_obj.create(self.vals)
+            self.env["product.category"].create(
+                {"name": "Categ", "category_product_id": self.product.id}
+            )
