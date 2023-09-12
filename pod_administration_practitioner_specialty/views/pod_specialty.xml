@@ -14,6 +14,12 @@
                     <group>
                         <field name="name" />
                         <field name="description" />
+                        <field name="code" />
+                        <label for="sequence_number_next" />
+                        <div>
+                            <field name="sequence_number_next" class="oe_inline" style="padding-right: 1.0em" />
+                            <field name="sequence_id" required="0" class="oe_inline" attrs="{'readonly': 1}" groups="base.group_no_one" />
+                        </div>
                         <field name="sct_code" options="{'no_create': True, 'no_open': True}" />
                     </group>
                 </sheet>
@@ -39,6 +45,6 @@
         <field name="res_model">pod.specialty</field>
         <field name="view_mode">tree,form</field>
     </record>
-    
+
     <menuitem id="pod_specialty_menu" name="Specialties" parent="pod_base.pod_root_configuration" action="pod_specialty_action" sequence="60" />
 </odoo>

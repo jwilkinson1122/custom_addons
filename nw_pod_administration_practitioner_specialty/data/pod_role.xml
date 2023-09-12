@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <record model="pod.role" id="pod_administration_practitioner.doctor">
-        <field name="specialty_required" eval="True" />
-    </record>
-</odoo>

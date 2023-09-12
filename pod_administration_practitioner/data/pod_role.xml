@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record model="pod.role" id="doctor">
+    <record model="pod.role" id="practitioner">
         <field name="name">Practitioner</field>
         <field name="description">Practitioner</field>
     </record>

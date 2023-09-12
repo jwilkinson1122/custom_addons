@@ -1,6 +1,6 @@
 {
     "name": "Podiatry Certify",
-    "summary": """Certify podiatry entities""",
+    "summary": """Certify entities""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "NWPL",

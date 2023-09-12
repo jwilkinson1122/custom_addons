@@ -10,7 +10,7 @@ class PodiatryNWPIdentifier(models.AbstractModel):
         return self.env["ir.config_parameter"].sudo().get_param("pod.identifier")
 
     @api.model
-    def _get_cb_internal_identifier(self, vals):
+    def _get_nw_internal_identifier(self, vals):
         encounter_code = vals.get("encounter_id", False) or self.env.context.get(
             "default_encounter_id"
         )

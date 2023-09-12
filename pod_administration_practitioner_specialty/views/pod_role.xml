@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="pod_role_view_form" model="ir.ui.view">
+        <field name="name">pod.role.view.form</field>
+        <field name="model">pod.role</field>
+        <field name="inherit_id" ref="pod_administration_practitioner.pod_role_view_form" />
+        <field name="arch" type="xml">
+            <field name="description" position="after">
+                <field name="specialty_required" />
+            </field>
+        </field>
+    </record>
+</odoo>

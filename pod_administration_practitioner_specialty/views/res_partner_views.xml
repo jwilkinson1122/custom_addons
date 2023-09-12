@@ -6,8 +6,22 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="pod_administration_practitioner.res_partner_view_form" />
         <field name="arch" type="xml">
+            <field name="practitioner_role_ids" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+            <field name="practitioner_role_ids" position="after">
+                <group>
+                    <field name="practitioner_role_id" options="{'no_create': True}" attrs="{'required': [('is_practitioner','=',True)], 'invisible': [('is_practitioner','=',False)]}" />
+                </group>
+            </field>
             <group name="practitioner_config" position="inside">
-                <field name="specialty_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('is_practitioner','=',False)]}" />
+                <field name="specialty_ids" widget="many2many_tags" options="{'no_create': True}" invisible="True"/>
+
+                <!-- <field name="specialty_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('is_practitioner','=',False)]}" /> -->
+                <field name="specialty_required" invisible="True" />
+                <group>
+                    <field name="specialty_id" options="{'no_create': True}" attrs="{'invisible': [('is_practitioner','=',False)], 'required': [('specialty_required', '=', True)]}" />
+                </group>
             </group>
         </field>
     </record>

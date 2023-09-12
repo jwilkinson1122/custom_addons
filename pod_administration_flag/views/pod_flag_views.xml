@@ -6,7 +6,9 @@
         <field name="name">pod.flag.view.tree</field>
         <field name="model">pod.flag</field>
         <field name="arch" type="xml">
-            <tree string="Podiatry Flags">
+            <tree string="Podiatry Flags" decoration-success="level == '1'" decoration-muted="level == '2'" decoration-warning="level == '3'" decoration-danger="level == '4'">
+                <field name="flag" />
+                <field name="level" invisible="1" />
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="patient_id" />
@@ -24,6 +26,7 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
                     <field name="active" invisible="1" />
                     <div name="button_box" class="oe_button_box" />
+                    <field name="flag" />
                     <h1>
                         <field name="internal_identifier" />
                     </h1>
