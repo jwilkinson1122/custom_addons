@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+
+
+    <record id="pod_coverage_agreement_xlsx" model="ir.actions.report">
+        <field name="name">Export to XLSX</field>
+        <field name="model">pod.coverage.agreement</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">pod_financial_coverage_agreement.mca_xlsx</field>
+        <field name="report_file">pod_coverage_agreement_xlsx</field>
+        <field name="attachment_use" eval="False" />
+    </record>
+
+</odoo>

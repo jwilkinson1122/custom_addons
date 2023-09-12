@@ -16,7 +16,7 @@ class TestPlanDefinition(TransactionCase):
                 "name": "Activity",
                 "service_id": self.product.id,
                 "model_id": self.browse_ref(
-                    "pod_clinical_laboratory." "model_pod_laboratory_request"
+                    "nw_pod_clinical_laboratory." "model_pod_laboratory_request"
                 ).id,
             }
         )

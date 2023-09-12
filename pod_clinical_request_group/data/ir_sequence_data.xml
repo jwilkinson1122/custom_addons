@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="seq_pod_request_group" model="ir.sequence">
+        <field name="name">Request Group</field>
+        <field name="code">pod.request.group</field>
+        <field name="prefix">RG</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

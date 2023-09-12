@@ -5,7 +5,7 @@
         <field name="model">pod.laboratory.event</field>
         <field
             name="inherit_id"
-            ref="pod_clinical_laboratory.pod_laboratory_event_view_form"
+            ref="nw_pod_clinical_laboratory.pod_laboratory_event_view_form"
         />
         <field name="arch" type="xml">
             <field name="performer_id" position="after">

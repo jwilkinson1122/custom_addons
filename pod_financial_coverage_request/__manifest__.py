@@ -10,7 +10,7 @@
         "pod_clinical_procedure",
         "pod_administration_encounter_careplan",
         "pod_document",
-        "pod_clinical_laboratory",
+        "nw_pod_clinical_laboratory",
         "pod_financial_coverage_agreement",
         "pod_encounter_identifier",
     ],
