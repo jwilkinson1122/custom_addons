@@ -53,7 +53,7 @@ class CrmLead(models.Model):
     def view_pod_quotes(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "nw_pod_quote.action_quotes"
+            "pod_quote.action_quotes"
         )
         action["context"] = ast.literal_eval(action["context"])
         action["context"].update(
@@ -92,7 +92,7 @@ class CrmLead(models.Model):
 
     def generate_quote(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "nw_pod_quote.action_quotes"
+            "pod_quote.action_quotes"
         )
         action.update(
             {

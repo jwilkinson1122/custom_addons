@@ -3,7 +3,7 @@
     <record model="ir.ui.view" id="pod_quote_form_view">
         <field name="name">pod.quote.form (in pod_crm_agreement)</field>
         <field name="model">pod.quote</field>
-        <field name="inherit_id" ref="nw_pod_quote.pod_quote_form" />
+        <field name="inherit_id" ref="pod_quote.pod_quote_form" />
         <field name="arch" type="xml">
             <field name="center_id" position="after">
                 <field name="lead_id" domain="[('partner_id.commercial_partner_id','=', payor_id)]" />
@@ -13,7 +13,7 @@
     <record model="ir.ui.view" id="pod_quote_search_view">
         <field name="name">pod.quote.search</field>
         <field name="model">pod.quote</field>
-        <field name="inherit_id" ref="nw_pod_quote.pod_quote_search" />
+        <field name="inherit_id" ref="pod_quote.pod_quote_search" />
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='activities_my']" position="after">
                 <separator />

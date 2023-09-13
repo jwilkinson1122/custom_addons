@@ -34,7 +34,7 @@
                         ${object.company_id.name}
                         ]]>
             </field>
-            <field name="report_template" ref="nw_pod_quote.action_report_pod_quote" />
+            <field name="report_template" ref="pod_quote.action_report_pod_quote" />
             <field name="report_name">${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.payor_id.lang}</field>
         </record>

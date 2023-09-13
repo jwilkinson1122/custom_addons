@@ -47,7 +47,7 @@ class WizardCreateQuoteAgreement(models.TransientModel):
             quote.button_add_line()
 
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "nw_pod_quote.action_quotes"
+            "pod_quote.action_quotes"
         )
         result["views"] = [(False, "form")]
         result["res_id"] = quote.id

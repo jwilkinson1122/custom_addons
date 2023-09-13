@@ -19,7 +19,7 @@
         "views/account_invoice_views.xml",
         "views/nomenclature_menu.xml",
         "views/report_invoice.xml",
-        "views/pod_requesst_group_view.xml",
+        "views/pod_request_group_view.xml",
         "views/pod_encounter_views.xml",
         "views/pod_request_views.xml",
         "views/pod_laboratory_event_view.xml",
