@@ -2,7 +2,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase
 
 
-class TestPodiatryCommission(SavepointCase):
+class TestPodiatrySpecialty(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

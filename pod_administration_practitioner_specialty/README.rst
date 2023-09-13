@@ -1,6 +1,6 @@
-==============================
-Podiatry Practitioner Specialty
-==============================
+=============================================
+Podiatry Administration Practitioner Specialty
+=============================================
 
 This module adds specialties on practitioner roles.
 
@@ -22,3 +22,4 @@ Usage
 #. Click 'Create' by providing a name. Below this, you can choose the roles this practitioner has and,
    after choosing the roles, you can assign any specialties.
 #. Click 'Save'
+#. Specialties can be added on roles

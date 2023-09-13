@@ -13,6 +13,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/sct_data.xml",
+        "data/pod_role.xml",
         "views/res_partner_views.xml",
         "views/pod_specialty.xml",
     ],
