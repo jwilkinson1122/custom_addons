@@ -3,7 +3,7 @@
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": [
-        "nw_pod_careplan_sale", 
+        "pod_careplan_sale", 
         "base_comment_template"
         ],
     "category": "Podiatry",

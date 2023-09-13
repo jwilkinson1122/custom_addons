@@ -33,7 +33,7 @@ class TestPodiatryQuote(TransactionCase):
         self.act_def_1 = self._create_act_def()
         self.plan_1 = self._create_plan()
         self.action_1 = self._create_action()
-        method_2 = self.browse_ref("nw_pod_careplan_sale.by_customer")
+        method_2 = self.browse_ref("pod_careplan_sale.by_customer")
         auth_method = self.env["pod.authorization.method"].create(
             {
                 "name": "Testing authorization_method",

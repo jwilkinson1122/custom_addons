@@ -2,7 +2,7 @@
     "name": "Podiatry Quote",
     "version": "15.0.1.0.0",
     "author": "NWPL",
-    "depends": ["nw_pod_careplan_sale", "base_comment_template"],
+    "depends": ["pod_careplan_sale", "base_comment_template"],
     "category": "Podiatry",
     "data": [
         "wizards/wizard_create_quote_agreement.xml",

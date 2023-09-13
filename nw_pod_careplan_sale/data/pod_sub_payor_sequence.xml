@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <record id="seq_pod_sub_payor" model="ir.sequence">
-        <field name="name">Podiatry sub Payor</field>
-        <field name="code">pod.sub.payor</field>
-        <field name="prefix">SPY</field>
-        <field name="padding">8</field>
-    </record>
-</odoo>

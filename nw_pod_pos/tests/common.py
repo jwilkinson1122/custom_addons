@@ -1,4 +1,4 @@
-from odoo.addons.nw_pod_careplan_sale.tests import common
+from odoo.addons.pod_careplan_sale.tests import common
 
 
 class PodiatrySavePointCase(common.PodiatrySavePointCase):

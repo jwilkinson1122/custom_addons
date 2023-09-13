@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="pod_laboratory_event_view_form" model="ir.ui.view">
+        <field name="name">pod.laboratory.event.view.form</field>
+        <field name="model">pod.laboratory.event</field>
+        <field name="inherit_id" ref="pod_clinical_laboratory.pod_laboratory_event_view_form" />
+        <field name="arch" type="xml">
+            <field name="performer_id" position="after">
+                <field name="coverage_amount" />
+                <field name="private_amount" />
+                <field name="is_sellable_private" />
+                <field name="is_sellable_insurance" />
+            </field>
+        </field>
+    </record>
+</odoo>
