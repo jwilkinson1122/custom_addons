@@ -6,6 +6,7 @@
         <field name="model">pod.flag.category</field>
         <field name="arch" type="xml">
             <tree string="Podiatry Flag Categories">
+                <field name="flag" />
                 <field name="name" />
                 <field name="description" />
             </tree>
@@ -26,6 +27,9 @@
                         <field name="name" />
                     </h1>
                     <group>
+                        <field name="flag" />
+                        <field name="icon" />
+                        <field name="level" />
                         <field name="description" />
                     </group>
                 </sheet>

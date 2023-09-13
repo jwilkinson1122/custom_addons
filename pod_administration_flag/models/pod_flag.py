@@ -22,6 +22,8 @@ class PodiatryFlag(models.Model):
     category_id = fields.Many2one("pod.flag.category", required=True)
     name = fields.Char(related="category_id.name", readonly=True, store=True)
     description = fields.Text(required=True)
+    flag = fields.Char(related="category_id.flag", readonly=True)
+    level = fields.Selection(related="category_id.level", readonly=True)
     closure_date = fields.Datetime(readonly=True)
     closure_uid = fields.Many2one("res.users", readonly=True, string="Closure user")
 

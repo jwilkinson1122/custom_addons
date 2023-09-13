@@ -3,7 +3,7 @@ from odoo.tests.common import TransactionCase
 
 class TestPodiatryAdministrationFlag(TransactionCase):
     def test_service(self):
-        category = self.env["pod.flag.category"].create({"name": "Category"})
+        category = self.env["pod.flag.category"].create({"name": "Category", "icon": "fa fa-flag"})
         patient = self.env["pod.patient"].create({"name": "Patient"})
         self.assertEqual(patient.pod_flag_count, 0)
         flag = self.env["pod.flag"].create(
@@ -25,3 +25,6 @@ class TestPodiatryAdministrationFlag(TransactionCase):
             flag.display_name,
             "[{}] {}".format(flag.internal_identifier, category.name),
         )
+        self.assertTrue(flag.level)
+        self.assertTrue(flag.flag)
+        self.assertEqual(flag.flag, "fa fa-flag text-success")
