@@ -1,5 +1,5 @@
 ====================
-Podiatry Patient Flag
+Podiatry Administration Flag
 ====================
 
-Podiatry Patient Flag
+Podiatry Administration Flag

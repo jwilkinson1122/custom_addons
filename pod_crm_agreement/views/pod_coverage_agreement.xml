@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="pod_coverage_agreement_view">
-        <field name="name">pod.coverage.agreement.form (in crm_agreement)</field>
+        <field name="name">pod.coverage.agreement.form (in pod_crm_agreement)</field>
         <field name="model">pod.coverage.agreement</field>
         <field
             name="inherit_id"

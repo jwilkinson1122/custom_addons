@@ -107,7 +107,7 @@ class CrmLead(models.Model):
     def send_email_from_lead(self):
         self.ensure_one()
         try:
-            template_id = self.env.ref("crm_agreement.email_from_lead").id
+            template_id = self.env.ref("pod_crm_agreement.email_from_lead").id
         except ValueError:
             template_id = False
         try:

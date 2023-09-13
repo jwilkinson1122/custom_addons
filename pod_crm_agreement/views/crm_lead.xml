@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="crm_lead_view_form">
-        <field name="name">crm.lead.form (in crm_agreement)</field>
+        <field name="name">crm.lead.form (in pod_crm_agreement)</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form" />
         <field name="arch" type="xml">
@@ -23,14 +23,14 @@
                 <button type="object" icon="fa-hand-holding-usd" attrs="{'invisible': [('is_payor', '=', False)]}" name="view_pod_quotes">
                     <field string="Quotes" name="pod_quote_count" widget="statinfo" />
                 </button>
-                <button name="%(crm_agreement.crm_lead_add_agreement_act_window)s" type="action" icon="fa-plus" attrs="{'invisible': [('is_payor', '=', False)]}" string="Add agreement" />
+                <button name="%(pod_crm_agreement.crm_lead_add_agreement_act_window)s" type="action" icon="fa-plus" attrs="{'invisible': [('is_payor', '=', False)]}" string="Add agreement" />
                 <button name="generate_quote" type="object" icon="fa-plus" attrs="{'invisible': [('is_payor', '=', False)]}" string="Generate quote">
                 </button>
             </div>
         </field>
     </record>
     <record model="ir.ui.view" id="crm_case_kanban_view_leads">
-        <field name="name">crm.lead.kanban (in crm_agreement)</field>
+        <field name="name">crm.lead.kanban (in pod_crm_agreement)</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
         <field name="arch" type="xml">
