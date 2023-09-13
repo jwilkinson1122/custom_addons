@@ -7,6 +7,8 @@
         "sale_third_party",
         "pod_authorization",
         "nw_pod_sale_report_invoice",
+        
+        # pod.laboratory.event
     ],
     "data": [
         "security/ir.model.access.csv",

@@ -4,6 +4,8 @@
     "author": "NWPL",
     "depends": [
         "mrp", 
+        "pod_clinical_request_group",
+        "pod_prescription_request",
         "nw_pod_block_request", 
         "stock_move_line_auto_fill"
         ],
