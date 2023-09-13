@@ -7,7 +7,7 @@
         "sale_third_party",
         "pod_authorization",
         "nw_pod_sale_report_invoice",
-        
+        "pod_clinical_laboratory",
         # pod.laboratory.event
     ],
     "data": [

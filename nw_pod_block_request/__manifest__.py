@@ -9,14 +9,14 @@
         # "pod_workflow",
         # "pod_clinical_careplan",
         
-        # medical_encounter_identifier
+        # pod_encounter_identifier
         #  "pod_clinical_request_group",
         # "sale_commission_delegated_partner",
-        # "cb_medical_sale_invoice_group_method",
-        # "cb_medical_workflow_activity",
-        # "medical_clinical_procedure"
-        #       "medical_workflow",
-        # "medical_administration_location",
+        # "pod_sale_invoice_group_method",
+        # "pod_workflow_activity",
+        # "pod_clinical_procedure"
+        #       "pod_workflow",
+        # "pod_administration_location",
         ],
     # "depends": ["nw_pod_pos"],
     "data": [

@@ -39,7 +39,7 @@ class TestNWPodiatryCommission(common.PodiatrySavePointCase):
         cls.session.action_pos_session_open()
         cls.def_third_party_product = cls.create_product("THIRD PARTY PRODUCT")
         cls.env["ir.config_parameter"].set_param(
-            "cb.default_third_party_product", cls.def_third_party_product.id
+            "default_third_party_product", cls.def_third_party_product.id
         )
 
     def test_session_sequence(self):

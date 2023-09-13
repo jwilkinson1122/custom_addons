@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
+        <field name="priority" eval="16" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" name="action_view_request" class="oe_stat_button" icon="fa-syringe" context="{'model_name': 'pod.laboratory.request'}">
+                    <field name="laboratory_request_count" widget="statinfo" string="Laboratory requests" />
+                    <field name='laboratory_request_ids' invisible="1" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,16 +1,16 @@
 from odoo import api, models
 
 
-class PodiatryNWPIdentifier(models.AbstractModel):
-    _name = "pod.nwp.identifier"
-    _description = "pod.nwp.identifier"
+class PodiatryIdentifier(models.AbstractModel):
+    _name = "pod.identifier"
+    _description = "pod.identifier"
 
     @api.model
     def get_request_format(self):
         return self.env["ir.config_parameter"].sudo().get_param("pod.identifier")
 
     @api.model
-    def _get_cb_internal_identifier(self, vals):
+    def _get_internal_identifier(self, vals):
         encounter_code = vals.get("encounter_id", False) or self.env.context.get(
             "default_encounter_id"
         )

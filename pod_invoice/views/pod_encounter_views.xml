@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="nw_pod_careplan_sale.pod_encounter_view_form" />
         <field name="arch" type="xml">
             <button name="onleave2finished" position="after">
-                <button name="%(nw_pod_invoice.pod_encounter_change_partner_action)d" type="action" string="Change Partner" class="oe_highlight" context="{'default_encounter_id': active_id}" attrs="{'invisible': [('state','not in',['finished'])]}" />
+                <button name="%(pod_invoice.pod_encounter_change_partner_action)d" type="action" string="Change Partner" class="oe_highlight" context="{'default_encounter_id': active_id}" attrs="{'invisible': [('state','not in',['finished'])]}" />
             </button>
         </field>
     </record>

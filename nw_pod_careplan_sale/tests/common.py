@@ -281,7 +281,7 @@ class PodiatrySavePointCase(SavepointCase):
                 "name": "Laboratory activity",
                 "service_id": self.product_07.id,
                 "model_id": self.env.ref(
-                    "nw_pod_clinical_laboratory." "model_pod_laboratory_request"
+                    "pod_clinical_laboratory." "model_pod_laboratory_request"
                 ).id,
             }
         )
