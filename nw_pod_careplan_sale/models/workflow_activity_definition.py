@@ -8,8 +8,8 @@ class ActivityDefinition(models.Model):
         res = super()._get_pod_values(vals, parent, plan, action)
         if parent:
             res.update({"sub_payor_id": parent.sub_payor_id.id or False})
-        if self.model_id.model == "pod.prescription.request":
-            # Prescription requests should have quantity equal to 1
+        if self.model_id.model == "pod.device.request":
+            # Device requests should have quantity equal to 1
             res["qty"] = 1
         return res
 

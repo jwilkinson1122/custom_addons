@@ -26,13 +26,13 @@
                         <group name="product_type" string="Product Type">
                             <field name="product_type" />
                         </group>
-                        <group name='ingredient' string='Ingredients' attrs="{'invisible':[('product_type', '!=', 'prescription')]}">
-                            <field name="ingredients" attrs="{'required':[('product_type', '==', 'prescription')]}" />
-                            <field name="dosage" attrs="{'required':[('product_type', '==', 'prescription')]}" />
+                        <group name='ingredient' string='Ingredients' attrs="{'invisible':[('product_type', '!=', 'device')]}">
+                            <field name="ingredients" attrs="{'required':[('product_type', '==', 'device')]}" />
+                            <field name="dosage" attrs="{'required':[('product_type', '==', 'device')]}" />
                         </group>
-                        <group name="form" string="Form" attrs="{'invisible':[('product_type', '!=', 'prescription')]}">
-                            <field name="form_id" widget="selection" attrs="{'required':[('product_type', '==', 'prescription')]}" />
-                            <field name="administration_route_ids" widget="many2many_tags" attrs="{'required':[('product_type', '==', 'prescription')]}" />
+                        <group name="form" string="Form" attrs="{'invisible':[('product_type', '!=', 'device')]}">
+                            <field name="form_id" widget="selection" attrs="{'required':[('product_type', '==', 'device')]}" />
+                            <field name="administration_route_ids" widget="many2many_tags" attrs="{'required':[('product_type', '==', 'device')]}" />
                         </group>
                     </group>
                 </sheet>

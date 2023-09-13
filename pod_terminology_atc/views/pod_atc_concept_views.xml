@@ -41,7 +41,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="pod_prescription_atc_concept_window_action">
+    <record model="ir.actions.act_window" id="pod_device_atc_concept_window_action">
         <field name="name">ATC classification</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pod.atc.concept</field>
@@ -49,10 +49,10 @@
         <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.menu" id="pod_prescription_atc_concept">
-        <field name="name">Prescription ATC Concepts</field>
+    <record model="ir.ui.menu" id="pod_device_atc_concept">
+        <field name="name">Device ATC Concepts</field>
         <field name="parent_id" ref="pod_base.pod_root_terminologies" />
-        <field name="action" ref="pod_prescription_atc_concept_window_action" />
+        <field name="action" ref="pod_device_atc_concept_window_action" />
         <field name="sequence" eval="20" />
     </record>
     

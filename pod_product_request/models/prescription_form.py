@@ -1,10 +1,10 @@
 from odoo import fields, models
 
 
-class PrescriptionForm(models.Model):
+class DeviceForm(models.Model):
 
-    _name = "prescription.form"
-    _description = "Prescription Form"
+    _name = "device.form"
+    _description = "Device Form"
 
     name = fields.Char()
 

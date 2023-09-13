@@ -13,12 +13,12 @@
             <field name="key">pod.identifier</field>
             <field name="value">I%02d</field>
         </record>
-        <record id="pod_prescription_administration_identifier_format" model="ir.config_parameter" forcecreate="True">
-            <field name="key">pod.prescription.administration.ident</field>
+        <record id="pod_device_administration_identifier_format" model="ir.config_parameter" forcecreate="True">
+            <field name="key">pod.device.administration.ident</field>
             <field name="value">MA%02d</field>
         </record>
-        <record id="pod_prescription_request_identifier_format" model="ir.config_parameter" forcecreate="True">
-            <field name="key">pod.prescription.request.identifier</field>
+        <record id="pod_device_request_identifier_format" model="ir.config_parameter" forcecreate="True">
+            <field name="key">pod.device.request.identifier</field>
             <field name="value">MR%02d</field>
         </record>
         <record id="pod_procedure_identifier_format" model="ir.config_parameter" forcecreate="True">

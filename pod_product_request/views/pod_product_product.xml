@@ -24,15 +24,15 @@
                         <group name="product_type" string="Product Type">
                             <field name="product_type" />
                         </group>
-                        <group name='ingredient' string='Ingredient' attrs="{'invisible':[('product_type', '!=', 'prescription')]}">
-                            <field name="ingredients" attrs="{'required':[('product_type', '==', 'prescription')]}" />
-                            <field name="dosage" attrs="{'required':[('product_type', '==', 'prescription')]}" />
+                        <group name='ingredient' string='Ingredient' attrs="{'invisible':[('product_type', '!=', 'device')]}">
+                            <field name="ingredients" attrs="{'required':[('product_type', '==', 'device')]}" />
+                            <field name="dosage" attrs="{'required':[('product_type', '==', 'device')]}" />
                         </group>
-                        <group name="form" string="Form" attrs="{'invisible':[('product_type', '!=', 'prescription')]}">
-                            <field name="form_id" widget="selection" attrs="{'required':[('product_type', '==', 'prescription')]}" />
-                            <field name="administration_route_ids" widget="many2many_tags" attrs="{'required':[('product_type', '==', 'prescription')]}" />
+                        <group name="form" string="Form" attrs="{'invisible':[('product_type', '!=', 'device')]}">
+                            <field name="form_id" widget="selection" attrs="{'required':[('product_type', '==', 'device')]}" />
+                            <field name="administration_route_ids" widget="many2many_tags" attrs="{'required':[('product_type', '==', 'device')]}" />
                         </group>
-                        <group name="amount" string="Amount" attrs="{'invisible':['&amp;', ('product_type', '==', 'prescription'), ('form_id', '==', False)]}">
+                        <group name="amount" string="Amount" attrs="{'invisible':['&amp;', ('product_type', '==', 'device'), ('form_id', '==', False)]}">
                             <field name="amount" required="1" />
                             <field name="amount_uom_domain" invisible="1" />
                             <field name="amount_uom_id" domain="amount_uom_domain" options="{'no_create': True, 'no_open': True}" required="1" />

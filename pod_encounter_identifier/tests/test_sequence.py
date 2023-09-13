@@ -106,18 +106,18 @@ class TestSequence(TransactionCase):
             },
         )
 
-    def test_prescription_administration(self):
+    def test_device_administration(self):
         self.check_model(
-            "pod.prescription.administration",
+            "pod.device.administration",
             {
                 "product_id": self.product.id,
                 "product_uom_id": self.uom_unit.id,
             },
         )
 
-    def test_prescription_request(self):
+    def test_device_request(self):
         request_1, request_2, request_3 = self.check_model(
-            "pod.prescription.request",
+            "pod.device.request",
             {
                 "product_id": self.product.id,
                 "product_uom_id": self.uom_unit.id,

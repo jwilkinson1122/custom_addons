@@ -1,5 +1,5 @@
 {
-    "name": "Podiatry Encounter careplan",
+    "name": "Podiatry Administration Encounter Careplan",
     "summary": "Joins careplans and encounters",
     "version": "15.0.1.0.0",
     "author": "NWPL",

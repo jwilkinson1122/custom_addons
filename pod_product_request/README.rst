@@ -2,7 +2,7 @@
 Podiatry Product Request
 =======================
 
-This addon enables to create product requests (as prescriptions or internal orders)
+This addon enables to create product requests (as devices or internal orders)
 
 Usage
 =====
@@ -10,15 +10,15 @@ Usage
 First, check that the user has the needed security permits.
 
 
-Prescription Form
+Device Form
 ~~~~~~~~~~~~~~~
 
-To create a new prescription.form:
+To create a new device.form:
 
-#. Go to Podiatry --> Configuration --> Prescription Form
+#. Go to Podiatry --> Configuration --> Device Form
 #. Create a new record.
 
-The uoms selected on the uom_ids field, will be the ones allowed to choose when creating a pod.product.request of a prescription with this form. The first one will be set as default.
+The uoms selected on the uom_ids field, will be the ones allowed to choose when creating a pod.product.request of a device with this form. The first one will be set as default.
 
 Podiatry Administration Route
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,15 +51,15 @@ A Podiatry Product Request can be created from an order or not. To create it fro
 External ('discharge') Podiatry Product Request Order
 ****************************************************
 
-#. Go to a Patient or an Encounter form and click on "Create Ext. Prescription".
-#. Create a new line on prescriptions and set the desired values.
+#. Go to a Patient or an Encounter form and click on "Create Ext. Device".
+#. Create a new line on devices and set the desired values.
 #. Once everything is correct, click "Validate". The state will be set to Completed.
 
 Internal Product Request Order
 ****************************************************
 
 #. Go to Patient or an Encounter form and click on "Create Int. Podiatry Order"
-#. Create a new line on prescriptions and set the desired values.
+#. Create a new line on devices and set the desired values.
 #. Once everything is correct, click "Validate". The state will be set to Active and you'll be able to create administrations.
 #. To create an administration for a request click on "Administrate". A pop up will be opened, and the values will be filled by default with the request's values. Change values if needed and validate it.
 #. You cannot cancel a request that has completed administrations. To do so, you should cancel them first.

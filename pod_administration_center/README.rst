@@ -1,5 +1,5 @@
 ===============================
-Podiatry Administration Location
+Podiatry Administration Center
 ===============================
 
 Extension that adds a Podiatry Administration Center entity as

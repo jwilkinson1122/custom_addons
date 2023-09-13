@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="pod_encounter_device_form" model="ir.ui.view">
+        <field name="name">pod.encounter.device</field>
+        <field name="model">pod.encounter.device</field>
+        <field name="arch" type="xml">
+            <form string="Add Device">
+                <group>
+                    <field name="pod_id" invisible="1" />
+                    <field name="location_id" options="{'no_create': True}" />
+                    <field name="product_id" options="{'no_create': True}" context="{'search_on_supplier': True}" />
+                </group>
+                <footer>
+                    <button name="run" string="Create" type="object" class="oe_highlight" />
+                    or
+                    <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="pod_encounter_device_action" model="ir.actions.act_window">
+        <field name="name">Add Device</field>
+        <field name="res_model">pod.encounter.device</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_pod_id': active_id}</field>
+        <field name="target">new</field>
+    </record>
+    
+</odoo>

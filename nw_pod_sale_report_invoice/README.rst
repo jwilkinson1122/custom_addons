@@ -1,5 +1,5 @@
 ======================
-NWP Sale Report Invoice
+Podiatry Sale Report Invoice
 ======================
 
 Sale Report invoice modification for NWP

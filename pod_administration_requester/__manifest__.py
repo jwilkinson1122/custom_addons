@@ -1,5 +1,5 @@
 {
-    "name": " Podiatry Requester",
+    "name": " Podiatry Administration Requester",
     "version": "15.0.1.0.0",
     "category": "",
     "website": "https://nwpodiatric.com",

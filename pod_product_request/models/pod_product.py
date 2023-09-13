@@ -24,8 +24,8 @@ class PodiatryProductTemplate(models.Model):
     product_count = fields.Integer(compute="_compute_product_count")
 
     product_type = fields.Selection(
-        selection=[("device", "Device"), ("prescription", "Prescription")],
-        default="prescription",
+        selection=[("device", "Device"), ("device", "Device")],
+        default="device",
     )
 
     code_template = fields.Char()
@@ -35,7 +35,7 @@ class PodiatryProductTemplate(models.Model):
 
     dosage = fields.Char()
 
-    form_id = fields.Many2one(comodel_name="prescription.form")
+    form_id = fields.Many2one(comodel_name="device.form")
     # Fhir Concept: Form
 
     form_name = fields.Char(related="form_id.name", string="Form Name")

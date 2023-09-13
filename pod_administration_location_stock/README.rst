@@ -1,5 +1,5 @@
 ===========================
-Podiatry Location with stock
+Podiatry Administration Location Stock
 ===========================
 
 This module links pod locations with stock locations in order to produce

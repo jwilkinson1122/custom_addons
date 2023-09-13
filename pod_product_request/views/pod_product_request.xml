@@ -37,8 +37,8 @@
                             <field name="cancel_date" states="cancelled" />
                             <field name="cancel_user_id" states="cancelled" />
                         </group>
-                        <group string="Prescription" attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
-                            <label string="Prescription" for="pod_product_template_id" />
+                        <group string="Device" attrs="{'invisible': [('product_type', '!=', 'device')]}">
+                            <label string="Device" for="pod_product_template_id" />
                             <field name="pod_product_template_id" nolabel="1" attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}" />
                             <field name="dose_uom_domain" invisible="1" nolabel="1" />
                         </group>
@@ -50,7 +50,7 @@
                             <field name="pod_product_id" string="Product" />
                             <field name="quantity_to_dispense" string="Quantity" />
                         </group>
-                        <group name="posology" string="Posology" attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
+                        <group name="posology" string="Posology" attrs="{'invisible': [('product_type', '!=', 'device')]}">
                             <group>
                                 <field name="dose_quantity" attrs="{ 'readonly':[('state', '!=', 'draft')]}" />
                                 <field name="rate_quantity" attrs="{ 'readonly':[('state', '!=', 'draft')]}" />
@@ -62,7 +62,7 @@
                                 <field name="duration_uom_id" string="Uom" attrs="{ 'readonly':[('state', '!=', 'draft')]}" />
                             </group>
                         </group>
-                        <group name="administration_route" string="Administration Route" attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
+                        <group name="administration_route" string="Administration Route" attrs="{'invisible': [('product_type', '!=', 'device')]}">
                             <field name="administration_route_id" string="Adm.Route" domain="administration_route_domain" attrs="{ 'readonly':[('state', '!=', 'draft')]}" />
                             <field name="administration_route_domain" invisible="1" />
                         </group>

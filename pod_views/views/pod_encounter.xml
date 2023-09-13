@@ -67,8 +67,8 @@
     <record model="ir.ui.view" id="pod_encounter_tree_show_create">
         <field name="name">pod.encounter.tree.create</field>
         <field name="model">pod.encounter</field>
-        <field name="inherit_id" ref="nw_pod_views.pod_encounter_tree_hide_create" />
-        <field name="groups_id" eval="[(4, ref('nw_pod_views.group_can_create_encounters'))]" />
+        <field name="inherit_id" ref="pod_views.pod_encounter_tree_hide_create" />
+        <field name="groups_id" eval="[(4, ref('pod_views.group_can_create_encounters'))]" />
         <field name="arch" type="xml">
             <tree position="attributes">
                 <attribute name="create">true</attribute>
@@ -91,7 +91,7 @@
         <field name="name">pod.encounter.form.create</field>
         <field name="model">pod.encounter</field>
         <field name="inherit_id" ref="pod_encounter_form_hide_create" />
-        <field name="groups_id" eval="[(4, ref('nw_pod_views.group_can_create_encounters'))]" />
+        <field name="groups_id" eval="[(4, ref('pod_views.group_can_create_encounters'))]" />
         <field name="arch" type="xml">
             <form position="attributes">
                 <attribute name="create">true</attribute>

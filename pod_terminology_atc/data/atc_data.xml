@@ -7247,7 +7247,7 @@
     </record>
     <record id="atc_N02C" model="pod.atc.concept">
         <field name="level_code">C</field>
-        <field name="name">Migraine prescription</field>
+        <field name="name">Migraine device</field>
         <field name="editable" eval="False" />
         <field name="code">N02C</field>
         <field name="parent_id" ref="atc_N02" />

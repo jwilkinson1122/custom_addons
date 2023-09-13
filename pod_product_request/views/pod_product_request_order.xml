@@ -36,20 +36,20 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="prescriptions" string="Prescriptions" required="1">
+                        <page name="devices" string="Devices" required="1">
                             <field name="product_request_ids" attrs="{'readonly':[('state', '!=', 'draft')]}">
                                 <tree editable="bottom" decoration-muted="state == 'cancelled'">
                                     <field name="pod_product_template_id" options="{'no_create': True, 'no_open': True}" />
                                     <field name="dose_quantity" string="Dose" required="1" />
                                     <field name="dose_uom_domain" invisible="1" />
                                     <field name="dose_uom_id" string="Uom" domain="dose_uom_domain" options="{'no_create': True, 'no_open': True}" required="1" />
-                                    <field name="rate_quantity" string="Rate" attrs="{'invisible': [('product_type', '!=', 'prescription')]}" />
-                                    <field name="rate_uom_id" string="Uom" attrs="{'invisible': [('product_type', '!=', 'prescription')], 'required': [('product_type', '==', 'prescription')]}" domain="[('category_id', '=', %(uom.uom_categ_wtime)s)]" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="rate_quantity" string="Rate" attrs="{'invisible': [('product_type', '!=', 'device')]}" />
+                                    <field name="rate_uom_id" string="Uom" attrs="{'invisible': [('product_type', '!=', 'device')], 'required': [('product_type', '==', 'device')]}" domain="[('category_id', '=', %(uom.uom_categ_wtime)s)]" options="{'no_create': True, 'no_open': True}" />
                                     <field name="category" invisible="1" />
                                     <field name="product_type" invisible="1" />
-                                    <field name="duration" string="Duration" attrs="{'invisible': [('product_type', '!=', 'prescription')]}" />
-                                    <field name="duration_uom_id" string="Uom" attrs="{'invisible': [('product_type', '!=', 'prescription')], 'required': [('product_type', '==', 'prescription')]}" domain="[('category_id', '=', %(uom.uom_categ_wtime)s)]" options="{'no_create': True, 'no_open': True}" />
-                                    <field name="administration_route_id" string="Adm. Route" domain="administration_route_domain" options="{'no_create': True, 'no_open': True}" attrs="{'column_invisible': [('parent.category', '!=', 'inpatient')], 'invisible': [('product_type', '!=', 'prescription')]}" />
+                                    <field name="duration" string="Duration" attrs="{'invisible': [('product_type', '!=', 'device')]}" />
+                                    <field name="duration_uom_id" string="Uom" attrs="{'invisible': [('product_type', '!=', 'device')], 'required': [('product_type', '==', 'device')]}" domain="[('category_id', '=', %(uom.uom_categ_wtime)s)]" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="administration_route_id" string="Adm. Route" domain="administration_route_domain" options="{'no_create': True, 'no_open': True}" attrs="{'column_invisible': [('parent.category', '!=', 'inpatient')], 'invisible': [('product_type', '!=', 'device')]}" />
                                     <field name="administration_route_domain" invisible="1" />
                                     <field name="observations" />
                                     <field name="pod_product_id" attrs="{'column_invisible': [('parent.category', '!=', 'discharge')]}" />
@@ -57,7 +57,7 @@
                                     <field name="can_administrate" invisible="1" />
                                     <button name="create_pod_product_administration" class="btn btn-link text-left" type="object" icon="fa-hand-holding-pod" string="Administrate" attrs="{'column_invisible': ['|', ('parent.can_administrate', '!=', True), ('parent.category', '==', 'discharge')], 'invisible': [('can_administrate', '!=', True)]}" />
                                     <field name="product_administrations_count" class="text-right" string="Administrations" attrs="{'column_invisible': ['|', ('parent.can_administrate', '!=', True), ('parent.category', '==', 'discharge')]}" />
-                                    <button name="action_view_pod_product_administration" class="btn btn-link text-left" type="object" icon="fa-solid fa-prescription-bottle" string="View Administrations" attrs="{'invisible': [('state', '==', 'draft')], 'column_invisible': [('parent.category', '==', 'discharge')]}" />
+                                    <button name="action_view_pod_product_administration" class="btn btn-link text-left" type="object" icon="fa-solid fa-device-bottle" string="View Administrations" attrs="{'invisible': [('state', '==', 'draft')], 'column_invisible': [('parent.category', '==', 'discharge')]}" />
                                     <field name="state" readonly="1" />
                                 </tree>
                             </field>
@@ -105,7 +105,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="external_pod_product_request_order_act_window">
-        <field name="name">External Prescriptions</field>
+        <field name="name">External Devices</field>
         <field name="res_model">pod.product.request.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('category', '=', 'discharge')]</field>

@@ -48,8 +48,8 @@
         ]" />
     </record>
 
-    <record model="ir.ui.menu" id="pod_root_prescriptions">
-        <field name="name">Prescriptions</field>
+    <record model="ir.ui.menu" id="pod_root_devices">
+        <field name="name">Devices</field>
         <field name="parent_id" ref="pod_root" />
         <field name="sequence" eval="30" />
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'),

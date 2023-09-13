@@ -17,9 +17,9 @@ class PodiatryProductRequestOrder(models.Model):
 
     category = fields.Selection(
         selection=[("inpatient", "Inpatient"), ("discharge", "Discharge")],
-        help="'Inpatient' includes requests for prescriptions to be "
+        help="'Inpatient' includes requests for devices to be "
         "administered or consumed in an inpatient or acute care setting "
-        " 'Discharge' Includes requests for prescriptions created when "
+        " 'Discharge' Includes requests for devices created when "
         "the patient is being released from a facility ",
     )
 
@@ -134,7 +134,7 @@ class PodiatryProductRequestOrder(models.Model):
         self.ensure_one()
         if not self.product_request_ids:
             raise ValidationError(
-                _("It must contain at least one prescription")
+                _("It must contain at least one device")
             )
         if self.category == "inpatient":
             self.draft2active_action()

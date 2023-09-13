@@ -1,8 +1,8 @@
 from odoo import api, models
 
 
-class PodiatryPrescriptionAdministration(models.Model):
-    _inherit = "pod.prescription.administration"
+class PodiatryDeviceAdministration(models.Model):
+    _inherit = "pod.device.administration"
 
     @api.model
     def get_request_format(self):

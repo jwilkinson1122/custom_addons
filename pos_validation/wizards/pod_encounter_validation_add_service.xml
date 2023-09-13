@@ -28,7 +28,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="pod_encounter_validation_add_service_act_window">
-        <field name="name">Podiatry Encounter Validation Add Service</field>
+        <field name="name">Podiatry Administration Encounter Validation Add Service</field>
         <field name="res_model">pod.encounter.validation.add.service</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_encounter_id': active_id}</field>

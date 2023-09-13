@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record model="ir.ui.view" id="prescription_form_form_view">
-        <field name="name">prescription.form.form (in pod_product_request)</field>
-        <field name="model">prescription.form</field>
+    <record model="ir.ui.view" id="device_form_form_view">
+        <field name="name">device.form.form (in pod_product_request)</field>
+        <field name="model">device.form</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -18,9 +18,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="prescription_form_search_view">
-        <field name="name">prescription.form.search (in pod_product_request)</field>
-        <field name="model">prescription.form</field>
+    <record model="ir.ui.view" id="device_form_search_view">
+        <field name="name">device.form.search (in pod_product_request)</field>
+        <field name="model">device.form</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
@@ -28,9 +28,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="prescription_form_tree_view">
-        <field name="name">prescription.form.tree (in pod_product_request)</field>
-        <field name="model">prescription.form</field>
+    <record model="ir.ui.view" id="device_form_tree_view">
+        <field name="name">device.form.tree (in pod_product_request)</field>
+        <field name="model">device.form</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
@@ -38,18 +38,18 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="prescription_form_act_window">
-        <field name="name">Prescription Form</field>
-        <field name="res_model">prescription.form</field>
+    <record model="ir.actions.act_window" id="device_form_act_window">
+        <field name="name">Device Form</field>
+        <field name="res_model">device.form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.menu" id="prescription_form_menu">
-        <field name="name">Prescription Form</field>
+    <record model="ir.ui.menu" id="device_form_menu">
+        <field name="name">Device Form</field>
         <field name="parent_id" ref="pod_product_menu" />
-        <field name="action" ref="prescription_form_act_window" />
+        <field name="action" ref="device_form_act_window" />
         <field name="sequence" eval="50" />
     </record>
     

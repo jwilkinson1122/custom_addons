@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 class PodiatryEncounter(models.Model):
     _name = "pod.encounter"
-    _description = "Podiatry Encounter"
+    _description = "Podiatry Administration Encounter"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 

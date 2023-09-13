@@ -63,7 +63,7 @@ class TestNWP(TransactionCase):
             {
                 "type": "service",
                 "name": "Clinical material",
-                "is_prescription": False,
+                "is_device": False,
                 "lst_price": 10.0,
             }
         )

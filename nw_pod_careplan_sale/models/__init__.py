@@ -8,8 +8,8 @@ from . import pod_laboratory_request
 from . import pod_patient
 from . import pod_request
 from . import pod_request_group
-from . import pod_prescription_administration
-from . import pod_prescription_request
+from . import pod_device_administration
+from . import pod_device_request
 from . import res_config_settings
 from . import res_partner
 from . import sale_order

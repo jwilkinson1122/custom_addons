@@ -1,5 +1,5 @@
 {
-    "name": "Podiatry Location with stock",
+    "name": "Podiatry Administration Location Stock",
     "summary": "Podiatry administration location with stock",
     "version": "15.0.1.0.0",
     "category": "Podiatry",

@@ -8,7 +8,7 @@
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button type="object" name="action_view_request" class="oe_stat_button" icon="fa-prescription" context="{'model_name': 'pod.procedure.request'}">
+                <button type="object" name="action_view_request" class="oe_stat_button" icon="fa-device" context="{'model_name': 'pod.procedure.request'}">
                     <field name="procedure_request_count" widget="statinfo" string="Procedure Requests" />
                     <field name='procedure_request_ids' invisible="1" />
                 </button>

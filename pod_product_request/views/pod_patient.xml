@@ -6,12 +6,12 @@
         <field name="inherit_id" ref="pod_base.pod_patient_form" />
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="create_pod_product_request_order" class="oe_stat_button btn-success" string="Create Ext. Prescription" type="object" context="{'default_category': 'discharge', 'default_patient_id': id}" icon="fa-prescription" />
+                <button name="create_pod_product_request_order" class="oe_stat_button btn-success" string="Create Ext. Device" type="object" context="{'default_category': 'discharge', 'default_patient_id': id}" icon="fa-device" />
                 <button name="create_pod_product_request_order" class="oe_stat_button btn-warning" string=" Create Int. Podiatry Order" type="object" context="{'default_category': 'inpatient',  'default_patient_id': id}" icon="fa-pills" />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button type="object" name="action_view_external_pod_product_request_order_ids" class="oe_stat_button" icon="fa-prescription">
-                    <field name="external_product_request_order_count" widget="statinfo" string="Ext. Prescriptions" />
+                <button type="object" name="action_view_external_pod_product_request_order_ids" class="oe_stat_button" icon="fa-device">
+                    <field name="external_product_request_order_count" widget="statinfo" string="Ext. Devices" />
                 </button>
                 <button type="object" name="action_view_internal_pod_product_request_order_ids" class="oe_stat_button" icon="fa-pills">
                     <field name="internal_product_request_order_count" widget="statinfo" string="Int. Podiatry Order" />

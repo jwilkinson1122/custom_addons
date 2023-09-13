@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="workflow_plan_definition_action_form">
+        <field name="name">workflow.plan.definition.action.form</field>
+        <field name="model">workflow.plan.definition.action</field>
+        <field name="inherit_id" ref="pod_workflow.workflow_plan_definition_action_form" />
+        <field name="priority" eval="16" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="model_id" invisible="1" />
+                <field name="location_type_id" attrs="{'invisible': [('model_id', '!=', %(pod_device_request.model_pod_device_request)s)]}" widget="selection" />
+            </field>
+        </field>
+    </record>
+</odoo>

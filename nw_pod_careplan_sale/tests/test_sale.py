@@ -119,24 +119,24 @@ class TestNWPSale(common.PodiatrySavePointCase):
             [("careplan_id", "=", careplan.id)]
         )
         self.assertTrue(groups)
-        prescription_requests = self.env["pod.prescription.request"].search(
+        device_requests = self.env["pod.device.request"].search(
             [("careplan_id", "=", careplan.id)]
         )
         self.assertEqual(careplan.state, "draft")
-        self.assertFalse(prescription_requests.filtered(lambda r: r.is_billable))
+        self.assertFalse(device_requests.filtered(lambda r: r.is_billable))
         self.assertTrue(
-            groups.filtered(lambda r: r.child_model == "pod.prescription.request")
+            groups.filtered(lambda r: r.child_model == "pod.device.request")
         )
         self.assertTrue(
             groups.filtered(
                 lambda r: (r.is_sellable_insurance or r.is_sellable_private)
-                and r.child_model == "pod.prescription.request"
+                and r.child_model == "pod.device.request"
             )
         )
         self.assertTrue(
             groups.filtered(
                 lambda r: r.is_billable
-                and r.child_model == "pod.prescription.request"
+                and r.child_model == "pod.device.request"
             )
         )
         encounter.create_sale_order()

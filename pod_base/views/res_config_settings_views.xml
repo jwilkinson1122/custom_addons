@@ -29,8 +29,8 @@
                     <div class="row mt16 o_settings_container" id="pod_diagnostics" />
                     <h2>
                         <i class="fa fa-flask" aria-hidden="true" />
- Prescription</h2>
-                    <div class="row mt16 o_settings_container" id="pod_prescription" />
+ Device</h2>
+                    <div class="row mt16 o_settings_container" id="pod_device" />
                     <h2>
                         <i class="fa fa-book" aria-hidden="true" />
  Terminologies</h2>

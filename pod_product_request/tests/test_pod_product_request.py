@@ -22,7 +22,7 @@ class TestPodiatryProductRequest(TransactionCase):
                 "rounding": 0.001,
             }
         )
-        self.tablet_form = self.env["prescription.form"].create(
+        self.tablet_form = self.env["device.form"].create(
             {
                 "name": "EFG film coated tablets",
                 "uom_ids": [(4, self.tablet_uom.id)],
@@ -37,7 +37,7 @@ class TestPodiatryProductRequest(TransactionCase):
         self.ibuprofen_template = self.env["pod.product.template"].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "prescription",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,
@@ -96,7 +96,7 @@ class TestPodiatryProductRequest(TransactionCase):
                 "rounding": 0.001,
             }
         )
-        self.solution_form = self.env["prescription.form"].create(
+        self.solution_form = self.env["device.form"].create(
             {
                 "name": "Eye drops in solution",
                 "uom_ids": [(4, self.drops_uom.id), (4, self.ml_uom.id)],
@@ -106,7 +106,7 @@ class TestPodiatryProductRequest(TransactionCase):
         self.acular_template = self.env["pod.product.template"].create(
             {
                 "name": "Acular",
-                "product_type": "prescription",
+                "product_type": "device",
                 "ingredients": "Ketorolac tromethamol",
                 "dosage": "5 mg/ml",
                 "form_id": self.solution_form.id,
@@ -275,7 +275,7 @@ class TestPodiatryProductRequest(TransactionCase):
         )
         self.assertEqual(request.quantity_to_dispense, 1)
 
-    def test_create_external_request_of_prescription_tablet(self):
+    def test_create_external_request_of_device_tablet(self):
         """
         In this case the dose unit and the amount unit
         of the pod product are the same
@@ -299,7 +299,7 @@ class TestPodiatryProductRequest(TransactionCase):
         )
         self.assertEqual(request.quantity_to_dispense, 2)
 
-    def test_create_external_request_of_prescription_solution(self):
+    def test_create_external_request_of_device_solution(self):
         """
         In this case the dose unit and the amount unit
         of the pod product are different

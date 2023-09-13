@@ -36,7 +36,7 @@ class PodiatryProductAdministration(models.Model):
     pod_product_template_id = fields.Many2one(
         comodel_name="pod.product.template"
     )
-    # Fhir Concept: prescription
+    # Fhir Concept: device
 
     product_type = fields.Selection(
         related="pod_product_template_id.product_type"

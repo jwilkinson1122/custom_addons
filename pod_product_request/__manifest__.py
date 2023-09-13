@@ -1,7 +1,7 @@
 {
     "name": "Podiatry Product Request",
     "summary": """
-        This addon sets the base of prescription.request and device.request""",
+        This addon sets the base of device.request and device.request""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "NWPL",
@@ -22,7 +22,7 @@
         "views/pod_product_administration.xml",
         "views/pod_product_request_order.xml",
         "views/pod_product_request.xml",
-        "views/prescription_form.xml",
+        "views/device_form.xml",
         "views/pod_administration_route.xml",
     ],
     "demo": ["demo/pod_product_request_demo.xml"],

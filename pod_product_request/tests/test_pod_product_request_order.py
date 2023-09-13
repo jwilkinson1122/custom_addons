@@ -23,7 +23,7 @@ class TestPodiatryProductRequestOrder(TransactionCase):
                 "rounding": 0.001,
             }
         )
-        self.tablet_form = self.env["prescription.form"].create(
+        self.tablet_form = self.env["device.form"].create(
             {
                 "name": "EFG film coated tablets",
                 "uom_ids": [(4, self.tablet_uom.id)],
@@ -32,7 +32,7 @@ class TestPodiatryProductRequestOrder(TransactionCase):
         self.ibuprofen_template = self.env["pod.product.template"].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "prescription",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,

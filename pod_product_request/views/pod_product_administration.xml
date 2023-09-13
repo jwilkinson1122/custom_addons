@@ -27,8 +27,8 @@
                             <field name="product_request_id" readonly="1" />
                             <field name="product_type" invisible="1" />
                         </group>
-                        <group string="Prescription" attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
-                            <label string="Prescription" for="pod_product_template_id" />
+                        <group string="Device" attrs="{'invisible': [('product_type', '!=', 'device')]}">
+                            <label string="Device" for="pod_product_template_id" />
                             <field name="pod_product_template_id" nolabel="1" readonly="1" />
                         </group>
                         <group string="Device" attrs="{'invisible': [('product_type', '!=', 'device')]}">
@@ -43,7 +43,7 @@
                                 <field name="quantity_uom_domain" invisible="1" />
                                 <field name="quantity_administered_uom_id" string="Uom" domain="quantity_uom_domain" attrs="{'readonly':[('state', '!=', 'in_progress')]}" />
                             </group>
-                            <group attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
+                            <group attrs="{'invisible': [('product_type', '!=', 'device')]}">
                                 <field name="administration_route_domain" invisible="1" />
                                 <field name="administration_route_id" string="Route" domain="administration_route_domain" attrs="{'readonly':[('state', '!=', 'in_progress')]}" />
                             </group>
@@ -82,8 +82,8 @@
                         <field name="patient_id" readonly="1" nolabel="1" options='{"no_open": True}'/>
                     </h2>
                     <group>
-                        <group string="Prescription" attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
-                            <label string="Prescription" for="pod_product_template_id" />
+                        <group string="Device" attrs="{'invisible': [('product_type', '!=', 'device')]}">
+                            <label string="Device" for="pod_product_template_id" />
                             <field name="pod_product_template_id" nolabel="1" readonly="1" />
                         </group>
                         <group string="Device" attrs="{'invisible': [('product_type', '!=', 'device')]}">
@@ -98,7 +98,7 @@
                                 <group>
                                     <field name="quantity_administered_uom_id" string="Uom" domain="quantity_uom_domain" />
                                 </group>
-                                <group attrs="{'invisible': [('product_type', '!=', 'prescription')]}">
+                                <group attrs="{'invisible': [('product_type', '!=', 'device')]}">
                                     <field name="administration_route_domain" invisible="1" />
                                     <field name="administration_route_id" string="Route" domain="administration_route_domain" />
                                 </group>

@@ -1,5 +1,5 @@
 {
-    "name": "Crm Agreement",
+    "name": "Podiatry CRM Agreement",
     "summary": """Link of Podiatry Agreements and CRM""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",

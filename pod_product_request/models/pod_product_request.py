@@ -31,15 +31,15 @@ class PodiatryProductRequest(models.Model):
     )
 
     product_type = fields.Selection(
-        selection=[("prescription", "Prescription"), ("device", "Device")],
+        selection=[("device", "Device"), ("device", "Device")],
         related="pod_product_template_id.product_type",
     )
 
     category = fields.Selection(
         selection=[("inpatient", "Inpatient"), ("discharge", "Discharge")],
-        help="'Inpatient' includes requests for prescriptions to be "
+        help="'Inpatient' includes requests for devices to be "
         "administered or consumed in an inpatient or acute care setting "
-        " 'Discharge' Includes requests for prescriptions created when "
+        " 'Discharge' Includes requests for devices created when "
         "the patient is being released from a facility ",
         compute="_compute_category_from_request_order_id",
         store=True,
@@ -56,7 +56,7 @@ class PodiatryProductRequest(models.Model):
     pod_product_template_id = fields.Many2one(
         comodel_name="pod.product.template", required=True
     )
-    # Fhir Concept: prescription
+    # Fhir Concept: device
 
     # Product and quantity to dispense/administrate
     pod_product_id = fields.Many2one(
@@ -355,13 +355,13 @@ class PodiatryProductRequest(models.Model):
     @api.constrains("rate_quantity")
     def _check_rate_quantity(self):
         for rec in self:
-            if rec.product_type == "prescription" and rec.rate_quantity < 1:
+            if rec.product_type == "device" and rec.rate_quantity < 1:
                 raise ValidationError(_("Rate must be positive"))
 
     @api.constrains("duration")
     def _check_duration(self):
         for rec in self:
-            if rec.product_type == "prescription" and rec.duration < 1:
+            if rec.product_type == "device" and rec.duration < 1:
                 raise ValidationError(_("Duration must be positive"))
 
     # This is done just for security to avoid infinite loops.
@@ -413,7 +413,7 @@ class PodiatryProductRequest(models.Model):
                 and template
                 and template.product_ids
             ):
-                if template.product_type == "prescription":
+                if template.product_type == "device":
                     # Search the most appropriate pod_product_id
                     # and quantity to dispense
                     product_id, qty = rec._select_product_and_quantity(

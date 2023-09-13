@@ -192,7 +192,7 @@ class PodiatrySavePointCase(SavepointCase):
                 "type": "consu",
                 "categ_id": self.category.id,
                 "name": "Clinical material",
-                "is_prescription": True,
+                "is_device": True,
                 "lst_price": 10.0,
                 "taxes_id": [(6, 0, self.tax.ids)],
             }
@@ -239,7 +239,7 @@ class PodiatrySavePointCase(SavepointCase):
                 "name": "Activity2",
                 "service_id": self.service.id,
                 "model_id": self.env.ref(
-                    "pod_prescription_request." "model_pod_prescription_request"
+                    "pod_device_request." "model_pod_device_request"
                 ).id,
             }
         )

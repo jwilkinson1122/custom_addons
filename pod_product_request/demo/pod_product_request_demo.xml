@@ -24,11 +24,11 @@
         <field name="uom_type">smaller</field>
         <field name="rounding" eval="0.001" />
     </record>
-    <record id="tablet_form" model="prescription.form">
+    <record id="tablet_form" model="device.form">
         <field name="name">EFG film coated tablets</field>
         <field name="uom_ids" eval="[(6, 0, [ref('tablet_uom_uom')])]" />
     </record>
-    <record id="solution_form" model="prescription.form">
+    <record id="solution_form" model="device.form">
         <field name="name">Eye drops in solution</field>
         <field
             name="uom_ids"
@@ -43,7 +43,7 @@
     </record>
     <record id="ibuprofen_pod_product_template" model="pod.product.template">
         <field name="name">Ibuprofen</field>
-        <field name="product_type">prescription</field>
+        <field name="product_type">device</field>
         <field name="ingredients">Ibuprofen</field>
         <field name="dosage">600 mg</field>
         <field name="form_id" ref="tablet_form" />
@@ -54,7 +54,7 @@
     </record>
     <record id="acular_pod_product_template" model="pod.product.template">
         <field name="name">Acular</field>
-        <field name="product_type">prescription</field>
+        <field name="product_type">device</field>
         <field name="ingredients">Ketorolac tromethamol</field>
         <field name="dosage">5 mg/ml</field>
         <field name="form_id" ref="solution_form" />

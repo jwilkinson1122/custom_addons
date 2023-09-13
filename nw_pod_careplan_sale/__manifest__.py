@@ -1,5 +1,5 @@
 {
-    "name": "Podiatry Careplan to sales",
+    "name": "Podiatry Careplan Sales",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Podiatry",
@@ -33,6 +33,11 @@
         "views/pod_sale_discount_views.xml",
         "views/theme_default_templates.xml",
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'nw_pod_careplan_sale/static/src/scss/layout_boxed.scss',
+            ]
+        },
     "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,

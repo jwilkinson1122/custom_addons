@@ -1,8 +1,8 @@
 from odoo import api, models
 
 
-class PodiatryPrescriptionRequest(models.Model):
-    _inherit = "pod.prescription.request"
+class PodiatryDeviceRequest(models.Model):
+    _inherit = "pod.device.request"
 
     def _get_event_values(self):
         res = super()._get_event_values()
@@ -15,7 +15,7 @@ class PodiatryPrescriptionRequest(models.Model):
         return (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("pod.prescription.request.identifier")
+            .get_param("pod.device.request.identifier")
         )
 
     @api.model

@@ -5,8 +5,8 @@ from . import pod_encounter
 from . import pod_event
 from . import pod_laboratory_event
 from . import pod_laboratory_request
-from . import pod_prescription_administration
-from . import pod_prescription_request
+from . import pod_device_administration
+from . import pod_device_request
 from . import pod_procedure
 from . import pod_procedure_request
 from . import pod_request

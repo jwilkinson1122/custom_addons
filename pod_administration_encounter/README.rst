@@ -1,5 +1,5 @@
 =================
-Podiatry Encounter
+Podiatry Administration Encounter
 =================
 
 Represents an interaction between a patient and healthcare provider(s) for
