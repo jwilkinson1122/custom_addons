@@ -3,7 +3,7 @@
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": [
-        "pos_validation",
+        # "pos_validation",
         "account_invoice_supplier_self_invoice",
         "account_move_change_company",
         "account_reconciliation_widget",
