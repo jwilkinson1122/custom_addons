@@ -6,17 +6,6 @@
     "depends": [
         "pod_administration_encounter",
         "pod_workflow",
-        # "pod_workflow",
-        # "pod_clinical_careplan",
-        
-        # pod_encounter_identifier
-        #  "pod_clinical_request_group",
-        # "sale_commission_delegated_partner",
-        # "pod_sale_invoice_group_method",
-        # "pod_workflow_activity",
-        # "pod_clinical_procedure"
-        #       "pod_workflow",
-        # "pod_administration_location",
         ],
     # "depends": ["nw_pod_pos"],
     "data": [

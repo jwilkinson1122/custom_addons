@@ -6,7 +6,7 @@
         "mrp", 
         "pod_clinical_request_group",
         "pod_device_request",
-        "nw_pod_block_request", 
+        "pod_block_request", 
         "stock_move_line_auto_fill"
         ],
     "data": [
