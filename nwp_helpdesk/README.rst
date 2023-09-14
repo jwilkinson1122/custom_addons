@@ -3,5 +3,5 @@
    :alt: License: AGPL-3
 
 ===========
-Cb Helpdesk
+NWPL Helpdesk
 ===========

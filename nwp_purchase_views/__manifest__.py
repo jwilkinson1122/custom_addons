@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Cb Purchase Views",
+    "name": "NWPL Purchase Views",
     "summary": """
         Purchase custom views""",
     "version": "15.0.1.0.0",

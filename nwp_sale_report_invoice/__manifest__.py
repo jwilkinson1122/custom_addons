@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Cb Sale Report Invoice",
+    "name": "NWPL Sale Report Invoice",
     "summary": """
         Sale Report invoice modification for NWP""",
     "version": "15.0.1.0.0",

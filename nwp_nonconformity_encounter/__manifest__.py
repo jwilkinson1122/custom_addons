@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Cb Nonconformity Encounter",
+    "name": "NWPL Nonconformity Encounter",
     "summary": """
         NWP custom nonconformity management""",
     "version": "15.0.1.1.0",

@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Cb Mgmtsystem Issue Product",
+    "name": "NWPL Mgmtsystem Issue Product",
     "summary": """
         Enables to relate quality issues with products""",
     "version": "15.0.1.0.0",

@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Cb Podiatry Diagnostic Report",
+    "name": "NWPL Podiatry Diagnostic Report",
     "summary": """Allows the creation of pod diagnostic reports""",
     "version": "15.0.2.0.0",
     "license": "AGPL-3",

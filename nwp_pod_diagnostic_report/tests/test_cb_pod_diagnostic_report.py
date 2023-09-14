@@ -10,9 +10,9 @@ from odoo.tests import TransactionCase, tagged
 
 
 @tagged("-at_install", "post_install")
-class TestCbPodiatryDiagnosticReport(TransactionCase):
+class TestNWPLPodiatryDiagnosticReport(TransactionCase):
     def setUp(self):
-        super(TestCbPodiatryDiagnosticReport, self).setUp()
+        super(TestNWPLPodiatryDiagnosticReport, self).setUp()
         self.user_1 = self.env["res.users"].create(
             {
                 "name": "Test user",
