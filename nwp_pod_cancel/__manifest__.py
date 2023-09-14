@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Cancel",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "category": "Podiatry",
     "depends": ["nwp_pod_pos"],
     "data": [

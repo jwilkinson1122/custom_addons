@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Administration Practitioner Specialty",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "category": "Podiatry",
     "website": "https://github.com/tegin/nwp-pod",
     "license": "AGPL-3",

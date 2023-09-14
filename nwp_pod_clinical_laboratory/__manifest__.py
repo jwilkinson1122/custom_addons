@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Clinical Laboratory",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": ["nwp_pod_device"],
     "data": [
         "security/ir.model.access.csv",

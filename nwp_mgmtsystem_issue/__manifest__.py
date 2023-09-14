@@ -6,7 +6,7 @@
         Managemente System Issues""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
-    "author": "CreuBlanca",
+    "author": "NWPL",
     "website": "https://nwpodiatric.com",
     "depends": ["mgmtsystem_nonconformity"],
     "data": [

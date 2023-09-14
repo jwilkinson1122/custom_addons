@@ -1,5 +1,4 @@
-# Copyright 2021 CreuBlanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 
 {
     "name": "Podiatry Diagnostic Report",
@@ -7,7 +6,7 @@
         Allows to create reports for patients""",
     "version": "15.0.2.0.0",
     "license": "AGPL-3",
-    "author": "CreuBlanca,Odoo Community Association (OCA)",
+    "author": "NWPL",
     "website": "https://nwpodiatric.com",
     "depends": [
         "pod_administration_encounter",

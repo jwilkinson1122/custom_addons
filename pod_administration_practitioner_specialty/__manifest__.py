@@ -1,10 +1,7 @@
-# Copyright 2017 LasLabs Inc.
-
-
 {
     "name": "Podiatry Administration Practitioner Specialty",
     "version": "15.0.1.0.0",
-    "author": "ForgeFlow, CreuBlanca, LasLabs, "
+    "author": "NWPL"
     "Odoo Community Association (OCA)",
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",

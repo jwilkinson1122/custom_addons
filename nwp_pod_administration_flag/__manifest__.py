@@ -3,7 +3,7 @@
 {
     "name": "NWP Podiatry Patient Flag",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": ["pod_administration_flag"],
     "data": [
         "views/pod_flag_views.xml",

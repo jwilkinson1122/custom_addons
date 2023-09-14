@@ -1,6 +1,3 @@
-# Copyright 2017 LasLabs Inc.
-
-
 import logging
 
 from odoo import _, api, fields, models

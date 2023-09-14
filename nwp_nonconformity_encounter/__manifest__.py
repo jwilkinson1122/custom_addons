@@ -6,7 +6,7 @@
         NWP custom nonconformity management""",
     "version": "15.0.1.1.0",
     "license": "AGPL-3",
-    "author": "CreuBlanca",
+    "author": "NWPL",
     "website": "https://github.com/tegin/nwp-pod",
     "depends": ["nwp_mgmtsystem_issue", "pod_administration_encounter"],
     "data": [

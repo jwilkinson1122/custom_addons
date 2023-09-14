@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Careplan to sales",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "category": "Podiatry",
     "depends": [
         "sale_third_party",

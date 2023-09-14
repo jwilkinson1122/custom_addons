@@ -3,7 +3,7 @@
 {
     "name": "NWP Podiatry link to PoS",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": [
         "pos_session_pay_invoice",
         "nwp_pod_commission",

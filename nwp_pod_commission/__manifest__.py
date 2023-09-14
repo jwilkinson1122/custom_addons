@@ -4,7 +4,7 @@
     "name": "Podiatry Commission",
     "summary": "Add Commissions",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "category": "Podiatry",
     "depends": [
         "sale_commission_formula",

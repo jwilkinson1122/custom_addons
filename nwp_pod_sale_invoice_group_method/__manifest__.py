@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Sale Invoice Group Method",
     "version": "15.0.1.0.1",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "category": "Podiatry",
     "depends": [
         "pod_base",

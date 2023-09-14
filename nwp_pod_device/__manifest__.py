@@ -3,7 +3,7 @@
 {
     "name": "NWP Podiatry sequence configuration",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": [
         "mrp", 
         "nwp_pod_block_request", 

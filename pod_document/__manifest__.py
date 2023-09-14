@@ -3,7 +3,7 @@
 {
     "name": "Podiatry documents",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": [
         "pod_workflow",
         "remote_report_to_printer",

@@ -5,7 +5,7 @@
     "summary": """Allows the creation of pod diagnostic reports""",
     "version": "15.0.2.0.0",
     "license": "AGPL-3",
-    "author": "CreuBlanca",
+    "author": "NWPL",
     "website": "https://github.com/tegin/nwp-pod",
     "depends": [
         "pod_diagnostic_report",

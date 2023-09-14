@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    Copyright 2021 CreuBlanca
-    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
--->
 <odoo>
     <record id="seq_pod_diagnostic_report" model="ir.sequence">
         <field name="name">Diagnostic Report</field>

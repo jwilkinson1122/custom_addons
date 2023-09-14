@@ -1,6 +1,3 @@
-# Copyright 2017 LasLabs Inc.
-
-
 from odoo import fields, models
 
 

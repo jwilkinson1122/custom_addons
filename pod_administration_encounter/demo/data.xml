@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2022 CreuBlanca
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo noupdate="1">
     <record id="encounter_01_patient_01" model="pod.encounter">
         <field name="patient_id" ref="pod_base.patient_01" />

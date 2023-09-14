@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    Copyright 2017 CreuBlanca
-    Copyright 2017 ForgeFlow
-    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
--->
 <odoo>
     <record id="seq_pod_careplan" model="ir.sequence">
         <field name="name">Podiatry care plan sequence</field>

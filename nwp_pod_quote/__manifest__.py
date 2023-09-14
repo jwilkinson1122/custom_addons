@@ -1,7 +1,7 @@
 {
     "name": "NWP Podiatry Quote",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": ["nwp_pod_careplan_sale", "base_comment_template"],
     "category": "Podiatry",
     "data": [

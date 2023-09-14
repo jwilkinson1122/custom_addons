@@ -3,7 +3,7 @@
     "version": "15.0.1.0.0",
     "category": "NWP",
     "website": "https://github.com/tegin/nwp-pod",
-    "author": "CreuBlanca, Eficent",
+    "author": "NWPL",
     "license": "AGPL-3",
     "installable": True,
     "application": False,

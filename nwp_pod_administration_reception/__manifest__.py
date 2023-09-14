@@ -5,7 +5,7 @@
     "version": "15.0.1.0.0",
     "category": "Podiatry",
     "website": "https://github.com/tegin/nwp-pod",
-    "author": "CreuBlanca, Eficent",
+    "author": "NWPL",
     "license": "AGPL-3",
     "depends": ["pod_administration_center"],
     "data": [

@@ -3,7 +3,7 @@
 {
     "name": "Podiatry Patient firstname",
     "version": "15.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "author": "NWPL",
     "depends": ["pod_base", "partner_firstname"],
     "data": ["views/pod_patient_views.xml"],
     "demo": ["demo/pod_demo.xml"],
