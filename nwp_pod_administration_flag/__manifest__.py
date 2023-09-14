@@ -9,7 +9,7 @@
         "views/pod_flag_views.xml",
         "views/pod_flag_category_views.xml",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

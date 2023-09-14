@@ -5,7 +5,7 @@
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Podiatry",
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "depends": ["pod_administration_practitioner_specialty"],
     "data": [

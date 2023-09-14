@@ -13,7 +13,7 @@
         "report_xlsx",
         "report_context",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "external_dependencies": {"python": ["pandas", "openpyxl"]},
     "license": "AGPL-3",
     "data": [

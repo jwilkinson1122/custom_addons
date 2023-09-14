@@ -22,7 +22,7 @@
         "views/res_partner_views.xml",
         "views/sale_order_view.xml",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

@@ -33,7 +33,7 @@
         "views/pod_sale_discount_views.xml",
         "views/theme_default_templates.xml",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

@@ -5,7 +5,7 @@
     "summary": "Podiatry financial coverage request",
     "version": "15.0.1.0.0",
     "author": "NWPL",
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "depends": ["pod_financial_coverage_request"],
     "data": [

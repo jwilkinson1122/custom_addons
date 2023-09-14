@@ -18,7 +18,7 @@
         "views/workflow_plan_definition_action.xml",
         "report/pod_encounter_device_report.xml",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

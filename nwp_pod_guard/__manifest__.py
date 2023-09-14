@@ -2,7 +2,7 @@
     "name": "NWP Podiatry Guard",
     "version": "15.0.1.0.0",
     "category": "NWP",
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "author": "NWPL",
     "license": "AGPL-3",
     "installable": True,

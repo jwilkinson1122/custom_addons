@@ -27,7 +27,7 @@
         "views/report_invoice.xml",
         "reports/report_pos_payment.xml",
     ],
-    "website": "https://github.com/tegin/nwp-pod",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,
