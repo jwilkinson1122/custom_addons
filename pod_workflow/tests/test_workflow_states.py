@@ -1,6 +1,3 @@
-# Copyright 2017 ForgeFlow Business and IT Consulting Services S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 from odoo.tests.common import TransactionCase
 
 
