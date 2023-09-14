@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="medical_encounter_view_form" model="ir.ui.view">
-        <field name="name">medical.encounter.form</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_form" model="ir.ui.view">
+        <field name="name">pod.encounter.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     type="action"
-                    name="%(medical_encounter_medication_action)s"
-                    context="{'default_medical_id': active_id}"
+                    name="%(pod_encounter_device_action)s"
+                    context="{'default_pod_id': active_id}"
                     class="oe_stat_button"
                     icon="fa-pills"
-                    string="Add Medication"
+                    string="Add Device"
                     states="draft,arrived,in-progress"
                 />
             </xpath>
             <notebook position="inside">
-                <page name="medication" string="Medication">
-                    <field name="medication_item_ids" />
+                <page name="device" string="Device">
+                    <field name="device_item_ids" />
                 </page>
             </notebook>
         </field>
     </record>
-    <record id="medical_medication_item_view_form" model="ir.ui.view">
-        <field name="name">medical.medication.item.form</field>
-        <field name="model">medical.medication.item</field>
+    <record id="pod_device_item_view_form" model="ir.ui.view">
+        <field name="name">pod.device.item.form</field>
+        <field name="model">pod.device.item</field>
         <field name="arch" type="xml">
             <form create="0">
                 <group>
@@ -43,9 +43,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_medication_item_view_tree" model="ir.ui.view">
-        <field name="name">medical.medication.item.tree</field>
-        <field name="model">medical.medication.item</field>
+    <record id="pod_device_item_view_tree" model="ir.ui.view">
+        <field name="name">pod.device.item.tree</field>
+        <field name="model">pod.device.item</field>
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="categ_id" />

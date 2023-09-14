@@ -1,9 +1,9 @@
 from odoo.exceptions import ValidationError
 
-from odoo.addons.cb_medical_pos.tests import common
+from odoo.addons.nwp_pod_pos.tests import common
 
 
-class TestCBMedicalCommission(common.MedicalSavePointCase):
+class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
     def test_blocking_failure(self):
         self.plan_definition2.action_ids.write({"is_blocking": True})
         self.plan_definition2.write({"third_party_bill": False})
@@ -14,7 +14,7 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
         self.assertTrue(group.procedure_request_ids.is_blocking)
         self.assertTrue(group.procedure_request_ids.is_blocking)
         with self.assertRaises(ValidationError):
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -34,7 +34,7 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
             self.assertEqual(request.fhir_state, "active")
             request.active2completed()
             self.assertEqual(request.fhir_state, "completed")
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": encounter.id, "pos_session_id": self.session.id}
         ).run()
         self.assertIn(encounter.state, ["onleave", "finished"])
@@ -46,7 +46,7 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
         )
         self.assertEqual(len(group.procedure_request_ids), 1)
         self.assertFalse(group.procedure_request_ids.is_blocking)
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": encounter.id, "pos_session_id": self.session.id}
         ).run()
         self.assertIn(encounter.state, ["onleave", "finished"])

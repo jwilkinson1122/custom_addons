@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_agreement_change_prices_form">
-        <field name="name">medical.agreement.change.prices.form</field>
-        <field name="model">medical.agreement.change.prices</field>
+    <record model="ir.ui.view" id="pod_agreement_change_prices_form">
+        <field name="name">pod.agreement.change.prices.form</field>
+        <field name="model">pod.agreement.change.prices</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Change prices of this Agreement">
@@ -30,11 +30,11 @@
         </field>
     </record>
 
-    <record id="medical_agreement_change_prices_action" model="ir.actions.act_window">
+    <record id="pod_agreement_change_prices_action" model="ir.actions.act_window">
         <field name="name">Change prices</field>
-        <field name="binding_model_id" ref="model_medical_coverage_agreement_item" />
+        <field name="binding_model_id" ref="model_pod_coverage_agreement_item" />
        <field name="binding_view_types">form</field>
-        <field name="res_model">medical.agreement.change.prices</field>
+        <field name="res_model">pod.agreement.change.prices</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

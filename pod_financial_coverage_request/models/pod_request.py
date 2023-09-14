@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     coverage_id = fields.Many2one(
-        "medical.coverage",
+        "pod.coverage",
         tracking=True,
         required=False,
         domain="[('patient_id', '=', patient_id)]",
@@ -18,13 +18,13 @@ class MedicalRequest(models.AbstractModel):
         states={"draft": [("readonly", False)]},
     )
     coverage_agreement_item_id = fields.Many2one(
-        "medical.coverage.agreement.item", readonly=True, ondelete="restrict"
+        "pod.coverage.agreement.item", readonly=True, ondelete="restrict"
     )
     coverage_agreement_id = fields.Many2one(
-        "medical.coverage.agreement", readonly=True, ondelete="restrict"
+        "pod.coverage.agreement", readonly=True, ondelete="restrict"
     )
     authorization_method_id = fields.Many2one(
-        comodel_name="medical.authorization.method",
+        comodel_name="pod.authorization.method",
         tracking=True,
         readonly=True,
         ondelete="restrict",

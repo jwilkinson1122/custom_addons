@@ -4,9 +4,9 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalProduct(TransactionCase):
+class TestPodiatryProduct(TransactionCase):
     def setUp(self):
-        super(TestMedicalProduct, self).setUp()
+        super(TestPodiatryProduct, self).setUp()
 
         self.tablet_uom = self.env["uom.uom"].create(
             {
@@ -17,43 +17,43 @@ class TestMedicalProduct(TransactionCase):
                 "rounding": 0.001,
             }
         )
-        self.tablet_form = self.env["medication.form"].create(
+        self.tablet_form = self.env["device.form"].create(
             {
                 "name": "EFG film coated tablets",
                 "uom_ids": [(4, self.tablet_uom.id)],
             }
         )
-        self.medical_product_ibuprofen_template = self.env[
-            "medical.product.template"
+        self.pod_product_ibuprofen_template = self.env[
+            "pod.product.template"
         ].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "medication",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,
             }
         )
-        self.medical_product_ibuprofen_30_tablets = self.env[
-            "medical.product.product"
+        self.pod_product_ibuprofen_30_tablets = self.env[
+            "pod.product.product"
         ].create(
             {
-                "product_tmpl_id": self.medical_product_ibuprofen_template.id,
+                "product_tmpl_id": self.pod_product_ibuprofen_template.id,
                 "amount": 30,
                 "amount_uom_id": self.tablet_uom.id,
             }
         )
 
-    def test_create_medical_product_without_template(self):
+    def test_create_pod_product_without_template(self):
         """
         If a product is created without a selected template,
         the product template should be automatically created
         with the product information.
         """
-        medical_product = self.env["medical.product.product"].create(
+        pod_product = self.env["pod.product.product"].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "medication",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,
@@ -61,76 +61,76 @@ class TestMedicalProduct(TransactionCase):
                 "amount_uom_id": self.tablet_uom.id,
             }
         )
-        medical_product.refresh()
-        self.assertTrue(medical_product.product_tmpl_id)
+        pod_product.refresh()
+        self.assertTrue(pod_product.product_tmpl_id)
         self.assertEqual(
-            medical_product.product_tmpl_id.ingredients,
-            medical_product.ingredients,
+            pod_product.product_tmpl_id.ingredients,
+            pod_product.ingredients,
         )
         self.assertEqual(
-            medical_product.product_tmpl_id.name, medical_product.name
+            pod_product.product_tmpl_id.name, pod_product.name
         )
         self.assertEqual(
-            medical_product.product_tmpl_id.product_type,
-            medical_product.product_type,
+            pod_product.product_tmpl_id.product_type,
+            pod_product.product_type,
         )
         self.assertEqual(
-            medical_product.product_tmpl_id.dosage, medical_product.dosage
+            pod_product.product_tmpl_id.dosage, pod_product.dosage
         )
         self.assertEqual(
-            medical_product.product_tmpl_id.form_id.id,
-            medical_product.form_id.id,
+            pod_product.product_tmpl_id.form_id.id,
+            pod_product.form_id.id,
         )
-        self.assertEqual(medical_product.product_tmpl_id.product_count, 1)
+        self.assertEqual(pod_product.product_tmpl_id.product_count, 1)
 
-    def test_create_medical_product_with_template(self):
+    def test_create_pod_product_with_template(self):
         """
         If a product is created with a selected template,
         a product template should not be automatically created.
         """
         self.assertTrue(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id.ingredients,
-            self.medical_product_ibuprofen_template.ingredients,
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id.ingredients,
+            self.pod_product_ibuprofen_template.ingredients,
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id.name,
-            self.medical_product_ibuprofen_template.name,
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id.name,
+            self.pod_product_ibuprofen_template.name,
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id.product_type,
-            self.medical_product_ibuprofen_template.product_type,
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id.product_type,
+            self.pod_product_ibuprofen_template.product_type,
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id.dosage,
-            self.medical_product_ibuprofen_template.dosage,
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id.dosage,
+            self.pod_product_ibuprofen_template.dosage,
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_30_tablets.product_tmpl_id.form_id.id,
-            self.medical_product_ibuprofen_template.form_id.id,
+            self.pod_product_ibuprofen_30_tablets.product_tmpl_id.form_id.id,
+            self.pod_product_ibuprofen_template.form_id.id,
         )
         self.assertEqual(
-            self.medical_product_ibuprofen_template.product_count, 1
+            self.pod_product_ibuprofen_template.product_count, 1
         )
 
-    def test_action_view_medical_product_ids(self):
+    def test_action_view_pod_product_ids(self):
         action = (
-            self.medical_product_ibuprofen_template.action_view_medical_product_ids()
+            self.pod_product_ibuprofen_template.action_view_pod_product_ids()
         )
         self.assertEqual(
-            action["res_id"], self.medical_product_ibuprofen_30_tablets.id
+            action["res_id"], self.pod_product_ibuprofen_30_tablets.id
         )
-        self.assertEqual(action["res_model"], "medical.product.product")
+        self.assertEqual(action["res_model"], "pod.product.product")
 
-    def test_compute_medical_product_name(self):
+    def test_compute_pod_product_name(self):
         self.assertRegex(
-            self.medical_product_ibuprofen_template.name_template,
+            self.pod_product_ibuprofen_template.name_template,
             "Ibuprofen 600 mg EFG film coated tablets",
         )
         self.assertRegex(
-            self.medical_product_ibuprofen_30_tablets.name_product,
+            self.pod_product_ibuprofen_30_tablets.name_product,
             "Ibuprofen 600 mg EFG film coated tablets 30.0 Tablets",
         )
 
@@ -139,10 +139,10 @@ class TestMedicalProduct(TransactionCase):
         If the amount of the product is set to 0, a validation error should raise
         """
         with self.assertRaises(ValidationError):
-            self.env["medical.product.product"].create(
+            self.env["pod.product.product"].create(
                 {
                     "name": "Ibuprofen",
-                    "product_type": "medication",
+                    "product_type": "device",
                     "ingredients": "Ibuprofen",
                     "dosage": "600 mg",
                     "form_id": self.tablet_form.id,
@@ -152,7 +152,7 @@ class TestMedicalProduct(TransactionCase):
             )
 
     def test_compute_amount_domain(self):
-        medical_device = self.env["medical.product.product"].create(
+        pod_device = self.env["pod.product.product"].create(
             {
                 "name": "Crutch",
                 "product_type": "device",
@@ -161,17 +161,17 @@ class TestMedicalProduct(TransactionCase):
             }
         )
         self.assertRegex(
-            self.medical_product_ibuprofen_30_tablets.amount_uom_domain,
+            self.pod_product_ibuprofen_30_tablets.amount_uom_domain,
             "%s" % self.tablet_uom.id,
         )
         self.assertRegex(
-            medical_device.amount_uom_domain,
+            pod_device.amount_uom_domain,
             "%s" % self.env.ref("uom.product_uom_unit").id,
         )
 
     def test_copy_product(self):
-        duplicated_product = self.medical_product_ibuprofen_30_tablets.copy()
+        duplicated_product = self.pod_product_ibuprofen_30_tablets.copy()
         self.assertEqual(
             duplicated_product.product_tmpl_id.id,
-            self.medical_product_ibuprofen_template.id,
+            self.pod_product_ibuprofen_template.id,
         )

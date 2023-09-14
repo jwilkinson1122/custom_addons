@@ -7,9 +7,9 @@ from odoo import fields, models
 
 class RequestGroup(models.Model):
     # FHIR Rntity: Request Group (https://www.hl7.org/fhir/requestgroup.html)
-    _name = "medical.request.group"
+    _name = "pod.request.group"
     _description = "Request Group"
-    _inherit = "medical.request"
+    _inherit = "pod.request"
 
     request_group_ids = fields.One2many(inverse_name="request_group_id")
 
@@ -17,7 +17,7 @@ class RequestGroup(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.request.group")
+            .next_by_code("pod.request.group")
             or "/"
         )
 
@@ -26,7 +26,7 @@ class RequestGroup(models.Model):
 
     def action_view_request_parameters(self):
         return {
-            "view": "medical_clinical_request_group."
-            "medical_request_group_window_action",
-            "view_form": "medical.request.group.form",
+            "view": "pod_clinical_request_group."
+            "pod_request_group_window_action",
+            "view_form": "pod.request.group.form",
         }

@@ -5,8 +5,8 @@
 from odoo import api, fields, models
 
 
-class MedicalProcedure(models.Model):
-    _inherit = "medical.procedure"
+class PodiatryProcedure(models.Model):
+    _inherit = "pod.procedure"
 
     variable_fee = fields.Float(
         string="Variable fee (%)",
@@ -23,7 +23,7 @@ class MedicalProcedure(models.Model):
         states={"draft": [("readonly", False)]},
     )
     practitioner_condition_id = fields.Many2one(
-        "medical.practitioner.condition",
+        "pod.practitioner.condition",
         readonly=True,
     )
     service_id = fields.Many2one(
@@ -37,13 +37,13 @@ class MedicalProcedure(models.Model):
         readonly=True,
         string="Procedure Service",
     )
-    medical_commission = fields.Boolean(
-        related="procedure_request_id.medical_commission", readonly=True
+    pod_commission = fields.Boolean(
+        related="procedure_request_id.pod_commission", readonly=True
     )
     sale_order_line_ids = fields.Many2many(
         "sale.order.line",
         string="Sale order lines",
-        relation="sale_order_line_medical_procedure",
+        relation="sale_order_line_pod_procedure",
         column1="procedure_id",
         column2="sale_order_line_id",
     )

@@ -1,4 +1,4 @@
-odoo.define("medical_diagnostic_report.fields", function (require) {
+odoo.define("pod_diagnostic_report.fields", function (require) {
     "use strict";
     var FieldHtml = require("web_editor.field.html");
     /*

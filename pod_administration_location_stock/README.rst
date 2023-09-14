@@ -3,26 +3,26 @@
    :alt: License: LGPL-3
 
 ===========================
-Medical Location with stock
+Podiatry Location with stock
 ===========================
 
-This module links medical locations with stock locations in order to produce
+This module links pod locations with stock locations in order to produce
 correct stock moves on other modules.
 
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
-'Administration / Locations' activate the option 'Relate a medical location
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
+'Administration / Locations' activate the option 'Relate a pod location
 with a stock location'.
 
 Usage
 =====
 
-#. Go to 'Medical / Administration / Location'
+#. Go to 'Podiatry / Administration / Location'
 #. Click 'Create' and fill in the information.
 #. Go inside de 'Location' page and select a stock location in order to
-   relate this stock location with the actual medical location.
+   relate this stock location with the actual pod location.
 #. Click 'Save'
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
@@ -43,7 +43,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

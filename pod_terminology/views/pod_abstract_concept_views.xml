@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_abstract_concept_tree">
-        <field name="name">medical.abstract.concept.tree</field>
-        <field name="model">medical.abstract.concept</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_tree">
+        <field name="name">pod.abstract.concept.tree</field>
+        <field name="model">pod.abstract.concept</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="code" />
@@ -16,20 +16,20 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_abstract_concept_uniparent_tree">
-        <field name="name">medical.abstract.concept.uniparent.tree</field>
-        <field name="model">medical.abstract.concept.uniparent</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_uniparent_tree">
+        <field name="name">pod.abstract.concept.uniparent.tree</field>
+        <field name="model">pod.abstract.concept.uniparent</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_abstract_concept_tree" />
+        <field name="inherit_id" ref="pod_abstract_concept_tree" />
         <field name="arch" type="xml">
             <field name="definition" position="after">
                 <field name="parent_id" options="{'no_create': True}" />
             </field>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_abstract_concept_form">
-        <field name="name">medical.abstract.concept.form</field>
-        <field name="model">medical.abstract.concept</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_form">
+        <field name="name">pod.abstract.concept.form</field>
+        <field name="model">pod.abstract.concept</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -53,11 +53,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_abstract_concept_uniparent_form">
-        <field name="name">medical.abstract.concept.uniparent.form</field>
-        <field name="model">medical.abstract.concept.uniparent</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_uniparent_form">
+        <field name="name">pod.abstract.concept.uniparent.form</field>
+        <field name="model">pod.abstract.concept.uniparent</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_abstract_concept_form" />
+        <field name="inherit_id" ref="pod_abstract_concept_form" />
         <field name="arch" type="xml">
             <field name="definition" position="after">
                 <field
@@ -76,11 +76,11 @@
             </notebook>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_abstract_concept_multiparent_form">
-        <field name="name">medical.abstract.concept.multiparent.form</field>
-        <field name="model">medical.abstract.concept.multiparent</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_multiparent_form">
+        <field name="name">pod.abstract.concept.multiparent.form</field>
+        <field name="model">pod.abstract.concept.multiparent</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_abstract_concept_form" />
+        <field name="inherit_id" ref="pod_abstract_concept_form" />
         <field name="arch" type="xml">
             <field name="definition" position="after">
                 <field
@@ -105,9 +105,9 @@
             </notebook>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_abstract_concept_filter">
-        <field name="name">medical.abstract.concept.filter</field>
-        <field name="model">medical.abstract.concept</field>
+    <record model="ir.ui.view" id="pod_abstract_concept_filter">
+        <field name="name">pod.abstract.concept.filter</field>
+        <field name="model">pod.abstract.concept</field>
         <field name="arch" type="xml">
             <search string="Search">
                 <field name="code" />

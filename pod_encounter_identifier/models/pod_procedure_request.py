@@ -1,8 +1,8 @@
 from odoo import api, models
 
 
-class MedicalProcedureRequest(models.Model):
-    _inherit = "medical.procedure.request"
+class PodiatryProcedureRequest(models.Model):
+    _inherit = "pod.procedure.request"
 
     def _get_procedure_values(self):
         res = super()._get_procedure_values()
@@ -15,12 +15,12 @@ class MedicalProcedureRequest(models.Model):
         return (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("medical.procedure.request.identifier")
+            .get_param("pod.procedure.request.identifier")
         )
 
     @api.model
     def _get_internal_identifier(self, vals):
-        code = self._get_cb_internal_identifier(vals)
+        code = self._get_nwp_internal_identifier(vals)
         if code:
             return code
         return super()._get_internal_identifier(vals)

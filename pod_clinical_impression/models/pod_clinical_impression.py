@@ -4,11 +4,11 @@
 from odoo import api, fields, models
 
 
-class MedicalClinicalImpression(models.Model):
+class PodiatryClinicalImpression(models.Model):
 
-    _name = "medical.clinical.impression"
-    _inherit = ["medical.event", "mail.thread", "mail.activity.mixin"]
-    _description = "Medical Clinical Impression"
+    _name = "pod.clinical.impression"
+    _inherit = ["pod.event", "mail.thread", "mail.activity.mixin"]
+    _description = "Podiatry Clinical Impression"
     _conditions = "condition_ids"
     _order = "validation_date desc, id"
     _rec_name = "internal_identifier"
@@ -24,7 +24,7 @@ class MedicalClinicalImpression(models.Model):
     fhir_state = fields.Selection(default="in_progress", readonly=True)
 
     specialty_id = fields.Many2one(
-        "medical.specialty", required=True, readonly=True
+        "pod.specialty", required=True, readonly=True
     )
     # FHIR code: type of clinical assessment performed.
     # TODO: add domain, so a partner can only select between their specialities
@@ -37,7 +37,7 @@ class MedicalClinicalImpression(models.Model):
     # FHIR: description
 
     encounter_id = fields.Many2one(
-        "medical.encounter", required=True, readonly=True
+        "pod.encounter", required=True, readonly=True
     )
     # FHIR: encounter
 
@@ -59,24 +59,24 @@ class MedicalClinicalImpression(models.Model):
         "res.users", string="Cancelled by", readonly=True, copy=False
     )
     finding_ids = fields.Many2many(
-        comodel_name="medical.clinical.finding",
+        comodel_name="pod.clinical.finding",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
     # FHIR: finding
     allergy_substance_ids = fields.Many2many(
-        comodel_name="medical.allergy.substance",
+        comodel_name="pod.allergy.substance",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
     condition_ids = fields.One2many(
-        comodel_name="medical.condition",
+        comodel_name="pod.condition",
         string="Conditions",
-        related="patient_id.medical_condition_ids",
+        related="patient_id.pod_condition_ids",
     )
 
     condition_count = fields.Integer(
-        related="patient_id.medical_condition_count"
+        related="patient_id.pod_condition_count"
     )
 
     summary = fields.Text(
@@ -95,7 +95,7 @@ class MedicalClinicalImpression(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].next_by_code("medical.clinical.impression")
+            self.env["ir.sequence"].next_by_code("pod.clinical.impression")
             or "/"
         )
 
@@ -115,11 +115,11 @@ class MedicalClinicalImpression(models.Model):
         )
         if finding_ids:
             for finding in finding_ids:
-                condition = self.patient_id.medical_condition_ids.filtered(
+                condition = self.patient_id.pod_condition_ids.filtered(
                     lambda r: r.clinical_finding_id.id == finding.id
                 )
                 if not condition:
-                    self.env["medical.condition"].create(
+                    self.env["pod.condition"].create(
                         {
                             "patient_id": self.patient_id.id,
                             "clinical_finding_id": finding.id,
@@ -130,11 +130,11 @@ class MedicalClinicalImpression(models.Model):
     def _create_allergies_from_findings(self):
         if self.allergy_substance_ids:
             for substance in self.allergy_substance_ids:
-                allergy = self.patient_id.medical_allergy_ids.filtered(
+                allergy = self.patient_id.pod_allergy_ids.filtered(
                     lambda r: r.allergy_id.id == substance.id
                 )
                 if not allergy:
-                    self.env["medical.condition"].create(
+                    self.env["pod.condition"].create(
                         {
                             "patient_id": self.patient_id.id,
                             "is_allergy": True,

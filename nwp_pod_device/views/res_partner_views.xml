@@ -10,7 +10,7 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_location_stock.res_partner_view_form"
+            ref="pod_administration_location_stock.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <field name="stock_location_id" position="after">

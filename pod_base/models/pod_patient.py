@@ -7,11 +7,11 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 
 
-class MedicalPatient(models.Model):
+class PodiatryPatient(models.Model):
     # FHIR Entity: Patient (http://hl7.org/fhir/patient.html)
-    _name = "medical.patient"
-    _description = "Medical Patient"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.patient"
+    _description = "Podiatry Patient"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 
     partner_id = fields.Many2one(
@@ -59,7 +59,7 @@ class MedicalPatient(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.patient")
+            self.env["ir.sequence"].sudo().next_by_code("pod.patient")
             or "/"
         )
 

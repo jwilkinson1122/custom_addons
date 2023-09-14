@@ -6,11 +6,11 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class MedicalAbstractConcept(models.AbstractModel):
-    # FHIR Entity: Medical Code system concept
+class PodiatryAbstractConcept(models.AbstractModel):
+    # FHIR Entity: Podiatry Code system concept
     # (https://www.hl7.org/fhir/codesystem.html)
-    _name = "medical.abstract.concept"
-    _description = "Medical abstract concept"
+    _name = "pod.abstract.concept"
+    _description = "Podiatry abstract concept"
 
     code = fields.Char(required=True, index=True)  # FHIR Field: code
     name = fields.Char(required=True)  # FHIR Field: display

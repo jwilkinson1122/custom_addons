@@ -4,14 +4,14 @@
 from odoo import api, fields, models
 
 
-class MedicalEncounterCreateDiagnosticReport(models.TransientModel):
+class PodiatryEncounterCreateDiagnosticReport(models.TransientModel):
 
-    _name = "medical.encounter.create.diagnostic.report"
+    _name = "pod.encounter.create.diagnostic.report"
     _description = "Generate report from encounter using a template"
 
-    encounter_id = fields.Many2one("medical.encounter", required=True)
+    encounter_id = fields.Many2one("pod.encounter", required=True)
     template_id = fields.Many2one(
-        "medical.diagnostic.report.template", required=True
+        "pod.diagnostic.report.template", required=True
     )
     lang = fields.Selection(
         string="Language",

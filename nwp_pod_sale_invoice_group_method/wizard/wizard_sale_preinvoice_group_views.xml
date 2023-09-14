@@ -47,7 +47,7 @@
         action="action_wizard_sale_preinvoice_group"
         id="menu_wizard_sale_preinvoice_group"
         parent="sale_preinvoice_group_menu"
-        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_manager"
+        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_manager"
         sequence="100"
     />
 </odoo>

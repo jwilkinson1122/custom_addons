@@ -2,14 +2,14 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_diagnostic_report_template_form_view">
+    <record model="ir.ui.view" id="pod_diagnostic_report_template_form_view">
         <field
             name="name"
-        >medical.diagnostic.report.template.form (in medical_diagnostic_report_graph)</field>
-        <field name="model">medical.diagnostic.report.template</field>
+        >pod.diagnostic.report.template.form (in pod_diagnostic_report_graph)</field>
+        <field name="model">pod.diagnostic.report.template</field>
         <field
             name="inherit_id"
-            ref="medical_diagnostic_report.medical_report_template_form_view"
+            ref="pod_diagnostic_report.pod_report_template_form_view"
         />
         <field name="arch" type="xml">
             <field name="with_conclusion" position="after">

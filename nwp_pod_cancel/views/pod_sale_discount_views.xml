@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_cancel_reason_form" model="ir.ui.view">
-        <field name="name">medical.cancel.reason.form</field>
-        <field name="model">medical.cancel.reason</field>
+    <record id="pod_cancel_reason_form" model="ir.ui.view">
+        <field name="name">pod.cancel.reason.form</field>
+        <field name="model">pod.cancel.reason</field>
         <field name="arch" type="xml">
             <form string="Cancellation reasons">
                 <header />
@@ -29,9 +29,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_cancel_reason_tree" model="ir.ui.view">
-        <field name="name">medical.cancel.reason.search</field>
-        <field name="model">medical.cancel.reason</field>
+    <record id="pod_cancel_reason_tree" model="ir.ui.view">
+        <field name="name">pod.cancel.reason.search</field>
+        <field name="model">pod.cancel.reason</field>
         <field name="arch" type="xml">
             <tree string="Cancellation reasons">
                 <field name="name" />
@@ -39,9 +39,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_cancel_reason_search" model="ir.ui.view">
-        <field name="name">medical.cancel.reason.search</field>
-        <field name="model">medical.cancel.reason</field>
+    <record id="pod_cancel_reason_search" model="ir.ui.view">
+        <field name="name">pod.cancel.reason.search</field>
+        <field name="model">pod.cancel.reason</field>
         <field name="arch" type="xml">
             <search string="Cancellation reasons">
                 <field name="name" />
@@ -53,17 +53,17 @@
             </search>
         </field>
     </record>
-    <record id="medical_cancel_reason_action" model="ir.actions.act_window">
-        <field name="name">Medical Cancel Reasons</field>
+    <record id="pod_cancel_reason_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Cancel Reasons</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.cancel.reason</field>
+        <field name="res_model">pod.cancel.reason</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        id="medical_cancel_reason_menu"
+        id="pod_cancel_reason_menu"
         name="Cancel reasons"
         sequence="90"
-        parent="medical_base.medical_root_configuration"
-        action="medical_cancel_reason_action"
+        parent="pod_base.pod_root_configuration"
+        action="pod_cancel_reason_action"
     />
 </odoo>

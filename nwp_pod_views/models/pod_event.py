@@ -1,8 +1,8 @@
 from odoo import api, models
 
 
-class MedicalEvent(models.AbstractModel):
-    _inherit = "medical.event"
+class PodiatryEvent(models.AbstractModel):
+    _inherit = "pod.event"
 
     @api.depends("name", "internal_identifier")
     def name_get(self):

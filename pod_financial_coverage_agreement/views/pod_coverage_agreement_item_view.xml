@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_coverage_agreement_item_view_tree" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.item.tree</field>
-        <field name="model">medical.coverage.agreement.item</field>
+    <record id="pod_coverage_agreement_item_view_tree" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.item.tree</field>
+        <field name="model">pod.coverage.agreement.item</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Agreement Items" editable="bottom">
@@ -24,10 +24,10 @@
             </tree>
         </field>
     </record>
-    <record id="medical_coverage_agreement_item_view_coverage_tree" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.item.tree</field>
-        <field name="model">medical.coverage.agreement.item</field>
-        <field name="inherit_id" ref="medical_coverage_agreement_item_view_tree" />
+    <record id="pod_coverage_agreement_item_view_coverage_tree" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.item.tree</field>
+        <field name="model">pod.coverage.agreement.item</field>
+        <field name="inherit_id" ref="pod_coverage_agreement_item_view_tree" />
         <field name="mode">primary</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
@@ -40,9 +40,9 @@
             </field>
         </field>
     </record>
-    <record id="medical_coverage_agreement_item_search_view" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.item.search</field>
-        <field name="model">medical.coverage.agreement.item</field>
+    <record id="pod_coverage_agreement_item_search_view" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.item.search</field>
+        <field name="model">pod.coverage.agreement.item</field>
         <field name="arch" type="xml">
             <search string="Agreements">
                 <field name="product_id" />
@@ -73,62 +73,62 @@
         </field>
     </record>
     <record
-        id="medical_coverage_agreement_item_product_template_action"
+        id="pod_coverage_agreement_item_product_template_action"
         model="ir.actions.act_window"
     >
         <field name="name">Agreement Item</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement.item</field>
+        <field name="res_model">pod.coverage.agreement.item</field>
         <field name="view_mode">tree</field>
         <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
         <field name="context">{'search_default_current_agreements': 1}</field>
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('medical_coverage_agreement_item_view_coverage_tree')})
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('pod_coverage_agreement_item_view_coverage_tree')})
              ]
         "
         />
     </record>
     <record
-        id="medical_coverage_agreement_item_product_action"
+        id="pod_coverage_agreement_item_product_action"
         model="ir.actions.act_window"
     >
         <field name="name">Agreement Item</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement.item</field>
+        <field name="res_model">pod.coverage.agreement.item</field>
         <field name="view_mode">tree</field>
         <field name="context">{'search_default_current_agreements': 1}</field>
         <field name="domain">[('product_id', '=', active_id)]</field>
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('medical_coverage_agreement_item_view_coverage_tree')})
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('pod_coverage_agreement_item_view_coverage_tree')})
              ]
         "
         />
     </record>
     <record
-        id="medical_coverage_agreement_item_plan_action"
+        id="pod_coverage_agreement_item_plan_action"
         model="ir.actions.act_window"
     >
         <field name="name">Agreement Item</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement.item</field>
+        <field name="res_model">pod.coverage.agreement.item</field>
         <field name="view_mode">tree</field>
         <field name="domain">[('plan_definition_id', '=', active_id)]</field>
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('medical_coverage_agreement_item_view_coverage_tree')})
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('pod_coverage_agreement_item_view_coverage_tree')})
              ]
         "
         />
     </record>
-    <record id="medical_coverage_agreement_item_action" model="ir.actions.act_window">
+    <record id="pod_coverage_agreement_item_action" model="ir.actions.act_window">
         <field name="name">Agreement Item</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement.item</field>
+        <field name="res_model">pod.coverage.agreement.item</field>
         <field name="view_mode">tree</field>
         <field name="context">{}</field>
     </record>

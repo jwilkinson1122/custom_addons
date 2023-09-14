@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ============================
-CB Management Issue Product
+NWP Management Issue Product
 ============================
 
 This module intends to create a system to generate Product Quality Issues.

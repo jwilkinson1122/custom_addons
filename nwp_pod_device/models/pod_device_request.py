@@ -5,11 +5,11 @@
 from odoo import fields, models
 
 
-class MedicalMedicationRequest(models.Model):
-    _inherit = "medical.medication.request"
+class PodiatryDeviceRequest(models.Model):
+    _inherit = "pod.device.request"
 
     location_type_id = fields.Many2one(
-        "medical.location.type", readonly=True, tracking=True
+        "pod.location.type", readonly=True, tracking=True
     )
 
     def _get_event_values(self):
@@ -25,7 +25,7 @@ class MedicalMedicationRequest(models.Model):
             res["stock_location_id"] = self.env.context.get("stock_location_id")
         return res
 
-    def _add_medication_item(self, item):
+    def _add_device_item(self, item):
         if self.state == "draft":
             self.draft2active()
         administration = self.with_context(

@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalPatient(models.Model):
-    _inherit = "medical.patient"
+class PodiatryPatient(models.Model):
+    _inherit = "pod.patient"
 
     def get_coverage(self, template, coverage, **kwargs):
         self.ensure_one()
@@ -27,7 +27,7 @@ class MedicalPatient(models.Model):
                 )
             )
         if not coverage:
-            coverage = self.env["medical.coverage"].create(
+            coverage = self.env["pod.coverage"].create(
                 {
                     "patient_id": self.id,
                     "coverage_template_id": template.id,

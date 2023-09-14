@@ -1,1 +1,1 @@
-from . import test_medical_invoice
+from . import test_pod_invoice

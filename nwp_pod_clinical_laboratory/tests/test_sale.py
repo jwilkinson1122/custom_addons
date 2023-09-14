@@ -1,10 +1,10 @@
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form
 
-from odoo.addons.cb_medical_pos.tests import common
+from odoo.addons.nwp_pod_pos.tests import common
 
 
-class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
+class TestNWPPodiatryClinicalLaboratorySale(common.PodiatrySavePointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -13,16 +13,16 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
         cls.practitioner_01.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
         cls.practitioner_02.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
-        cls.lab_service = cls.env["medical.laboratory.service"].create(
+        cls.lab_service = cls.env["pod.laboratory.service"].create(
             {
                 "name": "Lab service 1",
                 "code": "INTERNAL_CODE",
@@ -32,7 +32,7 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
                 ],
             }
         )
-        cls.lab_service_2 = cls.env["medical.laboratory.service"].create(
+        cls.lab_service_2 = cls.env["pod.laboratory.service"].create(
             {
                 "name": "Lab service 2",
                 "code": "INTERNAL_CODE2",
@@ -110,17 +110,17 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
                 "coverage_cost": 9,
             }
         )
-        self.env["medical.coverage.agreement.item"].create(
+        self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_07.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 100.0,
                 "authorization_method_id": self.browse_ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.browse_ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -156,17 +156,17 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
                 "coverage_cost": 9,
             }
         )
-        self.env["medical.coverage.agreement.item"].create(
+        self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_07.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 50.0,
                 "authorization_method_id": self.browse_ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.browse_ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -203,17 +203,17 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
             }
         )
         self.assertFalse(lab_req.event_coverage_agreement_id)
-        self.env["medical.coverage.agreement.item"].create(
+        self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_07.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 0.0,
                 "authorization_method_id": self.browse_ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.browse_ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -258,14 +258,14 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
     def test_laboratory(self):
         self.assertTrue(self.group.laboratory_request_ids)
         action = self.group.with_context(
-            model_name="medical.laboratory.request"
+            model_name="pod.laboratory.request"
         ).action_view_request()
         self.assertEqual(
             self.group.laboratory_request_ids,
-            self.env["medical.laboratory.request"].search(action["domain"]),
+            self.env["pod.laboratory.request"].search(action["domain"]),
         )
         with self.assertRaises(ValidationError):
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": self.enc.id,
                     "pos_session_id": self.session.id,
@@ -323,13 +323,13 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
         self.assertFalse(event.is_sellable_private)
         self.assertFalse(event.is_sellable_insurance)
         self.assertEqual(event.laboratory_code, self.lab_service.laboratory_code)
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": self.enc.id, "pos_session_id": self.session.id}
         ).run()
         self.assertIn(self.enc.state, ["finished", "onleave"])
         self.assertTrue(
             self.enc.sale_order_ids.mapped("order_line").filtered(
-                lambda r: r.medical_model == "medical.laboratory.event"
+                lambda r: r.pod_model == "pod.laboratory.event"
             )
         )
         self.enc.recompute_commissions()
@@ -337,7 +337,7 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
             sum(
                 a.amount
                 for a in self.enc.sale_order_ids.mapped("order_line")
-                .filtered(lambda r: r.medical_model == "medical.laboratory.event")
+                .filtered(lambda r: r.pod_model == "pod.laboratory.event")
                 .mapped("agent_ids")
             ),
             0,
@@ -346,14 +346,14 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
     def test_laboratory_check_code(self):
         self.assertTrue(self.group.laboratory_request_ids)
         action = self.group.with_context(
-            model_name="medical.laboratory.request"
+            model_name="pod.laboratory.request"
         ).action_view_request()
         self.assertEqual(
             self.group.laboratory_request_ids,
-            self.env["medical.laboratory.request"].search(action["domain"]),
+            self.env["pod.laboratory.request"].search(action["domain"]),
         )
         with self.assertRaises(ValidationError):
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": self.enc.id,
                     "pos_session_id": self.session.id,
@@ -408,17 +408,17 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
             }
         )
         # We need to invoice the event, so we create an agreement item
-        self.env["medical.coverage.agreement.item"].create(
+        self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_07.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 50.0,
                 "authorization_method_id": self.browse_ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.browse_ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -428,13 +428,13 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
         self.assertTrue(event.is_sellable_private)
         self.assertTrue(event.is_sellable_insurance)
         self.assertEqual(event.laboratory_code, self.lab_service_2.laboratory_code)
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": self.enc.id, "pos_session_id": self.session.id}
         ).run()
         self.assertIn(self.enc.state, ["finished", "onleave"])
         order_lines = self.enc.sale_order_ids.mapped("order_line").filtered(
-            lambda r: r.medical_model == "medical.laboratory.event"
-            and r.medical_res_id == event.id
+            lambda r: r.pod_model == "pod.laboratory.event"
+            and r.pod_res_id == event.id
         )
         self.assertTrue(order_lines)
         for line in order_lines:
@@ -444,7 +444,7 @@ class TestCBMedicalClinicalLaboratorySale(common.MedicalSavePointCase):
             sum(
                 a.amount
                 for a in self.enc.sale_order_ids.mapped("order_line")
-                .filtered(lambda r: r.medical_model == "medical.laboratory.event")
+                .filtered(lambda r: r.pod_model == "pod.laboratory.event")
                 .mapped("agent_ids")
             ),
             0,

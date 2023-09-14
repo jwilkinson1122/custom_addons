@@ -5,37 +5,37 @@
 from odoo import api, fields, models
 
 
-class MedicalRequestGroupChangePlan(models.TransientModel):
-    _name = "medical.request.group.change.plan"
-    _description = "medical.request.group.change.plan"
+class PodiatryRequestGroupChangePlan(models.TransientModel):
+    _name = "pod.request.group.change.plan"
+    _description = "pod.request.group.change.plan"
 
     request_group_id = fields.Many2one(
-        "medical.request.group", required=True, readonly=True
+        "pod.request.group", required=True, readonly=True
     )
     careplan_id = fields.Many2one(
-        "medical.careplan",
+        "pod.careplan",
         related="request_group_id.careplan_id",
         readonly=True,
     )
     patient_id = fields.Many2one(
-        "medical.patient", related="request_group_id.patient_id", readonly=True
+        "pod.patient", related="request_group_id.patient_id", readonly=True
     )
     coverage_id = fields.Many2one(
-        "medical.coverage", readonly=True, related="careplan_id.coverage_id"
+        "pod.coverage", readonly=True, related="careplan_id.coverage_id"
     )
     center_id = fields.Many2one(
         "res.partner", related="careplan_id.center_id", readonly=True
     )
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         readonly=True,
         related="coverage_id.coverage_template_id",
     )
     agreement_ids = fields.Many2many(
-        "medical.coverage.agreement", compute="_compute_agreements"
+        "pod.coverage.agreement", compute="_compute_agreements"
     )
     agreement_line_id = fields.Many2one(
-        "medical.coverage.agreement.item",
+        "pod.coverage.agreement.item",
         domain="[('coverage_agreement_id', 'in', agreement_ids),"
         "('plan_definition_id', '!=', False)]",
     )
@@ -50,12 +50,12 @@ class MedicalRequestGroupChangePlan(models.TransientModel):
         related="agreement_line_id.plan_definition_id",
     )
     authorization_method_id = fields.Many2one(
-        "medical.authorization.method",
+        "pod.authorization.method",
         readonly=True,
         related="agreement_line_id.authorization_method_id",
     )
     authorization_format_id = fields.Many2one(
-        "medical.authorization.format",
+        "pod.authorization.format",
         readonly=True,
         related="agreement_line_id.authorization_format_id",
     )
@@ -82,7 +82,7 @@ class MedicalRequestGroupChangePlan(models.TransientModel):
     @api.depends("coverage_template_id", "center_id")
     def _compute_agreements(self):
         for rec in self:
-            rec.agreement_ids = self.env["medical.coverage.agreement"].search(
+            rec.agreement_ids = self.env["pod.coverage.agreement"].search(
                 [
                     (
                         "coverage_template_ids",

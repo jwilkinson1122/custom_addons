@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     authorization_checked = fields.Boolean(default=False, readonly=True)

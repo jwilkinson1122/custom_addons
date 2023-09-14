@@ -10,19 +10,19 @@
         <field name="model">workflow.plan.definition.action</field>
         <field
             name="inherit_id"
-            ref="medical_workflow.workflow_plan_definition_action_form"
+            ref="pod_workflow.workflow_plan_definition_action_form"
         />
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <group name="fees">
-                <field name="medical_commission" invisible="1" />
+                <field name="pod_commission" invisible="1" />
                 <field
                     name="variable_fee"
-                    attrs="{'invisible':[('medical_commission', '=', False)]}"
+                    attrs="{'invisible':[('pod_commission', '=', False)]}"
                 />
                 <field
                     name="fixed_fee"
-                    attrs="{'invisible':[('medical_commission', '=', False)]}"
+                    attrs="{'invisible':[('pod_commission', '=', False)]}"
                 />
             </group>
         </field>

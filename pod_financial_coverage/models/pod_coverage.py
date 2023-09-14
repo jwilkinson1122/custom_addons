@@ -5,11 +5,11 @@
 from odoo import api, fields, models
 
 
-class MedicalCoverage(models.Model):
+class PodiatryCoverage(models.Model):
     # FHIR Entity: Coverage (https://www.hl7.org/fhir/coverage.html)
-    _name = "medical.coverage"
-    _description = "Medical Coverage"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.coverage"
+    _description = "Podiatry Coverage"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(
         string="Name",
@@ -18,7 +18,7 @@ class MedicalCoverage(models.Model):
     )
     patient_id = fields.Many2one(
         string="Patient",
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         required=True,
         ondelete="restrict",
         index=True,
@@ -29,7 +29,7 @@ class MedicalCoverage(models.Model):
     )  # FHIR Field: beneficiary
     coverage_template_id = fields.Many2one(
         string="Coverage Template",
-        comodel_name="medical.coverage.template",
+        comodel_name="pod.coverage.template",
         required=True,
         ondelete="restrict",
         index=True,
@@ -59,7 +59,7 @@ class MedicalCoverage(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.coverage")
+            self.env["ir.sequence"].sudo().next_by_code("pod.coverage")
             or "/"
         )
 

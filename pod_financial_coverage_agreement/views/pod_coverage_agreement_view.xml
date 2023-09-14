@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_coverage_agreement_tree" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.tree</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record id="pod_coverage_agreement_tree" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.tree</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="arch" type="xml">
             <tree
                 string="Agreements"
@@ -22,11 +22,11 @@
             </tree>
         </field>
     </record>
-    <record id="medical_coverage_agreement_tree_delete" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.form</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record id="pod_coverage_agreement_tree_delete" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.form</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_coverage_agreement_tree" />
+        <field name="inherit_id" ref="pod_coverage_agreement_tree" />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
             <tree position="attributes">
@@ -34,9 +34,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_coverage_agreement_view" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.form</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record id="pod_coverage_agreement_view" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.form</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="arch" type="xml">
             <form string="Agreement">
                 <sheet>
@@ -50,7 +50,7 @@
                         <field name="active" invisible="1" />
                         <button
                             type="action"
-                            name="%(medical_financial_coverage_agreement.set_medical_coverage_agreement_template_action)s"
+                            name="%(pod_financial_coverage_agreement.set_pod_coverage_agreement_template_action)s"
                             class="oe_stat_button"
                             icon="fa-clone"
                             context="{'default_agreement_id': id, 'default_template_id': template_id}"
@@ -59,7 +59,7 @@
                         />
                         <button
                             type="action"
-                            name="%(medical_financial_coverage_agreement.medical_agreement_expand_act_window)s"
+                            name="%(pod_financial_coverage_agreement.pod_agreement_expand_act_window)s"
                             class="oe_stat_button"
                             icon="fa-expand-alt"
                             context="{'default_agreement_id': id, 'default_name': name}"
@@ -68,7 +68,7 @@
                         />
                         <button
                             type="action"
-                            name="%(medical_financial_coverage_agreement.medical_agreement_change_prices_action)s"
+                            name="%(pod_financial_coverage_agreement.pod_agreement_change_prices_action)s"
                             class="oe_stat_button"
                             icon="fa-percent"
                             context="{'active_ids': [id]}"
@@ -158,9 +158,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_coverage_agreement_search_view" model="ir.ui.view">
-        <field name="name">medical.coverage.agreement.search</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record id="pod_coverage_agreement_search_view" model="ir.ui.view">
+        <field name="name">pod.coverage.agreement.search</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="arch" type="xml">
             <search string="Agreements">
                 <field name="name" />
@@ -174,10 +174,10 @@
             </search>
         </field>
     </record>
-    <record id="medical_coverage_agreement_action" model="ir.actions.act_window">
+    <record id="pod_coverage_agreement_action" model="ir.actions.act_window">
         <field name="name">Agreements</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement</field>
+        <field name="res_model">pod.coverage.agreement</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_template', '=', False)]</field>
         <field name="help" type="html">
@@ -196,12 +196,12 @@
         </field>
     </record>
     <record
-        id="medical_coverage_agreement_template_action"
+        id="pod_coverage_agreement_template_action"
         model="ir.actions.act_window"
     >
         <field name="name">Agreement Templates</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.agreement</field>
+        <field name="res_model">pod.coverage.agreement</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_template', '=', True)]</field>
         <field name="context">{'default_is_template': True}</field>

@@ -4,20 +4,20 @@
 from odoo import _, api, fields, models
 
 
-class MedicalPatient(models.Model):
+class PodiatryPatient(models.Model):
 
-    _inherit = "medical.patient"
+    _inherit = "pod.patient"
 
-    medical_impression_ids = fields.One2many(
-        "medical.clinical.impression",
+    pod_impression_ids = fields.One2many(
+        "pod.clinical.impression",
         inverse_name="patient_id",
     )
     impression_specialty_ids = fields.Many2many(
-        "medical.specialty", compute="_compute_impression_specialties"
+        "pod.specialty", compute="_compute_impression_specialties"
     )
 
     family_history_ids = fields.One2many(
-        "medical.family.member.history", inverse_name="patient_id"
+        "pod.family.member.history", inverse_name="patient_id"
     )
 
     family_history_count = fields.Integer(
@@ -25,32 +25,32 @@ class MedicalPatient(models.Model):
     )
 
     condition_ids = fields.One2many(
-        comodel_name="medical.condition",
+        comodel_name="pod.condition",
         string="Conditions Warning",
-        related="medical_impression_ids.condition_ids",
+        related="pod_impression_ids.condition_ids",
     )
 
     condition_count = fields.Integer(
-        related="medical_impression_ids.condition_count"
+        related="pod_impression_ids.condition_count"
     )
 
     @api.depends("family_history_ids")
     def _compute_family_history_count(self):
         self.family_history_count = len(self.family_history_ids)
 
-    @api.depends("medical_impression_ids")
+    @api.depends("pod_impression_ids")
     def _compute_impression_specialties(self):
         for record in self:
             record.impression_specialty_ids = (
-                record.medical_impression_ids.mapped("specialty_id")
+                record.pod_impression_ids.mapped("specialty_id")
             )
 
     def action_view_clinical_impressions(self):
         self.ensure_one()
         encounter = self._get_last_encounter()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_impression."
-            "medical_clinical_impression_act_window"
+            "pod_clinical_impression."
+            "pod_clinical_impression_act_window"
         )
         action["domain"] = [("patient_id", "=", self.id)]
         if encounter:
@@ -63,8 +63,8 @@ class MedicalPatient(models.Model):
     def action_view_family_history(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_impression."
-            "medical_family_member_history_action"
+            "pod_clinical_impression."
+            "pod_family_member_history_action"
         )
         action["domain"] = [
             ("patient_id", "=", self.id),
@@ -76,13 +76,13 @@ class MedicalPatient(models.Model):
     def create_family_member_history(self):
         self.ensure_one()
         view_id = self.env.ref(
-            "medical_clinical_impression.medical_family_member_history_view_form"
+            "pod_clinical_impression.pod_family_member_history_view_form"
         ).id
         ctx = dict(self._context)
         ctx["default_patient_id"] = self.id
         return {
             "type": "ir.actions.act_window",
-            "res_model": "medical.family.member.history",
+            "res_model": "pod.family.member.history",
             "name": _("Create family member history"),
             "view_type": "form",
             "view_mode": "form",

@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ======================================
-Creu Blanca Medical Diagnostic Report
+Creu Blanca Podiatry Diagnostic Report
 ======================================
 
 Usage
@@ -16,7 +16,7 @@ Usage
 2 - Create a report category
 #. Go to 'Clinical / Diagnostic / Report Configuration / Report Categories'
 #. Click 'Create'.
-#. Provide a name and medical department.
+#. Provide a name and pod department.
 #. Click 'Save'.
 3 - Create a patient
 #. Go to 'Administration / Patients'
@@ -33,8 +33,8 @@ Usage
 #. Click 'Create'.
 #. Provide a name, category and any other information.
 #. Click 'Save'.
-6 - Create an encounter and generate a medical report
+6 - Create an encounter and generate a pod report
 #. Go to 'Administration / Encounters'
 #. Click 'Create'.
 #. Provide a patient, center and any other information.
-#. Click 'Generate Medical Report' and select a template.
+#. Click 'Generate Podiatry Report' and select a template.

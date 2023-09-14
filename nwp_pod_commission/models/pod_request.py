@@ -5,15 +5,15 @@
 from odoo import api, models
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     @api.model
     def get_third_party_product(self):
         return int(
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("cb.default_third_party_product")
+            .get_param("nwp.default_third_party_product")
         )
 
     def get_commission(self, amount):

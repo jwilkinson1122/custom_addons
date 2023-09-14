@@ -1,9 +1,9 @@
 from odoo import fields, models
 
 
-class MedicalSaleDiscount(models.Model):
-    _name = "medical.sale.discount"
-    _description = "Medical Discounts"
+class PodiatrySaleDiscount(models.Model):
+    _name = "pod.sale.discount"
+    _description = "Podiatry Discounts"
 
     name = fields.Char(required=True)
     description = fields.Char()

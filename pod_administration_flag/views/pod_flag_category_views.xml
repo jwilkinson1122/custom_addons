@@ -5,21 +5,21 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_flag_category_view_tree" model="ir.ui.view">
-        <field name="name">medical.flag.category.view.tree</field>
-        <field name="model">medical.flag.category</field>
+    <record id="pod_flag_category_view_tree" model="ir.ui.view">
+        <field name="name">pod.flag.category.view.tree</field>
+        <field name="model">pod.flag.category</field>
         <field name="arch" type="xml">
-            <tree string="Medical Flag Categories">
+            <tree string="Podiatry Flag Categories">
                 <field name="name" />
                 <field name="description" />
             </tree>
         </field>
     </record>
-    <record id="medical_flag_category_view_form" model="ir.ui.view">
-        <field name="name">medical.flag.category.view.form</field>
-        <field name="model">medical.flag.category</field>
+    <record id="pod_flag_category_view_form" model="ir.ui.view">
+        <field name="name">pod.flag.category.view.form</field>
+        <field name="model">pod.flag.category</field>
         <field name="arch" type="xml">
-            <form string="Medical Flag Category">
+            <form string="Podiatry Flag Category">
                 <header />
                 <sheet>
                     <widget
@@ -40,18 +40,18 @@
             </form>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_flag_category_action">
+    <record model="ir.actions.act_window" id="pod_flag_category_action">
         <field name="name">Flag categories</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.flag.category</field>
+        <field name="res_model">pod.flag.category</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>
     <menuitem
-        id="menu_medical_flag_category_root"
+        id="menu_pod_flag_category_root"
         name="Flag categories"
         sequence="20"
-        parent="medical_base.medical_root_configuration"
-        action="medical_flag_category_action"
+        parent="pod_base.pod_root_configuration"
+        action="pod_flag_category_action"
     />
 </odoo>

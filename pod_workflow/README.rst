@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ================
-Medical Workflow
+Podiatry Workflow
 ================
 
 The Workflow Module focuses on the coordination of activities within and
@@ -28,19 +28,19 @@ For more information about the FHIR Workflow model visit: https://www.hl7.org/fh
 Installation
 ============
 
-#. To install this module, go to 'Medical / Configuration / Settings' and inside
+#. To install this module, go to 'Podiatry / Configuration / Settings' and inside
    'Workflow' activate 'Workflow'.
 
 Usage
 =====
 
-#. Go to 'Medical / Workflow / Workflow Types'
+#. Go to 'Podiatry / Workflow / Workflow Types'
 #. Click 'Create' and fill in all the required information.
 #. Click 'Save'.
-#. Go to 'Medical / Workflow / Activity definitions'
+#. Go to 'Podiatry / Workflow / Activity definitions'
 #. Click 'Create' and fill in all the required information.
 #. Click 'Save'.
-#. Go to 'Medical / Workflow / Plan definitions'
+#. Go to 'Podiatry / Workflow / Plan definitions'
 #. Click 'Create'.
 #. Provide a name and create actions by providing a name and an Activity
    Definition or a Plan Definition.
@@ -48,17 +48,17 @@ Usage
 
 Plan definition on patients
 ---------------------------
-#. Go to 'Medical / Configuration / Settings' and inside
+#. Go to 'Podiatry / Configuration / Settings' and inside
    'Workflow' activate 'Plan definition on patients'.
-#. Go to 'Medical / Administration / Patients'
+#. Go to 'Podiatry / Administration / Patients'
 #. Select a patient and press the button 'Add Plan definition'. Automatically
    the requests are generated.
 
 Main activity on plan definitions
 ---------------------------------
-#. Go to 'Medical / Configuration / Settings' and inside
+#. Go to 'Podiatry / Configuration / Settings' and inside
    'Workflow' activate 'Main activity on plan definition'.
-#. Go to 'Medical / Workflow / Plan definitions'
+#. Go to 'Podiatry / Workflow / Plan definitions'
 #. Add an activity definition to the plan.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
@@ -79,7 +79,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

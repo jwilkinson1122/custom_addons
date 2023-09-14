@@ -3,16 +3,16 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from . import account_move
-from . import medical_commission_action
-from . import medical_encounter
-from . import medical_event
-from . import medical_laboratory_event
-from . import medical_laboratory_request
-from . import medical_request_group
-from . import medical_practitioner_condition
-from . import medical_procedure
-from . import medical_procedure_request
-from . import medical_request
+from . import pod_commission_action
+from . import pod_encounter
+from . import pod_event
+from . import pod_laboratory_event
+from . import pod_laboratory_request
+from . import pod_request_group
+from . import pod_practitioner_condition
+from . import pod_procedure
+from . import pod_procedure_request
+from . import pod_request
 from . import product_template
 from . import res_partner
 from . import sale_order

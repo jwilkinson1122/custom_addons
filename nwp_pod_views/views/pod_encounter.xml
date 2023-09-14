@@ -12,7 +12,7 @@
         <field name="view_mode">form</field>
         <field
             name="context"
-        >{'default_model': 'medical.encounter', 'default_method': 'find_encounter_by_barcode'}</field>
+        >{'default_model': 'pod.encounter', 'default_method': 'find_encounter_by_barcode'}</field>
         <field name="target">new</field>
     </record>
 
@@ -20,13 +20,13 @@
     <menuitem
         id="encounter_find_by_barcode_menu"
         name="Find encounter"
-        parent="medical_base.medical_root_administration"
+        parent="pod_base.pod_root_administration"
         action="encounter_find_by_barcode"
         sequence="35"
     />
-    <record id="view_medical_encounter_kanban" model="ir.ui.view">
-        <field name="name">medical.encounter.kanban</field>
-        <field name="model">medical.encounter</field>
+    <record id="view_pod_encounter_kanban" model="ir.ui.view">
+        <field name="name">pod.encounter.kanban</field>
+        <field name="model">pod.encounter</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban create="false">
@@ -53,22 +53,22 @@
             </kanban>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_kanban_show_create">
-        <field name="name">medical.encounter.kanban.show</field>
-        <field name="model">medical.encounter</field>
-        <field name="inherit_id" ref="view_medical_encounter_kanban" />
+    <record model="ir.ui.view" id="pod_encounter_kanban_show_create">
+        <field name="name">pod.encounter.kanban.show</field>
+        <field name="model">pod.encounter</field>
+        <field name="inherit_id" ref="view_pod_encounter_kanban" />
         <field name="arch" type="xml">
             <kanban position="attributes">
                 <attribute name="create">true</attribute>
             </kanban>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_tree_hide_create">
-        <field name="name">medical.encounter.tree.hide</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_tree_hide_create">
+        <field name="name">pod.encounter.tree.hide</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_tree"
+            ref="pod_administration_encounter.pod_encounter_view_tree"
         />
         <field name="arch" type="xml">
             <tree position="attributes">
@@ -76,16 +76,16 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_tree_show_create">
-        <field name="name">medical.encounter.tree.create</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_tree_show_create">
+        <field name="name">pod.encounter.tree.create</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="cb_medical_views.medical_encounter_tree_hide_create"
+            ref="nwp_pod_views.pod_encounter_tree_hide_create"
         />
         <field
             name="groups_id"
-            eval="[(4, ref('cb_medical_views.group_can_create_encounters'))]"
+            eval="[(4, ref('nwp_pod_views.group_can_create_encounters'))]"
         />
         <field name="arch" type="xml">
             <tree position="attributes">
@@ -93,12 +93,12 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_form_hide_create">
-        <field name="name">medical.encounter.form.hide</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_form_hide_create">
+        <field name="name">pod.encounter.form.hide</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <form position="attributes">
@@ -106,13 +106,13 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_form_show_create">
-        <field name="name">medical.encounter.form.create</field>
-        <field name="model">medical.encounter</field>
-        <field name="inherit_id" ref="medical_encounter_form_hide_create" />
+    <record model="ir.ui.view" id="pod_encounter_form_show_create">
+        <field name="name">pod.encounter.form.create</field>
+        <field name="model">pod.encounter</field>
+        <field name="inherit_id" ref="pod_encounter_form_hide_create" />
         <field
             name="groups_id"
-            eval="[(4, ref('cb_medical_views.group_can_create_encounters'))]"
+            eval="[(4, ref('nwp_pod_views.group_can_create_encounters'))]"
         />
         <field name="arch" type="xml">
             <form position="attributes">
@@ -122,7 +122,7 @@
     </record>
     <record
         model="ir.actions.act_window"
-        id="medical_administration_encounter.medical_encounter_action"
+        id="pod_administration_encounter.pod_encounter_action"
     >
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'ignore_mcfix_widget': True}</field>

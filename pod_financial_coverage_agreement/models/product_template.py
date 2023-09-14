@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "categ_id" in vals:
-            self.env["medical.coverage.agreement.item"].search(
+            self.env["pod.coverage.agreement.item"].search(
                 [("product_id", "in", self.mapped("product_variant_ids").ids)]
             ).write({"categ_id": vals["categ_id"]})
         return res
@@ -26,7 +26,7 @@ class ProductProduct(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "categ_id" in vals:
-            self.env["medical.coverage.agreement.item"].search(
+            self.env["pod.coverage.agreement.item"].search(
                 [("product_id", "in", self.ids)]
             ).write({"categ_id": vals["categ_id"]})
         return res

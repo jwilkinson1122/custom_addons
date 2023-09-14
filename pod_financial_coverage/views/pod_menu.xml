@@ -6,24 +6,24 @@
 -->
 <odoo>
 
-    <record model="ir.ui.menu" id="menu_medical_coverage_root">
+    <record model="ir.ui.menu" id="menu_pod_coverage_root">
         <field name="name">Coverage</field>
-        <field name="parent_id" ref="medical_base.medical_root_financial" />
-        <field name="action" ref="medical_coverage_action" />
+        <field name="parent_id" ref="pod_base.pod_root_financial" />
+        <field name="action" ref="pod_coverage_action" />
         <field name="sequence" eval="40" />
     </record>
 
-    <record model="ir.ui.menu" id="menu_medical_coverage_template_root">
+    <record model="ir.ui.menu" id="menu_pod_coverage_template_root">
         <field name="name">Coverage Template</field>
-        <field name="parent_id" ref="medical_base.medical_root_financial" />
-        <field name="action" ref="medical_coverage_template_action" />
+        <field name="parent_id" ref="pod_base.pod_root_financial" />
+        <field name="action" ref="pod_coverage_template_action" />
         <field name="sequence" eval="20" />
     </record>
 
-    <record model="ir.ui.menu" id="menu_medical_payor_root">
+    <record model="ir.ui.menu" id="menu_pod_payor_root">
         <field name="name">Payors</field>
-        <field name="parent_id" ref="medical_base.medical_root_financial" />
-        <field name="action" ref="medical_payor_action" />
+        <field name="parent_id" ref="pod_base.pod_root_financial" />
+        <field name="action" ref="pod_payor_action" />
         <field name="sequence" eval="10" />
     </record>
 </odoo>

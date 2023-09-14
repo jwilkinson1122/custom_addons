@@ -7,11 +7,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProductAdministration(models.Model):
+class PodiatryProductAdministration(models.Model):
 
-    _name = "medical.product.administration"
-    _description = "Medical Product Administration"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.product.administration"
+    _description = "Podiatry Product Administration"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _rec_name = "internal_identifier"
 
     name = fields.Char()
@@ -19,7 +19,7 @@ class MedicalProductAdministration(models.Model):
     internal_identifier = fields.Char(string="Product Administration")
 
     product_request_id = fields.Many2one(
-        comodel_name="medical.product.request"
+        comodel_name="pod.product.request"
     )
 
     state = fields.Selection(
@@ -33,16 +33,16 @@ class MedicalProductAdministration(models.Model):
     # Fhir Concept: status
 
     product_type = fields.Selection(
-        related="medical_product_template_id.product_type"
+        related="pod_product_template_id.product_type"
     )
 
-    medical_product_template_id = fields.Many2one(
-        comodel_name="medical.product.template"
+    pod_product_template_id = fields.Many2one(
+        comodel_name="pod.product.template"
     )
-    # Fhir Concept: medication
+    # Fhir Concept: device
 
     product_type = fields.Selection(
-        related="medical_product_template_id.product_type"
+        related="pod_product_template_id.product_type"
     )
     # Used for visualization purposes
 
@@ -60,7 +60,7 @@ class MedicalProductAdministration(models.Model):
     quantity_uom_domain = fields.Char(compute="_compute_quantity_uom_domain")
 
     administration_route_id = fields.Many2one(
-        comodel_name="medical.administration.route"
+        comodel_name="pod.administration.route"
     )
     administration_route_domain = fields.Char(
         compute="_compute_administration_route_domain",
@@ -79,10 +79,10 @@ class MedicalProductAdministration(models.Model):
 
     comments = fields.Text()
 
-    @api.depends("medical_product_template_id")
+    @api.depends("pod_product_template_id")
     def _compute_quantity_uom_domain(self):
         for rec in self:
-            template = rec.medical_product_template_id
+            template = rec.pod_product_template_id
             if template and template.form_id:
                 rec.quantity_uom_domain = json.dumps(
                     [("id", "in", template.form_id.uom_ids.ids)]
@@ -94,10 +94,10 @@ class MedicalProductAdministration(models.Model):
                 )
                 rec.quantity_uom_domain = json.dumps([("id", "in", uoms.ids)])
 
-    @api.depends("medical_product_template_id")
+    @api.depends("pod_product_template_id")
     def _compute_administration_route_domain(self):
         for rec in self:
-            template = rec.medical_product_template_id
+            template = rec.pod_product_template_id
             if template and template.administration_route_ids:
                 rec.administration_route_domain = json.dumps(
                     [("id", "in", template.administration_route_ids.ids)]
@@ -108,7 +108,7 @@ class MedicalProductAdministration(models.Model):
     def _get_internal_identifier(self, vals):
         return (
             self.env["ir.sequence"].next_by_code(
-                "medical.product.administration"
+                "pod.product.administration"
             )
             or "/"
         )

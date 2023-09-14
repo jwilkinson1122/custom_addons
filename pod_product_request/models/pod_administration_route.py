@@ -4,9 +4,9 @@
 from odoo import fields, models
 
 
-class MedicalAdministrationRoute(models.Model):
+class PodiatryAdministrationRoute(models.Model):
 
-    _name = "medical.administration.route"
-    _description = "Medical Administration Route"
+    _name = "pod.administration.route"
+    _description = "Podiatry Administration Route"
 
     name = fields.Char()

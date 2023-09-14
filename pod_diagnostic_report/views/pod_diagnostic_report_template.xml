@@ -2,11 +2,11 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_report_template_form_view">
+    <record model="ir.ui.view" id="pod_report_template_form_view">
         <field
             name="name"
-        >medical.diagnostic.report.template.form (in medical_diagnostic_report)</field>
-        <field name="model">medical.diagnostic.report.template</field>
+        >pod.diagnostic.report.template.form (in pod_diagnostic_report)</field>
+        <field name="model">pod.diagnostic.report.template</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -19,7 +19,7 @@
                     />
                     <div name="button_box" class="oe_button_box">
                         <button
-                            name="%(medical_diagnostic_report.medical_diagnostic_report_template_print_act_window)s"
+                            name="%(pod_diagnostic_report.pod_diagnostic_report_template_print_act_window)s"
                             type="action"
                             icon="fa-print"
                             string="Preview"
@@ -30,15 +30,15 @@
                         <field name="title" />
                         <field
                             name="template_type"
-                            groups="medical_base.group_medical_configurator"
+                            groups="pod_base.group_pod_configurator"
                         />
                         <field
                             name="with_observation"
-                            groups="medical_base.group_medical_configurator"
+                            groups="pod_base.group_pod_configurator"
                         />
                         <field
                             name="item_blocked"
-                            groups="medical_base.group_medical_configurator"
+                            groups="pod_base.group_pod_configurator"
                         />
                         <field name="with_composition" />
                         <field name="with_conclusion" />
@@ -48,7 +48,7 @@
                         <page
                             name="item"
                             string="Observations"
-                            groups="medical_base.group_medical_configurator"
+                            groups="pod_base.group_pod_configurator"
                             attrs="{'invisible':[('with_observation', '=', False)]}"
                         >
                             <field name="item_ids" widget="section_and_note_one2many">
@@ -152,35 +152,35 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_diagnostic_report_template_tree_view">
+    <record model="ir.ui.view" id="pod_diagnostic_report_template_tree_view">
         <field
             name="name"
-        >medical.diagnostic.report.template.tree (in medical_diagnostic_report)</field>
-        <field name="model">medical.diagnostic.report.template</field>
+        >pod.diagnostic.report.template.tree (in pod_diagnostic_report)</field>
+        <field name="model">pod.diagnostic.report.template</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <record id="medical_report_template_act_window" model="ir.actions.act_window">
+    <record id="pod_report_template_act_window" model="ir.actions.act_window">
         <field name="name">Diagnostic Report Template</field>
-        <field name="res_model">medical.diagnostic.report.template</field>
+        <field name="res_model">pod.diagnostic.report.template</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_report_configuration">
+    <record model="ir.ui.menu" id="pod_report_configuration">
         <field name="name">Report Configuration</field>
-        <field name="parent_id" ref="medical_base.medical_root_diagnostics" />
+        <field name="parent_id" ref="pod_base.pod_root_diagnostics" />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_doctor')), (4, ref('medical_base.group_medical_configurator'))]"
+            eval="[(4, ref('pod_base.group_pod_practitioner')), (4, ref('pod_base.group_pod_configurator'))]"
         />
         <field name="sequence" eval="20" />
     </record>
-    <record model="ir.ui.menu" id="medical_report_template_menu">
+    <record model="ir.ui.menu" id="pod_report_template_menu">
         <field name="name">Diagnostic Report Templates</field>
-        <field name="parent_id" ref="medical_report_configuration" />
-        <field name="action" ref="medical_report_template_act_window" />
+        <field name="parent_id" ref="pod_report_configuration" />
+        <field name="action" ref="pod_report_template_act_window" />
         <field name="sequence" eval="16" />
     </record>
 </odoo>

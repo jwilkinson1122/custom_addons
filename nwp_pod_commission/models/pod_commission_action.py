@@ -1,9 +1,9 @@
 from odoo import fields, models
 
 
-class MedicalCommissionAction(models.AbstractModel):
-    _name = "medical.commission.action"
-    _description = "medical.commission.action"
+class PodiatryCommissionAction(models.AbstractModel):
+    _name = "pod.commission.action"
+    _description = "pod.commission.action"
 
     performer_id = fields.Many2one(
         string="Performer",

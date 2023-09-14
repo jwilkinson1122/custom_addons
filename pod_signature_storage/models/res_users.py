@@ -16,7 +16,7 @@ class ResUsers(models.Model):
     def update_signature(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_signature_storage.res_users_update_signature_act_window"
+            "pod_signature_storage.res_users_update_signature_act_window"
         )
         action["context"] = {
             "default_user_id": self.id,

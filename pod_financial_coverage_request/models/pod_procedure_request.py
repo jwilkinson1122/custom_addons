@@ -5,9 +5,9 @@
 from odoo import api, models
 
 
-class MedicalProcedureRequest(models.Model):
-    _name = "medical.procedure.request"
-    _inherit = ["medical.procedure.request", "medical.request"]
+class PodiatryProcedureRequest(models.Model):
+    _name = "pod.procedure.request"
+    _inherit = ["pod.procedure.request", "pod.request"]
 
     @api.model
     def _pass_performer(self, activity, parent, plan, action):

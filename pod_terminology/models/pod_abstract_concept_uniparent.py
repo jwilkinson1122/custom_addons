@@ -5,21 +5,21 @@
 from odoo import fields, models
 
 
-class MedicalAbstractConceptUniparent(models.AbstractModel):
-    # Medical Code system concept
+class PodiatryAbstractConceptUniparent(models.AbstractModel):
+    # Podiatry Code system concept
     # (https://www.hl7.org/fhir/codesystem.html)
-    _name = "medical.abstract.concept.uniparent"
-    _inherit = "medical.abstract.concept"
-    _description = "medical abstract concept uniparent"
+    _name = "pod.abstract.concept.uniparent"
+    _inherit = "pod.abstract.concept"
+    _description = "pod abstract concept uniparent"
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = "code"
 
     parent_id = fields.Many2one(
-        comodel_name="medical.abstract.concept.uniparent", ondelete="restrict"
+        comodel_name="pod.abstract.concept.uniparent", ondelete="restrict"
     )  # SNOMED_CT Field: parent
     child_ids = fields.One2many(
-        comodel_name="medical.abstract.concept.uniparent",
+        comodel_name="pod.abstract.concept.uniparent",
         inverse_name="parent_id",
     )  # SNOMED_CT Field: parent
     parent_left = fields.Integer("Left Parent", index=True)

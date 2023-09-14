@@ -8,12 +8,12 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
 
 
-class TestMedicalProductRequestOrder(TransactionCase):
+class TestPodiatryProductRequestOrder(TransactionCase):
     def setUp(self):
-        super(TestMedicalProductRequestOrder, self).setUp()
+        super(TestPodiatryProductRequestOrder, self).setUp()
 
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.encounter = self.env["medical.encounter"].create(
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id}
         )
         self.tablet_uom = self.env["uom.uom"].create(
@@ -25,23 +25,23 @@ class TestMedicalProductRequestOrder(TransactionCase):
                 "rounding": 0.001,
             }
         )
-        self.tablet_form = self.env["medication.form"].create(
+        self.tablet_form = self.env["device.form"].create(
             {
                 "name": "EFG film coated tablets",
                 "uom_ids": [(4, self.tablet_uom.id)],
             }
         )
-        self.ibuprofen_template = self.env["medical.product.template"].create(
+        self.ibuprofen_template = self.env["pod.product.template"].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "medication",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,
             }
         )
-        self.medical_product_ibuprofen_30_tablets = self.env[
-            "medical.product.product"
+        self.pod_product_ibuprofen_30_tablets = self.env[
+            "pod.product.product"
         ].create(
             {
                 "product_tmpl_id": self.ibuprofen_template.id,
@@ -50,7 +50,7 @@ class TestMedicalProductRequestOrder(TransactionCase):
             }
         )
         self.external_product_request_order = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "discharge",
@@ -59,11 +59,11 @@ class TestMedicalProductRequestOrder(TransactionCase):
             }
         )
         self.external_product_request = self.env[
-            "medical.product.request"
+            "pod.product.request"
         ].create(
             {
                 "request_order_id": self.external_product_request_order.id,
-                "medical_product_template_id": self.ibuprofen_template.id,
+                "pod_product_template_id": self.ibuprofen_template.id,
                 "dose_quantity": 1,
                 "dose_uom_id": self.tablet_uom.id,
                 "rate_quantity": 3,
@@ -73,7 +73,7 @@ class TestMedicalProductRequestOrder(TransactionCase):
             }
         )
         self.internal_product_request_order = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "inpatient",
@@ -82,11 +82,11 @@ class TestMedicalProductRequestOrder(TransactionCase):
             }
         )
         self.internal_product_request = self.env[
-            "medical.product.request"
+            "pod.product.request"
         ].create(
             {
                 "request_order_id": self.internal_product_request_order.id,
-                "medical_product_template_id": self.ibuprofen_template.id,
+                "pod_product_template_id": self.ibuprofen_template.id,
                 "dose_quantity": 1,
                 "dose_uom_id": self.tablet_uom.id,
                 "rate_quantity": 3,
@@ -98,7 +98,7 @@ class TestMedicalProductRequestOrder(TransactionCase):
 
     def test_validate_action_without_product_request_ids(self):
         product_request_order = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "discharge",
@@ -180,24 +180,24 @@ class TestMedicalProductRequestOrder(TransactionCase):
             )
             self.assertEqual(request.cancel_user_id.id, self.env.user.id)
 
-    def test_compute_medical_product_template_ids(self):
+    def test_compute_pod_product_template_ids(self):
         self.assertEqual(
             len(
-                self.internal_product_request_order.medical_product_template_ids
+                self.internal_product_request_order.pod_product_template_ids
             ),
             1,
         )
         self.assertEqual(
-            self.internal_product_request_order.medical_product_template_ids[
+            self.internal_product_request_order.pod_product_template_ids[
                 0
             ].id,
             self.ibuprofen_template.id,
         )
 
     def test_get_last_encounter_or_false(self):
-        patient = self.env["medical.patient"].create({"name": "Patient"})
+        patient = self.env["pod.patient"].create({"name": "Patient"})
         product_request_order_1 = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "discharge",
@@ -205,12 +205,12 @@ class TestMedicalProductRequestOrder(TransactionCase):
             }
         )
         self.assertFalse(product_request_order_1.encounter_id)
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": patient.id}
         )
         patient.refresh()
         product_request_order_2 = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "discharge",
@@ -222,15 +222,15 @@ class TestMedicalProductRequestOrder(TransactionCase):
 
     def test_onchange_encounter_date(self):
         with freezegun.freeze_time("2022-01-01"):
-            encounter_1 = self.env["medical.encounter"].create(
+            encounter_1 = self.env["pod.encounter"].create(
                 {"patient_id": self.patient.id, "create_date": datetime.now()}
             )
         with freezegun.freeze_time("2022-02-01"):
-            encounter_2 = self.env["medical.encounter"].create(
+            encounter_2 = self.env["pod.encounter"].create(
                 {"patient_id": self.patient.id, "create_date": datetime.now()}
             )
         with freezegun.freeze_time("2022-02-02"):
-            request_order = self.env["medical.product.request.order"].create(
+            request_order = self.env["pod.product.request.order"].create(
                 {
                     "category": "discharge",
                     "patient_id": self.patient.id,
@@ -241,8 +241,8 @@ class TestMedicalProductRequestOrder(TransactionCase):
                 self.assertFalse(order.show_encounter_warning)
                 order.encounter_id = encounter_1
                 self.assertTrue(order.show_encounter_warning)
-                order.encounter_id = self.env["medical.encounter"]
+                order.encounter_id = self.env["pod.encounter"]
                 self.assertFalse(order.show_encounter_warning)
                 order.encounter_id = encounter_2
                 self.assertFalse(order.show_encounter_warning)
-                order.encounter_id = self.env["medical.encounter"]
+                order.encounter_id = self.env["pod.encounter"]

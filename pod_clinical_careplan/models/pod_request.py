@@ -5,18 +5,18 @@
 from odoo import api, fields, models
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     careplan_id = fields.Many2one(
         string="Parent Careplan",
-        comodel_name="medical.careplan",
+        comodel_name="pod.careplan",
         ondelete="restrict",
         index=True,
     )  # FHIR Field: BasedOn
     careplan_ids = fields.One2many(
         string="Associated Care Plans",
-        comodel_name="medical.careplan",
+        comodel_name="pod.careplan",
         compute="_compute_careplan_ids",
     )
     careplan_count = fields.Integer(
@@ -29,7 +29,7 @@ class MedicalRequest(models.AbstractModel):
     def _compute_careplan_ids(self):
         inverse_field_name = self._get_parent_field_name()
         for rec in self:
-            careplans = self.env["medical.careplan"].search(
+            careplans = self.env["pod.careplan"].search(
                 [(inverse_field_name, "=", rec.id)]
             )
             rec.careplan_ids = [(6, 0, careplans.ids)]
@@ -37,8 +37,8 @@ class MedicalRequest(models.AbstractModel):
 
     @api.model
     def _get_request_models(self):
-        res = super(MedicalRequest, self)._get_request_models()
-        res.append("medical.careplan")
+        res = super(PodiatryRequest, self)._get_request_models()
+        res.append("pod.careplan")
         return res
 
     @api.constrains("careplan_id")

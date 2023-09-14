@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record model="ir.ui.view" id="medical_request_form">
-        <field name="name">medical.request.form</field>
-        <field name="model">medical.request</field>
-        <field name="inherit_id" ref="medical_workflow.medical_request_form" />
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
         <field name="arch" type="xml">
             <form position="attributes">
                 <attribute name="create">0</attribute>
@@ -35,7 +35,7 @@
                             <newline />
                             <field name="discount" />
                             <newline />
-                            <field name="medical_sale_discount_id" />
+                            <field name="pod_sale_discount_id" />
                             <field name="qty" />
                         </group>
                     </group>
@@ -49,13 +49,13 @@
             </group>
         </field>
     </record>
-    <record id="medical_request_form_agreement" model="ir.ui.view">
-        <field name="name">medical.request.view.form</field>
-        <field name="model">medical.request</field>
-        <field name="inherit_id" ref="medical_request_form" />
+    <record id="pod_request_form_agreement" model="ir.ui.view">
+        <field name="name">pod.request.view.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_financial'))]"
+            eval="[(4, ref('pod_base.group_pod_financial'))]"
         />
         <field name="arch" type="xml">
             <field name="coverage_agreement_id" position="attributes">
@@ -70,13 +70,13 @@
             </field>
         </field>
     </record>
-    <record id="medical_request_form_payor" model="ir.ui.view">
-        <field name="name">medical.request.view.form</field>
-        <field name="model">medical.request</field>
-        <field name="inherit_id" ref="medical_request_form" />
+    <record id="pod_request_form_payor" model="ir.ui.view">
+        <field name="name">pod.request.view.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_financial'))]"
+            eval="[(4, ref('pod_base.group_pod_financial'))]"
         />
         <field name="arch" type="xml">
             <field name="payor_id" position="attributes">

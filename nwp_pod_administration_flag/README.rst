@@ -3,10 +3,10 @@
    :alt: License: AGPL-3
 
 ====================
-Medical Patient Flag
+Podiatry Patient Flag
 ====================
 
-Medical Patient Flag
+Podiatry Patient Flag
 
 Contributors
 ------------

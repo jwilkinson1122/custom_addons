@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="medical_encounter_view_form" model="ir.ui.view">
-        <field name="name">medical.encounter.view.form</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_form" model="ir.ui.view">
+        <field name="name">pod.encounter.view.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="cb_medical_careplan_sale.medical_encounter_view_form"
+            ref="nwp_pod_careplan_sale.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <button name="create_sale_order" position="attributes">
@@ -21,28 +21,28 @@
             </button>
             <button name="onleave2finished" position="after">
                 <button
-                    name="%(cb_medical_pos.wizard_medical_encounter_add_amount_action)d"
+                    name="%(nwp_pod_pos.wizard_pod_encounter_add_amount_action)d"
                     type="action"
                     string="Add Amount"
                     class="oe_highlight"
                     context="{'default_encounter_id': active_id}"
-                    groups="medical_base.group_medical_reception"
+                    groups="pod_base.group_pod_reception"
                     attrs="{'invisible': [('state','not in',['arrived', 'in-progress'])]}"
                 />
                 <button
-                    name="medical_encounter_close_action"
+                    name="pod_encounter_close_action"
                     type="object"
                     string="Close"
                     class="oe_highlight"
-                    groups="medical_base.group_medical_reception"
+                    groups="pod_base.group_pod_reception"
                     attrs="{'invisible': [('state','not in',['arrived', 'in-progress'])]}"
                 />
                 <button
-                    name="%(cb_medical_pos.wizard_medical_encounter_finish_action)d"
+                    name="%(nwp_pod_pos.wizard_pod_encounter_finish_action)d"
                     type="action"
                     string="Finish"
                     class="oe_highlight"
-                    groups="medical_base.group_medical_reception"
+                    groups="pod_base.group_pod_reception"
                     context="{'default_encounter_id': active_id}"
                     attrs="{'invisible': [('state','!=','onleave')]}"
                 />

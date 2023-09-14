@@ -5,18 +5,18 @@
 from odoo import api, fields, models
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     procedure_request_id = fields.Many2one(
         string="Parent Procedure Request",
-        comodel_name="medical.procedure.request",
+        comodel_name="pod.procedure.request",
         ondelete="restrict",
         index=True,
     )  # FHIR Field: BasedOn
     procedure_request_ids = fields.One2many(
         string="Associated Procedure Requests",
-        comodel_name="medical.procedure.request",
+        comodel_name="pod.procedure.request",
         compute="_compute_procedure_request_ids",
     )
     procedure_request_count = fields.Integer(
@@ -29,7 +29,7 @@ class MedicalRequest(models.AbstractModel):
     def _compute_procedure_request_ids(self):
         inverse_field_name = self._get_parent_field_name()
         for rec in self:
-            procedure_requests = self.env["medical.procedure.request"].search(
+            procedure_requests = self.env["pod.procedure.request"].search(
                 [(inverse_field_name, "=", rec.id)]
             )
             rec.procedure_request_ids = [(6, 0, procedure_requests.ids)]
@@ -37,8 +37,8 @@ class MedicalRequest(models.AbstractModel):
 
     @api.model
     def _get_request_models(self):
-        res = super(MedicalRequest, self)._get_request_models()
-        res.append("medical.procedure.request")
+        res = super(PodiatryRequest, self)._get_request_models()
+        res.append("pod.procedure.request")
         return res
 
     @api.constrains("procedure_request_id")

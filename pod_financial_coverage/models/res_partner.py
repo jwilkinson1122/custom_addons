@@ -19,7 +19,7 @@ class ResPartner(models.Model):
     payor_identifier = fields.Char(readonly=True)  # FHIR Field: identifier
     coverage_template_ids = fields.One2many(
         string="Coverage Template",
-        comodel_name="medical.coverage.template",
+        comodel_name="pod.coverage.template",
         inverse_name="payor_id",
     )
     coverage_template_count = fields.Integer(
@@ -35,30 +35,30 @@ class ResPartner(models.Model):
 
     def action_view_coverage_template(self):
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_financial_coverage.medical_coverage_template_action"
+            "pod_financial_coverage.pod_coverage_template_action"
         )
         result["context"] = {"default_payor_id": self.id}
         result["domain"] = "[('payor_id', '=', " + str(self.id) + ")]"
         if len(self.coverage_template_ids) == 1:
-            res = self.env.ref("medical.coverage.template.view.form", False)
+            res = self.env.ref("pod.coverage.template.view.form", False)
             result["views"] = [(res and res.id or False, "form")]
             result["res_id"] = self.coverage_template_ids.id
         return result
 
     @api.model
-    def default_medical_fields(self):
-        result = super(ResPartner, self).default_medical_fields()
+    def default_pod_fields(self):
+        result = super(ResPartner, self).default_pod_fields()
         result.append("is_payor")
         return result
 
-    def _check_medical(self, mode="write"):
-        super()._check_medical(mode=mode)
+    def _check_pod(self, mode="write"):
+        super()._check_pod(mode=mode)
 
         if (
             self.is_payor
             and mode != "read"
             and not self.env.user.has_group(
-                "medical_base.group_medical_financial"
+                "pod_base.group_pod_financial"
             )
         ):
             _logger.info(
@@ -69,7 +69,7 @@ class ResPartner(models.Model):
             )
             raise AccessError(
                 _(
-                    "You are not allowed to %(mode)s medical Contacts (res.partner) records.",
+                    "You are not allowed to %(mode)s pod Contacts (res.partner) records.",
                     mode=mode,
                 )
             )

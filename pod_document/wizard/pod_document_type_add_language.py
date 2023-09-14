@@ -1,12 +1,12 @@
 from odoo import api, fields, models
 
 
-class MedicalDocumentTypeAddLanguage(models.TransientModel):
-    _name = "medical.document.type.add.language"
-    _description = "medical document type add language"
+class PodiatryDocumentTypeAddLanguage(models.TransientModel):
+    _name = "pod.document.type.add.language"
+    _description = "pod document type add language"
 
     document_type_id = fields.Many2one(
-        "medical.document.type", required=True, readonly=True
+        "pod.document.type", required=True, readonly=True
     )
     lang_ids = fields.Many2many("res.lang", compute="_compute_lang_ids")
     lang_id = fields.Many2one(
@@ -38,4 +38,4 @@ class MedicalDocumentTypeAddLanguage(models.TransientModel):
 
     def run(self):
         self.ensure_one()
-        self.env["medical.document.type.lang"].create(self._document_type_vals())
+        self.env["pod.document.type.lang"].create(self._document_type_vals())

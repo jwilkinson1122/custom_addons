@@ -4,8 +4,8 @@ from odoo.tests.common import Form
 from odoo.tools.float_utils import float_compare
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     def _change_invoice_partner(self, partner):
         self.ensure_one()

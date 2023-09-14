@@ -10,11 +10,11 @@ class ResConfigSettings(models.TransientModel):
 
     group_patient_add_plan_definition = fields.Boolean(
         string="Add Plan definition on patients",
-        implied_group="medical_workflow." "group_patient_add_plan_definition",
+        implied_group="pod_workflow." "group_patient_add_plan_definition",
     )
 
     group_main_activity_plan_definition = fields.Boolean(
         string="Allows to add a main activity definition on a plan definition",
-        implied_group="medical_workflow."
+        implied_group="pod_workflow."
         "group_main_activity_plan_definition",
     )

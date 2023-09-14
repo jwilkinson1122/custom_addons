@@ -3,12 +3,12 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <!-- Clinical Impressions -->
-    <record model="ir.ui.view" id="medical_encounter_view_form">
-        <field name="name">medical.encounter.form</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_view_form">
+        <field name="name">pod.encounter.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_clinical_condition.medical_encounter_view_form"
+            ref="pod_clinical_condition.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <button name="create_allergy" position="after">
@@ -41,7 +41,7 @@
                     <div>
                         <button
                             type="action"
-                            name="%(medical_clinical_impression.create_impression_from_encounter_act_window)s"
+                            name="%(pod_clinical_impression.create_impression_from_encounter_act_window)s"
                             class="oe_stat_button btn-primary"
                             string="Create Impression"
                         />

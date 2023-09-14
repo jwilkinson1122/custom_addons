@@ -4,14 +4,14 @@
 from odoo import fields, models
 
 
-class MedicalReportAbstract(models.AbstractModel):
+class PodiatryReportAbstract(models.AbstractModel):
 
-    _inherit = "medical.report.abstract"
+    _inherit = "pod.report.abstract"
 
-    report_category_id = fields.Many2one("medical.report.category")
-    medical_department_id = fields.Many2one(
-        "medical.department",
-        related="report_category_id.medical_department_id",
+    report_category_id = fields.Many2one("pod.report.category")
+    pod_department_id = fields.Many2one(
+        "pod.department",
+        related="report_category_id.pod_department_id",
         store=True,
     )
-    medical_department_header = fields.Html()
+    pod_department_header = fields.Html()

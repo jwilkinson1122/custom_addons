@@ -8,16 +8,16 @@ from odoo import _, api, fields, models
 class SalePreinvoiceGroup(models.Model):
     _name = "sale.preinvoice.group"
     _description = "Sale Preinvoice Group"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _rec_name = "internal_identifier"
 
     agreement_id = fields.Many2one(
-        comodel_name="medical.coverage.agreement",
+        comodel_name="pod.coverage.agreement",
         string="Agreement",
         required=False,
         readonly=True,
     )
-    coverage_template_id = fields.Many2one("medical.coverage.template", readonly=True)
+    coverage_template_id = fields.Many2one("pod.coverage.template", readonly=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -74,7 +74,7 @@ class SalePreinvoiceGroup(models.Model):
 
     @api.model
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.preinvoice.group") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.preinvoice.group") or "/"
 
     @api.depends("line_ids")
     def _compute_lines(self):
@@ -187,7 +187,7 @@ class SalePreinvoiceGroup(models.Model):
         )
 
     def scan_barcode_preinvoice(self, barcode):
-        encounter_id = self.env["medical.encounter"].search(
+        encounter_id = self.env["pod.encounter"].search(
             [("internal_identifier", "=", barcode)]
         )
         if not encounter_id:

@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ===========================
-Medical Clinical Laboratory
+Podiatry Clinical Laboratory
 ===========================
 
 Contributors

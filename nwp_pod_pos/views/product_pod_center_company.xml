@@ -2,11 +2,11 @@
 <!-- Copyright 2021 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="product_medical_center_company_form_view">
+    <record model="ir.ui.view" id="product_pod_center_company_form_view">
         <field
             name="name"
-        >product.medical.center.company.form (in cb_medical_pos)</field>
-        <field name="model">product.medical.center.company</field>
+        >product.pod.center.company.form (in nwp_pod_pos)</field>
+        <field name="model">product.pod.center.company</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -19,11 +19,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="product_medical_center_company_tree_view">
+    <record model="ir.ui.view" id="product_pod_center_company_tree_view">
         <field
             name="name"
-        >product.medical.center.company.tree (in cb_medical_pos)</field>
-        <field name="model">product.medical.center.company</field>
+        >product.pod.center.company.tree (in nwp_pod_pos)</field>
+        <field name="model">product.pod.center.company</field>
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="center_id" />

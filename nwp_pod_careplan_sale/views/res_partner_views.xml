@@ -5,7 +5,7 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.actions.act_window" id="medical_sub_payor_action">
+    <record model="ir.actions.act_window" id="pod_sub_payor_action">
         <field name="name">Sub Payors</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -15,7 +15,7 @@
         >[('is_sub_payor', '=', True), ('payor_id', '=', active_id)]</field>
         <field name="context">{'default_company_type':'company',
             'default_is_company':True, 'default_is_sub_payor': True,
-            'default_is_medical': True, 'default_payor_id': active_id}
+            'default_is_pod': True, 'default_payor_id': active_id}
         </field>
     </record>
     <record id="res_partner_view_form" model="ir.ui.view">
@@ -23,11 +23,11 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage.res_partner_view_form"
+            ref="pod_financial_coverage.res_partner_view_form"
         />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_financial'))]"
+            eval="[(4, ref('pod_base.group_pod_financial'))]"
         />
         <field name="arch" type="xml">
             <xpath
@@ -37,7 +37,7 @@
                 <field name="is_sub_payor" invisible="1" />
             </xpath>
             <xpath
-                expr="//group[@name='medical_config']//field[@name='is_payor']"
+                expr="//group[@name='pod_config']//field[@name='is_payor']"
                 position="after"
             >
                 <field name="is_sub_payor" invisible="1" />
@@ -50,7 +50,7 @@
             <div name="button_box" position="inside">
                 <button
                     type="action"
-                    name="%(medical_sub_payor_action)d"
+                    name="%(pod_sub_payor_action)d"
                     string="Sub payors"
                     class="oe_stat_button"
                     icon="fa-sitemap"
@@ -65,7 +65,7 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage_request.res_partner_view_form_payor"
+            ref="pod_financial_coverage_request.res_partner_view_form_payor"
         />
         <field name="arch" type="xml">
             <page name="payor" position="inside">

@@ -15,6 +15,6 @@
         <field name="email">email@example.com</field>
         <field name="state_id" ref="base.state_us_23" />
         <field name="is_location" eval="True" />
-        <field name="is_medical" eval="True" />
+        <field name="is_pod" eval="True" />
     </record>
 </odoo>

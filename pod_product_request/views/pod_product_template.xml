@@ -2,11 +2,11 @@
 <!-- Copyright 2022 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_product_template_form_view">
+    <record model="ir.ui.view" id="pod_product_template_form_view">
         <field
             name="name"
-        >medical.product.template.form (in medical_product_request)</field>
-        <field name="model">medical.product.template</field>
+        >pod.product.template.form (in pod_product_request)</field>
+        <field name="model">pod.product.template</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -14,7 +14,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button
                             type="object"
-                            name="action_view_medical_product_ids"
+                            name="action_view_pod_product_ids"
                             class="oe_stat_button"
                             icon="fa-pills"
                         >
@@ -41,31 +41,31 @@
                         <group
                             name='ingredient'
                             string='Ingredients'
-                            attrs="{'invisible':[('product_type', '!=', 'medication')]}"
+                            attrs="{'invisible':[('product_type', '!=', 'device')]}"
                         >
                             <field
                                 name="ingredients"
-                                attrs="{'required':[('product_type', '==', 'medication')]}"
+                                attrs="{'required':[('product_type', '==', 'device')]}"
                             />
                             <field
                                 name="dosage"
-                                attrs="{'required':[('product_type', '==', 'medication')]}"
+                                attrs="{'required':[('product_type', '==', 'device')]}"
                             />
                         </group>
                         <group
                             name="form"
                             string="Form"
-                            attrs="{'invisible':[('product_type', '!=', 'medication')]}"
+                            attrs="{'invisible':[('product_type', '!=', 'device')]}"
                         >
                             <field
                                 name="form_id"
                                 widget="selection"
-                                attrs="{'required':[('product_type', '==', 'medication')]}"
+                                attrs="{'required':[('product_type', '==', 'device')]}"
                             />
                             <field
                                 name="administration_route_ids"
                                 widget="many2many_tags"
-                                attrs="{'required':[('product_type', '==', 'medication')]}"
+                                attrs="{'required':[('product_type', '==', 'device')]}"
                             />
                         </group>
                     </group>
@@ -78,11 +78,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_product_template_search_view">
+    <record model="ir.ui.view" id="pod_product_template_search_view">
         <field
             name="name"
-        >medical.product.template.search (in medical_product_request)</field>
-        <field name="model">medical.product.template</field>
+        >pod.product.template.search (in pod_product_request)</field>
+        <field name="model">pod.product.template</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name_template" />
@@ -93,11 +93,11 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_product_template_tree_view">
+    <record model="ir.ui.view" id="pod_product_template_tree_view">
         <field
             name="name"
-        >medical.product.template.tree (in medical_product_request)</field>
-        <field name="model">medical.product.template</field>
+        >pod.product.template.tree (in pod_product_request)</field>
+        <field name="model">pod.product.template</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name_template" />
@@ -107,20 +107,20 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.menu" id="medical_product_menu">
-        <field name="name">Medical Product</field>
-        <field name="parent_id" ref="medical_base.medical_root_configuration" />
+    <record model="ir.ui.menu" id="pod_product_menu">
+        <field name="name">Podiatry Product</field>
+        <field name="parent_id" ref="pod_base.pod_root_configuration" />
         <field name="sequence" eval="50" />
     </record>
-    <record model="ir.actions.act_window" id="medical_product_template_act_window">
-        <field name="name">Medical Product Template</field>
-        <field name="res_model">medical.product.template</field>
+    <record model="ir.actions.act_window" id="pod_product_template_act_window">
+        <field name="name">Podiatry Product Template</field>
+        <field name="res_model">pod.product.template</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_product_template_menu">
-        <field name="name">Medical Product Template</field>
-        <field name="parent_id" ref="medical_product_menu" />
-        <field name="action" ref="medical_product_template_act_window" />
+    <record model="ir.ui.menu" id="pod_product_template_menu">
+        <field name="name">Podiatry Product Template</field>
+        <field name="parent_id" ref="pod_product_menu" />
+        <field name="action" ref="pod_product_template_act_window" />
         <field name="sequence" eval="10" />
     </record>
 </odoo>

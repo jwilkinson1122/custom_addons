@@ -12,20 +12,20 @@ from odoo.tests import TransactionCase
 from odoo.tests.common import Form
 
 
-class TestMedicalDiagnosticReport(TransactionCase):
+class TestPodiatryDiagnosticReport(TransactionCase):
     def setUp(self):
-        super(TestMedicalDiagnosticReport, self).setUp()
+        super(TestPodiatryDiagnosticReport, self).setUp()
         self.env.user.digital_signature = base64.b64encode(b"12345")
-        self.patient_1 = self.env["medical.patient"].create(
+        self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
-        self.encounter_1 = self.env["medical.encounter"].create(
+        self.encounter_1 = self.env["pod.encounter"].create(
             {"name": "Encounter 1", "patient_id": self.patient_1.id}
         )
         uom = self.env.ref(
-            "medical_diagnostic_report.uom_ten_thousand_micro_liter"
+            "pod_diagnostic_report.uom_ten_thousand_micro_liter"
         )
-        self.concept_1 = self.env["medical.observation.concept"].create(
+        self.concept_1 = self.env["pod.observation.concept"].create(
             {
                 "name": "Concept 1",
                 "value_type": "float",
@@ -57,7 +57,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
             {"name": "Line 5", "concept_id": self.concept_1.id},
         ]
         self.template_1 = self.env[
-            "medical.diagnostic.report.template"
+            "pod.diagnostic.report.template"
         ].create(
             {
                 "name": "Template 1",
@@ -69,7 +69,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
             }
         )
         self.template_2 = self.env[
-            "medical.diagnostic.report.template"
+            "pod.diagnostic.report.template"
         ].create(
             {
                 "name": "Template 2",
@@ -81,7 +81,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
             }
         )
         self.template_3 = self.env[
-            "medical.diagnostic.report.template"
+            "pod.diagnostic.report.template"
         ].create(
             {
                 "name": "Template 3",
@@ -92,7 +92,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
             }
         )
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -147,21 +147,21 @@ class TestMedicalDiagnosticReport(TransactionCase):
         with freezegun.freeze_time("2020-01-01"):
             self.assertEqual(
                 18,
-                self.env["medical.diagnostic.report.template"]._compute_age(
+                self.env["pod.diagnostic.report.template"]._compute_age(
                     self.patient_1
                 ),
             )
         with freezegun.freeze_time("2019-12-31"):
             self.assertEqual(
                 17,
-                self.env["medical.diagnostic.report.template"]._compute_age(
+                self.env["pod.diagnostic.report.template"]._compute_age(
                     self.patient_1
                 ),
             )
 
     def test_report_generation(self):
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -172,7 +172,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
         action = report_generation.generate()
         report = self.env[action.get("res_model")].browse(action.get("res_id"))
         self.assertEqual(self.encounter_1.report_count, 2)
-        self.assertEqual("medical.diagnostic.report", report._name)
+        self.assertEqual("pod.diagnostic.report", report._name)
         self.assertEqual(self.encounter_1, report.encounter_id)
         self.assertEqual(self.patient_1, report.patient_id)
         self.assertEqual(self.patient_1.name, report.patient_id.name)
@@ -240,7 +240,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
 
     def test_report_expand(self):
         self.assertFalse(self.report.composition)
-        self.env["medical.diagnostic.report.expand"].create(
+        self.env["pod.diagnostic.report.expand"].create(
             {
                 "diagnostic_report_id": self.report.id,
                 "template_id": self.template_2.id,
@@ -257,7 +257,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
 
     def test_report_expand_without_current_report_conclusion(self):
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -267,7 +267,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
         action = report_generation.generate()
         report = self.env[action.get("res_model")].browse(action.get("res_id"))
         self.assertFalse(report.conclusion)
-        self.env["medical.diagnostic.report.expand"].create(
+        self.env["pod.diagnostic.report.expand"].create(
             {
                 "diagnostic_report_id": report.id,
                 "template_id": self.template_3.id,
@@ -278,14 +278,14 @@ class TestMedicalDiagnosticReport(TransactionCase):
         self.assertRegex(report.conclusion, self.template_3.conclusion)
 
     def test_report_expand_same_template_exception(self):
-        self.env["medical.diagnostic.report.expand"].create(
+        self.env["pod.diagnostic.report.expand"].create(
             {
                 "diagnostic_report_id": self.report.id,
                 "template_id": self.template_2.id,
             }
         ).merge()
         with self.assertRaises(ValidationError):
-            self.env["medical.diagnostic.report.expand"].create(
+            self.env["pod.diagnostic.report.expand"].create(
                 {
                     "diagnostic_report_id": self.report.id,
                     "template_id": self.template_2.id,
@@ -293,13 +293,13 @@ class TestMedicalDiagnosticReport(TransactionCase):
             ).merge()
 
     def test_report_expand_same_template_no_exception(self):
-        self.env["medical.diagnostic.report.expand"].create(
+        self.env["pod.diagnostic.report.expand"].create(
             {
                 "diagnostic_report_id": self.report.id,
                 "template_id": self.template_2.id,
             }
         ).merge()
-        self.env["medical.diagnostic.report.expand"].create(
+        self.env["pod.diagnostic.report.expand"].create(
             {
                 "diagnostic_report_id": self.report.id,
                 "template_id": self.template_2.id,
@@ -311,7 +311,7 @@ class TestMedicalDiagnosticReport(TransactionCase):
         self.report.registered2final_action()
         self.assertEqual(self.report.fhir_state, "final")
         with self.assertRaises(ValidationError):
-            self.env["medical.diagnostic.report.expand"].create(
+            self.env["pod.diagnostic.report.expand"].create(
                 {
                     "diagnostic_report_id": self.report.id,
                     "template_id": self.template_3.id,

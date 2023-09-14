@@ -3,18 +3,18 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical Administration Location",
+    "name": "Podiatry Administration Location",
     "version": "15.0.1.0.0",
-    "category": "Medical",
-    "website": "https://github.com/tegin/medical-fhir",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/pod-fhir",
     "author": "CreuBlanca, Eficent",
     "license": "AGPL-3",
-    "depends": ["medical_administration_location"],
+    "depends": ["pod_administration_location"],
     "data": [
         "views/res_partner_views.xml",
-        "views/medical_menu.xml",
+        "views/pod_menu.xml",
     ],
-    "demo": ["demo/medical_demo.xml"],
+    "demo": ["demo/pod_demo.xml"],
     "installable": True,
     "application": False,
 }

@@ -3,10 +3,10 @@
    :alt: License: AGPL-3
 
 ==================
-Medical Commission
+Podiatry Commission
 ==================
 
-This module allows you to define fixed or variable fees on medical
+This module allows you to define fixed or variable fees on pod
 services through actions. Commissions can be changed on Procedure Requests or
 Procedures.
 
@@ -24,8 +24,8 @@ Usage
 Define service's fee
 --------------------
 
-#. Go to Medical / Workflow / Activity definition
-#. Click on Resource Product and activate the boolean 'Medical Commissions'
+#. Go to Podiatry / Workflow / Activity definition
+#. Click on Resource Product and activate the boolean 'Podiatry Commissions'
 #. Go to an action with that activity definition and specify the fixed or
    the variable fee for that service.
 
@@ -36,7 +36,7 @@ Add commission agent to a practitioner
 #. Remove the filter 'Agents'
 #. Search or create a partner that has to be the agent. Inside the partner
    view form, go to the 'Sales & Purchases' page and activate the flag 'Agent'
-#. Go to Medical / Practitioners
+#. Go to Podiatry / Practitioners
 #. Select the practitioner and inside the 'Commission Agents page' select the
    agent(s) for that practitioner.
 
@@ -63,7 +63,7 @@ Bug Tracker
 ===========
 
 Bugs are tracked on
-`GitHub Issues <https://github.com/OCA/vertical-medical/issues>`_. In case of
+`GitHub Issues <https://github.com/OCA/vertical-pod/issues>`_. In case of
 trouble, please check there if your issue has already been reported. If you
 spotted it first, help us smash it by providing detailed and welcomed feedback.
 

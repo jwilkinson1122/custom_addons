@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =====================
-Medical Request Group
+Podiatry Request Group
 =====================
 
 The Request Group resource is used to represent a group of optional activities
@@ -21,13 +21,13 @@ For more information about the FHIR Request Group visit: https://www.hl7.org/fhi
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Clinical' activate 'Request groups'.
 
 Usage
 =====
 
-#. Go to 'Medical / Clinical / Requests / Request groups'
+#. Go to 'Podiatry / Clinical / Requests / Request groups'
 #. Click 'Create'.
 #. Fill in the information.
 #. Click 'Save'.
@@ -50,7 +50,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

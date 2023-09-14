@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_document_type_lang_view_tree" model="ir.ui.view">
-        <field name="name">medical.document.type.lang.view.tree</field>
-        <field name="model">medical.document.type.lang</field>
+    <record id="pod_document_type_lang_view_tree" model="ir.ui.view">
+        <field name="name">pod.document.type.lang.view.tree</field>
+        <field name="model">pod.document.type.lang</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <tree string="Document types Language" create="false">
@@ -15,9 +15,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_document_type_lang_view_form" model="ir.ui.view">
-        <field name="name">medical.document.type.lang.view.form</field>
-        <field name="model">medical.document.type.lang</field>
+    <record id="pod_document_type_lang_view_form" model="ir.ui.view">
+        <field name="name">pod.document.type.lang.view.form</field>
+        <field name="model">pod.document.type.lang</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Document type">
@@ -36,9 +36,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_document_type_view_tree" model="ir.ui.view">
-        <field name="name">medical.document.type.view.tree</field>
-        <field name="model">medical.document.type</field>
+    <record id="pod_document_type_view_tree" model="ir.ui.view">
+        <field name="name">pod.document.type.view.tree</field>
+        <field name="model">pod.document.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <tree string="Document types">
@@ -48,9 +48,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_document_type_view_form" model="ir.ui.view">
-        <field name="name">medical.document.type.view.form</field>
-        <field name="model">medical.document.type</field>
+    <record id="pod_document_type_view_form" model="ir.ui.view">
+        <field name="name">pod.document.type.view.form</field>
+        <field name="model">pod.document.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Document type">
@@ -80,7 +80,7 @@
                 <sheet>
                     <div name="button_box" class="oe_button_box">
                         <button
-                            name="%(medical_document.medical_document_type_add_language_action)s"
+                            name="%(pod_document.pod_document_type_add_language_action)s"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-language"
@@ -131,11 +131,11 @@
             </form>
         </field>
     </record>
-    <record id="medical_document_type_view_search" model="ir.ui.view">
-        <field name="name">medical.document.type.view.search</field>
-        <field name="model">medical.document.type</field>
+    <record id="pod_document_type_view_search" model="ir.ui.view">
+        <field name="name">pod.document.type.view.search</field>
+        <field name="model">pod.document.type</field>
         <field name="arch" type="xml">
-            <search string="Medical Document type">
+            <search string="Podiatry Document type">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="state" />
@@ -151,18 +151,18 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_document_type_action">
+    <record model="ir.actions.act_window" id="pod_document_type_action">
         <field name="name">Document Actions</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.document.type</field>
+        <field name="res_model">pod.document.type</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('document_type', '=', 'action')]</field>
         <field name="context">{'default_document_type': 'action'}</field>
     </record>
     <menuitem
-        id="medical_document_type_menu"
-        parent="medical_base.medical_root_configuration"
-        action="medical_document_type_action"
+        id="pod_document_type_menu"
+        parent="pod_base.pod_root_configuration"
+        action="pod_document_type_action"
         name="Document actions"
     />
 </odoo>

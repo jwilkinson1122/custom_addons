@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ================
-Medical Coverage
+Podiatry Coverage
 ================
 
 The **Coverage** Resource represents a Financial instrument which may be used
@@ -26,21 +26,21 @@ For more information about the FHIR Payor visit: https://www.hl7.org/fhir/covera
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Financial' activate 'Covarages'.
 
 Usage
 =====
 
-#. Go to 'Medical / Financial / Payors'
+#. Go to 'Podiatry / Financial / Payors'
 #. Click 'Create'.
 #. Fill in the information.
 #. Click 'Save'.
-#. Go to 'Medical / Financial / Coverage Template'
+#. Go to 'Podiatry / Financial / Coverage Template'
 #. Click 'Create'.
 #. Provide a name for that template and a payor.
 #. Click 'Save'.
-#. Go to 'Medical / Financial / Coverage'
+#. Go to 'Podiatry / Financial / Coverage'
 #. Click 'Create'.
 #. Provide a patient, a subscriber id and a coverage template.
 #. Click 'Save'.
@@ -63,7 +63,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

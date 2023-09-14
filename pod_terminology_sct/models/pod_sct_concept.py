@@ -5,9 +5,9 @@
 from odoo import fields, models
 
 
-class MedicalSCTConcept(models.Model):
+class PodiatrySCTConcept(models.Model):
     """
-    Medical SNOMED CT concept
+    Podiatry SNOMED CT concept
     (https://www.hl7.org/fhir/codesystem-snomedct.html)
     It has been defined following the code system entity with the following
     information:
@@ -17,16 +17,16 @@ class MedicalSCTConcept(models.Model):
     - publisher: IHTSDO
     """
 
-    _name = "medical.sct.concept"
-    _inherit = "medical.abstract.concept.multiparent"
-    _description = "Medical SCT Concept"
+    _name = "pod.sct.concept"
+    _inherit = "pod.abstract.concept.multiparent"
+    _description = "Podiatry SCT Concept"
 
     parent_ids = fields.Many2many(
-        comodel_name="medical.sct.concept", relation="medical_sct_concept_is_a"
+        comodel_name="pod.sct.concept", relation="pod_sct_concept_is_a"
     )
-    child_ids = fields.Many2many(comodel_name="medical.sct.concept")
-    full_parent_ids = fields.Many2many(comodel_name="medical.sct.concept")
-    full_child_ids = fields.Many2many(comodel_name="medical.sct.concept")
+    child_ids = fields.Many2many(comodel_name="pod.sct.concept")
+    full_parent_ids = fields.Many2many(comodel_name="pod.sct.concept")
+    full_child_ids = fields.Many2many(comodel_name="pod.sct.concept")
 
     def check_property(self, name, codes):
         for parent in self.parent_ids:

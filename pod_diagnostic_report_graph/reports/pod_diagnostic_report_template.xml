@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template
-        id="medical_diagnostic_report_graph.medical_diagnostic_report_template_single"
-        inherit_id="medical_diagnostic_report.medical_diagnostic_report_template_single"
+        id="pod_diagnostic_report_graph.pod_diagnostic_report_template_single"
+        inherit_id="pod_diagnostic_report.pod_diagnostic_report_template_single"
     >
         <xpath expr="//div[@id='graph']" position="inside">
             <t t-if="doc.compute_html and doc.state!='registered'">

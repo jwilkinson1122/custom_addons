@@ -78,8 +78,8 @@ class TestWorkflowPlandefinition(TransactionCase):
 
     def test_add_plan_definition_on_patients(self):
         plan_obj = self.env["workflow.plan.definition"]
-        wzd = self.env["medical.add.plan.definition"]
-        patient = self.browse_ref("medical_base.patient_01")
+        wzd = self.env["pod.add.plan.definition"]
+        patient = self.browse_ref("pod_base.patient_01")
         plan_1 = plan_obj.create({"name": "P1"})
         wzd_1 = wzd.create(
             {"patient_id": patient.id, "plan_definition_id": plan_1.id}
@@ -89,6 +89,6 @@ class TestWorkflowPlandefinition(TransactionCase):
 
     def test_execute_plan_definition(self):
         plan_obj = self.env["workflow.plan.definition"]
-        patient = self.browse_ref("medical_base.patient_01")
+        patient = self.browse_ref("pod_base.patient_01")
         plan_1 = plan_obj.create({"name": "P1"})
         plan_1.execute_plan_definition({"patient_id": patient.id})

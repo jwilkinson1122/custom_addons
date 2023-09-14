@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =================
-Medical Procedure
+Podiatry Procedure
 =================
 
 A **Procedure Request** is a record of a request for a procedure to be
@@ -33,13 +33,13 @@ For further information about the FHIR Procedure visit: https://www.hl7.org/fhir
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Clinical' activate 'Procedures & Procedure requests'.
 
 Usage
 =====
 
-#. Go to 'Medical / Clinical / Requests / Procedure Requests'
+#. Go to 'Podiatry / Clinical / Requests / Procedure Requests'
 #. Click 'Create'.
 #. Fill in the information.
 #. Click 'Save' and press the button 'Activate'.
@@ -63,7 +63,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

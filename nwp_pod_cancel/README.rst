@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ======================
-Medical Cancel
+Podiatry Cancel
 ======================
 
-Medical Cancel
+Podiatry Cancel

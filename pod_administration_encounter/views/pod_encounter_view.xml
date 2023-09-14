@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_encounter_view_tree" model="ir.ui.view">
-        <field name="name">medical.encounter.view.tree</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_tree" model="ir.ui.view">
+        <field name="name">pod.encounter.view.tree</field>
+        <field name="model">pod.encounter</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
@@ -18,9 +18,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_encounter_view_form" model="ir.ui.view">
-        <field name="name">medical.encounter.view.form</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_form" model="ir.ui.view">
+        <field name="name">pod.encounter.view.form</field>
+        <field name="model">pod.encounter</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -29,7 +29,7 @@
                         type="object"
                         name="planned2arrived"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','planned')]}"
                     />
                     <button
@@ -37,7 +37,7 @@
                         type="object"
                         name="planned2cancelled"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','planned')]}"
                     />
                     <button
@@ -45,7 +45,7 @@
                         type="object"
                         name="arrived2inprogress"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','arrived')]}"
                     />
                     <button
@@ -53,7 +53,7 @@
                         type="object"
                         name="arrived2cancelled"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','arrived')]}"
                     />
                     <button
@@ -61,14 +61,14 @@
                         type="object"
                         name="inprogress2onleave"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','in-progress')]}"
                     />
                     <button
                         string="Cancel"
                         type="object"
                         name="inprogress2cancelled"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','in-progress')]}"
                     />
@@ -76,7 +76,7 @@
                         string="Finish"
                         type="object"
                         name="onleave2finished"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','onleave')]}"
                     />
@@ -84,7 +84,7 @@
                         string="Cancel"
                         type="object"
                         name="onleave2cancelled"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','onleave')]}"
                     />
@@ -121,9 +121,9 @@
             </form>
         </field>
     </record>
-    <record id="view_medical_encounter_search" model="ir.ui.view">
-        <field name="name">medical.encounter.search</field>
-        <field name="model">medical.encounter</field>
+    <record id="view_pod_encounter_search" model="ir.ui.view">
+        <field name="name">pod.encounter.search</field>
+        <field name="model">pod.encounter</field>
         <field name="arch" type="xml">
             <search>
                 <field name="internal_identifier" />
@@ -174,9 +174,9 @@
             </search>
         </field>
     </record>
-    <record id="medical_encounter_view_pivot" model="ir.ui.view">
-        <field name="name">medical.encounter.pivot</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_pivot" model="ir.ui.view">
+        <field name="name">pod.encounter.pivot</field>
+        <field name="model">pod.encounter</field>
         <field name="arch" type="xml">
             <pivot string="Encounters" sample="1">
                 <field name="location_id" type="col" />
@@ -184,18 +184,18 @@
             </pivot>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_encounter_action">
+    <record model="ir.actions.act_window" id="pod_encounter_action">
         <field name="name">Encounters</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.encounter</field>
+        <field name="res_model">pod.encounter</field>
         <field name="view_mode">tree,pivot,form</field>
-        <field name="search_view_id" ref="view_medical_encounter_search" />
+        <field name="search_view_id" ref="view_pod_encounter_search" />
         <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.view" id="medical_encounter_his_form_view">
-        <field name="name">medical.encounter.form</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_his_form_view">
+        <field name="name">pod.encounter.form</field>
+        <field name="model">pod.encounter</field>
         <field eval="99" name="priority" />
         <field name="arch" type="xml">
             <form create="false" edit="false">
@@ -205,7 +205,7 @@
                         type="object"
                         name="planned2arrived"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','planned')]}"
                     />
                     <button
@@ -213,7 +213,7 @@
                         type="object"
                         name="planned2cancelled"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','planned')]}"
                     />
                     <button
@@ -221,7 +221,7 @@
                         type="object"
                         name="arrived2inprogress"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','arrived')]}"
                     />
                     <button
@@ -229,7 +229,7 @@
                         type="object"
                         name="arrived2cancelled"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','arrived')]}"
                     />
                     <button
@@ -237,14 +237,14 @@
                         type="object"
                         name="inprogress2onleave"
                         class="oe_highlight"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         attrs="{'invisible': [('state','!=','in-progress')]}"
                     />
                     <button
                         string="Cancel"
                         type="object"
                         name="inprogress2cancelled"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','in-progress')]}"
                     />
@@ -252,7 +252,7 @@
                         string="Finish"
                         type="object"
                         name="onleave2finished"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','onleave')]}"
                     />
@@ -260,7 +260,7 @@
                         string="Cancel"
                         type="object"
                         name="onleave2cancelled"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                         class="oe_highlight"
                         attrs="{'invisible': [('state','!=','onleave')]}"
                     />
@@ -278,7 +278,7 @@
                         <group>
                             <field
                                 name="patient_id"
-                                context="{'form_view_ref': 'medical_base.medical_patient_his_form_view'}"
+                                context="{'form_view_ref': 'pod_base.pod_patient_his_form_view'}"
                             />
                         </group>
                         <group>
@@ -290,9 +290,9 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_encounter_his_tree_view">
-        <field name="name">medical.encounter.tree</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_his_tree_view">
+        <field name="name">pod.encounter.tree</field>
+        <field name="model">pod.encounter</field>
         <field eval="99" name="priority" />
         <field name="arch" type="xml">
             <tree>
@@ -302,22 +302,22 @@
             </tree>
         </field>
     </record>
-    <record id="action_encounter_medical_his" model="ir.actions.act_window">
+    <record id="action_encounter_pod_his" model="ir.actions.act_window">
         <field name="name">Encounters</field>
-        <field name="res_model">medical.encounter</field>
+        <field name="res_model">pod.encounter</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('patient_id', '=', active_id)]</field>
         <field
             name="view_ids"
             eval="[(5,0,0),
-                          (0,0,{'view_mode':'form', 'view_id': ref('medical_administration_encounter.medical_encounter_his_form_view')})]"
+                          (0,0,{'view_mode':'form', 'view_id': ref('pod_administration_encounter.pod_encounter_his_form_view')})]"
         />
     </record>
-    <record model="ir.actions.act_window.view" id="action_encounter_medical_his_tree">
+    <record model="ir.actions.act_window.view" id="action_encounter_pod_his_tree">
         <field name="sequence" eval="5" />
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="medical_encounter_his_tree_view" />
-        <field name="act_window_id" ref="action_encounter_medical_his" />
+        <field name="view_id" ref="pod_encounter_his_tree_view" />
+        <field name="act_window_id" ref="action_encounter_pod_his" />
     </record>
 
 

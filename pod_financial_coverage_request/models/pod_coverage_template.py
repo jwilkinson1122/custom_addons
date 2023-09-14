@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class MedicalCoverageTemplate(models.Model):
-    _inherit = "medical.coverage.template"
+class PodiatryCoverageTemplate(models.Model):
+    _inherit = "pod.coverage.template"
 
     subscriber_required = fields.Boolean(tracking=True, default=False)
     subscriber_format = fields.Char(tracking=True)

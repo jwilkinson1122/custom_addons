@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalMedicationRequest(models.Model):
-    _inherit = "medical.medication.request"
+class PodiatryDeviceRequest(models.Model):
+    _inherit = "pod.device.request"
 
     def check_is_billable(self):
         return self.is_billable
@@ -16,13 +16,13 @@ class MedicalMedicationRequest(models.Model):
             self.coverage_agreement_item_id
             or self.request_group_id.coverage_agreement_item_id
         )
-        medication_price = 0.0
-        for admin in self.medication_administration_ids:
-            medication_price += admin.amount
+        device_price = 0.0
+        for admin in self.device_administration_ids:
+            device_price += admin.amount
         percentage = cai.coverage_percentage
         if not is_insurance:
             percentage = 100 - percentage
-        return (medication_price * percentage) / 100
+        return (device_price * percentage) / 100
 
     def check_sellable(self, is_insurance, agreement_item):
         if is_insurance:

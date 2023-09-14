@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template
-        id="medical_procedure_external.medical_procedure_external_request_template_base"
+        id="pod_procedure_external.pod_procedure_external_request_template_base"
     >
         <t t-call="web.html_container">
             <t
@@ -20,11 +20,11 @@
                 </t>
                 <t t-set="partner" t-value="company.partner_id" />
                 <t
-                    t-call="medical_procedure_external.procedure_external_request_base_layout"
+                    t-call="pod_procedure_external.procedure_external_request_base_layout"
                     t-lang="lang"
                 >
                     <t
-                        t-call="medical_procedure_external.medical_procedure_external_request_base"
+                        t-call="pod_procedure_external.pod_procedure_external_request_base"
                         t-lang="lang"
                     />
                 </t>
@@ -105,7 +105,7 @@
             </div>
         </div>
     </template>
-    <template id="medical_procedure_external_request_base">
+    <template id="pod_procedure_external_request_base">
         <div class="page">
             <div class="row o_patient_information">
                 <div class="col-6" name="patient_information">

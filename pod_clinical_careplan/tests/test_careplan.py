@@ -8,14 +8,14 @@ from odoo.tests import TransactionCase
 class TestCareplan(TransactionCase):
     def setUp(self):
         res = super(TestCareplan, self).setUp()
-        self.patient = self.env["medical.patient"].create(
+        self.patient = self.env["pod.patient"].create(
             {"name": "Test Patient"}
         )
-        self.plan = self.browse_ref("medical_workflow.mr_knee")
+        self.plan = self.browse_ref("pod_workflow.mr_knee")
         return res
 
     def test_careplan_workflow(self):
-        request = self.env["medical.careplan"].create(
+        request = self.env["pod.careplan"].create(
             {"patient_id": self.patient.id}
         )
         self.assertNotEqual(request.internal_identifier, "/")

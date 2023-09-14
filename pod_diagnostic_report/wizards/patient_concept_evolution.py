@@ -17,8 +17,8 @@ class PatientConceptEvolution(models.TransientModel):
     _name = "patient.concept.evolution"
     _description = "This wizard allows to view a patient's concept evolution"
 
-    concept_id = fields.Many2one("medical.observation.concept")
-    patient_id = fields.Many2one("medical.patient")
+    concept_id = fields.Many2one("pod.observation.concept")
+    patient_id = fields.Many2one("pod.patient")
     bokeh_chart = fields.Text(compute="_compute_bokeh_chart")
     date_low_limit = fields.Date()
     date_high_limit = fields.Date()
@@ -38,7 +38,7 @@ class PatientConceptEvolution(models.TransientModel):
 
     def _compute_evolution_dataframe(self):
         domain = self._get_dataframe_domain()
-        observations = self.env["medical.observation"].search(
+        observations = self.env["pod.observation"].search(
             domain, order="observation_date"
         )
         if observations:

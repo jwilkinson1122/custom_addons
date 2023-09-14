@@ -81,7 +81,7 @@
     </record>
     <record model="ir.ui.menu" id="workflow_plan_definition_actions_menu">
         <field name="name">Actions</field>
-        <field name="parent_id" ref="medical_base.medical_root_workflow" />
+        <field name="parent_id" ref="pod_base.pod_root_workflow" />
         <field name="action" ref="workflow_plan_definition_action" />
         <field name="sequence" eval="20" />
     </record>

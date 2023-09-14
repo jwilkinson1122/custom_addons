@@ -25,18 +25,18 @@
     <record id="action_report_document_report_type" model="ir.actions.report">
         <field name="name">Preview without headers</field>
         <field name="type">ir.actions.report</field>
-        <field name="model">medical.document.type.lang</field>
+        <field name="model">pod.document.type.lang</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">medical_document.document_report_preview</field>
-        <field name="report_file">medical_document.document_report_preview</field>
+        <field name="report_name">pod_document.document_report_preview</field>
+        <field name="report_file">pod_document.document_report_preview</field>
     </record>
 
     <record id="action_report_document_report_base" model="ir.actions.report">
         <field name="name">Preview without headers</field>
         <field name="type">ir.actions.report</field>
-        <field name="model">medical.document.reference</field>
+        <field name="model">pod.document.reference</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">medical_document.document_report_base</field>
-        <field name="report_file">medical_document.document_report_base</field>
+        <field name="report_name">pod_document.document_report_base</field>
+        <field name="report_file">pod_document.document_report_base</field>
     </record>
 </odoo>

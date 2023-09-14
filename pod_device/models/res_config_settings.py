@@ -8,4 +8,4 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    module_medical_medication_request = fields.Boolean("Medication request")
+    module_pod_device_request = fields.Boolean("Device request")

@@ -1,13 +1,13 @@
 from odoo import fields, models
 
 
-class MedicalEncounterCancel(models.TransientModel):
-    _name = "medical.encounter.cancel"
-    _description = "medical.encounter.cancel"
+class PodiatryEncounterCancel(models.TransientModel):
+    _name = "pod.encounter.cancel"
+    _description = "pod.encounter.cancel"
 
-    encounter_id = fields.Many2one("medical.encounter")
+    encounter_id = fields.Many2one("pod.encounter")
     cancel_reason_id = fields.Many2one(
-        "medical.cancel.reason", required=True, string="Cancel reason"
+        "pod.cancel.reason", required=True, string="Cancel reason"
     )
     cancel_reason = fields.Text(string="Description")
     pos_session_id = fields.Many2one("pos.session", required=True)

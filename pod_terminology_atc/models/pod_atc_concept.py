@@ -5,9 +5,9 @@
 from odoo import api, fields, models
 
 
-class MedicalATCConcept(models.Model):
+class PodiatryATCConcept(models.Model):
     """
-    Medical ATC concept
+    Podiatry ATC concept
     (https://www.hl7.org/fhir/terminologies-systems.html)
     It has been defined following the code system entity with the following
     information:
@@ -17,15 +17,15 @@ class MedicalATCConcept(models.Model):
     - publisher: WHO
     """
 
-    _name = "medical.atc.concept"
-    _inherit = "medical.abstract.concept.uniparent"
+    _name = "pod.atc.concept"
+    _inherit = "pod.abstract.concept.uniparent"
     _parent_order = False
-    _description = "medical atc concept"
+    _description = "pod atc concept"
 
     code = fields.Char(compute="_compute_code", store=True, required=False)
     level_code = fields.Char(required=True)
-    parent_id = fields.Many2one(comodel_name="medical.atc.concept")
-    child_ids = fields.One2many(comodel_name="medical.atc.concept")
+    parent_id = fields.Many2one(comodel_name="pod.atc.concept")
+    child_ids = fields.One2many(comodel_name="pod.atc.concept")
 
     @api.depends("level_code", "parent_id")
     def _compute_code(self):

@@ -12,7 +12,7 @@ class ProcedureRequestMakeProcedure(models.Model):
     def make_procedure(self):
         res = []
         active_ids = self.env.context.get("active_ids", []) or []
-        for pr in self.env["medical.procedure.request"].browse(active_ids):
+        for pr in self.env["pod.procedure.request"].browse(active_ids):
             if pr.procedure_ids:
                 raise exceptions.Warning(
                     _("This Procedure Request already has a Procedure.")
@@ -24,7 +24,7 @@ class ProcedureRequestMakeProcedure(models.Model):
             "name": _("Procedure"),
             "view_type": "form",
             "view_mode": "tree,form",
-            "res_model": "medical.procedure",
+            "res_model": "pod.procedure",
             "view_id": False,
             "context": False,
             "type": "ir.actions.act_window",

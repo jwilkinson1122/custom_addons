@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class MedicalCoverageAgreementItem(models.Model):
-    _inherit = "medical.coverage.agreement.item"
+class PodiatryCoverageAgreementItem(models.Model):
+    _inherit = "pod.coverage.agreement.item"
 
     invoice_group_method_id = fields.Many2one("invoice.group.method")
 

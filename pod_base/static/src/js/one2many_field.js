@@ -1,4 +1,4 @@
-odoo.define("medical_base.one2many_field", function (require) {
+odoo.define("pod_base.one2many_field", function (require) {
     "use strict";
 
     var relational_fields = require("web.relational_fields");

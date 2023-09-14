@@ -5,19 +5,19 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalEncounter(TransactionCase):
+class TestPodiatryEncounter(TransactionCase):
     def setUp(self):
-        super(TestMedicalEncounter, self).setUp()
-        self.medical_user = self._create_user(
-            "medical_user", self.env.ref("medical_base.group_medical_admin").id
+        super(TestPodiatryEncounter, self).setUp()
+        self.pod_user = self._create_user(
+            "pod_user", self.env.ref("pod_base.group_pod_admin").id
         )
-        self.medical_reception = self._create_user(
-            "medical_reception",
-            self.env.ref("medical_base.group_medical_reception").id,
+        self.pod_reception = self._create_user(
+            "pod_reception",
+            self.env.ref("pod_base.group_pod_reception").id,
         )
-        self.patient_model = self.env["medical.patient"]
+        self.patient_model = self.env["pod.patient"]
         self.location_model = self.env["res.partner"]
-        self.encounter_model = self.env["medical.encounter"]
+        self.encounter_model = self.env["pod.encounter"]
         self.patient_1 = self._create_patient()
         self.location_1 = self._create_location()
 
@@ -64,7 +64,7 @@ class TestMedicalEncounter(TransactionCase):
             "state": "arrived",
         }
         encounter = self.encounter_model.with_user(
-            self.medical_reception
+            self.pod_reception
         ).create(encounter_vals)
         self.assertTrue(encounter)
 

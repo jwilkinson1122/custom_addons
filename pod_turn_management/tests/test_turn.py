@@ -8,7 +8,7 @@ from odoo.tests.common import TransactionCase
 class TestTurn(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.specialty_01 = self.env["medical.turn.specialty"].create(
+        self.specialty_01 = self.env["pod.turn.specialty"].create(
             {
                 "name": "Specialty 01",
                 "rule_ids": [
@@ -16,7 +16,7 @@ class TestTurn(TransactionCase):
                 ],
             }
         )
-        self.specialty_02 = self.env["medical.turn.specialty"].create(
+        self.specialty_02 = self.env["pod.turn.specialty"].create(
             {
                 "name": "Specialty 02",
                 "rule_ids": [
@@ -27,7 +27,7 @@ class TestTurn(TransactionCase):
 
     def test_generation_filtered(self):
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [
                     (
                         "specialty_id",
@@ -37,21 +37,21 @@ class TestTurn(TransactionCase):
                 ]
             )
         )
-        self.env["wzd.medical.turn"].create(
+        self.env["wzd.pod.turn"].create(
             {
                 "turn_specialty_ids": [(4, self.specialty_01.id)],
                 "start_date": "2020-01-01",
                 "end_date": "2020-01-31",
             }
         ).doit()
-        turns = self.env["medical.turn"].search(
+        turns = self.env["pod.turn"].search(
             [("specialty_id", "in", [self.specialty_01.id])]
         )
         self.assertTrue(turns)
         for turn in turns:
             self.assertEqual(fields.Datetime.from_string(turn.date).weekday(), 0)
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [
                     ("specialty_id", "in", [self.specialty_01.id]),
                     "|",
@@ -61,14 +61,14 @@ class TestTurn(TransactionCase):
             )
         )
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [("specialty_id", "in", [self.specialty_02.id])]
             )
         )
 
     def test_generation_all(self):
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [
                     (
                         "specialty_id",
@@ -78,17 +78,17 @@ class TestTurn(TransactionCase):
                 ]
             )
         )
-        self.env["wzd.medical.turn"].create(
+        self.env["wzd.pod.turn"].create(
             {"start_date": "2020-01-01", "end_date": "2020-01-31"}
         ).doit()
-        turns = self.env["medical.turn"].search(
+        turns = self.env["pod.turn"].search(
             [("specialty_id", "in", [self.specialty_01.id])]
         )
         self.assertTrue(turns)
         for turn in turns:
             self.assertEqual(fields.Datetime.from_string(turn.date).weekday(), 0)
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [
                     ("specialty_id", "in", [self.specialty_01.id]),
                     "|",
@@ -97,7 +97,7 @@ class TestTurn(TransactionCase):
                 ]
             )
         )
-        turns = self.env["medical.turn"].search(
+        turns = self.env["pod.turn"].search(
             [("specialty_id", "in", [self.specialty_02.id])]
         )
         self.assertTrue(turns)
@@ -106,7 +106,7 @@ class TestTurn(TransactionCase):
             self.assertRegex(turn.display_name, "^%s.*$" % self.specialty_02.name)
 
         self.assertFalse(
-            self.env["medical.turn"].search(
+            self.env["pod.turn"].search(
                 [
                     ("specialty_id", "in", [self.specialty_02.id]),
                     "|",

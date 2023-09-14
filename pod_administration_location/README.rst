@@ -3,12 +3,12 @@
    :alt: License: LGPL-3
 
 ===============================
-Medical Administration Location
+Podiatry Administration Location
 ===============================
 
-Extension of medical that adds a Medical Administration Location entity.
+Extension of pod that adds a Podiatry Administration Location entity.
 
-A Medical Administration Location gives details and position information for a
+A Podiatry Administration Location gives details and position information for a
 physical place where services are provided and resources and participants may
 be stored, found, contained or accommodated.
 
@@ -36,13 +36,13 @@ For more information about FHIR Location visit: http://hl7.org/fhir/location.htm
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Administration' activate the option 'Locations'.
 
 Usage
 =====
 
-#. Go to 'Medical / Administration / Location'
+#. Go to 'Podiatry / Administration / Location'
 #. Click 'Create' and fill in the information.
 #. Click 'Save'
 
@@ -64,7 +64,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

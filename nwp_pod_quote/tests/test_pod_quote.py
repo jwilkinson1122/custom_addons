@@ -2,19 +2,19 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalQuote(TransactionCase):
+class TestPodiatryQuote(TransactionCase):
     def setUp(self):
-        super(TestMedicalQuote, self).setUp()
-        self.medical_user_group = self.env.ref("medical_base.group_medical_reception")
-        self.medical_user = self._create_user(
-            "medical_user", self.medical_user_group.id
+        super(TestPodiatryQuote, self).setUp()
+        self.pod_user_group = self.env.ref("pod_base.group_pod_reception")
+        self.pod_user = self._create_user(
+            "pod_user", self.pod_user_group.id
         )
-        self.patient_model = self.env["medical.patient"]
-        self.coverage_model = self.env["medical.coverage"]
-        self.coverage_template_model = self.env["medical.coverage.template"]
+        self.patient_model = self.env["pod.patient"]
+        self.coverage_model = self.env["pod.coverage"]
+        self.coverage_template_model = self.env["pod.coverage.template"]
         self.payor_model = self.env["res.partner"]
-        self.coverage_agreement_model = self.env["medical.coverage.agreement"]
-        self.coverage_agreement_model_item = self.env["medical.coverage.agreement.item"]
+        self.coverage_agreement_model = self.env["pod.coverage.agreement"]
+        self.coverage_agreement_model_item = self.env["pod.coverage.agreement.item"]
         self.center_model = self.env["res.partner"]
         self.product_model = self.env["product.product"]
         # self.type_model = self.env["workflow.type"]
@@ -33,8 +33,8 @@ class TestMedicalQuote(TransactionCase):
         self.act_def_1 = self._create_act_def()
         self.plan_1 = self._create_plan()
         self.action_1 = self._create_action()
-        method_2 = self.browse_ref("cb_medical_careplan_sale.by_customer")
-        auth_method = self.env["medical.authorization.method"].create(
+        method_2 = self.browse_ref("nwp_pod_careplan_sale.by_customer")
+        auth_method = self.env["pod.authorization.method"].create(
             {
                 "name": "Testing authorization_method",
                 "code": "none",
@@ -49,7 +49,7 @@ class TestMedicalQuote(TransactionCase):
             "company_id": self.ref("base.main_company"),
             "authorization_method_id": auth_method.id,
             "authorization_format_id": self.browse_ref(
-                "medical_financial_coverage_request.format_anything"
+                "pod_financial_coverage_request.format_anything"
             ).id,
         }
         self.coverage_agreement = self.coverage_agreement_model.create(
@@ -63,7 +63,7 @@ class TestMedicalQuote(TransactionCase):
                 "coverage_percentage": 40.0,
                 "authorization_method_id": auth_method.id,
                 "authorization_format_id": self.browse_ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
                 "total_price": 200,
             }
@@ -148,13 +148,13 @@ class TestMedicalQuote(TransactionCase):
             }
         )
 
-    def test_onchange_medical_quote(self):
+    def test_onchange_pod_quote(self):
         comment_template = self.env["base.comment.template"].create(
             {"name": "Comment", "text": "Text"}
         )
         payor_2 = self._create_payor()
         coverage_template_2 = self._create_coverage_template(payor=payor_2.id)
-        quote = self.env["medical.quote"].create(
+        quote = self.env["pod.quote"].create(
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
@@ -180,7 +180,7 @@ class TestMedicalQuote(TransactionCase):
             self.assertEqual(f.coverage_template_id, coverage_template_2)
 
     def test_quote_states(self):
-        quote = self.env["medical.quote"].create(
+        quote = self.env["pod.quote"].create(
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
@@ -199,8 +199,8 @@ class TestMedicalQuote(TransactionCase):
         quote.button_draft()
         self.assertEqual(quote.state, "draft")
 
-    def test_medical_quote_private(self):
-        quote = self.env["medical.quote"].create(
+    def test_pod_quote_private(self):
+        quote = self.env["pod.quote"].create(
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
@@ -220,8 +220,8 @@ class TestMedicalQuote(TransactionCase):
         self.assertEqual(line.amount, 240)
         self.assertEqual(quote.amount, 240)
 
-    def test_medical_quote_coverage(self):
-        quote = self.env["medical.quote"].create(
+    def test_pod_quote_coverage(self):
+        quote = self.env["pod.quote"].create(
             {
                 "payor_id": self.payor_1.id,
                 "is_private": False,
@@ -266,7 +266,7 @@ class TestMedicalQuote(TransactionCase):
         )
 
     def test_send_email(self):
-        quote = self.env["medical.quote"].create(
+        quote = self.env["pod.quote"].create(
             {
                 "payor_id": self.payor_1.id,
                 "is_private": False,

@@ -3,10 +3,10 @@
    :alt: License: AGPL-3
 
 =================
-Medical Documents
+Podiatry Documents
 =================
 
-This module adds medical documents on medical environment.
+This module adds pod documents on pod environment.
 
 Contributors
 ------------

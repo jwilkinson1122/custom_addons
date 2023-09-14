@@ -1,19 +1,19 @@
 from odoo.exceptions import ValidationError
 
-from odoo.addons.medical_financial_coverage_agreement.tests import common
+from odoo.addons.pod_financial_coverage_agreement.tests import common
 
 
-class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
+class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     @classmethod
     def _create_coverage_agreement_vals(cls, coverage_template):
         result = super()._create_coverage_agreement_vals(coverage_template)
         result.update(
             {
                 "authorization_method_id": cls.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": cls.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -27,10 +27,10 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         result.update(
             {
                 "authorization_method_id": cls.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": cls.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
@@ -43,10 +43,10 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_2)
         (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
         agr.invoice_group_method_id = self.env.ref(
-            "cb_medical_careplan_sale.by_customer"
+            "nwp_pod_careplan_sale.by_customer"
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
                 active_ids=(agr | agr2).ids,
             ).create({}).run()
@@ -58,13 +58,13 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_2)
         (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
         agr.invoice_group_method_id = self.env.ref(
-            "cb_medical_careplan_sale.by_customer"
+            "nwp_pod_careplan_sale.by_customer"
         )
         agr2.invoice_group_method_id = self.env.ref(
-            "cb_medical_careplan_sale.by_patient"
+            "nwp_pod_careplan_sale.by_patient"
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
                 active_ids=(agr | agr2).ids,
             ).create({}).run()

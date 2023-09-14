@@ -4,19 +4,19 @@
 from odoo import api, fields, models
 
 
-class MedicalDiagnosticReportTemplate(models.Model):
-    _name = "medical.diagnostic.report.template"
-    _inherit = ["medical.report.abstract"]
+class PodiatryDiagnosticReportTemplate(models.Model):
+    _name = "pod.diagnostic.report.template"
+    _inherit = ["pod.report.abstract"]
     _description = "Diagnostic Report Template"
 
     @api.model
     def _default_template_type(self):
-        if self.env.user.has_group("medical_base.group_medical_configurator"):
+        if self.env.user.has_group("pod_base.group_pod_configurator"):
             return "general"
         return "user"
 
     item_ids = fields.One2many(
-        "medical.diagnostic.report.template.item",
+        "pod.diagnostic.report.template.item",
         inverse_name="template_id",
         copy=True,
         string="Observations",
@@ -74,19 +74,19 @@ class MedicalDiagnosticReportTemplate(models.Model):
         return age
 
     def _generate_report(self, **kwargs):
-        return self.env["medical.diagnostic.report"].create(
+        return self.env["pod.diagnostic.report"].create(
             self._generate_report_vals(**kwargs)
         )
 
 
-class MedicalDiagnosticReportTemplateItem(models.Model):
+class PodiatryDiagnosticReportTemplateItem(models.Model):
 
-    _name = "medical.diagnostic.report.template.item"
-    _inherit = ["medical.report.item.abstract"]
+    _name = "pod.diagnostic.report.template.item"
+    _inherit = ["pod.report.item.abstract"]
     _description = "Diagnostic Report Item template"
     _order = "sequence, id"
 
-    template_id = fields.Many2one("medical.diagnostic.report.template")
+    template_id = fields.Many2one("pod.diagnostic.report.template")
     name = fields.Char(translate=True)
     selection_options = fields.Char(translate=True)
     reference_range_low_view = fields.Float(
@@ -100,7 +100,7 @@ class MedicalDiagnosticReportTemplateItem(models.Model):
         "uom.uom", compute="_compute_from_concept", inverse="_inverse_uom_id"
     )
     value_type_view = fields.Selection(
-        selection=lambda r: r.env["medical.report.item.abstract"]
+        selection=lambda r: r.env["pod.report.item.abstract"]
         ._fields["value_type"]
         .selection,
         compute="_compute_from_concept",

@@ -5,12 +5,12 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_patient_form">
-        <field name="name">medical.patient.form</field>
-        <field name="model">medical.patient</field>
+    <record model="ir.ui.view" id="pod_patient_form">
+        <field name="name">pod.patient.form</field>
+        <field name="model">pod.patient</field>
         <field
             name="inherit_id"
-            ref="medical_administration_firstname.medical_patient_form"
+            ref="pod_administration_firstname.pod_patient_form"
         />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='firstname']" position="attributes">

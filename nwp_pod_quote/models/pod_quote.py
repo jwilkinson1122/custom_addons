@@ -3,9 +3,9 @@ from itertools import groupby
 from odoo import _, api, fields, models
 
 
-class MedicalQuote(models.Model):
-    _name = "medical.quote"
-    _description = "Medical Quote"
+class PodiatryQuote(models.Model):
+    _name = "pod.quote"
+    _description = "Podiatry Quote"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "quote_date desc, id desc"
 
@@ -48,7 +48,7 @@ class MedicalQuote(models.Model):
         default=lambda self: self.env.user.company_id,
     )
     patient_id = fields.Many2one(
-        "medical.patient",
+        "pod.patient",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
@@ -62,7 +62,7 @@ class MedicalQuote(models.Model):
         states={"draft": [("readonly", False)]},
     )
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
@@ -75,20 +75,20 @@ class MedicalQuote(models.Model):
         states={"draft": [("readonly", False)]},
     )
     quote_line_ids = fields.One2many(
-        comodel_name="medical.quote.line",
+        comodel_name="pod.quote.line",
         inverse_name="quote_id",
         string="Quote Lines",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
 
-    origin_agreement_id = fields.Many2one("medical.coverage.agreement", readonly=True)
+    origin_agreement_id = fields.Many2one("pod.coverage.agreement", readonly=True)
 
     agreement_ids = fields.Many2many(
-        "medical.coverage.agreement", compute="_compute_agreements", store=True
+        "pod.coverage.agreement", compute="_compute_agreements", store=True
     )
     add_agreement_line_id = fields.Many2one(
-        "medical.coverage.agreement.item",
+        "pod.coverage.agreement.item",
         string="Add service",
         domain="[('coverage_agreement_id', 'in', agreement_ids),"
         "('plan_definition_id', '!=', False)]",
@@ -149,7 +149,7 @@ class MedicalQuote(models.Model):
     def _compute_agreements(self):
         for rec in self:
             domain = rec._get_agreements_domain()
-            rec.agreement_ids = self.env["medical.coverage.agreement"].search(domain)
+            rec.agreement_ids = self.env["pod.coverage.agreement"].search(domain)
 
     @api.depends("quote_line_ids", "quote_line_ids.price", "quote_line_ids.quantity")
     def _compute_amount(self):
@@ -208,7 +208,7 @@ class MedicalQuote(models.Model):
                     activity = action.activity_definition_id
                     service = activity and activity.service_id
                     qty = activity.quantity
-                    agreement = self.env["medical.coverage.agreement.item"].get_item(
+                    agreement = self.env["pod.coverage.agreement.item"].get_item(
                         service, self.coverage_template_id, self.center_id
                     )
                     items.append([agreement, qty])
@@ -216,7 +216,7 @@ class MedicalQuote(models.Model):
         return items
 
     @api.model
-    def _prepare_medical_quote_line(self, item, cat):
+    def _prepare_pod_quote_line(self, item, cat):
         coverage_price = (item[0].coverage_percentage * item[0].total_price) / 100
         private_price = (
             (100 - item[0].coverage_percentage) * item[0].total_price
@@ -250,7 +250,7 @@ class MedicalQuote(models.Model):
         for rec in self:
             rec.state = "draft"
 
-    def _prepare_medical_quote_layout_category(self):
+    def _prepare_pod_quote_layout_category(self):
         self.ensure_one()
         return {
             "name": self.add_agreement_line_id.product_id.name,
@@ -260,9 +260,9 @@ class MedicalQuote(models.Model):
     def button_add_line(self):
         self.ensure_one()
         items = self._search_agreement_items()
-        cat = self.env["medical.quote.layout_category"]
+        cat = self.env["pod.quote.layout_category"]
         if len(items) > 1:
-            cat = self.env["medical.quote.layout_category"].search(
+            cat = self.env["pod.quote.layout_category"].search(
                 [
                     ("quote_id", "=", self.id),
                     ("name", "=", self.add_agreement_line_id.product_id.name),
@@ -270,12 +270,12 @@ class MedicalQuote(models.Model):
                 limit=1,
             )
             if not cat:
-                data = self._prepare_medical_quote_layout_category()
-                cat = self.env["medical.quote.layout_category"].sudo().create(data)
+                data = self._prepare_pod_quote_layout_category()
+                cat = self.env["pod.quote.layout_category"].sudo().create(data)
         for item in items:
-            medical_quote_line_data = self._prepare_medical_quote_line(item, cat)
-            self.quote_line_ids += self.env["medical.quote.line"].new(
-                medical_quote_line_data
+            pod_quote_line_data = self._prepare_pod_quote_line(item, cat)
+            self.quote_line_ids += self.env["pod.quote.line"].new(
+                pod_quote_line_data
             )
         self.add_agreement_line_id = False
         self.add_quantity = 1
@@ -284,16 +284,16 @@ class MedicalQuote(models.Model):
         if "company_id" in vals:
             name = self.env["ir.sequence"].with_company(
                 vals["company_id"]
-            ).next_by_code("medical.quote") or _("New")
+            ).next_by_code("pod.quote") or _("New")
         else:
-            name = self.env["ir.sequence"].next_by_code("medical.quote") or _("New")
+            name = self.env["ir.sequence"].next_by_code("pod.quote") or _("New")
         return name
 
     @api.model
     def create(self, vals):
         if vals.get("name", "/") == "/":
             vals["name"] = self._get_name(vals)
-        return super(MedicalQuote, self).create(vals)
+        return super(PodiatryQuote, self).create(vals)
 
     def lines_layouted(self):
         """
@@ -324,7 +324,7 @@ class MedicalQuote(models.Model):
     def send_quote_by_email(self):
         self.ensure_one()
         try:
-            template_id = self.env.ref("cb_medical_quote.email_medical_quote").id
+            template_id = self.env.ref("nwp_pod_quote.email_pod_quote").id
         except ValueError:
             template_id = False
         try:
@@ -333,7 +333,7 @@ class MedicalQuote(models.Model):
             compose_form_id = False
 
         ctx = {
-            "default_model": "medical.quote",
+            "default_model": "pod.quote",
             "default_res_id": self.ids[0],
             "default_use_template": bool(template_id),
             "default_template_id": template_id,
@@ -353,17 +353,17 @@ class MedicalQuote(models.Model):
         }
 
 
-class MedicalQuoteLine(models.Model):
-    _name = "medical.quote.line"
-    _description = "Medical Quote Line"
+class PodiatryQuoteLine(models.Model):
+    _name = "pod.quote.line"
+    _description = "Podiatry Quote Line"
     _order = "quote_id, layout_category_id, sequence, id"
 
     quote_id = fields.Many2one(
-        "medical.quote", "Medical Quote", required=True, ondelete="cascade"
+        "pod.quote", "Podiatry Quote", required=True, ondelete="cascade"
     )
     sequence = fields.Integer(default=10)
     agreement_line_id = fields.Many2one(
-        "medical.coverage.agreement.item", readonly=True
+        "pod.coverage.agreement.item", readonly=True
     )
     plan_definition_id = fields.Many2one(
         string="Plan definition",
@@ -395,14 +395,14 @@ class MedicalQuoteLine(models.Model):
         readonly=True,
     )
     coverage_agreement_id = fields.Many2one(
-        comodel_name="medical.coverage.agreement",
-        string="Medical agreement",
+        comodel_name="pod.coverage.agreement",
+        string="Podiatry agreement",
         index=True,
         ondelete="cascade",
         readonly=True,
     )
     template_id = fields.Many2one(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         readonly=True,
         related="coverage_agreement_id.template_id",
     )
@@ -420,7 +420,7 @@ class MedicalQuoteLine(models.Model):
     price = fields.Float(string="Price")
     amount = fields.Float(string="Amount", compute="_compute_amount", readonly=True)
     layout_category_id = fields.Many2one(
-        "medical.quote.layout_category", string="Section"
+        "pod.quote.layout_category", string="Section"
     )
     layout_category_sequence = fields.Integer(string="Layout Sequence")
 

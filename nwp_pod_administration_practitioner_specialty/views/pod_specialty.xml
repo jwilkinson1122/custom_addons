@@ -5,12 +5,12 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_specialty_view_form" model="ir.ui.view">
-        <field name="name">medical.specialty.view.form</field>
-        <field name="model">medical.specialty</field>
+    <record id="pod_specialty_view_form" model="ir.ui.view">
+        <field name="name">pod.specialty.view.form</field>
+        <field name="model">pod.specialty</field>
         <field
             name="inherit_id"
-            ref="medical_administration_practitioner_specialty.medical_specialty_view_form"
+            ref="pod_administration_practitioner_specialty.pod_specialty_view_form"
         />
         <field name="arch" type="xml">
             <field name="description" position="after">

@@ -5,23 +5,23 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_procedure_request_view_form" model="ir.ui.view">
-        <field name="name">medical.procedure.request.view.form</field>
-        <field name="model">medical.procedure.request</field>
+    <record id="pod_procedure_request_view_form" model="ir.ui.view">
+        <field name="name">pod.procedure.request.view.form</field>
+        <field name="model">pod.procedure.request</field>
         <field
             name="inherit_id"
-            ref="medical_clinical_procedure.medical_procedure_request_view_form"
+            ref="pod_clinical_procedure.pod_procedure_request_view_form"
         />
         <field name="arch" type="xml">
             <field name="performer_id" position="after">
-                <field name="medical_commission" invisible="1" />
+                <field name="pod_commission" invisible="1" />
                 <field
                     name="variable_fee"
-                    attrs="{'invisible':[('medical_commission', '=', False)]}"
+                    attrs="{'invisible':[('pod_commission', '=', False)]}"
                 />
                 <field
                     name="fixed_fee"
-                    attrs="{'invisible':[('medical_commission', '=', False)]}"
+                    attrs="{'invisible':[('pod_commission', '=', False)]}"
                 />
             </field>
         </field>

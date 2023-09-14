@@ -2,11 +2,11 @@
 <!-- Copyright 2020 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_turn_specialty_form_view">
+    <record model="ir.ui.view" id="pod_turn_specialty_form_view">
         <field
             name="name"
-        >medical.turn.specialty.form (in medical_turn_management)</field>
-        <field name="model">medical.turn.specialty</field>
+        >pod.turn.specialty.form (in pod_turn_management)</field>
+        <field name="model">pod.turn.specialty</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -51,39 +51,39 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_specialty_search_view">
+    <record model="ir.ui.view" id="pod_turn_specialty_search_view">
         <field
             name="name"
-        >medical.turn.specialty.search (in medical_turn_management)</field>
-        <field name="model">medical.turn.specialty</field>
+        >pod.turn.specialty.search (in pod_turn_management)</field>
+        <field name="model">pod.turn.specialty</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_specialty_tree_view">
+    <record model="ir.ui.view" id="pod_turn_specialty_tree_view">
         <field
             name="name"
-        >medical.turn.specialty.tree (in medical_turn_management)</field>
-        <field name="model">medical.turn.specialty</field>
+        >pod.turn.specialty.tree (in pod_turn_management)</field>
+        <field name="model">pod.turn.specialty</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_turn_specialty_act_window">
+    <record model="ir.actions.act_window" id="pod_turn_specialty_act_window">
         <field name="name">Turn Specialties</field>
-        <field name="res_model">medical.turn.specialty</field>
+        <field name="res_model">pod.turn.specialty</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_turn_specialty_menu">
+    <record model="ir.ui.menu" id="pod_turn_specialty_menu">
         <field name="name">Turn Specialties</field>
-        <field name="parent_id" ref="medical_turn_root" />
-        <field name="action" ref="medical_turn_specialty_act_window" />
+        <field name="parent_id" ref="pod_turn_root" />
+        <field name="action" ref="pod_turn_specialty_act_window" />
         <field name="sequence" eval="90" />
     </record>
 </odoo>

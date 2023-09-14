@@ -23,7 +23,7 @@ class MgmtsystemQualityIssue(models.AbstractModel):
 
     def action_view_quality_issues(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_mgmtsystem_issue.mgmtsystem_quality_issue_act_window"
+            "nwp_mgmtsystem_issue.mgmtsystem_quality_issue_act_window"
         )
         if len(self.quality_issue_ids) > 1:
             action["domain"] = [("id", "in", self.quality_issue_ids.ids)]
@@ -31,7 +31,7 @@ class MgmtsystemQualityIssue(models.AbstractModel):
             action["views"] = [
                 (
                     self.env.ref(
-                        "cb_mgmtsystem_issue.mgmtsystem_quality_issue_form_view"
+                        "nwp_mgmtsystem_issue.mgmtsystem_quality_issue_form_view"
                     ).id,
                     "form",
                 )

@@ -6,19 +6,19 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase
 
 
-class TestMedicalPatientObservationButtons(TransactionCase):
+class TestPodiatryPatientObservationButtons(TransactionCase):
     def setUp(self):
-        super(TestMedicalPatientObservationButtons, self).setUp()
-        self.patient_1 = self.env["medical.patient"].create(
+        super(TestPodiatryPatientObservationButtons, self).setUp()
+        self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
-        self.encounter_1 = self.env["medical.encounter"].create(
+        self.encounter_1 = self.env["pod.encounter"].create(
             {"name": "Encounter 1", "patient_id": self.patient_1.id}
         )
         uom = self.env.ref(
-            "medical_diagnostic_report.uom_ten_thousand_micro_liter"
+            "pod_diagnostic_report.uom_ten_thousand_micro_liter"
         )
-        self.concept_1 = self.env["medical.observation.concept"].create(
+        self.concept_1 = self.env["pod.observation.concept"].create(
             {
                 "name": "Concept 1",
                 "value_type": "float",
@@ -27,7 +27,7 @@ class TestMedicalPatientObservationButtons(TransactionCase):
                 "reference_range_high": 10,
             }
         )
-        self.concept_2 = self.env["medical.observation.concept"].create(
+        self.concept_2 = self.env["pod.observation.concept"].create(
             {
                 "name": "Concept 2",
                 "value_type": "int",
@@ -59,7 +59,7 @@ class TestMedicalPatientObservationButtons(TransactionCase):
             {"name": "Line 6", "concept_id": self.concept_2.id},
         ]
         self.template_1 = self.env[
-            "medical.diagnostic.report.template"
+            "pod.diagnostic.report.template"
         ].create(
             {
                 "name": "Template 1",
@@ -72,7 +72,7 @@ class TestMedicalPatientObservationButtons(TransactionCase):
         )
 
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -165,14 +165,14 @@ class TestMedicalPatientObservationButtons(TransactionCase):
             '.*<script type="text/javascript">.*',
         )
 
-    def preview_test_medical_diagnostic_report(self, report):
+    def preview_test_pod_diagnostic_report(self, report):
         try:
-            report.preview_medical_diagnostic_report()
+            report.preview_pod_diagnostic_report()
             return True
         except ValidationError:
             return False
 
     def test_preview(self):
         self.assertTrue(
-            self.preview_test_medical_diagnostic_report(self.report)
+            self.preview_test_pod_diagnostic_report(self.report)
         )

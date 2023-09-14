@@ -5,13 +5,13 @@
     <record model="ir.ui.view" id="product_template_form_view">
         <field
             name="name"
-        >product.template.form (in cb_mgmtsystem_issue_product)</field>
+        >product.template.form (in nwp_mgmtsystem_issue_product)</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <header position="inside">
                 <button
-                    name="%(cb_mgmtsystem_issue.wizard_create_nonconformity_act_window)d"
+                    name="%(nwp_mgmtsystem_issue.wizard_create_nonconformity_act_window)d"
                     string="Add Quality Issue"
                     type="action"
                 />

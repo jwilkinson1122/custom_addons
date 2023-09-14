@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class RequestGroup(models.Model):
-    _inherit = "medical.request.group"
+    _inherit = "pod.request.group"
 
     def get_third_party_partner(self):
         if self.third_party_bill:

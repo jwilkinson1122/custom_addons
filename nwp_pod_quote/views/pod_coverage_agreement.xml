@@ -2,18 +2,18 @@
 <!-- Copyright 2020 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_coverage_agreement_form_view">
-        <field name="name">medical.coverage.agreement.form (in cb_medical_quote)</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record model="ir.ui.view" id="pod_coverage_agreement_form_view">
+        <field name="name">pod.coverage.agreement.form (in nwp_pod_quote)</field>
+        <field name="model">pod.coverage.agreement</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage_agreement.medical_coverage_agreement_view"
+            ref="pod_financial_coverage_agreement.pod_coverage_agreement_view"
         />
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button
                     type="action"
-                    name="%(cb_medical_quote.wizard_create_quote_agreement_act_window)d"
+                    name="%(nwp_pod_quote.wizard_create_quote_agreement_act_window)d"
                     class="oe_stat_button"
                     icon="fa-file-text-o"
                     string="Generate Quote"

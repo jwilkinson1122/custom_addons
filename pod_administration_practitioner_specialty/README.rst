@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ==============================
-Medical Practitioner Specialty
+Podiatry Practitioner Specialty
 ==============================
 
 This module adds specialties on practitioner roles.
@@ -11,18 +11,18 @@ This module adds specialties on practitioner roles.
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Administration / Practitioner' activate the option 'Add specialties to a
 practitioner role'.
 
 Usage
 =====
 
-#. Go to 'Medical / Configuration / Specialties'
+#. Go to 'Podiatry / Configuration / Specialties'
 #. Create a new specialty by providing a name and a description and (if
    desired) associate it with an SCT Code.
 #. Click 'Save'.
-#. Go to 'Medical / Administration / Practitioners'
+#. Go to 'Podiatry / Administration / Practitioners'
 #. Click 'Create' by providing a name. Choose whether if the practitioner is
    an internal employee (Internal Entity) or external employee (External
    Entity). Below this, you can choose the roles this practitioner has and,
@@ -47,7 +47,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

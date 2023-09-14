@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =========================
-Medical Patient firstname
+Podiatry Patient firstname
 =========================
 
 Allows to use first name and last name on patients

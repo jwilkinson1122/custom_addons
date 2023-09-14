@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class MedicalCancelReason(models.Model):
-    _name = "medical.cancel.reason"
+class PodiatryCancelReason(models.Model):
+    _name = "pod.cancel.reason"
     _description = "Cancellation reason"
 
     name = fields.Char(required=True)

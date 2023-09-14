@@ -2,10 +2,10 @@
 <!-- Copyright 2023 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_patient_his_form_view">
-        <field name="name">medical.patient.form</field>
-        <field name="model">medical.patient</field>
-        <field name="inherit_id" ref="medical_base.medical_patient_his_form" />
+    <record model="ir.ui.view" id="pod_patient_his_form_view">
+        <field name="name">pod.patient.form</field>
+        <field name="model">pod.patient</field>
+        <field name="inherit_id" ref="pod_base.pod_patient_his_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='administration_data']" position="before">
                 <page name="external_procedure" string="Procedure">
@@ -30,11 +30,11 @@
                 </field>
                     <button
                         type="action"
-                        name="%(medical_encounter_create_procedure_external_patient_act_window)s"
+                        name="%(pod_encounter_create_procedure_external_patient_act_window)s"
                         class="oe_stat_button btn-warning"
                         icon="fa-file-prescription"
                         string="Generate External Request"
-                        groups="medical_base.group_medical_assistance_user"
+                        groups="pod_base.group_pod_assistance_user"
                         attrs="{'invisible': [('encounter_count', '=', 0)]}"
                     />
                 </page>

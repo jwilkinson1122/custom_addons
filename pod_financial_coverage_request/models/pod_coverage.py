@@ -4,8 +4,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalCoverage(models.Model):
-    _inherit = "medical.coverage"
+class PodiatryCoverage(models.Model):
+    _inherit = "pod.coverage"
 
     subscriber_required = fields.Boolean(
         related="coverage_template_id.subscriber_required", readonly=True

@@ -17,7 +17,7 @@ from ..tests import common
 _logger = logging.getLogger(__name__)
 
 
-class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
+class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_security(self):
         coverage_template = self._create_coverage_template()
         coverage_agreement_vals = {
@@ -27,7 +27,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             "coverage_template_ids": [(6, 0, [coverage_template.id])],
         }
         coverage_agreement = self.coverage_agreement_model.with_user(
-            self.medical_user
+            self.pod_user
         ).create(coverage_agreement_vals)
         self.assertNotEqual(coverage_agreement, False)
         item_1 = self._create_coverage_agreement_item(
@@ -143,7 +143,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         )
         self.assertEqual(item_1.coverage_price, 100)
         self.assertEqual(item_1.private_price, 100)
-        wiz = self.env["medical.agreement.change.prices"].create({"difference": 50.0})
+        wiz = self.env["pod.agreement.change.prices"].create({"difference": 50.0})
         wiz.with_context(active_ids=[coverage_agreement.id]).change_prices()
         item_1.refresh()
         self.assertEqual(item_1.coverage_price, 150)
@@ -174,7 +174,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self.assertEqual(item_1.coverage_price, 100)
         self.assertEqual(item_1.private_price, 100)
         wiz = (
-            self.env["medical.agreement.expand"]
+            self.env["pod.agreement.expand"]
             .with_context(
                 default_agreement_id=coverage_agreement.id,
                 default_name=coverage_agreement.name,
@@ -298,7 +298,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         )
 
         report_object = self.env["ir.actions.report"]
-        report_name = "medical_financial_coverage_agreement.items_xslx"
+        report_name = "pod_financial_coverage_agreement.items_xslx"
         report = report_object._get_report_from_name(report_name)
 
         rep = report._render(item.ids)
@@ -324,10 +324,10 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             }
         )
 
-        report_name = "medical_financial_coverage_agreement.mca_xlsx_private"
+        report_name = "pod_financial_coverage_agreement.mca_xlsx_private"
         report = report_object._get_report_from_name(report_name)
 
-        rep = report.with_context(active_model="medical.coverage.agreement")._render(
+        rep = report.with_context(active_model="pod.coverage.agreement")._render(
             coverage_agreement.ids
         )
         sheet = pandas.read_excel(BytesIO(rep[0]), engine="openpyxl")
@@ -351,7 +351,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
                 "coverage_template_ids": [(4, temp_01.id)],
             }
         )
-        self.env["medical.coverage.agreement.join"].with_context(
+        self.env["pod.coverage.agreement.join"].with_context(
             active_model=(agr | agr2)._name,
             active_ids=(agr | agr2).ids,
         ).create({}).run()
@@ -367,7 +367,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_2)
         (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
                 active_ids=(agr | agr2).ids,
             ).create({}).run()
@@ -381,7 +381,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         agr2.center_ids = self.center_1
         agr.center_ids = self._create_center()
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
                 active_ids=(agr | agr2).ids,
             ).create({}).run()
@@ -392,7 +392,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr, self.product_1)
         agr.center_ids = self._create_center()
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=agr._name,
                 active_ids=agr.ids,
             ).create({}).run()
@@ -411,24 +411,24 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         )
         agr.company_id = self.env["res.company"].create({"name": "Demo company"})
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.join"].with_context(
+            self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
                 active_ids=(agr | agr2).ids,
             ).create({}).run()
 
     def test_template_constrain_01(self):
-        temp_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        temp_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_01.is_template = True
         with self.assertRaises(ValidationError):
             temp_01.coverage_template_ids = self.coverage_template_1
 
     def test_template_constrain_02(self):
-        temp_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        temp_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_01.is_template = True
-        temp_02 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        temp_02 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_02.is_template = True
         with self.assertRaises(ValidationError):
-            self.env["medical.coverage.agreement.template"].create(
+            self.env["pod.coverage.agreement.template"].create(
                 {
                     "agreement_id": temp_02.id,
                     "template_id": temp_01.id,
@@ -437,14 +437,14 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             ).run()
 
     def test_template_wizard(self):
-        temp_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        temp_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_01.is_template = True
         self._create_coverage_agreement_item(temp_01, self.product_1)
         self._create_coverage_agreement_item(temp_01, self.product_2)
 
         aggr = self._create_coverage_agreement(self.coverage_template_1)
         self.assertFalse(aggr.item_ids)
-        self.env["medical.coverage.agreement.template"].create(
+        self.env["pod.coverage.agreement.template"].create(
             {
                 "agreement_id": aggr.id,
                 "template_id": temp_01.id,
@@ -456,25 +456,25 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
         self.assertEqual(aggr.template_id, temp_01)
 
     def test_template_wizard_no_items(self):
-        temp_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        temp_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_01.is_template = True
         self._create_coverage_agreement_item(temp_01, self.product_1)
         self._create_coverage_agreement_item(temp_01, self.product_2)
 
         aggr = self._create_coverage_agreement(self.coverage_template_1)
         self.assertFalse(aggr.item_ids)
-        self.env["medical.coverage.agreement.template"].create(
+        self.env["pod.coverage.agreement.template"].create(
             {"agreement_id": aggr.id, "template_id": temp_01.id}
         ).run()
         self.assertFalse(aggr.item_ids)
         self.assertEqual(aggr.template_id, temp_01)
 
     def test_agreement_line_onchange(self):
-        aggr_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        aggr_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         aggr_01.principal_concept = "private"
         self.product_1.agreement_comment = "MY COMMENT"
         with Form(
-            self.env["medical.coverage.agreement.item"].with_context(
+            self.env["pod.coverage.agreement.item"].with_context(
                 default_coverage_agreement_id=aggr_01.id
             )
         ) as item:
@@ -483,11 +483,11 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             self.assertEqual(item.item_comment, "MY COMMENT")
 
     def test_agreement_line_onchange_template(self):
-        aggr_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
-        temp_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        aggr_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
+        temp_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         temp_01.is_template = True
         self._create_coverage_agreement_item(temp_01, self.product_1)
-        self.env["medical.coverage.agreement.template"].create(
+        self.env["pod.coverage.agreement.template"].create(
             {
                 "agreement_id": aggr_01.id,
                 "template_id": temp_01.id,
@@ -495,7 +495,7 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             }
         ).run()
         with Form(
-            self.env["medical.coverage.agreement.item"].with_context(
+            self.env["pod.coverage.agreement.item"].with_context(
                 default_coverage_agreement_id=aggr_01.id
             )
         ) as item:
@@ -504,13 +504,13 @@ class TestMedicalCoverageAgreement(common.AgrementSavepointCase):
             self.assertEqual(item.plan_definition_id, self.plan_1)
 
     def test_agreement_line_constrain(self):
-        aggr_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        aggr_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         self._create_coverage_agreement_item(aggr_01, self.product_1)
         with self.assertRaises(ValidationError):
             self._create_coverage_agreement_item(aggr_01, self.product_1)
 
     def test_search(self):
-        aggr_01 = self._create_coverage_agreement(self.env["medical.coverage.template"])
+        aggr_01 = self._create_coverage_agreement(self.env["pod.coverage.template"])
         self.product_1.default_code = "DEMO DEFAULT CODE"
         self.product_1.name = "DEMO DEFAULT NAME"
         self._create_coverage_agreement_item(aggr_01, self.product_1)

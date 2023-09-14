@@ -11,7 +11,7 @@ from .base_result import combine_result
 class PlanDefinitionAction(models.Model):
     # FHIR entity: Action
     _name = "workflow.plan.definition.action"
-    _description = "Medical Plan Definition Action"
+    _description = "Podiatry Plan Definition Action"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _parent_name = "parent_id"
     _parent_store = True

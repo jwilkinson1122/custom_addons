@@ -3,37 +3,37 @@
    :alt: License: LGPL-3
 
 ==========================
-Medical Medication Request
+Podiatry Device Request
 ==========================
 
-The resource **Medication Request** represents an order or request for both
-supply of the medication and the instructions for administration of the
-medication to a patient.
+The resource **Device Request** represents an order or request for both
+supply of the device and the instructions for administration of the
+device to a patient.
 
-The resource **Medication Administration** describes the event of a patient
-consuming or otherwise being administered a medication. This may be as simple
+The resource **Device Administration** describes the event of a patient
+consuming or otherwise being administered a device. This may be as simple
 as swallowing a tablet or it may be a long running infusion. Related
 resources tie this event to the authorizing prescription, and the specific
 encounter between patient and health care practitioner.
 
-For further information about FHIR Medication Request visit: https://www.hl7.org/fhir/medicationrequest.html
-For further information about FHIR Medication Administration visit: https://www.hl7.org/fhir/medicationadministration.html
+For further information about FHIR Device Request visit: https://www.hl7.org/fhir/devicerequest.html
+For further information about FHIR Device Administration visit: https://www.hl7.org/fhir/deviceadministration.html
 
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
-'Medication' activate 'Medication administration & Medication requests'.
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
+'Device' activate 'Device administration & Device requests'.
 
 Usage
 =====
 
-#. Go to 'Medical / Medications / Requests'
+#. Go to 'Podiatry / Devices / Requests'
 #. Click 'Create' and fill in all the required information.
 #. Click 'Save'.
-#. Go to 'Medical / Medications / Administration'
+#. Go to 'Podiatry / Devices / Administration'
 #. Click 'Create'.
-#. Provide a patient, a product, a quantity and a medical location which must
+#. Provide a patient, a product, a quantity and a pod location which must
    be already related to a stock location.
 #. Click 'Save'.
 #. Press the button 'Activate'.
@@ -58,7 +58,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

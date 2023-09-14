@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =================================
-Medical Sale Invoice Group Method
+Podiatry Sale Invoice Group Method
 =================================
 
-Medical Sale invoice group Method
+Podiatry Sale invoice group Method

@@ -2,12 +2,12 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalDocumentType(models.Model):
+class PodiatryDocumentType(models.Model):
     # FHIR Entity: Document Refernece
     # (https://www.hl7.org/fhir/documentreference.html)
-    _name = "medical.document.type"
-    _description = "Medical Document Type"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.document.type"
+    _description = "Podiatry Document Type"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 
     document_type = fields.Selection(
         [("action", "Report action")], required=True, default="action"
@@ -25,12 +25,12 @@ class MedicalDocumentType(models.Model):
         default="draft",
     )
     template_ids = fields.One2many(
-        "medical.document.template",
+        "pod.document.template",
         inverse_name="document_type_id",
         readonly=True,
     )
     current_template_id = fields.Many2one(
-        "medical.document.template", compute="_compute_current_template"
+        "pod.document.template", compute="_compute_current_template"
     )
     current_sequence = fields.Integer(required=True, default=0)
     activity_definition_ids = fields.One2many(
@@ -38,10 +38,10 @@ class MedicalDocumentType(models.Model):
     )
     report_action_id = fields.Many2one(
         "ir.actions.report",
-        domain=[("model", "=", "medical.document.reference")],
+        domain=[("model", "=", "pod.document.reference")],
     )
     lang_ids = fields.One2many(
-        "medical.document.type.lang", inverse_name="document_type_id"
+        "pod.document.type.lang", inverse_name="document_type_id"
     )
 
     @api.depends("current_sequence")
@@ -54,7 +54,7 @@ class MedicalDocumentType(models.Model):
             )
 
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.document.template") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.document.template") or "/"
 
     def get_document_template_vals(self):
         return {
@@ -70,7 +70,7 @@ class MedicalDocumentType(models.Model):
         self.ensure_one()
         self.unpost()
         self.current_sequence += 1
-        template = self.env["medical.document.template"].create(
+        template = self.env["pod.document.template"].create(
             self.get_document_template_vals()
         )
         self.message_post(body=_("Added template with sequence %s") % template.sequence)
@@ -114,7 +114,7 @@ class MedicalDocumentType(models.Model):
         return {
             "name": self.name,
             "model_id": self.env.ref(
-                "medical_document.model_medical_document_reference"
+                "pod_document.model_pod_document_reference"
             ).id,
             "document_type_id": self.id,
         }
@@ -122,7 +122,7 @@ class MedicalDocumentType(models.Model):
     def generate_activity_definition(self):
         activites = self._generate_activity_definition()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_workflow.workflow_activity_definition_action"
+            "pod_workflow.workflow_activity_definition_action"
         )
         if len(activites) > 1:
             result["domain"] = "[('id', 'in', " + str(activites.ids) + ")]"
@@ -133,13 +133,13 @@ class MedicalDocumentType(models.Model):
         return result
 
 
-class MedicalDocumentTypeLang(models.Model):
-    _name = "medical.document.type.lang"
-    _description = "Medical Document Type Lang"
-    _inherit = "medical.document.language"
+class PodiatryDocumentTypeLang(models.Model):
+    _name = "pod.document.type.lang"
+    _description = "Podiatry Document Type Lang"
+    _inherit = "pod.document.language"
     _rec_name = "lang"
 
-    document_type_id = fields.Many2one("medical.document.type", required=True)
+    document_type_id = fields.Many2one("pod.document.type", required=True)
     text = fields.Html(sanitize=True)
 
     _sql_constraints = [
@@ -155,5 +155,5 @@ class MedicalDocumentTypeLang(models.Model):
 
     def preview(self):
         return self.env.ref(
-            "medical_document.action_report_document_report_type"
+            "pod_document.action_report_document_report_type"
         ).report_action(self)

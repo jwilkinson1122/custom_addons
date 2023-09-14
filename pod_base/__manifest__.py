@@ -3,29 +3,29 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical Base",
-    "summary": "Medical Base",
+    "name": "Podiatry Base",
+    "summary": "Podiatry Base",
     "version": "15.0.1.0.0",
     "author": "CreuBlanca, Eficent, Odoo Community Association (OCA)",
-    "category": "Medical",
-    "website": "https://github.com/tegin/medical-fhir",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/pod-fhir",
     "license": "LGPL-3",
     "depends": ["mail", "base_fontawesome", "uom"],
     "data": [
-        "security/medical_security.xml",
+        "security/pod_security.xml",
         "security/ir.model.access.csv",
         "views/res_partner.xml",
         "data/ir_sequence_data.xml",
-        "views/medical_menu.xml",
-        "views/medical_patient.xml",
+        "views/pod_menu.xml",
+        "views/pod_patient.xml",
         "views/res_config_settings_views.xml",
         # "templates/assets.xml",
     ],
     'assets': {
         'web.assets_backend': [
-            'medical_base/static/src/js/one2many_field.js',
+            'pod_base/static/src/js/one2many_field.js',
         ],
     },
-    "demo": ["demo/medical_demo.xml"],
+    "demo": ["demo/pod_demo.xml"],
     "application": True,
 }

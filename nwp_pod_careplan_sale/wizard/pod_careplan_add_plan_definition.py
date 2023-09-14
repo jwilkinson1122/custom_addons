@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class MedicalCareplanAddPlanDefinition(models.TransientModel):
-    _inherit = "medical.careplan.add.plan.definition"
+class PodiatryCareplanAddPlanDefinition(models.TransientModel):
+    _inherit = "pod.careplan.add.plan.definition"
 
     qty = fields.Integer(default=1)
     order_by_id = fields.Many2one("res.partner")

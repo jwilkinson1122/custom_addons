@@ -1,1 +1,1 @@
-from . import test_medical_quote
+from . import test_pod_quote

@@ -3,5 +3,5 @@
    :alt: License: AGPL-3
 
 =========================
-Medical Signature Storage
+Podiatry Signature Storage
 =========================

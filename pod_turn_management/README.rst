@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =======================
-Medical Turn Management
+Podiatry Turn Management
 =======================
 
 Manage Profesional turn management

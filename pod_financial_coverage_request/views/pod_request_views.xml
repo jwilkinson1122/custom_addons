@@ -5,10 +5,10 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
     -->
 <odoo>
-    <record model="ir.ui.view" id="medical_request_form">
-        <field name="name">medical.request.form</field>
-        <field name="model">medical.request</field>
-        <field name="inherit_id" ref="medical_workflow.medical_request_form" />
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <field name="encounter_id" position="after">
@@ -39,10 +39,10 @@
             </notebook>
         </field>
     </record>
-    <record id="medical_request_form_coverage" model="ir.ui.view">
-        <field name="name">medical.request.view.form</field>
-        <field name="model">medical.request</field>
-        <field name="inherit_id" ref="medical_request_form" />
+    <record id="pod_request_form_coverage" model="ir.ui.view">
+        <field name="name">pod.request.view.form</field>
+        <field name="model">pod.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
         <field name="arch" type="xml">
             <field name="coverage_id" position="attributes">
                 <attribute name="options">{'no_open': False, 'no_create':

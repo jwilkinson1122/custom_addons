@@ -8,15 +8,15 @@ from odoo import models
 class ActivityDefinition(models.Model):
     _inherit = "workflow.activity.definition"
 
-    def _get_medical_values(self, vals, parent=False, plan=False, action=False):
-        res = super(ActivityDefinition, self)._get_medical_values(
+    def _get_pod_values(self, vals, parent=False, plan=False, action=False):
+        res = super(ActivityDefinition, self)._get_pod_values(
             vals, parent, plan, action
         )
         request_models = self.env.ref(
-            "medical_clinical_procedure.model_medical_procedure_request"
+            "pod_clinical_procedure.model_pod_procedure_request"
         )
         request_models |= self.env.ref(
-            "medical_clinical_laboratory.model_medical_laboratory_request"
+            "pod_clinical_laboratory.model_pod_laboratory_request"
         )
         if self.model_id in request_models and action:
             res.update(

@@ -2,11 +2,11 @@
 <!-- Copyright 2022 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_administration_route_form_view">
+    <record model="ir.ui.view" id="pod_administration_route_form_view">
         <field
             name="name"
-        >medical.administration.route (in medical_product_request)</field>
-        <field name="model">medical.administration.route</field>
+        >pod.administration.route (in pod_product_request)</field>
+        <field name="model">pod.administration.route</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -19,39 +19,39 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_administration_route_search_view">
+    <record model="ir.ui.view" id="pod_administration_route_search_view">
         <field
             name="name"
-        >medical.administration.route.search (in medical_product_request)</field>
-        <field name="model">medical.administration.route</field>
+        >pod.administration.route.search (in pod_product_request)</field>
+        <field name="model">pod.administration.route</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_administration_route_tree_view">
+    <record model="ir.ui.view" id="pod_administration_route_tree_view">
         <field
             name="name"
-        >medical.administration.route.tree (in medical_product_request)</field>
-        <field name="model">medical.administration.route</field>
+        >pod.administration.route.tree (in pod_product_request)</field>
+        <field name="model">pod.administration.route</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_administration_route_act_window">
-        <field name="name">Medical Administration Route</field>
-        <field name="res_model">medical.administration.route</field>
+    <record model="ir.actions.act_window" id="pod_administration_route_act_window">
+        <field name="name">Podiatry Administration Route</field>
+        <field name="res_model">pod.administration.route</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_administration_route_menu">
-        <field name="name">Medical Administration Route</field>
-        <field name="parent_id" ref="medical_product_menu" />
-        <field name="action" ref="medical_administration_route_act_window" />
+    <record model="ir.ui.menu" id="pod_administration_route_menu">
+        <field name="name">Podiatry Administration Route</field>
+        <field name="parent_id" ref="pod_product_menu" />
+        <field name="action" ref="pod_administration_route_act_window" />
         <field name="sequence" eval="50" />
     </record>
 </odoo>

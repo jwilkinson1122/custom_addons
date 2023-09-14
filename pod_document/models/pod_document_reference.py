@@ -7,12 +7,12 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class MedicalDocumentReference(models.Model):
+class PodiatryDocumentReference(models.Model):
     # FHIR Entity: Document Reference
     # (https://www.hl7.org/fhir/documentreference.html)
-    _name = "medical.document.reference"
-    _description = "Medical Document Reference"
-    _inherit = ["medical.request", "medical.document.language"]
+    _name = "pod.document.reference"
+    _description = "Podiatry Document Reference"
+    _inherit = ["pod.request", "pod.document.language"]
 
     @api.model
     def _get_states(self):
@@ -29,7 +29,7 @@ class MedicalDocumentReference(models.Model):
         default="draft",
     )
     document_type_id = fields.Many2one(
-        "medical.document.type",
+        "pod.document.type",
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
@@ -41,7 +41,7 @@ class MedicalDocumentReference(models.Model):
         string="Document type reference",
     )
     document_template_id = fields.Many2one(
-        "medical.document.template",
+        "pod.document.template",
         readonly=True,
         copy=False,
         ondelete="restrict",
@@ -85,12 +85,12 @@ class MedicalDocumentReference(models.Model):
         return self.lang or self.patient_id.lang
 
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.document.reference") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.document.reference") or "/"
 
     def action_view_request_parameters(self):
         return {
-            "view": "medical_document.medical_document_reference_action",
-            "view_form": "medical.document.reference.view.form",
+            "view": "pod_document.pod_document_reference_action",
+            "view_form": "pod.document.reference.view.form",
         }
 
     def _get_parent_field_name(self):
@@ -178,7 +178,7 @@ class MedicalDocumentReference(models.Model):
     def render_text(self):
         if self.document_type == "action":
             template = self.document_template_id or self.env[
-                "medical.document.template"
+                "pod.document.template"
             ].browse(self._context.get("template_id", False))
             return template.render_template(self._name, self.id)
         raise UserError(_("Function must be defined"))

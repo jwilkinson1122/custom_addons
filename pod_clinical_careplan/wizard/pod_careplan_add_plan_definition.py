@@ -5,9 +5,9 @@
 from odoo import fields, models
 
 
-class MedicalCareplanAddPlanDefinition(models.TransientModel):
-    _name = "medical.careplan.add.plan.definition"
-    _inherit = "medical.add.plan.definition"
+class PodiatryCareplanAddPlanDefinition(models.TransientModel):
+    _name = "pod.careplan.add.plan.definition"
+    _inherit = "pod.add.plan.definition"
     _description = "Add a plan Definition on a Careplan"
 
     patient_id = fields.Many2one(
@@ -15,7 +15,7 @@ class MedicalCareplanAddPlanDefinition(models.TransientModel):
     )
 
     careplan_id = fields.Many2one(
-        comodel_name="medical.careplan", string="Care plan", required=True
+        comodel_name="pod.careplan", string="Care plan", required=True
     )
 
     plan_definition_id = fields.Many2one(
@@ -30,6 +30,6 @@ class MedicalCareplanAddPlanDefinition(models.TransientModel):
         }
 
     def _get_values(self):
-        values = super(MedicalCareplanAddPlanDefinition, self)._get_values()
+        values = super(PodiatryCareplanAddPlanDefinition, self)._get_values()
         values["careplan_id"] = self.careplan_id.id
         return values

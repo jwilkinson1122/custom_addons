@@ -6,18 +6,18 @@
 -->
 <odoo>
     <record
-        id="medical_financial_coverage.menu_medical_coverage_root"
+        id="pod_financial_coverage.menu_pod_coverage_root"
         model="ir.ui.menu"
     >
         <field name="active" eval="False" />
     </record>
     <record
-        id="medical_workflow.workflow_plan_definition_actions_menu"
+        id="pod_workflow.workflow_plan_definition_actions_menu"
         model="ir.ui.menu"
     >
         <field name="active" eval="False" />
     </record>
-    <record id="medical_financial_coverage.menu_medical_payor_root" model="ir.ui.menu">
-        <field name="parent_id" ref="medical_base.medical_root_administration" />
+    <record id="pod_financial_coverage.menu_pod_payor_root" model="ir.ui.menu">
+        <field name="parent_id" ref="pod_base.pod_root_administration" />
     </record>
 </odoo>

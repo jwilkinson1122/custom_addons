@@ -5,14 +5,14 @@
 from odoo import fields, models
 
 
-class MedicalLaboratoryEvent(models.Model):
-    _inherit = "medical.laboratory.event"
+class PodiatryLaboratoryEvent(models.Model):
+    _inherit = "pod.laboratory.event"
 
     private_cost = fields.Float(required=True, default=0)
     coverage_cost = fields.Float(required=True, default=0)
     commission_sale_order_line_ids = fields.Many2many(
         "sale.order.line",
-        relation="sale_order_line_commission_medical_laboratory_event",
+        relation="sale_order_line_commission_pod_laboratory_event",
         column1="laboratory_event_id",
         column2="sale_order_line_id",
     )

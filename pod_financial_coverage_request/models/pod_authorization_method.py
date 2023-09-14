@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class MedicalAuthorizationMethod(models.Model):
-    _name = "medical.authorization.method"
+class PodiatryAuthorizationMethod(models.Model):
+    _name = "pod.authorization.method"
     _description = "Authorization method"
 
     code = fields.Char(required=True)
@@ -21,7 +21,7 @@ class MedicalAuthorizationMethod(models.Model):
         default=False,
     )
     auxiliary_method_id = fields.Many2one(
-        comodel_name="medical.authorization.method", required=False
+        comodel_name="pod.authorization.method", required=False
     )
     always_authorized = fields.Boolean(default=False)
     integration_system = fields.Selection(
@@ -30,6 +30,6 @@ class MedicalAuthorizationMethod(models.Model):
         required=True,
     )
     integration_information = fields.Char()
-    authorization_web_id = fields.Many2one("medical.authorization.web")
+    authorization_web_id = fields.Many2one("pod.authorization.web")
 
     active = fields.Boolean(default=True)

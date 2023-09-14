@@ -3,9 +3,9 @@ from datetime import timedelta
 from odoo import _, fields, models
 
 
-class MedicalGuardPlanApply(models.TransientModel):
-    _name = "medical.guard.invoice"
-    _description = "medical.guard.invoice"
+class PodiatryGuardPlanApply(models.TransientModel):
+    _name = "pod.guard.invoice"
+    _description = "pod.guard.invoice"
 
     date_from = fields.Date(required=True, default=fields.Date.today())
     date_to = fields.Date(required=True)
@@ -34,7 +34,7 @@ class MedicalGuardPlanApply(models.TransientModel):
 
     def run(self):
         self.ensure_one()
-        guards = self.env["medical.guard"].search(self.get_guard_domain())
+        guards = self.env["pod.guard"].search(self.get_guard_domain())
         invoices = guards.make_invoice()
         if len(invoices):
             return {

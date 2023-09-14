@@ -5,8 +5,8 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_center_reception_action" model="ir.actions.act_window">
-        <field name="name">Medical Receptions</field>
+    <record id="pod_center_reception_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Receptions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -14,7 +14,7 @@
             name="domain"
         >[('is_reception', '=', True), ('center_id', '=', active_id)]</field>
         <field name="context">{'default_company_type':'company',
-            'default_is_company':True, 'default_is_reception': True, 'default_is_medical': True,
+            'default_is_company':True, 'default_is_reception': True, 'default_is_pod': True,
             'default_center_id': active_id,
             }</field>
     </record>
@@ -23,7 +23,7 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_center.res_partner_view_form"
+            ref="pod_administration_center.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <xpath
@@ -32,13 +32,13 @@
             >
                 <field name="is_reception" invisible="1" />
             </xpath>
-            <field name="is_medical" position="before">
+            <field name="is_pod" position="before">
                 <field name="is_reception" />
             </field>
             <div name="button_box" position="inside">
                 <button
                     type="action"
-                    name="%(medical_center_reception_action)d"
+                    name="%(pod_center_reception_action)d"
                     class="oe_stat_button"
                     icon="fa-registered"
                     attrs="{'invisible': [('is_center', '=', False)]}"

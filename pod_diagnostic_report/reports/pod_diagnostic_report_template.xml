@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template
-        id="medical_diagnostic_report_template"
-        inherit_id="medical_diagnostic_report.medical_diagnostic_report_template_base"
+        id="pod_diagnostic_report_template"
+        inherit_id="pod_diagnostic_report.pod_diagnostic_report_template_base"
         primary="True"
     >
         <xpath expr="//t[@t-set='lang']" position="attributes">
             <attribute name="t-value">o.lang</attribute>
         </xpath>
         <xpath
-            expr="//t[@t-call='medical_diagnostic_report.diagnostic_report_base_layout']"
+            expr="//t[@t-call='pod_diagnostic_report.diagnostic_report_base_layout']"
             position="attributes"
         >
             <attribute
                 name="t-call"
-            >medical_diagnostic_report.diagnostic_report_layout</attribute>
+            >pod_diagnostic_report.diagnostic_report_layout</attribute>
         </xpath>
         <xpath
-            expr="//t[@t-call='medical_diagnostic_report.medical_diagnostic_report_base']"
+            expr="//t[@t-call='pod_diagnostic_report.pod_diagnostic_report_base']"
             position="attributes"
         >
             <attribute
                 name="t-call"
-            >medical_diagnostic_report.medical_diagnostic_report_template_single</attribute>
+            >pod_diagnostic_report.pod_diagnostic_report_template_single</attribute>
         </xpath>
     </template>
     <template
         id="diagnostic_report_layout"
-        inherit_id="medical_diagnostic_report.diagnostic_report_base_layout"
+        inherit_id="pod_diagnostic_report.diagnostic_report_base_layout"
         primary="True"
     >
         <xpath expr="//div[@name='patient_id']" position="inside">
@@ -44,8 +44,8 @@
         </xpath>
     </template>
     <template
-        id="medical_diagnostic_report_template_single"
-        inherit_id="medical_diagnostic_report.medical_diagnostic_report_base"
+        id="pod_diagnostic_report_template_single"
+        inherit_id="pod_diagnostic_report.pod_diagnostic_report_base"
         primary="True"
     >
         <xpath expr="//t[@t-set='observations']" position="attributes">

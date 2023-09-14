@@ -3,10 +3,10 @@
    :alt: License: LGPL-3
 
 ====================
-Medical Practitioner
+Podiatry Practitioner
 ====================
 
-This module adds medical practitioners.
+This module adds pod practitioners.
 
 Practitioner covers all individuals who are engaged in the healthcare process
 and healthcare-related services as part of their formal responsibilities.
@@ -19,7 +19,7 @@ Practitioners include (but are not limited to):
 * Physicians, dentists, pharmacists
 * Physician assistants, nurses, scribes
 * Midwives, dietitians, therapists, optometrists, paramedics
-* Medical technicians, laboratory scientists, prosthetic technicians,
+* Podiatry technicians, laboratory scientists, prosthetic technicians,
   radiographers
 * Social workers, professional home carers, official volunteers
 * Receptionists handling patient registration
@@ -33,16 +33,16 @@ For more information about FHIR Practitioner Role visit: http://hl7.org/fhir/pra
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Administration' activate 'Practitioner'.
 
 Usage
 =====
 
-#. Go to 'Medical / Configuration / Roles'
+#. Go to 'Podiatry / Configuration / Roles'
 #. Create a new role by providing a name and a description.
 #. Click 'Save'.
-#. Go to 'Medical / Administration / Practitioners'
+#. Go to 'Podiatry / Administration / Practitioners'
 #. Click 'Create' by providing a name. Choose whether if the practitioner is
    an internal employee (Internal Entity) or external employee (External
    Entity). Below this, you can choose the roles this practitioner has.
@@ -66,7 +66,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 * Patient: `Icons land <http://www.icons-land.com/>`_
 

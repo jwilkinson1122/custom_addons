@@ -15,7 +15,7 @@ class PlanDefinition(models.Model):
     _description = "Plan Definition"
     _order = "name"
     _parent_order = "name"
-    _inherit = ["mail.thread", "mail.activity.mixin", "medical.abstract"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "pod.abstract"]
 
     name = fields.Char(
         string="Name",
@@ -94,7 +94,7 @@ class PlanDefinition(models.Model):
         result = {}
         if (
             self.env.user._has_group(
-                "medical_workflow." "group_main_activity_plan_definition"
+                "pod_workflow." "group_main_activity_plan_definition"
             )
             and self.activity_definition_id
         ):

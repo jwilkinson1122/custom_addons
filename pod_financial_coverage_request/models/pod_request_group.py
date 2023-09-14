@@ -6,9 +6,9 @@ from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
 
-class MedicalRequestGroup(models.Model):
-    _name = "medical.request.group"
-    _inherit = ["medical.request.group", "medical.request"]
+class PodiatryRequestGroup(models.Model):
+    _name = "pod.request.group"
+    _inherit = ["pod.request.group", "pod.request"]
 
     can_change_plan = fields.Boolean(compute="_compute_can_change_plan")
     child_model = fields.Char()
@@ -35,8 +35,8 @@ class MedicalRequestGroup(models.Model):
     def check_authorization_action(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_financial_coverage_request."
-            "medical_request_group_check_authorization_action"
+            "pod_financial_coverage_request."
+            "pod_request_group_check_authorization_action"
         )
         ctx = safe_eval(result["context"]) or {}
         ctx.update(self._get_authorization_context())

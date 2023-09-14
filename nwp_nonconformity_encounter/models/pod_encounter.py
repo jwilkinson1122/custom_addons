@@ -4,6 +4,6 @@
 from odoo import models
 
 
-class MedicalEncounter(models.Model):
-    _name = "medical.encounter"
-    _inherit = ["medical.encounter", "mgmtsystem.quality.issue.abstract"]
+class PodiatryEncounter(models.Model):
+    _name = "pod.encounter"
+    _inherit = ["pod.encounter", "mgmtsystem.quality.issue.abstract"]

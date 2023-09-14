@@ -4,20 +4,20 @@ from odoo import _, api, models
 from odoo.tools.safe_eval import safe_eval
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     def find_encounter_by_barcode(self, barcode):
         encounter = self.search([("internal_identifier", "=", barcode)])
         if not encounter:
-            document = self.env["medical.document.reference"].search(
+            document = self.env["pod.document.reference"].search(
                 [("internal_identifier", "=", barcode)]
             )
             if document:
                 encounter = document.encounter_id
         if not encounter:
             result = self.env["ir.actions.act_window"]._for_xml_id(
-                "cb_medical_views.encounter_find_by_barcode"
+                "nwp_pod_views.encounter_find_by_barcode"
             )
             context = safe_eval(result["context"])
             context.update(
@@ -29,9 +29,9 @@ class MedicalEncounter(models.Model):
             result["context"] = json.dumps(context)
             return result
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
-        res = self.env.ref("medical_encounter.medical_encounter_form", False)
+        res = self.env.ref("pod_encounter.pod_encounter_form", False)
         result["views"] = [(res and res.id or False, "form")]
         result["res_id"] = encounter.id
         return result

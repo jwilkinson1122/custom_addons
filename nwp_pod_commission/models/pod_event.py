@@ -5,6 +5,6 @@
 from odoo import models
 
 
-class MedicalEvent(models.AbstractModel):
-    _name = "medical.event"
-    _inherit = ["medical.event", "medical.commission.action"]
+class PodiatryEvent(models.AbstractModel):
+    _name = "pod.event"
+    _inherit = ["pod.event", "pod.commission.action"]

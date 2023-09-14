@@ -12,15 +12,15 @@ class CreateImpressionFromEncounter(models.TransientModel):
     _description = "Create Impression From Encounter"
 
     patient_id = fields.Many2one(
-        "medical.patient", required=True, related="encounter_id.patient_id"
+        "pod.patient", required=True, related="encounter_id.patient_id"
     )
     # The field patient_id is used for the domain of the encounter_id.
     # This way, even if coming from the view encounter, the default encounter
     # is the current but can be changed.
 
-    specialty_id = fields.Many2one("medical.specialty", required=True)
+    specialty_id = fields.Many2one("pod.specialty", required=True)
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         required=True,
     )
     show_encounter_warning = fields.Boolean(default=False)
@@ -37,7 +37,7 @@ class CreateImpressionFromEncounter(models.TransientModel):
 
     def generate(self):
         self.ensure_one()
-        action = self.env["medical.clinical.impression"].get_formview_action()
+        action = self.env["pod.clinical.impression"].get_formview_action()
         action["context"] = self._get_impression_vals()
         return action
 

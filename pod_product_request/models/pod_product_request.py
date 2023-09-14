@@ -7,11 +7,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProductRequest(models.Model):
+class PodiatryProductRequest(models.Model):
 
-    _name = "medical.product.request"
-    _description = "Medical Product Request"
-    _inherit = "medical.abstract"
+    _name = "pod.product.request"
+    _description = "Podiatry Product Request"
+    _inherit = "pod.abstract"
     _rec_name = "internal_identifier"
 
     name = fields.Char()
@@ -30,19 +30,19 @@ class MedicalProductRequest(models.Model):
     # Fhir Concept: Status
 
     request_order_id = fields.Many2one(
-        comodel_name="medical.product.request.order"
+        comodel_name="pod.product.request.order"
     )
 
     product_type = fields.Selection(
-        selection=[("medication", "Medication"), ("device", "Device")],
-        related="medical_product_template_id.product_type",
+        selection=[("device", "Device"), ("device", "Device")],
+        related="pod_product_template_id.product_type",
     )
 
     category = fields.Selection(
         selection=[("inpatient", "Inpatient"), ("discharge", "Discharge")],
-        help="'Inpatient' includes requests for medications to be "
+        help="'Inpatient' includes requests for devices to be "
         "administered or consumed in an inpatient or acute care setting "
-        " 'Discharge' Includes requests for medications created when "
+        " 'Discharge' Includes requests for devices created when "
         "the patient is being released from a facility ",
         compute="_compute_category_from_request_order_id",
         store=True,
@@ -51,27 +51,27 @@ class MedicalProductRequest(models.Model):
     # Fhir Concept:Category
     # Category, patient_id and encounter_id are done with computes
     # and setting store=True and readonly=False
-    # to be able to create medical.product.requests without an order
+    # to be able to create pod.product.requests without an order
 
     validation_date = fields.Datetime(copy=False)
     # Fhir Concept: authoredOn
 
-    medical_product_template_id = fields.Many2one(
-        comodel_name="medical.product.template", required=True
+    pod_product_template_id = fields.Many2one(
+        comodel_name="pod.product.template", required=True
     )
-    # Fhir Concept: medication
+    # Fhir Concept: device
 
     # Product and quantity to dispense/administrate
-    medical_product_id = fields.Many2one(
-        comodel_name="medical.product.product",
-        compute="_compute_medical_product_id",
+    pod_product_id = fields.Many2one(
+        comodel_name="pod.product.product",
+        compute="_compute_pod_product_id",
     )
     quantity_to_dispense = fields.Integer(
-        compute="_compute_medical_product_id"
+        compute="_compute_pod_product_id"
     )
 
     patient_id = fields.Many2one(
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         compute="_compute_patient_id_from_request_order_id",
         store=True,
         readonly=False,
@@ -79,7 +79,7 @@ class MedicalProductRequest(models.Model):
     # Fhir Concept: Subject
 
     encounter_id = fields.Many2one(
-        comodel_name="medical.encounter",
+        comodel_name="pod.encounter",
         compute="_compute_encounter_id_from_request_order_id",
         store=True,
         readonly=False,
@@ -115,7 +115,7 @@ class MedicalProductRequest(models.Model):
     )
 
     administration_route_id = fields.Many2one(
-        comodel_name="medical.administration.route"
+        comodel_name="pod.administration.route"
     )
     administration_route_domain = fields.Char(
         compute="_compute_administration_route_domain",
@@ -124,7 +124,7 @@ class MedicalProductRequest(models.Model):
     )
 
     product_administration_ids = fields.One2many(
-        comodel_name="medical.product.administration",
+        comodel_name="pod.product.administration",
         inverse_name="product_request_id",
         domain=[("state", "in", ["completed", "cancelled"])],
     )
@@ -143,7 +143,7 @@ class MedicalProductRequest(models.Model):
     observations = fields.Text()
 
     @api.depends(
-        "request_order_id", "patient_id", "medical_product_template_id"
+        "request_order_id", "patient_id", "pod_product_template_id"
     )
     def _compute_patient_id_from_request_order_id(self):
         for rec in self:
@@ -158,7 +158,7 @@ class MedicalProductRequest(models.Model):
         "request_order_id",
         "patient_id",
         "encounter_id",
-        "medical_product_template_id",
+        "pod_product_template_id",
     )
     def _compute_encounter_id_from_request_order_id(self):
         for rec in self:
@@ -171,9 +171,9 @@ class MedicalProductRequest(models.Model):
             else:
                 rec.encounter_id = False
 
-    # Without the medical_product_template_id dependency it was not computed
+    # Without the pod_product_template_id dependency it was not computed
     @api.depends(
-        "request_order_id", "patient_id", "medical_product_template_id"
+        "request_order_id", "patient_id", "pod_product_template_id"
     )
     def _compute_category_from_request_order_id(self):
         for rec in self:
@@ -186,31 +186,31 @@ class MedicalProductRequest(models.Model):
 
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].next_by_code("medical.product.request")
+            self.env["ir.sequence"].next_by_code("pod.product.request")
             or "/"
         )
 
-    @api.onchange("medical_product_template_id")
+    @api.onchange("pod_product_template_id")
     def _get_default_dose_uom_id(self):
-        template = self.medical_product_template_id
+        template = self.pod_product_template_id
         if template and template.form_id:
             if template.form_id.uom_ids:
                 self.dose_uom_id = template.form_id.uom_ids[0]
         else:
             self.dose_uom_id = self.env.ref("uom.product_uom_unit")
 
-    @api.onchange("medical_product_template_id")
+    @api.onchange("pod_product_template_id")
     def _get_default_administration_route_id(self):
-        template = self.medical_product_template_id
+        template = self.pod_product_template_id
         if template and template.administration_route_ids:
             self.administration_route_id = template.administration_route_ids[0]
         else:
             self.administration_route_id = False
 
-    @api.depends("medical_product_template_id")
+    @api.depends("pod_product_template_id")
     def _compute_dose_uom_domain(self):
         for rec in self:
-            template = rec.medical_product_template_id
+            template = rec.pod_product_template_id
             if template and template.form_id:
                 rec.dose_uom_domain = json.dumps(
                     [("id", "in", template.form_id.uom_ids.ids)]
@@ -222,10 +222,10 @@ class MedicalProductRequest(models.Model):
                 )
                 rec.dose_uom_domain = json.dumps([("id", "in", uoms.ids)])
 
-    @api.depends("medical_product_template_id")
+    @api.depends("pod_product_template_id")
     def _compute_administration_route_domain(self):
         for rec in self:
-            template = rec.medical_product_template_id
+            template = rec.pod_product_template_id
             if template and template.administration_route_ids:
                 rec.administration_route_domain = json.dumps(
                     [("id", "in", template.administration_route_ids.ids)]
@@ -242,18 +242,18 @@ class MedicalProductRequest(models.Model):
                 ).ids
             )
 
-    def action_view_medical_product_administration(self):
+    def action_view_pod_product_administration(self):
         action = self.env.ref(
-            "medical_product_request.medical_product_administration_act_window"
+            "pod_product_request.pod_product_administration_act_window"
         ).read()[0]
         action["domain"] = [("product_request_id", "=", self.id)]
         if len(self.product_administration_ids) == 1:
-            view = "medical_product_request.medical_product_administration_form_view"
+            view = "pod_product_request.pod_product_administration_form_view"
             action["views"] = [(self.env.ref(view).id, "form")]
             action["res_id"] = self.product_administration_ids.id
         return action
 
-    def _get_medical_product_administration_values(self):
+    def _get_pod_product_administration_values(self):
         route = (
             self.administration_route_id.id
             if self.administration_route_id
@@ -261,7 +261,7 @@ class MedicalProductRequest(models.Model):
         )
         return {
             "product_request_id": self.id,
-            "medical_product_template_id": self.medical_product_template_id.id,
+            "pod_product_template_id": self.pod_product_template_id.id,
             "patient_id": self.patient_id.id,
             "encounter_id": self.encounter_id.id
             if self.encounter_id
@@ -271,18 +271,18 @@ class MedicalProductRequest(models.Model):
             "administration_route_id": route,
         }
 
-    def create_medical_product_administration(self):
+    def create_pod_product_administration(self):
         self.ensure_one()
         view_id = self.env.ref(
-            "medical_product_request.medical_product_administration_pop_up_form_view"
+            "pod_product_request.pod_product_administration_pop_up_form_view"
         ).id
         ctx = dict(self._context)
-        vals = self._get_medical_product_administration_values()
+        vals = self._get_pod_product_administration_values()
         for key in vals:
             ctx["default_%s" % key] = vals[key]
         return {
             "type": "ir.actions.act_window",
-            "res_model": "medical.product.administration",
+            "res_model": "pod.product.administration",
             "name": _("Insert administered quantity and validate"),
             "view_type": "form",
             "view_mode": "form",
@@ -344,7 +344,7 @@ class MedicalProductRequest(models.Model):
             else:
                 raise ValidationError(
                     _(
-                        "You cant not cancel a medical product request "
+                        "You cant not cancel a pod product request "
                         "that has administrations completed"
                     )
                 )
@@ -358,13 +358,13 @@ class MedicalProductRequest(models.Model):
     @api.constrains("rate_quantity")
     def _check_rate_quantity(self):
         for rec in self:
-            if rec.product_type == "medication" and rec.rate_quantity < 1:
+            if rec.product_type == "device" and rec.rate_quantity < 1:
                 raise ValidationError(_("Rate must be positive"))
 
     @api.constrains("duration")
     def _check_duration(self):
         for rec in self:
-            if rec.product_type == "medication" and rec.duration < 1:
+            if rec.product_type == "device" and rec.duration < 1:
                 raise ValidationError(_("Duration must be positive"))
 
     # This is done just for security to avoid infinite loops.
@@ -398,7 +398,7 @@ class MedicalProductRequest(models.Model):
         return template.product_ids[0].id, self.dose_quantity
 
     @api.depends(
-        "medical_product_template_id",
+        "pod_product_template_id",
         "dose_quantity",
         "dose_uom_id",
         "rate_quantity",
@@ -406,9 +406,9 @@ class MedicalProductRequest(models.Model):
         "duration",
         "duration_uom_id",
     )
-    def _compute_medical_product_id(self):
+    def _compute_pod_product_id(self):
         for rec in self:
-            template = rec.medical_product_template_id
+            template = rec.pod_product_template_id
             product_id = False
             qty = 0
             if (
@@ -416,8 +416,8 @@ class MedicalProductRequest(models.Model):
                 and template
                 and template.product_ids
             ):
-                if template.product_type == "medication":
-                    # Search the most appropriate medical_product_id
+                if template.product_type == "device":
+                    # Search the most appropriate pod_product_id
                     # and quantity to dispense
                     product_id, qty = rec._select_product_and_quantity(
                         template
@@ -425,5 +425,5 @@ class MedicalProductRequest(models.Model):
                 else:
                     product_id = template.product_ids[0].id
                     qty = rec.dose_quantity
-            rec.medical_product_id = product_id
+            rec.pod_product_id = product_id
             rec.quantity_to_dispense = qty

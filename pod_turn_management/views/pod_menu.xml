@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <menuitem
-        id="medical_turn_root"
+        id="pod_turn_root"
         name="Turns"
-        parent="medical_base.medical_root"
+        parent="pod_base.pod_root"
         sequence="25"
     />
 </odoo>

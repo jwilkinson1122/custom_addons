@@ -4,20 +4,20 @@
 from odoo import models
 
 
-class MedicalRequestGroup(models.Model):
+class PodiatryRequestGroup(models.Model):
 
-    _inherit = "medical.request.group"
+    _inherit = "pod.request.group"
 
     def check_authorization_action(self):
-        result = super(MedicalRequestGroup, self).check_authorization_action()
+        result = super(PodiatryRequestGroup, self).check_authorization_action()
         if (
             not self.authorization_method_id.check_required
             or not self.authorization_checked
         ):
             return result
         new_result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_authorization."
-            "medical_request_group_uncheck_authorization_act_window"
+            "pod_authorization."
+            "pod_request_group_uncheck_authorization_act_window"
         )
         new_result["context"] = result["context"]
         return new_result

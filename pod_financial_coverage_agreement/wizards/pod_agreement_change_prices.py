@@ -5,9 +5,9 @@
 from odoo import _, fields, models
 
 
-class MedicalAgreementChangePrices(models.TransientModel):
-    _name = "medical.agreement.change.prices"
-    _description = "medical.agreement.change.prices"
+class PodiatryAgreementChangePrices(models.TransientModel):
+    _name = "pod.agreement.change.prices"
+    _description = "pod.agreement.change.prices"
 
     difference = fields.Float(
         string="Indicate the percentage to apply to the agreement"
@@ -15,7 +15,7 @@ class MedicalAgreementChangePrices(models.TransientModel):
 
     def change_prices(self):
         context = dict(self._context or {})
-        agreements = self.env["medical.coverage.agreement"].browse(
+        agreements = self.env["pod.coverage.agreement"].browse(
             context.get("active_ids")
         )
         for agreement in agreements:

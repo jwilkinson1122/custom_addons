@@ -13,7 +13,7 @@ class ProductProduct(models.Model):
 
     def _get_activity_vals(self):
         model = self.env.ref(
-            "medical_clinical_procedure.model_medical_procedure_request"
+            "pod_clinical_procedure.model_pod_procedure_request"
         )
         return {
             "name": self.name,
@@ -24,7 +24,7 @@ class ProductProduct(models.Model):
 
     def get_activity(self):
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_workflow.workflow_activity_definition_action"
+            "pod_workflow.workflow_activity_definition_action"
         )
         result["domain"] = [("service_id", "=", self.id)]
         if len(self.activity_definition_ids) == 1:

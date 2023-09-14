@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class MedicalEvent(models.AbstractModel):
-    _name = "medical.event"
-    _inherit = ["medical.event", "medical.cb.identifier"]
+class PodiatryEvent(models.AbstractModel):
+    _name = "pod.event"
+    _inherit = ["pod.event", "pod.nwp.identifier"]
 
-    encounter_id = fields.Many2one("medical.encounter", readonly=True)
+    encounter_id = fields.Many2one("pod.encounter", readonly=True)

@@ -5,27 +5,27 @@
 from odoo import api, fields, models
 
 
-class MedicalAbstractConceptMultiparent(models.AbstractModel):
-    # Medical Code system concept
+class PodiatryAbstractConceptMultiparent(models.AbstractModel):
+    # Podiatry Code system concept
     # (https://www.hl7.org/fhir/codesystem.html)
-    _name = "medical.abstract.concept.multiparent"
-    _inherit = "medical.abstract.concept"
-    _description = "medical abstract concept multiparent"
+    _name = "pod.abstract.concept.multiparent"
+    _inherit = "pod.abstract.concept"
+    _description = "pod abstract concept multiparent"
 
     parent_ids = fields.Many2many(
-        comodel_name="medical.abstract.concept",
-        relation="medical_abstract_concept_is_a",
+        comodel_name="pod.abstract.concept",
+        relation="pod_abstract_concept_is_a",
         column1="parent",
         column2="child",
     )
     child_ids = fields.Many2many(
-        comodel_name="medical.abstract.concept", compute="_compute_child_ids"
+        comodel_name="pod.abstract.concept", compute="_compute_child_ids"
     )  # FHIR Field: concept/concept
     full_parent_ids = fields.Many2many(
-        comodel_name="medical.abstract.concept", compute="_compute_child_ids"
+        comodel_name="pod.abstract.concept", compute="_compute_child_ids"
     )
     full_child_ids = fields.Many2many(
-        comodel_name="medical.abstract.concept",
+        comodel_name="pod.abstract.concept",
         compute="_compute_full_child_ids",
     )
 

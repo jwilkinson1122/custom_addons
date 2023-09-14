@@ -10,12 +10,12 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_location.res_partner_view_form"
+            ref="pod_administration_location.res_partner_view_form"
         />
 
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
         <field name="arch" type="xml">
-            <group name="medical_config" position="after">
+            <group name="pod_config" position="after">
                 <group name="stock_location_group">
                     <field name="stock_location_id" />
                     <field name="stock_picking_type_id" />

@@ -5,7 +5,7 @@ from odoo.fields import Date, Datetime
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalGuard(TransactionCase):
+class TestPodiatryGuard(TransactionCase):
     def setUp(self):
         super().setUp()
         self.journal = self.env["account.journal"].search(
@@ -23,7 +23,7 @@ class TestMedicalGuard(TransactionCase):
             {
                 "name": "Center",
                 "is_center": True,
-                "is_medical": True,
+                "is_pod": True,
                 "guard_journal_id": self.journal.id,
             }
         )
@@ -31,12 +31,12 @@ class TestMedicalGuard(TransactionCase):
             {
                 "name": "Practitioner",
                 "is_practitioner": True,
-                "is_medical": True,
+                "is_pod": True,
             }
         )
 
     def test_complex_plan(self):
-        plan = self.env["medical.guard.plan"].create(
+        plan = self.env["pod.guard.plan"].create(
             {
                 "location_id": self.center.id,
                 "product_id": self.product.id,
@@ -48,12 +48,12 @@ class TestMedicalGuard(TransactionCase):
             }
         )
         self.assertFalse(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
         plan.monthday = "1-40"
         date = Date.from_string(Date.today()).replace(day=1)
         with self.assertRaises(UserError):
-            self.env["medical.guard.plan.apply"].create(
+            self.env["pod.guard.plan.apply"].create(
                 {
                     "start_date": Date.to_string(date),
                     "end_date": Date.to_string(date + timedelta(days=1)),
@@ -61,7 +61,7 @@ class TestMedicalGuard(TransactionCase):
             ).run()
         plan.monthday = "1%"
         with self.assertRaises(UserError):
-            self.env["medical.guard.plan.apply"].create(
+            self.env["pod.guard.plan.apply"].create(
                 {
                     "start_date": Date.to_string(date),
                     "end_date": Date.to_string(date + timedelta(days=1)),
@@ -69,45 +69,45 @@ class TestMedicalGuard(TransactionCase):
             ).run()
         plan.monthday = "AB/2"
         with self.assertRaises(UserError):
-            self.env["medical.guard.plan.apply"].create(
+            self.env["pod.guard.plan.apply"].create(
                 {
                     "start_date": Date.to_string(date),
                     "end_date": Date.to_string(date + timedelta(days=1)),
                 }
             ).run()
         plan.monthday = "*/2"
-        self.env["medical.guard.plan.apply"].create(
+        self.env["pod.guard.plan.apply"].create(
             {
                 "start_date": Date.to_string(date + timedelta(days=1)),
                 "end_date": Date.to_string(date + timedelta(days=1)),
             }
         ).run()
         self.assertFalse(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
         plan.monthday = "15-20"
-        self.env["medical.guard.plan.apply"].create(
+        self.env["pod.guard.plan.apply"].create(
             {
                 "start_date": Date.to_string(date),
                 "end_date": Date.to_string(date + timedelta(days=1)),
             }
         ).run()
         self.assertFalse(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
         plan.monthday = "15-5"
-        self.env["medical.guard.plan.apply"].create(
+        self.env["pod.guard.plan.apply"].create(
             {
                 "start_date": Date.to_string(date),
                 "end_date": Date.to_string(date + timedelta(days=1)),
             }
         ).run()
         self.assertTrue(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
 
     def check_apply_plan(self, key, value, modulus, difference):
-        plan = self.env["medical.guard.plan"].create(
+        plan = self.env["pod.guard.plan"].create(
             {
                 "location_id": self.center.id,
                 "product_id": self.product.id,
@@ -119,27 +119,27 @@ class TestMedicalGuard(TransactionCase):
             }
         )
         self.assertFalse(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
         plan.write({key: ((value + 1) % modulus) + difference})
-        self.env["medical.guard.plan.apply"].create(
+        self.env["pod.guard.plan.apply"].create(
             {
                 "start_date": Date.today(),
                 "end_date": Date.to_string(Date.from_string(Date.today())),
             }
         ).run()
         self.assertFalse(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
         plan.write({key: value})
-        self.env["medical.guard.plan.apply"].create(
+        self.env["pod.guard.plan.apply"].create(
             {
                 "start_date": Date.today(),
                 "end_date": Date.to_string(Date.from_string(Date.today())),
             }
         ).run()
         self.assertTrue(
-            self.env["medical.guard"].search([("plan_guard_id", "=", plan.id)])
+            self.env["pod.guard"].search([("plan_guard_id", "=", plan.id)])
         )
 
     def test_apply_weekday_plan(self):
@@ -152,7 +152,7 @@ class TestMedicalGuard(TransactionCase):
         self.check_apply_plan("monthday", Date.from_string(Date.today()).day, 25, 1)
 
     def test_completion(self):
-        guard = self.env["medical.guard"].create(
+        guard = self.env["pod.guard"].create(
             {
                 "product_id": self.product.id,
                 "location_id": self.center.id,
@@ -169,7 +169,7 @@ class TestMedicalGuard(TransactionCase):
         self.assertFalse(guard.invoice_line_ids)
         guard.flush()
 
-        self.env["medical.guard.invoice"].create(
+        self.env["pod.guard.invoice"].create(
             {"date_from": Date.today(), "date_to": Date.today()}
         ).run()
         guard.refresh()

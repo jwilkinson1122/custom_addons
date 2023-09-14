@@ -4,9 +4,9 @@
 from odoo import models
 
 
-class MedicalDiagnosticReportExpand(models.TransientModel):
+class PodiatryDiagnosticReportExpand(models.TransientModel):
 
-    _inherit = "medical.diagnostic.report.expand"
+    _inherit = "pod.diagnostic.report.expand"
 
     def _merge_new_vals(self, vals):
         new_vals = super()._merge_new_vals(self, vals)

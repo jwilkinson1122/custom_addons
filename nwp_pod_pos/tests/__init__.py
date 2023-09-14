@@ -1,2 +1,2 @@
 from . import common
-from . import test_medical_pos
+from . import test_pod_pos

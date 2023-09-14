@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
 <odoo>
-    <record id="action_medical_preinvoice_group_report" model="ir.actions.report">
+    <record id="action_pod_preinvoice_group_report" model="ir.actions.report">
         <field name="name">Preinvoice Report</field>
         <field name="model">sale.preinvoice.group</field>
         <field name="report_type">qweb-pdf</field>
         <field
             name="report_name"
-        >cb_medical_sale_invoice_group_method.report_medical_preinvoice_group</field>
+        >nwp_pod_sale_invoice_group_method.report_pod_preinvoice_group</field>
     </record>
 
-    <template id="report_medical_preinvoice_group">
+    <template id="report_pod_preinvoice_group">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">

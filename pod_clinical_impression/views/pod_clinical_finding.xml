@@ -5,12 +5,12 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_clinical_finding_view_tree" model="ir.ui.view">
-        <field name="name">medical.clinical.finding.view.tree</field>
-        <field name="model">medical.clinical.finding</field>
+    <record id="pod_clinical_finding_view_tree" model="ir.ui.view">
+        <field name="name">pod.clinical.finding.view.tree</field>
+        <field name="model">pod.clinical.finding</field>
         <field
             name="inherit_id"
-            ref="medical_clinical_condition.medical_clinical_finding_view_tree"
+            ref="pod_clinical_condition.pod_clinical_finding_view_tree"
         />
         <field name="arch" type="xml">
             <field name="create_warning" position="after">
@@ -18,12 +18,12 @@
             </field>
         </field>
     </record>
-    <record id="medical_clinical_finding_view_form" model="ir.ui.view">
-        <field name="name">medical.clinical.finding.view.form</field>
-        <field name="model">medical.clinical.finding</field>
+    <record id="pod_clinical_finding_view_form" model="ir.ui.view">
+        <field name="name">pod.clinical.finding.view.form</field>
+        <field name="model">pod.clinical.finding</field>
         <field
             name="inherit_id"
-            ref="medical_clinical_condition.medical_clinical_finding_view_form"
+            ref="pod_clinical_condition.pod_clinical_finding_view_form"
         />
         <field name="arch" type="xml">
             <field name="create_warning" position="after">

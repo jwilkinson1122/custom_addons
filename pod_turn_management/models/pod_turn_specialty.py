@@ -9,14 +9,14 @@ from pytz import utc
 from odoo import fields, models
 
 
-class MedicalTurnSpecialty(models.Model):
-    _name = "medical.turn.specialty"
+class PodiatryTurnSpecialty(models.Model):
+    _name = "pod.turn.specialty"
     _description = "Turn Specialty"
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     rule_ids = fields.One2many(
-        "medical.turn.specialty.rule",
+        "pod.turn.specialty.rule",
         inverse_name="turn_specialty_id",
         copy=True,
     )
@@ -26,10 +26,10 @@ class MedicalTurnSpecialty(models.Model):
         string="Practitioners",
         domain=[("is_practitioner", "=", True)],
     )
-    turn_tag_ids = fields.Many2many(comodel_name="medical.turn.tag")
+    turn_tag_ids = fields.Many2many(comodel_name="pod.turn.tag")
 
     def _execute_rules(self, start_date, end_date):
-        results = self.env["medical.turn"]
+        results = self.env["pod.turn"]
         rules = self.mapped("rule_ids")
         for day in range(0, (end_date - start_date).days):
             date = start_date + timedelta(days=day)
@@ -40,12 +40,12 @@ class MedicalTurnSpecialty(models.Model):
         return results
 
 
-class MedicalTurnSpecialtyRule(models.Model):
-    _name = "medical.turn.specialty.rule"
-    _description = "medical.turn.specialty.rule"
+class PodiatryTurnSpecialtyRule(models.Model):
+    _name = "pod.turn.specialty.rule"
+    _description = "pod.turn.specialty.rule"
 
     turn_specialty_id = fields.Many2one(
-        "medical.turn.specialty", required=True, ondelete="cascade"
+        "pod.turn.specialty", required=True, ondelete="cascade"
     )
     default_practitioner_id = fields.Many2one("res.partner")
     dayofweek = fields.Selection(
@@ -78,7 +78,7 @@ class MedicalTurnSpecialtyRule(models.Model):
             datetime.combine(date, time(0, 0, 0, 0, tzinfo=None))
             + timedelta(hours=self.start_hour)
         ).replace(tzinfo=tz.gettz(utz))
-        return self.env["medical.turn"].create(self._generate_record_vals(rule_date))
+        return self.env["pod.turn"].create(self._generate_record_vals(rule_date))
 
     def _generate_record_vals(self, rule_date):
         return {

@@ -9,10 +9,10 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     def recompute_lines_agents(self):
-        # Commission on medical sale orders will not be managed by the
+        # Commission on pod sale orders will not be managed by the
         # recompute function
         return super(
-            AccountMove, self.filtered(lambda r: not r.is_medical)
+            AccountMove, self.filtered(lambda r: not r.is_pod)
         ).recompute_lines_agents()
 
 
@@ -33,12 +33,12 @@ class AccountMoveLine(models.Model):
 class AccountInvoiceLineAgent(models.Model):
     _inherit = "account.invoice.line.agent"
 
-    procedure_id = fields.Many2one("medical.procedure", readonly=True)
+    procedure_id = fields.Many2one("pod.procedure", readonly=True)
     laboratory_event_id = fields.Many2one(
-        "medical.laboratory.event", string="Laboratory Event"
+        "pod.laboratory.event", string="Laboratory Event"
     )
     laboratory_request_id = fields.Many2one(
-        "medical.laboratory.request", string="Laboratory Request"
+        "pod.laboratory.request", string="Laboratory Request"
     )
 
     @api.constrains("agent_id", "amount")

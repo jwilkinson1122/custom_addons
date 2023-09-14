@@ -5,10 +5,10 @@
 from odoo.tests import TransactionCase
 
 
-class TestMedication(TransactionCase):
+class TestDevice(TransactionCase):
     def setUp(self):
-        super(TestMedication, self).setUp()
-        self.atc_code = self.env["medical.atc.concept"].search(
+        super(TestDevice, self).setUp()
+        self.atc_code = self.env["pod.atc.concept"].search(
             [("parent_id", "!=", False)], limit=1
         )
 

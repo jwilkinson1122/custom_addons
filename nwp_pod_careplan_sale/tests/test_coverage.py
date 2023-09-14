@@ -8,19 +8,19 @@ from odoo.tests.common import TransactionCase
 class TestCoverage(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
         self.payor = self.env["res.partner"].create(
-            {"is_medical": "True", "name": "Payor", "is_payor": True}
+            {"is_pod": "True", "name": "Payor", "is_payor": True}
         )
-        self.template = self.env["medical.coverage.template"].create(
+        self.template = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Coverage"}
         )
-        self.template_2 = self.env["medical.coverage.template"].create(
+        self.template_2 = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Coverage 2"}
         )
 
     def test_activate_coverage(self):
-        coverage = self.env["medical.coverage"].create(
+        coverage = self.env["pod.coverage"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_template_id": self.template.id,
@@ -36,7 +36,7 @@ class TestCoverage(TransactionCase):
     def test_coverage(self):
         coverage = self.patient.get_coverage(
             self.template,
-            self.env["medical.coverage"],
+            self.env["pod.coverage"],
             subscriber_id="1",
             magnetic_str="magnetic",
         )
@@ -44,7 +44,7 @@ class TestCoverage(TransactionCase):
         self.assertTrue(coverage)
         coverage_2 = self.patient.get_coverage(
             self.template,
-            self.env["medical.coverage"],
+            self.env["pod.coverage"],
             subscriber_id="1",
             magnetic_str="magnetic2",
         )

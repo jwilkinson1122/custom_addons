@@ -4,9 +4,9 @@
 from odoo import fields, models
 
 
-class MedicalDiagnosticReportTemplate(models.Model):
+class PodiatryDiagnosticReportTemplate(models.Model):
 
-    _inherit = "medical.diagnostic.report.template"
+    _inherit = "pod.diagnostic.report.template"
 
     graph_python_code = fields.Text()
     html_code = fields.Text(translate=True)

@@ -8,4 +8,4 @@ from odoo import fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    medical_commission = fields.Boolean(string="Medical commission", default=False)
+    pod_commission = fields.Boolean(string="Podiatry commission", default=False)

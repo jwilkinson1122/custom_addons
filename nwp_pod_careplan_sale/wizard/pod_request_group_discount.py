@@ -1,29 +1,29 @@
 from odoo import api, fields, models
 
 
-class MedicalRequestGroupDiscount(models.TransientModel):
-    _name = "medical.request.group.discount"
+class PodiatryRequestGroupDiscount(models.TransientModel):
+    _name = "pod.request.group.discount"
     _description = "Add discount on a request group"
 
     request_group_id = fields.Many2one(
-        "medical.request.group", required=True, readonly=True
+        "pod.request.group", required=True, readonly=True
     )
     discount = fields.Float(required=True, digits="Discount")
-    medical_sale_discount_id = fields.Many2one("medical.sale.discount", required=True)
+    pod_sale_discount_id = fields.Many2one("pod.sale.discount", required=True)
     percentage = fields.Float(
-        related="medical_sale_discount_id.percentage", readonly=True
+        related="pod_sale_discount_id.percentage", readonly=True
     )
     is_fixed = fields.Boolean(
-        related="medical_sale_discount_id.is_fixed", readonly=True
+        related="pod_sale_discount_id.is_fixed", readonly=True
     )
 
-    @api.onchange("medical_sale_discount_id")
+    @api.onchange("pod_sale_discount_id")
     def _onchange_discount(self):
-        self.discount = self.medical_sale_discount_id.percentage
+        self.discount = self.pod_sale_discount_id.percentage
 
     def get_discount_update_vals(self):
         return {
-            "medical_sale_discount_id": self.medical_sale_discount_id.id,
+            "pod_sale_discount_id": self.pod_sale_discount_id.id,
             "discount": self.discount,
         }
 

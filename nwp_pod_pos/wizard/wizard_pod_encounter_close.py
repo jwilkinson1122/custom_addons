@@ -5,9 +5,9 @@
 from odoo import fields, models
 
 
-class WizardMedicalEncounterClose(models.TransientModel):
-    _name = "wizard.medical.encounter.close"
-    _description = "wizard.medical.encounter.close"
+class WizardPodiatryEncounterClose(models.TransientModel):
+    _name = "wizard.pod.encounter.close"
+    _description = "wizard.pod.encounter.close"
 
     pos_session_id = fields.Many2one(
         comodel_name="pos.session",
@@ -16,7 +16,7 @@ class WizardMedicalEncounterClose(models.TransientModel):
         domain=[("state", "=", "opened")],
     )
     encounter_id = fields.Many2one(
-        comodel_name="medical.encounter",
+        comodel_name="pod.encounter",
         string="encounter",
         readonly=True,
         required=True,

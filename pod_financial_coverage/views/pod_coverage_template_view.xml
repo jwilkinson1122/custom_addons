@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_coverage_template_view_tree" model="ir.ui.view">
-        <field name="name">medical.coverage.template.view.tree</field>
-        <field name="model">medical.coverage.template</field>
+    <record id="pod_coverage_template_view_tree" model="ir.ui.view">
+        <field name="name">pod.coverage.template.view.tree</field>
+        <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
@@ -17,9 +17,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_coverage_template_view_form" model="ir.ui.view">
-        <field name="name">medical.coverage.template.view.form</field>
-        <field name="model">medical.coverage.template</field>
+    <record id="pod_coverage_template_view_form" model="ir.ui.view">
+        <field name="name">pod.coverage.template.view.form</field>
+        <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -112,9 +112,9 @@
             </form>
         </field>
     </record>
-    <record id="view_medical_coverage_template_search" model="ir.ui.view">
-        <field name="name">medical.coverage.template.search</field>
-        <field name="model">medical.coverage.template</field>
+    <record id="view_pod_coverage_template_search" model="ir.ui.view">
+        <field name="name">pod.coverage.template.search</field>
+        <field name="model">pod.coverage.template</field>
         <field name="arch" type="xml">
             <search>
                 <field name="internal_identifier" />
@@ -127,10 +127,10 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_coverage_template_action">
+    <record model="ir.actions.act_window" id="pod_coverage_template_action">
         <field name="name">Coverages</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.coverage.template</field>
+        <field name="res_model">pod.coverage.template</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>

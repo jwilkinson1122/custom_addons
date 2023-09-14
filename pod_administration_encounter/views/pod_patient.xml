@@ -2,12 +2,12 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_patient_form_view">
+    <record model="ir.ui.view" id="pod_patient_form_view">
         <field
             name="name"
-        >medical.patient.form (in medical_administration_encounter)</field>
-        <field name="model">medical.patient</field>
-        <field name="inherit_id" ref="medical_base.medical_patient_form" />
+        >pod.patient.form (in pod_administration_encounter)</field>
+        <field name="model">pod.patient</field>
+        <field name="inherit_id" ref="pod_base.pod_patient_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
@@ -27,17 +27,17 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="medical_patient_his_form">
+    <record model="ir.ui.view" id="pod_patient_his_form">
         <field
             name="name"
-        >medical.patient.form (in medical_administration_encounter)</field>
-        <field name="model">medical.patient</field>
-        <field name="inherit_id" ref="medical_base.medical_patient_his_form" />
+        >pod.patient.form (in pod_administration_encounter)</field>
+        <field name="model">pod.patient</field>
+        <field name="inherit_id" ref="pod_base.pod_patient_his_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     type="action"
-                    name="%(medical_administration_encounter.action_encounter_medical_his)s"
+                    name="%(pod_administration_encounter.action_encounter_pod_his)s"
                     class="oe_stat_button"
                     attrs="{'invisible': [('encounter_count', '=', 0)]}"
                     icon="fa-hospital-o"

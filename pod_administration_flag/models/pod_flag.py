@@ -1,15 +1,15 @@
 from odoo import api, fields, models
 
 
-class MedicalFlag(models.Model):
+class PodiatryFlag(models.Model):
     # FHIR Entity: Flag (https://www.hl7.org/fhir/flag.html)
-    _name = "medical.flag"
-    _description = "Medical Flag"
-    _inherit = "medical.abstract"
+    _name = "pod.flag"
+    _description = "Podiatry Flag"
+    _inherit = "pod.abstract"
 
     patient_id = fields.Many2one(
         string="Patient",
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         required=True,
         readonly=True,
         ondelete="restrict",
@@ -17,7 +17,7 @@ class MedicalFlag(models.Model):
         help="Patient name",
     )  # FHIR Field: subject
     active = fields.Boolean(store=True, compute="_compute_active")
-    category_id = fields.Many2one("medical.flag.category", required=True)
+    category_id = fields.Many2one("pod.flag.category", required=True)
     name = fields.Char(related="category_id.name", readonly=True, store=True)
     description = fields.Text(required=True)
     closure_date = fields.Datetime(readonly=True)
@@ -25,7 +25,7 @@ class MedicalFlag(models.Model):
 
     @api.model
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.flag") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.flag") or "/"
 
     @api.depends("name", "internal_identifier")
     def name_get(self):

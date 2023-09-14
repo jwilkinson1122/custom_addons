@@ -3,18 +3,18 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical ATC Codification",
-    "summary": "Medical codification base",
+    "name": "Podiatry ATC Codification",
+    "summary": "Podiatry codification base",
     "version": "15.0.1.0.0",
     "author": "CreuBlanca, ForgeFlow, Odoo Community Association (OCA)",
-    "category": "Medical",
-    "website": "https://github.com/tegin/medical-fhir",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/pod-fhir",
     "license": "LGPL-3",
-    "depends": ["medical_terminology"],
+    "depends": ["pod_terminology"],
     "data": [
         "security/ir.model.access.csv",
         "data/atc_data.xml",
-        "views/medical_atc_concept_views.xml",
+        "views/pod_atc_concept_views.xml",
     ],
     "demo": [],
     "application": False,

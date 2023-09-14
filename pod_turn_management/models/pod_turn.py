@@ -4,11 +4,11 @@
 from odoo import _, api, fields, models
 
 
-class MedicalTurn(models.Model):
-    _name = "medical.turn"
+class PodiatryTurn(models.Model):
+    _name = "pod.turn"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date asc"
-    _description = "Medical Turn"
+    _description = "Podiatry Turn"
 
     center_ids = fields.Many2many(
         string="Centers",
@@ -23,10 +23,10 @@ class MedicalTurn(models.Model):
         tracking=True,
     )
     specialty_id = fields.Many2one(
-        "medical.turn.specialty", tracking=True, required=True
+        "pod.turn.specialty", tracking=True, required=True
     )
     turn_tag_ids = fields.Many2many(
-        comodel_name="medical.turn.tag", related="specialty_id.turn_tag_ids"
+        comodel_name="pod.turn.tag", related="specialty_id.turn_tag_ids"
     )
     date = fields.Datetime(
         required=True,

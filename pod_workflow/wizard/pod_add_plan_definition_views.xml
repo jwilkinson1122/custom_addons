@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_add_plan_definition_form">
-        <field name="name">medical.add.plan.definition.form</field>
-        <field name="model">medical.add.plan.definition</field>
+    <record model="ir.ui.view" id="pod_add_plan_definition_form">
+        <field name="name">pod.add.plan.definition.form</field>
+        <field name="model">pod.add.plan.definition</field>
         <field name="arch" type="xml">
             <form>
                 <group>
@@ -26,9 +26,9 @@
             </form>
         </field>
     </record>
-    <record id="action_medical_add_plan_definition_form" model="ir.actions.act_window">
+    <record id="action_pod_add_plan_definition_form" model="ir.actions.act_window">
         <field name="name">Add Plan definition</field>
-        <field name="res_model">medical.add.plan.definition</field>
+        <field name="res_model">pod.add.plan.definition</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_patient_id': active_id}</field>
         <field name="target">new</field>

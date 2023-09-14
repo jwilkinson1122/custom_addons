@@ -1,3 +1,3 @@
-from . import medical_flag
-from . import medical_flag_category
-from . import medical_patient
+from . import pod_flag
+from . import pod_flag_category
+from . import pod_patient

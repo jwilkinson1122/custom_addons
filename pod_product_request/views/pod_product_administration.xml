@@ -2,11 +2,11 @@
 <!-- Copyright 2022 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_product_administration_form_view">
+    <record model="ir.ui.view" id="pod_product_administration_form_view">
         <field
             name="name"
-        >medical.product.administration.form (in medical_product_request)</field>
-        <field name="model">medical.product.administration</field>
+        >pod.product.administration.form (in pod_product_request)</field>
+        <field name="model">pod.product.administration</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -53,15 +53,15 @@
                             <field name="product_type" invisible="1" />
                         </group>
                         <group
-                            string="Medication"
-                            attrs="{'invisible': [('product_type', '!=', 'medication')]}"
+                            string="Device"
+                            attrs="{'invisible': [('product_type', '!=', 'device')]}"
                         >
                             <label
-                                string="Medication"
-                                for="medical_product_template_id"
+                                string="Device"
+                                for="pod_product_template_id"
                             />
                             <field
-                                name="medical_product_template_id"
+                                name="pod_product_template_id"
                                 nolabel="1"
                                 readonly="1"
                             />
@@ -70,9 +70,9 @@
                             string="Device"
                             attrs="{'invisible': [('product_type', '!=', 'device')]}"
                         >
-                            <label string="Device" for="medical_product_template_id" />
+                            <label string="Device" for="pod_product_template_id" />
                             <field
-                                name="medical_product_template_id"
+                                name="pod_product_template_id"
                                 nolabel="1"
                                 readonly="1"
                             />
@@ -95,7 +95,7 @@
                                 />
                             </group>
                             <group
-                                attrs="{'invisible': [('product_type', '!=', 'medication')]}"
+                                attrs="{'invisible': [('product_type', '!=', 'device')]}"
                             >
                                 <field
                                     name="administration_route_domain"
@@ -161,11 +161,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_product_administration_pop_up_form_view">
+    <record model="ir.ui.view" id="pod_product_administration_pop_up_form_view">
         <field
             name="name"
-        >medical.product.administration.form (in medical_product_request)</field>
-        <field name="model">medical.product.administration</field>
+        >pod.product.administration.form (in pod_product_request)</field>
+        <field name="model">pod.product.administration</field>
         <field name="arch" type="xml">
             <form string="Create Administration">
                 <sheet>
@@ -179,15 +179,15 @@
                     </h2>
                     <group>
                         <group
-                            string="Medication"
-                            attrs="{'invisible': [('product_type', '!=', 'medication')]}"
+                            string="Device"
+                            attrs="{'invisible': [('product_type', '!=', 'device')]}"
                         >
                             <label
-                                string="Medication"
-                                for="medical_product_template_id"
+                                string="Device"
+                                for="pod_product_template_id"
                             />
                             <field
-                                name="medical_product_template_id"
+                                name="pod_product_template_id"
                                 nolabel="1"
                                 readonly="1"
                             />
@@ -196,9 +196,9 @@
                             string="Device"
                             attrs="{'invisible': [('product_type', '!=', 'device')]}"
                         >
-                            <label string="Device" for="medical_product_template_id" />
+                            <label string="Device" for="pod_product_template_id" />
                             <field
-                                name="medical_product_template_id"
+                                name="pod_product_template_id"
                                 nolabel="1"
                                 readonly="1"
                                 options='{"no_open": True}'
@@ -217,7 +217,7 @@
                                 />
                             </group>
                             <group
-                                attrs="{'invisible': [('product_type', '!=', 'medication')]}"
+                                attrs="{'invisible': [('product_type', '!=', 'device')]}"
                             >
                                 <field
                                     name="administration_route_domain"
@@ -254,16 +254,16 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_product_administration_search_view">
+    <record model="ir.ui.view" id="pod_product_administration_search_view">
         <field
             name="name"
-        >medical.product.administration.search (in medical_product_request)</field>
-        <field name="model">medical.product.administration</field>
+        >pod.product.administration.search (in pod_product_request)</field>
+        <field name="model">pod.product.administration</field>
         <field name="arch" type="xml">
             <search>
                 <field name="internal_identifier" />
                 <field name="product_request_id" />
-                <field name="medical_product_template_id" />
+                <field name="pod_product_template_id" />
                 <field name="administration_user_id" />
                 <filter
                     string="Not Cancelled"
@@ -273,15 +273,15 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_product_administration_tree_view">
+    <record model="ir.ui.view" id="pod_product_administration_tree_view">
         <field
             name="name"
-        >medical.product.administration.tree (in medical_product_request)</field>
-        <field name="model">medical.product.administration</field>
+        >pod.product.administration.tree (in pod_product_request)</field>
+        <field name="model">pod.product.administration</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
-                <field name="medical_product_template_id" />
+                <field name="pod_product_template_id" />
                 <field name="quantity_administered" />
                 <field name="product_request_id" />
                 <field name="administration_user_id" />
@@ -291,10 +291,10 @@
     </record>
     <record
         model="ir.actions.act_window"
-        id="medical_product_administration_act_window"
+        id="pod_product_administration_act_window"
     >
-        <field name="name">Medical Product Administration</field>
-        <field name="res_model">medical.product.administration</field>
+        <field name="name">Podiatry Product Administration</field>
+        <field name="res_model">pod.product.administration</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_not_cancelled': 1}</field>
     </record>

@@ -8,5 +8,5 @@ from odoo import models
 class ActivityDefinition(models.Model):
     _inherit = "workflow.activity.definition"
 
-    def _get_medical_models(self):
-        return super()._get_medical_models() + ["medical.laboratory.request"]
+    def _get_pod_models(self):
+        return super()._get_pod_models() + ["pod.laboratory.request"]

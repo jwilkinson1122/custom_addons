@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalLocation(TransactionCase):
+class TestPodiatryLocation(TransactionCase):
     def setUp(self):
         super().setUp()
         self.partner_obj = self.env["res.partner"].with_context(

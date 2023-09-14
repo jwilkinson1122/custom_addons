@@ -5,15 +5,15 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="seq_medical_coverage" model="ir.sequence">
-        <field name="name">Medical Coverage</field>
-        <field name="code">medical.coverage</field>
+    <record id="seq_pod_coverage" model="ir.sequence">
+        <field name="name">Podiatry Coverage</field>
+        <field name="code">pod.coverage</field>
         <field name="prefix">COV</field>
         <field name="padding">8</field>
     </record>
-    <record id="seq_medical_coverage_template" model="ir.sequence">
-        <field name="name">Medical Coverage Template</field>
-        <field name="code">medical.coverage.template</field>
+    <record id="seq_pod_coverage_template" model="ir.sequence">
+        <field name="name">Podiatry Coverage Template</field>
+        <field name="code">pod.coverage.template</field>
         <field name="prefix">CVT</field>
         <field name="padding">8</field>
     </record>

@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_request_tree">
-        <field name="name">medical.request.tree</field>
-        <field name="model">medical.request</field>
+    <record model="ir.ui.view" id="pod_request_tree">
+        <field name="name">pod.request.tree</field>
+        <field name="model">pod.request</field>
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <tree>
@@ -20,9 +20,9 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_request_form">
-        <field name="name">medical.request.form</field>
-        <field name="model">medical.request</field>
+    <record model="ir.ui.view" id="pod_request_form">
+        <field name="name">pod.request.form</field>
+        <field name="model">pod.request</field>
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <form>

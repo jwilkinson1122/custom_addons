@@ -6,12 +6,12 @@ from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProcedureRequest(models.Model):
+class PodiatryProcedureRequest(models.Model):
     # FHIR Entity: Procedure request
     # (https://www.hl7.org/fhir/procedurerequest.html)
-    _name = "medical.procedure.request"
+    _name = "pod.procedure.request"
     _description = "Procedure Request"
-    _inherit = "medical.request"
+    _inherit = "pod.request"
     _order = "sequence, id"
 
     internal_identifier = fields.Char(string="Procedure request")
@@ -34,7 +34,7 @@ class MedicalProcedureRequest(models.Model):
     )
     procedure_ids = fields.One2many(
         string="Related Procedure",
-        comodel_name="medical.procedure",
+        comodel_name="pod.procedure",
         inverse_name="procedure_request_id",
         readonly=True,
     )
@@ -54,7 +54,7 @@ class MedicalProcedureRequest(models.Model):
             raise exceptions.Warning(
                 _("You cannot delete a record that refers to a Procedure!")
             )
-        return super(MedicalProcedureRequest, self).unlink()
+        return super(PodiatryProcedureRequest, self).unlink()
 
     def active2completed(self):
         self.filtered(lambda r: not r.procedure_ids).generate_event()
@@ -63,7 +63,7 @@ class MedicalProcedureRequest(models.Model):
     def action_view_procedure(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_procedure.medical_procedure_action"
+            "pod_clinical_procedure.pod_procedure_action"
         )
         result["context"] = {
             "default_patient_id": self.patient_id.id,
@@ -75,7 +75,7 @@ class MedicalProcedureRequest(models.Model):
             "[('procedure_request_id', '=', " + str(self.id) + ")]"
         )
         if len(self.procedure_ids) == 1:
-            res = self.env.ref("medical.procedure.view.form", False)
+            res = self.env.ref("pod.procedure.view.form", False)
             result["views"] = [(res and res.id or False, "form")]
             result["res_id"] = self.procedure_ids.id
         return result
@@ -84,7 +84,7 @@ class MedicalProcedureRequest(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.procedure.request")
+            .next_by_code("pod.procedure.request")
             or "/"
         )
 
@@ -109,7 +109,7 @@ class MedicalProcedureRequest(models.Model):
         }
 
     def generate_event(self):
-        proc_obj = self.env["medical.procedure"]
+        proc_obj = self.env["pod.procedure"]
         procedure_ids = []
         for request in self:
             vals = request._get_procedure_values()
@@ -122,8 +122,8 @@ class MedicalProcedureRequest(models.Model):
 
     def action_view_request_parameters(self):
         return {
-            "view": "medical_clinical_procedure.medical_procedure_request_action",
-            "view_form": "medical.procedure.request.view.form",
+            "view": "pod_clinical_procedure.pod_procedure_request_action",
+            "view_form": "pod.procedure.request.view.form",
         }
 
     @api.constrains("patient_id")

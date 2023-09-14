@@ -2,17 +2,17 @@
 <!-- Copyright 2020 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_encounter_view_form">
-        <field name="name">medical.encounter.form (in cb_nonconformity)</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_view_form">
+        <field name="name">pod.encounter.form (in nwp_nonconformity)</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <header position="inside">
                 <button
-                    name="%(cb_nonconformity_encounter.wizard_create_nonconformity_act_window)d"
+                    name="%(nwp_nonconformity_encounter.wizard_create_nonconformity_act_window)d"
                     string="Add Quality Issue"
                     type="action"
                 />

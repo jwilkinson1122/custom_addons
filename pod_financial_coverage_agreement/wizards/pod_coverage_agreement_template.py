@@ -1,15 +1,15 @@
 from odoo import fields, models
 
 
-class MedicalCoverageAgreementTemplate(models.TransientModel):
-    _name = "medical.coverage.agreement.template"
-    _description = "medical.coverage.agreement.template"
+class PodiatryCoverageAgreementTemplate(models.TransientModel):
+    _name = "pod.coverage.agreement.template"
+    _description = "pod.coverage.agreement.template"
 
     agreement_id = fields.Many2one(
-        "medical.coverage.agreement", readonly=True, required=True
+        "pod.coverage.agreement", readonly=True, required=True
     )
     template_id = fields.Many2one(
-        "medical.coverage.agreement", domain=[("is_template", "=", True)]
+        "pod.coverage.agreement", domain=[("is_template", "=", True)]
     )
     set_items = fields.Boolean(default=False)
 

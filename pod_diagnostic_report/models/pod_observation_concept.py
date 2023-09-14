@@ -4,13 +4,13 @@
 from odoo import fields, models
 
 
-class MedicalObservationConcept(models.Model):
-    _name = "medical.observation.concept"
-    _description = "Medical Observation Concept"
+class PodiatryObservationConcept(models.Model):
+    _name = "pod.observation.concept"
+    _description = "Podiatry Observation Concept"
 
     name = fields.Char(required=True, translate=True)
     value_type = fields.Selection(
-        selection=lambda r: r.env["medical.report.item.abstract"]
+        selection=lambda r: r.env["pod.report.item.abstract"]
         ._fields["value_type"]
         .selection,
     )

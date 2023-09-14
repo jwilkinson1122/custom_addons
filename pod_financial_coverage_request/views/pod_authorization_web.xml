@@ -2,11 +2,11 @@
 <!-- Copyright 2020 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_authorization_web_form_view">
+    <record model="ir.ui.view" id="pod_authorization_web_form_view">
         <field
             name="name"
-        >medical.authorization.web.form (in medical_financial_coverage_request)</field>
-        <field name="model">medical.authorization.web</field>
+        >pod.authorization.web.form (in pod_financial_coverage_request)</field>
+        <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -22,11 +22,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_authorization_web_search_view">
+    <record model="ir.ui.view" id="pod_authorization_web_search_view">
         <field
             name="name"
-        >medical.authorization.web.search (in medical_financial_coverage_request)</field>
-        <field name="model">medical.authorization.web</field>
+        >pod.authorization.web.search (in pod_financial_coverage_request)</field>
+        <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
@@ -36,11 +36,11 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_authorization_web_tree_view">
+    <record model="ir.ui.view" id="pod_authorization_web_tree_view">
         <field
             name="name"
-        >medical.authorization.web.tree (in medical_financial_coverage_request)</field>
-        <field name="model">medical.authorization.web</field>
+        >pod.authorization.web.tree (in pod_financial_coverage_request)</field>
+        <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
@@ -50,17 +50,17 @@
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_authorization_web_act_window">
-        <field name="name">Medical Authorization Web</field>
-        <field name="res_model">medical.authorization.web</field>
+    <record model="ir.actions.act_window" id="pod_authorization_web_act_window">
+        <field name="name">Podiatry Authorization Web</field>
+        <field name="res_model">pod.authorization.web</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_authorization_web_menu">
-        <field name="name">Medical Authorization Web</field>
-        <field name="parent_id" ref="medical_base.medical_root_configuration" />
-        <field name="action" ref="medical_authorization_web_act_window" />
+    <record model="ir.ui.menu" id="pod_authorization_web_menu">
+        <field name="name">Podiatry Authorization Web</field>
+        <field name="parent_id" ref="pod_base.pod_root_configuration" />
+        <field name="action" ref="pod_authorization_web_act_window" />
         <field name="sequence" eval="16" />
     </record>
 </odoo>

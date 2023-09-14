@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template id="medical_diagnostic_report.medical_diagnostic_report_template_base">
+    <template id="pod_diagnostic_report.pod_diagnostic_report_template_base">
         <t t-call="web.html_container">
             <t
                 t-set="docs"
@@ -18,11 +18,11 @@
                 </t>
                 <t t-set="partner" t-value="company.partner_id" />
                 <t
-                    t-call="medical_diagnostic_report.diagnostic_report_base_layout"
+                    t-call="pod_diagnostic_report.diagnostic_report_base_layout"
                     t-lang="lang"
                 >
                     <t
-                        t-call="medical_diagnostic_report.medical_diagnostic_report_base"
+                        t-call="pod_diagnostic_report.pod_diagnostic_report_base"
                         t-lang="lang"
                     />
                 </t>
@@ -103,7 +103,7 @@
             </div>
         </div>
     </template>
-    <template id="medical_diagnostic_report_base">
+    <template id="pod_diagnostic_report_base">
         <div class="page">
             <div class="row o_patient_information">
                 <div class="col-6" name="patient_information">

@@ -2,7 +2,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedication(TransactionCase):
+class TestDevice(TransactionCase):
     def setUp(self):
         super().setUp()
         self.category = self.env["product.category"].create({"name": "Category"})

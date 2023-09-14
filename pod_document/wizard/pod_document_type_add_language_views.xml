@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_document_type_add_language_form">
-        <field name="name">medical.document_type.add.language</field>
-        <field name="model">medical.document.type.add.language</field>
+    <record model="ir.ui.view" id="pod_document_type_add_language_form">
+        <field name="name">pod.document_type.add.language</field>
+        <field name="model">pod.document.type.add.language</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Add Language">
@@ -30,11 +30,11 @@
         </field>
     </record>
     <record
-        id="medical_document_type_add_language_action"
+        id="pod_document_type_add_language_action"
         model="ir.actions.act_window"
     >
         <field name="name">Add Language</field>
-        <field name="res_model">medical.document.type.add.language</field>
+        <field name="res_model">pod.document.type.add.language</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_document_type_id': active_id}</field>
         <field name="target">new</field>

@@ -5,8 +5,8 @@
 from odoo import api, models
 
 
-class MedicalMedicationRequest(models.Model):
-    _inherit = "medical.medication.request"
+class PodiatryDeviceRequest(models.Model):
+    _inherit = "pod.device.request"
 
     def _get_event_values(self):
         res = super()._get_event_values()
@@ -19,12 +19,12 @@ class MedicalMedicationRequest(models.Model):
         return (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("medical.medication.request.identifier")
+            .get_param("pod.device.request.identifier")
         )
 
     @api.model
     def _get_internal_identifier(self, vals):
-        code = self._get_cb_internal_identifier(vals)
+        code = self._get_nwp_internal_identifier(vals)
         if code:
             return code
         return super()._get_internal_identifier(vals)

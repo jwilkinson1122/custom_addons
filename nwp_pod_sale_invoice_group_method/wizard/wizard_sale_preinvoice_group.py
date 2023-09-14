@@ -82,6 +82,6 @@ class WizardSalePreinvoiceGroup(models.TransientModel):
                     partner_invoice_id
                 ][group][template]
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_medical_sale_invoice_group_method.sale_preinvoice_group_action"
+            "nwp_pod_sale_invoice_group_method.sale_preinvoice_group_action"
         )
         return result

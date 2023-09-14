@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_guard_tree" model="ir.ui.view">
-        <field name="name">medical.guard.view.tree</field>
-        <field name="model">medical.guard</field>
+    <record id="pod_guard_tree" model="ir.ui.view">
+        <field name="name">pod.guard.view.tree</field>
+        <field name="model">pod.guard</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <tree>
@@ -20,9 +20,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_guard_view_form" model="ir.ui.view">
-        <field name="name">medical.guard.view.form</field>
-        <field name="model">medical.guard</field>
+    <record id="pod_guard_view_form" model="ir.ui.view">
+        <field name="name">pod.guard.view.form</field>
+        <field name="model">pod.guard</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form>
@@ -60,9 +60,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_guard_view_calendar" model="ir.ui.view">
-        <field name="name">medical.guard.view.calendar</field>
-        <field name="model">medical.guard</field>
+    <record id="pod_guard_view_calendar" model="ir.ui.view">
+        <field name="name">pod.guard.view.calendar</field>
+        <field name="model">pod.guard</field>
         <field name="arch" type="xml">
             <calendar date_start="date" date_delay="delay" color="state" quick_add="0">
                 <field name="practitioner_id" />
@@ -71,11 +71,11 @@
             </calendar>
         </field>
     </record>
-    <record id="medical_guard_view_search" model="ir.ui.view">
-        <field name="name">medical.guard.view.search</field>
-        <field name="model">medical.guard</field>
+    <record id="pod_guard_view_search" model="ir.ui.view">
+        <field name="name">pod.guard.view.search</field>
+        <field name="model">pod.guard</field>
         <field name="arch" type="xml">
-            <search string="Medical Guard">
+            <search string="Podiatry Guard">
                 <field name="internal_identifier" />
                 <field name="practitioner_id" />
                 <field name="location_id" />
@@ -85,18 +85,18 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_guard_action">
-        <field name="name">Medical guards</field>
+    <record model="ir.actions.act_window" id="pod_guard_action">
+        <field name="name">Podiatry guards</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.guard</field>
+        <field name="res_model">pod.guard</field>
         <field name="view_mode">calendar,tree,form</field>
         <field name="context">{}</field>
     </record>
     <menuitem
-        id="medical_guard_menu"
-        parent="cb_medical_guard.medical_guard_root"
-        action="medical_guard_action"
-        name="Medical Guards"
+        id="pod_guard_menu"
+        parent="nwp_pod_guard.pod_guard_root"
+        action="pod_guard_action"
+        name="Podiatry Guards"
         sequence="10"
     />
 </odoo>

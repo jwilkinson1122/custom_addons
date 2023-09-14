@@ -5,8 +5,8 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_preinvoice_group_line_tree" model="ir.ui.view">
-        <field name="name">medical.preinvoice.group.line.tree</field>
+    <record id="pod_preinvoice_group_line_tree" model="ir.ui.view">
+        <field name="name">pod.preinvoice.group.line.tree</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <tree string="sale order lines">
@@ -16,7 +16,7 @@
                     icon="fa-minus-square"
                     aria-label="invalidate_line"
                     title="invalidate_line"
-                    groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_manager"
+                    groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_manager"
                     attrs="{'invisible': ['|', ('is_validated', '=', False), ('preinvoice_status', '!=', 'validation')]}"
                 />
                 <button

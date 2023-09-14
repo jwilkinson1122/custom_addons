@@ -9,11 +9,11 @@ class WizardCreateQuoteAgreement(models.TransientModel):
     _name = "wizard.create.quote.agreement"
     _description = "wizard.create.quote.agreement"
 
-    agreement_id = fields.Many2one("medical.coverage.agreement")
+    agreement_id = fields.Many2one("pod.coverage.agreement")
 
-    possible_template_ids = fields.Many2many("medical.coverage.template")
+    possible_template_ids = fields.Many2many("pod.coverage.template")
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         required=True,
         domain="[('id', 'in', possible_template_ids)]",
     )
@@ -30,14 +30,14 @@ class WizardCreateQuoteAgreement(models.TransientModel):
         rec = super().default_get(fields_list)
         agreement_id = self.env.context.get("active_id", False)
         rec["agreement_id"] = agreement_id
-        agreement = self.env["medical.coverage.agreement"].browse(agreement_id)
+        agreement = self.env["pod.coverage.agreement"].browse(agreement_id)
         rec["possible_center_ids"] = [(6, 0, agreement.center_ids.ids)]
         rec["possible_template_ids"] = [(6, 0, agreement.coverage_template_ids.ids)]
         return rec
 
     def generate_quote(self):
         self.ensure_one()
-        quote = self.env["medical.quote"].create(
+        quote = self.env["pod.quote"].create(
             {
                 "center_id": self.center_id.id,
                 "coverage_template_id": self.coverage_template_id.id,
@@ -50,7 +50,7 @@ class WizardCreateQuoteAgreement(models.TransientModel):
             quote.button_add_line()
 
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_medical_quote.action_quotes"
+            "nwp_pod_quote.action_quotes"
         )
         result["views"] = [(False, "form")]
         result["res_id"] = quote.id

@@ -4,11 +4,11 @@
 {
     "name": "Cb Knowledge",
     "summary": """
-        Knowledge for CB""",
+        Knowledge for NWP""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
-    "website": "https://github.com/tegin/cb-addons",
+    "website": "https://github.com/tegin/nwp-addons",
     "depends": [
         "document_page_reference",
         "document_page_approval",

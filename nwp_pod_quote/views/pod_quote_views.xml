@@ -5,12 +5,12 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
     -->
 <odoo>
-    <record model="ir.ui.view" id="medical_quote_tree">
-        <field name="name">medical.quote.form</field>
-        <field name="model">medical.quote</field>
+    <record model="ir.ui.view" id="pod_quote_tree">
+        <field name="name">pod.quote.form</field>
+        <field name="model">pod.quote</field>
         <field name="arch" type="xml">
             <tree
-                string="Medical Quotes"
+                string="Podiatry Quotes"
                 decoration-info="state=='draft'"
                 decoration-muted="(state=='cancel')"
             >
@@ -33,11 +33,11 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_quote_form">
-        <field name="name">medical.quote.form</field>
-        <field name="model">medical.quote</field>
+    <record model="ir.ui.view" id="pod_quote_form">
+        <field name="name">pod.quote.form</field>
+        <field name="model">pod.quote</field>
         <field name="arch" type="xml">
-            <form string="Medical Quote">
+            <form string="Podiatry Quote">
                 <header>
                     <button
                         name="button_send"
@@ -45,7 +45,7 @@
                         type="object"
                         states="draft"
                         class="btn-primary"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                     />
                     <button
                         name="button_confirm"
@@ -53,14 +53,14 @@
                         type="object"
                         states="sent"
                         class="btn-primary"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                     />
                     <button
                         name="button_cancel"
                         string="Cancel"
                         type="object"
                         states="draft,confirm,sent"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                     />
                     <button
                         name="button_draft"
@@ -68,7 +68,7 @@
                         type="object"
                         states="cancel"
                         class="btn-primary"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                     />
                     <button
                         name="send_quote_by_email"
@@ -76,7 +76,7 @@
                         type="object"
                         class="btn-primary"
                         states="draft,confirm,sent"
-                        groups="medical_base.group_medical_reception"
+                        groups="pod_base.group_pod_reception"
                     />
                     <field
                         name="state"
@@ -219,11 +219,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_quote_search">
-        <field name="name">medical.quote.search</field>
-        <field name="model">medical.quote</field>
+    <record model="ir.ui.view" id="pod_quote_search">
+        <field name="name">pod.quote.search</field>
+        <field name="model">pod.quote</field>
         <field name="arch" type="xml">
-            <search string="Medical Quotes">
+            <search string="Podiatry Quotes">
                 <field name="name" />
                 <field name="quote_date" />
                 <field name="validity_date" />
@@ -294,11 +294,11 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_quote_line_tree">
-        <field name="name">medical.quote.line.tree</field>
-        <field name="model">medical.quote.line</field>
+    <record model="ir.ui.view" id="pod_quote_line_tree">
+        <field name="name">pod.quote.line.tree</field>
+        <field name="model">pod.quote.line</field>
         <field name="arch" type="xml">
-            <tree string="Medical Quote Lines" editable="bottom">
+            <tree string="Podiatry Quote Lines" editable="bottom">
                 <field name="sequence" widget="handle" />
                 <field name="plan_definition_id" />
                 <field name="product_id" />
@@ -323,11 +323,11 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_quote_line_form">
-        <field name="name">medical.quote.line.form</field>
-        <field name="model">medical.quote.line</field>
+    <record model="ir.ui.view" id="pod_quote_line_form">
+        <field name="name">pod.quote.line.form</field>
+        <field name="model">pod.quote.line</field>
         <field name="arch" type="xml">
-            <form string="Medical Quote Line">
+            <form string="Podiatry Quote Line">
                 <group>
                     <field name="plan_definition_id" />
                     <field name="product_id" />
@@ -356,15 +356,15 @@
         </field>
     </record>
     <record id="action_quotes" model="ir.actions.act_window">
-        <field name="name">Medical Quotes</field>
+        <field name="name">Podiatry Quotes</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.quote</field>
+        <field name="res_model">pod.quote</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="medical_quote_search" />
+        <field name="search_view_id" ref="pod_quote_search" />
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                    Create a Medical Quote
+                    Create a Podiatry Quote
                 </p>
         </field>
     </record>

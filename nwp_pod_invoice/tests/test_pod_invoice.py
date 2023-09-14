@@ -1,7 +1,7 @@
-from odoo.addons.cb_medical_pos.tests import common
+from odoo.addons.nwp_pod_pos.tests import common
 
 
-class TestPosValidation(common.MedicalSavePointCase):
+class TestPosValidation(common.PodiatrySavePointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,10 +22,10 @@ class TestPosValidation(common.MedicalSavePointCase):
         encounter, careplan, group = self.create_careplan_and_group(
             self.agreement_line3
         )
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": encounter.id, "pos_session_id": self.session.id}
         ).run()
-        self.env["wizard.medical.encounter.finish"].create(
+        self.env["wizard.pod.encounter.finish"].create(
             {
                 "encounter_id": encounter.id,
                 "pos_session_id": self.session.id,
@@ -34,7 +34,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         ).run()
         self.assertEqual(1, len(encounter.sale_order_ids.mapped("invoice_ids")))
         partner = self.env["res.partner"].create({"name": "New Partner"})
-        self.env["medical.encounter.change.partner"].create(
+        self.env["pod.encounter.change.partner"].create(
             {"encounter_id": encounter.id, "partner_id": partner.id}
         ).run()
         self.assertEqual(3, len(encounter.sale_order_ids.mapped("invoice_ids")))
@@ -44,7 +44,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             )
         )
         partner_2 = self.env["res.partner"].create({"name": "New Partner 2"})
-        self.env["medical.encounter.change.partner"].create(
+        self.env["pod.encounter.change.partner"].create(
             {"encounter_id": encounter.id, "partner_id": partner_2.id}
         ).run()
         self.assertEqual(5, len(encounter.sale_order_ids.mapped("invoice_ids")))

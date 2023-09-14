@@ -1,1 +1,1 @@
-CB Purchase views
+NWP Purchase views

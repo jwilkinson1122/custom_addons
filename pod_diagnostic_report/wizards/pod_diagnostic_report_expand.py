@@ -5,19 +5,19 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalDiagnosticReportExpand(models.TransientModel):
+class PodiatryDiagnosticReportExpand(models.TransientModel):
 
-    _name = "medical.diagnostic.report.expand"
+    _name = "pod.diagnostic.report.expand"
     _description = "This model allows to add templates to a report"
 
     diagnostic_report_id = fields.Many2one(
-        "medical.diagnostic.report", required=True
+        "pod.diagnostic.report", required=True
     )
     template_id = fields.Many2one(
-        "medical.diagnostic.report.template", required=True
+        "pod.diagnostic.report.template", required=True
     )
     template_ids = fields.Many2many(
-        "medical.diagnostic.report.template",
+        "pod.diagnostic.report.template",
         related="diagnostic_report_id.template_ids",
         string="Current report templates",
     )

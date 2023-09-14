@@ -5,10 +5,10 @@
     <record model="ir.ui.view" id="wizard_create_quote_agreement_form_view">
         <field
             name="name"
-        >wizard.create.quote.agreement.form (in cb_medical_quote)</field>
+        >wizard.create.quote.agreement.form (in nwp_pod_quote)</field>
         <field name="model">wizard.create.quote.agreement</field>
         <field name="arch" type="xml">
-            <form string="Medical Quote">
+            <form string="Podiatry Quote">
                 <group>
                     <field name="possible_template_ids" invisible="1" />
                     <field name="possible_center_ids" invisible="1" />

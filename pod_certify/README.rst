@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ===============
-Medical Certify
+Podiatry Certify
 ===============
 
-Certify medical entities
+Certify pod entities

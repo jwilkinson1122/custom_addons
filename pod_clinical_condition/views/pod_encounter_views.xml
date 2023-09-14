@@ -2,21 +2,21 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_encounter_view_form">
-        <field name="name">medical.encounter.form</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_view_form">
+        <field name="name">pod.encounter.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_assistance_user'))]"
+            eval="[(4, ref('pod_base.group_pod_assistance_user'))]"
         />
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button
-                    name="create_medical_clinical_condition"
+                    name="create_pod_clinical_condition"
                     class="oe_stat_button btn-primary"
                     string=" Create Clin. Condition"
                     type="object"
@@ -33,45 +33,45 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     type="object"
-                    name="action_view_medical_conditions"
+                    name="action_view_pod_conditions"
                     class="oe_stat_button"
                     icon="fa-heartbeat"
-                    attrs="{'invisible':[('medical_condition_count', '=', 0)]}"
+                    attrs="{'invisible':[('pod_condition_count', '=', 0)]}"
                 >
                     <field
-                        name="medical_condition_count"
+                        name="pod_condition_count"
                         widget="statinfo"
                         string="Conditions"
                     />
-                    <field name="medical_condition_ids" invisible="1" />
+                    <field name="pod_condition_ids" invisible="1" />
                 </button>
                 <button
                     type="object"
-                    name="action_view_medical_allergies"
+                    name="action_view_pod_allergies"
                     class="oe_stat_button"
                     icon="fa-allergies"
-                    attrs="{'invisible':[('medical_allergies_count', '=', 0)]}"
+                    attrs="{'invisible':[('pod_allergies_count', '=', 0)]}"
                 >
                     <field
-                        name="medical_allergies_count"
+                        name="pod_allergies_count"
                         widget="statinfo"
                         string="Allergies"
                     />
-                    <field name="medical_allergy_ids" invisible="1" />
+                    <field name="pod_allergy_ids" invisible="1" />
                 </button>
                 <button
                     type="object"
-                    name="action_view_medical_warnings"
+                    name="action_view_pod_warnings"
                     class="oe_stat_button"
                     icon="fa-exclamation-triangle"
-                    attrs="{'invisible':[('medical_warning_count', '=', 0)]}"
+                    attrs="{'invisible':[('pod_warning_count', '=', 0)]}"
                 >
                     <field
-                        name="medical_warning_count"
+                        name="pod_warning_count"
                         widget="statinfo"
                         string="Warnings"
                     />
-                    <field name="medical_warning_ids" invisible="1" />
+                    <field name="pod_warning_ids" invisible="1" />
                 </button>
             </xpath>
         </field>

@@ -10,21 +10,21 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     procedure_ids = fields.Many2many(
-        "medical.procedure",
-        relation="sale_order_line_medical_procedure",
+        "pod.procedure",
+        relation="sale_order_line_pod_procedure",
         column1="sale_order_line_id",
         column2="procedure_id",
     )
     laboratory_event_ids = fields.Many2many(
-        "medical.laboratory.event",
-        relation="sale_order_line_commission_medical_laboratory_event",
+        "pod.laboratory.event",
+        relation="sale_order_line_commission_pod_laboratory_event",
         column1="sale_order_line_id",
         column2="laboratory_event_id",
         string="Laboratory Events",
     )
     laboratory_request_ids = fields.Many2many(
-        "medical.laboratory.request",
-        relation="sale_order_line_commission_medical_laboratory_request",
+        "pod.laboratory.request",
+        relation="sale_order_line_commission_pod_laboratory_request",
         column1="sale_order_line_id",
         column2="laboratory_request_id",
         string="Laboratory requests",
@@ -53,12 +53,12 @@ class SaleOrderLine(models.Model):
 class SaleOrderLineAgent(models.Model):
     _inherit = "sale.order.line.agent"
 
-    procedure_id = fields.Many2one("medical.procedure", string="Procedure")
+    procedure_id = fields.Many2one("pod.procedure", string="Procedure")
     laboratory_event_id = fields.Many2one(
-        "medical.laboratory.event", string="Laboratory Event"
+        "pod.laboratory.event", string="Laboratory Event"
     )
     laboratory_request_id = fields.Many2one(
-        "medical.laboratory.request", string="Laboratory Request"
+        "pod.laboratory.request", string="Laboratory Request"
     )
     parent_agent_line_id = fields.Many2one("sale.order.line.agent", readonly=True)
     child_agent_line_ids = fields.One2many(

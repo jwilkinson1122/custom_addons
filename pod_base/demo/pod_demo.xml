@@ -9,21 +9,21 @@
         <field name="name">Jane Doe</field>
         <field name="country_id" ref="base.us" />
     </record>
-    <record id="patient_01" model="medical.patient">
+    <record id="patient_01" model="pod.patient">
         <field name="partner_id" ref="patient_01_partner" />
     </record>
     <record id="patient_02_partner" model="res.partner">
         <field name="name">Vinnie Boombotz</field>
         <field name="country_id" ref="base.us" />
     </record>
-    <record id="patient_02" model="medical.patient">
+    <record id="patient_02" model="pod.patient">
         <field name="partner_id" ref="patient_02_partner" />
     </record>
     <record id="patient_03_partner" model="res.partner">
         <field name="name">Lucas Hood</field>
         <field name="country_id" ref="base.us" />
     </record>
-    <record id="patient_03" model="medical.patient">
+    <record id="patient_03" model="pod.patient">
         <field name="partner_id" ref="patient_03_partner" />
     </record>
 </odoo>

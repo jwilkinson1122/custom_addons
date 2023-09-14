@@ -2,11 +2,11 @@
 <!-- Copyright 2021 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_clinical_impression_form_view">
+    <record model="ir.ui.view" id="pod_clinical_impression_form_view">
         <field
             name="name"
-        >medical.clinical.impression.form (in medical_clinical_impression)</field>
-        <field name="model">medical.clinical.impression</field>
+        >pod.clinical.impression.form (in pod_clinical_impression)</field>
+        <field name="model">pod.clinical.impression</field>
         <field name="arch" type="xml">
             <form string="Clinical Impression">
                 <header>
@@ -139,11 +139,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_clinical_impression_tree_view">
+    <record model="ir.ui.view" id="pod_clinical_impression_tree_view">
         <field
             name="name"
-        >medical.clinical.impression.tree (in medical_clinical_impression)</field>
-        <field name="model">medical.clinical.impression</field>
+        >pod.clinical.impression.tree (in pod_clinical_impression)</field>
+        <field name="model">pod.clinical.impression</field>
         <field name="arch" type="xml">
             <tree
                 string="Clinical Impressions"
@@ -194,11 +194,11 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_clinical_impression_search_view">
+    <record model="ir.ui.view" id="pod_clinical_impression_search_view">
         <field
             name="name"
-        >medical.clinical.impression.search (in medical_clinical_impression)</field>
-        <field name="model">medical.clinical.impression</field>
+        >pod.clinical.impression.search (in pod_clinical_impression)</field>
+        <field name="model">pod.clinical.impression</field>
         <field name="arch" type="xml">
             <search>
                 <field name="specialty_id" />
@@ -218,9 +218,9 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_clinical_impression_act_window">
-        <field name="name">Medical Clinical Impression</field>
-        <field name="res_model">medical.clinical.impression</field>
+    <record model="ir.actions.act_window" id="pod_clinical_impression_act_window">
+        <field name="name">Podiatry Clinical Impression</field>
+        <field name="res_model">pod.clinical.impression</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

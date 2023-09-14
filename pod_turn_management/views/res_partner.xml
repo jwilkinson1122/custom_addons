@@ -3,13 +3,13 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record model="ir.ui.view" id="res_partner_view_form">
-        <field name="name">res.partner.form (in medical_turn_management)</field>
+        <field name="name">res.partner.form (in pod_turn_management)</field>
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_practitioner.res_partner_view_form"
+            ref="pod_administration_practitioner.res_partner_view_form"
         />
-        <field name="groups_id" eval="[(4, ref('medical_base.group_medical_user'))]" />
+        <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]" />
         <field name="arch" type="xml">
             <field name="practitioner_role_ids" position="after">
                 <field
@@ -22,15 +22,15 @@
         </field>
     </record>
     <record model="ir.ui.view" id="res_partner_view_edit_form">
-        <field name="name">res.partner.form (in medical_turn_management)</field>
+        <field name="name">res.partner.form (in pod_turn_management)</field>
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_practitioner.res_partner_view_form"
+            ref="pod_administration_practitioner.res_partner_view_form"
         />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_configurator'))]"
+            eval="[(4, ref('pod_base.group_pod_configurator'))]"
         />
         <field name="arch" type="xml">
             <field name="turn_specialty_ids" position="attributes">

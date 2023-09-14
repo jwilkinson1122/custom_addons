@@ -13,7 +13,7 @@ class PosSession(models.Model):
 
     internal_identifier = fields.Char(required=True, default="/")
     encounter_ids = fields.One2many(
-        comodel_name="medical.encounter",
+        comodel_name="pod.encounter",
         inverse_name="pos_session_id",
         string="Encounters",
         readonly=1,
@@ -57,7 +57,7 @@ class PosSession(models.Model):
     def action_view_encounters(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
         result["domain"] = [("pos_session_id", "=", self.id)]
         if len(self.encounter_ids) == 1:

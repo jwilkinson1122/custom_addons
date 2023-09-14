@@ -5,14 +5,14 @@
 from odoo import api, fields, models
 
 
-class MedicalPatient(models.Model):
-    _inherit = "medical.patient"
+class PodiatryPatient(models.Model):
+    _inherit = "pod.patient"
 
     request_group_ids = fields.One2many(
-        "medical.request.group", inverse_name="patient_id"
+        "pod.request.group", inverse_name="patient_id"
     )
     last_coverage_id = fields.Many2one(
-        "medical.coverage", compute="_compute_last_coverage"
+        "pod.coverage", compute="_compute_last_coverage"
     )
 
     @api.depends("request_group_ids")

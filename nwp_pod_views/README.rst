@@ -3,10 +3,10 @@
    :alt: License: AGPL-3
 
 ================
-CB Medical Views
+NWP Podiatry Views
 ================
 
-This module fixes all views of medical in order to accomplish CB Standard.
+This module fixes all views of pod in order to accomplish NWP Standard.
 
 Contributors
 ------------

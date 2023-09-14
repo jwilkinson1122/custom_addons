@@ -5,11 +5,11 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
     -->
 <odoo>
-    <record id="medical_quote_report_configuration_form_view" model="ir.ui.view">
-        <field name="name">medical.quote.report.configuration.form.view</field>
-        <field name="model">medical.quote.layout_category</field>
+    <record id="pod_quote_report_configuration_form_view" model="ir.ui.view">
+        <field name="name">pod.quote.report.configuration.form.view</field>
+        <field name="model">pod.quote.layout_category</field>
         <field name="arch" type="xml">
-            <form string="Medical Quote Report Configuration">
+            <form string="Podiatry Quote Report Configuration">
                 <group>
                     <field name="name" />
                     <field name="subtotal" widget="checkbox" />
@@ -19,11 +19,11 @@
             </form>
         </field>
     </record>
-    <record id="medical_quote_report_configuration_tree_view" model="ir.ui.view">
-        <field name="name">medical.quote.report.configuration.form.view</field>
-        <field name="model">medical.quote.layout_category</field>
+    <record id="pod_quote_report_configuration_tree_view" model="ir.ui.view">
+        <field name="name">pod.quote.report.configuration.form.view</field>
+        <field name="model">pod.quote.layout_category</field>
         <field name="arch" type="xml">
-            <tree string="Medical Quote Report Configuration">
+            <tree string="Podiatry Quote Report Configuration">
                 <field name="name" />
                 <field name="subtotal" widget="checkbox" />
                 <field name="pagebreak" widget="checkbox" />
@@ -31,9 +31,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_quote_report_configuration_search_view" model="ir.ui.view">
-        <field name="name">medical.quote.report.configuration.search.view</field>
-        <field name="model">medical.quote.layout_category</field>
+    <record id="pod_quote_report_configuration_search_view" model="ir.ui.view">
+        <field name="name">pod.quote.report.configuration.search.view</field>
+        <field name="model">pod.quote.layout_category</field>
         <field name="arch" type="xml">
             <search string="Search Name">
                 <field name='name' />
@@ -54,11 +54,11 @@
         </field>
     </record>
     <record
-        id='medical_quote_report_configuration_action'
+        id='pod_quote_report_configuration_action'
         model='ir.actions.act_window'
     >
-        <field name="name">Medical Quote Report Configuration</field>
-        <field name="res_model">medical.quote.layout_category</field>
+        <field name="name">Podiatry Quote Report Configuration</field>
+        <field name="res_model">pod.quote.layout_category</field>
         <field name="domain">[('quote_id','=',False)]</field>
         <field name="view_mode">tree,form</field>
     </record>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="medical_encounter_view_form" model="ir.ui.view">
-        <field name="name">medical.encounter.view.form</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_form" model="ir.ui.view">
+        <field name="name">pod.encounter.view.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field
             name="groups_id"
@@ -14,10 +14,10 @@
         <field name="arch" type="xml">
             <button name="inprogress2onleave" position="before">
                 <button
-                    name="%(medical_encounter_add_careplan_action)s"
+                    name="%(pod_encounter_add_careplan_action)s"
                     type="action"
                     string="Create careplan"
-                    groups="medical_base.group_medical_financial"
+                    groups="pod_base.group_pod_financial"
                     states="arrived,in-progress,onleave"
                 />
                 <button

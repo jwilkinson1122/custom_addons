@@ -10,7 +10,7 @@
         <field name="model">workflow.plan.definition.action</field>
         <field
             name="inherit_id"
-            ref="medical_workflow.workflow_plan_definition_action_tree"
+            ref="pod_workflow.workflow_plan_definition_action_tree"
         />
         <field name="arch" type="xml">
             <field name="complete_name" position="after">
@@ -24,7 +24,7 @@
         <field name="model">workflow.plan.definition.action</field>
         <field
             name="inherit_id"
-            ref="medical_workflow.workflow_plan_definition_action_form"
+            ref="pod_workflow.workflow_plan_definition_action_form"
         />
         <field name="arch" type="xml">
             <group name="fees" position="inside">

@@ -5,7 +5,7 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record id="medical_base.medical_root_medications" model="ir.ui.menu">
+    <record id="pod_base.pod_root_devices" model="ir.ui.menu">
         <field name="active" eval="True" />
     </record>
 </odoo>

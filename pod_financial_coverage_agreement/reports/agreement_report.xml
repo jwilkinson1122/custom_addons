@@ -69,7 +69,7 @@
         <t t-set="level" t-value="level + 1" />
         <t t-foreach="item['childs']" t-as="item_variable">
             <t
-                t-call="medical_financial_coverage_agreement.report_agreement_template_category"
+                t-call="pod_financial_coverage_agreement.report_agreement_template_category"
             />
         </t>
         <t t-set="level" t-value="level - 1" />
@@ -103,7 +103,7 @@
                                 <t t-foreach="data" t-as="item_variable">
                                     <t t-set="level" t-value="0" />
                                     <t
-                                        t-call="medical_financial_coverage_agreement.report_agreement_template_category"
+                                        t-call="pod_financial_coverage_agreement.report_agreement_template_category"
                                     />
                                 </t>
                             </tbody>
@@ -125,19 +125,19 @@
 
     <record id="action_agreement_report_private" model="ir.actions.report">
         <field name="name">Agreement Report Private</field>
-        <field name="model">medical.coverage.agreement</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="report_type">qweb-pdf</field>
         <field
             name="report_name"
-        >medical_financial_coverage_agreement.report_agreement_template</field>
+        >pod_financial_coverage_agreement.report_agreement_template</field>
     </record>
 
     <record id="action_agreement_report" model="ir.actions.report">
         <field name="name">Agreement Report Coverage</field>
-        <field name="model">medical.coverage.agreement</field>
+        <field name="model">pod.coverage.agreement</field>
         <field name="report_type">qweb-pdf</field>
         <field
             name="report_name"
-        >medical_financial_coverage_agreement.report_agreement_template</field>
+        >pod_financial_coverage_agreement.report_agreement_template</field>
     </record>
 </odoo>

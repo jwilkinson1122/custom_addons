@@ -4,9 +4,9 @@
 from odoo import api, fields, models
 
 
-class MedicalProcedureExternalRequest(models.Model):
-    _name = "medical.procedure.external.request"
-    _inherit = ["medical.event", "digest.base"]
+class PodiatryProcedureExternalRequest(models.Model):
+    _name = "pod.procedure.external.request"
+    _inherit = ["pod.event", "digest.base"]
     _description = "Procedure external"
     _rec_name = "internal_identifier"
 
@@ -43,7 +43,7 @@ class MedicalProcedureExternalRequest(models.Model):
         readonly=True, states={"draft": [("readonly", False)]}
     )
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
@@ -75,8 +75,8 @@ class MedicalProcedureExternalRequest(models.Model):
         "res.users", string="Cancelled by User", readonly=True, copy=False
     )
     template_ids = fields.Many2many(
-        "medical.procedure.external.request.template",
-        relation="medical_procedure_external_request_templates_rel",
+        "pod.procedure.external.request.template",
+        relation="pod_procedure_external_request_templates_rel",
     )
 
     @api.model
@@ -86,7 +86,7 @@ class MedicalProcedureExternalRequest(models.Model):
     def _get_internal_identifier(self, vals):
         return (
             self.env["ir.sequence"].next_by_code(
-                "medical.procedure.external.request"
+                "pod.procedure.external.request"
             )
             or "/"
         )

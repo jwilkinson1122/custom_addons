@@ -58,10 +58,10 @@
                             <field
                                 name="activity_definition_id"
                                 options="{'no_create': True}"
-                                groups="medical_workflow.group_main_activity_plan_definition"
+                                groups="pod_workflow.group_main_activity_plan_definition"
                             />
                         </group>
-                        <group name="medical">
+                        <group name="pod">
                         </group>
                     </group>
                     <notebook>
@@ -101,7 +101,7 @@
     </record>
     <record model="ir.ui.menu" id="workflow_plan_definitions_menu">
         <field name="name">Plan definitions</field>
-        <field name="parent_id" ref="medical_base.medical_root_workflow" />
+        <field name="parent_id" ref="pod_base.pod_root_workflow" />
         <field name="action" ref="workflow_plan_definition" />
         <field name="sequence" eval="10" />
     </record>

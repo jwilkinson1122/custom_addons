@@ -4,7 +4,7 @@
 from odoo.tests.common import SavepointCase
 
 
-class MedicalSavePointCase(SavepointCase):
+class PodiatrySavePointCase(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,7 +22,7 @@ class MedicalSavePointCase(SavepointCase):
             {
                 "name": "Payor",
                 "is_payor": True,
-                "is_medical": True,
+                "is_pod": True,
                 "invoice_nomenclature_id": self.nomenclature.id,
             }
         )
@@ -30,14 +30,14 @@ class MedicalSavePointCase(SavepointCase):
             {
                 "name": "Sub Payor",
                 "is_sub_payor": True,
-                "is_medical": True,
+                "is_pod": True,
                 "payor_id": self.payor.id,
             }
         )
-        self.coverage_template = self.env["medical.coverage.template"].create(
+        self.coverage_template = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Coverage"}
         )
-        self.coverage_template_2 = self.env["medical.coverage.template"].create(
+        self.coverage_template_2 = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Coverage 2"}
         )
         self.company = self.env.ref("base.main_company")
@@ -94,7 +94,7 @@ class MedicalSavePointCase(SavepointCase):
         self.center = self.env["res.partner"].create(
             {
                 "name": "Center",
-                "is_medical": True,
+                "is_pod": True,
                 "is_center": True,
                 "encounter_sequence_prefix": "S",
             }
@@ -102,7 +102,7 @@ class MedicalSavePointCase(SavepointCase):
         self.location = self.env["res.partner"].create(
             {
                 "name": "Location",
-                "is_medical": True,
+                "is_pod": True,
                 "is_location": True,
                 "center_id": self.center.id,
                 "stock_location_id": self.env.ref("stock.warehouse0").lot_stock_id.id,
@@ -111,12 +111,12 @@ class MedicalSavePointCase(SavepointCase):
                 .id,
             }
         )
-        self.document_type = self.env["medical.document.type"].create(
+        self.document_type = self.env["pod.document.type"].create(
             {
                 "name": "CI",
                 "document_type": "action",
                 "report_action_id": self.env.ref(
-                    "medical_document.action_report_document_report_base"
+                    "pod_document.action_report_document_report_base"
                 ).id,
             }
         )
@@ -126,7 +126,7 @@ class MedicalSavePointCase(SavepointCase):
         self.lang_en = self.env.ref("base.lang_en")
         if not self.lang_en.active:
             self.lang_en.active = True
-        self.env["medical.document.type.lang"].create(
+        self.env["pod.document.type.lang"].create(
             {
                 "lang": self.lang_es.code,
                 "document_type_id": self.document_type.id,
@@ -134,7 +134,7 @@ class MedicalSavePointCase(SavepointCase):
                 "</p>" % self.lang_es.code,
             }
         )
-        self.env["medical.document.type.lang"].create(
+        self.env["pod.document.type.lang"].create(
             {
                 "lang": self.lang_en.code,
                 "document_type_id": self.document_type.id,
@@ -143,40 +143,40 @@ class MedicalSavePointCase(SavepointCase):
             }
         )
         self.document_type.draft2current()
-        self.agreement = self.env["medical.coverage.agreement"].create(
+        self.agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Agreement",
                 "center_ids": [(4, self.center.id)],
                 "coverage_template_ids": [(4, self.coverage_template.id)],
                 "company_id": self.company.id,
                 "invoice_group_method_id": self.env.ref(
-                    "cb_medical_careplan_sale.by_preinvoicing"
+                    "nwp_pod_careplan_sale.by_preinvoicing"
                 ).id,
                 "authorization_method_id": self.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
-        self.format = self.env["medical.authorization.format"].create(
+        self.format = self.env["pod.authorization.format"].create(
             {"code": "TEST", "name": "test", "authorization_format": "^1.*$"}
         )
         self.patient_01 = self.create_patient("Patient 01")
-        self.coverage_01 = self.env["medical.coverage"].create(
+        self.coverage_01 = self.env["pod.coverage"].create(
             {
                 "patient_id": self.patient_01.id,
                 "coverage_template_id": self.coverage_template.id,
             }
         )
-        self.coverage_02 = self.env["medical.coverage"].create(
+        self.coverage_02 = self.env["pod.coverage"].create(
             {
                 "patient_id": self.patient_01.id,
                 "coverage_template_id": self.coverage_template_2.id,
             }
         )
-        self.product_01 = self.create_product("Medical resonance")
+        self.product_01 = self.create_product("Podiatry resonance")
         self.product_02 = self.create_product("Report")
         self.product_04 = self.create_product("Report 04")
         self.product_05 = self.create_product("Report 05")
@@ -195,13 +195,13 @@ class MedicalSavePointCase(SavepointCase):
                 "type": "consu",
                 "categ_id": self.category.id,
                 "name": "Clinical material",
-                "is_medication": True,
+                "is_device": True,
                 "lst_price": 10.0,
                 "taxes_id": [(6, 0, self.tax.ids)],
             }
         )
         self.product_03.qty_available = 50.0
-        self.product_04 = self.create_product("Medical visit")
+        self.product_04 = self.create_product("Podiatry visit")
         self.product_05 = self.create_product("Extra product")
         self.lab_product = self.create_product("Laboratory Product")
 
@@ -232,7 +232,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Activity",
                 "service_id": self.product_02.id,
                 "model_id": self.env.ref(
-                    "medical_clinical_procedure." "model_medical_procedure_request"
+                    "pod_clinical_procedure." "model_pod_procedure_request"
                 ).id,
             }
         )
@@ -242,7 +242,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Activity2",
                 "service_id": self.service.id,
                 "model_id": self.env.ref(
-                    "medical_medication_request." "model_medical_medication_request"
+                    "pod_device_request." "model_pod_device_request"
                 ).id,
             }
         )
@@ -252,7 +252,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Activity3",
                 "service_id": self.product_05.id,
                 "model_id": self.env.ref(
-                    "medical_document.model_medical_document_reference"
+                    "pod_document.model_pod_document_reference"
                 ).id,
                 "document_type_id": self.document_type.id,
             }
@@ -263,7 +263,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Activity4",
                 "service_id": self.product_06.id,
                 "model_id": self.env.ref(
-                    "medical_document.model_medical_document_reference"
+                    "pod_document.model_pod_document_reference"
                 ).id,
                 "document_type_id": self.document_type.id,
             }
@@ -274,7 +274,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Activity 5",
                 "service_id": self.product_04.id,
                 "model_id": self.env.ref(
-                    "medical_clinical_procedure." "model_medical_procedure_request"
+                    "pod_clinical_procedure." "model_pod_procedure_request"
                 ).id,
             }
         )
@@ -284,7 +284,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Laboratory activity",
                 "service_id": self.product_07.id,
                 "model_id": self.env.ref(
-                    "medical_clinical_laboratory." "model_medical_laboratory_request"
+                    "pod_clinical_laboratory." "model_pod_laboratory_request"
                 ).id,
             }
         )
@@ -329,7 +329,7 @@ class MedicalSavePointCase(SavepointCase):
                 "name": "Action4",
             }
         )
-        self.agreement_line = self.env["medical.coverage.agreement.item"].create(
+        self.agreement_line = self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_01.id,
                 "coverage_agreement_id": self.agreement.id,
@@ -337,15 +337,15 @@ class MedicalSavePointCase(SavepointCase):
                 "total_price": 100,
                 "coverage_percentage": 50,
                 "authorization_method_id": self.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
-        self.method = self.env.ref("medical_financial_coverage_request.only_number")
-        self.format = self.env["medical.authorization.format"].create(
+        self.method = self.env.ref("pod_financial_coverage_request.only_number")
+        self.format = self.env["pod.authorization.format"].create(
             {
                 "name": "Number",
                 "code": "testing_number",
@@ -353,7 +353,7 @@ class MedicalSavePointCase(SavepointCase):
                 "authorization_format": "^[0-9]*$",
             }
         )
-        self.format_letter = self.env["medical.authorization.format"].create(
+        self.format_letter = self.env["pod.authorization.format"].create(
             {
                 "name": "Number",
                 "code": "testing_number",
@@ -361,21 +361,21 @@ class MedicalSavePointCase(SavepointCase):
                 "authorization_format": "^[a-zA-Z]*$",
             }
         )
-        self.agreement_line2 = self.env["medical.coverage.agreement.item"].create(
+        self.agreement_line2 = self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.service.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 100.0,
                 "authorization_method_id": self.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
-        self.agreement_line3 = self.env["medical.coverage.agreement.item"].create(
+        self.agreement_line3 = self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.product_04.id,
                 "coverage_agreement_id": self.agreement.id,
@@ -383,30 +383,30 @@ class MedicalSavePointCase(SavepointCase):
                 "total_price": 100.0,
                 "coverage_percentage": 0.0,
                 "authorization_method_id": self.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
-        self.lab_agreement_line = self.env["medical.coverage.agreement.item"].create(
+        self.lab_agreement_line = self.env["pod.coverage.agreement.item"].create(
             {
                 "product_id": self.lab_product.id,
                 "coverage_agreement_id": self.agreement.id,
                 "total_price": 0.0,
                 "coverage_percentage": 0.0,
                 "authorization_method_id": self.env.ref(
-                    "medical_financial_coverage_request.without"
+                    "pod_financial_coverage_request.without"
                 ).id,
                 "authorization_format_id": self.env.ref(
-                    "medical_financial_coverage_request.format_anything"
+                    "pod_financial_coverage_request.format_anything"
                 ).id,
             }
         )
         self.practitioner_01 = self.create_practitioner("Practitioner 01")
         self.practitioner_02 = self.create_practitioner("Practitioner 02")
-        # self.product_01.medical_commission = True
+        # self.product_01.pod_commission = True
         # self.action.fixed_fee = 1
 
         self.sb_account = self.env["account.account"].create(
@@ -439,7 +439,7 @@ class MedicalSavePointCase(SavepointCase):
         self.reina = self.env["res.partner"].create(
             {
                 "name": "Reina",
-                "is_medical": True,
+                "is_pod": True,
                 "is_center": True,
                 "encounter_sequence_prefix": "9",
             }
@@ -451,7 +451,7 @@ class MedicalSavePointCase(SavepointCase):
                 "sale.default_deposit_product_id",
                 self.create_product("Down payment").id,
             )
-        self.discount = self.env["medical.sale.discount"].create(
+        self.discount = self.env["pod.sale.discount"].create(
             {"name": "Discount 01", "percentage": 50}
         )
         self.product = self.env["product.product"].create(
@@ -465,7 +465,7 @@ class MedicalSavePointCase(SavepointCase):
 
     @classmethod
     def create_patient(cls, name):
-        return cls.env["medical.patient"].create({"name": name})
+        return cls.env["pod.patient"].create({"name": name})
 
     @classmethod
     def create_product(cls, name):
@@ -480,11 +480,11 @@ class MedicalSavePointCase(SavepointCase):
     def create_careplan_and_group(self, agreement_line, coverage=False):
         if not coverage:
             coverage = self.coverage_01
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient_01.id, "center_id": self.center.id}
         )
         careplan_wizard = (
-            self.env["medical.encounter.add.careplan"]
+            self.env["pod.encounter.add.careplan"]
             .with_context(default_encounter_id=encounter.id)
             .new({"coverage_id": coverage.id})
         )
@@ -499,7 +499,7 @@ class MedicalSavePointCase(SavepointCase):
         careplan_wizard.run()
         careplan = encounter.careplan_ids
         self.assertEqual(careplan.center_id, encounter.center_id)
-        wizard = self.env["medical.careplan.add.plan.definition"].create(
+        wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
                 "agreement_line_id": agreement_line.id,
@@ -508,7 +508,7 @@ class MedicalSavePointCase(SavepointCase):
         self.assertIn(self.agreement, wizard.agreement_ids)
         self.action.is_billable = False
         wizard.run()
-        group = self.env["medical.request.group"].search(
+        group = self.env["pod.request.group"].search(
             [
                 ("careplan_id", "=", careplan.id),
                 ("service_id", "=", agreement_line.product_id.id),

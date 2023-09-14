@@ -2,11 +2,11 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalEncounter(models.AbstractModel):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.AbstractModel):
+    _inherit = "pod.encounter"
 
     cancel_reason_id = fields.Many2one(
-        "medical.cancel.reason",
+        "pod.cancel.reason",
         readonly=True,
         tracking=True,
         string="Cancel reason",
@@ -16,7 +16,7 @@ class MedicalEncounter(models.AbstractModel):
         self.ensure_one()
         models = [
             self.env[model]
-            for model in self.env["medical.request"]._get_request_models()
+            for model in self.env["pod.request"]._get_request_models()
         ]
         states = ["onleave", "completed", "entered-in-error", "cancelled"]
         if self.state in states:

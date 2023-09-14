@@ -6,16 +6,16 @@
 from odoo import fields, models
 
 
-class MedicalPatient(models.Model):
-    _inherit = "medical.patient"
+class PodiatryPatient(models.Model):
+    _inherit = "pod.patient"
 
-    medical_location_primary_id = fields.Many2one(
-        string="Primary Medical Center",
+    pod_location_primary_id = fields.Many2one(
+        string="Primary Podiatry Center",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )
-    medical_location_secondary_ids = fields.Many2many(
-        string="Secondary Medical Centers",
+    pod_location_secondary_ids = fields.Many2many(
+        string="Secondary Podiatry Centers",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )

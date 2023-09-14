@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record id="medical_laboratory_service_view_form" model="ir.ui.view">
-        <field name="name">medical.laboratory.service.view.form</field>
-        <field name="model">medical.laboratory.service</field>
+    <record id="pod_laboratory_service_view_form" model="ir.ui.view">
+        <field name="name">pod.laboratory.service.view.form</field>
+        <field name="model">pod.laboratory.service</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -49,9 +49,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_laboratory_service_view_tree" model="ir.ui.view">
-        <field name="name">medical.laboratory.service.view.tree</field>
-        <field name="model">medical.laboratory.service</field>
+    <record id="pod_laboratory_service_view_tree" model="ir.ui.view">
+        <field name="name">pod.laboratory.service.view.tree</field>
+        <field name="model">pod.laboratory.service</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="code" />
@@ -61,9 +61,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_laboratory_service_price_view_form" model="ir.ui.view">
-        <field name="name">medical.laboratory.service.price.view.form</field>
-        <field name="model">medical.laboratory.service.price</field>
+    <record id="pod_laboratory_service_price_view_form" model="ir.ui.view">
+        <field name="name">pod.laboratory.service.price.view.form</field>
+        <field name="model">pod.laboratory.service.price</field>
         <field name="arch" type="xml">
             <form>
                 <group>
@@ -77,9 +77,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_laboratory_service_price_view_tree" model="ir.ui.view">
-        <field name="name">medical.laboratory.service.price.view.tree</field>
-        <field name="model">medical.laboratory.service.price</field>
+    <record id="pod_laboratory_service_price_view_tree" model="ir.ui.view">
+        <field name="name">pod.laboratory.service.price.view.tree</field>
+        <field name="model">pod.laboratory.service.price</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="laboratory_service_id" invisible="1" />
@@ -89,17 +89,17 @@
             </tree>
         </field>
     </record>
-    <record id="medical_laboratory_service_action" model="ir.actions.act_window">
+    <record id="pod_laboratory_service_action" model="ir.actions.act_window">
         <field name="name">Laboratory service</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.laboratory.service</field>
+        <field name="res_model">pod.laboratory.service</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        id="medical_laboratory_service_menu"
+        id="pod_laboratory_service_menu"
         name="Laboratory services"
         sequence="90"
-        parent="medical_base.medical_root_configuration"
-        action="medical_laboratory_service_action"
+        parent="pod_base.pod_root_configuration"
+        action="pod_laboratory_service_action"
     />
 </odoo>

@@ -19,7 +19,7 @@ class TestPlanDefinition(TransactionCase):
                 "name": "Activity",
                 "service_id": self.product.id,
                 "model_id": self.browse_ref(
-                    "medical_clinical_laboratory." "model_medical_laboratory_request"
+                    "pod_clinical_laboratory." "model_pod_laboratory_request"
                 ).id,
             }
         )
@@ -28,12 +28,12 @@ class TestPlanDefinition(TransactionCase):
                 "name": "Activity2",
                 "service_id": self.product.id,
                 "model_id": self.browse_ref(
-                    "medical_clinical_procedure." "model_medical_procedure_request"
+                    "pod_clinical_procedure." "model_pod_procedure_request"
                 ).id,
             }
         )
         self.activity.activate()
-        self.lab_service = self.env["medical.laboratory.service"].create(
+        self.lab_service = self.env["pod.laboratory.service"].create(
             {
                 "code": "INTERNAL_CODE",
                 "name": "name",

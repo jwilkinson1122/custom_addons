@@ -4,12 +4,12 @@
 <odoo>
     <record
         model="ir.ui.view"
-        id="medical_procedure_external_request_template_form_view"
+        id="pod_procedure_external_request_template_form_view"
     >
         <field
             name="name"
-        >medical.procedure.external.request.template.form (in medical_procedure_external_request)</field>
-        <field name="model">medical.procedure.external.request.template</field>
+        >pod.procedure.external.request.template.form (in pod_procedure_external_request)</field>
+        <field name="model">pod.procedure.external.request.template</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -36,12 +36,12 @@
     </record>
     <record
         model="ir.ui.view"
-        id="medical_procedure_external_request_template_tree_view"
+        id="pod_procedure_external_request_template_tree_view"
     >
         <field
             name="name"
-        >medical.procedure.external.request.template.tree (in medical_procedure_external_request)</field>
-        <field name="model">medical.procedure.external.request.template</field>
+        >pod.procedure.external.request.template.tree (in pod_procedure_external_request)</field>
+        <field name="model">pod.procedure.external.request.template</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
@@ -49,19 +49,19 @@
         </field>
     </record>
     <record
-        id="medical_procedure_external_request_template_act_window"
+        id="pod_procedure_external_request_template_act_window"
         model="ir.actions.act_window"
     >
         <field name="name">External Request Template</field>
-        <field name="res_model">medical.procedure.external.request.template</field>
+        <field name="res_model">pod.procedure.external.request.template</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_request_template_menu">
+    <record model="ir.ui.menu" id="pod_request_template_menu">
         <field name="name">External Request Templates</field>
-        <field name="parent_id" ref="medical_base.medical_root_configuration" />
+        <field name="parent_id" ref="pod_base.pod_root_configuration" />
         <field
             name="action"
-            ref="medical_procedure_external_request_template_act_window"
+            ref="pod_procedure_external_request_template_act_window"
         />
         <field name="sequence" eval="16" />
     </record>

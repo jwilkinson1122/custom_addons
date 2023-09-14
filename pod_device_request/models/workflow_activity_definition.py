@@ -10,16 +10,16 @@ class ActivityDefinition(models.Model):
     # (https://www.hl7.org/fhir/activitydefinition.html)
     _inherit = "workflow.activity.definition"
 
-    def _get_medical_models(self):
-        return super()._get_medical_models() + ["medical.medication.request"]
+    def _get_pod_models(self):
+        return super()._get_pod_models() + ["pod.device.request"]
 
-    def _get_medical_values(
+    def _get_pod_values(
         self, vals, parent=False, plan=False, action=False
     ):
-        values = super(ActivityDefinition, self)._get_medical_values(
+        values = super(ActivityDefinition, self)._get_pod_values(
             vals, parent, plan, action
         )
-        if self.model_id.model == "medical.medication.request":
+        if self.model_id.model == "pod.device.request":
             values.update(
                 {
                     "product_id": self.service_id.id,

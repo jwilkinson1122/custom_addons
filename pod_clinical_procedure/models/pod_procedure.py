@@ -6,15 +6,15 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProcedure(models.Model):
+class PodiatryProcedure(models.Model):
     # FHIR Entity: Procedure (https://www.hl7.org/fhir/procedure.html)
-    _name = "medical.procedure"
-    _description = "Medical Procedure"
-    _inherit = "medical.event"
+    _name = "pod.procedure"
+    _description = "Podiatry Procedure"
+    _inherit = "pod.event"
 
     internal_identifier = fields.Char(string="Procedure")
     procedure_request_id = fields.Many2one(
-        comodel_name="medical.procedure.request",
+        comodel_name="pod.procedure.request",
         string="Procedure request",
         ondelete="restrict",
         index=True,
@@ -55,7 +55,7 @@ class MedicalProcedure(models.Model):
 
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.procedure")
+            self.env["ir.sequence"].sudo().next_by_code("pod.procedure")
             or "/"
         )
 

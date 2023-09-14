@@ -5,8 +5,8 @@
 from odoo import api, fields, models
 
 
-class MedicalSCTConcept(models.Model):
-    _inherit = "medical.sct.concept"
+class PodiatrySCTConcept(models.Model):
+    _inherit = "pod.sct.concept"
 
     is_specialty = fields.Boolean(
         store=True, index=True, compute="_compute_is_specialty"

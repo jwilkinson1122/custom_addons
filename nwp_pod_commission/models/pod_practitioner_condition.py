@@ -2,8 +2,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalPractitionerCondition(models.Model):
-    _name = "medical.practitioner.condition"
+class PodiatryPractitionerCondition(models.Model):
+    _name = "pod.practitioner.condition"
     _description = "Practitioner condition"
 
     practitioner_id = fields.Many2one("res.partner", required=True, readonly=True)

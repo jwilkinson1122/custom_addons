@@ -2,11 +2,11 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_observation_concept_form_view">
+    <record model="ir.ui.view" id="pod_observation_concept_form_view">
         <field
             name="name"
-        >medical.observation.concept.form (in medical_diagnostic_report)</field>
-        <field name="model">medical.observation.concept</field>
+        >pod.observation.concept.form (in pod_diagnostic_report)</field>
+        <field name="model">pod.observation.concept</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -35,29 +35,29 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_observation_concept_tree_view">
+    <record model="ir.ui.view" id="pod_observation_concept_tree_view">
         <field
             name="name"
-        >medical.observation.concept.tree (in medical_diagnostic_report)</field>
-        <field name="model">medical.observation.concept</field>
+        >pod.observation.concept.tree (in pod_diagnostic_report)</field>
+        <field name="model">pod.observation.concept</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <record id="medical_observation_concept_act_window" model="ir.actions.act_window">
+    <record id="pod_observation_concept_act_window" model="ir.actions.act_window">
         <field name="name">Observation concept</field>
-        <field name="res_model">medical.observation.concept</field>
+        <field name="res_model">pod.observation.concept</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_observation_concept_menu">
+    <record model="ir.ui.menu" id="pod_observation_concept_menu">
         <field name="name">Observation concepts</field>
-        <field name="parent_id" ref="medical_report_configuration" />
-        <field name="action" ref="medical_observation_concept_act_window" />
+        <field name="parent_id" ref="pod_report_configuration" />
+        <field name="action" ref="pod_observation_concept_act_window" />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_configurator'))]"
+            eval="[(4, ref('pod_base.group_pod_configurator'))]"
         />
         <field name="sequence" eval="16" />
     </record>

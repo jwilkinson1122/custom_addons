@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =======================
-Medical ATC Terminology
+Podiatry ATC Terminology
 =======================
 
 This module creates ATC codification system used on FHIR:
@@ -13,7 +13,7 @@ This module creates ATC codification system used on FHIR:
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Terminologies' activate 'ATC classification'.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
@@ -34,7 +34,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

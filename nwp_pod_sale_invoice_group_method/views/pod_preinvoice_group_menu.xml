@@ -10,6 +10,6 @@
         name="Pre-invoice management"
         parent="sale.sale_menu_root"
         sequence="4"
-        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_display"
+        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_display"
     />
 </odoo>

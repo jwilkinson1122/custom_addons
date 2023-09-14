@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     encounter_id = fields.Many2one(
-        comodel_name="medical.encounter", ondelete="restrict", index=True
+        comodel_name="pod.encounter", ondelete="restrict", index=True
     )
 
     @api.constrains("patient_id", "encounter_id")

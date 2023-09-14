@@ -5,18 +5,18 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalCoverage(TransactionCase):
+class TestPodiatryCoverage(TransactionCase):
     def setUp(self):
-        super(TestMedicalCoverage, self).setUp()
-        self.medical_user_group = self.env.ref(
-            "medical_base.group_medical_financial"
+        super(TestPodiatryCoverage, self).setUp()
+        self.pod_user_group = self.env.ref(
+            "pod_base.group_pod_financial"
         )
-        self.medical_user = self._create_user(
-            "medical_user", self.medical_user_group.id
+        self.pod_user = self._create_user(
+            "pod_user", self.pod_user_group.id
         )
-        self.patient_model = self.env["medical.patient"]
-        self.coverage_model = self.env["medical.coverage"]
-        self.coverage_template_model = self.env["medical.coverage.template"]
+        self.patient_model = self.env["pod.patient"]
+        self.coverage_model = self.env["pod.coverage"]
+        self.coverage_template_model = self.env["pod.coverage.template"]
         self.payor_model = self.env["res.partner"]
         self.patient_1 = self._create_patient()
         self.patient_2 = self._create_patient()
@@ -73,7 +73,7 @@ class TestMedicalCoverage(TransactionCase):
             "payor_id": self.payor_1.id,
         }
         coverage_template = self.coverage_template_model.with_user(
-            self.medical_user
+            self.pod_user
         ).create(coverage_template_vals)
         self.assertNotEquals(coverage_template, False)
         coverage_vals = {
@@ -82,7 +82,7 @@ class TestMedicalCoverage(TransactionCase):
             "subscriber_id": "abc123",
             "coverage_template_id": coverage_template.id,
         }
-        coverage = self.coverage_model.with_user(self.medical_user).create(
+        coverage = self.coverage_model.with_user(self.pod_user).create(
             coverage_vals
         )
         self.assertEqual(coverage.subscriber_id, "abc123")

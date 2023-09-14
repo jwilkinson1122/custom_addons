@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ================================
-Medical Patient second last name
+Podiatry Patient second last name
 ================================
 
 Allows to use second last name on patients

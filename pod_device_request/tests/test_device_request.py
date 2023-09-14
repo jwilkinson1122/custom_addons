@@ -6,10 +6,10 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase
 
 
-class TestMedicationRequest(TransactionCase):
+class TestDeviceRequest(TransactionCase):
     def setUp(self):
-        super(TestMedicationRequest, self).setUp()
-        self.patient = self.browse_ref("medical_base.patient_01")
+        super(TestDeviceRequest, self).setUp()
+        self.patient = self.browse_ref("pod_base.patient_01")
         stock_location = self.browse_ref("stock.warehouse0").lot_stock_id
         picking_type = self.env["stock.picking.type"].search([], limit=1)
         self.location = self.env["res.partner"].create(
@@ -20,16 +20,16 @@ class TestMedicationRequest(TransactionCase):
                 "stock_picking_type_id": picking_type.id,
             }
         )
-        self.medication = self.env["product.product"].create(
-            {"name": "Medication", "is_medication": True, "type": "consu"}
+        self.device = self.env["product.product"].create(
+            {"name": "Device", "is_device": True, "type": "consu"}
         )
 
     def test_flow(self):
-        request_obj = self.env["medical.medication.request"]
+        request_obj = self.env["pod.device.request"]
         request = request_obj.new(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "qty": 1,
             }
         )
@@ -37,12 +37,12 @@ class TestMedicationRequest(TransactionCase):
         request = request.create(request._convert_to_write(request._cache))
         request.draft2active()
         self.assertEqual(request.fhir_state, "active")
-        res = request.action_view_medication_administration()
+        res = request.action_view_device_administration()
         self.assertFalse(res["res_id"])
-        self.assertEqual(request.medication_administration_count, 0)
+        self.assertEqual(request.device_administration_count, 0)
         event = request.generate_event()
         request.refresh()
-        self.assertGreater(request.medication_administration_count, 0)
+        self.assertGreater(request.device_administration_count, 0)
         event.preparation2in_progress()
         self.assertEqual(event.fhir_state, "in-progress")
         event.in_progress2suspended()
@@ -58,5 +58,5 @@ class TestMedicationRequest(TransactionCase):
         self.assertTrue(event.occurrence_date)
         res = event.action_view_stock_moves()
         self.assertTrue(res["domain"])
-        res = request.action_view_medication_administration()
+        res = request.action_view_device_administration()
         self.assertEqual(res["res_id"], event.id)

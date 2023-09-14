@@ -2,10 +2,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
-    cancel_reason_id = fields.Many2one("medical.cancel.reason", string="Cancel reason")
+    cancel_reason_id = fields.Many2one("pod.cancel.reason", string="Cancel reason")
 
     @api.constrains("fhir_state", "cancel_reason_id")
     def check_cancel_reason_state(self):

@@ -15,7 +15,7 @@
         <field name="email">example@dkp.example.com</field>
         <field name="is_payor" eval="True" />
         <field name="company_type">company</field>
-        <field name="is_medical" eval="True" />
+        <field name="is_pod" eval="True" />
     </record>
     <record id="partner_payor_2" model="res.partner">
         <field name="name">ADL</field>
@@ -26,35 +26,35 @@
         <field name="email">example@adl.example.com</field>
         <field name="is_payor" eval="True" />
         <field name="company_type">company</field>
-        <field name="is_medical" eval="True" />
+        <field name="is_pod" eval="True" />
     </record>
     <!-- Coverage Template -->
-    <record id="medical_coverage_template_1" model="medical.coverage.template">
+    <record id="pod_coverage_template_1" model="pod.coverage.template">
         <field name="name">DKP Template</field>
-        <field name="payor_id" ref="medical_financial_coverage.partner_payor_1" />
+        <field name="payor_id" ref="pod_financial_coverage.partner_payor_1" />
         <field name="state">active</field>
     </record>
-    <record id="medical_coverage_template_2" model="medical.coverage.template">
+    <record id="pod_coverage_template_2" model="pod.coverage.template">
         <field name="name">ADL Template</field>
-        <field name="payor_id" ref="medical_financial_coverage.partner_payor_2" />
+        <field name="payor_id" ref="pod_financial_coverage.partner_payor_2" />
         <field name="state">active</field>
     </record>
     <!-- Coverage -->
-    <record id="medical_coverage_1" model="medical.coverage">
+    <record id="pod_coverage_1" model="pod.coverage">
         <field name="name">DKP Coverage</field>
-        <field name="patient_id" ref="medical_base.patient_02" />
+        <field name="patient_id" ref="pod_base.patient_02" />
         <field
             name="coverage_template_id"
-            ref="medical_financial_coverage.medical_coverage_template_1"
+            ref="pod_financial_coverage.pod_coverage_template_1"
         />
         <field name="state">active</field>
     </record>
-    <record id="medical_coverage_2" model="medical.coverage">
+    <record id="pod_coverage_2" model="pod.coverage">
         <field name="name">ADL Coverage</field>
-        <field name="patient_id" ref="medical_base.patient_02" />
+        <field name="patient_id" ref="pod_base.patient_02" />
         <field
             name="coverage_template_id"
-            ref="medical_financial_coverage.medical_coverage_template_2"
+            ref="pod_financial_coverage.pod_coverage_template_2"
         />
         <field name="state">active</field>
     </record>

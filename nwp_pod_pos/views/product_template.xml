@@ -8,16 +8,16 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field
             name="groups_id"
-            eval="[(4, ref('medical_base.group_medical_configurator'))]"
+            eval="[(4, ref('pod_base.group_pod_configurator'))]"
         />
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page
-                    name="medical_center"
-                    string="Medical centers"
+                    name="pod_center"
+                    string="Podiatry centers"
                     attrs="{'invisible': [('type', '!=', 'service')]}"
                 >
-                    <field name="medical_center_company_ids" />
+                    <field name="pod_center_company_ids" />
                 </page>
             </notebook>
         </field>

@@ -6,9 +6,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_role_view_form" model="ir.ui.view">
-        <field name="name">medical.role.view.form</field>
-        <field name="model">medical.role</field>
+    <record id="pod_role_view_form" model="ir.ui.view">
+        <field name="name">pod.role.view.form</field>
+        <field name="model">pod.role</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form>
@@ -30,9 +30,9 @@
             </form>
         </field>
     </record>
-    <record id="medical_role_view_tree" model="ir.ui.view">
-        <field name="name">medical.role.view.tree</field>
-        <field name="model">medical.role</field>
+    <record id="pod_role_view_tree" model="ir.ui.view">
+        <field name="name">pod.role.view.tree</field>
+        <field name="model">pod.role</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <tree>
@@ -41,10 +41,10 @@
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_role_action">
+    <record model="ir.actions.act_window" id="pod_role_action">
         <field name="name">Roles</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.role</field>
+        <field name="res_model">pod.role</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

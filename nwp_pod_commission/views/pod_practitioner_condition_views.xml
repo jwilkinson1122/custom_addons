@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_practitioner_condition_tree" model="ir.ui.view">
-        <field name="name">medical.practitioner.condition.tree</field>
-        <field name="model">medical.practitioner.condition</field>
+    <record id="pod_practitioner_condition_tree" model="ir.ui.view">
+        <field name="name">pod.practitioner.condition.tree</field>
+        <field name="model">pod.practitioner.condition</field>
         <field name="arch" type="xml">
             <tree editable="bottom" delete="0">
                 <field name="service_id" />
@@ -30,9 +30,9 @@
             </tree>
         </field>
     </record>
-    <record id="medical_practitioner_condition_form" model="ir.ui.view">
-        <field name="name">medical.practitioner.condition.form</field>
-        <field name="model">medical.practitioner.condition</field>
+    <record id="pod_practitioner_condition_form" model="ir.ui.view">
+        <field name="name">pod.practitioner.condition.form</field>
+        <field name="model">pod.practitioner.condition</field>
         <field name="arch" type="xml">
             <form>
                 <header />

@@ -12,8 +12,8 @@
         <field name="arch" type="xml">
             <label for="commission_free" position="after">
                 <div>
-                    <field name="medical_commission" />
-                    <label for="medical_commission" />
+                    <field name="pod_commission" />
+                    <label for="pod_commission" />
                 </div>
             </label>
         </field>

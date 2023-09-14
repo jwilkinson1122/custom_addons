@@ -10,7 +10,7 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="medical_administration_practitioner.res_partner_view_form"
+            ref="pod_administration_practitioner.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <field name="practitioner_role_ids" position="attributes">

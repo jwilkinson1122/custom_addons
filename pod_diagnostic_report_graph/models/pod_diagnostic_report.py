@@ -23,9 +23,9 @@ from odoo.tools.safe_eval import safe_eval, wrap_module
 from .export_png import get_screenshot_as_png
 
 
-class MedicalDiagnosticReport(models.Model):
+class PodiatryDiagnosticReport(models.Model):
 
-    _inherit = "medical.diagnostic.report"
+    _inherit = "pod.diagnostic.report"
 
     bokeh_chart = fields.Text(copy=False)
     html_chart = fields.Html()
@@ -137,8 +137,8 @@ class MedicalDiagnosticReport(models.Model):
             "views": [
                 (
                     self.env.ref(
-                        "medical_diagnostic_report_graph."
-                        "medical_diagnostic_report_form_view_preview_graph"
+                        "pod_diagnostic_report_graph."
+                        "pod_diagnostic_report_form_view_preview_graph"
                     ).id,
                     "form",
                 )

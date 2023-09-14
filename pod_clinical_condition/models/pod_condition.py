@@ -5,20 +5,20 @@
 from odoo import _, api, fields, models
 
 
-class MedicalCondition(models.Model):
+class PodiatryCondition(models.Model):
     # FHIR Entity: Condition (https://www.hl7.org/fhir/condition.html)
-    _name = "medical.condition"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.condition"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _description = "Conditions"
 
     name = fields.Char(compute="_compute_condition_name")
 
     patient_id = fields.Many2one(
-        comodel_name="medical.patient", string="Subject", required=True
+        comodel_name="pod.patient", string="Subject", required=True
     )  # FHIR Field: Subject
 
     clinical_finding_id = fields.Many2one(
-        comodel_name="medical.clinical.finding", tracking=True
+        comodel_name="pod.clinical.finding", tracking=True
     )
 
     active = fields.Boolean(default=True, tracking=True)
@@ -31,7 +31,7 @@ class MedicalCondition(models.Model):
 
     criticality = fields.Selection([("low", "Low"), ("high", "High")])
     allergy_id = fields.Many2one(
-        comodel_name="medical.allergy.substance", tracking=True
+        comodel_name="pod.allergy.substance", tracking=True
     )
 
     last_occurrence_date = fields.Date(tracking=True)
@@ -41,7 +41,7 @@ class MedicalCondition(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.condition")
+            self.env["ir.sequence"].sudo().next_by_code("pod.condition")
             or "/"
         )
 

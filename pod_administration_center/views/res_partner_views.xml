@@ -5,8 +5,8 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_center_location_action" model="ir.actions.act_window">
-        <field name="name">Medical Locations</field>
+    <record id="pod_center_location_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -15,7 +15,7 @@
         </field>
         <field name="context">{'default_company_type':'company',
             'default_is_company':True, 'default_is_location': True,
-            'default_is_medical': True,
+            'default_is_pod': True,
             'default_center_id': active_id,
             }
         </field>
@@ -23,10 +23,10 @@
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
-        <field name="groups_id" eval="[(4, ref('medical_base.group_medical_user'))]" />
+        <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]" />
         <field
             name="inherit_id"
-            ref="medical_administration_location.res_partner_view_form"
+            ref="pod_administration_location.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <xpath
@@ -35,10 +35,10 @@
             >
                 <field name="is_center" invisible="1" />
             </xpath>
-            <field name="is_medical" position="before">
+            <field name="is_pod" position="before">
                 <field name="is_center" />
             </field>
-            <xpath expr="//field[@name='is_medical']/.." position="after">
+            <xpath expr="//field[@name='is_pod']/.." position="after">
                 <group
                     name="location_config"
                     attrs="{'invisible': [('is_location','=',False)]}"
@@ -52,7 +52,7 @@
             <div name="button_box" position="inside">
                 <button
                     type="action"
-                    name="%(medical_center_location_action)d"
+                    name="%(pod_center_location_action)d"
                     class="oe_stat_button"
                     icon="fa-h-square"
                     attrs="{'invisible': [('is_center', '=', False)]}"
@@ -63,15 +63,15 @@
             </div>
         </field>
     </record>
-    <record id="medical_center_action" model="ir.actions.act_window">
-        <field name="name">Medical Centers</field>
+    <record id="pod_center_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Centers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_center', '=', True)]</field>
         <field name="context">{'default_company_type':'company',
             'default_is_company':True, 'default_is_center': True,
-            'default_is_medical': True}
+            'default_is_pod': True}
         </field>
     </record>
 </odoo>

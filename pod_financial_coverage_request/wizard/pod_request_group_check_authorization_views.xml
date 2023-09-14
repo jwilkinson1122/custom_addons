@@ -5,10 +5,10 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
     -->
 <odoo>
-    <record model="ir.ui.view" id="medical_request_group_check_authorization_form">
-        <field name="name">medical.request.group.check.authorization.form
+    <record model="ir.ui.view" id="pod_request_group_check_authorization_form">
+        <field name="name">pod.request.group.check.authorization.form
         </field>
-        <field name="model">medical.request.group.check.authorization</field>
+        <field name="model">pod.request.group.check.authorization</field>
         <field name="arch" type="xml">
             <form>
                 <field name="request_group_id" invisible="1" />
@@ -48,11 +48,11 @@
         </field>
     </record>
     <record
-        id="medical_request_group_check_authorization_action"
+        id="pod_request_group_check_authorization_action"
         model="ir.actions.act_window"
     >
         <field name="name">Check authorization</field>
-        <field name="res_model">medical.request.group.check.authorization</field>
+        <field name="res_model">pod.request.group.check.authorization</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

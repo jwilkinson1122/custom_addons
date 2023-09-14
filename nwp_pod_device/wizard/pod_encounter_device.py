@@ -1,11 +1,11 @@
 from odoo import fields, models
 
 
-class MedicalCareplanMedication(models.TransientModel):
-    _name = "medical.encounter.medication"
-    _description = "medical.encounter.medication"
+class PodiatryCareplanDevice(models.TransientModel):
+    _name = "pod.encounter.device"
+    _description = "pod.encounter.device"
 
-    medical_id = fields.Many2one("medical.encounter", required=True, readonly=True)
+    pod_id = fields.Many2one("pod.encounter", required=True, readonly=True)
     product_id = fields.Many2one(
         "product.product",
         required=True,
@@ -21,4 +21,4 @@ class MedicalCareplanMedication(models.TransientModel):
     )
 
     def run(self):
-        return self.medical_id.add_medication(self.location_id, self.product_id)
+        return self.pod_id.add_device(self.location_id, self.product_id)

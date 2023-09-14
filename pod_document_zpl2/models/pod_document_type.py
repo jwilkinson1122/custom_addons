@@ -1,10 +1,10 @@
 from odoo import fields, models
 
 
-class MedicalDocumentType(models.Model):
+class PodiatryDocumentType(models.Model):
     # FHIR Entity: Document Refernece
     # (https://www.hl7.org/fhir/documentreference.html)
-    _inherit = "medical.document.type"
+    _inherit = "pod.document.type"
 
     document_type = fields.Selection(
         selection_add=[("zpl2", "ZPL2 Label")], ondelete={"zpl2": "cascade"}

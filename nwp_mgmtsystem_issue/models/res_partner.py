@@ -21,7 +21,7 @@ class ResPartner(models.Model):
     def action_view_quality_issues(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_mgmtsystem_issue.mgmtsystem_quality_issue_act_window"
+            "nwp_mgmtsystem_issue.mgmtsystem_quality_issue_act_window"
         )
         if len(self.quality_issue_ids) > 1:
             action["domain"] = [("partner_id", "=", self.id)]
@@ -29,7 +29,7 @@ class ResPartner(models.Model):
             action["views"] = [
                 (
                     self.env.ref(
-                        "cb_mgmtsystem_issue.mgmtsystem_quality_issue_form_view"
+                        "nwp_mgmtsystem_issue.mgmtsystem_quality_issue_form_view"
                     ).id,
                     "form",
                 )

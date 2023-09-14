@@ -16,8 +16,8 @@ class TestNonconformityEncounter(TransactionCase):
                 "manager_user_id": self.env.uid,
             }
         )
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.encounter = self.env["medical.encounter"].create(
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id}
         )
 

@@ -1,4 +1,4 @@
 from . import account_invoice
-from . import medical_guard
-from . import medical_guard_plan
+from . import pod_guard
+from . import pod_guard_plan
 from . import res_partner

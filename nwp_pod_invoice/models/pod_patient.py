@@ -1,12 +1,12 @@
 from odoo import fields, models
 
 
-class MedicalPatient(models.Model):
-    _inherit = "medical.patient"
+class PodiatryPatient(models.Model):
+    _inherit = "pod.patient"
 
     related_partner_ids = fields.Many2many(
         "res.partner",
-        "medical_patient_invoicable_partner",
+        "pod_patient_invoicable_partner",
         "patient_id",
         "partner_id",
     )

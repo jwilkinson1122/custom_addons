@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalLocation(TransactionCase):
+class TestPodiatryLocation(TransactionCase):
     def test_center(self):
         vals = {
             "name": "reception",

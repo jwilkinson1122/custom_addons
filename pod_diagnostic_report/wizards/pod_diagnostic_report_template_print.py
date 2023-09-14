@@ -4,13 +4,13 @@
 from odoo import api, fields, models
 
 
-class MedicalDiagnosticReportTemplatePrint(models.TransientModel):
-    _name = "medical.diagnostic.report.template.print"
+class PodiatryDiagnosticReportTemplatePrint(models.TransientModel):
+    _name = "pod.diagnostic.report.template.print"
     _description = (
         "This wizard allows to print from template with the selected language"
     )
     diagnostic_template_id = fields.Many2one(
-        "medical.diagnostic.report.template", required=True
+        "pod.diagnostic.report.template", required=True
     )
     lang = fields.Selection(
         string="Language",
@@ -27,7 +27,7 @@ class MedicalDiagnosticReportTemplatePrint(models.TransientModel):
         return (
             self.env["ir.actions.report"]
             ._for_xml_id(
-                "medical_diagnostic_report.medical_diagnostic_report_template_preview"
+                "pod_diagnostic_report.pod_diagnostic_report_template_preview"
             )
             .with_context(lang=self.lang, force_lang=self.lang)
             .report_action(

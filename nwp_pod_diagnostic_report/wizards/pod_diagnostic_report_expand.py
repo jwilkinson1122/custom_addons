@@ -4,10 +4,10 @@
 from odoo import fields, models
 
 
-class MedicalDiagnosticReportExpand(models.TransientModel):
+class PodiatryDiagnosticReportExpand(models.TransientModel):
 
-    _inherit = "medical.diagnostic.report.expand"
+    _inherit = "pod.diagnostic.report.expand"
     report_category_id = fields.Many2one(
-        "medical.report.category",
+        "pod.report.category",
         related="diagnostic_report_id.report_category_id",
     )

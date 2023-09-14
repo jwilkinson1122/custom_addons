@@ -4,15 +4,15 @@
 from odoo.tests import TransactionCase
 
 
-class TestMedicalObservation(TransactionCase):
+class TestPodiatryObservation(TransactionCase):
     def setUp(self):
-        super(TestMedicalObservation, self).setUp()
-        self.patient_1 = self.env["medical.patient"].create(
+        super(TestPodiatryObservation, self).setUp()
+        self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
 
     def test_compute_interpretation_float(self):
-        observation = self.env["medical.observation"].create(
+        observation = self.env["pod.observation"].create(
             {
                 "name": "Observation 1",
                 "reference_range_low": 2.5,
@@ -28,7 +28,7 @@ class TestMedicalObservation(TransactionCase):
         self.assertEqual(observation.interpretation, "high")
 
     def test_compute_interpretation_int(self):
-        observation = self.env["medical.observation"].create(
+        observation = self.env["pod.observation"].create(
             {
                 "name": "Observation 2",
                 "reference_range_low": 2,
@@ -44,15 +44,15 @@ class TestMedicalObservation(TransactionCase):
         self.assertEqual(observation.interpretation, "high")
 
     def test_compute_interpretation_bool(self):
-        observation = self.env["medical.observation"].create(
+        observation = self.env["pod.observation"].create(
             {"name": "Observation 3", "patient_id": self.patient_1.id}
         )
         observation.value_bool = True
         self.assertFalse(observation.interpretation)
 
     def test_compute_reference_range_with_range(self):
-        uom = self.env.ref("medical_diagnostic_report.uom_gram_deciliter")
-        observation = self.env["medical.observation"].create(
+        uom = self.env.ref("pod_diagnostic_report.uom_gram_deciliter")
+        observation = self.env["pod.observation"].create(
             {
                 "name": "Observation 4",
                 "reference_range_low": 2.5,
@@ -71,14 +71,14 @@ class TestMedicalObservation(TransactionCase):
         )
 
     def test_compute_reference_range_without_range(self):
-        observation = self.env["medical.observation"].create(
+        observation = self.env["pod.observation"].create(
             {"name": "Observation 5", "patient_id": self.patient_1.id}
         )
         self.assertFalse(observation.reference_range_limit)
 
     def test_compute_reference_range_only_high_reference_limit(self):
-        uom = self.env.ref("medical_diagnostic_report.uom_gram_deciliter")
-        observation = self.env["medical.observation"].create(
+        uom = self.env.ref("pod_diagnostic_report.uom_gram_deciliter")
+        observation = self.env["pod.observation"].create(
             {
                 "name": "Observation 6",
                 "reference_range_high": 10.3,

@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =============================================
-Medical Administration Practitioner Specialty
+Podiatry Administration Practitioner Specialty
 =============================================
 
 This module adds specialties on practitioner roles.
@@ -16,7 +16,7 @@ To install this module, simply follow the standard install process.
 Usage
 =====
 
-#. Go to Medical / Administration / Practitioner / Practitioners
+#. Go to Podiatry / Administration / Practitioner / Practitioners
 #. Specialties can be added on roles
 
 Credits

@@ -5,12 +5,12 @@
 from odoo import api, fields, models
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     request_group_id = fields.Many2one(
         string="Parent Request group",
-        comodel_name="medical.request.group",
+        comodel_name="pod.request.group",
         ondelete="restrict",
         index=True,
         readonly=True,
@@ -18,7 +18,7 @@ class MedicalRequest(models.AbstractModel):
 
     request_group_ids = fields.One2many(
         string="Parent Request Group",
-        comodel_name="medical.request.group",
+        comodel_name="pod.request.group",
         compute="_compute_request_group_ids",
     )
     request_group_count = fields.Integer(
@@ -29,7 +29,7 @@ class MedicalRequest(models.AbstractModel):
     def _compute_request_group_ids(self):
         inverse_field_name = self._get_parent_field_name()
         for rec in self:
-            request_groups = self.env["medical.request.group"].search(
+            request_groups = self.env["pod.request.group"].search(
                 [(inverse_field_name, "=", rec.id)]
             )
             rec.request_group_ids = [(6, 0, request_groups.ids)]
@@ -37,8 +37,8 @@ class MedicalRequest(models.AbstractModel):
 
     @api.model
     def _get_request_models(self):
-        res = super(MedicalRequest, self)._get_request_models()
-        res.append("medical.request.group")
+        res = super(PodiatryRequest, self)._get_request_models()
+        res.append("pod.request.group")
         return res
 
     @api.constrains("request_group_id")

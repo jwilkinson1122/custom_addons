@@ -5,8 +5,8 @@
 from odoo import api, fields, models
 
 
-class MedicalRequestGroupCheckAuthorization(models.TransientModel):
-    _inherit = "medical.request.group.check.authorization"
+class PodiatryRequestGroupCheckAuthorization(models.TransientModel):
+    _inherit = "pod.request.group.check.authorization"
 
     @api.model
     def _default_authorization(self):

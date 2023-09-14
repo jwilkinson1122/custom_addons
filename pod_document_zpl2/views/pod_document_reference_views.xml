@@ -5,12 +5,12 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_document_reference_view_form" model="ir.ui.view">
-        <field name="name">medical.document.reference.view.form</field>
-        <field name="model">medical.document.reference</field>
+    <record id="pod_document_reference_view_form" model="ir.ui.view">
+        <field name="name">pod.document.reference.view.form</field>
+        <field name="model">pod.document.reference</field>
         <field
             name="inherit_id"
-            ref="medical_document.medical_document_reference_view_form"
+            ref="pod_document.pod_document_reference_view_form"
         />
         <field name="arch" type="xml">
             <header position="inside">

@@ -5,11 +5,11 @@
 from odoo import api, fields, models
 
 
-class MedicalCoverageTemplate(models.Model):
-    _name = "medical.coverage.template"
-    _description = "Medical Coverage Template"
+class PodiatryCoverageTemplate(models.Model):
+    _name = "pod.coverage.template"
+    _description = "Podiatry Coverage Template"
     _order = "payor_id,name"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(
         string="Name",
@@ -30,7 +30,7 @@ class MedicalCoverageTemplate(models.Model):
     )
     coverage_ids = fields.One2many(
         string="Coverage",
-        comodel_name="medical.coverage",
+        comodel_name="pod.coverage",
         inverse_name="coverage_template_id",
     )
     state = fields.Selection(
@@ -53,7 +53,7 @@ class MedicalCoverageTemplate(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.coverage.template")
+            .next_by_code("pod.coverage.template")
             or "/"
         )
 

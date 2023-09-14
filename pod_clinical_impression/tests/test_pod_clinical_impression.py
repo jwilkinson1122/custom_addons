@@ -10,18 +10,18 @@ from odoo.tests.common import TransactionCase
 class TestClinicalImpression(TransactionCase):
     def setUp(self):
         super(TestClinicalImpression, self).setUp()
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.encounter = self.env["medical.encounter"].create(
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id}
         )
-        self.finding_pregnant = self.env["medical.clinical.finding"].create(
+        self.finding_pregnant = self.env["pod.clinical.finding"].create(
             {
                 "name": "Pregnant",
                 "create_condition_from_clinical_impression": True,
             }
         )
         self.finding_eye_infection = self.env[
-            "medical.clinical.finding"
+            "pod.clinical.finding"
         ].create(
             {
                 "name": "Eye infection",
@@ -29,7 +29,7 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         self.allergy_substance_pollen = self.env[
-            "medical.allergy.substance"
+            "pod.allergy.substance"
         ].create(
             {
                 "name": "Pollen",
@@ -37,7 +37,7 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         self.allergy_substance_ibuprofen = self.env[
-            "medical.allergy.substance"
+            "pod.allergy.substance"
         ].create(
             {
                 "name": "Ibuprofen",
@@ -45,15 +45,15 @@ class TestClinicalImpression(TransactionCase):
                 "create_warning": True,
             }
         )
-        self.specialty_cardiology = self.env["medical.specialty"].create(
+        self.specialty_cardiology = self.env["pod.specialty"].create(
             {"name": "Cardiology", "description": "Cardiology"}
         )
-        self.specialty_gynecology = self.env["medical.specialty"].create(
+        self.specialty_gynecology = self.env["pod.specialty"].create(
             {"name": "Gynecology", "description": "Gynecology"}
         )
 
     def test_validate_impression_fields(self):
-        impression = self.env["medical.clinical.impression"].create(
+        impression = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -69,8 +69,8 @@ class TestClinicalImpression(TransactionCase):
         self.assertEqual(impression.fhir_state, "completed")
 
     def test_create_condition_from_impression_finding(self):
-        self.assertEqual(self.patient.medical_condition_count, 0)
-        impression = self.env["medical.clinical.impression"].create(
+        self.assertEqual(self.patient.pod_condition_count, 0)
+        impression = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -83,14 +83,14 @@ class TestClinicalImpression(TransactionCase):
         )
         # It should create a condition for pregnant finding only
         impression.validate_clinical_impression()
-        self.assertEqual(self.patient.medical_condition_count, 1)
+        self.assertEqual(self.patient.pod_condition_count, 1)
         self.assertEqual(
-            self.patient.medical_condition_ids[0].clinical_finding_id.id,
+            self.patient.pod_condition_ids[0].clinical_finding_id.id,
             self.finding_pregnant.id,
         )
         # If a new impression is created with the same finding,
         # it should not create a condition
-        impression_2 = self.env["medical.clinical.impression"].create(
+        impression_2 = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -99,15 +99,15 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         impression_2.validate_clinical_impression()
-        self.assertEqual(self.patient.medical_condition_count, 1)
+        self.assertEqual(self.patient.pod_condition_count, 1)
         self.assertEqual(
-            self.patient.medical_condition_ids[0].clinical_finding_id.id,
+            self.patient.pod_condition_ids[0].clinical_finding_id.id,
             self.finding_pregnant.id,
         )
 
     def test_create_allergy_from_impression_allergy_substance(self):
-        self.assertEqual(self.patient.medical_allergies_count, 0)
-        impression = self.env["medical.clinical.impression"].create(
+        self.assertEqual(self.patient.pod_allergies_count, 0)
+        impression = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -118,14 +118,14 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         impression.validate_clinical_impression()
-        self.assertEqual(self.patient.medical_allergies_count, 1)
+        self.assertEqual(self.patient.pod_allergies_count, 1)
         self.assertEqual(
-            self.patient.medical_allergy_ids[0].allergy_id.id,
+            self.patient.pod_allergy_ids[0].allergy_id.id,
             self.allergy_substance_ibuprofen.id,
         )
         # If a new impression is created with the same allergy substance,
         # it should not create an allergy
-        impression_2 = self.env["medical.clinical.impression"].create(
+        impression_2 = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -136,14 +136,14 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         impression_2.validate_clinical_impression()
-        self.assertEqual(self.patient.medical_allergies_count, 1)
+        self.assertEqual(self.patient.pod_allergies_count, 1)
         self.assertEqual(
-            self.patient.medical_allergy_ids[0].allergy_id.id,
+            self.patient.pod_allergy_ids[0].allergy_id.id,
             self.allergy_substance_ibuprofen.id,
         )
 
     def test_cancel_impression(self):
-        impression = self.env["medical.clinical.impression"].create(
+        impression = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -154,21 +154,21 @@ class TestClinicalImpression(TransactionCase):
             }
         )
         impression.validate_clinical_impression()
-        self.assertEqual(self.patient.medical_allergies_count, 1)
+        self.assertEqual(self.patient.pod_allergies_count, 1)
         impression.cancel_clinical_impression()
         # The allergies and findings created in that impression should be cancelled too.
         self.patient.refresh()
-        self.assertEqual(self.patient.medical_allergies_count, 0)
+        self.assertEqual(self.patient.pod_allergies_count, 0)
 
     def test_compute_current_encounter(self):
-        impression = self.env["medical.clinical.impression"].create(
+        impression = self.env["pod.clinical.impression"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
                 "specialty_id": self.specialty_gynecology.id,
             }
         )
-        self.encounter_2 = self.env["medical.encounter"].create(
+        self.encounter_2 = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id}
         )
         impression.with_context(

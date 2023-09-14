@@ -4,21 +4,21 @@
 from odoo import api, fields, models
 
 
-class MedicalEncounterCreateExternalRequest(models.TransientModel):
+class PodiatryEncounterCreateExternalRequest(models.TransientModel):
 
-    _name = "medical.encounter.create.external.request"
+    _name = "pod.encounter.create.external.request"
     _description = "Generate report from encounter using a template"
 
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         required=True,
         default=lambda r: r._default_encounter(),
     )
     patient_id = fields.Many2one(
-        "medical.patient", default=lambda r: r._default_patient()
+        "pod.patient", default=lambda r: r._default_patient()
     )
     template_id = fields.Many2one(
-        "medical.procedure.external.request.template", required=True
+        "pod.procedure.external.request.template", required=True
     )
     lang = fields.Selection(
         string="Language",
@@ -31,7 +31,7 @@ class MedicalEncounterCreateExternalRequest(models.TransientModel):
     def _default_encounter(self):
         if self.env.context.get("default_patient_id"):
             return (
-                self.env["medical.patient"]
+                self.env["pod.patient"]
                 .browse(self.env.context.get("default_patient_id"))
                 ._get_last_encounter()
                 .id
@@ -42,7 +42,7 @@ class MedicalEncounterCreateExternalRequest(models.TransientModel):
     def _default_patient(self):
         if self.env.context.get("default_encounter_id"):
             return (
-                self.env["medical.encounter"]
+                self.env["pod.encounter"]
                 .browse(self.env.context.get("default_encounter_id"))
                 .patient_id.id
             )

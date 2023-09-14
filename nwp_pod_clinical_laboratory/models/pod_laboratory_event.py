@@ -6,20 +6,20 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalLaboratoryEvent(models.Model):
-    _inherit = "medical.laboratory.event"
+class PodiatryLaboratoryEvent(models.Model):
+    _inherit = "pod.laboratory.event"
 
     delay = fields.Date()
     laboratory_code = fields.Char(required=True, readonly=True)
     laboratory_service_id = fields.Many2one(
-        "medical.laboratory.service",
+        "pod.laboratory.service",
         readonly=True,
         states={
             "draft": [("readonly", False)],
         },
     )
     laboratory_service_ids = fields.Many2many(
-        "medical.laboratory.service",
+        "pod.laboratory.service",
         related="laboratory_request_id.laboratory_service_ids",
         string="Request Laboratory services",
     )
@@ -43,7 +43,7 @@ class MedicalLaboratoryEvent(models.Model):
             price = rec.laboratory_service_id.service_price_ids.filtered(
                 lambda r: r.laboratory_code == cov.laboratory_code
             )
-            cai = self.env["medical.coverage.agreement.item"].get_item(
+            cai = self.env["pod.coverage.agreement.item"].get_item(
                 self.service_id, cov, self.laboratory_request_id.center_id
             )
             if (

@@ -5,29 +5,29 @@ from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalDocumentZPL2(TransactionCase):
+class TestPodiatryDocumentZPL2(TransactionCase):
     def setUp(self):
         super().setUp()
         self.label_zpl2 = self.env["printing.label.zpl2"].create(
             {
                 "name": "label1",
                 "model_id": self.env.ref(
-                    "medical_document.model_medical_document_reference"
+                    "pod_document.model_pod_document_reference"
                 ).id,
                 "component_ids": [
                     (0, 0, {"name": "DEMO", "data": "object.patient_id.name"})
                 ],
             }
         )
-        self.zpl2_document_type = self.env["medical.document.type"].create(
+        self.zpl2_document_type = self.env["pod.document.type"].create(
             {
                 "name": "CI",
                 "document_type": "zpl2",
                 "label_zpl2_id": self.label_zpl2.id,
             }
         )
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.reference = self.env["medical.document.reference"].create(
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.reference = self.env["pod.document.reference"].create(
             {
                 "document_type": self.zpl2_document_type.document_type,
                 "document_type_id": self.zpl2_document_type.id,
@@ -46,7 +46,7 @@ class TestMedicalDocumentZPL2(TransactionCase):
         self.label_zpl2.model_id = self.env.ref(
             "base_report_to_printer.model_printing_printer"
         )
-        reference = self.env["medical.document.reference"].create(
+        reference = self.env["pod.document.reference"].create(
             {
                 "document_type": self.zpl2_document_type.document_type,
                 "document_type_id": self.zpl2_document_type.id,
@@ -63,14 +63,14 @@ class TestMedicalDocumentZPL2(TransactionCase):
         self.assertNotEqual(self.reference._get_printer_usage(), "label")
 
     def test_render_label(self):
-        self.zpl2_document_type2 = self.env["medical.document.type"].create(
+        self.zpl2_document_type2 = self.env["pod.document.type"].create(
             {
                 "name": "CI",
                 "document_type": "zpl2",
                 "label_zpl2_id": self.label_zpl2.id,
             }
         )
-        reference = self.env["medical.document.reference"].create(
+        reference = self.env["pod.document.reference"].create(
             {
                 "document_type": self.zpl2_document_type2.document_type,
                 "document_type_id": self.zpl2_document_type2.id,

@@ -2,13 +2,13 @@
 <!-- Copyright 2022 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_procedure_external_request_form_view">
+    <record model="ir.ui.view" id="pod_procedure_external_request_form_view">
         <field
             name="name"
-        >medical.procedure.external.request.form (in medical_procedure_external)</field>
-        <field name="model">medical.procedure.external.request</field>
+        >pod.procedure.external.request.form (in pod_procedure_external)</field>
+        <field name="model">pod.procedure.external.request</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_workflow.medical_event_form" />
+        <field name="inherit_id" ref="pod_workflow.pod_event_form" />
         <field name="arch" type="xml">
             <header position="inside">
                 <button
@@ -90,11 +90,11 @@
             </xpath>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_procedure_external_request_search_view">
+    <record model="ir.ui.view" id="pod_procedure_external_request_search_view">
         <field
             name="name"
-        >medical.procedure.external.request.search (in medical_procedure_external)</field>
-        <field name="model">medical.procedure.external.request</field>
+        >pod.procedure.external.request.search (in pod_procedure_external)</field>
+        <field name="model">pod.procedure.external.request</field>
         <field name="arch" type="xml">
             <search>
                 <field name="internal_identifier" />
@@ -107,13 +107,13 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_procedure_external_request_tree_view">
+    <record model="ir.ui.view" id="pod_procedure_external_request_tree_view">
         <field
             name="name"
-        >medical.procedure.external.request.tree (in medical_procedure_external)</field>
-        <field name="model">medical.procedure.external.request</field>
+        >pod.procedure.external.request.tree (in pod_procedure_external)</field>
+        <field name="model">pod.procedure.external.request</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_workflow.medical_event_tree" />
+        <field name="inherit_id" ref="pod_workflow.pod_event_tree" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">false</attribute>
@@ -133,16 +133,16 @@
     </record>
     <record
         model="ir.actions.act_window"
-        id="medical_procedure_external_request_act_window"
+        id="pod_procedure_external_request_act_window"
     >
         <field name="name">External Request</field>
-        <field name="res_model">medical.procedure.external.request</field>
+        <field name="res_model">pod.procedure.external.request</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_procedure_external_request_menu">
+    <record model="ir.ui.menu" id="pod_procedure_external_request_menu">
         <field name="name">External Request</field>
-        <field name="parent_id" ref="medical_root_request" />
-        <field name="action" ref="medical_procedure_external_request_act_window" />
+        <field name="parent_id" ref="pod_root_request" />
+        <field name="action" ref="pod_procedure_external_request_act_window" />
         <field name="sequence" eval="16" />
     </record>
 </odoo>

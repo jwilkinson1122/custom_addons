@@ -4,9 +4,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record id="seq_medical_diagnostic_report" model="ir.sequence">
+    <record id="seq_pod_diagnostic_report" model="ir.sequence">
         <field name="name">Diagnostic Report</field>
-        <field name="code">medical.diagnostic.report</field>
+        <field name="code">pod.diagnostic.report</field>
         <field name="prefix">MDR</field>
         <field name="padding">6</field>
     </record>

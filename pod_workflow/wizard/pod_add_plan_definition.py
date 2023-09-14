@@ -6,12 +6,12 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
-class MedicalAddPlanDefinition(models.TransientModel):
-    _name = "medical.add.plan.definition"
+class PodiatryAddPlanDefinition(models.TransientModel):
+    _name = "pod.add.plan.definition"
     _description = "Add plan definition"
 
     patient_id = fields.Many2one(
-        comodel_name="medical.patient", string="Patient", required=True
+        comodel_name="pod.patient", string="Patient", required=True
     )
 
     plan_definition_id = fields.Many2one(

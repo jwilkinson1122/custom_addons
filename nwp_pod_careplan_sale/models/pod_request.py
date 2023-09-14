@@ -6,17 +6,17 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalRequest(models.AbstractModel):
-    _inherit = "medical.request"
+class PodiatryRequest(models.AbstractModel):
+    _inherit = "pod.request"
 
     @api.model
     def _get_sale_order_domain(self):
-        return [("medical_model", "=", self._name)]
+        return [("pod_model", "=", self._name)]
 
     sale_order_line_ids = fields.One2many(
         string="Sale order lines",
         comodel_name="sale.order.line",
-        inverse_name="medical_res_id",
+        inverse_name="pod_res_id",
         domain=lambda self: self._get_sale_order_domain(),
     )
     sale_order_line_count = fields.Integer(compute="_compute_sale_order_line_count")
@@ -35,7 +35,7 @@ class MedicalRequest(models.AbstractModel):
         states={"draft": [("readonly", False)]},
     )
     authorization_method_id = fields.Many2one(
-        "medical.authorization.method", tracking=True, readonly=True
+        "pod.authorization.method", tracking=True, readonly=True
     )
     invoice_group_method_id = fields.Many2one(
         "invoice.group.method",
@@ -50,7 +50,7 @@ class MedicalRequest(models.AbstractModel):
         states={"draft": [("readonly", False)]},
     )
 
-    medical_sale_discount_id = fields.Many2one("medical.sale.discount", readonly=True)
+    pod_sale_discount_id = fields.Many2one("pod.sale.discount", readonly=True)
     discount = fields.Float(readonly=True, digits="Discount")
 
     @api.depends("sale_order_line_ids")
@@ -119,8 +119,8 @@ class MedicalRequest(models.AbstractModel):
         res = {
             "product_id": self.service_id.id,
             "name": self.service_id.name or self.name,
-            "medical_model": self._name,
-            "medical_res_id": self.id,
+            "pod_model": self._name,
+            "pod_res_id": self.id,
             "product_uom_qty": self.qty or 1,
             "product_uom": self.service_id.uom_id.id,
             "price_unit": self.compute_price(is_insurance),
@@ -133,9 +133,9 @@ class MedicalRequest(models.AbstractModel):
             res["patient_name"] = self.patient_id.display_name
             res["authorization_number"] = self.authorization_number
             res["subscriber_id"] = self.coverage_id.subscriber_id
-        if self.medical_sale_discount_id:
+        if self.pod_sale_discount_id:
             res["discount"] = self.discount or 0.0
-            res["medical_sale_discount_id"] = self.medical_sale_discount_id.id
+            res["pod_sale_discount_id"] = self.pod_sale_discount_id.id
         return res
 
     def check_is_billable(self):
@@ -143,7 +143,7 @@ class MedicalRequest(models.AbstractModel):
             return True
         # Agreement is researched if it is not billable
         self.coverage_agreement_item_id = self.env[
-            "medical.coverage.agreement.item"
+            "pod.coverage.agreement.item"
         ].get_item(
             self.service_id,
             self.coverage_id.coverage_template_id,

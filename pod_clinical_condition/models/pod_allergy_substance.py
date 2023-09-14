@@ -5,16 +5,16 @@
 from odoo import api, fields, models
 
 
-class MedicalAllergySubstance(models.Model):
+class PodiatryAllergySubstance(models.Model):
 
-    _name = "medical.allergy.substance"
-    _inherit = "medical.abstract"
+    _name = "pod.allergy.substance"
+    _inherit = "pod.abstract"
     _description = "Substance/Pharmaceutical/Biological product codes"
 
     name = fields.Char(required=True)
     description = fields.Char()
     sct_code_id = fields.Many2one(
-        comodel_name="medical.sct.concept",
+        comodel_name="pod.sct.concept",
         domain=[
             "|",
             ("is_clinical_substance", "=", True),
@@ -23,7 +23,7 @@ class MedicalAllergySubstance(models.Model):
     )
     create_warning = fields.Boolean(
         help="Mark if this allergy substance needs to create "
-        "a warning for taking medical decisions"
+        "a warning for taking pod decisions"
     )
 
     @api.model
@@ -31,6 +31,6 @@ class MedicalAllergySubstance(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.allergy.substance")
+            .next_by_code("pod.allergy.substance")
             or "/"
         )

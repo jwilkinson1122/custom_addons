@@ -5,24 +5,24 @@
 from odoo import api, fields, models
 
 
-class MedicalCareplanAddPlanDefinition(models.TransientModel):
-    _inherit = "medical.careplan.add.plan.definition"
+class PodiatryCareplanAddPlanDefinition(models.TransientModel):
+    _inherit = "pod.careplan.add.plan.definition"
 
     coverage_id = fields.Many2one(
-        "medical.coverage", related="careplan_id.coverage_id", readonly=True
+        "pod.coverage", related="careplan_id.coverage_id", readonly=True
     )
     center_id = fields.Many2one(
         "res.partner", related="careplan_id.center_id", readonly=True
     )
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         related="coverage_id.coverage_template_id",
         readonly=True,
     )
     agreement_ids = fields.Many2many(
-        "medical.coverage.agreement", compute="_compute_agreements"
+        "pod.coverage.agreement", compute="_compute_agreements"
     )
-    agreement_line_id = fields.Many2one("medical.coverage.agreement.item")
+    agreement_line_id = fields.Many2one("pod.coverage.agreement.item")
     product_id = fields.Many2one(
         "product.product",
         related="agreement_line_id.product_id",
@@ -34,12 +34,12 @@ class MedicalCareplanAddPlanDefinition(models.TransientModel):
         readonly=True,
     )
     authorization_method_id = fields.Many2one(
-        "medical.authorization.method",
+        "pod.authorization.method",
         related="agreement_line_id.authorization_method_id",
         readonly=True,
     )
     authorization_format_id = fields.Many2one(
-        "medical.authorization.format",
+        "pod.authorization.format",
         related="agreement_line_id.authorization_format_id",
         readonly=True,
     )
@@ -78,7 +78,7 @@ class MedicalCareplanAddPlanDefinition(models.TransientModel):
     def _compute_agreements(self):
         for rec in self:
             date = rec._get_careplan_date()
-            rec.agreement_ids = self.env["medical.coverage.agreement"].search(
+            rec.agreement_ids = self.env["pod.coverage.agreement"].search(
                 [
                     (
                         "coverage_template_ids",
@@ -94,7 +94,7 @@ class MedicalCareplanAddPlanDefinition(models.TransientModel):
             )
 
     def _get_values(self):
-        values = super(MedicalCareplanAddPlanDefinition, self)._get_values()
+        values = super(PodiatryCareplanAddPlanDefinition, self)._get_values()
         values["coverage_id"] = self.careplan_id.coverage_id.id
         values["coverage_agreement_item_id"] = self.agreement_line_id.id
         values["authorization_method_id"] = self.authorization_method_id.id

@@ -28,7 +28,7 @@ class PlanDefinition(models.Model):
         if not values.get("is_billable", False):
             return values
         if vals.get("coverage_agreement_item_id", False):
-            agreement_item_id = self.env["medical.coverage.agreement.item"].browse(
+            agreement_item_id = self.env["pod.coverage.agreement.item"].browse(
                 vals.get("coverage_agreement_item_id")
             )
             values[
@@ -49,7 +49,7 @@ class PlanDefinition(models.Model):
             and not self.activity_definition_id
             and vals.get("coverage_agreement_item_id", False)
         ):
-            request_group = self.env["medical.request.group"].create(
+            request_group = self.env["pod.request.group"].create(
                 self._get_request_group_vals(vals)
             )
         res = super().execute_plan_definition(vals, request_group)

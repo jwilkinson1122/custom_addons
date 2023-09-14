@@ -6,7 +6,7 @@
 -->
 <odoo>
     <record id="view_sale_preinvoice_group_tree" model="ir.ui.view">
-        <field name="name">view.medical.preinvoice.group.tree</field>
+        <field name="name">view.pod.preinvoice.group.tree</field>
         <field name="model">sale.preinvoice.group</field>
         <field name="arch" type="xml">
             <tree string="Pre-invoice groups" create="0">
@@ -19,7 +19,7 @@
         </field>
     </record>
     <record id="view_sale_preinvoice_group_search" model="ir.ui.view">
-        <field name="name">view.medical.preinvoice.group.search</field>
+        <field name="name">view.pod.preinvoice.group.search</field>
         <field name="model">sale.preinvoice.group</field>
         <field name="arch" type="xml">
             <search string="Pre-invoice groups">
@@ -71,7 +71,7 @@
         </field>
     </record>
     <record id="view_sale_preinvoice_group_form" model="ir.ui.view">
-        <field name="name">view.medical.preinvoice.group.form</field>
+        <field name="name">view.pod.preinvoice.group.form</field>
         <field name="model">sale.preinvoice.group</field>
         <field name="arch" type="xml">
             <form string="Pre-invoice group" create="0" edit="0">
@@ -80,7 +80,7 @@
                         name="start"
                         string="Start"
                         type="object"
-                        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_sorter"
+                        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_sorter"
                         class="oe_highlight"
                         states="draft"
                     />
@@ -88,7 +88,7 @@
                         name="close_sorting"
                         string="Close"
                         type="object"
-                        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_sorter"
+                        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_sorter"
                         class="oe_highlight"
                         states="in_progress"
                     />
@@ -96,7 +96,7 @@
                         name="close"
                         string="Validate"
                         type="object"
-                        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_manager"
+                        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_manager"
                         class="oe_highlight"
                         states="validation"
                     />
@@ -104,7 +104,7 @@
                         name="cancel"
                         string="Cancel"
                         type="object"
-                        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_manager"
+                        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_manager"
                         states="draft,in_progress,validation"
                     />
                     <field name="state" widget="statusbar" />
@@ -164,7 +164,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="sale_preinvoice_group_action">
-        <field name="name">Medical Pre-invoice Group</field>
+        <field name="name">Podiatry Pre-invoice Group</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.preinvoice.group</field>
         <field name="view_mode">tree,form</field>
@@ -175,7 +175,7 @@
         name="Sales to pre-invoice"
         parent="sale_preinvoice_group_menu"
         sequence="99"
-        groups="cb_medical_sale_invoice_group_method.group_sale_preinvoice_group_display"
+        groups="nwp_pod_sale_invoice_group_method.group_sale_preinvoice_group_display"
         action="sale_preinvoice_group_action"
     />
 </odoo>

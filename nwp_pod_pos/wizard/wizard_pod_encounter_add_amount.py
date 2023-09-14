@@ -6,9 +6,9 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-class WizardMedicalEncounterAddAmount(models.TransientModel):
-    _name = "wizard.medical.encounter.add.amount"
-    _description = "wizard.medical.encounter.add.amount"
+class WizardPodiatryEncounterAddAmount(models.TransientModel):
+    _name = "wizard.pod.encounter.add.amount"
+    _description = "wizard.pod.encounter.add.amount"
 
     def _default_product(self):
         product_id = (
@@ -61,7 +61,7 @@ class WizardMedicalEncounterAddAmount(models.TransientModel):
     )
     amount = fields.Monetary(currency_field="currency_id")
     encounter_id = fields.Many2one(
-        comodel_name="medical.encounter",
+        comodel_name="pod.encounter",
         string="encounter",
         readonly=True,
         required=True,

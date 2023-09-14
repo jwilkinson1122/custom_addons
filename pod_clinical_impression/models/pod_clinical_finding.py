@@ -5,9 +5,9 @@
 from odoo import fields, models
 
 
-class MedicalClinicalFinding(models.Model):
+class PodiatryClinicalFinding(models.Model):
 
-    _inherit = "medical.clinical.finding"
+    _inherit = "pod.clinical.finding"
 
     create_condition_from_clinical_impression = fields.Boolean(
         help="If marked, "

@@ -4,10 +4,10 @@
 from odoo import _, fields, models
 
 
-class MedicalTurnTag(models.Model):
+class PodiatryTurnTag(models.Model):
 
-    _name = "medical.turn.tag"
-    _description = "Medical Turn Tag"
+    _name = "pod.turn.tag"
+    _description = "Podiatry Turn Tag"
 
     name = fields.Char(required=True)
 

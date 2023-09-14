@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template
-        id="medical_procedure_external_request_template"
-        inherit_id="medical_procedure_external.medical_procedure_external_request_template_base"
+        id="pod_procedure_external_request_template"
+        inherit_id="pod_procedure_external.pod_procedure_external_request_template_base"
         primary="True"
     >
         <xpath expr="//t[@t-set='lang']" position="attributes">
             <attribute name="t-value">o.lang</attribute>
         </xpath>
         <xpath
-            expr="//t[@t-call='medical_procedure_external.procedure_external_request_base_layout']"
+            expr="//t[@t-call='pod_procedure_external.procedure_external_request_base_layout']"
             position="attributes"
         >
             <attribute
                 name="t-call"
-            >medical_procedure_external.procedure_external_request_layout</attribute>
+            >pod_procedure_external.procedure_external_request_layout</attribute>
         </xpath>
     </template>
     <template
         id="procedure_external_request_layout"
-        inherit_id="medical_procedure_external.procedure_external_request_base_layout"
+        inherit_id="pod_procedure_external.procedure_external_request_base_layout"
         primary="True"
     >
         <xpath expr="//div[@name='patient_id']" position="inside">

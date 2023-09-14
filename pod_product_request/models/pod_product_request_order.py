@@ -7,11 +7,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProductRequestOrder(models.Model):
+class PodiatryProductRequestOrder(models.Model):
 
-    _name = "medical.product.request.order"
-    _description = "Medical Product Request Order"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.product.request.order"
+    _description = "Podiatry Product Request Order"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _rec_name = "internal_identifier"
     _order = "id desc"
 
@@ -20,9 +20,9 @@ class MedicalProductRequestOrder(models.Model):
 
     category = fields.Selection(
         selection=[("inpatient", "Inpatient"), ("discharge", "Discharge")],
-        help="'Inpatient' includes requests for medications to be "
+        help="'Inpatient' includes requests for devices to be "
         "administered or consumed in an inpatient or acute care setting "
-        " 'Discharge' Includes requests for medications created when "
+        " 'Discharge' Includes requests for devices created when "
         "the patient is being released from a facility ",
     )
 
@@ -38,15 +38,15 @@ class MedicalProductRequestOrder(models.Model):
     # Fhir Concept: Status
 
     product_request_ids = fields.One2many(
-        comodel_name="medical.product.request",
+        comodel_name="pod.product.request",
         inverse_name="request_order_id",
         copy=True,
     )
 
-    patient_id = fields.Many2one(comodel_name="medical.patient", required=True)
+    patient_id = fields.Many2one(comodel_name="pod.patient", required=True)
 
     encounter_id = fields.Many2one(
-        comodel_name="medical.encounter",
+        comodel_name="pod.encounter",
         compute="_compute_last_encounter",
         store=True,
         readonly=False,
@@ -74,30 +74,30 @@ class MedicalProductRequestOrder(models.Model):
         color="red",
         readonly=True,
     )
-    medical_product_template_id = fields.Many2one(
-        "medical.product.template",
-        related="product_request_ids.medical_product_template_id",
+    pod_product_template_id = fields.Many2one(
+        "pod.product.template",
+        related="product_request_ids.pod_product_template_id",
         readonly=True,
     )  # used for search purposes
 
-    medical_product_template_ids = fields.Many2many(
-        comodel_name="medical.product.template",
-        compute="_compute_medical_product_template_ids",
+    pod_product_template_ids = fields.Many2many(
+        comodel_name="pod.product.template",
+        compute="_compute_pod_product_template_ids",
         string="Product Template",
     )
     # This field is used as a fast visualization of products at the order's tree view.
 
     @api.depends("product_request_ids")
-    def _compute_medical_product_template_ids(self):
+    def _compute_pod_product_template_ids(self):
         for rec in self:
-            rec.medical_product_template_ids = rec.product_request_ids.mapped(
-                "medical_product_template_id"
+            rec.pod_product_template_ids = rec.product_request_ids.mapped(
+                "pod_product_template_id"
             )
 
     # The _get_last_encounter() function is not used here as in other modules.
     # The reason is that in other modules we want to raise a ValidationError
     # because the encounter is required.
-    # But in this case, we can have a medical.product.request without the encounter
+    # But in this case, we can have a pod.product.request without the encounter
     @api.depends("patient_id")
     def _compute_last_encounter(self):
         if self.patient_id and (
@@ -109,7 +109,7 @@ class MedicalProductRequestOrder(models.Model):
     def _get_internal_identifier(self, vals):
         return (
             self.env["ir.sequence"].next_by_code(
-                "medical.product.request.order"
+                "pod.product.request.order"
             )
             or "/"
         )

@@ -2,11 +2,11 @@
 <odoo>
     <record id="action_clinical_impression_report" model="ir.actions.report">
         <field name="name">Clinical impressions report</field>
-        <field name="model">medical.clinical.impression</field>
+        <field name="model">pod.clinical.impression</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">report_medical_clinical_impression</field>
+        <field name="report_name">report_pod_clinical_impression</field>
     </record>
-    <template id="report_medical_clinical_impression">
+    <template id="report_pod_clinical_impression">
         <t t-set="company" t-value="docs.env.user.company_id" />
         <t t-set="partner" t-value="company.partner_id" />
         <t t-call="web.html_container">

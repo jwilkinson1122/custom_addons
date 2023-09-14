@@ -4,11 +4,11 @@
 from odoo import api, fields, models
 
 
-class MedicalEvent(models.AbstractModel):
+class PodiatryEvent(models.AbstractModel):
     # FHIR Entity: Event (https://www.hl7.org/fhir/event.html)
-    _name = "medical.event"
-    _description = "Medical event"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.event"
+    _description = "Podiatry event"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 
     @api.model
@@ -69,7 +69,7 @@ class MedicalEvent(models.AbstractModel):
     )  # FHIR Field: code
     patient_id = fields.Many2one(
         string="Patient",
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         required=True,
         tracking=True,
         ondelete="restrict",

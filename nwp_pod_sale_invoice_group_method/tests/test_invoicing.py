@@ -2,14 +2,14 @@ from datetime import timedelta
 
 from odoo import fields
 
-from odoo.addons.cb_medical_careplan_sale.tests import common
+from odoo.addons.nwp_pod_careplan_sale.tests import common
 
 
-class TestCBInvoicing(common.MedicalSavePointCase):
+class TestNWPInvoicing(common.PodiatrySavePointCase):
     def test_multiple_groups(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_patient")
-        method_2 = self.browse_ref("cb_medical_careplan_sale.by_customer")
-        auth_method = self.env["medical.authorization.method"].create(
+        method = self.browse_ref("nwp_pod_careplan_sale.by_patient")
+        method_2 = self.browse_ref("nwp_pod_careplan_sale.by_customer")
+        auth_method = self.env["pod.authorization.method"].create(
             {
                 "name": "Testing authorization_method",
                 "code": "none",
@@ -28,7 +28,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
         self.plan_definition.is_billable = True
         self.agreement.invoice_group_method_id = method
         self.agreement_line3.coverage_percentage = 100
-        encounters = self.env["medical.encounter"]
+        encounters = self.env["pod.encounter"]
         for _ in range(1, 10):
             encounter, careplan, group = self.create_careplan_and_group(
                 self.agreement_line3
@@ -38,7 +38,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertEqual(method, group.invoice_group_method_id)
             self.assertFalse(
-                self.env["medical.request.group"].search(
+                self.env["pod.request.group"].search(
                     [
                         ("encounter_id", "=", encounter.id),
                         ("careplan_id", "=", careplan.id),
@@ -46,7 +46,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
                     ]
                 )
             )
-            wizard = self.env["medical.careplan.add.plan.definition"].create(
+            wizard = self.env["pod.careplan.add.plan.definition"].create(
                 {
                     "careplan_id": careplan.id,
                     "agreement_line_id": self.agreement_line.id,
@@ -57,7 +57,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
             wizard.run()
             self.assertFalse(group.third_party_bill)
             self.assertTrue(
-                self.env["medical.request.group"].search(
+                self.env["pod.request.group"].search(
                     [
                         ("encounter_id", "=", encounter.id),
                         ("careplan_id", "=", careplan.id),
@@ -91,7 +91,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
                 )
 
     def test_no_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.no_invoice")
+        method = self.browse_ref("nwp_pod_careplan_sale.no_invoice")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -115,7 +115,7 @@ class TestCBInvoicing(common.MedicalSavePointCase):
             self.assertEqual(line.qty_to_invoice, 0)
 
     def test_monthly_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_customer")
+        method = self.browse_ref("nwp_pod_careplan_sale.by_customer")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -182,13 +182,13 @@ class TestCBInvoicing(common.MedicalSavePointCase):
             self.assertTrue(sale_order.invoice_status == "invoiced")
 
     def test_preinvoice_no_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.no_invoice_preinvoice")
+        method = self.browse_ref("nwp_pod_careplan_sale.no_invoice_preinvoice")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_billable = True
         self.agreement.invoice_group_method_id = method
         self.agreement_line3.coverage_percentage = 100
         sale_orders = self.env["sale.order"]
-        encounters = self.env["medical.encounter"]
+        encounters = self.env["pod.encounter"]
         for _i in range(1, 10):
             encounter, careplan, group = self.create_careplan_and_group(
                 self.agreement_line3

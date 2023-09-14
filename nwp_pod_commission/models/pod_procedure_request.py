@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class MedicalProcedureRequest(models.Model):
-    _inherit = "medical.procedure.request"
+class PodiatryProcedureRequest(models.Model):
+    _inherit = "pod.procedure.request"
 
     variable_fee = fields.Float(
         string="Variable fee (%)",
@@ -20,12 +20,12 @@ class MedicalProcedureRequest(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
-    medical_commission = fields.Boolean(
-        related="service_id.medical_commission", readonly=True
+    pod_commission = fields.Boolean(
+        related="service_id.pod_commission", readonly=True
     )
 
     def _get_procedure_values(self):
-        res = super(MedicalProcedureRequest, self)._get_procedure_values()
+        res = super(PodiatryProcedureRequest, self)._get_procedure_values()
         res.update(
             {
                 "service_id": self.service_id.id,

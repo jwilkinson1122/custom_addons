@@ -12,14 +12,14 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     specialty_id = fields.Many2one(
-        "medical.specialty",
+        "pod.specialty",
         string="Specialty",
         compute="_compute_specialty",
         inverse="_inverse_specialty",
         search="_search_specialty",
     )
     practitioner_role_id = fields.Many2one(
-        "medical.role",
+        "pod.role",
         string="Role",
         compute="_compute_role",
         inverse="_inverse_role",
@@ -63,12 +63,12 @@ class ResPartner(models.Model):
         self, practitioner_role_id=False, specialty_id=False
     ):
         role = (
-            self.env["medical.role"].browse(practitioner_role_id)
+            self.env["pod.role"].browse(practitioner_role_id)
             or self.practitioner_role_id
         )
         if role.specialty_required:
             specialty = (
-                self.env["medical.specialty"].browse(specialty_id) or self.specialty_id
+                self.env["pod.specialty"].browse(specialty_id) or self.specialty_id
             )
             return specialty.sequence_id._next()
         return False

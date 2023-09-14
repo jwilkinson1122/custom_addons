@@ -2,11 +2,11 @@
 <!-- Copyright 2021 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_department_form_view">
+    <record model="ir.ui.view" id="pod_department_form_view">
         <field
             name="name"
-        >medical.department.form (in cb_medical_diagnostic_report)</field>
-        <field name="model">medical.department</field>
+        >pod.department.form (in nwp_pod_diagnostic_report)</field>
+        <field name="model">pod.department</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -39,11 +39,11 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_department_tree_view">
+    <record model="ir.ui.view" id="pod_department_tree_view">
         <field
             name="name"
-        >medical.department.tree (in cb_medical_diagnostic_report)</field>
-        <field name="model">medical.department</field>
+        >pod.department.tree (in nwp_pod_diagnostic_report)</field>
+        <field name="model">pod.department</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
@@ -51,16 +51,16 @@
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_department_act_window">
-        <field name="name">Medical Department</field>
-        <field name="res_model">medical.department</field>
+    <record model="ir.actions.act_window" id="pod_department_act_window">
+        <field name="name">Podiatry Department</field>
+        <field name="res_model">pod.department</field>
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        id="medical_department_menu"
+        id="pod_department_menu"
         name="Departments"
-        parent="medical_base.medical_root_configuration"
-        action="medical_department_act_window"
+        parent="pod_base.pod_root_configuration"
+        action="pod_department_act_window"
         sequence="20"
     />
 </odoo>

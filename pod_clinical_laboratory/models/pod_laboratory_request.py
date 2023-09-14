@@ -6,17 +6,17 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalLaboratoryRequest(models.Model):
+class PodiatryLaboratoryRequest(models.Model):
     # FHIR Entity: Procedure request
     # (https://www.hl7.org/fhir/procedurerequest.html)
-    _name = "medical.laboratory.request"
+    _name = "pod.laboratory.request"
     _description = "Laboratory Request"
-    _inherit = "medical.request"
+    _inherit = "pod.request"
 
     internal_identifier = fields.Char(string="Laboratory request")
     laboratory_event_ids = fields.One2many(
         string="Laboratory Events",
-        comodel_name="medical.laboratory.event",
+        comodel_name="pod.laboratory.event",
         inverse_name="laboratory_request_id",
         readonly=True,
     )
@@ -32,15 +32,15 @@ class MedicalLaboratoryRequest(models.Model):
             rec.laboratory_event_count = len(rec.laboratory_event_ids.ids)
 
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.laboratory.request") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.laboratory.request") or "/"
 
     def _get_parent_field_name(self):
         return "laboratory_request_id"
 
     def action_view_request_parameters(self):
         return {
-            "view": "medical_clinical_laboratory.medical_laboratory_request_action",
-            "view_form": "medical.procedure.request.view.form",
+            "view": "pod_clinical_laboratory.pod_laboratory_request_action",
+            "view_form": "pod.procedure.request.view.form",
         }
 
     def _get_event_values(self, vals=False):
@@ -59,12 +59,12 @@ class MedicalLaboratoryRequest(models.Model):
 
     def generate_event(self, vals=False):
         self.ensure_one()
-        return self.env["medical.laboratory.event"].create(self._get_event_values(vals))
+        return self.env["pod.laboratory.event"].create(self._get_event_values(vals))
 
     def action_view_laboratory_events(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_laboratory.medical_laboratory_event_action"
+            "pod_clinical_laboratory.pod_laboratory_event_action"
         )
         result["context"] = {
             "default_patient_id": self.patient_id.id,
@@ -74,7 +74,7 @@ class MedicalLaboratoryRequest(models.Model):
         }
         result["domain"] = "[('laboratory_request_id', '=', " + str(self.id) + ")]"
         if len(self.laboratory_event_ids) == 1:
-            res = self.env.ref("medical.laboratory.event.view.form", False)
+            res = self.env.ref("pod.laboratory.event.view.form", False)
             result["views"] = [(res and res.id or False, "form")]
             result["res_id"] = self.laboratory_event_ids.id
         return result

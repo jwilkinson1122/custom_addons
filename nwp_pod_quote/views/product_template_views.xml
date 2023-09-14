@@ -7,13 +7,13 @@
         <field name="arch" type="xml">
             <group name="description" position="after">
                 <group
-                    string="Description for Medical quotes"
+                    string="Description for Podiatry quotes"
                     name="group_description_quote"
                 >
                     <field
                         name="description_quote"
                         nolabel="1"
-                        placeholder="This note will show up on medical quotes."
+                        placeholder="This note will show up on pod quotes."
                     />
                 </group>
             </group>

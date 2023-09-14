@@ -5,12 +5,12 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_coverage_template_view_form" model="ir.ui.view">
-        <field name="name">medical.coverage.template.view.form</field>
-        <field name="model">medical.coverage.template</field>
+    <record id="pod_coverage_template_view_form" model="ir.ui.view">
+        <field name="name">pod.coverage.template.view.form</field>
+        <field name="model">pod.coverage.template</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage.medical_coverage_template_view_form"
+            ref="pod_financial_coverage.pod_coverage_template_view_form"
         />
         <field name="arch" type="xml">
             <notebook position="inside">
@@ -35,13 +35,13 @@
             </notebook>
         </field>
     </record>
-    <record id="medical_coverage_template_view_tree_delete" model="ir.ui.view">
-        <field name="name">medical.coverage.template.form</field>
-        <field name="model">medical.coverage.template</field>
+    <record id="pod_coverage_template_view_tree_delete" model="ir.ui.view">
+        <field name="name">pod.coverage.template.form</field>
+        <field name="model">pod.coverage.template</field>
         <field name="mode">primary</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage.medical_coverage_template_view_tree"
+            ref="pod_financial_coverage.pod_coverage_template_view_tree"
         />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">

@@ -5,22 +5,22 @@
 from odoo import api, fields, models
 
 
-class MedicalClinicalFinding(models.Model):
+class PodiatryClinicalFinding(models.Model):
     # FHIR Entity: Condition Code
     # (http://hl7.org/fhir/valueset-condition-code.html)
-    _name = "medical.clinical.finding"
-    _inherit = "medical.abstract"
+    _name = "pod.clinical.finding"
+    _inherit = "pod.abstract"
     _description = "Condition/Problem/Diagnosis codes"
 
     name = fields.Char(required=True)
     description = fields.Char()
     sct_code_id = fields.Many2one(
-        comodel_name="medical.sct.concept",
+        comodel_name="pod.sct.concept",
         domain=[("is_clinical_finding", "=", True)],
     )
     create_warning = fields.Boolean(
         help="Mark if this clinical finding needs to create "
-        "a warning for taking medical decisions"
+        "a warning for taking pod decisions"
     )
 
     @api.model
@@ -28,6 +28,6 @@ class MedicalClinicalFinding(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.clinical.finding")
+            .next_by_code("pod.clinical.finding")
             or "/"
         )

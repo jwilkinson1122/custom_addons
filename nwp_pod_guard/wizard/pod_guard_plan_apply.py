@@ -4,21 +4,21 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalGuardPlanApply(models.TransientModel):
-    _name = "medical.guard.plan.apply"
-    _description = "medical.guard.plan.apply"
+class PodiatryGuardPlanApply(models.TransientModel):
+    _name = "pod.guard.plan.apply"
+    _description = "pod.guard.plan.apply"
 
     start_date = fields.Date(required=True, default=fields.Date.today())
     end_date = fields.Date(required=True)
 
     def run(self):
         self.ensure_one()
-        guards = self.env["medical.guard"].search(
+        guards = self.env["pod.guard"].search(
             [("date", ">=", self.start_date), ("date", "<=", self.end_date)]
         )
         if guards:
             raise ValidationError(_("Guards already exists, plan cannot be applied"))
-        plans = self.env["medical.guard.plan"].search([])
+        plans = self.env["pod.guard.plan"].search([])
         start = fields.Date.from_string(self.start_date)
         end = fields.Date.from_string(self.end_date)
         for i in range(0, (end - start).days + 1):

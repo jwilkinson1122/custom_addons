@@ -5,12 +5,12 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="sct_394658006" model="medical.sct.concept">
+    <record id="sct_394658006" model="pod.sct.concept">
         <field name="code">394658006</field>
         <field name="name">Clinical specialty</field>
         <field
             name="parent_ids"
-            eval="[(4, ref('medical_terminology_sct.sct_362981000'))]"
+            eval="[(4, ref('pod_terminology_sct.sct_362981000'))]"
         />
         <field name="editable" eval="False" />
     </record>

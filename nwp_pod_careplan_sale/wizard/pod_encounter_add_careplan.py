@@ -6,9 +6,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalEncounterAddCareplan(models.TransientModel):
-    _name = "medical.encounter.add.careplan"
-    _description = "medical.encounter.add.careplan"
+class PodiatryEncounterAddCareplan(models.TransientModel):
+    _name = "pod.encounter.add.careplan"
+    _description = "pod.encounter.add.careplan"
 
     @api.model
     def get_encounter_states(self):
@@ -22,19 +22,19 @@ class MedicalEncounterAddCareplan(models.TransientModel):
     def default_center(self):
         if self._context.get("default_encounter_id", False):
             return (
-                self.env["medical.encounter"]
+                self.env["pod.encounter"]
                 .browse(self._context.get("default_encounter_id", False))
                 .center_id
             )
 
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         required=True,
         readonly=True,
         domain=[("state", "in", get_encounter_states)],
     )
     patient_id = fields.Many2one(
-        "medical.patient", related="encounter_id.patient_id", readonly=True
+        "pod.patient", related="encounter_id.patient_id", readonly=True
     )
     center_id = fields.Many2one(
         "res.partner",
@@ -50,10 +50,10 @@ class MedicalEncounterAddCareplan(models.TransientModel):
         domain="[('payor_id', '=', payor_id), ('is_sub_payor', '=', True)]",
     )
     coverage_id = fields.Many2one(
-        "medical.coverage", domain="[('patient_id','=', patient_id)]"
+        "pod.coverage", domain="[('patient_id','=', patient_id)]"
     )
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         required=True,
         domain="[('payor_id', '=', payor_id)]",
     )
@@ -118,4 +118,4 @@ class MedicalEncounterAddCareplan(models.TransientModel):
         )
         if cp:
             return cp[0]
-        return self.env["medical.careplan"].create(vals)
+        return self.env["pod.careplan"].create(vals)

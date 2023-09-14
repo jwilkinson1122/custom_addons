@@ -5,7 +5,7 @@
     <record model="ir.ui.view" id="mgmtsystem_nonconformity_origin_form_view">
         <field
             name="name"
-        >mgmtsystem.nonconformity.origin.form (in cb_nonconformity)</field>
+        >mgmtsystem.nonconformity.origin.form (in nwp_nonconformity)</field>
         <field name="model">mgmtsystem.nonconformity.origin</field>
         <field
             name="inherit_id"
@@ -36,7 +36,7 @@
     <record model="ir.ui.view" id="view_mgmtsystem_nonconformity_origin_tree">
         <field
             name="name"
-        >mgmtsystem.nonconformity.origin.tree (in cb_nonconformity)</field>
+        >mgmtsystem.nonconformity.origin.tree (in nwp_nonconformity)</field>
         <field name="model">mgmtsystem.nonconformity.origin</field>
         <field
             name="inherit_id"
@@ -56,7 +56,7 @@
     <record model="ir.ui.view" id="view_mgmtsystem_nonconformity_origin_filter">
         <field
             name="name"
-        >mgmtsystem.nonconformity.origin.search (in cb_mgmtsystem_issue)</field>
+        >mgmtsystem.nonconformity.origin.search (in nwp_mgmtsystem_issue)</field>
         <field name="model">mgmtsystem.nonconformity.origin</field>
         <field
             name="inherit_id"

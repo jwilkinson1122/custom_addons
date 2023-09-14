@@ -10,7 +10,7 @@
         <field name="model">workflow.plan.definition.action</field>
         <field
             name="inherit_id"
-            ref="medical_workflow.workflow_plan_definition_action_form"
+            ref="pod_workflow.workflow_plan_definition_action_form"
         />
         <field name="arch" type="xml">
             <field name="parent_id" position="after">

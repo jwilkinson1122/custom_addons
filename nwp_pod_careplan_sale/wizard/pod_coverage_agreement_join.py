@@ -5,8 +5,8 @@ from odoo import _, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalCoverageAgreementJoin(models.TransientModel):
-    _inherit = "medical.coverage.agreement.join"
+class PodiatryCoverageAgreementJoin(models.TransientModel):
+    _inherit = "pod.coverage.agreement.join"
 
     def check_possible_join(self):
         super().check_possible_join()

@@ -2,9 +2,9 @@
 <!-- Copyright 2021 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_turn_tag_form_view">
-        <field name="name">medical.turn.tag.form (in medical_turn_management)</field>
-        <field name="model">medical.turn.tag</field>
+    <record model="ir.ui.view" id="pod_turn_tag_form_view">
+        <field name="name">pod.turn.tag.form (in pod_turn_management)</field>
+        <field name="model">pod.turn.tag</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -18,24 +18,24 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_tag_tree_view">
-        <field name="name">medical.turn.tag.tree (in medical_turn_management)</field>
-        <field name="model">medical.turn.tag</field>
+    <record model="ir.ui.view" id="pod_turn_tag_tree_view">
+        <field name="name">pod.turn.tag.tree (in pod_turn_management)</field>
+        <field name="model">pod.turn.tag</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_turn_tag_act_window">
-        <field name="name">Medical Turn Tag</field>
-        <field name="res_model">medical.turn.tag</field>
+    <record model="ir.actions.act_window" id="pod_turn_tag_act_window">
+        <field name="name">Podiatry Turn Tag</field>
+        <field name="res_model">pod.turn.tag</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record model="ir.ui.menu" id="medical_turn_tag_menu">
-        <field name="name">Medical Turn Tag</field>
-        <field name="parent_id" ref="medical_turn_root" />
-        <field name="action" ref="medical_turn_tag_act_window" />
+    <record model="ir.ui.menu" id="pod_turn_tag_menu">
+        <field name="name">Podiatry Turn Tag</field>
+        <field name="parent_id" ref="pod_turn_root" />
+        <field name="action" ref="pod_turn_tag_act_window" />
         <field name="sequence" eval="100" />
     </record>
 </odoo>

@@ -6,110 +6,110 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalRequest(TransactionCase):
+class TestPodiatryRequest(TransactionCase):
     def setUp(self):
-        super(TestMedicalRequest, self).setUp()
-        self.patient = self.env["medical.patient"].create(
+        super(TestPodiatryRequest, self).setUp()
+        self.patient = self.env["pod.patient"].create(
             {"name": "Test Patient"}
         )
-        self.patient2 = self.env["medical.patient"].create(
+        self.patient2 = self.env["pod.patient"].create(
             {"name": "Test Patient2"}
         )
         self.uom_unit = self.env.ref("uom.product_uom_unit")
-        self.medication = self.env["product.product"].create(
-            {"name": "Medication", "is_medication": True, "type": "consu"}
+        self.device = self.env["product.product"].create(
+            {"name": "Device", "is_device": True, "type": "consu"}
         )
 
     def test_constrains(self):
-        request = self.env["medical.medication.request"].create(
+        request = self.env["pod.device.request"].create(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "product_uom_id": self.uom_unit.id,
                 "qty": 1,
             }
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.medication.request"].create(
+            self.env["pod.device.request"].create(
                 {
                     "patient_id": self.patient2.id,
-                    "medication_request_id": request.id,
-                    "product_id": self.medication.id,
+                    "device_request_id": request.id,
+                    "product_id": self.device.id,
                     "product_uom_id": self.uom_unit.id,
                     "qty": 1,
                 }
             )
 
     def test_constrains_administration(self):
-        request = self.env["medical.medication.request"].create(
+        request = self.env["pod.device.request"].create(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "product_uom_id": self.uom_unit.id,
                 "qty": 1,
             }
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.medication.administration"].create(
+            self.env["pod.device.administration"].create(
                 {
                     "patient_id": self.patient2.id,
-                    "medication_request_id": request.id,
-                    "product_id": self.medication.id,
+                    "device_request_id": request.id,
+                    "product_id": self.device.id,
                     "product_uom_id": self.uom_unit.id,
                     "qty": 1,
                 }
             )
 
     def test_views(self):
-        # medication request
-        medication_request = self.env["medical.medication.request"].create(
+        # device request
+        device_request = self.env["pod.device.request"].create(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "product_uom_id": self.uom_unit.id,
                 "qty": 1,
             }
         )
-        medication_request._compute_medication_request_ids()
-        self.assertEqual(medication_request.medication_request_count, 0)
-        medication_request.with_context(
-            inverse_id="active_id", model_name="medical.medication.request"
+        device_request._compute_device_request_ids()
+        self.assertEqual(device_request.device_request_count, 0)
+        device_request.with_context(
+            inverse_id="active_id", model_name="pod.device.request"
         ).action_view_request()
-        # 1 medication request
-        medication_request2 = self.env["medical.medication.request"].create(
+        # 1 device request
+        device_request2 = self.env["pod.device.request"].create(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "product_uom_id": self.uom_unit.id,
                 "qty": 1,
-                "medication_request_id": medication_request.id,
+                "device_request_id": device_request.id,
             }
         )
-        medication_request._compute_medication_request_ids()
+        device_request._compute_device_request_ids()
         self.assertEqual(
-            medication_request.medication_request_ids.ids,
-            [medication_request2.id],
+            device_request.device_request_ids.ids,
+            [device_request2.id],
         )
-        self.assertEqual(medication_request.medication_request_count, 1)
-        medication_request.with_context(
-            inverse_id="active_id", model_name="medical.medication.request"
+        self.assertEqual(device_request.device_request_count, 1)
+        device_request.with_context(
+            inverse_id="active_id", model_name="pod.device.request"
         ).action_view_request()
-        # 2 medication request
-        medication_request3 = self.env["medical.medication.request"].create(
+        # 2 device request
+        device_request3 = self.env["pod.device.request"].create(
             {
                 "patient_id": self.patient.id,
-                "product_id": self.medication.id,
+                "product_id": self.device.id,
                 "product_uom_id": self.uom_unit.id,
                 "qty": 1,
-                "medication_request_id": medication_request.id,
+                "device_request_id": device_request.id,
             }
         )
-        medication_request._compute_medication_request_ids()
-        self.assertEqual(medication_request.medication_request_count, 2)
+        device_request._compute_device_request_ids()
+        self.assertEqual(device_request.device_request_count, 2)
         self.assertEqual(
-            medication_request.medication_request_ids.ids.sort(),
-            [medication_request2.id, medication_request3.id].sort(),
+            device_request.device_request_ids.ids.sort(),
+            [device_request2.id, device_request3.id].sort(),
         )
-        medication_request.with_context(
-            inverse_id="active_id", model_name="medical.medication.request"
+        device_request.with_context(
+            inverse_id="active_id", model_name="pod.device.request"
         ).action_view_request()

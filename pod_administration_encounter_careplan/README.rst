@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ===========================
-Medical Encounter Care plan
+Podiatry Encounter Care plan
 ===========================
 
 This module links Encounters and Care plans requests.
@@ -11,14 +11,14 @@ This module links Encounters and Care plans requests.
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Administration / Encounters' activate the option 'Link encounters with
 care plans'.
 
 Usage
 =====
 
-#. Go to 'Medical / Administration / Encounter'
+#. Go to 'Podiatry / Administration / Encounter'
 #. Click 'Create' and fill in the information.
 #. Press the button 'Care plans' and create a new Care plan by filling up the
    form. You will see that the origin Encounter is already recorded.
@@ -42,7 +42,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

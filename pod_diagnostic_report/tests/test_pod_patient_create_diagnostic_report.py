@@ -8,24 +8,24 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase
 
 
-class TestMedicalPatientCreateReport(TransactionCase):
+class TestPodiatryPatientCreateReport(TransactionCase):
     def setUp(self):
-        super(TestMedicalPatientCreateReport, self).setUp()
+        super(TestPodiatryPatientCreateReport, self).setUp()
 
-        self.patient = self.env["medical.patient"].create(
+        self.patient = self.env["pod.patient"].create(
             {
                 "name": "Test Patient",
             }
         )
 
-        self.encounter = self.env["medical.encounter"].create(
+        self.encounter = self.env["pod.encounter"].create(
             {
                 "patient_id": self.patient.id,
                 "create_date": datetime.now() - timedelta(days=6),
             }
         )
 
-        self.encounter2 = self.env["medical.encounter"].create(
+        self.encounter2 = self.env["pod.encounter"].create(
             {
                 "patient_id": self.patient.id,
                 "create_date": datetime.now() - timedelta(days=8),
@@ -35,11 +35,11 @@ class TestMedicalPatientCreateReport(TransactionCase):
         self.patient.encounter_ids.append(self.encounter1)
         self.patient.encounter_ids.append(self.encounter2)
 
-        self.report = self.env["medical.report"].create(
+        self.report = self.env["pod.report"].create(
             {
                 "name": "Test Report",
                 "template_id": self.env.ref(
-                    "medical_fhir.medical_report_template"
+                    "pod_fhir.pod_report_template"
                 ).id,
                 "patient_id": self.patient.id,
                 "encounter_id": self.encounter.id,
@@ -54,7 +54,7 @@ class TestMedicalPatientCreateReport(TransactionCase):
         self.assertTrue(self.report.show_encounter_warning)
 
     def test_compute_default_encounter(self):
-        new_encounter = self.env["medical.encounter"].create(
+        new_encounter = self.env["pod.encounter"].create(
             {
                 "patient_id": self.patient.id,
                 "encounter_type": "outpatient",

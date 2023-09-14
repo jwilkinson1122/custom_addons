@@ -6,8 +6,8 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class MedicalLaboratoryService(models.Model):
-    _name = "medical.laboratory.service"
+class PodiatryLaboratoryService(models.Model):
+    _name = "pod.laboratory.service"
     _description = "Laboratory service"
     _rec_name = "name"
 
@@ -16,7 +16,7 @@ class MedicalLaboratoryService(models.Model):
     delay = fields.Integer()
     laboratory_code = fields.Char(required=True)
     service_price_ids = fields.One2many(
-        "medical.laboratory.service.price",
+        "pod.laboratory.service.price",
         inverse_name="laboratory_service_id",
         readonly=True,
     )
@@ -79,11 +79,11 @@ class MedicalLaboratoryService(models.Model):
         return result
 
 
-class MedicalLaboratoryServicePrice(models.Model):
-    _name = "medical.laboratory.service.price"
+class PodiatryLaboratoryServicePrice(models.Model):
+    _name = "pod.laboratory.service.price"
     _description = "Laboratory service price list"
 
-    laboratory_service_id = fields.Many2one("medical.laboratory.service", required=True)
+    laboratory_service_id = fields.Many2one("pod.laboratory.service", required=True)
     laboratory_code = fields.Char(required=True, string="Coverage code")
     amount = fields.Float(required=True)
     cost = fields.Float()

@@ -4,18 +4,18 @@
 from odoo import api, fields, models
 
 
-class MedicalObservation(models.Model):
+class PodiatryObservation(models.Model):
 
-    _name = "medical.observation"
-    _inherit = "medical.report.item.abstract"
-    _description = "Medical observation"
+    _name = "pod.observation"
+    _inherit = "pod.report.item.abstract"
+    _description = "Podiatry observation"
     _order = "observation_date desc, sequence, id"
 
     diagnostic_report_id = fields.Many2one(
-        comodel_name="medical.diagnostic.report"
+        comodel_name="pod.diagnostic.report"
     )
     patient_id = fields.Many2one(
-        "medical.patient", readonly=True, required=True
+        "pod.patient", readonly=True, required=True
     )
     value = fields.Char(store=False)
     value_float = fields.Float()
@@ -106,7 +106,7 @@ class MedicalObservation(models.Model):
     def _get_reference_format(self):
         return (
             self.reference_format
-            or super(MedicalObservation, self)._get_reference_format()
+            or super(PodiatryObservation, self)._get_reference_format()
         )
 
     def _generate_serializer(self):

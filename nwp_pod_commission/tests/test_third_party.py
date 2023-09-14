@@ -1,27 +1,27 @@
 from odoo.exceptions import UserError
 
-from odoo.addons.cb_medical_careplan_sale.tests import common
+from odoo.addons.nwp_pod_careplan_sale.tests import common
 
 
-class TestCBMedicalCommission(common.MedicalSavePointCase):
+class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.practitioner_01.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
         cls.practitioner_02.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
         cls.def_third_party_product = cls.create_product("THIRD PARTY PRODUCT")
         cls.env["ir.config_parameter"].set_param(
-            "cb.default_third_party_product", cls.def_third_party_product.id
+            "nwp.default_third_party_product", cls.def_third_party_product.id
         )
 
     def test_performer(self):
@@ -37,11 +37,11 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
                 "performer_id": self.practitioner_02.id,
             }
         )
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient_01.id, "center_id": self.center.id}
         )
         careplan_wizard = (
-            self.env["medical.encounter.add.careplan"]
+            self.env["pod.encounter.add.careplan"]
             .with_context(default_encounter_id=encounter.id)
             .new({"coverage_id": self.coverage_01.id})
         )
@@ -56,7 +56,7 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
         careplan_wizard.run()
         careplan = encounter.careplan_ids
         self.assertEqual(careplan.center_id, encounter.center_id)
-        wizard = self.env["medical.careplan.add.plan.definition"].create(
+        wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
                 "agreement_line_id": self.agreement_line3.id,
@@ -66,7 +66,7 @@ class TestCBMedicalCommission(common.MedicalSavePointCase):
         self.assertIn(self.agreement, wizard.agreement_ids)
         self.action.is_billable = False
         wizard.run()
-        group = self.env["medical.request.group"].search(
+        group = self.env["pod.request.group"].search(
             [("careplan_id", "=", careplan.id)]
         )
         group.ensure_one()

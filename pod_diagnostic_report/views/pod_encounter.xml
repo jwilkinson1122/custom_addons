@@ -2,21 +2,21 @@
 <!-- Copyright 2021 CreuBlanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_encounter_form_view">
-        <field name="name">medical.encounter.form (in medical_diagnostic_report)</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_form_view">
+        <field name="name">pod.encounter.form (in pod_diagnostic_report)</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_view_form"
+            ref="pod_administration_encounter.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <xpath expr="//header/button[last()]" position="after">
                 <button
                     type="action"
-                    name="%(medical_diagnostic_report.medical_encounter_create_diagnostic_report_act_window)s"
+                    name="%(pod_diagnostic_report.pod_encounter_create_diagnostic_report_act_window)s"
                     class="oe_stat_button btn-warning"
-                    icon="fa-file-medical-alt"
-                    string="Generate Medical Report"
+                    icon="fa-file-pod-alt"
+                    string="Generate Podiatry Report"
                 />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
@@ -24,7 +24,7 @@
                     type="object"
                     name="action_view_report"
                     class="oe_stat_button"
-                    icon="fa-file-medical-alt"
+                    icon="fa-file-pod-alt"
                 >
                     <field
                         name="report_count"
@@ -36,12 +36,12 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="medical_encounter_his_form_view">
-        <field name="name">medical.encounter.form</field>
-        <field name="model">medical.encounter</field>
+    <record model="ir.ui.view" id="pod_encounter_his_form_view">
+        <field name="name">pod.encounter.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="medical_administration_encounter.medical_encounter_his_form_view"
+            ref="pod_administration_encounter.pod_encounter_his_form_view"
         />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
@@ -61,11 +61,11 @@
                     </field>
                     <button
                         type="action"
-                        name="%(medical_diagnostic_report.medical_encounter_create_diagnostic_report_act_window)s"
+                        name="%(pod_diagnostic_report.pod_encounter_create_diagnostic_report_act_window)s"
                         class="oe_stat_button btn-warning"
-                        icon="fa-file-medical-alt"
-                        string="Generate Medical Report"
-                        groups="medical_base.group_medical_assistance_user"
+                        icon="fa-file-pod-alt"
+                        string="Generate Podiatry Report"
+                        groups="pod_base.group_pod_assistance_user"
                     />
                 </page>
             </xpath>

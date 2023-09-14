@@ -5,9 +5,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="seq_medical_patient" model="ir.sequence">
+    <record id="seq_pod_patient" model="ir.sequence">
         <field name="name">Patient sequence</field>
-        <field name="code">medical.patient</field>
+        <field name="code">pod.patient</field>
         <field name="prefix">PAC</field>
         <field name="padding">6</field>
     </record>

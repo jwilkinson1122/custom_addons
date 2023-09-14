@@ -9,13 +9,13 @@ from odoo.tests.common import TransactionCase
 class TestCoverage(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
 
     def test_write_sequence(self):
         center = self.env["res.partner"].create({"name": "Center", "is_center": True})
         self.assertFalse(center.encounter_sequence_id)
         with self.assertRaises(ValidationError):
-            self.env["medical.encounter"].create(
+            self.env["pod.encounter"].create(
                 {"patient_id": self.patient.id, "center_id": center.id}
             )
         center.write({"encounter_sequence_prefix": "R"})
@@ -24,7 +24,7 @@ class TestCoverage(TransactionCase):
         code = center.encounter_sequence_id.get_next_char(
             center.encounter_sequence_id.number_next_actual
         )
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id, "center_id": center.id}
         )
         self.assertEqual(encounter.internal_identifier, code)
@@ -41,7 +41,7 @@ class TestCoverage(TransactionCase):
         self.assertEqual(center.encounter_sequence_id.prefix, "S")
         current = center.encounter_sequence_id.number_next_actual
         code = center.encounter_sequence_id.get_next_char(current)
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id, "center_id": center.id}
         )
         self.assertEqual(encounter.internal_identifier, code)
@@ -49,7 +49,7 @@ class TestCoverage(TransactionCase):
         self.assertEqual(center.encounter_sequence_id.prefix, "R")
         self.assertTrue(center.encounter_sequence_id)
         code = center.encounter_sequence_id.get_next_char(current + 1)
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id, "center_id": center.id}
         )
         self.assertEqual(encounter.internal_identifier, code)

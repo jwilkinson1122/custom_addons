@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =========================
-Medical Careplan to Sales
+Podiatry Careplan to Sales
 =========================
 
 TBD

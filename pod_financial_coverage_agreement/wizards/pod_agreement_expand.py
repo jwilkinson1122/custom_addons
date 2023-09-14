@@ -6,12 +6,12 @@ from datetime import timedelta
 from odoo import fields, models
 
 
-class MedicalAgreementExpand(models.TransientModel):
+class PodiatryAgreementExpand(models.TransientModel):
 
-    _name = "medical.agreement.expand"
+    _name = "pod.agreement.expand"
     _description = "TODO"
 
-    agreement_id = fields.Many2one("medical.coverage.agreement", required=True)
+    agreement_id = fields.Many2one("pod.coverage.agreement", required=True)
     name = fields.Char(required=True)
     difference = fields.Float(
         string="Indicate the percentage to apply to the agreement"
@@ -32,7 +32,7 @@ class MedicalAgreementExpand(models.TransientModel):
     def _expand(self):
         self.ensure_one()
         new_agreement = self.agreement_id.copy(self._get_copy_vals())
-        self.env["medical.agreement.change.prices"].create(
+        self.env["pod.agreement.change.prices"].create(
             {"difference": self.difference}
         ).with_context(
             active_ids=new_agreement.ids,

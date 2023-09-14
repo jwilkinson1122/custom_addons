@@ -21,7 +21,7 @@ class TestSignStorage(TransactionCase):
         file = tools.file_open(
             "icon.png",
             mode="rb",
-            subdir="addons/medical_signature_storage/static/description",
+            subdir="addons/pod_signature_storage/static/description",
         ).read()
         self.env[action["res_model"]].with_context(action["context"]).create(
             {"option": "signature", "signature": file}

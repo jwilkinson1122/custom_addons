@@ -1,14 +1,14 @@
-from odoo.addons.cb_medical_careplan_sale.tests import common
+from odoo.addons.nwp_pod_careplan_sale.tests import common
 
 
-class MedicalSavePointCase(common.MedicalSavePointCase):
+class PodiatrySavePointCase(common.PodiatrySavePointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.reina = cls.env["res.partner"].create(
             {
                 "name": "Reina",
-                "is_medical": True,
+                "is_pod": True,
                 "is_center": True,
                 "encounter_sequence_prefix": "9",
             }
@@ -34,12 +34,12 @@ class MedicalSavePointCase(common.MedicalSavePointCase):
             }
         )
         cls.pos_config = cls.env["pos.config"].create(pos_vals)
-        cls.pos_config.open_session_cb()
+        cls.pos_config.open_session_nwp()
         cls.session = cls.pos_config.current_session_id
         cls.session.action_pos_session_open()
         cls.def_third_party_product = cls.create_product("THIRD PARTY PRODUCT")
         cls.env["ir.config_parameter"].set_param(
-            "cb.default_third_party_product", cls.def_third_party_product.id
+            "nwp.default_third_party_product", cls.def_third_party_product.id
         )
         cls.company.patient_journal_id = cls.env["account.journal"].create(
             {

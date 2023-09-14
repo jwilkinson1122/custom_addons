@@ -6,10 +6,10 @@
 -->
 <odoo>
     <menuitem
-        id="medical_guard_root"
+        id="pod_guard_root"
         name="Guards"
-        parent="medical_base.medical_root"
+        parent="pod_base.pod_root"
         sequence="40"
-        groups="cb_medical_guard.group_medical_guard_display"
+        groups="nwp_pod_guard.group_pod_guard_display"
     />
 </odoo>

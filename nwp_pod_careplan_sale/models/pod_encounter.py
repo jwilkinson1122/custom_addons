@@ -4,8 +4,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     sale_order_ids = fields.One2many(
         "sale.order", inverse_name="encounter_id", readonly=True
@@ -185,7 +185,7 @@ class MedicalEncounter(models.Model):
     ):
         if coverage:
             if isinstance(coverage, int):
-                coverage = self.env["medical.coverage"].browse(coverage)
+                coverage = self.env["pod.coverage"].browse(coverage)
             if self.patient_id != coverage.patient_id:
                 raise ValidationError(_("Patient must be the same"))
             if not payor:
@@ -193,7 +193,7 @@ class MedicalEncounter(models.Model):
             if not coverage_template:
                 coverage_template = coverage.coverage_template_id
         else:
-            coverage = self.env["medical.coverage"]
+            coverage = self.env["pod.coverage"]
         if not payor:
             raise ValidationError(_("Payor is required"))
         if isinstance(payor, int):
@@ -201,7 +201,7 @@ class MedicalEncounter(models.Model):
         if not coverage_template:
             raise ValidationError(_("Coverage template is required"))
         if isinstance(coverage_template, int):
-            coverage_template = self.env["medical.coverage.template"].browse(
+            coverage_template = self.env["pod.coverage.template"].browse(
                 coverage_template
             )
         if not service:
@@ -222,7 +222,7 @@ class MedicalEncounter(models.Model):
             performer = self.env["res.partner"].browse(performer)
         self.ensure_one()
         careplan = (
-            self.env["medical.encounter.add.careplan"]
+            self.env["pod.encounter.add.careplan"]
             .with_context(default_encounter_id=self.id)
             .create(
                 {

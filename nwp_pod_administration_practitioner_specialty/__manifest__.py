@@ -3,18 +3,18 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical Administration Practitioner Specialty",
+    "name": "Podiatry Administration Practitioner Specialty",
     "version": "15.0.1.0.0",
     "author": "Eficent, CreuBlanca",
-    "category": "Medical",
-    "website": "https://github.com/tegin/cb-medical",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/nwp-pod",
     "license": "AGPL-3",
-    "depends": ["medical_administration_practitioner_specialty"],
+    "depends": ["pod_administration_practitioner_specialty"],
     "data": [
-        "data/medical_role.xml",
+        "data/pod_role.xml",
         "views/res_partner_views.xml",
-        "views/medical_role.xml",
-        "views/medical_specialty.xml",
+        "views/pod_role.xml",
+        "views/pod_specialty.xml",
     ],
     "installable": True,
     "application": False,

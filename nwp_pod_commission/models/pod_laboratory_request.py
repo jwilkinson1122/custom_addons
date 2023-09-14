@@ -1,20 +1,20 @@
 from odoo import fields, models
 
 
-class MedicalLaboratoryRequest(models.Model):
-    _name = "medical.laboratory.request"
-    _inherit = ["medical.laboratory.request", "medical.commission.action"]
+class PodiatryLaboratoryRequest(models.Model):
+    _name = "pod.laboratory.request"
+    _inherit = ["pod.laboratory.request", "pod.commission.action"]
 
     commission_sale_order_line_ids = fields.Many2many(
         "sale.order.line",
-        relation="sale_order_line_commission_medical_laboratory_request",
+        relation="sale_order_line_commission_pod_laboratory_request",
         column1="laboratory_request_id",
         column2="sale_order_line_id",
     )
     variable_fee = fields.Float(string="Variable fee (%)", default="0.0")
     fixed_fee = fields.Float(string="Fixed fee", default="0.0")
-    medical_commission = fields.Boolean(
-        related="service_id.medical_commission", readonly=True
+    pod_commission = fields.Boolean(
+        related="service_id.pod_commission", readonly=True
     )
     sale_agent_ids = fields.One2many(inverse_name="laboratory_request_id")
     invoice_agent_ids = fields.One2many(inverse_name="laboratory_request_id")

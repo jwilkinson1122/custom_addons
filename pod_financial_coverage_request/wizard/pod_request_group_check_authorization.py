@@ -5,13 +5,13 @@
 from odoo import api, fields, models
 
 
-class MedicalRequestGroupCheckAuthorization(models.TransientModel):
-    _name = "medical.request.group.check.authorization"
-    _description = "medical.request.group.check.authorization"
+class PodiatryRequestGroupCheckAuthorization(models.TransientModel):
+    _name = "pod.request.group.check.authorization"
+    _description = "pod.request.group.check.authorization"
 
     @api.model
     def _default_request(self):
-        return self.env["medical.request.group"].browse(
+        return self.env["pod.request.group"].browse(
             self.env.context.get("default_request_group_id", False)
         )
 
@@ -21,9 +21,9 @@ class MedicalRequestGroupCheckAuthorization(models.TransientModel):
             self._default_request().coverage_agreement_item_id.authorization_method_id
         )
 
-    request_group_id = fields.Many2one("medical.request.group", required=True)
+    request_group_id = fields.Many2one("pod.request.group", required=True)
     coverage_agreement_item_id = fields.Many2one(
-        "medical.coverage.agreement.item",
+        "pod.coverage.agreement.item",
         readonly=True,
         related="request_group_id.coverage_agreement_item_id",
     )
@@ -40,17 +40,17 @@ class MedicalRequestGroupCheckAuthorization(models.TransientModel):
     authorization_number = fields.Char()
     authorization_number_extra_1 = fields.Char()
     authorization_method_id = fields.Many2one(
-        "medical.authorization.method",
+        "pod.authorization.method",
         default=_default_method,
         domain="[('id', 'in', authorization_method_ids)]",
     )
     authorization_method_ids = fields.Many2many(
-        "medical.authorization.method",
+        "pod.authorization.method",
         compute="_compute_authorization_method_ids",
         string="Authorization Methods",
     )
     authorization_format_id = fields.Many2one(
-        "medical.authorization.format",
+        "pod.authorization.format",
         related="coverage_agreement_item_id.authorization_format_id",
         readonly=True,
     )
@@ -73,7 +73,7 @@ class MedicalRequestGroupCheckAuthorization(models.TransientModel):
     @api.depends("request_group_id")
     def _compute_authorization_method_ids(self):
         for rec in self:
-            result = self.env["medical.authorization.method"]
+            result = self.env["pod.authorization.method"]
             method = self.coverage_agreement_item_id.authorization_method_id
             while method:
                 result |= method

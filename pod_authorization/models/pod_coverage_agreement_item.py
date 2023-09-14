@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class MedicalCoverageAgreementItem(models.Model):
-    _inherit = "medical.coverage.agreement.item"
+class PodiatryCoverageAgreementItem(models.Model):
+    _inherit = "pod.coverage.agreement.item"
 
     def _check_authorization(self, method, **kwargs):
         res = super()._check_authorization(method, **kwargs)

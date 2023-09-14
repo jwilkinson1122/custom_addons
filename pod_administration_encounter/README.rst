@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =================
-Medical Encounter
+Podiatry Encounter
 =================
 
 Represents an interaction between a patient and healthcare provider(s) for
@@ -18,13 +18,13 @@ For more information about FHIR Encounter visit: http://hl7.org/fhir/encounter.h
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Administration' activate Encounters.
 
 Usage
 =====
 
-#. Go to 'Medical / Administration / Encounter'
+#. Go to 'Podiatry / Administration / Encounter'
 #. Click 'Create'
 #. Enter the encounter information and click 'Save'
 
@@ -46,7 +46,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

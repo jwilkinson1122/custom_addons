@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="seq_medical_sub_payor" model="ir.sequence">
-        <field name="name">Medical sub Payor</field>
-        <field name="code">medical.sub.payor</field>
+    <record id="seq_pod_sub_payor" model="ir.sequence">
+        <field name="name">Podiatry sub Payor</field>
+        <field name="code">pod.sub.payor</field>
         <field name="prefix">SPY</field>
         <field name="padding">8</field>
     </record>

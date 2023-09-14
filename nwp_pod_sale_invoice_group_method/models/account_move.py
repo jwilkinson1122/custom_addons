@@ -9,11 +9,11 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     agreement_id = fields.Many2one(
-        comodel_name="medical.coverage.agreement",
+        comodel_name="pod.coverage.agreement",
         string="Agreement",
         readonly=True,
     )
-    coverage_template_id = fields.Many2one("medical.coverage.template", readonly=True)
+    coverage_template_id = fields.Many2one("pod.coverage.template", readonly=True)
     invoice_group_method_id = fields.Many2one("invoice.group.method", readonly=True)
 
     def _get_refund_common_fields(self):

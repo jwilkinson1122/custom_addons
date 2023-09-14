@@ -5,11 +5,11 @@
 from odoo import api, fields, models
 
 
-class MedicalEncounter(models.Model):
+class PodiatryEncounter(models.Model):
     # FHIR Entity: Encounter (https://www.hl7.org/fhir/encounter.html)
-    _name = "medical.encounter"
-    _description = "Medical Encounter"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.encounter"
+    _description = "Podiatry Encounter"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 
     name = fields.Char(
@@ -23,7 +23,7 @@ class MedicalEncounter(models.Model):
     )
     internal_identifier = fields.Char()
     patient_id = fields.Many2one(
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         required=True,
         tracking=True,
         ondelete="restrict",
@@ -80,7 +80,7 @@ class MedicalEncounter(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.encounter")
+            self.env["ir.sequence"].sudo().next_by_code("pod.encounter")
             or "/"
         )
 

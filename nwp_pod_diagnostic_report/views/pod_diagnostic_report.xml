@@ -2,14 +2,14 @@
 <!-- Copyright 2021 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_diagnostic_report_form_view">
+    <record model="ir.ui.view" id="pod_diagnostic_report_form_view">
         <field
             name="name"
-        >medical.diagnostic.report.form (in cb_medical_diagnostic_report)</field>
-        <field name="model">medical.diagnostic.report</field>
+        >pod.diagnostic.report.form (in nwp_pod_diagnostic_report)</field>
+        <field name="model">pod.diagnostic.report</field>
         <field
             name="inherit_id"
-            ref="medical_diagnostic_report.medical_diagnostic_report_form_view"
+            ref="pod_diagnostic_report.pod_diagnostic_report_form_view"
         />
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
@@ -67,11 +67,11 @@
                     </field>
                 </page>
                 <page
-                    name="medical_department_header"
-                    string="Medical Department"
+                    name="pod_department_header"
+                    string="Podiatry Department"
                     attrs="{'invisible': [('with_department', '=', False)]}"
                 >
-                    <field name="medical_department_header" />
+                    <field name="pod_department_header" />
                 </page>
             </xpath>
         </field>

@@ -7,8 +7,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     pos_session_id = fields.Many2one(
         comodel_name="pos.session",
@@ -30,7 +30,7 @@ class MedicalEncounter(models.Model):
         currency_field="currency_id", compute="_compute_pending_private_amount"
     )
     laboratory_request_ids = fields.One2many(
-        "medical.laboratory.request", inverse_name="encounter_id"
+        "pod.laboratory.request", inverse_name="encounter_id"
     )
 
     @api.depends(
@@ -128,10 +128,10 @@ class MedicalEncounter(models.Model):
             self.onleave2finished()
         return res
 
-    def medical_encounter_close_action(self):
+    def pod_encounter_close_action(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_medical_pos.wizard_medical_encounter_close_action"
+            "nwp_pod_pos.wizard_pod_encounter_close_action"
         )
         action["context"] = {
             "default_encounter_id": self.id,
@@ -256,9 +256,9 @@ class MedicalEncounter(models.Model):
         down_payments = self.sale_order_ids.filtered(lambda r: r.is_down_payment)
         if down_payments:
             key = (
-                self.env["medical.coverage.agreement"],
+                self.env["pod.coverage.agreement"],
                 self.get_patient_partner(),
-                self.env["medical.coverage"],
+                self.env["pod.coverage"],
                 self.env["res.partner"],
                 self.env["invoice.group.method"],
             )

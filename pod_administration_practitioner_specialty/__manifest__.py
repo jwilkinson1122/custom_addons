@@ -4,22 +4,22 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical Administration Practitioner Specialty",
+    "name": "Podiatry Administration Practitioner Specialty",
     "version": "15.0.1.0.0",
     "author": "ForgeFlow, CreuBlanca, LasLabs, "
     "Odoo Community Association (OCA)",
-    "category": "Medical",
-    "website": "https://github.com/tegin/medical-fhir",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/pod-fhir",
     "license": "LGPL-3",
     "depends": [
-        "medical_administration_practitioner",
-        "medical_terminology_sct",
+        "pod_administration_practitioner",
+        "pod_terminology_sct",
     ],
     "data": [
         "security/ir.model.access.csv",
         "data/sct_data.xml",
         "views/res_partner_views.xml",
-        "views/medical_specialty.xml",
+        "views/pod_specialty.xml",
     ],
     "demo": [],
     "installable": True,

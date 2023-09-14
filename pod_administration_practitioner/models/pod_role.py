@@ -6,10 +6,10 @@
 from odoo import fields, models
 
 
-class MedicalRole(models.Model):
+class PodiatryRole(models.Model):
     # FHIR Entity: PractitionerRole/code
     # (https://www.hl7.org/fhir/practitionerrole.html)
-    _name = "medical.role"
+    _name = "pod.role"
     _description = "Practitioner Roles"
 
     name = fields.Char(required=True)

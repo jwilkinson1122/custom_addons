@@ -5,21 +5,21 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestCBMedicalAdministrationFlag(TransactionCase):
+class TestNWPPodiatryAdministrationFlag(TransactionCase):
     def test_service(self):
-        category = self.env["medical.flag.category"].create(
+        category = self.env["pod.flag.category"].create(
             {"name": "Category", "icon": "fa fa-flag"}
         )
-        patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.assertEqual(patient.medical_flag_count, 0)
-        flag = self.env["medical.flag"].create(
+        patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.assertEqual(patient.pod_flag_count, 0)
+        flag = self.env["pod.flag"].create(
             {
                 "patient_id": patient.id,
                 "description": "Description",
                 "category_id": category.id,
             }
         )
-        self.assertEqual(patient.medical_flag_count, 1)
+        self.assertEqual(patient.pod_flag_count, 1)
         action = patient.action_view_flags()
         self.assertEqual(action["res_id"], flag.id)
         self.assertTrue(flag.active)

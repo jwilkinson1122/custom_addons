@@ -6,9 +6,9 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalSubPayor(TransactionCase):
+class TestPodiatrySubPayor(TransactionCase):
     def setUp(self):
-        super(TestMedicalSubPayor, self).setUp()
+        super(TestPodiatrySubPayor, self).setUp()
         self.payor = self.env["res.partner"].create({"name": "Payor", "is_payor": True})
 
     def test_constrain(self):

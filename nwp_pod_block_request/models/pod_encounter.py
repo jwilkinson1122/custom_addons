@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     def inprogress2onleave(self):
         self._blocking_childs()

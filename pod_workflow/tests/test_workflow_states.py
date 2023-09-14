@@ -21,7 +21,7 @@ class TestWorkflowStates(TransactionCase):
             {
                 "name": "Activity",
                 "model_id": self.browse_ref(
-                    "medical_base.model_medical_patient"
+                    "pod_base.model_pod_patient"
                 ).id,
             }
         )

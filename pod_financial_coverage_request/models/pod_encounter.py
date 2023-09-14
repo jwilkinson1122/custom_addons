@@ -5,9 +5,9 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalEncounter(models.Model):
+class PodiatryEncounter(models.Model):
 
-    _inherit = "medical.encounter"
+    _inherit = "pod.encounter"
 
     @api.model
     def create_encounter(
@@ -20,7 +20,7 @@ class MedicalEncounter(models.Model):
             **kwargs,
         )
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
         result["views"] = [(False, "form")]
         result["res_id"] = encounter.id
@@ -37,10 +37,10 @@ class MedicalEncounter(models.Model):
         if not patient_vals:
             patient_vals = {}
         if not patient:
-            patient = self.env["medical.patient"].create(patient_vals)
+            patient = self.env["pod.patient"].create(patient_vals)
         else:
             if isinstance(patient, int):
-                patient = self.env["medical.patient"].browse(patient)
+                patient = self.env["pod.patient"].browse(patient)
             new_patient_vals = {}
             for field in patient_vals:
                 if field not in patient._fields:

@@ -6,18 +6,18 @@ from datetime import timedelta
 from odoo import fields, models
 
 
-class WzdMedicalTurn(models.TransientModel):
-    _name = "wzd.medical.turn"
-    _description = "wzd.medical.turn"
+class WzdPodiatryTurn(models.TransientModel):
+    _name = "wzd.pod.turn"
+    _description = "wzd.pod.turn"
 
-    turn_specialty_ids = fields.Many2many("medical.turn.specialty")
+    turn_specialty_ids = fields.Many2many("pod.turn.specialty")
     start_date = fields.Date(required=True)
     end_date = fields.Date(required=True)
 
     def _get_specialties(self):
         if self.turn_specialty_ids:
             return self.turn_specialty_ids
-        return self.env["medical.turn.specialty"].search([])
+        return self.env["pod.turn.specialty"].search([])
 
     def doit(self):
         self.ensure_one()

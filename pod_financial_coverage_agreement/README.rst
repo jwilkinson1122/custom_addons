@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ====================================
-Medical Financial Coverage Agreement
+Podiatry Financial Coverage Agreement
 ====================================
 
 This module introduces the concept of Agreement. An Agreement contains rules to
@@ -20,7 +20,7 @@ To install this module, simply follow the standard install process.
 Usage
 =====
 
-#. Go to Medical / Financial / Coverage Agreement
+#. Go to Podiatry / Financial / Coverage Agreement
 #. Click "Create"
 #. Enter the agreement information and click "Save"
 
@@ -32,7 +32,7 @@ Bug Tracker
 ===========
 
 Bugs are tracked on
-`GitHub Issues <https://github.com/OCA/vertical-medical/issues>`_. In case of
+`GitHub Issues <https://github.com/OCA/vertical-pod/issues>`_. In case of
 trouble, please check there if your issue has already been reported. If you
 spotted it first, help us smash it by providing detailed and welcomed feedback.
 

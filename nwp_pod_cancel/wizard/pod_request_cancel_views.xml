@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_request_cancel_form">
-        <field name="name">medical.request.cancel</field>
-        <field name="model">medical.request.cancel</field>
+    <record model="ir.ui.view" id="pod_request_cancel_form">
+        <field name="name">pod.request.cancel</field>
+        <field name="model">pod.request.cancel</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Cancel request">

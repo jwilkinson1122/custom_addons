@@ -5,10 +5,10 @@
 from odoo import api, fields, models
 
 
-class MedicalSpecialty(models.Model):
+class PodiatrySpecialty(models.Model):
     # FHIR Entity: PractitionerRole
     # (https://www.hl7.org/fhir/practitionerrole.html)
-    _inherit = "medical.specialty"
+    _inherit = "pod.specialty"
 
     code = fields.Char(required=True)
     sequence_id = fields.Many2one("ir.sequence", string="Sequence", required=True)
@@ -36,7 +36,7 @@ class MedicalSpecialty(models.Model):
         if "sequence_id" not in vals:
             sequence = self.env["ir.sequence"].create(self._sequence_vals(vals))
             vals["sequence_id"] = sequence.id
-        return super(MedicalSpecialty, self).create(vals)
+        return super(PodiatrySpecialty, self).create(vals)
 
     # do not depend on 'sequence_id.date_range_ids', because
     # sequence_id._get_current_sequence() may invalidate it!

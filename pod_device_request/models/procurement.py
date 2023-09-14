@@ -25,8 +25,8 @@ class StockRule(models.Model):
             company_id,
             values,
         )
-        if values.get("medication_administration_id", False):
-            res["medication_administration_id"] = values.get(
-                "medication_administration_id"
+        if values.get("device_administration_id", False):
+            res["device_administration_id"] = values.get(
+                "device_administration_id"
             )
         return res

@@ -5,15 +5,15 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
-class MedicalDocumentTemplate(models.Model):
+class PodiatryDocumentTemplate(models.Model):
     # FHIR Entity: Document Refernece
     # (https://www.hl7.org/fhir/documentreference.html)
-    _name = "medical.document.template"
-    _description = "Medical Document Template"
+    _name = "pod.document.template"
+    _description = "Podiatry Document Template"
     _order = "sequence desc"
 
     document_type_id = fields.Many2one(
-        "medical.document.type",
+        "pod.document.type",
         required=True,
         readonly=True,
         ondelete="cascade",
@@ -35,7 +35,7 @@ class MedicalDocumentTemplate(models.Model):
         readonly=True,
     )
     lang_ids = fields.One2many(
-        "medical.document.template.lang", inverse_name="document_template_id"
+        "pod.document.template.lang", inverse_name="document_template_id"
     )
 
     def unpost(self):
@@ -58,13 +58,13 @@ class MedicalDocumentTemplate(models.Model):
         raise UserError(_("Function must be defined"))
 
 
-class MedicalDocumentTemplateLang(models.Model):
-    _name = "medical.document.template.lang"
-    _description = "Medical Document Template Lang"
-    _inherit = "medical.document.language"
+class PodiatryDocumentTemplateLang(models.Model):
+    _name = "pod.document.template.lang"
+    _description = "Podiatry Document Template Lang"
+    _inherit = "pod.document.language"
     _rec_name = "lang"
 
-    document_template_id = fields.Many2one("medical.document.template", required=True)
+    document_template_id = fields.Many2one("pod.document.template", required=True)
     text = fields.Html(sanitize=True)
 
     _sql_constraints = [

@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class MedicalRequest(models.AbstractModel):
+class PodiatryRequest(models.AbstractModel):
     # FHIR Entity: Request (https://www.hl7.org/fhir/request.html)
-    _name = "medical.request"
-    _description = "Medical request"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "pod.request"
+    _description = "Podiatry request"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 
     @api.model
@@ -68,7 +68,7 @@ class MedicalRequest(models.AbstractModel):
     )  # FHIR Field: priority
     patient_id = fields.Many2one(
         string="Patient",
-        comodel_name="medical.patient",
+        comodel_name="pod.patient",
         required=True,
         tracking=True,
         ondelete="restrict",
@@ -131,8 +131,8 @@ class MedicalRequest(models.AbstractModel):
         comodel_name="workflow.plan.definition.action",
         readonly=True,
     )  # FHIR Field: definition
-    is_medical_request = fields.Boolean(
-        "Medical request", compute="_compute_is_medical_request"
+    is_pod_request = fields.Boolean(
+        "Podiatry request", compute="_compute_is_pod_request"
     )
 
     @api.depends("fhir_state")
@@ -141,20 +141,20 @@ class MedicalRequest(models.AbstractModel):
         for record in self:
             record.state = state_vals[record.fhir_state][1]
 
-    def _compute_is_medical_request(self):
+    def _compute_is_pod_request(self):
         for rec in self:
-            rec.is_medical_request = True
+            rec.is_pod_request = True
 
-    def _get_medical_request_context(self, context):
+    def _get_pod_request_context(self, context):
         for name, field in self._fields.items():
             if (
                 field.comodel_name
-                and "is_medical_request"
+                and "is_pod_request"
                 in self.env[field.comodel_name]._fields
                 and field.type == "many2one"
             ):
                 context.update({"default_%s" % field.name: self[name].id})
-                if "is_medical_request" in self._fields:
+                if "is_pod_request" in self._fields:
                     if field.comodel_name == self._name:
                         context.update({"default_%s" % field.name: self.id})
                     else:
@@ -249,7 +249,7 @@ class MedicalRequest(models.AbstractModel):
         requests = self.env[model].search([(inverse_name, "=", self.id)])
         result = self.env["ir.actions.act_window"]._for_xml_id(params["view"])
         context = {"default_patient_id": self.patient_id.id}
-        context = self._get_medical_request_context(context)
+        context = self._get_pod_request_context(context)
         result["context"] = context
         result["domain"] = [(inverse_name, "=", self.id)]
         if len(requests) == 1:

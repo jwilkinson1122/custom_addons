@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class MedicalProcedureExternalRequestTemplate(models.Model):
-    _name = "medical.procedure.external.request.template"
+class PodiatryProcedureExternalRequestTemplate(models.Model):
+    _name = "pod.procedure.external.request.template"
     _description = "Procedure External Template"
 
     name = fields.Char(required=True)
@@ -39,6 +39,6 @@ class MedicalProcedureExternalRequestTemplate(models.Model):
         return age
 
     def _generate_request(self, **kwargs):
-        return self.env["medical.procedure.external.request"].create(
+        return self.env["pod.procedure.external.request"].create(
             self._generate_request_vals(**kwargs)
         )

@@ -3,5 +3,5 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from . import res_partner
-from . import medical_role
-from . import medical_specialty
+from . import pod_role
+from . import pod_specialty

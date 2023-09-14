@@ -4,10 +4,10 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_event_tree">
-        <field name="name">medical.event.tree</field>
-        <field name="model">medical.event</field>
-        <field name="inherit_id" ref="medical_workflow.medical_event_tree" />
+    <record model="ir.ui.view" id="pod_event_tree">
+        <field name="name">pod.event.tree</field>
+        <field name="model">pod.event</field>
+        <field name="inherit_id" ref="pod_workflow.pod_event_tree" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">0</attribute>
@@ -22,10 +22,10 @@
             </xpath>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_event_form">
-        <field name="name">medical.event.form</field>
-        <field name="model">medical.event</field>
-        <field name="inherit_id" ref="medical_workflow.medical_event_form" />
+    <record model="ir.ui.view" id="pod_event_form">
+        <field name="name">pod.event.form</field>
+        <field name="model">pod.event</field>
+        <field name="inherit_id" ref="pod_workflow.pod_event_form" />
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <field name="service_id" position="attributes">

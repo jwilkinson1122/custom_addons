@@ -4,10 +4,10 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalUom(TransactionCase):
+class TestPodiatryUom(TransactionCase):
     def _check(self, origin, destiny, original_qty, expected_qty):
-        base_uom = self.env.ref("medical_diagnostic_report.%s" % origin)
-        compute_uom = self.env.ref("medical_diagnostic_report.%s" % destiny)
+        base_uom = self.env.ref("pod_diagnostic_report.%s" % origin)
+        compute_uom = self.env.ref("pod_diagnostic_report.%s" % destiny)
         self.assertAlmostEqual(
             base_uom._compute_quantity(original_qty, compute_uom),
             expected_qty,
@@ -96,13 +96,13 @@ class TestMedicalUom(TransactionCase):
 
     def test_femto_litre(self):
         base_uom = self.env.ref("uom.product_uom_litre")
-        compute_uom = self.env.ref("medical_diagnostic_report.uom_femto_litre")
+        compute_uom = self.env.ref("pod_diagnostic_report.uom_femto_litre")
         self.assertAlmostEqual(
             base_uom._compute_quantity(0.001, compute_uom),
             1000000000000,
             places=2,
         )
-        base_uom = self.env.ref("medical_diagnostic_report.uom_femto_litre")
+        base_uom = self.env.ref("pod_diagnostic_report.uom_femto_litre")
         compute_uom = self.env.ref("uom.product_uom_litre")
         self.assertAlmostEqual(
             base_uom._compute_quantity(2000000000000000, compute_uom),
@@ -112,13 +112,13 @@ class TestMedicalUom(TransactionCase):
 
     def test_pico_gram(self):
         base_uom = self.env.ref("uom.product_uom_kgm")
-        compute_uom = self.env.ref("medical_diagnostic_report.uom_pico_gram")
+        compute_uom = self.env.ref("pod_diagnostic_report.uom_pico_gram")
         self.assertAlmostEqual(
             base_uom._compute_quantity(0.001, compute_uom),
             1000000000000,
             places=2,
         )
-        base_uom = self.env.ref("medical_diagnostic_report.uom_pico_gram")
+        base_uom = self.env.ref("pod_diagnostic_report.uom_pico_gram")
         compute_uom = self.env.ref("uom.product_uom_kgm")
         self.assertAlmostEqual(
             base_uom._compute_quantity(2000000000000000, compute_uom),

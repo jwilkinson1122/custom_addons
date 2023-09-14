@@ -5,61 +5,61 @@
 from odoo import _, api, fields, models
 
 
-class MedicalPatient(models.Model):
-    _inherit = "medical.patient"
+class PodiatryPatient(models.Model):
+    _inherit = "pod.patient"
 
-    medical_condition_ids = fields.One2many(
-        comodel_name="medical.condition",
+    pod_condition_ids = fields.One2many(
+        comodel_name="pod.condition",
         inverse_name="patient_id",
         string="Conditions",
     )
-    medical_condition_count = fields.Integer(
-        compute="_compute_medical_condition_count",
+    pod_condition_count = fields.Integer(
+        compute="_compute_pod_condition_count",
         string="# of Conditions",
     )
-    medical_allergy_ids = fields.One2many(
-        comodel_name="medical.condition",
+    pod_allergy_ids = fields.One2many(
+        comodel_name="pod.condition",
         inverse_name="patient_id",
         domain=[("is_allergy", "=", True)],
         string="Allergies",
     )
-    medical_allergies_count = fields.Integer(
-        compute="_compute_medical_condition_count",
+    pod_allergies_count = fields.Integer(
+        compute="_compute_pod_condition_count",
         string="# of Allergies",
     )
 
-    medical_warning_ids = fields.One2many(
-        comodel_name="medical.condition",
+    pod_warning_ids = fields.One2many(
+        comodel_name="pod.condition",
         inverse_name="patient_id",
         string="Warnings",
         domain=[("create_warning", "=", True)],
     )
 
-    medical_warning_count = fields.Integer(
-        compute="_compute_medical_condition_count",
+    pod_warning_count = fields.Integer(
+        compute="_compute_pod_condition_count",
         string="# of Warnings",
     )
 
-    @api.depends("medical_condition_ids")
-    def _compute_medical_condition_count(self):
+    @api.depends("pod_condition_ids")
+    def _compute_pod_condition_count(self):
         for record in self:
-            record.medical_condition_count = len(record.medical_condition_ids)
-            record.medical_warning_count = len(record.medical_warning_ids)
-            record.medical_allergies_count = len(record.medical_allergy_ids)
+            record.pod_condition_count = len(record.pod_condition_ids)
+            record.pod_warning_count = len(record.pod_warning_ids)
+            record.pod_allergies_count = len(record.pod_allergy_ids)
 
-    def action_view_medical_conditions(self):
+    def action_view_pod_conditions(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_condition.medical_clinical_condition_action"
+            "pod_clinical_condition.pod_clinical_condition_action"
         )
         result["context"] = {"default_patient_id": self.id}
         result["domain"] = [("patient_id", "=", self.id)]
         return result
 
-    def action_view_medical_warnings(self):
+    def action_view_pod_warnings(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_condition.medical_warning_action"
+            "pod_clinical_condition.pod_warning_action"
         )
         result["context"] = {"default_patient_id": self.id}
         result["domain"] = [
@@ -68,10 +68,10 @@ class MedicalPatient(models.Model):
         ]
         return result
 
-    def action_view_medical_allergies(self):
+    def action_view_pod_allergies(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_condition.medical_allergy_action"
+            "pod_clinical_condition.pod_allergy_action"
         )
         result["context"] = {
             "default_patient_id": self.id,
@@ -95,7 +95,7 @@ class MedicalPatient(models.Model):
     def create_allergy(self):
         self.ensure_one()
         view_id = self.env.ref(
-            "medical_clinical_condition.medical_condition_view_form"
+            "pod_clinical_condition.pod_condition_view_form"
         ).id
         ctx = dict(self._context)
         vals = self._get_allergy_values()
@@ -103,7 +103,7 @@ class MedicalPatient(models.Model):
             ctx["default_%s" % key] = vals[key]
         return {
             "type": "ir.actions.act_window",
-            "res_model": "medical.condition",
+            "res_model": "pod.condition",
             "name": _("Create clinical condition"),
             "view_type": "form",
             "view_mode": "form",
@@ -112,21 +112,21 @@ class MedicalPatient(models.Model):
             "context": ctx,
         }
 
-    def _get_medical_clinical_condition_values(self):
+    def _get_pod_clinical_condition_values(self):
         return {"patient_id": self.id}
 
-    def create_medical_clinical_condition(self):
+    def create_pod_clinical_condition(self):
         self.ensure_one()
         view_id = self.env.ref(
-            "medical_clinical_condition.medical_condition_view_form"
+            "pod_clinical_condition.pod_condition_view_form"
         ).id
         ctx = dict(self._context)
-        vals = self._get_medical_clinical_condition_values()
+        vals = self._get_pod_clinical_condition_values()
         for key in vals:
             ctx["default_%s" % key] = vals[key]
         return {
             "type": "ir.actions.act_window",
-            "res_model": "medical.condition",
+            "res_model": "pod.condition",
             "name": _("Create clinical condition"),
             "view_type": "form",
             "view_mode": "form",

@@ -4,9 +4,9 @@
 from odoo import api, fields, models
 
 
-class MedicalReportAbstract(models.AbstractModel):
+class PodiatryReportAbstract(models.AbstractModel):
 
-    _name = "medical.report.abstract"
+    _name = "pod.report.abstract"
     _description = "Abstract Diagnostic Report"
 
     name = fields.Char(string="Report Name")
@@ -25,14 +25,14 @@ class MedicalReportAbstract(models.AbstractModel):
     )
 
 
-class MedicalReportItemAbstract(models.AbstractModel):
+class PodiatryReportItemAbstract(models.AbstractModel):
 
-    _name = "medical.report.item.abstract"
+    _name = "pod.report.item.abstract"
     _description = "Abstract Diagnostic Report Item"
 
     sequence = fields.Integer(default=20)
 
-    concept_id = fields.Many2one(comodel_name="medical.observation.concept")
+    concept_id = fields.Many2one(comodel_name="pod.observation.concept")
     name = fields.Char(required=True)
     uom_id = fields.Many2one("uom.uom", string="Unit of measure")
 

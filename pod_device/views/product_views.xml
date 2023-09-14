@@ -12,15 +12,15 @@
         <field name="arch" type="xml">
             <label for="sale_ok" position="after">
                 <div>
-                    <field name="is_medication" />
-                    <label for="is_medication" />
+                    <field name="is_device" />
+                    <label for="is_device" />
                 </div>
             </label>
             <notebook position="inside">
                 <page
-                    string="Medication"
-                    name="medication"
-                    attrs="{'invisible':[('is_medication','=', False)]}"
+                    string="Device"
+                    name="device"
+                    attrs="{'invisible':[('is_device','=', False)]}"
                 >
                     <group>
                         <group>
@@ -43,18 +43,18 @@
             </notebook>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_medication_action">
-        <field name="name">Medications</field>
+    <record model="ir.actions.act_window" id="pod_device_action">
+        <field name="name">Devices</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('is_medication', '=', True)]</field>
-        <field name="context">{'default_is_medication': True}</field>
+        <field name="domain">[('is_device', '=', True)]</field>
+        <field name="context">{'default_is_device': True}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_medication">
-        <field name="name">Medications</field>
-        <field name="parent_id" ref="medical_base.medical_root_medications" />
-        <field name="action" ref="medical_medication_action" />
+    <record model="ir.ui.menu" id="pod_device">
+        <field name="name">Devices</field>
+        <field name="parent_id" ref="pod_base.pod_root_devices" />
+        <field name="action" ref="pod_device_action" />
         <field name="sequence" eval="10" />
     </record>
 </odoo>

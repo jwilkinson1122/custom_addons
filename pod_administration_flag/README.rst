@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ===========================
-Medical Administration Flag
+Podiatry Administration Flag
 ===========================
 
 This module allows to create and add flags to the patients

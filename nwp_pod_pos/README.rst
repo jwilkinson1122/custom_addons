@@ -1,8 +1,8 @@
 ===============
-CB Medical Pos
+NWP Podiatry Pos
 ===============
 
-This module adapts pos for medical usage.
+This module adapts pos for pod usage.
 Contributors
 ------------
 

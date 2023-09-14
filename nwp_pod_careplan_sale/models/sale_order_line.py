@@ -8,14 +8,14 @@ from odoo import _, fields, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    encounter_id = fields.Many2one("medical.encounter", readonly=True, index=True)
-    medical_model = fields.Char(index=True)
-    medical_res_id = fields.Many2oneReference(index=True, model_field="medical_model")
+    encounter_id = fields.Many2one("pod.encounter", readonly=True, index=True)
+    pod_model = fields.Char(index=True)
+    pod_res_id = fields.Many2oneReference(index=True, model_field="pod_model")
     invoice_group_method_id = fields.Many2one(
         "invoice.group.method", readonly=True, index=True
     )
     authorization_method_id = fields.Many2one(
-        "medical.authorization.method",
+        "pod.authorization.method",
         readonly=True,
         index=True,
     )
@@ -28,19 +28,19 @@ class SaleOrderLine(models.Model):
         ],
         readonly=True,
     )
-    medical_sale_discount_id = fields.Many2one("medical.sale.discount", readonly=True)
+    pod_sale_discount_id = fields.Many2one("pod.sale.discount", readonly=True)
     authorization_number = fields.Char()
     subscriber_id = fields.Char()
     patient_name = fields.Char()
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         related="order_id.coverage_id.coverage_template_id",
     )
 
     def _prepare_third_party_order_line(self):
         res = super()._prepare_third_party_order_line()
         res["invoice_group_method_id"] = self.env.ref(
-            "cb_medical_careplan_sale.third_party"
+            "nwp_pod_careplan_sale.third_party"
         ).id
         res["encounter_id"] = self.encounter_id.id or False
         res["authorization_number"] = self.authorization_number or False
@@ -48,12 +48,12 @@ class SaleOrderLine(models.Model):
         res["patient_name"] = self.patient_name or False
         return res
 
-    def open_medical_record(self):
+    def open_pod_record(self):
         action = {
-            "name": _("Medical Record"),
+            "name": _("Podiatry Record"),
             "type": "ir.actions.act_window",
-            "res_model": self.medical_model,
-            "res_id": self.medical_res_id,
+            "res_model": self.pod_model,
+            "res_id": self.pod_res_id,
             "view_mode": "form",
         }
         return action
@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
             res["authorization_number"] = self.authorization_number
             agreement = self.order_id.coverage_agreement_id
             if agreement:
-                # TODO: Pass this to cb_facturae
+                # TODO: Pass this to nwp_facturae
                 # if agreement.file_reference:
                 #     res["facturae_file_reference"] = agreement.file_reference
                 if agreement.discount and agreement.discount > 0.0:

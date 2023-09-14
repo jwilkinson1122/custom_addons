@@ -8,8 +8,8 @@ from odoo.exceptions import ValidationError
 SO_OPEN = ["draft"]
 
 
-class MedicalCareplan(models.Model):
-    _inherit = "medical.careplan"
+class PodiatryCareplan(models.Model):
+    _inherit = "pod.careplan"
 
     @api.onchange("encounter_id")
     def _onchange_encounter(self):
@@ -46,7 +46,7 @@ class MedicalCareplan(models.Model):
         elif isinstance(performer, int):
             performer = self.env["res.partner"].browse(performer)
         call = (
-            self.env["medical.careplan.add.plan.definition"]
+            self.env["pod.careplan.add.plan.definition"]
             .with_context(default_careplan_id=self.id)
             .create(
                 {
@@ -58,7 +58,7 @@ class MedicalCareplan(models.Model):
             )
         )
         if not agreement_line:
-            agreement_line = self.env["medical.coverage.agreement.item"].search(
+            agreement_line = self.env["pod.coverage.agreement.item"].search(
                 [
                     ("product_id", "=", service.id),
                     ("coverage_agreement_id", "in", call.agreement_ids.ids),

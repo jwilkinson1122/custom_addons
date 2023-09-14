@@ -1,10 +1,10 @@
 from odoo import api, fields, models
 
 
-class MedicalFlag(models.Model):
+class PodiatryFlag(models.Model):
     # FHIR Entity: Flag (https://www.hl7.org/fhir/flag.html)
-    _inherit = "medical.flag.category"
-    _description = "Medical Category Flag"
+    _inherit = "pod.flag.category"
+    _description = "Podiatry Category Flag"
 
     flag = fields.Char(compute="_compute_flag", store=True)
     icon = fields.Char()

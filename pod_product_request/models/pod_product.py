@@ -7,28 +7,28 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalProductTemplate(models.Model):
+class PodiatryProductTemplate(models.Model):
 
-    _name = "medical.product.template"
-    _description = "Medical Product Template"
+    _name = "pod.product.template"
+    _description = "Podiatry Product Template"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "name_template"
 
     name_template = fields.Char(
-        compute="_compute_medical_product_name", store=True
+        compute="_compute_pod_product_name", store=True
     )
 
     name = fields.Char(required=True)
 
     product_ids = fields.One2many(
-        "medical.product.product", inverse_name="product_tmpl_id"
+        "pod.product.product", inverse_name="product_tmpl_id"
     )
 
     product_count = fields.Integer(compute="_compute_product_count")
 
     product_type = fields.Selection(
-        selection=[("device", "Device"), ("medication", "Medication")],
-        default="medication",
+        selection=[("device", "Device"), ("device", "Device")],
+        default="device",
     )
 
     code_template = fields.Char()
@@ -38,12 +38,12 @@ class MedicalProductTemplate(models.Model):
 
     dosage = fields.Char()
 
-    form_id = fields.Many2one(comodel_name="medication.form")
+    form_id = fields.Many2one(comodel_name="device.form")
     # Fhir Concept: Form
 
     form_name = fields.Char(related="form_id.name", string="Form Name")
 
-    administration_route_ids = fields.Many2many("medical.administration.route")
+    administration_route_ids = fields.Many2many("pod.administration.route")
 
     @api.depends("product_ids")
     def _compute_product_count(self):
@@ -54,7 +54,7 @@ class MedicalProductTemplate(models.Model):
         return ["name", "dosage", "form_name"]
 
     @api.depends(_get_name_fields)
-    def _compute_medical_product_name(self):
+    def _compute_pod_product_name(self):
         for rec in self:
             name = ""
             for field in rec._get_name_fields():
@@ -62,32 +62,32 @@ class MedicalProductTemplate(models.Model):
                     name += "%s " % getattr(rec, field)
             rec.name_template = name
 
-    def action_view_medical_product_ids(self):
+    def action_view_pod_product_ids(self):
         action = self.env.ref(
-            "medical_product_request.medical_product_product_act_window"
+            "pod_product_request.pod_product_product_act_window"
         ).read()[0]
         action["domain"] = [("product_tmpl_id", "=", self.id)]
         if len(self.product_ids) == 1:
-            view = "medical_product_request.medical_product_product_form_view"
+            view = "pod_product_request.pod_product_product_form_view"
             action["views"] = [(self.env.ref(view).id, "form")]
             action["res_id"] = self.product_ids.id
         return action
 
 
-class MedicalProductProduct(models.Model):
+class PodiatryProductProduct(models.Model):
 
-    _name = "medical.product.product"
-    _description = "Medical Product Product"
+    _name = "pod.product.product"
+    _description = "Podiatry Product Product"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _inherits = {"medical.product.template": "product_tmpl_id"}
+    _inherits = {"pod.product.template": "product_tmpl_id"}
     _rec_name = "name_product"
 
     name_product = fields.Char(
-        compute="_compute_medical_product_name", store=True
+        compute="_compute_pod_product_name", store=True
     )
 
     product_tmpl_id = fields.Many2one(
-        "medical.product.template",
+        "pod.product.template",
         ondelete="cascade",
         copy=True,
         required=True,
@@ -116,7 +116,7 @@ class MedicalProductProduct(models.Model):
         ]
 
     @api.depends(_get_name_fields)
-    def _compute_medical_product_name(self):
+    def _compute_pod_product_name(self):
         for rec in self:
             name = ""
             for field in rec._get_name_fields():

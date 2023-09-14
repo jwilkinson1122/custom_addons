@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="view_medical_patient_filter" model="ir.ui.view">
-        <field name="name">medical.patient.search</field>
-        <field name="model">medical.patient</field>
+    <record id="view_pod_patient_filter" model="ir.ui.view">
+        <field name="name">pod.patient.search</field>
+        <field name="model">pod.patient</field>
         <field name="arch" type="xml">
             <search>
                 <field string="Name" name="name" />
@@ -11,10 +11,10 @@
             </search>
         </field>
     </record>
-    <record id="medical_patient_tree" model="ir.ui.view">
-        <field name="name">medical.patient.tree</field>
-        <field name="model">medical.patient</field>
-        <field name="inherit_id" ref="medical_base.medical_patient_tree" />
+    <record id="pod_patient_tree" model="ir.ui.view">
+        <field name="name">pod.patient.tree</field>
+        <field name="model">pod.patient</field>
+        <field name="inherit_id" ref="pod_base.pod_patient_tree" />
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="vat" />
@@ -24,7 +24,7 @@
     </record>
     <record
         model="ir.actions.act_window"
-        id="medical_base.medical_patient_window_action"
+        id="pod_base.pod_patient_window_action"
     >
         <field name="view_mode">tree,kanban,form</field>
     </record>

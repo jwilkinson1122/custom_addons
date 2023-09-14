@@ -80,7 +80,7 @@ class DigestBase(models.AbstractModel):
         }
 
     def _show_signature_view(self):
-        return self.env.ref("medical_certify.certify_base_form_view")
+        return self.env.ref("pod_certify.certify_base_form_view")
 
     def _generate_signature(self):
         digest = self.digest_current

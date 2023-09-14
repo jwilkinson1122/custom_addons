@@ -25,7 +25,7 @@ class TestDocument(SavepointCase):
                 "server_id": cls.server.id,
             }
         )
-        cls.patient = cls.env["medical.patient"].create({"name": "My patient"})
+        cls.patient = cls.env["pod.patient"].create({"name": "My patient"})
         cls.lang_es = cls.env.ref("base.lang_es")
         if not cls.lang_es.active:
             cls.lang_es.active = True
@@ -35,11 +35,11 @@ class TestDocument(SavepointCase):
         cls.lang_en = cls.env.ref("base.lang_en")
         if not cls.lang_en.active:
             cls.lang_en.active = True
-        cls.document_type = cls.env["medical.document.type"].create(
+        cls.document_type = cls.env["pod.document.type"].create(
             {
                 "name": "CI",
                 "report_action_id": cls.env.ref(
-                    "medical_document.action_report_document_report_base"
+                    "pod_document.action_report_document_report_base"
                 ).id,
                 "lang_ids": [
                     (
@@ -70,7 +70,7 @@ class TestDocument(SavepointCase):
         "PrintingPrinter.print_file"
     )
     def test_document(self, mck):
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,
@@ -98,7 +98,7 @@ class TestDocument(SavepointCase):
             "<p>{}</p><p>{}</p>".format(self.patient.lang, self.patient.name),
         )
         language_change = Form(
-            self.env["medical.document.reference.change.language"].with_context(
+            self.env["pod.document.reference.change.language"].with_context(
                 default_document_reference_id=document.id
             )
         )
@@ -133,7 +133,7 @@ class TestDocument(SavepointCase):
         mck.assert_called_once()
 
     def test_document_constrain_01(self):
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,
@@ -144,7 +144,7 @@ class TestDocument(SavepointCase):
             document.current2superseded()
 
     def test_document_constrain_02(self):
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,
@@ -159,7 +159,7 @@ class TestDocument(SavepointCase):
             document.draft2current()
 
     def test_document_constrain_03(self):
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,
@@ -176,14 +176,14 @@ class TestDocument(SavepointCase):
             document.current2superseded()
 
     def test_document_constrain_04(self):
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,
             }
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.document.reference"].create(
+            self.env["pod.document.reference"].create(
                 {
                     "patient_id": self.patient.id,
                     "document_type_id": self.document_type.id,
@@ -193,7 +193,7 @@ class TestDocument(SavepointCase):
 
     def test_document_no_lang(self):
         self.patient.lang = self.lang_it.code
-        document = self.env["medical.document.reference"].create(
+        document = self.env["pod.document.reference"].create(
             {
                 "patient_id": self.patient.id,
                 "document_type_id": self.document_type.id,

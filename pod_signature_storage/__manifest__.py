@@ -2,15 +2,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Medical Signature Storage",
+    "name": "Podiatry Signature Storage",
     "summary": """
         Store User signature""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
-    "website": "https://github.com/tegin/cb-medical",
+    "website": "https://github.com/tegin/nwp-pod",
     "depends": [
-        # 'medical_diagnostic_report',
+        # 'pod_diagnostic_report',
     ],
     "data": [
         "security/ir.model.access.csv",

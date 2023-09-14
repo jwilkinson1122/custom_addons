@@ -5,8 +5,8 @@
 from odoo import api, models
 
 
-class MedicalRequestGroup(models.Model):
-    _inherit = "medical.request.group"
+class PodiatryRequestGroup(models.Model):
+    _inherit = "pod.request.group"
 
     def compute_price(self, is_insurance):
         if self.child_model and self.child_id:
@@ -15,7 +15,7 @@ class MedicalRequestGroup(models.Model):
                 .browse(self.child_id)
                 .compute_price(is_insurance)
             )
-        return super(MedicalRequestGroup, self).compute_price(is_insurance)
+        return super(PodiatryRequestGroup, self).compute_price(is_insurance)
 
     @api.depends(
         "is_billable",

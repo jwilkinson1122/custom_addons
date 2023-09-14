@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
     -->
 <odoo>
-    <record model="ir.ui.view" id="medical_request_group_change_plan_form">
-        <field name="name">medical.request.group.change.plan.form</field>
-        <field name="model">medical.request.group.change.plan</field>
+    <record model="ir.ui.view" id="pod_request_group_change_plan_form">
+        <field name="name">pod.request.group.change.plan.form</field>
+        <field name="model">pod.request.group.change.plan</field>
         <field name="arch" type="xml">
             <form>
                 <field name="request_group_id" invisible="1" />
@@ -52,9 +52,9 @@
             </form>
         </field>
     </record>
-    <record id="action_medical_request_group_change_plan" model="ir.actions.act_window">
+    <record id="action_pod_request_group_change_plan" model="ir.actions.act_window">
         <field name="name">Change Plan</field>
-        <field name="res_model">medical.request.group.change.plan</field>
+        <field name="res_model">pod.request.group.change.plan</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_request_group_id': active_id}</field>
         <field name="target">new</field>

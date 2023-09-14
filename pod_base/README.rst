@@ -3,10 +3,10 @@
    :alt: License: LGPL-3
 
 ============
-Medical Base
+Podiatry Base
 ============
 
-This module starts the installation of medical environment.
+This module starts the installation of pod environment.
 It installs the abstract classes used generally on FHIR.
 
 Installation
@@ -17,8 +17,8 @@ To install this module, simply follow the standard install process.
 Usage
 =====
 
-#. Go to 'Medical / Configuration / Settings'
-#. Configure the medical environment by selecting the modules you want to
+#. Go to 'Podiatry / Configuration / Settings'
+#. Configure the pod environment by selecting the modules you want to
    install.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
@@ -39,7 +39,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

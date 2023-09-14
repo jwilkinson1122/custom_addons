@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =================
-Medical Care Plan
+Podiatry Care Plan
 =================
 
 Describes the intention of how one or more practitioners intend to deliver
@@ -24,13 +24,13 @@ For further information visit: https://www.hl7.org/fhir/careplan.html
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Clinical' activate 'Care plans'.
 
 Usage
 =====
 
-#. Go to 'Medical / Clinical / Requests / Care plans'
+#. Go to 'Podiatry / Clinical / Requests / Care plans'
 #. Click 'Create'.
 #. Provide the patient this Care plan is intended for and any other
    non-required fields.
@@ -54,7 +54,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

@@ -5,12 +5,12 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalPatient(models.Model):
+class PodiatryPatient(models.Model):
 
-    _inherit = "medical.patient"
+    _inherit = "pod.patient"
 
     encounter_ids = fields.One2many(
-        comodel_name="medical.encounter", inverse_name="patient_id"
+        comodel_name="pod.encounter", inverse_name="patient_id"
     )
     encounter_count = fields.Integer(compute="_compute_encounter_count")
 
@@ -22,7 +22,7 @@ class MedicalPatient(models.Model):
     def action_view_encounter_ids(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
         action["domain"] = [("patient_id", "=", self.id)]
         return action

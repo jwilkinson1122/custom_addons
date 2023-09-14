@@ -5,11 +5,11 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_document_reference_view_tree" model="ir.ui.view">
-        <field name="name">medical.document.reference.view.tree</field>
-        <field name="model">medical.document.reference</field>
+    <record id="pod_document_reference_view_tree" model="ir.ui.view">
+        <field name="name">pod.document.reference.view.tree</field>
+        <field name="model">pod.document.reference</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_workflow.medical_request_tree" />
+        <field name="inherit_id" ref="pod_workflow.pod_request_tree" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="string">Document references</attribute>
@@ -22,10 +22,10 @@
             </field>
         </field>
     </record>
-    <record id="medical_document_reference_view_form" model="ir.ui.view">
-        <field name="name">medical.document.reference.view.form</field>
-        <field name="model">medical.document.reference</field>
-        <field name="inherit_id" ref="medical_workflow.medical_request_form" />
+    <record id="pod_document_reference_view_form" model="ir.ui.view">
+        <field name="name">pod.document.reference.view.form</field>
+        <field name="model">pod.document.reference</field>
+        <field name="inherit_id" ref="pod_workflow.pod_request_form" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form position="attributes">
@@ -47,7 +47,7 @@
             <xpath expr="//div[@name='button_box']" position="after">
                 <div name="language_button_box" class="oe_button_box">
                     <button
-                        name="%(medical_document.medical_document_reference_change_language_action)s"
+                        name="%(pod_document.pod_document_reference_change_language_action)s"
                         type="action"
                         class="oe_stat_button"
                         icon="fa-language"
@@ -68,11 +68,11 @@
             </notebook>
         </field>
     </record>
-    <record id="medical_document_reference_view_search" model="ir.ui.view">
-        <field name="name">medical.document.reference.view.search</field>
-        <field name="model">medical.document.reference</field>
+    <record id="pod_document_reference_view_search" model="ir.ui.view">
+        <field name="name">pod.document.reference.view.search</field>
+        <field name="model">pod.document.reference</field>
         <field name="arch" type="xml">
-            <search string="Medical Document Reference">
+            <search string="Podiatry Document Reference">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="patient_id" />
@@ -95,10 +95,10 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_document_reference_action">
+    <record model="ir.actions.act_window" id="pod_document_reference_action">
         <field name="name">Document references</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.document.reference</field>
+        <field name="res_model">pod.document.reference</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>

@@ -3,28 +3,28 @@
    :alt: License: LGPL-3
 
 ==================
-Medical Medication
+Podiatry Device
 ==================
 
-The Medication resource is primarily used for the identification and definition
-of a medication. This module improves product in order to provide to a
-product some medical fields: SNOMED CT code, ATC code, Over The Counter flag
+The Device resource is primarily used for the identification and definition
+of a device. This module improves product in order to provide to a
+product some pod fields: SNOMED CT code, ATC code, Over The Counter flag
 and a Form code.
 
-For further information about the FHRI Medication visit: https://www.hl7.org/fhir/medication.html
+For further information about the FHRI Device visit: https://www.hl7.org/fhir/device.html
 
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
-'Medication' activate 'Medication'.
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
+'Device' activate 'Device'.
 
 Usage
 =====
 
-#. Go to 'Medical / Medications / Medications'
+#. Go to 'Podiatry / Devices / Devices'
 #. Click 'Create'.
-#. Provide a name and any other medical information inside the 'Medication'
+#. Provide a name and any other pod information inside the 'Device'
    page.
 #. Click 'Save'.
 
@@ -46,7 +46,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

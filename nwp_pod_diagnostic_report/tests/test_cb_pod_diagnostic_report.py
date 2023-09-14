@@ -10,9 +10,9 @@ from odoo.tests import TransactionCase, tagged
 
 
 @tagged("-at_install", "post_install")
-class TestCbMedicalDiagnosticReport(TransactionCase):
+class TestCbPodiatryDiagnosticReport(TransactionCase):
     def setUp(self):
-        super(TestCbMedicalDiagnosticReport, self).setUp()
+        super(TestCbPodiatryDiagnosticReport, self).setUp()
         self.user_1 = self.env["res.users"].create(
             {
                 "name": "Test user",
@@ -20,12 +20,12 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
                 "groups_id": [
                     (
                         4,
-                        self.env.ref("medical_base." "group_medical_doctor").id,
+                        self.env.ref("pod_base." "group_pod_practitioner").id,
                     )
                 ],
             }
         )
-        self.department_1 = self.env["medical.department"].create(
+        self.department_1 = self.env["pod.department"].create(
             {
                 "name": "Department 1",
                 "with_department_report_header": True,
@@ -33,23 +33,23 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
                 "user_ids": [(4, self.user_1.id)],
             }
         )
-        self.department_2 = self.env["medical.department"].create(
+        self.department_2 = self.env["pod.department"].create(
             {
                 "name": "Department 2",
                 "with_department_report_header": True,
                 "diagnostic_report_header": "Report Header 2",
             }
         )
-        self.category_1 = self.env["medical.report.category"].create(
+        self.category_1 = self.env["pod.report.category"].create(
             {
                 "name": "Category 1",
-                "medical_department_id": self.department_1.id,
+                "pod_department_id": self.department_1.id,
             }
         )
-        self.category_2 = self.env["medical.report.category"].create(
+        self.category_2 = self.env["pod.report.category"].create(
             {"name": "Category 2"}
         )
-        self.patient_1 = self.env["medical.patient"].create(
+        self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
         self.center_1 = self.env["res.partner"].create(
@@ -59,14 +59,14 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
                 "encounter_sequence_prefix": "C",
             }
         )
-        self.encounter_1 = self.env["medical.encounter"].create(
+        self.encounter_1 = self.env["pod.encounter"].create(
             {
                 "name": "Encounter 1",
                 "patient_id": self.patient_1.id,
                 "center_id": self.center_1.id,
             }
         )
-        self.template_1 = self.env["medical.diagnostic.report.template"].create(
+        self.template_1 = self.env["pod.diagnostic.report.template"].create(
             {
                 "name": "Template 1",
                 "with_observation": False,
@@ -76,7 +76,7 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
                 "report_category_id": self.category_1.id,
             }
         )
-        self.template_2 = self.env["medical.diagnostic.report.template"].create(
+        self.template_2 = self.env["pod.diagnostic.report.template"].create(
             {
                 "name": "Template 2",
                 "with_observation": False,
@@ -88,7 +88,7 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
         )
 
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -113,20 +113,20 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
                 "groups_id": [
                     (
                         4,
-                        self.env.ref("medical_base.group_medical_doctor").id,
+                        self.env.ref("pod_base.group_pod_practitioner").id,
                     ),
                 ],
             }
         )
-        department_2 = self.env["medical.department"].create(
+        department_2 = self.env["pod.department"].create(
             {
                 "name": "Department 2",
                 "diagnostic_report_header": "Report Header 2",
                 "user_ids": [(4, user_2.id)],
             }
         )
-        category_3 = self.env["medical.report.category"].create(
-            {"name": "Category 3", "medical_department_id": department_2.id}
+        category_3 = self.env["pod.report.category"].create(
+            {"name": "Category 3", "pod_department_id": department_2.id}
         )
         # Template 1, is from category 1, it should be managed only by user 1
         report_1 = self._generate_report(self.template_1)
@@ -144,7 +144,7 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
         self.assertEqual(report_3.fhir_state, "final")
 
         # Template 3, is from category 3, it should be managed only by user 2
-        template_3 = self.env["medical.diagnostic.report.template"].create(
+        template_3 = self.env["pod.diagnostic.report.template"].create(
             {"name": "Template", "report_category_id": category_3.id}
         )
         report_4 = self._generate_report(template_3)
@@ -155,22 +155,22 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
 
     def _generate_report(self, template):
         report_generation = self.env[
-            "medical.encounter.create.diagnostic.report"
+            "pod.encounter.create.diagnostic.report"
         ].create({"encounter_id": self.encounter_1.id, "template_id": template.id})
         action = report_generation.generate()
         return self.env[action.get("res_model")].browse(action.get("res_id"))
 
     def test_report_generation(self):
-        self.assertEqual("medical.diagnostic.report", self.report._name)
+        self.assertEqual("pod.diagnostic.report", self.report._name)
         self.assertEqual(
             self.template_1.report_category_id.id,
             self.report.report_category_id.id,
         )
-        self.assertTrue(self.template_1.medical_department_id.id)
+        self.assertTrue(self.template_1.pod_department_id.id)
         self.assertTrue(self.report.with_department)
         self.assertRegex(
-            self.report.medical_department_header,
-            self.template_1.medical_department_header,
+            self.report.pod_department_header,
+            self.template_1.pod_department_header,
         )
 
     def test_finalization(self):
@@ -178,8 +178,8 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
         self.report.registered2final_action()
         self.assertTrue(self.report.with_department)
         self.assertRegex(
-            self.report.medical_department_header,
-            self.template_1.medical_department_header,
+            self.report.pod_department_header,
+            self.template_1.pod_department_header,
         )
         self.assertTrue(self.report.signature_id.id)
         self.assertEqual(
@@ -197,14 +197,14 @@ class TestCbMedicalDiagnosticReport(TransactionCase):
         report_duplicate = self.env[action.get("res_model")].browse(
             action.get("res_id")
         )
-        self.assertEqual("medical.diagnostic.report", report_duplicate._name)
+        self.assertEqual("pod.diagnostic.report", report_duplicate._name)
         self.assertNotEqual(report_duplicate.id, self.report.id)
         self.assertEqual(report_duplicate.fhir_state, "registered")
         self.assertEqual(report_duplicate.encounter_id, self.report.encounter_id)
 
     def test_images(self):
         image = tools.file_open(
-            name="addons/cb_medical_diagnostic_report/static/description/icon.png",
+            name="addons/nwp_pod_diagnostic_report/static/description/icon.png",
             mode="rb",
         ).read()
         self.assertFalse(self.report.image_ids)

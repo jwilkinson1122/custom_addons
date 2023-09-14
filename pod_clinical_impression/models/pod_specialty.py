@@ -4,9 +4,9 @@ from odoo import fields, models
 from odoo.osv import expression
 
 
-class MedicalSpecialty(models.Model):
+class PodiatrySpecialty(models.Model):
 
-    _inherit = "medical.specialty"
+    _inherit = "pod.specialty"
 
     patient_impression_count = fields.Integer(
         compute="_compute_impression_info"
@@ -32,15 +32,15 @@ class MedicalSpecialty(models.Model):
             patient_id = None
             last_update = False
             if self.env.context.get("patient_id"):
-                patient_id = self.env["medical.patient"].browse(
+                patient_id = self.env["pod.patient"].browse(
                     self.env.context.get("patient_id")
                 )
             elif self.env.context.get("encounter_id"):
-                encounter_id = self.env["medical.encounter"].browse(
+                encounter_id = self.env["pod.encounter"].browse(
                     self.env.context.get("encounter_id")
                 )
                 encounter_count = len(
-                    encounter_id.medical_impression_ids.filtered(
+                    encounter_id.pod_impression_ids.filtered(
                         lambda r: r.specialty_id.id == rec.id
                         and r.fhir_state != "cancelled"
                     )
@@ -48,7 +48,7 @@ class MedicalSpecialty(models.Model):
                 patient_id = encounter_id.patient_id
             if patient_id:
                 patient_impression_ids = (
-                    patient_id.medical_impression_ids.filtered(
+                    patient_id.pod_impression_ids.filtered(
                         lambda r: r.specialty_id.id == rec.id
                         and r.fhir_state != "cancelled"
                     )
@@ -77,17 +77,17 @@ class MedicalSpecialty(models.Model):
     # Always pass a context to this function
     def get_specialty_impression(self):
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_impression."
-            "medical_clinical_impression_act_window"
+            "pod_clinical_impression."
+            "pod_clinical_impression_act_window"
         )
         ctx_dict = self._get_default_context()
         if self.env.context.get("patient_id"):
-            patient_id = self.env["medical.patient"].browse(
+            patient_id = self.env["pod.patient"].browse(
                 self.env.context.get("patient_id")
             )
             encounter_id = patient_id._get_last_encounter()
         elif self.env.context.get("encounter_id"):
-            encounter_id = self.env["medical.encounter"].browse(
+            encounter_id = self.env["pod.encounter"].browse(
                 self.env.context.get("encounter_id")
             )
             patient_id = encounter_id.patient_id

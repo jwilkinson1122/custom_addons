@@ -4,12 +4,12 @@
 from odoo import api, fields, models
 
 
-class MedicalEncounter(models.Model):
+class PodiatryEncounter(models.Model):
 
-    _inherit = "medical.encounter"
+    _inherit = "pod.encounter"
 
     external_request_ids = fields.One2many(
-        comodel_name="medical.procedure.external.request",
+        comodel_name="pod.procedure.external.request",
         inverse_name="encounter_id",
     )
 
@@ -29,7 +29,7 @@ class MedicalEncounter(models.Model):
     def action_view_external_request(self):
         self.ensure_one()
         action = self.env.ref(
-            "medical_procedure_external.medical_procedure_external_request_act_window"
+            "pod_procedure_external.pod_procedure_external_request_act_window"
         ).read()[0]
         action["domain"] = [("encounter_id", "=", self.id)]
         action["context"] = {"search_default_filter_not_cancelled": True}

@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class MedicalCoverageAgreement(models.Model):
+class PodiatryCoverageAgreement(models.Model):
 
-    _inherit = "medical.coverage.agreement"
+    _inherit = "pod.coverage.agreement"
 
-    quote_ids = fields.One2many("medical.quote", inverse_name="origin_agreement_id")
+    quote_ids = fields.One2many("pod.quote", inverse_name="origin_agreement_id")

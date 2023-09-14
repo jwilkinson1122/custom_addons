@@ -1,5 +1,5 @@
-CB medical administration requester
+NWP pod administration requester
 ===================================
 
-CB medical administration requester
-cb_medical_administration_requester
+NWP pod administration requester
+nwp_pod_administration_requester

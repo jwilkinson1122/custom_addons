@@ -1,14 +1,14 @@
 import json
 
-from odoo.addons.cb_medical_careplan_sale.tests import common
+from odoo.addons.nwp_pod_careplan_sale.tests import common
 
 
-class TestCBSale(common.MedicalSavePointCase):
+class TestNWPSale(common.PodiatrySavePointCase):
     def test_search_encounter_01(self):
         encounter, careplan, group = self.create_careplan_and_group(
             self.agreement_line3
         )
-        encounter_search = self.env["medical.encounter"].find_encounter_by_barcode(
+        encounter_search = self.env["pod.encounter"].find_encounter_by_barcode(
             encounter.internal_identifier
         )
         self.assertEqual(
@@ -18,12 +18,12 @@ class TestCBSale(common.MedicalSavePointCase):
 
     def test_search_encounter_02(self):
         encounter, careplan, group = self.create_careplan_and_group(self.agreement_line)
-        documents = self.env["medical.document.reference"].search(
+        documents = self.env["pod.document.reference"].search(
             [("encounter_id", "=", encounter.id)], limit=1
         )
         self.assertTrue(documents)
         for document in documents:
-            encounter_search = self.env["medical.encounter"].find_encounter_by_barcode(
+            encounter_search = self.env["pod.encounter"].find_encounter_by_barcode(
                 document.internal_identifier
             )
             self.assertEqual(
@@ -37,7 +37,7 @@ class TestCBSale(common.MedicalSavePointCase):
         encounter, careplan, group = self.create_careplan_and_group(
             self.agreement_line3
         )
-        encounter_search = self.env["medical.encounter"].find_encounter_by_barcode(
+        encounter_search = self.env["pod.encounter"].find_encounter_by_barcode(
             encounter.internal_identifier + encounter.internal_identifier
         )
         self.assertEqual("barcode.action", encounter_search["res_model"])

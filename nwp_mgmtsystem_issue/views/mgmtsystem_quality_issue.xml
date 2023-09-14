@@ -5,7 +5,7 @@
     <record model="ir.ui.view" id="mgmtsystem_quality_issue_form_view">
         <field
             name="name"
-        >mgmtsystem.quality.issue.form (in cb_mgmtsystem_issue)</field>
+        >mgmtsystem.quality.issue.form (in nwp_mgmtsystem_issue)</field>
         <field name="model">mgmtsystem.quality.issue</field>
         <field name="arch" type="xml">
             <form>
@@ -89,7 +89,7 @@
     <record model="ir.ui.view" id="mgmtsystem_quality_issue_search_view">
         <field
             name="name"
-        >mgmtsystem.quality.issue.search (in cb_mgmtsystem_issue)</field>
+        >mgmtsystem.quality.issue.search (in nwp_mgmtsystem_issue)</field>
         <field name="model">mgmtsystem.quality.issue</field>
         <field name="arch" type="xml">
             <search>
@@ -135,7 +135,7 @@
     <record model="ir.ui.view" id="mgmtsystem_quality_issue_tree_view">
         <field
             name="name"
-        >mgmtsystem.quality.issue.tree (in cb_mgmtsystem_issue)</field>
+        >mgmtsystem.quality.issue.tree (in nwp_mgmtsystem_issue)</field>
         <field name="model">mgmtsystem.quality.issue</field>
         <field name="arch" type="xml">
             <tree>

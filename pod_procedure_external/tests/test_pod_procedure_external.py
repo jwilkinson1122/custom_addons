@@ -12,19 +12,19 @@ from odoo.tests import TransactionCase
 _logger = logging.getLogger(__name__)
 
 
-class TestMedicalProcedureExternal(TransactionCase):
+class TestPodiatryProcedureExternal(TransactionCase):
     def setUp(self):
-        super(TestMedicalProcedureExternal, self).setUp()
+        super(TestPodiatryProcedureExternal, self).setUp()
         self.env.user.digital_signature = base64.b64encode(b"12345")
-        self.patient_1 = self.env["medical.patient"].create(
+        self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
-        self.encounter_1 = self.env["medical.encounter"].create(
+        self.encounter_1 = self.env["pod.encounter"].create(
             {"name": "Encounter 1", "patient_id": self.patient_1.id}
         )
 
         self.template_1 = self.env[
-            "medical.procedure.external.request.template"
+            "pod.procedure.external.request.template"
         ].create(
             {
                 "name": "Template 1",
@@ -32,7 +32,7 @@ class TestMedicalProcedureExternal(TransactionCase):
             }
         )
         self.template_2 = self.env[
-            "medical.procedure.external.request.template"
+            "pod.procedure.external.request.template"
         ].create(
             {
                 "name": "Template 2",
@@ -40,7 +40,7 @@ class TestMedicalProcedureExternal(TransactionCase):
             }
         )
         self.template_3 = self.env[
-            "medical.procedure.external.request.template"
+            "pod.procedure.external.request.template"
         ].create(
             {
                 "name": "Template 3",
@@ -48,7 +48,7 @@ class TestMedicalProcedureExternal(TransactionCase):
             }
         )
         report_generation = self.env[
-            "medical.encounter.create.external.request"
+            "pod.encounter.create.external.request"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -100,20 +100,20 @@ class TestMedicalProcedureExternal(TransactionCase):
             self.assertEqual(
                 18,
                 self.env[
-                    "medical.procedure.external.request.template"
+                    "pod.procedure.external.request.template"
                 ]._compute_age(self.patient_1),
             )
         with freezegun.freeze_time("2019-12-31"):
             self.assertEqual(
                 17,
                 self.env[
-                    "medical.procedure.external.request.template"
+                    "pod.procedure.external.request.template"
                 ]._compute_age(self.patient_1),
             )
 
     def test_report_generation(self):
         report_generation = self.env[
-            "medical.encounter.create.external.request"
+            "pod.encounter.create.external.request"
         ].create(
             {
                 "encounter_id": self.encounter_1.id,
@@ -124,7 +124,7 @@ class TestMedicalProcedureExternal(TransactionCase):
         action = report_generation.generate()
         report = self.env[action.get("res_model")].browse(action.get("res_id"))
         self.assertEqual(self.encounter_1.external_request_count, 2)
-        self.assertEqual("medical.procedure.external.request", report._name)
+        self.assertEqual("pod.procedure.external.request", report._name)
         self.assertEqual(self.encounter_1, report.encounter_id)
         self.assertEqual(self.patient_1, report.patient_id)
         self.assertEqual(self.patient_1.name, report.patient_id.name)

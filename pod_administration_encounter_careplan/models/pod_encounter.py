@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     careplan_ids = fields.One2many(
-        comodel_name="medical.careplan", inverse_name="encounter_id"
+        comodel_name="pod.careplan", inverse_name="encounter_id"
     )
     careplan_count = fields.Integer(compute="_compute_careplan_count")
 
@@ -22,7 +22,7 @@ class MedicalEncounter(models.Model):
     def action_view_careplans(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_clinical_careplan.medical_careplan_action"
+            "pod_clinical_careplan.pod_careplan_action"
         )
         result["context"] = {
             "default_patient_id": self.patient_id.id,

@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class MedicalCoverage(models.Model):
+class PodiatryCoverage(models.Model):
 
-    _inherit = "medical.coverage"
+    _inherit = "pod.coverage"
 
     subscriber_magnetic_str = fields.Char(readonly=True)

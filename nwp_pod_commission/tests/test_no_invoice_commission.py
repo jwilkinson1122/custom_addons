@@ -21,7 +21,7 @@ class TestNoInvoiceCommission(TransactionCase):
         self.product = self.env["product.product"].create(
             {"name": "Product", "type": "service"}
         )
-        self.group = self.browse_ref("cb_medical_careplan_sale.no_invoice")
+        self.group = self.browse_ref("nwp_pod_careplan_sale.no_invoice")
 
     def create_agent(self, name):
         return self.env["res.partner"].create(

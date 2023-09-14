@@ -9,9 +9,9 @@
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="medical_base.res_partner_view_form" />
+        <field name="inherit_id" ref="pod_base.res_partner_view_form" />
         <field name="arch" type="xml">
-            <field name="is_medical" position="after">
+            <field name="is_pod" position="after">
                 <field name="is_location" />
             </field>
             <xpath
@@ -23,14 +23,14 @@
             </xpath>
         </field>
     </record>
-    <record id="medical_location_action" model="ir.actions.act_window">
-        <field name="name">Medical Locations</field>
+    <record id="pod_location_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_location', '=', True)]</field>
         <field
             name="context"
-        >{'default_company_type':'company', 'default_is_company':True, 'default_is_location': True, 'default_is_medical': True}</field>
+        >{'default_company_type':'company', 'default_is_company':True, 'default_is_location': True, 'default_is_pod': True}</field>
     </record>
 </odoo>

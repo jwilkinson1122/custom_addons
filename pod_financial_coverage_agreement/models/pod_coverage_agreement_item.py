@@ -8,14 +8,14 @@ from odoo.osv import expression
 from odoo.tools import float_compare
 
 
-class MedicalCoverageAgreementItem(models.Model):
-    _name = "medical.coverage.agreement.item"
-    _description = "Medical Coverage Agreement Item"
+class PodiatryCoverageAgreementItem(models.Model):
+    _name = "pod.coverage.agreement.item"
+    _description = "Podiatry Coverage Agreement Item"
     _rec_name = "product_id"
 
     def _default_coverage_percentage(self):
         agreement_id = self.env.context.get("default_coverage_agreement_id", False)
-        agreement = self.env["medical.coverage.agreement"].browse(agreement_id)
+        agreement = self.env["pod.coverage.agreement"].browse(agreement_id)
         if agreement:
             if agreement.principal_concept == "coverage":
                 return 100.0
@@ -64,15 +64,15 @@ class MedicalCoverageAgreementItem(models.Model):
         default=_default_coverage_percentage,
     )
     coverage_agreement_id = fields.Many2one(
-        comodel_name="medical.coverage.agreement",
-        string="Medical agreement",
+        comodel_name="pod.coverage.agreement",
+        string="Podiatry agreement",
         index=True,
         ondelete="cascade",
         auto_join=True,
         copy=False,
     )
     template_id = fields.Many2one(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         readonly=True,
         related="coverage_agreement_id.template_id",
     )

@@ -5,9 +5,9 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_coverage_agreement_template_form">
-        <field name="name">medical.coverage.agreement.template.form</field>
-        <field name="model">medical.coverage.agreement.template</field>
+    <record model="ir.ui.view" id="pod_coverage_agreement_template_form">
+        <field name="name">pod.coverage.agreement.template.form</field>
+        <field name="model">pod.coverage.agreement.template</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Set a template for an Agreement">
@@ -32,11 +32,11 @@
         </field>
     </record>
     <record
-        id="set_medical_coverage_agreement_template_action"
+        id="set_pod_coverage_agreement_template_action"
         model="ir.actions.act_window"
     >
         <field name="name">Change prices</field>
-        <field name="res_model">medical.coverage.agreement.template</field>
+        <field name="res_model">pod.coverage.agreement.template</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

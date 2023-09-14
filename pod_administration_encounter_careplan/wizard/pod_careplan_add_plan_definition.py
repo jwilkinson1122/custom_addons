@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalCareplanAddPlanDefinition(models.TransientModel):
-    _inherit = "medical.careplan.add.plan.definition"
+class PodiatryCareplanAddPlanDefinition(models.TransientModel):
+    _inherit = "pod.careplan.add.plan.definition"
 
     def _get_values(self):
         values = super()._get_values()

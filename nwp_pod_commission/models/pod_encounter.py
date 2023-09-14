@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalEncounter(models.AbstractModel):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.AbstractModel):
+    _inherit = "pod.encounter"
 
     def recompute_commissions(self):
         for rec in self:

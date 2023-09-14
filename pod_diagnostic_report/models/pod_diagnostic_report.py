@@ -4,10 +4,10 @@
 from odoo import api, fields, models
 
 
-class MedicalDiagnosticReport(models.Model):
+class PodiatryDiagnosticReport(models.Model):
 
-    _name = "medical.diagnostic.report"
-    _inherit = ["medical.event", "medical.report.abstract", "digest.base"]
+    _name = "pod.diagnostic.report"
+    _inherit = ["pod.event", "pod.report.abstract", "digest.base"]
     _description = "Diagnostic Report"
     _rec_name = "internal_identifier"
 
@@ -45,7 +45,7 @@ class MedicalDiagnosticReport(models.Model):
     )
     # FHIR Field: subject
 
-    encounter_id = fields.Many2one("medical.encounter", readonly=True)
+    encounter_id = fields.Many2one("pod.encounter", readonly=True)
     # FHIR Field: encounter
 
     vat = fields.Char(
@@ -105,15 +105,15 @@ class MedicalDiagnosticReport(models.Model):
         prefetch=False,
     )
     observation_ids = fields.One2many(
-        "medical.observation",
+        "pod.observation",
         inverse_name="diagnostic_report_id",
         readonly=True,
         states={"draft": [("readonly", False)]},
         copy=True,
     )
     template_ids = fields.Many2many(
-        "medical.diagnostic.report.template",
-        relation="medical_diagnostic_report_templates_rel",
+        "pod.diagnostic.report.template",
+        relation="pod_diagnostic_report_templates_rel",
     )
     is_cancellable = fields.Boolean(compute="_compute_is_cancellable")
 
@@ -149,7 +149,7 @@ class MedicalDiagnosticReport(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.diagnostic.report")
+            .next_by_code("pod.diagnostic.report")
             or "/"
         )
 
@@ -192,7 +192,7 @@ class MedicalDiagnosticReport(models.Model):
         return self.fhir_state in ("registered", "final")
 
     def _generate_serializer(self):
-        result = super(MedicalDiagnosticReport, self)._generate_serializer()
+        result = super(PodiatryDiagnosticReport, self)._generate_serializer()
         result.update(
             {
                 "name": self.name,
@@ -213,7 +213,7 @@ class MedicalDiagnosticReport(models.Model):
         )
         return result
 
-    def preview_medical_diagnostic_report(self):
+    def preview_pod_diagnostic_report(self):
         return self.env.ref(
-            "medical_diagnostic_report.medical_diagnostic_report"
+            "pod_diagnostic_report.pod_diagnostic_report"
         ).report_action(self)

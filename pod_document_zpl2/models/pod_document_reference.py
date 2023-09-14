@@ -4,8 +4,8 @@
 from odoo import models
 
 
-class MedicalDocumentReference(models.Model):
-    _inherit = "medical.document.reference"
+class PodiatryDocumentReference(models.Model):
+    _inherit = "pod.document.reference"
 
     def _render(self):
         if self.document_type == "zpl2":

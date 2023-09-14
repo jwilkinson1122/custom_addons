@@ -6,10 +6,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalCoverageAgreement(models.Model):
-    _name = "medical.coverage.agreement"
+class PodiatryCoverageAgreement(models.Model):
+    _name = "pod.coverage.agreement"
     _description = "Coverage Agreement"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
 
     def _get_default_currency_id(self):
         return self.env.user.company_id.currency_id.id
@@ -22,19 +22,19 @@ class MedicalCoverageAgreement(models.Model):
         domain=[("is_center", "=", True)],
         required=True,
         index=True,
-        help="Medical centers",
+        help="Podiatry centers",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
         required=True,
         index=True,
-        help="Responsible Medical Company",
+        help="Responsible Podiatry Company",
     )
     coverage_template_ids = fields.Many2many(
         string="Coverage Templates",
-        comodel_name="medical.coverage.template",
-        relation="medical_coverage_agreement_medical_coverage_template_rel",
+        comodel_name="pod.coverage.template",
+        relation="pod_coverage_agreement_pod_coverage_template_rel",
         column1="agreement_id",
         column2="coverage_template_id",
         help="Coverage templates related to this agreement",
@@ -45,7 +45,7 @@ class MedicalCoverageAgreement(models.Model):
         "product.nomenclature", string="Printing nomenclature"
     )
     item_ids = fields.One2many(
-        comodel_name="medical.coverage.agreement.item",
+        comodel_name="pod.coverage.agreement.item",
         inverse_name="coverage_agreement_id",
         string="Agreement items",
         copy=True,
@@ -64,14 +64,14 @@ class MedicalCoverageAgreement(models.Model):
     )
     is_template = fields.Boolean(default=False, readonly=True)
     template_id = fields.Many2one(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         domain=[("is_template", "=", True)],
         readonly=True,
         tracking=True,
     )
-    parent_id = fields.Many2one("medical.coverage.agreement", copy=False, readonly=True)
+    parent_id = fields.Many2one("pod.coverage.agreement", copy=False, readonly=True)
     child_ids = fields.One2many(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         inverse_name="parent_id",
         copy=False,
         readonly=True,
@@ -101,7 +101,7 @@ class MedicalCoverageAgreement(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.coverage.agreement")
+            self.env["ir.sequence"].sudo().next_by_code("pod.coverage.agreement")
             or "/"
         )
 
@@ -114,8 +114,8 @@ class MedicalCoverageAgreement(models.Model):
 
     def action_search_item(self):
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_financial_coverage_agreement."
-            "medical_coverage_agreement_item_action"
+            "pod_financial_coverage_agreement."
+            "pod_coverage_agreement_item_action"
         )
         result["context"] = {"default_coverage_agreement_id": self.id}
         result["domain"] = [("coverage_agreement_id", "=", self.id)]
@@ -128,7 +128,7 @@ class MedicalCoverageAgreement(models.Model):
             return
         for item in template.item_ids:
             if not self.item_ids.filtered(lambda r: r.product_id == item.product_id):
-                self.env["medical.coverage.agreement.item"].with_context(
+                self.env["pod.coverage.agreement.item"].with_context(
                     default_coverage_agreement_id=self.id
                 ).create(item._copy_agreement_vals(self))
 
@@ -186,10 +186,10 @@ class MedicalCoverageAgreement(models.Model):
         categs = self.env["product.category"]
         all_categs = self.env["product.category"]
         domain = self._agreement_report_domain(print_coverage)
-        for item in self.env["medical.coverage.agreement.item"].search(domain):
+        for item in self.env["pod.coverage.agreement.item"].search(domain):
             if item.categ_id.id not in data:
                 categs |= item.categ_id
-                data[item.categ_id.id] = self.env["medical.coverage.agreement.item"]
+                data[item.categ_id.id] = self.env["pod.coverage.agreement.item"]
             data[item.categ_id.id] |= item
 
         all_categs |= categs
@@ -198,7 +198,7 @@ class MedicalCoverageAgreement(models.Model):
             while ctg.parent_id and ctg.parent_id not in all_categs:
                 all_categs |= ctg.parent_id
                 if ctg.parent_id not in data:
-                    data[ctg.parent_id.id] = self.env["medical.coverage.agreement.item"]
+                    data[ctg.parent_id.id] = self.env["pod.coverage.agreement.item"]
                 ctg = ctg.parent_id
 
         for categ in all_categs.filtered(lambda r: r.level == 0):

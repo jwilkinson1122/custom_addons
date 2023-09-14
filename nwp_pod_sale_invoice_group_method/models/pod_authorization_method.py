@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class MedicalAuthorizationMethod(models.Model):
+class PodiatryAuthorizationMethod(models.Model):
 
-    _inherit = "medical.authorization.method"
+    _inherit = "pod.authorization.method"
 
     force_item_authorization_method = fields.Boolean()

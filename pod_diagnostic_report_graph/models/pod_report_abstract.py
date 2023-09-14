@@ -4,9 +4,9 @@
 from odoo import fields, models
 
 
-class MedicalReportAbstract(models.AbstractModel):
+class PodiatryReportAbstract(models.AbstractModel):
 
-    _inherit = "medical.report.abstract"
+    _inherit = "pod.report.abstract"
 
     compute_graph = fields.Boolean()
     compute_html = fields.Boolean()

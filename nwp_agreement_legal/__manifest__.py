@@ -5,7 +5,7 @@
     "name": "Agreements Legal Demo",
     "summary": "Create contract from agreement",
     "author": "CreuBlanca, Odoo Community Association (OCA)",
-    "website": "https://github.com/tegin/cb-addons",
+    "website": "https://github.com/tegin/nwp-addons",
     "category": "Agreement",
     "depends": ["agreement_legal", "archive_management"],
     "license": "AGPL-3",
@@ -20,7 +20,7 @@
         'web.assets_frontend': [
         ],
         'web.report_assets_common': [
-            'cb_agreement_legal/static/src/scss/agreement_layout.scss',
+            'nwp_agreement_legal/static/src/scss/agreement_layout.scss',
         ],
     },
     "installable": True,

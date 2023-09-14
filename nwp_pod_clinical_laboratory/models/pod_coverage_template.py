@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class MedicalCoverageTemplate(models.Model):
-    _inherit = "medical.coverage.template"
+class PodiatryCoverageTemplate(models.Model):
+    _inherit = "pod.coverage.template"
 
     laboratory_code = fields.Char(tracking=True)

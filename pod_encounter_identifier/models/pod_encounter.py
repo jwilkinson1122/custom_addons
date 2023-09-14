@@ -4,8 +4,8 @@ from odoo.exceptions import ValidationError
 from odoo.addons.base.models.ir_sequence import _update_nogap
 
 
-class MedicalEncounter(models.Model):
-    _inherit = "medical.encounter"
+class PodiatryEncounter(models.Model):
+    _inherit = "pod.encounter"
 
     center_id = fields.Many2one(
         "res.partner",
@@ -47,6 +47,6 @@ class MedicalEncounter(models.Model):
         self.ensure_one()
         return _update_nogap(self, 1)
 
-    def get_next_number_cb(self, number_format):
+    def get_next_number_nwp(self, number_format):
         self.ensure_one()
         return number_format % self.get_next_number()

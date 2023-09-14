@@ -7,7 +7,7 @@ class ResConfigSettings(models.TransientModel):
     def_third_party_product = fields.Many2one(
         "product.product",
         "Third party Product",
-        config_parameter="cb.default_third_party_product",
+        config_parameter="nwp.default_third_party_product",
         domain="[('type', '=', 'service')]",
         help="Default product used for third party sale orders",
     )

@@ -8,9 +8,9 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestMedicalProductAdministration(TransactionCase):
+class TestPodiatryProductAdministration(TransactionCase):
     def setUp(self):
-        super(TestMedicalProductAdministration, self).setUp()
+        super(TestPodiatryProductAdministration, self).setUp()
 
         self.tablet_uom = self.env["uom.uom"].create(
             {
@@ -22,19 +22,19 @@ class TestMedicalProductAdministration(TransactionCase):
             }
         )
 
-        self.tablet_form = self.env["medication.form"].create(
+        self.tablet_form = self.env["device.form"].create(
             {
                 "name": "EFG film coated tablets",
                 "uom_ids": [(4, self.tablet_uom.id)],
             }
         )
         self.oral_administration_route = self.env[
-            "medical.administration.route"
+            "pod.administration.route"
         ].create({"name": "Oral"})
-        self.ibuprofen_template = self.env["medical.product.template"].create(
+        self.ibuprofen_template = self.env["pod.product.template"].create(
             {
                 "name": "Ibuprofen",
-                "product_type": "medication",
+                "product_type": "device",
                 "ingredients": "Ibuprofen",
                 "dosage": "600 mg",
                 "form_id": self.tablet_form.id,
@@ -43,12 +43,12 @@ class TestMedicalProductAdministration(TransactionCase):
                 ],
             }
         )
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.encounter = self.env["medical.encounter"].create(
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient.id}
         )
         self.internal_product_request_order = self.env[
-            "medical.product.request.order"
+            "pod.product.request.order"
         ].create(
             {
                 "category": "inpatient",
@@ -57,11 +57,11 @@ class TestMedicalProductAdministration(TransactionCase):
             }
         )
         self.internal_product_request = self.env[
-            "medical.product.request"
+            "pod.product.request"
         ].create(
             {
                 "request_order_id": self.internal_product_request_order.id,
-                "medical_product_template_id": self.ibuprofen_template.id,
+                "pod_product_template_id": self.ibuprofen_template.id,
                 "dose_quantity": 1,
                 "dose_uom_id": self.tablet_uom.id,
                 "rate_quantity": 3,
@@ -72,12 +72,12 @@ class TestMedicalProductAdministration(TransactionCase):
         )
 
         self.administration = self.env[
-            "medical.product.administration"
+            "pod.product.administration"
         ].create(
             {
                 "product_request_id": self.internal_product_request.id,
                 "quantity_administered": 1,
-                "medical_product_template_id": self.ibuprofen_template.id,
+                "pod_product_template_id": self.ibuprofen_template.id,
                 "quantity_administered_uom_id": self.tablet_uom.id,
             }
         )
@@ -107,7 +107,7 @@ class TestMedicalProductAdministration(TransactionCase):
 
     def test_check_quantity_administered(self):
         with self.assertRaises(ValidationError):
-            self.env["medical.product.administration"].create(
+            self.env["pod.product.administration"].create(
                 {
                     "product_request_id": self.internal_product_request.id,
                     "quantity_administered": 0,
@@ -119,7 +119,7 @@ class TestMedicalProductAdministration(TransactionCase):
         self.assertRegex(
             self.administration.quantity_uom_domain, "%s" % self.tablet_uom.id
         )
-        self.administration.medical_product_template_id = False
+        self.administration.pod_product_template_id = False
         self.assertRegex(
             self.administration.quantity_uom_domain,
             "%s" % self.ref("uom.product_uom_unit"),
@@ -130,7 +130,7 @@ class TestMedicalProductAdministration(TransactionCase):
             self.administration.administration_route_domain,
             "%s" % self.oral_administration_route.id,
         )
-        self.administration.medical_product_template_id = False
+        self.administration.pod_product_template_id = False
         self.assertRegex(
             self.administration.administration_route_domain, "%s" % 0
         )

@@ -1,15 +1,15 @@
-from odoo.addons.cb_medical_careplan_sale.tests import common
+from odoo.addons.nwp_pod_careplan_sale.tests import common
 
 
-class TestCBSale(common.MedicalSavePointCase):
+class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_sale(self):
-        encounter = self.env["medical.encounter"].create(
+        encounter = self.env["pod.encounter"].create(
             {"patient_id": self.patient_01.id, "center_id": self.center.id}
         )
-        encounter_02 = self.env["medical.encounter"].create(
+        encounter_02 = self.env["pod.encounter"].create(
             {"patient_id": self.patient_01.id, "center_id": self.center.id}
         )
-        careplan = self.env["medical.careplan"].new(
+        careplan = self.env["pod.careplan"].new(
             {
                 "patient_id": self.patient_01.id,
                 "encounter_id": encounter.id,
@@ -20,7 +20,7 @@ class TestCBSale(common.MedicalSavePointCase):
         careplan._onchange_encounter()
         careplan = careplan.create(careplan._convert_to_write(careplan._cache))
         self.assertEqual(careplan.center_id, encounter.center_id)
-        wizard = self.env["medical.careplan.add.plan.definition"].create(
+        wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
                 "agreement_line_id": self.agreement_line.id,
@@ -28,42 +28,42 @@ class TestCBSale(common.MedicalSavePointCase):
         )
         self.action.is_billable = False
         wizard.run()
-        groups = self.env["medical.request.group"].search(
+        groups = self.env["pod.request.group"].search(
             [("careplan_id", "=", careplan.id)]
         )
         self.assertTrue(groups)
-        medication_requests = self.env["medical.medication.request"].search(
+        device_requests = self.env["pod.device.request"].search(
             [("careplan_id", "=", careplan.id)]
         )
         self.assertEqual(careplan.state, "draft")
-        self.assertFalse(medication_requests.filtered(lambda r: r.is_billable))
+        self.assertFalse(device_requests.filtered(lambda r: r.is_billable))
         self.assertTrue(
-            groups.filtered(lambda r: r.child_model == "medical.medication.request")
+            groups.filtered(lambda r: r.child_model == "pod.device.request")
         )
         self.assertTrue(
             groups.filtered(
                 lambda r: (r.is_sellable_insurance or r.is_sellable_private)
-                and r.child_model == "medical.medication.request"
+                and r.child_model == "pod.device.request"
             )
         )
         self.assertTrue(
             groups.filtered(
                 lambda r: r.is_billable
-                and r.child_model == "medical.medication.request"
+                and r.child_model == "pod.device.request"
             )
         )
         encounter.create_sale_order()
         self.assertTrue(encounter.sale_order_ids)
 
-        procedure_requests = self.env["medical.procedure.request"].search(
+        procedure_requests = self.env["pod.procedure.request"].search(
             [("careplan_id", "=", careplan.id)]
         )
         self.assertGreater(len(procedure_requests), 0)
-        medication_requests = self.env["medical.medication.request"].search(
+        device_requests = self.env["pod.device.request"].search(
             [("careplan_id", "=", careplan.id)]
         )
-        self.assertGreater(len(medication_requests), 0)
-        procedure_requests = self.env["medical.procedure.request"].search(
+        self.assertGreater(len(device_requests), 0)
+        procedure_requests = self.env["pod.procedure.request"].search(
             [("careplan_id", "=", careplan.id)]
         )
         self.assertGreater(len(procedure_requests), 0)
@@ -102,7 +102,7 @@ class TestCBSale(common.MedicalSavePointCase):
                 lambda r: r.preinvoice_status == "to preinvoice"
                 and any(
                     line.invoice_group_method_id
-                    == self.browse_ref("cb_medical_careplan_sale.by_preinvoicing")
+                    == self.browse_ref("nwp_pod_careplan_sale.by_preinvoicing")
                     for line in r.order_line
                 )
             )

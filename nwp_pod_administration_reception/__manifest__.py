@@ -3,15 +3,15 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Medical Administration Location",
+    "name": "Podiatry Administration Location",
     "version": "15.0.1.0.0",
-    "category": "Medical",
-    "website": "https://github.com/tegin/cb-medical",
+    "category": "Podiatry",
+    "website": "https://github.com/tegin/nwp-pod",
     "author": "CreuBlanca, Eficent",
     "license": "AGPL-3",
-    "depends": ["medical_administration_center"],
+    "depends": ["pod_administration_center"],
     "data": [
-        # "security/medical_security.xml",
+        # "security/pod_security.xml",
         # "data/ir_sequence_data.xml",
         "views/res_partner_views.xml",
     ],

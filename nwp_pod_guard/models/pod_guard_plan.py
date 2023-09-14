@@ -48,9 +48,9 @@ def parse_atom(parse, minmax):
         raise UserError(_('Atom "%s" not in a recognized format.') % parse)
 
 
-class MedicalGuardPlan(models.Model):
-    _name = "medical.guard.plan"
-    _description = "medical.guard.plan"
+class PodiatryGuardPlan(models.Model):
+    _name = "pod.guard.plan"
+    _description = "pod.guard.plan"
 
     start_time = fields.Float(required=True)
     delay = fields.Integer(required=True)
@@ -120,4 +120,4 @@ class MedicalGuardPlan(models.Model):
         }
 
     def apply_plan(self, date):
-        return self.env["medical.guard"].create(self._prepare_guard_vals(date))
+        return self.env["pod.guard"].create(self._prepare_guard_vals(date))

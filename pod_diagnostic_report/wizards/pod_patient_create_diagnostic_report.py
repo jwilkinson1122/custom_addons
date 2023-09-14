@@ -6,19 +6,19 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models
 
 
-class MedicalPatientCreateDiagnosticReport(models.TransientModel):
+class PodiatryPatientCreateDiagnosticReport(models.TransientModel):
 
-    _name = "medical.patient.create.diagnostic.report"
+    _name = "pod.patient.create.diagnostic.report"
     _description = "Create a diagnostic report from patient"
 
-    patient_id = fields.Many2one("medical.patient", readonly=True)
+    patient_id = fields.Many2one("pod.patient", readonly=True)
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         required=True,
         compute="_compute_default_encounter",
     )
     template_id = fields.Many2one(
-        "medical.diagnostic.report.template",
+        "pod.diagnostic.report.template",
         required=True,
         domain="['|',('template_type','=','general'), '&', "
         "('create_uid','=',uid), ('template_type', '=', 'user')]",

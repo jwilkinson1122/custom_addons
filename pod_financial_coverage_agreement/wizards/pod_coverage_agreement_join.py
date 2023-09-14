@@ -5,16 +5,16 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalCoverageAgreementJoin(models.TransientModel):
-    _name = "medical.coverage.agreement.join"
-    _description = "medical.coverage.agreement.join"
+class PodiatryCoverageAgreementJoin(models.TransientModel):
+    _name = "pod.coverage.agreement.join"
+    _description = "pod.coverage.agreement.join"
 
     def _default_agreements(self):
         context = self.env.context
         return self.env[context.get("active_model")].browse(context.get("active_ids"))
 
     agreement_ids = fields.Many2many(
-        "medical.coverage.agreement", default=_default_agreements
+        "pod.coverage.agreement", default=_default_agreements
     )
 
     def check_possible_join(self):

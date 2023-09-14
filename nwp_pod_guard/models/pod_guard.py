@@ -5,10 +5,10 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import Form
 
 
-class MedicalGuard(models.Model):
-    _name = "medical.guard"
-    _description = "medical.guard"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
+class PodiatryGuard(models.Model):
+    _name = "pod.guard"
+    _description = "pod.guard"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _order = "date desc"
 
     date = fields.Datetime(
@@ -52,7 +52,7 @@ class MedicalGuard(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
-    plan_guard_id = fields.Many2one("medical.guard.plan", readonly=True)
+    plan_guard_id = fields.Many2one("pod.guard.plan", readonly=True)
     invoice_line_ids = fields.One2many("account.move.line", inverse_name="guard_id")
 
     @api.depends("internal_identifier")
@@ -64,7 +64,7 @@ class MedicalGuard(models.Model):
 
     @api.model
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("medical.guard") or "/"
+        return self.env["ir.sequence"].next_by_code("pod.guard") or "/"
 
     def _complete_vals(self):
         return {"state": "completed"}
@@ -122,10 +122,10 @@ class MedicalGuard(models.Model):
 
     def make_invoice(self, grouped=True):
         invoice_vals_list = []
-        medical_guard_obj = self.env[self._name]
+        pod_guard_obj = self.env[self._name]
         if grouped:
             invoice_grouping_keys = self._get_invoice_grouping_keys()
-            medical_guards = groupby(
+            pod_guards = groupby(
                 self.sorted(
                     key=lambda x: [
                         x._fields[grouping_key].convert_to_write(x[grouping_key], x)
@@ -137,13 +137,13 @@ class MedicalGuard(models.Model):
                     for grouping_key in invoice_grouping_keys
                 ],
             )
-            grouped_medical_guards = [
-                medical_guard_obj.union(*list(sett))
-                for _grouping_keys, sett in medical_guards
+            grouped_pod_guards = [
+                pod_guard_obj.union(*list(sett))
+                for _grouping_keys, sett in pod_guards
             ]
         else:
-            grouped_medical_guards = self
-        for medical_guard in grouped_medical_guards:
-            invoice_vals = medical_guard._prepare_invoice()
+            grouped_pod_guards = self
+        for pod_guard in grouped_pod_guards:
+            invoice_vals = pod_guard._prepare_invoice()
             invoice_vals_list.append(invoice_vals)
         return self.env["account.move"].create(invoice_vals_list)

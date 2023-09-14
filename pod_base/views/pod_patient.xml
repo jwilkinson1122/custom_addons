@@ -5,18 +5,18 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_patient_tree">
-        <field name="name">medical.patient.tree</field>
-        <field name="model">medical.patient</field>
+    <record model="ir.ui.view" id="pod_patient_tree">
+        <field name="name">pod.patient.tree</field>
+        <field name="model">pod.patient</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
                 <field name="name" />
             </tree></field>
     </record>
-    <record model="ir.ui.view" id="medical_patient_his_tree">
-        <field name="name">medical.patient.tree</field>
-        <field name="model">medical.patient</field>
+    <record model="ir.ui.view" id="pod_patient_his_tree">
+        <field name="name">pod.patient.tree</field>
+        <field name="model">pod.patient</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <tree>
@@ -27,9 +27,9 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_patient_form">
-        <field name="name">medical.patient.form</field>
-        <field name="model">medical.patient</field>
+    <record model="ir.ui.view" id="pod_patient_form">
+        <field name="name">pod.patient.form</field>
+        <field name="model">pod.patient</field>
         <field name="arch" type="xml">
             <form>
                 <header />
@@ -182,15 +182,15 @@
                     </group>
                     <notebook name="administration_data">
                         <page
-                            name="medical_administration"
+                            name="pod_administration"
                             string="Administration data"
                         >
                             <group>
-                                <group id="medical_administration_info">
+                                <group id="pod_administration_info">
                                     <field name="gender" />
                                     <field name="marital_status" />
                                 </group>
-                                <group id="medical_administration_date">
+                                <group id="pod_administration_date">
                                     <field name="birth_date" />
                                     <field name="deceased_date" />
                                 </group>
@@ -207,9 +207,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="medical_patient_his_form">
-        <field name="name">medical.patient.form</field>
-        <field name="model">medical.patient</field>
+    <record model="ir.ui.view" id="pod_patient_his_form">
+        <field name="name">pod.patient.form</field>
+        <field name="model">pod.patient</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <form create="0" edit="0"><header />
@@ -233,11 +233,11 @@
                     <notebook>
                         <page name="administration_data" string="Administration Info">
                             <group>
-                                <group id="medical_administration_contact">
+                                <group id="pod_administration_contact">
                                     <field name="email" />
                                     <field name="mobile" />
                                 </group>
-                                <group id="medical_administration_street">
+                                <group id="pod_administration_street">
                                     <field name="street" />
                                 </group>
                             </group>
@@ -248,9 +248,9 @@
         </field>
     </record>
 
-    <record id="medical_patient_kanban" model="ir.ui.view">
-        <field name="name">medical.patient.kanban</field>
-        <field name="model">medical.patient</field>
+    <record id="pod_patient_kanban" model="ir.ui.view">
+        <field name="name">pod.patient.kanban</field>
+        <field name="model">pod.patient</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban class="o_res_partner_kanban">
@@ -283,7 +283,7 @@
                                 <t t-if="record.image_128.raw_value">
                                     <img
                                         alt="Image"
-                                        t-att-src="kanban_image('medical.patient', 'image_128', record.id.raw_value)"
+                                        t-att-src="kanban_image('pod.patient', 'image_128', record.id.raw_value)"
                                     />
                                 </t>
                                 <t t-if="!record.image_128.raw_value">
@@ -323,47 +323,47 @@
             </kanban>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_patient_window_action">
+    <record model="ir.actions.act_window" id="pod_patient_window_action">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.patient</field>
+        <field name="res_model">pod.patient</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'default_company_type': 'person'}</field>
     </record>
-    <record model="ir.actions.act_window" id="medical_patient_his_window_action">
+    <record model="ir.actions.act_window" id="pod_patient_his_window_action">
         <field name="name">HIS</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.patient</field>
+        <field name="res_model">pod.patient</field>
         <field name="view_mode">tree,form</field>
     </record>
     <record
         model="ir.actions.act_window.view"
-        id="medical_patient_his_window_action_tree"
+        id="pod_patient_his_window_action_tree"
     >
-        <field name="act_window_id" ref="medical_patient_his_window_action" />
+        <field name="act_window_id" ref="pod_patient_his_window_action" />
         <field name="sequence" eval="20" />
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="medical_patient_his_tree" />
+        <field name="view_id" ref="pod_patient_his_tree" />
     </record>
     <record
         model="ir.actions.act_window.view"
-        id="medical_patient_his_window_action_form"
+        id="pod_patient_his_window_action_form"
     >
-        <field name="act_window_id" ref="medical_patient_his_window_action" />
+        <field name="act_window_id" ref="pod_patient_his_window_action" />
         <field name="sequence" eval="20" />
         <field name="view_mode">form</field>
-        <field name="view_id" ref="medical_patient_his_form" />
+        <field name="view_id" ref="pod_patient_his_form" />
     </record>
-    <record model="ir.ui.menu" id="medical_patient">
+    <record model="ir.ui.menu" id="pod_patient">
         <field name="name">Patients</field>
-        <field name="parent_id" ref="medical_base.medical_root_administration" />
-        <field name="action" ref="medical_patient_window_action" />
+        <field name="parent_id" ref="pod_base.pod_root_administration" />
+        <field name="action" ref="pod_patient_window_action" />
         <field name="sequence" eval="10" />
     </record>
-    <record model="ir.ui.menu" id="medical_patient_his">
+    <record model="ir.ui.menu" id="pod_patient_his">
         <field name="name">HIS</field>
-        <field name="parent_id" ref="medical_root" />
-        <field name="action" ref="medical_patient_his_window_action" />
+        <field name="parent_id" ref="pod_root" />
+        <field name="action" ref="pod_patient_his_window_action" />
         <field name="sequence" eval="1" />
     </record>
 </odoo>

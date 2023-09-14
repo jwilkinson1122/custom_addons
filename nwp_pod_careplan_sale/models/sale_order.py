@@ -8,18 +8,18 @@ from odoo import api, fields, models
 class SaleOrder(models.AbstractModel):
     _inherit = "sale.order"
 
-    encounter_id = fields.Many2one("medical.encounter", readonly=True, index=True)
-    coverage_id = fields.Many2one("medical.coverage", readonly=True)
+    encounter_id = fields.Many2one("pod.encounter", readonly=True, index=True)
+    coverage_id = fields.Many2one("pod.coverage", readonly=True)
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         readonly=True,
         related="coverage_id.coverage_template_id",
     )
     coverage_agreement_id = fields.Many2one(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         index=True,
     )
-    patient_id = fields.Many2one("medical.patient", readonly=True, index=True)
+    patient_id = fields.Many2one("pod.patient", readonly=True, index=True)
     patient_name = fields.Char(
         states={"draft": [("readonly", False)], "sent": [("readonly", False)]}
     )
@@ -41,14 +41,14 @@ class SaleOrder(models.AbstractModel):
         res["encounter_id"] = self.encounter_id.id or False
         res["patient_id"] = self.patient_id.id or False
         res["invoice_group_method_id"] = self.env.ref(
-            "cb_medical_careplan_sale.third_party"
+            "nwp_pod_careplan_sale.third_party"
         ).id
         return res
 
     def _prepare_invoice(self):
         res = super()._prepare_invoice()
         if self.encounter_id:
-            res["is_medical"] = True
+            res["is_pod"] = True
             if self.coverage_agreement_id:
                 p = self.coverage_id.coverage_template_id
                 res["show_patient"] = p.payor_id.show_patient

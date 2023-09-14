@@ -2,9 +2,9 @@
 <!-- Copyright 2020 Creu Blanca
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_turn_form_view">
-        <field name="name">medical.turn.form (in medical_turn_management)</field>
-        <field name="model">medical.turn</field>
+    <record model="ir.ui.view" id="pod_turn_form_view">
+        <field name="name">pod.turn.form (in pod_turn_management)</field>
+        <field name="model">pod.turn</field>
         <field name="arch" type="xml">
             <form create="0">
                 <header />
@@ -31,9 +31,9 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_search_view">
-        <field name="name">medical.turn.search (in medical_turn_management)</field>
-        <field name="model">medical.turn</field>
+    <record model="ir.ui.view" id="pod_turn_search_view">
+        <field name="name">pod.turn.search (in pod_turn_management)</field>
+        <field name="model">pod.turn</field>
         <field name="arch" type="xml">
             <search>
                 <field name="practitioner_id" />
@@ -74,9 +74,9 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_calendar_list_view">
-        <field name="name">medical.turn.tree (in medical_turn_management)</field>
-        <field name="model">medical.turn</field>
+    <record model="ir.ui.view" id="pod_turn_calendar_list_view">
+        <field name="name">pod.turn.tree (in pod_turn_management)</field>
+        <field name="model">pod.turn</field>
         <field name="arch" type="xml">
             <calendar_list
                 date_start="date"
@@ -88,9 +88,9 @@
             </calendar_list>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_turn_tree_view">
-        <field name="name">medical.turn.tree (in medical_turn_management)</field>
-        <field name="model">medical.turn</field>
+    <record model="ir.ui.view" id="pod_turn_tree_view">
+        <field name="name">pod.turn.tree (in pod_turn_management)</field>
+        <field name="model">pod.turn</field>
         <field name="arch" type="xml">
             <tree create="0">
                 <field name="date" />
@@ -101,17 +101,17 @@
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_turn_act_window">
+    <record model="ir.actions.act_window" id="pod_turn_act_window">
         <field name="name">Turns</field>
-        <field name="res_model">medical.turn</field>
+        <field name="res_model">pod.turn</field>
         <field name="view_mode">calendar_list,tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_from_today':1}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_turn_menu">
+    <record model="ir.ui.menu" id="pod_turn_menu">
         <field name="name">Turns</field>
-        <field name="parent_id" ref="medical_turn_root" />
-        <field name="action" ref="medical_turn_act_window" />
+        <field name="parent_id" ref="pod_turn_root" />
+        <field name="action" ref="pod_turn_act_window" />
         <field name="sequence" eval="16" />
     </record>
 </odoo>

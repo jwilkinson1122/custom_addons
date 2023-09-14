@@ -7,8 +7,8 @@ import re
 from odoo import fields, models
 
 
-class MedicalAuthorizationFormat(models.Model):
-    _name = "medical.authorization.format"
+class PodiatryAuthorizationFormat(models.Model):
+    _name = "pod.authorization.format"
     _description = "Authorization format"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 

@@ -9,8 +9,8 @@ from odoo.exceptions import ValidationError
 class ActivityDefinition(models.Model):
     _inherit = "workflow.activity.definition"
 
-    def _get_medical_values(self, vals, parent=False, plan=False, action=False):
-        res = super()._get_medical_values(vals, parent, plan, action)
+    def _get_pod_values(self, vals, parent=False, plan=False, action=False):
+        res = super()._get_pod_values(vals, parent, plan, action)
         res["is_billable"] = False if action else plan.is_billable
         res["is_breakdown"] = plan.is_breakdown if not action else False
         res["coverage_agreement_item_id"] = False
@@ -23,7 +23,7 @@ class ActivityDefinition(models.Model):
             res["center_id"] = parent.center_id.id
         elif res.get("careplan_id", False) and not res.get("center_id", False):
             res["center_id"] = (
-                self.env["medical.careplan"].browse(res["careplan_id"]).center_id.id
+                self.env["pod.careplan"].browse(res["careplan_id"]).center_id.id
             )
         if not self.env[self.model_id.model]._pass_performer(
             self, parent, plan, action
@@ -38,11 +38,11 @@ class ActivityDefinition(models.Model):
         res["is_billable"] = True
         if vals.get("coverage_id", False):
             coverage_template = (
-                self.env["medical.coverage"]
+                self.env["pod.coverage"]
                 .browse(vals.get("coverage_id"))
                 .coverage_template_id
             )
-            cai = self.env["medical.coverage.agreement.item"].get_item(
+            cai = self.env["pod.coverage.agreement.item"].get_item(
                 self.service_id, coverage_template, vals["center_id"]
             )
             if not cai:
@@ -59,7 +59,7 @@ class ActivityDefinition(models.Model):
     def execute_activity(self, vals, parent=False, plan=False, action=False):
         self.ensure_one()
         if parent and action.is_billable:
-            group_obj = self.env["medical.request.group"]
+            group_obj = self.env["pod.request.group"]
             request_vals = self._get_request_group_values(
                 vals,
                 self.env[parent.parent_model].browse(parent.parent_id),

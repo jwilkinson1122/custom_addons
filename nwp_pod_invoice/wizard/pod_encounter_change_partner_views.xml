@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="medical_encounter_change_partner_form" model="ir.ui.view">
-        <field name="name">medical.encounter.change.partner.form</field>
-        <field name="model">medical.encounter.change.partner</field>
+    <record id="pod_encounter_change_partner_form" model="ir.ui.view">
+        <field name="name">pod.encounter.change.partner.form</field>
+        <field name="model">pod.encounter.change.partner</field>
         <field name="arch" type="xml">
             <form string="Add amount encounter">
                 <field name="encounter_id" invisible="1" />
@@ -21,19 +21,19 @@
             </form>
         </field>
     </record>
-    <record id="medical_encounter_change_partner_action" model="ir.actions.act_window">
+    <record id="pod_encounter_change_partner_action" model="ir.actions.act_window">
         <field name="name">Change invoice partner on encounter</field>
-        <field name="res_model">medical.encounter.change.partner</field>
+        <field name="res_model">pod.encounter.change.partner</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_encounter_id': active_id}</field>
         <field name="target">new</field>
         <field
             name="groups_id"
-            eval="[(4,ref('medical_base.group_medical_reception'))]"
+            eval="[(4,ref('pod_base.group_pod_reception'))]"
         />
         <field
             name="binding_model_id"
-            ref="medical_administration_encounter.model_medical_encounter"
+            ref="pod_administration_encounter.model_pod_encounter"
         />
     </record>
 </odoo>

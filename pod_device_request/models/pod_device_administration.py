@@ -7,17 +7,17 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
 
-class MedicalMedicationAdministration(models.Model):
-    _name = "medical.medication.administration"
-    _inherit = "medical.event"
-    _description = "medical medication administration"
+class PodiatryDeviceAdministration(models.Model):
+    _name = "pod.device.administration"
+    _inherit = "pod.event"
+    _description = "pod device administration"
 
     def _default_patient_location(self):
         # return self.env.ref('stock.stock_location_customers')
-        return self.env.ref("medical_medication_request.location_patient")
+        return self.env.ref("pod_device_request.location_patient")
 
-    medication_request_id = fields.Many2one(
-        comodel_name="medical.medication.request",
+    device_request_id = fields.Many2one(
+        comodel_name="pod.device.request",
         ondelete="restrict",
         index=True,
         readonly=True,
@@ -96,7 +96,7 @@ class MedicalMedicationAdministration(models.Model):
         states={"draft": [("readonly", False)]},
     )
     move_ids = fields.One2many(
-        "stock.move", inverse_name="medication_administration_id"
+        "stock.move", inverse_name="device_administration_id"
     )
 
     @api.onchange("product_id")
@@ -108,7 +108,7 @@ class MedicalMedicationAdministration(models.Model):
         return (
             self.env["ir.sequence"]
             .sudo()
-            .next_by_code("medical.medication.administration")
+            .next_by_code("pod.device.administration")
             or "/"
         )
 
@@ -187,7 +187,7 @@ class MedicalMedicationAdministration(models.Model):
         wh = self.stock_location_id.get_warehouse()
         return {
             "group_id": group,
-            "medication_administration_id": self.id,
+            "device_administration_id": self.id,
             "warehouse_id": wh,
             "partner_dest_id": group.partner_id,
             "route_ids": self.env["stock.location.route"],
@@ -198,17 +198,17 @@ class MedicalMedicationAdministration(models.Model):
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "stock.stock_move_action"
         )
-        action["domain"] = [("medication_administration_id", "=", self.id)]
+        action["domain"] = [("device_administration_id", "=", self.id)]
         if len(self.move_ids) == 1:
             action["views"] = [(False, "form")]
             action["res_id"] = self.move_ids.id
         return action
 
-    @api.constrains("medication_request_id", "patient_id")
-    def _check_patient_medication(self):
+    @api.constrains("device_request_id", "patient_id")
+    def _check_patient_device(self):
         if not self.env.context.get("no_check_patient", False):
             if (
-                self.medication_request_id
-                and self.patient_id != self.medication_request_id.patient_id
+                self.device_request_id
+                and self.patient_id != self.device_request_id.patient_id
             ):
                 raise ValidationError(_("Patient inconsistency"))

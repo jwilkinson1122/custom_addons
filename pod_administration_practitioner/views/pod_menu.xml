@@ -7,17 +7,17 @@
 -->
 <odoo>
     <menuitem
-        id="medical_conf_practitioner_menu"
+        id="pod_conf_practitioner_menu"
         name="Practitioners"
-        parent="medical_base.medical_root_administration"
-        action="medical_practitioner_action"
+        parent="pod_base.pod_root_administration"
+        action="pod_practitioner_action"
         sequence="20"
     />
     <menuitem
-        id="medical_role_menu"
+        id="pod_role_menu"
         name="Roles"
-        parent="medical_base.medical_root_configuration"
-        action="medical_role_action"
+        parent="pod_base.pod_root_configuration"
+        action="pod_role_action"
         sequence="60"
     />
 </odoo>

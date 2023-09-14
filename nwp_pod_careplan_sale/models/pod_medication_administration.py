@@ -5,8 +5,8 @@
 from odoo import api, fields, models
 
 
-class MedicalMedicationAdministration(models.Model):
-    _inherit = "medical.medication.administration"
+class PodiatryDeviceAdministration(models.Model):
+    _inherit = "pod.device.administration"
 
     amount = fields.Float()
 

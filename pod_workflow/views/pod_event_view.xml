@@ -4,9 +4,9 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_event_tree">
-        <field name="name">medical.event.tree</field>
-        <field name="model">medical.event</field>
+    <record model="ir.ui.view" id="pod_event_tree">
+        <field name="name">pod.event.tree</field>
+        <field name="model">pod.event</field>
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <tree>
@@ -19,9 +19,9 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_event_form">
-        <field name="name">medical.event.form</field>
-        <field name="model">medical.event</field>
+    <record model="ir.ui.view" id="pod_event_form">
+        <field name="name">pod.event.form</field>
+        <field name="model">pod.event</field>
         <field name="priority" eval="16" />
         <field name="arch" type="xml">
             <form>

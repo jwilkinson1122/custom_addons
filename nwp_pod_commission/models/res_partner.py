@@ -9,7 +9,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     practitioner_condition_ids = fields.One2many(
-        "medical.practitioner.condition",
+        "pod.practitioner.condition",
         inverse_name="practitioner_id",
         copy=False,
     )

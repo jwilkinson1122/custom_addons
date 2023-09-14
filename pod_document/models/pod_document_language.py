@@ -1,9 +1,9 @@
 from odoo import api, fields, models
 
 
-class MedicalDocumentLanguage(models.AbstractModel):
-    _name = "medical.document.language"
-    _description = "Medical Document Language"
+class PodiatryDocumentLanguage(models.AbstractModel):
+    _name = "pod.document.language"
+    _description = "Podiatry Document Language"
 
     @api.model
     def _get_languages(self):

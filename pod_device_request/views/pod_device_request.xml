@@ -5,37 +5,37 @@
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="medical_medication_request_view_tree" model="ir.ui.view">
-        <field name="name">medical.medication.request.view.tree</field>
-        <field name="model">medical.medication.request</field>
+    <record id="pod_device_request_view_tree" model="ir.ui.view">
+        <field name="name">pod.device.request.view.tree</field>
+        <field name="model">pod.device.request</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="medical_workflow.medical_request_tree" />
+        <field name="inherit_id" ref="pod_workflow.pod_request_tree" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="decoration-muted">state=='cancelled'</attribute>
             </xpath>
         </field>
     </record>
-    <record id="medical_medication_request_view_form" model="ir.ui.view">
-        <field name="name">medical.medication.request.view.form</field>
-        <field name="model">medical.medication.request</field>
-        <field name="inherit_id" ref="medical_request_form" />
+    <record id="pod_device_request_view_form" model="ir.ui.view">
+        <field name="name">pod.device.request.view.form</field>
+        <field name="model">pod.device.request</field>
+        <field name="inherit_id" ref="pod_request_form" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     type="object"
-                    name="action_view_medication_administration"
+                    name="action_view_device_administration"
                     class="oe_stat_button"
                     icon="fa-pills"
                     attrs="{'invisible': [('state','=','draft')]}"
                 >
                     <field
-                        name="medication_administration_count"
+                        name="device_administration_count"
                         widget="statinfo"
                         string="Administrations"
                     />
-                    <field name='medication_administration_ids' invisible="1" />
+                    <field name='device_administration_ids' invisible="1" />
                 </button>
             </xpath>
             <field name="service_id" position="after">
@@ -51,11 +51,11 @@
             </field>
         </field>
     </record>
-    <record id="medical_medication_request_view_search" model="ir.ui.view">
-        <field name="name">medical.medication.request.view.search</field>
-        <field name="model">medical.medication.request</field>
+    <record id="pod_device_request_view_search" model="ir.ui.view">
+        <field name="name">pod.device.request.view.search</field>
+        <field name="model">pod.device.request</field>
         <field name="arch" type="xml">
-            <search string="Medical Care Plan">
+            <search string="Podiatry Care Plan">
                 <field name="internal_identifier" />
                 <field name="name" />
                 <field name="patient_id" />
@@ -106,17 +106,17 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="medical_medication_request_action">
-        <field name="name">Medication requests</field>
+    <record model="ir.actions.act_window" id="pod_device_request_action">
+        <field name="name">Device requests</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">medical.medication.request</field>
+        <field name="res_model">pod.device.request</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>
-    <record model="ir.ui.menu" id="medical_medication_request">
+    <record model="ir.ui.menu" id="pod_device_request">
         <field name="name">Requests</field>
-        <field name="parent_id" ref="medical_base.medical_clinical_request" />
-        <field name="action" ref="medical_medication_request_action" />
+        <field name="parent_id" ref="pod_base.pod_clinical_request" />
+        <field name="action" ref="pod_device_request_action" />
         <field name="sequence" eval="0" />
     </record>
 </odoo>

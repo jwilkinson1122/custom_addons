@@ -13,7 +13,7 @@ class ReportPosPayment(models.Model):
 
     date = fields.Date()
     amount = fields.Monetary(currency_field="currency_id")
-    encounter_id = fields.Many2one("medical.encounter")
+    encounter_id = fields.Many2one("pod.encounter")
     currency_id = fields.Many2one("res.currency")
     company_id = fields.Many2one("res.company")
     session_id = fields.Many2one("pos.session")

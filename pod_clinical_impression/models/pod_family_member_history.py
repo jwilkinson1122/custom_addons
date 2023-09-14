@@ -5,11 +5,11 @@
 from odoo import api, fields, models
 
 
-class MedicalFamilyMemberHistory(models.Model):
+class PodiatryFamilyMemberHistory(models.Model):
     # FHIR Entity: Family Member History
-    _name = "medical.family.member.history"
-    _inherit = ["medical.abstract", "mail.thread", "mail.activity.mixin"]
-    _description = "Medical Family Member History"
+    _name = "pod.family.member.history"
+    _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
+    _description = "Podiatry Family Member History"
 
     name = fields.Char(compute="_compute_name")
     # FHIR: state
@@ -17,7 +17,7 @@ class MedicalFamilyMemberHistory(models.Model):
     active = fields.Boolean(default=True)
     unable_to_obtain = fields.Boolean()
 
-    patient_id = fields.Many2one("medical.patient")
+    patient_id = fields.Many2one("pod.patient")
     # FHIR: patient
 
     family_member_name = fields.Char()
@@ -55,7 +55,7 @@ class MedicalFamilyMemberHistory(models.Model):
     def _get_internal_identifier(self, vals):
         return (
             self.env["ir.sequence"].next_by_code(
-                "medical.family.member.history"
+                "pod.family.member.history"
             )
             or "/"
         )

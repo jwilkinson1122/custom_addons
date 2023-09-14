@@ -1,5 +1,5 @@
 =================
-Medical Condition
+Podiatry Condition
 =================
 
 .. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -13,9 +13,9 @@ Medical Condition
 .. |badge2| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
-.. |badge3| image:: https://img.shields.io/badge/github-tegin%2Fmedical--fhir-lightgray.png?logo=github
-    :target: https://github.com/tegin/medical-fhir/tree/13.0/medical_clinical_condition
-    :alt: tegin/medical-fhir
+.. |badge3| image:: https://img.shields.io/badge/github-tegin%2Fpod--fhir-lightgray.png?logo=github
+    :target: https://github.com/tegin/pod-fhir/tree/13.0/pod_clinical_condition
+    :alt: tegin/pod-fhir
 
 |badge1| |badge2| |badge3| 
 
@@ -67,8 +67,8 @@ For further information about FHIR Condition visit: https://www.hl7.org/fhir/con
 
 TODO:
 
-* Decide if field medical_condition_ids should contain allergies or not. On one side, allergies are medical.condition records. On the other hand, the information is repeated and can cause confusion as the conditions can be seen from the "Condition" button and the "Allergies" button.
-* If finally medical_condition_ids do not contain allergies, the warning_dropdowm from medical_clinical_impression should be modified, as it is computed with the medical_condition_ids.
+* Decide if field pod_condition_ids should contain allergies or not. On one side, allergies are pod.condition records. On the other hand, the information is repeated and can cause confusion as the conditions can be seen from the "Condition" button and the "Allergies" button.
+* If finally pod_condition_ids do not contain allergies, the warning_dropdowm from pod_clinical_impression should be modified, as it is computed with the pod_condition_ids.
 
 **Table of contents**
 
@@ -78,21 +78,21 @@ TODO:
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
-'Clinical' activate 'Medical condition'.
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
+'Clinical' activate 'Podiatry condition'.
 
 Usage
 =====
 
-#. Go to 'Medical / Terminologies / Clinical Finding Codes'
+#. Go to 'Podiatry / Terminologies / Clinical Finding Codes'
 #. Click 'Create'.
 #. Provide a name and (if desired) a description and a Sct Code. You can also select if this finding should create a warning.
 #. Click 'Save'.
-#. Go to 'Medical / Terminologies / Allergy Substance Codes'
+#. Go to 'Podiatry / Terminologies / Allergy Substance Codes'
 #. Click 'Create'.
 #. Provide a name and (if desired) a description and a Sct Code. You can also select if this substance should create a warning.
 #. Click 'Save'.
-#. Go to 'Medical / Administration / Patients' or to 'Medical / Administration / Encounters'
+#. Go to 'Podiatry / Administration / Patients' or to 'Podiatry / Administration / Encounters'
 #. Select a patient/encounter and create a condition or an allergy.
 #. You can view conditions, allergies and warnings from encounter or patient through smart buttons.
 
@@ -103,10 +103,10 @@ Usage
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/tegin/medical-fhir/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/tegin/pod-fhir/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/tegin/medical-fhir/issues/new?body=module:%20medical_clinical_condition%0Aversion:%2013.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/tegin/pod-fhir/issues/new?body=module:%20pod_clinical_condition%0Aversion:%2013.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -130,6 +130,6 @@ Contributors
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `tegin/medical-fhir <https://github.com/tegin/medical-fhir/tree/13.0/medical_clinical_condition>`_ project on GitHub.
+This module is part of the `tegin/pod-fhir <https://github.com/tegin/pod-fhir/tree/13.0/pod_clinical_condition>`_ project on GitHub.
 
 You are welcome to contribute.

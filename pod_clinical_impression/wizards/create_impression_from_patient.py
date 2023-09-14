@@ -11,11 +11,11 @@ class CreateImpressionFromPatient(models.TransientModel):
     _name = "create.impression.from.patient"
     _description = "Create Impression From Patient"
 
-    patient_id = fields.Many2one("medical.patient", required=True)
+    patient_id = fields.Many2one("pod.patient", required=True)
 
-    specialty_id = fields.Many2one("medical.specialty", required=True)
+    specialty_id = fields.Many2one("pod.specialty", required=True)
     encounter_id = fields.Many2one(
-        "medical.encounter",
+        "pod.encounter",
         required=True,
         compute="_compute_default_encounter",
     )
@@ -33,7 +33,7 @@ class CreateImpressionFromPatient(models.TransientModel):
 
     def generate(self):
         self.ensure_one()
-        action = self.env["medical.clinical.impression"].get_formview_action()
+        action = self.env["pod.clinical.impression"].get_formview_action()
         action["context"] = self._get_impression_vals()
         return action
 

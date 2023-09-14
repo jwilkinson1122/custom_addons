@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalLaboratoryEvent(models.Model):
-    _inherit = "medical.laboratory.event"
+class PodiatryLaboratoryEvent(models.Model):
+    _inherit = "pod.laboratory.event"
 
     def _change_authorization(self, vals, **kwargs):
         new_vals = {}

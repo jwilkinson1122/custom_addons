@@ -5,8 +5,8 @@
 from odoo import models
 
 
-class MedicalLaboratoryRequest(models.Model):
-    _inherit = "medical.laboratory.request"
+class PodiatryLaboratoryRequest(models.Model):
+    _inherit = "pod.laboratory.request"
 
     def _change_authorization(self, vals, **kwargs):
         res = super()._change_authorization(vals, **kwargs)

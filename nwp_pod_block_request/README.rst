@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ======================
-Medical Block Request
+Podiatry Block Request
 ======================
 
-Medical Block Request
+Podiatry Block Request

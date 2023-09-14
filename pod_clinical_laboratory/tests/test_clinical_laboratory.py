@@ -5,15 +5,15 @@ from odoo.tests.common import TransactionCase
 class TestClinicalLaboratory(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.patient = self.env["medical.patient"].create({"name": "Patient"})
-        self.patient2 = self.env["medical.patient"].create({"name": "Test Patient2"})
+        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.patient2 = self.env["pod.patient"].create({"name": "Test Patient2"})
 
     def test_constrains(self):
-        request = self.env["medical.laboratory.request"].create(
+        request = self.env["pod.laboratory.request"].create(
             {"patient_id": self.patient.id}
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.laboratory.request"].create(
+            self.env["pod.laboratory.request"].create(
                 {
                     "patient_id": self.patient2.id,
                     "laboratory_request_id": request.id,
@@ -21,11 +21,11 @@ class TestClinicalLaboratory(TransactionCase):
             )
 
     def test_constrains_event(self):
-        request = self.env["medical.laboratory.request"].create(
+        request = self.env["pod.laboratory.request"].create(
             {"patient_id": self.patient.id}
         )
         with self.assertRaises(ValidationError):
-            self.env["medical.laboratory.event"].create(
+            self.env["pod.laboratory.event"].create(
                 {
                     "patient_id": self.patient2.id,
                     "laboratory_request_id": request.id,
@@ -33,7 +33,7 @@ class TestClinicalLaboratory(TransactionCase):
             )
 
     def test_laboratory(self):
-        request = self.env["medical.laboratory.request"].create(
+        request = self.env["pod.laboratory.request"].create(
             {"patient_id": self.patient.id}
         )
         self.assertEqual(request.laboratory_event_count, 0)

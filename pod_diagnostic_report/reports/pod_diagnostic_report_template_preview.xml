@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template
-        id="medical_diagnostic_report_template_preview_report"
-        inherit_id="medical_diagnostic_report.medical_diagnostic_report_template_base"
+        id="pod_diagnostic_report_template_preview_report"
+        inherit_id="pod_diagnostic_report.pod_diagnostic_report_template_base"
         primary="True"
     >
         <xpath
-            expr="//t[@t-call='medical_diagnostic_report.diagnostic_report_base_layout']"
+            expr="//t[@t-call='pod_diagnostic_report.diagnostic_report_base_layout']"
             position="attributes"
         >
             <attribute
                 name="t-call"
-            >medical_diagnostic_report.diagnostic_report_layout_preview</attribute>
+            >pod_diagnostic_report.diagnostic_report_layout_preview</attribute>
         </xpath>
         <xpath
-            expr="//t[@t-call='medical_diagnostic_report.medical_diagnostic_report_base']"
+            expr="//t[@t-call='pod_diagnostic_report.pod_diagnostic_report_base']"
             position="attributes"
         >
             <attribute
                 name="t-call"
-            >medical_diagnostic_report.medical_diagnostic_report_template_single_preview</attribute>
+            >pod_diagnostic_report.pod_diagnostic_report_template_single_preview</attribute>
         </xpath>
     </template>
     <template
         id="diagnostic_report_layout_preview"
-        inherit_id="medical_diagnostic_report.diagnostic_report_base_layout"
+        inherit_id="pod_diagnostic_report.diagnostic_report_base_layout"
         primary="True"
     >
         <xpath expr="//div[@name='patient_id']" position="inside">
@@ -40,8 +40,8 @@
         </xpath>
     </template>
     <template
-        id="medical_diagnostic_report_template_single_preview"
-        inherit_id="medical_diagnostic_report.medical_diagnostic_report_base"
+        id="pod_diagnostic_report_template_single_preview"
+        inherit_id="pod_diagnostic_report.pod_diagnostic_report_base"
         primary="True"
     >
         <xpath expr="//t[@t-set='observations']" position="attributes">

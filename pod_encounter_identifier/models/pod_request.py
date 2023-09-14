@@ -1,6 +1,6 @@
 from odoo import models
 
 
-class MedicalRequest(models.AbstractModel):
-    _name = "medical.request"
-    _inherit = ["medical.request", "medical.cb.identifier"]
+class PodiatryRequest(models.AbstractModel):
+    _name = "pod.request"
+    _inherit = ["pod.request", "pod.nwp.identifier"]

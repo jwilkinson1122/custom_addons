@@ -5,16 +5,16 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class MedicalDiagnosticReport(models.Model):
-    _inherit = "medical.diagnostic.report"
+class PodiatryDiagnosticReport(models.Model):
+    _inherit = "pod.diagnostic.report"
 
     with_department = fields.Boolean(default=False)
-    medical_department_header = fields.Html(readonly=True)
+    pod_department_header = fields.Html(readonly=True)
     signature_id = fields.Many2one("res.users.signature", readonly=True)
     occurrence_date = fields.Datetime(related="encounter_id.create_date")
     encounter_id = fields.Many2one(readonly=True)
     image_ids = fields.One2many(
-        "medical.diagnostic.report.image",
+        "pod.diagnostic.report.image",
         inverse_name="diagnostic_report_id",
         copy=True,
         readonly=True,
@@ -22,9 +22,9 @@ class MedicalDiagnosticReport(models.Model):
     )
 
     def _generate_serializer(self):
-        result = super(MedicalDiagnosticReport, self)._generate_serializer()
+        result = super(PodiatryDiagnosticReport, self)._generate_serializer()
         if self.with_department:
-            result.update({"medical_department_header": self.medical_department_header})
+            result.update({"pod_department_header": self.pod_department_header})
         if self.image_ids:
             result.update(
                 {"images": [image._generate_serializer() for image in self.image_ids]}
@@ -35,7 +35,7 @@ class MedicalDiagnosticReport(models.Model):
 
     def registered2final_change_state(self):
         res = super().registered2final_change_state()
-        if not self.medical_department_id.without_practitioner:
+        if not self.pod_department_id.without_practitioner:
             res["signature_id"] = self.env.user.current_signature_id.id
         return res
 
@@ -55,7 +55,7 @@ class MedicalDiagnosticReport(models.Model):
         self.ensure_one()
         if self.fhir_state != "registered":
             raise ValidationError(_("State must be registered"))
-        self.env["medical.diagnostic.report.image"].create(
+        self.env["pod.diagnostic.report.image"].create(
             self._add_image_attachment_vals(name=name, datas=datas, **kwargs)
         )
         return True
@@ -65,20 +65,20 @@ class MedicalDiagnosticReport(models.Model):
         lst = self.image_ids.ids
         n = 2
         return [
-            self.env["medical.diagnostic.report.image"].browse(lst[i : i + n])
+            self.env["pod.diagnostic.report.image"].browse(lst[i : i + n])
             for i in range(0, len(lst), n)
         ]
 
 
-class MedicalDiagnosticReportImage(models.Model):
-    _name = "medical.diagnostic.report.image"
+class PodiatryDiagnosticReportImage(models.Model):
+    _name = "pod.diagnostic.report.image"
     _description = "image for a diagnostic report"
     _inherits = {"storage.file": "file_id"}
     _order = "sequence,id"
     _default_file_type = "diagnostic_report_image"
 
     sequence = fields.Integer(default=20)
-    diagnostic_report_id = fields.Many2one("medical.diagnostic.report", required=True)
+    diagnostic_report_id = fields.Many2one("pod.diagnostic.report", required=True)
     file_id = fields.Many2one("storage.file", required=True, ondelete="cascade")
     description = fields.Text()
 

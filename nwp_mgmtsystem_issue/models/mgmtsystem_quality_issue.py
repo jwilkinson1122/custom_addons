@@ -56,7 +56,7 @@ class MgmtsystemQualityIssue(models.Model):
     @api.model
     def create(self, vals):
         if vals.get("ref", "/") == "/":
-            sequence = self.env.ref("cb_mgmtsystem_issue.seq_mgmtsystem_issue")
+            sequence = self.env.ref("nwp_mgmtsystem_issue.seq_mgmtsystem_issue")
             vals["ref"] = sequence.next_by_id()
         return super().create(vals)
 
@@ -75,7 +75,7 @@ class MgmtsystemQualityIssue(models.Model):
         self.write({"state": "ok"})
 
     def _creation_subtype(self):
-        return self.env.ref("cb_mgmtsystem_issue.issue_created")
+        return self.env.ref("nwp_mgmtsystem_issue.issue_created")
 
     def _create_non_conformity_vals(self):
         return {

@@ -6,25 +6,25 @@
 -->
 <odoo>
     <menuitem
-        id="menu_medical_quote"
+        id="menu_pod_quote"
         name="Quotes"
         action="action_quotes"
-        parent="medical_base.medical_root_administration"
+        parent="pod_base.pod_root_administration"
         sequence="10"
-        groups="medical_base.group_medical_user"
+        groups="pod_base.group_pod_user"
     />
     <menuitem
         name="Document Comments"
-        id="menu_base_comment_template_medical_quote"
+        id="menu_base_comment_template_pod_quote"
         action="base_comment_template.action_base_comment_template"
-        groups="medical_base.group_medical_user"
-        parent="medical_base.medical_root_configuration"
+        groups="pod_base.group_pod_user"
+        parent="pod_base.pod_root_configuration"
     />
     <menuitem
-        action="medical_quote_report_configuration_action"
-        id="medical_quote_report_configuration"
-        groups="medical_base.group_medical_user"
-        parent="medical_base.medical_root_configuration"
-        name="Medical Quote Report Layout Categories"
+        action="pod_quote_report_configuration_action"
+        id="pod_quote_report_configuration"
+        groups="pod_base.group_pod_user"
+        parent="pod_base.pod_root_configuration"
+        name="Podiatry Quote Report Layout Categories"
     />
 </odoo>

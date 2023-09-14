@@ -5,12 +5,12 @@
 from odoo import fields, models
 
 
-class MedicalCarePlan(models.Model):
+class PodiatryCarePlan(models.Model):
     # FHIR Entity: Care Plan
     # (https://www.hl7.org/fhir/careplan.html)
-    _name = "medical.careplan"
-    _description = "Medical Care Plan"
-    _inherit = "medical.request"
+    _name = "pod.careplan"
+    _description = "Podiatry Care Plan"
+    _inherit = "pod.request"
 
     internal_identifier = fields.Char()
     start_date = fields.Datetime(
@@ -24,7 +24,7 @@ class MedicalCarePlan(models.Model):
 
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("medical.careplan")
+            self.env["ir.sequence"].sudo().next_by_code("pod.careplan")
             or "/"
         )
 
@@ -43,6 +43,6 @@ class MedicalCarePlan(models.Model):
 
     def action_view_request_parameters(self):
         return {
-            "view": "medical_clinical_careplan.medical_careplan_action",
-            "view_form": "medical.careplan.view.form",
+            "view": "pod_clinical_careplan.pod_careplan_action",
+            "view_form": "pod.careplan.view.form",
         }

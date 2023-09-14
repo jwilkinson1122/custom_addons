@@ -8,8 +8,8 @@
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
-    "website": "https://github.com/tegin/cb-addons",
-    "depends": ["cb_mgmtsystem_issue", "product"],
+    "website": "https://github.com/tegin/nwp-addons",
+    "depends": ["nwp_mgmtsystem_issue", "product"],
     "data": ["views/product_template.xml"],
     "demo": [],
 }

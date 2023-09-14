@@ -1,4 +1,4 @@
-odoo.define("medical_diagnostic_report.ListRenderer", function (require) {
+odoo.define("pod_diagnostic_report.ListRenderer", function (require) {
     "use strict";
     var ListRenderer = require("web.ListRenderer");
     var relational_fields = require("web.relational_fields");

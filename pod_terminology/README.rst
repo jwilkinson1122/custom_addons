@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ===================
-Medical Terminology
+Podiatry Terminology
 ===================
 
 This module creates the basic codification systems used on FHIR.
@@ -11,14 +11,14 @@ The covered codification systems are:
 * `SNOMED CT <https://www.hl7.org/fhir/codesystem-snomedct.html>`_
 * `ATC <http://www.whocc.no/atc>`_
 
-This module initializes the terminology models of medical.
+This module initializes the terminology models of pod.
 
 Find more information about FHIR codification systems in: https://www.hl7.org/fhir/codesystem.html
 
 Installation
 ============
 
-To install this module, go to 'Medical / Configuration / Settings' and inside
+To install this module, go to 'Podiatry / Configuration / Settings' and inside
 'Terminologies' activate 'Terminology'.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
@@ -39,7 +39,7 @@ Credits
 Images
 ------
 
-* Clker-Free-Vector-Images: `Medical Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
+* Clker-Free-Vector-Images: `Podiatry Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
 * Odoo Community Association: `Odoo Icon <https://odoo-community.org/logo.png>`_.
 
 Contributors

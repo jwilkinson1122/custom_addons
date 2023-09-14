@@ -5,17 +5,17 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 -->
 <odoo>
-    <record model="ir.ui.view" id="medical_laboratory_request_view_form">
-        <field name="name">medical.laboratory.request.form</field>
-        <field name="model">medical.laboratory.request</field>
+    <record model="ir.ui.view" id="pod_laboratory_request_view_form">
+        <field name="name">pod.laboratory.request.form</field>
+        <field name="model">pod.laboratory.request</field>
         <field
             name="inherit_id"
-            ref="medical_clinical_laboratory.medical_laboratory_request_view_form"
+            ref="pod_clinical_laboratory.pod_laboratory_request_view_form"
         />
         <field name="arch" type="xml">
             <xpath expr="//button[@name='cancel']" position="after">
                 <button
-                    name="%(cb_medical_cancel.medical_laboratory_request_cancel_action)s"
+                    name="%(nwp_pod_cancel.pod_laboratory_request_cancel_action)s"
                     string="Cancel"
                     states="draft,active"
                     type="action"
