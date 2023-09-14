@@ -30,7 +30,7 @@
         "reports/medical_procedure_external_request_report.xml",
         "reports/medical_procedure_external_request_template_preview.xml",
         "reports/medical_procedure_external_request_preview.xml",
-        "templates/assets.xml",
+        # "templates/assets.xml",
     ],
     "demo": ["demo/medical_procedure_external.xml"],
 }

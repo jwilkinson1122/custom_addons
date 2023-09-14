@@ -29,7 +29,7 @@
         "views/medical_report_category.xml",
         "reports/medical_diagnostic_report_template.xml",
         "wizards/medical_diagnostic_report_expand.xml",
-        "templates/assets.xml",
+        # "templates/assets.xml",
     ],
     "demo": ["demo/medical_diagnostic_report.xml"],
 }

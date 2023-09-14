@@ -13,7 +13,7 @@
     "data": [
         "data/agreement_demo_data.xml",
         "views/agreement.xml",
-        "templates/assets.xml",
+        # "templates/assets.xml",
         "reports/agreement.xml",
     ],
     "installable": True,

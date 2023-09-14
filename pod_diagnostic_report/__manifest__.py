@@ -25,7 +25,7 @@
         "wizards/patient_concept_evolution.xml",
         "wizards/medical_diagnostic_report_template_print.xml",
         "wizards/medical_diagnostic_report_expand.xml",
-        "templates/assets.xml",
+        # "templates/assets.xml",
         "views/medical_uom.xml",
         "data/uom.xml",
         "wizards/medical_encounter_create_diagnostic_report.xml",
