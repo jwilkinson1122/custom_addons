@@ -1,12 +1,9 @@
-# Copyright 2019 Creu Blanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import api, fields, models
 
 
-class MedicalCoverageAgreement(models.Model):
+class PodiatryCoverageAgreement(models.Model):
 
-    _inherit = "medical.coverage.agreement"
+    _inherit = "pod.coverage.agreement"
 
     def _default_leads(self):
         if not self.env.context.get("lead_id"):
@@ -25,7 +22,7 @@ class MedicalCoverageAgreement(models.Model):
 
     lead_ids = fields.Many2many(
         "crm.lead",
-        relation="medical_coverage_agreement_crm_lead",
+        relation="pod_coverage_agreement_crm_lead",
         column1="agreement_id",
         column2="lead_id",
         string="Leads",

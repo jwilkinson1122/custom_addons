@@ -17,20 +17,20 @@ class SalerOrderLine(models.Model):
         related="encounter_id.validation_status", readonly=True
     )
     coverage_agreement_id = fields.Many2one(
-        "medical.coverage.agreement",
+        "pod.coverage.agreement",
         related="order_id.coverage_agreement_id",
         readonly=True,
     )
     coverage_agreement_item_id = fields.Many2one(
-        "medical.coverage.agreement.item", readonly=True
+        "pod.coverage.agreement.item", readonly=True
     )
     authorization_format_id = fields.Many2one(
-        "medical.authorization.format",
+        "pod.authorization.format",
         related="coverage_agreement_item_id.authorization_format_id",
         readonly=True,
     )
     coverage_template_id = fields.Many2one(
-        "medical.coverage.template",
+        "pod.coverage.template",
         related="order_id.coverage_template_id",
         readonly=True,
     )
@@ -48,19 +48,19 @@ class SalerOrderLine(models.Model):
         "account.invoice.line.agent", compute="_compute_invoiced_agent_ids"
     )
 
-    @api.depends("medical_model", "medical_res_id")
+    @api.depends("pod_model", "pod_res_id")
     def _compute_invoiced_agent_ids(self):
         for record in self:
             invoiced_agent_ids = self.env["account.invoice.line.agent"]
-            if record.medical_model:
-                request = self.env[record.medical_model].browse(record.medical_res_id)
-                if request._name == "medical.laboratory.event":
+            if record.pod_model:
+                request = self.env[record.pod_model].browse(record.pod_res_id)
+                if request._name == "pod.laboratory.event":
                     invoiced_agent_ids = request.invoice_agent_ids
-                elif request._name == "medical.procedure.request":
+                elif request._name == "pod.procedure.request":
                     invoiced_agent_ids = request.mapped(
                         "invoice_agent_ids"
                     ) | request.mapped("laboratory_event_ids.invoice_agent_ids")
-                elif request._name == "medical.laboratory.request":
+                elif request._name == "pod.laboratory.request":
                     invoiced_agent_ids = request.mapped(
                         "procedure_ids.invoice_agent_ids"
                     )
@@ -107,18 +107,18 @@ class SalerOrderLine(models.Model):
 
     def check_authorization_action(self):
         self.ensure_one()
-        request = self.env[self.medical_model].browse(self.medical_res_id)
-        if request._name == "medical.request.group":
+        request = self.env[self.pod_model].browse(self.pod_res_id)
+        if request._name == "pod.request.group":
             pass
-        elif request._name == "medical.laboratory.event":
+        elif request._name == "pod.laboratory.event":
             request = request.laboratory_request_id.request_group_id
         else:
             request = request.request_group_id
         return request.check_authorization_action()
 
-    def medical_cancel(self, cancel_reason):
+    def pod_cancel(self, cancel_reason):
         if not self.env.user.has_group(
-            "pos_validation.group_medical_receptionist_manager"
+            "pos_validation.group_pod_receptionist_manager"
         ):
             raise UserError(
                 _("This can only be executed if you can validate encounters")
@@ -127,12 +127,12 @@ class SalerOrderLine(models.Model):
             if rec.order_id.state != "draft":
                 raise UserError(_("Only on draft orders you can cancel an element"))
             request = False
-            if rec.medical_model:
+            if rec.pod_model:
                 request = (
-                    self.env[rec.medical_model].browse(rec.medical_res_id).exists()
+                    self.env[rec.pod_model].browse(rec.pod_res_id).exists()
                 )
             if not request:
-                raise UserError(_("This is not a medical line"))
+                raise UserError(_("This is not a pod line"))
             request.with_context(
                 cancel_reason_id=cancel_reason.id,
                 cancel_reason=cancel_reason.name,
@@ -143,11 +143,11 @@ class SalerOrderLine(models.Model):
         self.ensure_one()
         if self.order_id.state != "draft":
             raise UserError(_("Change of plan can only be applied to draft orders"))
-        request = self.env[self.medical_model].browse(self.medical_res_id).exists()
+        request = self.env[self.pod_model].browse(self.pod_res_id).exists()
         if not request:
             raise UserError(_("Change of plan can only be applied to request groups"))
         request.with_context(validation_change=True).change_plan_definition(
-            self.env["medical.coverage.agreement.item"].get_item(
+            self.env["pod.coverage.agreement.item"].get_item(
                 service, request.coverage_template_id, request.center_id
             )
         )

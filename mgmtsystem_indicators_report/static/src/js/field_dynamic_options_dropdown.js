@@ -1,7 +1,3 @@
-/*
- * Copyright 2021 Creu Blanca
- * License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
- */
 odoo.define("mgmtsystem_indicators_report.field_dynamic_dropdown", function (require) {
     "use strict";
     /*

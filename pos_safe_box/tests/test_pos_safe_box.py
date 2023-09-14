@@ -1,7 +1,3 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -66,7 +62,7 @@ class TestPosSafeBox(TransactionCase):
         self.pos_config = self.pos_config.create(self.pos_config._cache)
 
     def test_pos_safe_box(self):
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_nwp()
         session = self.pos_config.current_session_id
         self.assertTrue(session.statement_ids)
         self.env["cash.box.out"].with_context(

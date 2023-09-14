@@ -1,5 +1,4 @@
-# Copyright 2020 Creu Blanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 
 from odoo.tests.common import Form, TransactionCase
 
@@ -162,7 +161,7 @@ class TestManualOrder(TestPointOfSaleCommon):
         self.product4 = self.env["product.product"].create(
             {"name": "TEST PRODUCT 4", "type": "service", "taxes_id": []}
         )
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_nwp()
         self.pos_order_session0 = self.pos_config.current_session_id
 
     def test_manual_order_excluded(self):

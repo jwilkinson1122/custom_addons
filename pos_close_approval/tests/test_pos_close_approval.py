@@ -1,7 +1,3 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -13,7 +9,7 @@ class TestPosCloseApproval(TransactionCase):
         self.session = False
 
     def _open_session(self):
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_nwp()
         self.session = self.pos_config.current_session_id
         self.session.action_pos_session_open()
 
@@ -55,7 +51,7 @@ class TestPosCloseApproval(TransactionCase):
         self.session.action_pos_session_open()
         self.session.action_pos_session_closing_control()
         self.assertEqual(self.session.state, "pending_approval")
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_nwp()
         self.assertTrue(self.pos_config.current_session_id)
         self.session.action_pos_session_approve()
         self.assertEqual(self.session.state, "closed")

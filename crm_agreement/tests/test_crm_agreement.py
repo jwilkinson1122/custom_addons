@@ -1,6 +1,3 @@
-# Copyright 2019 Creu Blanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo.tests.common import TransactionCase
 
 
@@ -10,7 +7,7 @@ class TestCrmAgreement(TransactionCase):
         self.payor = self.env["res.partner"].create(
             {
                 "name": "Payor",
-                "is_medical": True,
+                "is_pod": True,
                 "is_payor": True,
                 "email": "payor@email.com",
             }
@@ -18,20 +15,20 @@ class TestCrmAgreement(TransactionCase):
         self.contact = self.env["res.partner"].create(
             {"name": "Contact", "parent_id": self.payor.id}
         )
-        self.template_1 = self.env["medical.coverage.template"].create(
+        self.template_1 = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Template 01"}
         )
-        self.template_2 = self.env["medical.coverage.template"].create(
+        self.template_2 = self.env["pod.coverage.template"].create(
             {"payor_id": self.payor.id, "name": "Template 02"}
         )
         self.company = self.browse_ref("base.main_company")
         self.center = self.env["res.partner"].create(
-            {"name": "Center", "is_center": True, "is_medical": True}
+            {"name": "Center", "is_center": True, "is_pod": True}
         )
-        self.method = self.env["medical.authorization.method"].create(
+        self.method = self.env["pod.authorization.method"].create(
             {"name": "Test method", "code": "TEST"}
         )
-        self.format = self.env["medical.authorization.format"].create(
+        self.format = self.env["pod.authorization.format"].create(
             {"name": "Test format", "code": "test"}
         )
 
@@ -45,12 +42,12 @@ class TestCrmAgreement(TransactionCase):
         agreement_action = lead.view_agreements()
         self.assertFalse(agreement_action.get("res_id", False))
         self.assertFalse(
-            self.env["medical.coverage.agreement"].search(
+            self.env["pod.coverage.agreement"].search(
                 agreement_action.get("domain", [])
             )
         )
         agreement = (
-            self.env["medical.coverage.agreement"]
+            self.env["pod.coverage.agreement"]
             .with_context(**agreement_action.get("context", {}))
             .create(
                 {
@@ -72,12 +69,12 @@ class TestCrmAgreement(TransactionCase):
         self.assertEqual(agreement_action.get("res_id", False), agreement.id)
         self.assertIn(
             agreement,
-            self.env["medical.coverage.agreement"].search(
+            self.env["pod.coverage.agreement"].search(
                 agreement_action.get("domain", [])
             ),
         )
         agreement2 = (
-            self.env["medical.coverage.agreement"]
+            self.env["pod.coverage.agreement"]
             .with_context(**agreement_action.get("context", {}))
             .create(
                 {
@@ -97,14 +94,14 @@ class TestCrmAgreement(TransactionCase):
         self.assertEqual(2, lead.agreement_count)
         agreement_action = lead.view_agreements()
         self.assertFalse(agreement_action.get("res_id", False))
-        agreements = self.env["medical.coverage.agreement"].search(
+        agreements = self.env["pod.coverage.agreement"].search(
             agreement_action.get("domain", [])
         )
         self.assertIn(agreement, agreements)
         self.assertIn(agreement2, agreements)
 
     def test_agreement_to_lead(self):
-        agreement = self.env["medical.coverage.agreement"].create(
+        agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
                 "center_ids": [(4, self.center.id)],
@@ -150,7 +147,7 @@ class TestCrmAgreement(TransactionCase):
         self.assertIn(lead2, leads)
 
     def test_lead_onchange(self):
-        agreement = self.env["medical.coverage.agreement"].create(
+        agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
                 "center_ids": [(4, self.center.id)],
@@ -173,13 +170,13 @@ class TestCrmAgreement(TransactionCase):
         lead.partner_id = self.contact
         self.assertIn(agreement.id, lead.agreement_ids.ids)
         payor2 = self.env["res.partner"].create(
-            {"name": "Payor2", "is_medical": True, "is_payor": True}
+            {"name": "Payor2", "is_pod": True, "is_payor": True}
         )
         lead.partner_id = payor2
         self.assertNotIn(agreement, lead.agreement_ids)
 
     def test_lead_add_agreement(self):
-        agreement = self.env["medical.coverage.agreement"].create(
+        agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
                 "center_ids": [(4, self.center.id)],
@@ -204,20 +201,20 @@ class TestCrmAgreement(TransactionCase):
         self.assertIn(lead, agreement.lead_ids)
         self.assertIn(agreement, lead.agreement_ids)
 
-        agreements_count_before = len(self.env["medical.coverage.agreement"].search([]))
+        agreements_count_before = len(self.env["pod.coverage.agreement"].search([]))
         wizard.generate_new()
         lead.refresh()
-        agreements_count_after = len(self.env["medical.coverage.agreement"].search([]))
+        agreements_count_after = len(self.env["pod.coverage.agreement"].search([]))
         self.assertEqual(agreements_count_before + 1, agreements_count_after)
 
     def test_view_quote(self):
         lead = self.env["crm.lead"].create(
             {"name": "Test", "partner_id": self.payor.id}
         )
-        self.assertEqual(lead.medical_quote_count, 0)
-        action = lead.view_medical_quotes()
+        self.assertEqual(lead.pod_quote_count, 0)
+        action = lead.view_pod_quotes()
         quote = (
-            self.env["medical.quote"]
+            self.env["pod.quote"]
             .with_context(**action["context"])
             .create(
                 {
@@ -228,19 +225,19 @@ class TestCrmAgreement(TransactionCase):
         )
         self.assertEqual(lead, quote.lead_id)
         lead.refresh()
-        self.assertEqual(1, lead.medical_quote_count)
-        action = lead.view_medical_quotes()
+        self.assertEqual(1, lead.pod_quote_count)
+        action = lead.view_pod_quotes()
         self.assertTrue(quote.id, action["res_id"])
 
     def test_generate_quote(self):
         lead = self.env["crm.lead"].create(
             {"name": "Test", "partner_id": self.payor.id}
         )
-        self.assertEqual(lead.medical_quote_count, 0)
+        self.assertEqual(lead.pod_quote_count, 0)
         action = lead.generate_quote()
 
         quote = self.env[action.get("res_model")].browse(action.get("res_id"))
-        self.assertEqual("medical.quote", quote._name)
+        self.assertEqual("pod.quote", quote._name)
         self.assertEqual(lead.id, action["context"]["default_lead_id"])
         self.assertEqual(lead.partner_id.id, action["context"]["default_payor_id"])
 

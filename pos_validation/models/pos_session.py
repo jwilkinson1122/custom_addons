@@ -1,6 +1,4 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 
 import ast
 
@@ -25,12 +23,12 @@ class PosSession(models.Model):
     )
     down_payment_ids = fields.One2many("sale.order", compute="_compute_down_payments")
     request_group_ids = fields.One2many(
-        "medical.request.group", compute="_compute_lines"
+        "pod.request.group", compute="_compute_lines"
     )
     procedure_request_ids = fields.One2many(
-        "medical.procedure.request", compute="_compute_lines"
+        "pod.procedure.request", compute="_compute_lines"
     )
-    procedure_ids = fields.Many2many("medical.procedure", compute="_compute_lines")
+    procedure_ids = fields.Many2many("pod.procedure", compute="_compute_lines")
     encounter_non_validated_count = fields.Integer(
         compute="_compute_encounter_non_validated_count"
     )
@@ -61,21 +59,21 @@ class PosSession(models.Model):
             )
 
     @api.depends(
-        "sale_order_line_ids.medical_model",
-        "sale_order_line_ids.medical_res_id",
+        "sale_order_line_ids.pod_model",
+        "sale_order_line_ids.pod_res_id",
         "sale_order_line_ids.procedure_ids",
     )
     def _compute_lines(self):
         for record in self:
-            record.request_group_ids = self.env["medical.request.group"].browse(
+            record.request_group_ids = self.env["pod.request.group"].browse(
                 record.sale_order_line_ids.filtered(
-                    lambda r: r.medical_model == "medical.request.group"
-                ).mapped("medical_res_id")
+                    lambda r: r.pod_model == "pod.request.group"
+                ).mapped("pod_res_id")
             )
-            record.procedure_request_ids = self.env["medical.procedure.request"].browse(
+            record.procedure_request_ids = self.env["pod.procedure.request"].browse(
                 record.sale_order_line_ids.filtered(
-                    lambda r: r.medical_model == "medical.procedure.request"
-                ).mapped("medical_res_id")
+                    lambda r: r.pod_model == "pod.procedure.request"
+                ).mapped("pod_res_id")
             )
             record.procedure_ids = record.sale_order_line_ids.mapped("procedure_ids")
 
@@ -96,7 +94,7 @@ class PosSession(models.Model):
 
     def open_validation_encounter(self, barcode):
         self.ensure_one()
-        encounter = self.env["medical.encounter"].search(
+        encounter = self.env["pod.encounter"].search(
             [
                 ("internal_identifier", "=", barcode),
                 ("pos_session_id", "=", self.id),
@@ -120,9 +118,9 @@ class PosSession(models.Model):
         if self.env.context.get("refresh_view", False):
             return {"type": "ir.actions.act_client_load_new", "res_id": encounter.id}
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
-        res = self.env.ref("medical_encounter.medical_encounter_form", False)
+        res = self.env.ref("pod_encounter.pod_encounter_form", False)
         if isinstance(result["context"], str):
             result["context"] = ast.literal_eval(result["context"])
         result["context"]["from_barcode_reader"] = True
@@ -133,7 +131,7 @@ class PosSession(models.Model):
     def action_view_non_validated_encounters(self):
         self.ensure_one()
         result = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_administration_encounter.medical_encounter_action"
+            "pod_administration_encounter.pod_encounter_action"
         )
         result["domain"] = [
             ("pos_session_id", "=", self.id),

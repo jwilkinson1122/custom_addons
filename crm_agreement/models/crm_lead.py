@@ -1,5 +1,3 @@
-# Copyright 2019 Creu Blanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import ast
 
 from odoo import api, fields, models
@@ -15,8 +13,8 @@ class CrmLead(models.Model):
         return [(4, self.env.context.get("agreement_id"))]
 
     agreement_ids = fields.Many2many(
-        "medical.coverage.agreement",
-        relation="medical_coverage_agreement_crm_lead",
+        "pod.coverage.agreement",
+        relation="pod_coverage_agreement_crm_lead",
         column1="lead_id",
         column2="agreement_id",
         string="Agreements",
@@ -26,13 +24,13 @@ class CrmLead(models.Model):
     is_payor = fields.Boolean(
         related="partner_id.commercial_partner_id.is_payor", readonly=True
     )
-    medical_quote_ids = fields.One2many("medical.quote", inverse_name="lead_id")
-    medical_quote_count = fields.Integer(compute="_compute_medical_quote_count")
+    pod_quote_ids = fields.One2many("pod.quote", inverse_name="lead_id")
+    pod_quote_count = fields.Integer(compute="_compute_pod_quote_count")
 
-    @api.depends("medical_quote_ids")
-    def _compute_medical_quote_count(self):
+    @api.depends("pod_quote_ids")
+    def _compute_pod_quote_count(self):
         for record in self:
-            record.medical_quote_count = len(record.medical_quote_ids)
+            record.pod_quote_count = len(record.pod_quote_ids)
 
     @api.depends("agreement_ids")
     def _compute_agreement_count(self):
@@ -42,7 +40,7 @@ class CrmLead(models.Model):
     def view_agreements(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "medical_financial_coverage_agreement.medical_coverage_agreement_action"
+            "pod_financial_coverage_agreement.pod_coverage_agreement_action"
         )
         action["context"] = ast.literal_eval(action["context"])
         action["context"]["lead_id"] = self.id
@@ -52,10 +50,10 @@ class CrmLead(models.Model):
             action["views"] = [(False, "form")]
         return action
 
-    def view_medical_quotes(self):
+    def view_pod_quotes(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_medical_quote.action_quotes"
+            "nwp_pod_quote.action_quotes"
         )
         action["context"] = ast.literal_eval(action["context"])
         action["context"].update(
@@ -66,8 +64,8 @@ class CrmLead(models.Model):
             }
         )
         action["domain"] = [("lead_id", "=", self.id)]
-        if len(self.medical_quote_ids) == 1:
-            action["res_id"] = self.medical_quote_ids.id
+        if len(self.pod_quote_ids) == 1:
+            action["res_id"] = self.pod_quote_ids.id
             action["views"] = [(False, "form")]
         return action
 
@@ -94,7 +92,7 @@ class CrmLead(models.Model):
 
     def generate_quote(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "cb_medical_quote.action_quotes"
+            "nwp_pod_quote.action_quotes"
         )
         action.update(
             {

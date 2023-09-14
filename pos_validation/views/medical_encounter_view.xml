@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-    Copyright 2017 Creu Blanca
-    License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
--->
+
 <odoo>
-    <record id="medical_encounter_view_form" model="ir.ui.view">
-        <field name="name">medical.encounter.view.form</field>
-        <field name="model">medical.encounter</field>
+    <record id="pod_encounter_view_form" model="ir.ui.view">
+        <field name="name">pod.encounter.view.form</field>
+        <field name="model">pod.encounter</field>
         <field
             name="inherit_id"
-            ref="cb_medical_careplan_sale.medical_encounter_view_form"
+            ref="nwp_pod_careplan_sale.pod_encounter_view_form"
         />
         <field name="arch" type="xml">
             <xpath
@@ -19,20 +15,20 @@
             >
                 <attribute
                     name="groups"
-                >pos_validation.group_medical_receptionist_manager</attribute>
+                >pos_validation.group_pod_receptionist_manager</attribute>
             </xpath>
             <field name="location_id" position="after">
                 <field name="validation_status" />
             </field>
         </field>
     </record>
-    <record id="medical_encounter_view_validation_form" model="ir.ui.view">
-        <field name="name">medical.encounter.view.form</field>
-        <field name="model">medical.encounter</field>
-        <field name="inherit_id" ref="pos_validation.medical_encounter_view_form" />
+    <record id="pod_encounter_view_validation_form" model="ir.ui.view">
+        <field name="name">pod.encounter.view.form</field>
+        <field name="model">pod.encounter</field>
+        <field name="inherit_id" ref="pos_validation.pod_encounter_view_form" />
         <field
             name="groups_id"
-            eval="[(4, ref('pos_validation.group_medical_receptionist_manager'))]"
+            eval="[(4, ref('pos_validation.group_pod_receptionist_manager'))]"
         />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="after">
@@ -116,7 +112,7 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
-                    name="%(pos_validation.medical_encounter_validation_add_service_act_window)s"
+                    name="%(pos_validation.pod_encounter_validation_add_service_act_window)s"
                     type="action"
                     string="Add Service"
                     icon="fa-plus-circle"
@@ -209,7 +205,7 @@
                                         name="product_uom_qty"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"
                                     />
-                                    <field name="medical_sale_discount_id" />
+                                    <field name="pod_sale_discount_id" />
                                     <field
                                         name="price_unit"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"

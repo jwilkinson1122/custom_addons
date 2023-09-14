@@ -1,13 +1,9 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 {
     "name": "PoS multiple sessions per user",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Reporting",
-    "website": "https://github.com/tegin/cb-addons",
-    "author": "CreuBlanca, Eficent",
+    "website": "https://nwpodiatric.com",
+    "author": "NWPL",
     "license": "AGPL-3",
     "installable": True,
     "application": False,

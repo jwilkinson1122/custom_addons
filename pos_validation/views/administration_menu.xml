@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <menuitem
-        id="medical_sale"
-        name="Medical"
+        id="pod_sale"
+        name="Podiatry"
         parent="sale.sale_menu_root"
         sequence="3"
     />

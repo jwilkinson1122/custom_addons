@@ -2,4 +2,4 @@
 Crm Agreement
 =============
 
-Link of Medical Agreements and CRM
+Link of Podiatry Agreements and CRM

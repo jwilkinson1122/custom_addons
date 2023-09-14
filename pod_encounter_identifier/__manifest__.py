@@ -27,5 +27,5 @@
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,
-    "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.3.1"]},
+    "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.4.2"]},
 }

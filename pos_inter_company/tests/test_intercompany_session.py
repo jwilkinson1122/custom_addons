@@ -1,7 +1,3 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import tagged
@@ -75,7 +71,7 @@ class TestInterCompanyCashInvoice(common.TestInterCompany):
             cls.company_2, "out_invoice", cls.partner, cls.product
         )
 
-        cls.pos_config.open_session_cb()
+        cls.pos_config.open_session_nwp()
         cls.session = cls.pos_config.current_session_id
         cls.session.action_pos_session_open()
         out_invoice = cls.env["pos.box.cash.invoice.out"].with_context(

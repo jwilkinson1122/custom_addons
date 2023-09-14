@@ -1,6 +1,3 @@
-# Copyright 2021 Creu Blanca.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0).
-
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 

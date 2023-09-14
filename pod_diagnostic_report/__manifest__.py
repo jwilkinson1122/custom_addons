@@ -53,5 +53,5 @@
         ],
     },
     "demo": ["demo/pod_diagnostic_report.xml"],
-    "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.3.1"]},
+    "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.4.2"]},
 }

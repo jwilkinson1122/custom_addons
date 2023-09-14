@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2019 Creu Blanca
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_quote_form_view">
-        <field name="name">medical.quote.form (in crm_agreement)</field>
-        <field name="model">medical.quote</field>
-        <field name="inherit_id" ref="cb_medical_quote.medical_quote_form" />
+    <record model="ir.ui.view" id="pod_quote_form_view">
+        <field name="name">pod.quote.form (in crm_agreement)</field>
+        <field name="model">pod.quote</field>
+        <field name="inherit_id" ref="nwp_pod_quote.pod_quote_form" />
         <field name="arch" type="xml">
             <field name="center_id" position="after">
                 <field
@@ -15,10 +13,10 @@
             </field>
         </field>
     </record>
-    <record model="ir.ui.view" id="medical_quote_search_view">
-        <field name="name">medical.quote.search</field>
-        <field name="model">medical.quote</field>
-        <field name="inherit_id" ref="cb_medical_quote.medical_quote_search" />
+    <record model="ir.ui.view" id="pod_quote_search_view">
+        <field name="name">pod.quote.search</field>
+        <field name="model">pod.quote</field>
+        <field name="inherit_id" ref="nwp_pod_quote.pod_quote_search" />
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='activities_my']" position="after">
                 <separator />

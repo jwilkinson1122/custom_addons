@@ -1,11 +1,7 @@
-# Copyright 2017 Creu Blanca
-# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 {
     "name": "Safe Box with PoS",
-    "version": "14.0.1.0.0",
-    "author": "Eficent, CreuBlanca",
+    "version": "15.0.1.0.0",
+    "author": "NWPL",
     "depends": ["safe_box", "pos_close_approval", "pos_session_pay_invoice"],
     "data": [
         "security/ir.model.access.csv",
@@ -16,7 +12,7 @@
         "views/safe_box_group_views.xml",
         "views/safe_box_coin_views.xml",
     ],
-    "website": "https://github.com/tegin/cb-addons",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

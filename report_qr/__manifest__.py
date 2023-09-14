@@ -1,12 +1,10 @@
-# Copyright 2019 Creu Blanca
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
     "name": "Web QR Manager",
     "version": "15.0.1.0.0",
-    "author": "Creu Blanca, " "Odoo Community Association (OCA)",
+    "author": "NWPL",
     "category": "Reporting",
-    "website": "https://github.com/OCA/reporting-engine",
+    "website": "https://nwpodiatric.com",
     "license": "AGPL-3",
     "depends": ["web"],
     "data": [],

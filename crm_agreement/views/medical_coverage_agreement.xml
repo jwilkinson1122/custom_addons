@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2019 Creu Blanca
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="medical_coverage_agreement_view">
-        <field name="name">medical.coverage.agreement.form (in crm_agreement)</field>
-        <field name="model">medical.coverage.agreement</field>
+    <record model="ir.ui.view" id="pod_coverage_agreement_view">
+        <field name="name">pod.coverage.agreement.form (in crm_agreement)</field>
+        <field name="model">pod.coverage.agreement</field>
         <field
             name="inherit_id"
-            ref="medical_financial_coverage_agreement.medical_coverage_agreement_view"
+            ref="pod_financial_coverage_agreement.pod_coverage_agreement_view"
         />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">

@@ -3,33 +3,33 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.cb_medical_pos.tests import common
+from odoo.addons.nwp_pod_pos.tests import common
 
 
-class TestPosValidation(common.MedicalSavePointCase):
+class TestPosValidation(common.PodiatrySavePointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.practitioner_01.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
         cls.practitioner_02.write(
             {
                 "agent": True,
-                "commission_id": cls.env.ref("cb_medical_commission.commission_01").id,
+                "commission_id": cls.env.ref("nwp_pod_commission.commission_01").id,
             }
         )
-        cls.cancel_reason = cls.env["medical.cancel.reason"].create(
+        cls.cancel_reason = cls.env["pod.cancel.reason"].create(
             {"name": "Testing cancel reason"}
         )
 
     def test_multiple_groups(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_patient")
-        method_2 = self.browse_ref("cb_medical_careplan_sale.by_customer")
-        auth_method = self.env["medical.authorization.method"].create(
+        method = self.browse_ref("nwp_pod_careplan_sale.by_patient")
+        method_2 = self.browse_ref("nwp_pod_careplan_sale.by_customer")
+        auth_method = self.env["pod.authorization.method"].create(
             {
                 "name": "Testing authorization_method",
                 "code": "none",
@@ -56,7 +56,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertEqual(method, group.invoice_group_method_id)
             self.assertFalse(
-                self.env["medical.request.group"].search(
+                self.env["pod.request.group"].search(
                     [
                         ("encounter_id", "=", encounter.id),
                         ("careplan_id", "=", careplan.id),
@@ -64,7 +64,7 @@ class TestPosValidation(common.MedicalSavePointCase):
                     ]
                 )
             )
-            wizard = self.env["medical.careplan.add.plan.definition"].create(
+            wizard = self.env["pod.careplan.add.plan.definition"].create(
                 {
                     "careplan_id": careplan.id,
                     "agreement_line_id": self.agreement_line.id,
@@ -75,7 +75,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             wizard.run()
             self.assertFalse(group.third_party_bill)
             self.assertTrue(
-                self.env["medical.request.group"].search(
+                self.env["pod.request.group"].search(
                     [
                         ("encounter_id", "=", encounter.id),
                         ("careplan_id", "=", careplan.id),
@@ -84,7 +84,7 @@ class TestPosValidation(common.MedicalSavePointCase):
                 )
             )
             encounter.refresh()
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -100,7 +100,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertTrue(self.session.request_group_ids)
         self.assertEqual(
             self.session.encounter_ids,
-            self.env["medical.encounter"].search(
+            self.env["pod.encounter"].search(
                 self.session.action_view_non_validated_encounters()["domain"]
             ),
         )
@@ -111,7 +111,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertFalse(self.session.down_payment_ids)
         for encounter in self.session.encounter_ids:
             self.assertEqual(non_validated, self.session.encounter_non_validated_count)
-            encounter_aux = self.env["medical.encounter"].browse(
+            encounter_aux = self.env["pod.encounter"].browse(
                 self.session.open_validation_encounter(encounter.internal_identifier)[
                     "res_id"
                 ]
@@ -120,12 +120,12 @@ class TestPosValidation(common.MedicalSavePointCase):
             if non_validated > 1:
                 self.assertIn(
                     encounter,
-                    self.env["medical.encounter"].search(action["domain"]),
+                    self.env["pod.encounter"].search(action["domain"]),
                 )
             else:
                 self.assertEqual(
                     encounter,
-                    self.env["medical.encounter"].browse(action["res_id"]),
+                    self.env["pod.encounter"].browse(action["res_id"]),
                 )
             encounter_aux.with_context(from_barcode_reader=True).admin_validate()
             encounter_aux.refresh()
@@ -171,7 +171,7 @@ class TestPosValidation(common.MedicalSavePointCase):
                 )
 
     def test_validation(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_preinvoicing")
+        method = self.browse_ref("nwp_pod_careplan_sale.by_preinvoicing")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -184,7 +184,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertTrue(group.procedure_request_ids)
         self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
         self.assertFalse(group.third_party_bill)
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": encounter.id, "pos_session_id": self.session.id}
         ).run()
         self.assertTrue(encounter.sale_order_ids)
@@ -195,7 +195,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.pos_config.write({"session_sequence_prefix": "PS"})
         self.assertTrue(self.pos_config.session_sequence_id)
         self.assertEqual(self.pos_config.session_sequence_id.prefix, "PS/%(range_y)s/")
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_nwp()
         self.assertTrue(self.session.request_group_ids)
         self.assertFalse(encounter.is_preinvoiced)
         line = encounter.sale_order_ids.order_line
@@ -219,7 +219,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             }
         )
         action = (
-            self.env["medical.request.group.check.authorization"]
+            self.env["pod.request.group.check.authorization"]
             .with_context(line.check_authorization_action()["context"])
             .create({"authorization_number": "1234A"})
         )
@@ -229,7 +229,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         with self.assertRaises(ValidationError):
             encounter.admin_validate()
         action = (
-            self.env["medical.request.group.check.authorization"]
+            self.env["pod.request.group.check.authorization"]
             .with_context(line.check_authorization_action()["context"])
             .create({"authorization_number": "1234"})
         )
@@ -243,7 +243,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         encounter.admin_validate()
 
     def test_patient_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_patient")
+        method = self.browse_ref("nwp_pod_careplan_sale.by_patient")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -256,7 +256,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             self.assertTrue(group.procedure_request_ids)
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertFalse(group.third_party_bill)
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -271,7 +271,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertTrue(self.session.request_group_ids)
         self.assertEqual(
             self.session.encounter_ids,
-            self.env["medical.encounter"].search(
+            self.env["pod.encounter"].search(
                 self.session.action_view_non_validated_encounters()["domain"]
             ),
         )
@@ -282,7 +282,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertEqual(action["res_model"], "barcode.action")
         for encounter in self.session.encounter_ids:
             self.assertEqual(non_validated, self.session.encounter_non_validated_count)
-            encounter_aux = self.env["medical.encounter"].browse(
+            encounter_aux = self.env["pod.encounter"].browse(
                 self.session.open_validation_encounter(encounter.internal_identifier)[
                     "res_id"
                 ]
@@ -291,12 +291,12 @@ class TestPosValidation(common.MedicalSavePointCase):
             if non_validated > 1:
                 self.assertIn(
                     encounter,
-                    self.env["medical.encounter"].search(action["domain"]),
+                    self.env["pod.encounter"].search(action["domain"]),
                 )
             else:
                 self.assertEqual(
                     encounter,
-                    self.env["medical.encounter"].browse(action["res_id"]),
+                    self.env["pod.encounter"].browse(action["res_id"]),
                 )
             encounter_aux.admin_validate()
             non_validated -= 1
@@ -308,7 +308,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertEqual(0, self.session.encounter_non_validated_count)
 
     def test_no_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.no_invoice")
+        method = self.browse_ref("nwp_pod_careplan_sale.no_invoice")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -322,7 +322,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             self.assertTrue(group.procedure_request_ids)
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertFalse(group.third_party_bill)
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -337,7 +337,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.session.action_pos_session_close()
         self.assertTrue(self.session.request_group_ids)
         for encounter in self.session.encounter_ids:
-            encounter_aux = self.env["medical.encounter"].browse(
+            encounter_aux = self.env["pod.encounter"].browse(
                 self.session.open_validation_encounter(encounter.internal_identifier)[
                     "res_id"
                 ]
@@ -381,7 +381,7 @@ class TestPosValidation(common.MedicalSavePointCase):
                 self.assertEqual(len(procedure.invoice_agent_ids), 0)
 
     def test_monthly_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.by_customer")
+        method = self.browse_ref("nwp_pod_careplan_sale.by_customer")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_breakdown = True
         self.plan_definition.is_billable = True
@@ -403,7 +403,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             self.assertTrue(group.procedure_request_ids)
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertFalse(group.third_party_bill)
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -418,7 +418,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.session.action_pos_session_close()
         self.assertTrue(self.session.request_group_ids)
         for encounter in self.session.encounter_ids:
-            encounter_aux = self.env["medical.encounter"].browse(
+            encounter_aux = self.env["pod.encounter"].browse(
                 self.session.open_validation_encounter(encounter.internal_identifier)[
                     "res_id"
                 ]
@@ -483,7 +483,7 @@ class TestPosValidation(common.MedicalSavePointCase):
                 self.assertEqual(len(procedure.invoice_agent_ids), 3)
 
     def test_preinvoice_no_invoice(self):
-        method = self.browse_ref("cb_medical_careplan_sale.no_invoice_preinvoice")
+        method = self.browse_ref("nwp_pod_careplan_sale.no_invoice_preinvoice")
         self.plan_definition2.third_party_bill = False
         self.plan_definition.is_billable = True
         self.agreement.invoice_group_method_id = method
@@ -496,7 +496,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             self.assertTrue(group.procedure_request_ids)
             self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)
             self.assertFalse(group.third_party_bill)
-            self.env["wizard.medical.encounter.close"].create(
+            self.env["wizard.pod.encounter.close"].create(
                 {
                     "encounter_id": encounter.id,
                     "pos_session_id": self.session.id,
@@ -524,7 +524,7 @@ class TestPosValidation(common.MedicalSavePointCase):
             preinvoice_obj.search([("agreement_id", "=", self.agreement.id)])
         )
         for encounter in self.session.encounter_ids:
-            encounter_aux = self.env["medical.encounter"].browse(
+            encounter_aux = self.env["pod.encounter"].browse(
                 self.session.open_validation_encounter(encounter.internal_identifier)[
                     "res_id"
                 ]
@@ -592,12 +592,12 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.assertFalse(invoices)
 
     def close_encounter(self, encounter):
-        self.env["wizard.medical.encounter.close"].create(
+        self.env["wizard.pod.encounter.close"].create(
             {"encounter_id": encounter.id, "pos_session_id": self.session.id}
         ).run()
         if encounter.state == "finished":
             return
-        self.env["wizard.medical.encounter.finish"].create(
+        self.env["wizard.pod.encounter.finish"].create(
             {
                 "encounter_id": encounter.id,
                 "pos_session_id": self.session.id,
@@ -616,7 +616,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.session.action_pos_session_approve()
         self.assertEqual(self.session.validation_status, "in_progress")
         with self.assertRaises(UserError):
-            encounter.sale_order_ids.mapped("order_line").medical_cancel(
+            encounter.sale_order_ids.mapped("order_line").pod_cancel(
                 self.cancel_reason
             )
 
@@ -629,7 +629,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.close_encounter(encounter)
         self.session.action_pos_session_closing_control()
         self.session.action_pos_session_approve()
-        encounter.sale_order_ids.mapped("order_line").medical_cancel(self.cancel_reason)
+        encounter.sale_order_ids.mapped("order_line").pod_cancel(self.cancel_reason)
         self.assertFalse(encounter.sale_order_ids.mapped("order_line"))
 
     def test_validation_no_invoices(self):
@@ -646,7 +646,7 @@ class TestPosValidation(common.MedicalSavePointCase):
         self.agreement.write(
             {"coverage_template_ids": [(4, self.coverage_template_2.id)]}
         )
-        self.env["medical.encounter.validation.add.service"].create(
+        self.env["pod.encounter.validation.add.service"].create(
             {
                 "encounter_id": encounter.id,
                 "action_type": "new",

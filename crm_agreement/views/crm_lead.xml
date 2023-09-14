@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2019 Creu Blanca
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record model="ir.ui.view" id="crm_lead_view_form">
         <field name="name">crm.lead.form (in crm_agreement)</field>
@@ -15,7 +13,7 @@
             <field name="partner_id" position="after">
                 <field name="is_payor" invisible="1" />
                 <field name="agreement_ids" invisible="1" />
-                <field name="medical_quote_ids" invisible="1" />
+                <field name="pod_quote_ids" invisible="1" />
             </field>
             <xpath expr="//button[@name='action_set_lost']" position="after">
                 <button
@@ -42,11 +40,11 @@
                     type="object"
                     icon="fa-hand-holding-usd"
                     attrs="{'invisible': [('is_payor', '=', False)]}"
-                    name="view_medical_quotes"
+                    name="view_pod_quotes"
                 >
                     <field
                         string="Quotes"
-                        name="medical_quote_count"
+                        name="pod_quote_count"
                         widget="statinfo"
                     />
                 </button>

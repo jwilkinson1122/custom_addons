@@ -75,5 +75,5 @@
             </filter>
         </field>
     </record>
-    <menuitem id="pos_session_validation" name="Sessions to validate" parent="medical_sale" action="session_to_validate_action" sequence="1" />
+    <menuitem id="pos_session_validation" name="Sessions to validate" parent="pod_sale" action="session_to_validate_action" sequence="1" />
 </odoo>
