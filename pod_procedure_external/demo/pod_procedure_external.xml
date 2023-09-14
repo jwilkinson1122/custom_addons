@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2022 Creu Blanca
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo noupdate="1">
     <record model="pod.encounter" id="pod_encounter_demo_1">
         <field name="name">Encounter 1</field>

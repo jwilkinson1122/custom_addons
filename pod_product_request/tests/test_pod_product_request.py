@@ -1,4 +1,4 @@
-# Copyright 2022 Creu Blanca
+
 
 from datetime import datetime
 

@@ -1,14 +1,12 @@
-# Copyright 2017 CreuBlanca
-# Copyright 2017 ForgeFlow
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 
 {
     "name": "Podiatry SCT Codification",
     "summary": "Podiatry codification base",
     "version": "15.0.1.0.0",
-    "author": "CreuBlanca, ForgeFlow, Odoo Community Association (OCA)",
+    "author": "NWPL",
     "category": "Podiatry",
-    "website": "https://github.com/tegin/pod-fhir",
+    "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
     "depends": ["pod_terminology"],
     "data": [

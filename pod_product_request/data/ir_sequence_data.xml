@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    Copyright 2021 Creu Blanca
-    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
--->
 <odoo>
     <record id="seq_pod_product_request_order" model="ir.sequence">
         <field name="name">Podiatry Product Request Order</field>

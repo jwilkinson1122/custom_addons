@@ -1,4 +1,4 @@
-# Copyright 2022 Creu Blanca
+
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase

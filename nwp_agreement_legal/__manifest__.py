@@ -1,11 +1,8 @@
-# Copyright 2017 Creu Blanca
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 {
     "name": "Agreements Legal Demo",
     "summary": "Create contract from agreement",
-    "author": "CreuBlanca, Odoo Community Association (OCA)",
-    "website": "https://github.com/tegin/nwp-addons",
+    "author": "NWPL",
+    "website": "https://nwpodiatric.com",
     "category": "Agreement",
     "depends": ["agreement_legal", "archive_management"],
     "license": "AGPL-3",

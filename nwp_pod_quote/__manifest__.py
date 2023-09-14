@@ -1,7 +1,3 @@
-# Copyright 2018 Creu Blanca
-# Copyright 2018 Eficent Business and IT Consulting Services, S.L.
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
-
 {
     "name": "NWP Podiatry Quote",
     "version": "15.0.1.0.0",

@@ -8,7 +8,7 @@
     "version": "15.0.1.0.0",
     "author": "CreuBlanca, Eficent, Odoo Community Association (OCA)",
     "category": "Podiatry",
-    "website": "https://github.com/tegin/pod-fhir",
+    "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
     "depends": ["mail", "base_fontawesome", "uom"],
     "data": [

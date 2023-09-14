@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright 2021 Creu Blanca
-    # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
--->
 <odoo noupdate="1">
     <record model="ir.rule" id="storage_file_diagnostic_report_image_rule">
         <field name="name">Storage File for diagnostic_report_image</field>

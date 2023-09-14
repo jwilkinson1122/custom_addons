@@ -1,6 +1,3 @@
-# Copyright (C) 2017 Creu Blanca
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-
 from odoo import api, fields, models
 from odoo.fields import first
 from odoo.tools import float_is_zero

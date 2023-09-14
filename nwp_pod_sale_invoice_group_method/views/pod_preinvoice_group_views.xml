@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright 2017 Eficent Business and IT Consulting Services, S.L.
-    Copyright 2017 Creu Blanca
-    License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
--->
+
 <odoo>
     <record id="view_sale_preinvoice_group_tree" model="ir.ui.view">
         <field name="name">view.pod.preinvoice.group.tree</field>
