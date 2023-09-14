@@ -1,7 +1,3 @@
-# Copyright 2014-2020 Tecnativa - Pedro M. Baeza
-# Copyright 2020 Tecnativa - Manuel Calero
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
 from itertools import groupby
 
 from odoo import _, api, fields, models

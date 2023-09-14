@@ -1,6 +1,3 @@
-# Copyright 2014-2018 Tecnativa - Pedro M. Baeza
-# Copyright 2020 Tecnativa - Manuel Calero
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from psycopg2.extensions import AsIs
 
 from odoo import api, fields, models, tools

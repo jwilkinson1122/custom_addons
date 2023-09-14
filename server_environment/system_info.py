@@ -1,7 +1,3 @@
-# Based on Florent Xicluna original code. Copyright Wingo SA
-# Adapted by Nicolas Bessi. Copyright Camptocamp SA
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
-
 import locale
 import os
 import platform

@@ -1,8 +1,3 @@
-# © 2016 Nicola Malcontenti - Agile Business Group
-# © 2016 Davide Corio - Abstract
-# Copyright 2018 Tecnativa - Pedro M. Baeza
-# License AGPL-3 - See https://www.gnu.org/licenses/agpl-3.0.html
-
 from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
 

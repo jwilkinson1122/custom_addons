@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Copyright 2020 Tecnativa - Pedro M. Baeza
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <data noupdate="1">
     <record id="rule_invoice_line_agent_multi_company" model="ir.rule">
         <field name="name">Invoice commission line multi-company</field>

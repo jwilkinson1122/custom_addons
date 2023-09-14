@@ -1,8 +1,3 @@
-# Copyright 2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# Copyright 2018 David Vidal <david.vidal@tecnativa.com>
-# Copyright 2020 Tecnativa - Sergio Teruel
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import models
 
 

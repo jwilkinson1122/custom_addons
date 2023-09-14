@@ -1,8 +1,3 @@
-// Copyright 2017 - 2018 Modoolar <info@modoolar.com>
-// Copyright 2018 Brainbean Apps <hello@brainbeanapps.com>
-// Copyright 2020 Manuel Calero - Tecnativa
-// License LGPLv3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.en.html).
-
 odoo.define("pos_validation.ir_actions_act_load_new", function (require) {
     "use strict";
 

@@ -1,7 +1,3 @@
-# Copyright 2017 Camptocamp SA
-# Copyright 2017 Odoo
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
-
 """
 
 Core

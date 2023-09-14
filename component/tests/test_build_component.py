@@ -1,6 +1,3 @@
-# Copyright 2017 Camptocamp SA
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
-
 # Tell pylint to not bother us for all our fake component classes
 # pylint: disable=consider-merging-classes-inherited
 

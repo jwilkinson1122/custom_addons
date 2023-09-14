@@ -1,6 +1,3 @@
-# Copyright 2016-2019 Tecnativa - Pedro M. Baeza
-# License AGPL-3 - See https://www.gnu.org/licenses/agpl-3.0.html
-
 import dateutil.relativedelta
 
 from odoo import fields

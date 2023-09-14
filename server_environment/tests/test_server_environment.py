@@ -1,6 +1,3 @@
-# Copyright 2018 Camptocamp (https://www.camptocamp.com).
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
-
 from unittest.mock import patch
 
 from odoo.tools.config import config as odoo_config

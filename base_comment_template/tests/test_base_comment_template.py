@@ -1,6 +1,3 @@
-# Copyright 2020 NextERP Romania SRL
-# Copyright 2021 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 from odoo.tools.misc import mute_logger

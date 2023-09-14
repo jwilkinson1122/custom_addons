@@ -1,8 +1,3 @@
-# Copyright 2014 Guewen Baconnier (Camptocamp SA)
-# Copyright 2013-2014 Nicolas Bessi (Camptocamp SA)
-# Copyright 2020 NextERP Romania SRL
-# Copyright 2021-2022 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 

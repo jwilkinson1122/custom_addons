@@ -1,7 +1,3 @@
-# Copyright 2016-2019 Tecnativa - Pedro M. Baeza
-# Copyright 2020 Tecnativa - Manuel Calero
-# License AGPL-3 - See https://www.gnu.org/licenses/agpl-3.0.html
-
 import dateutil.relativedelta
 from dateutil.relativedelta import relativedelta
 

@@ -1,7 +1,3 @@
-# Copyright 2017 ACSONE SA/NV
-# Copyright 2018 JARSA Sistemas S.A. de C.V.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
