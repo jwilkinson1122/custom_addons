@@ -4,7 +4,7 @@
 
 {
     "name": "CB Medical link to PoS",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "Eficent, CreuBlanca",
     "depends": [
         "pos_session_pay_invoice",

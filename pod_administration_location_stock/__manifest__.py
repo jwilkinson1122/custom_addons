@@ -5,7 +5,7 @@
 {
     "name": "Medical Location with stock",
     "summary": "Medical administration location with stock",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Medical",
     "author": "CreuBlanca, ForgeFlow, Odoo Community Association (OCA)",
     "website": "https://github.com/tegin/medical-fhir",

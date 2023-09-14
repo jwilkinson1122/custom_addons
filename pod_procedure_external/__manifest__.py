@@ -5,7 +5,7 @@
     "name": "Medical Procedure External",
     "summary": """
         Allows to create external requests for patients""",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
     "website": "https://github.com/tegin/medical-fhir",
@@ -32,5 +32,10 @@
         "reports/medical_procedure_external_request_preview.xml",
         # "templates/assets.xml",
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'medical_procedure_external/static/src/scss/medical_procedure_external_layout.scss',
+        ],
+    },
     "demo": ["demo/medical_procedure_external.xml"],
 }

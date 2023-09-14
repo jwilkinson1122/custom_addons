@@ -5,7 +5,7 @@
 {
     "name": "Medical Base",
     "summary": "Medical Base",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "CreuBlanca, Eficent, Odoo Community Association (OCA)",
     "category": "Medical",
     "website": "https://github.com/tegin/medical-fhir",
@@ -21,6 +21,11 @@
         "views/res_config_settings_views.xml",
         # "templates/assets.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'medical_base/static/src/js/one2many_field.js',
+        ],
+    },
     "demo": ["demo/medical_demo.xml"],
     "application": True,
 }

@@ -5,7 +5,7 @@
     "name": "Medical Diagnostic Report",
     "summary": """
         Allows to create reports for patients""",
-    "version": "14.0.2.0.0",
+    "version": "15.0.2.0.0",
     "license": "AGPL-3",
     "author": "CreuBlanca,Odoo Community Association (OCA)",
     "website": "https://github.com/tegin/medical-fhir",
@@ -43,6 +43,16 @@
         "reports/medical_diagnostic_report_template_preview.xml",
         "reports/medical_diagnostic_report_report_preview.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'medical_diagnostic_report/static/src/js/list_renderer.js',
+            'medical_diagnostic_report/static/src/js/field_dynamic_options_dropdown.js',
+            'medical_diagnostic_report/static/src/js/fields.js',
+        ],
+        'web.report_assets_common': [
+            'medical_diagnostic_report/static/src/scss/medical_report_layout.scss',
+        ],
+    },
     "demo": ["demo/medical_diagnostic_report.xml"],
     "external_dependencies": {"python": ["numpy", "pandas", "bokeh==2.3.1"]},
 }

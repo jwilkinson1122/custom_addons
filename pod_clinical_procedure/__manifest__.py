@@ -5,7 +5,7 @@
 {
     "name": "Medical Clinical Procedure",
     "summary": "Medical Procedures and Procedure requests",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "CreuBlanca, ForgeFlow, Odoo Community Association (OCA)",
     "category": "Medical",
     "website": "https://github.com/tegin/medical-fhir",

@@ -3,7 +3,7 @@
 
 {
     "name": "CB Medical Requester",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "CB",
     "website": "https://github.com/tegin/cb-medical",
     "author": "CreuBlanca",

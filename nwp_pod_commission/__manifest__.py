@@ -5,7 +5,7 @@
 {
     "name": "Medical Commission",
     "summary": "Add Commissions",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "Eficent, CreuBlanca",
     "category": "Medical",
     "depends": [
