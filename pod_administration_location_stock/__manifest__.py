@@ -1,15 +1,16 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 {
-    "name": "Podiatry Administration Location Stock",
-    "summary": "Podiatry administration location with stock",
-    "version": "15.0.1.0.0",
-    "category": "Podiatry",
-    "author": "NWPL",
-    "website": "https://nwpodiatric.com",
+    "name": "Medical Location with stock",
+    "summary": "Medical administration location with stock",
+    "version": "14.0.1.0.0",
+    "category": "Medical",
+    "author": "CreuBlanca, ForgeFlow, Odoo Community Association (OCA)",
+    "website": "https://github.com/tegin/medical-fhir",
     "license": "LGPL-3",
-    "depends": [
-        "pod_administration_location", 
-        "stock"
-        ],
+    "depends": ["medical_administration_location", "stock"],
     "data": ["views/res_partner_views.xml"],
     "demo": [],
     "application": False,

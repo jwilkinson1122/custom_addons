@@ -1,3 +1,7 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.exceptions import UserError, Warning as Warn
 from odoo.tests import TransactionCase
 
@@ -5,26 +9,26 @@ from odoo.tests import TransactionCase
 class TestProcedureRequest(TransactionCase):
     def setUp(self):
         res = super(TestProcedureRequest, self).setUp()
-        self.patient = self.browse_ref("pod_base.patient_01")
-        self.plan = self.browse_ref("pod_workflow.mr_knee")
+        self.patient = self.browse_ref("medical_base.patient_01")
+        self.plan = self.browse_ref("medical_workflow.mr_knee")
         return res
 
     def test_procedure(self):
-        procedure_requests = self.env["pod.procedure.request"].search(
+        procedure_requests = self.env["medical.procedure.request"].search(
             [("patient_id", "=", self.patient.id)]
         )
         self.assertEqual(len(procedure_requests), 0)
-        self.env["pod.add.plan.definition"].create(
+        self.env["medical.add.plan.definition"].create(
             {"patient_id": self.patient.id, "plan_definition_id": self.plan.id}
         ).run()
-        procedure_requests = self.env["pod.procedure.request"].search(
+        procedure_requests = self.env["medical.procedure.request"].search(
             [("patient_id", "=", self.patient.id)]
         )
         self.assertGreater(len(procedure_requests), 0)
         self.env["procedure.request.make.procedure"].with_context(
             active_ids=procedure_requests.ids
         ).create({}).make_procedure()
-        procedures = self.env["pod.procedure"].search(
+        procedures = self.env["medical.procedure"].search(
             [("procedure_request_id", "in", procedure_requests.ids)]
         )
         self.assertEqual(len(procedure_requests), len(procedures))
@@ -42,7 +46,7 @@ class TestProcedureRequest(TransactionCase):
             )
 
     def test_procedure_request_workflow(self):
-        request = self.env["pod.procedure.request"].create(
+        request = self.env["medical.procedure.request"].create(
             {"patient_id": self.patient.id}
         )
         self.assertNotEqual(request.internal_identifier, "/")

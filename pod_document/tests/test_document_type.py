@@ -1,15 +1,19 @@
+# Copyright 2017 Creu Blanca
+# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestPodiatryDocumentType(TransactionCase):
+class TestMedicalDocumentType(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.document_type = self.env["pod.document.type"].create(
+        self.document_type = self.env["medical.document.type"].create(
             {
                 "name": "CI",
                 "report_action_id": self.browse_ref(
-                    "pod_document.action_report_document_report_base"
+                    "medical_document.action_report_document_report_base"
                 ).id,
             }
         )
@@ -17,7 +21,7 @@ class TestPodiatryDocumentType(TransactionCase):
     def add_language(self):
         self.assertFalse(self.document_type.lang_ids)
         lang = self.env["res.lang"].search([("active", "=", True)], limit=1)
-        add_language = self.env["pod.document.type.add.language"].create(
+        add_language = self.env["medical.document.type.add.language"].create(
             {"document_type_id": self.document_type.id, "lang_id": lang.id}
         )
         self.assertTrue(add_language.lang_ids.filtered(lambda r: r.code == lang.code))
@@ -30,7 +34,7 @@ class TestPodiatryDocumentType(TransactionCase):
                 "<p>Signed:${object.patient_id.name}<br></p>"
             }
         )
-        add_language = self.env["pod.document.type.add.language"].new(
+        add_language = self.env["medical.document.type.add.language"].new(
             {"document_type_id": self.document_type.id}
         )
         self.assertFalse(add_language.lang_id.filtered(lambda r: r.code == lang.code))
@@ -72,7 +76,7 @@ class TestPodiatryDocumentType(TransactionCase):
             {
                 "name": "Activity3",
                 "model_id": self.browse_ref(
-                    "pod_document.model_pod_document_reference"
+                    "medical_document.model_medical_document_reference"
                 ).id,
                 "document_type_id": self.document_type.id,
                 "state": "active",
@@ -82,7 +86,7 @@ class TestPodiatryDocumentType(TransactionCase):
         activity_def.update(
             {
                 "model_id": self.browse_ref(
-                    "pod_document.model_pod_document_type"
+                    "medical_document.model_medical_document_type"
                 ).id
             }
         )
@@ -93,7 +97,7 @@ class TestPodiatryDocumentType(TransactionCase):
         activity_def.update(
             {
                 "model_id": self.browse_ref(
-                    "pod_document.model_pod_document_reference"
+                    "medical_document.model_medical_document_reference"
                 ).id
             }
         )

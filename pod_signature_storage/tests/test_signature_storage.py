@@ -1,3 +1,6 @@
+# Copyright 2020 Creu Blanca
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import tools
 from odoo.tests.common import TransactionCase
 
@@ -18,7 +21,7 @@ class TestSignStorage(TransactionCase):
         file = tools.file_open(
             "icon.png",
             mode="rb",
-            subdir="addons/pod_signature_storage/static/description",
+            subdir="addons/medical_signature_storage/static/description",
         ).read()
         self.env[action["res_model"]].with_context(action["context"]).create(
             {"option": "signature", "signature": file}

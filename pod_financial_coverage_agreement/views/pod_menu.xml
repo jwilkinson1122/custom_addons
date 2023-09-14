@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <menuitem id="menu_pod_coverage_agreement_template_root" name="Agreement Template" sequence="30" parent="pod_base.pod_root_financial" action="pod_coverage_agreement_template_action" />
-    <menuitem id="menu_pod_coverage_agreement_root" name="Agreement" sequence="31" parent="pod_base.pod_root_financial" action="pod_coverage_agreement_action" />
-</odoo>

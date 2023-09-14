@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<odoo>
-    <menuitem id="menu_pod_quote" name="Quotes" action="action_quotes" parent="pod_base.pod_root_administration" sequence="10" groups="pod_base.group_pod_user" />
-    <menuitem name="Document Comments" id="menu_base_comment_template_pod_quote" action="base_comment_template.action_base_comment_template" groups="pod_base.group_pod_user" parent="pod_base.pod_root_configuration" />
-    <menuitem action="pod_quote_report_configuration_action" id="pod_quote_report_configuration" groups="pod_base.group_pod_user" parent="pod_base.pod_root_configuration" name="Podiatry Quote Report Layout Categories" />
-</odoo>

@@ -1,15 +1,19 @@
+# Copyright 2017 Creu Blanca
+# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.tests.common import TransactionCase
 
 
 class TestWizard(TransactionCase):
     def setUp(self):
         super(TestWizard, self).setUp()
-        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.patient = self.env["medical.patient"].create({"name": "Patient"})
         self.payor = self.env["res.partner"].create({"name": "Payor", "is_payor": True})
-        self.template = self.env["pod.coverage.template"].create(
+        self.template = self.env["medical.coverage.template"].create(
             {"name": "Template", "payor_id": self.payor.id}
         )
-        self.template2 = self.env["pod.coverage.template"].create(
+        self.template2 = self.env["medical.coverage.template"].create(
             {"name": "Template2", "payor_id": self.payor.id}
         )
         self.center = self.env["res.partner"].create(
@@ -19,22 +23,22 @@ class TestWizard(TransactionCase):
                 "is_center": True,
             }
         )
-        self.coverage = self.env["pod.coverage"].create(
+        self.coverage = self.env["medical.coverage"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_template_id": self.template.id,
             }
         )
-        self.coverage2 = self.env["pod.coverage"].create(
+        self.coverage2 = self.env["medical.coverage"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_template_id": self.template2.id,
             }
         )
-        self.encounter = self.env["pod.encounter"].create(
+        self.encounter = self.env["medical.encounter"].create(
             {"patient_id": self.patient.id, "center_id": self.center.id}
         )
-        self.careplan = self.env["pod.careplan"].create(
+        self.careplan = self.env["medical.careplan"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_id": self.coverage.id,
@@ -42,14 +46,14 @@ class TestWizard(TransactionCase):
                 "center_id": self.encounter.center_id.id,
             }
         )
-        self.format = self.env["pod.authorization.format"].create(
+        self.format = self.env["medical.authorization.format"].create(
             {
                 "code": "Format",
                 "name": "Format test",
                 "authorization_format": "^[0-9]{2}$",
             }
         )
-        self.agreement = self.env["pod.coverage.agreement"].create(
+        self.agreement = self.env["medical.coverage.agreement"].create(
             {
                 "name": "Agreement",
                 "center_ids": [(6, 0, self.center.ids)],
@@ -59,7 +63,7 @@ class TestWizard(TransactionCase):
                 ],
                 "company_id": self.browse_ref("base.main_company").id,
                 "authorization_method_id": self.browse_ref(
-                    "pod_financial_coverage_request.only_number"
+                    "medical_financial_coverage_request.only_number"
                 ).id,
                 "authorization_format_id": self.format.id,
             }
@@ -78,7 +82,7 @@ class TestWizard(TransactionCase):
                 "service_id": self.product.id,
                 "quantity": 1,
                 "model_id": self.browse_ref(
-                    "pod_clinical_careplan.model_pod_careplan"
+                    "medical_clinical_careplan.model_medical_careplan"
                 ).id,
             }
         )
@@ -90,7 +94,7 @@ class TestWizard(TransactionCase):
             }
         )
         self.agreement_line = (
-            self.env["pod.coverage.agreement.item"]
+            self.env["medical.coverage.agreement.item"]
             .with_context(default_coverage_agreement_id=self.agreement.id)
             .create(
                 {
@@ -104,7 +108,7 @@ class TestWizard(TransactionCase):
         )
 
     def test_wizard(self):
-        wizard = self.env["pod.careplan.add.plan.definition"].create(
+        wizard = self.env["medical.careplan.add.plan.definition"].create(
             {
                 "careplan_id": self.careplan.id,
                 "agreement_line_id": self.agreement_line.id,
@@ -115,12 +119,12 @@ class TestWizard(TransactionCase):
         self.assertEqual(wizard.patient_id, self.patient)
         self.assertTrue(wizard.plan_definition_id)
         wizard.run()
-        careplans = self.env["pod.careplan"].search(
+        careplans = self.env["medical.careplan"].search(
             [("careplan_id", "=", self.careplan.id)]
         )
         self.assertGreater(len(careplans.ids), 0)
         self.assertEqual(self.patient.last_coverage_id, self.coverage)
-        careplan = self.env["pod.careplan"].create(
+        careplan = self.env["medical.careplan"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_id": self.coverage2.id,
@@ -129,7 +133,7 @@ class TestWizard(TransactionCase):
             }
         )
 
-        self.env["pod.careplan.add.plan.definition"].create(
+        self.env["medical.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
                 "agreement_line_id": self.agreement_line.id,
@@ -146,7 +150,7 @@ class TestWizard(TransactionCase):
                 "authorization_extra_1_format": "^1.*$",
             }
         )
-        wizard = self.env["pod.careplan.add.plan.definition"].create(
+        wizard = self.env["medical.careplan.add.plan.definition"].create(
             {
                 "careplan_id": self.careplan.id,
                 "agreement_line_id": self.agreement_line.id,
@@ -158,7 +162,7 @@ class TestWizard(TransactionCase):
         self.assertEqual(wizard.patient_id, self.patient)
         self.assertTrue(wizard.plan_definition_id)
         wizard.run()
-        careplans = self.env["pod.careplan"].search(
+        careplans = self.env["medical.careplan"].search(
             [("careplan_id", "=", self.careplan.id)]
         )
         self.assertGreater(len(careplans.ids), 0)

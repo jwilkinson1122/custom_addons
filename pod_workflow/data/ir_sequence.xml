@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017 ForgeFlow
+    Copyright 2017 CreuBlanca
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
 <odoo>
     <record id="seq_workflow_plan_definition" model="ir.sequence">
         <field name="name">Workflow Plan definition</field>

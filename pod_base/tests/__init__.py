@@ -1,1 +1,1 @@
-from . import test_pod_patient
+from . import test_medical_patient

@@ -22,7 +22,10 @@
                 <t t-foreach="range(0, level)" t-as="i">
                     &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
                 </t>
-                <strong t-esc="'%s - %s' % (item['category'].display_name, item['category'].description)" t-if="item['category'].description" />
+                <strong
+                    t-esc="'%s - %s' % (item['category'].display_name, item['category'].description)"
+                    t-if="item['category'].description"
+                />
                 <strong t-esc="item['category'].display_name" t-else="" />
             </td>
         </tr>
@@ -32,8 +35,14 @@
                     <t t-foreach="range(0, level + 1)" t-as="i">
                         &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
                     </t>
-                    <span t-esc="child['product'].default_code" t-if="not child['nomenclature']" />
-                    <span t-esc="'%s [%s]' % (child['nomenclature'].code, child['product'].default_code)" t-if="child['nomenclature']" />
+                    <span
+                        t-esc="child['product'].default_code"
+                        t-if="not child['nomenclature']"
+                    />
+                    <span
+                        t-esc="'%s [%s]' % (child['nomenclature'].code, child['product'].default_code)"
+                        t-if="child['nomenclature']"
+                    />
                 </td>
                 <td>
                     <div>
@@ -44,14 +53,24 @@
                     </div>
                 </td>
                 <td style="text-align:right">
-                    <span t-esc="child['item'].coverage_price" t-if="print_coverage" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}" />
-                    <span t-esc="child['item'].private_price" t-if="not print_coverage" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}" />
+                    <span
+                        t-esc="child['item'].coverage_price"
+                        t-if="print_coverage"
+                        t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"
+                    />
+                    <span
+                        t-esc="child['item'].private_price"
+                        t-if="not print_coverage"
+                        t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"
+                    />
                 </td>
             </tr>
         </t>
         <t t-set="level" t-value="level + 1" />
         <t t-foreach="item['childs']" t-as="item_variable">
-            <t t-call="pod_financial_coverage_agreement.report_agreement_template_category" />
+            <t
+                t-call="medical_financial_coverage_agreement.report_agreement_template_category"
+            />
         </t>
         <t t-set="level" t-value="level - 1" />
     </template>
@@ -63,7 +82,10 @@
                     <t t-set="print_coverage" t-value="True" />
                     <t t-set="centers" t-value="o.center_ids" />
                     <t t-set="items" t-value="o.item_ids" />
-                    <t t-set="data" t-value="o._agreement_report_data(print_coverage)" />
+                    <t
+                        t-set="data"
+                        t-value="o._agreement_report_data(print_coverage)"
+                    />
                     <div class="page">
                         <h3 class="text-center">
                             <span t-field="o.name" />
@@ -73,17 +95,16 @@
                                 <t t-esc="o.internal_identifier" />
                             </h2>
                             <br />
-                            <p>
-                                <b>Period: </b>
-                                <span t-field="o.date_from" />
-                                -                                <span t-field="o.date_to" />
-                            </p>
+                            <p><b>Period: </b><span t-field="o.date_from" />
+                                - <span t-field="o.date_to" /></p>
                         </div>
                         <table class="table table-condensed mt32">
                             <tbody>
                                 <t t-foreach="data" t-as="item_variable">
                                     <t t-set="level" t-value="0" />
-                                    <t t-call="pod_financial_coverage_agreement.report_agreement_template_category" />
+                                    <t
+                                        t-call="medical_financial_coverage_agreement.report_agreement_template_category"
+                                    />
                                 </t>
                             </tbody>
                         </table>
@@ -92,7 +113,11 @@
             </t>
         </t>
     </template>
-    <template id="report_agreement_template_private" inherit_id="report_agreement_template" primary="True">
+    <template
+        id="report_agreement_template_private"
+        inherit_id="report_agreement_template"
+        primary="True"
+    >
         <xpath expr="//t[@t-set='print_coverage']" position="attributes">
             <attribute name="t-value">False</attribute>
         </xpath>
@@ -100,15 +125,19 @@
 
     <record id="action_agreement_report_private" model="ir.actions.report">
         <field name="name">Agreement Report Private</field>
-        <field name="model">pod.coverage.agreement</field>
+        <field name="model">medical.coverage.agreement</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">pod_financial_coverage_agreement.report_agreement_template</field>
+        <field
+            name="report_name"
+        >medical_financial_coverage_agreement.report_agreement_template</field>
     </record>
 
     <record id="action_agreement_report" model="ir.actions.report">
         <field name="name">Agreement Report Coverage</field>
-        <field name="model">pod.coverage.agreement</field>
+        <field name="model">medical.coverage.agreement</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">pod_financial_coverage_agreement.report_agreement_template</field>
+        <field
+            name="report_name"
+        >medical_financial_coverage_agreement.report_agreement_template</field>
     </record>
 </odoo>

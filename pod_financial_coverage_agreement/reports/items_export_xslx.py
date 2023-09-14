@@ -1,14 +1,14 @@
 from odoo import models
 
 
-class PodiatryCoverageAgreementItem(models.AbstractModel):
+class MedicalCoverageAgreementItem(models.AbstractModel):
 
-    _name = "report.pod_financial_coverage_agreement.items_xslx"
-    _description = "Report Podiatry Financial Coverage Agreement Items"
+    _name = "report.medical_financial_coverage_agreement.items_xslx"
+    _description = "Report CB Medical Financial Coverage Agreement Items"
     _inherit = "report.report_xlsx.abstract"
 
     def generate_xlsx_report(self, workbook, data, items):
-        sheet = workbook.add_worksheet("Podiatry Coverage Items")
+        sheet = workbook.add_worksheet("Medical Coverage Items")
         bold = workbook.add_format({"bold": True})
         sheet.set_column(0, 2, 30)
         sheet.set_column(3, 6, 15)

@@ -5,16 +5,16 @@ from odoo.tests.common import TransactionCase
 class TestSequence(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.patient = self.env["pod.patient"].create({"name": "Patient"})
+        self.patient = self.env["medical.patient"].create({"name": "Patient"})
         self.center = self.env["res.partner"].create(
             {
                 "name": "Center",
-                "is_pod": True,
+                "is_medical": True,
                 "is_center": True,
                 "encounter_sequence_prefix": "S",
             }
         )
-        self.encounter = self.env["pod.encounter"].create(
+        self.encounter = self.env["medical.encounter"].create(
             {"patient_id": self.patient.id, "center_id": self.center.id}
         )
         self.product = self.env["product.product"].create(
@@ -51,14 +51,14 @@ class TestSequence(TransactionCase):
         return request_1, request_2, request_3
 
     def test_careplan(self):
-        self.check_model("pod.careplan", {})
+        self.check_model("medical.careplan", {})
 
     def test_procedure(self):
-        self.check_model("pod.procedure", {})
+        self.check_model("medical.procedure", {})
 
     def test_procedure_request(self):
         request_1, request_2, request_3 = self.check_model(
-            "pod.procedure.request", {}
+            "medical.procedure.request", {}
         )
         event_1 = request_1.generate_event()
         self.assertFalse(event_1.encounter_id)
@@ -80,14 +80,14 @@ class TestSequence(TransactionCase):
         )
 
     def test_request_group(self):
-        self.check_model("pod.request.group", {})
+        self.check_model("medical.request.group", {})
 
     def test_laboratory_event(self):
-        request = self.env["pod.laboratory.request"].create(
+        request = self.env["medical.laboratory.request"].create(
             {"patient_id": self.patient.id}
         )
         self.check_model(
-            "pod.laboratory.event",
+            "medical.laboratory.event",
             {
                 "patient_id": self.patient.id,
                 "laboratory_request_id": request.id,
@@ -95,29 +95,29 @@ class TestSequence(TransactionCase):
         )
 
     def test_laboratory_request(self):
-        request = self.env["pod.laboratory.request"].create(
+        request = self.env["medical.laboratory.request"].create(
             {"patient_id": self.patient.id}
         )
         self.check_model(
-            "pod.laboratory.request",
+            "medical.laboratory.request",
             {
                 "patient_id": self.patient.id,
                 "laboratory_request_id": request.id,
             },
         )
 
-    def test_device_administration(self):
+    def test_medication_administration(self):
         self.check_model(
-            "pod.device.administration",
+            "medical.medication.administration",
             {
                 "product_id": self.product.id,
                 "product_uom_id": self.uom_unit.id,
             },
         )
 
-    def test_device_request(self):
+    def test_medication_request(self):
         request_1, request_2, request_3 = self.check_model(
-            "pod.device.request",
+            "medical.medication.request",
             {
                 "product_id": self.product.id,
                 "product_uom_id": self.uom_unit.id,
@@ -143,15 +143,15 @@ class TestSequence(TransactionCase):
         )
 
     def test_document_reference(self):
-        document_type = self.env["pod.document.type"].create(
+        document_type = self.env["medical.document.type"].create(
             {
                 "name": "CI",
                 "report_action_id": self.browse_ref(
-                    "pod_document.action_report_document_report_base"
+                    "medical_document.action_report_document_report_base"
                 ).id,
             }
         )
-        self.env["pod.document.type.lang"].create(
+        self.env["medical.document.type.lang"].create(
             {
                 "lang": "en_US",
                 "document_type_id": document_type.id,
@@ -162,16 +162,16 @@ class TestSequence(TransactionCase):
         )
         document_type.post()
         self.check_model(
-            "pod.document.reference",
+            "medical.document.reference",
             {"document_type_id": document_type.id},
         )
 
     def test_diagnostic_report(self):
-        self.check_model("pod.diagnostic.report", {})
+        self.check_model("medical.diagnostic.report", {})
 
     def test_encounter(self):
         with self.assertRaises(ValidationError):
-            self.env["pod.encounter"].create(
+            self.env["medical.encounter"].create(
                 {"patient_id": self.patient.id, "center_id": False}
             )
 

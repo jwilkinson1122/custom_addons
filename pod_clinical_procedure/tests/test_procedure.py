@@ -1,15 +1,19 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.tests import TransactionCase
 
 
 class TestProcedure(TransactionCase):
     def setUp(self):
         res = super(TestProcedure, self).setUp()
-        self.patient = self.browse_ref("pod_base.patient_01")
-        self.plan = self.browse_ref("pod_workflow.mr_knee")
+        self.patient = self.browse_ref("medical_base.patient_01")
+        self.plan = self.browse_ref("medical_workflow.mr_knee")
         return res
 
     def open_procedure(self):
-        procedure = self.env["pod.procedure"].create(
+        procedure = self.env["medical.procedure"].create(
             {"patient_id": self.patient.id}
         )
         self.assertEqual(procedure.fhir_state, "preparation")

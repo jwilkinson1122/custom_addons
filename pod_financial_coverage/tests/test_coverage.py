@@ -1,18 +1,22 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.tests.common import TransactionCase
 
 
-class TestPodiatryCoverage(TransactionCase):
+class TestMedicalCoverage(TransactionCase):
     def setUp(self):
-        super(TestPodiatryCoverage, self).setUp()
-        self.pod_user_group = self.env.ref(
-            "pod_base.group_pod_financial"
+        super(TestMedicalCoverage, self).setUp()
+        self.medical_user_group = self.env.ref(
+            "medical_base.group_medical_financial"
         )
-        self.pod_user = self._create_user(
-            "pod_user", self.pod_user_group.id
+        self.medical_user = self._create_user(
+            "medical_user", self.medical_user_group.id
         )
-        self.patient_model = self.env["pod.patient"]
-        self.coverage_model = self.env["pod.coverage"]
-        self.coverage_template_model = self.env["pod.coverage.template"]
+        self.patient_model = self.env["medical.patient"]
+        self.coverage_model = self.env["medical.coverage"]
+        self.coverage_template_model = self.env["medical.coverage.template"]
         self.payor_model = self.env["res.partner"]
         self.patient_1 = self._create_patient()
         self.patient_2 = self._create_patient()
@@ -69,7 +73,7 @@ class TestPodiatryCoverage(TransactionCase):
             "payor_id": self.payor_1.id,
         }
         coverage_template = self.coverage_template_model.with_user(
-            self.pod_user
+            self.medical_user
         ).create(coverage_template_vals)
         self.assertNotEquals(coverage_template, False)
         coverage_vals = {
@@ -78,7 +82,7 @@ class TestPodiatryCoverage(TransactionCase):
             "subscriber_id": "abc123",
             "coverage_template_id": coverage_template.id,
         }
-        coverage = self.coverage_model.with_user(self.pod_user).create(
+        coverage = self.coverage_model.with_user(self.medical_user).create(
             coverage_vals
         )
         self.assertEqual(coverage.subscriber_id, "abc123")

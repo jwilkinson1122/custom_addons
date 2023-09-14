@@ -6,7 +6,14 @@
         <field name="inherit_id" ref="product.product_template_only_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(pod_coverage_agreement_item_product_template_action)s" type="action" class="oe_stat_button" icon="fa-hand-holding-usd" attrs="{'invisible': [('type','!=','service')]}" string="View Agreements" />
+                <button
+                    name="%(medical_coverage_agreement_item_product_template_action)s"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-hand-holding-usd"
+                    attrs="{'invisible': [('type','!=','service')]}"
+                    string="View Agreements"
+                />
             </xpath>
         </field>
     </record>
@@ -16,7 +23,14 @@
         <field name="inherit_id" ref="product.product_normal_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(pod_financial_coverage_agreement.pod_coverage_agreement_item_product_action)s" type="action" class="oe_stat_button" icon="fa-hand-holding-usd" attrs="{'invisible': [('type','!=','service')]}" string="View Agreements" />
+                <button
+                    name="%(medical_financial_coverage_agreement.medical_coverage_agreement_item_product_action)s"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-hand-holding-usd"
+                    attrs="{'invisible': [('type','!=','service')]}"
+                    string="View Agreements"
+                />
             </xpath>
         </field>
     </record>
@@ -33,7 +47,11 @@
             </xpath>
             <xpath expr="//field[@name='description_sale']/.." position="after">
                 <group string="Agreement Comment" name="group_agreement_comment">
-                    <field name="agreement_comment" nolabel="1" placeholder="This note will show up agreement items comments..." />
+                    <field
+                        name="agreement_comment"
+                        nolabel="1"
+                        placeholder="This note will show up agreement items comments..."
+                    />
                 </group>
             </xpath>
         </field>

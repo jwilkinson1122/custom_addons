@@ -1,1 +1,1 @@
-This addon enables to create product requests (as devices or internal orders)
+This addon enables to create medical product requests (as medication prescriptions or internal medical orders)

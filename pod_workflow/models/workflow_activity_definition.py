@@ -1,15 +1,19 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-# FHIR entity: Activity Definition
-# (https://www.hl7.org/fhir/activitydefinition.html)
 
 class ActivityDefinition(models.Model):
+    # FHIR entity: Activity Definition
+    # (https://www.hl7.org/fhir/activitydefinition.html)
     _name = "workflow.activity.definition"
     _description = "Activity Definition"
     _order = "name"
     _parent_order = "name"
-    _inherit = ["mail.thread", "mail.activity.mixin", "pod.abstract"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "medical.abstract"]
 
     name = fields.Char(
         string="Name",
@@ -22,7 +26,7 @@ class ActivityDefinition(models.Model):
     model_id = fields.Many2one(
         string="Model",
         comodel_name="ir.model",
-        domain=lambda self: [("model", "in", self._get_pod_models())],
+        domain=lambda self: [("model", "in", self._get_medical_models())],
     )  # FHIR field: kind
     state = fields.Selection(
         [
@@ -54,7 +58,7 @@ class ActivityDefinition(models.Model):
     )
     active = fields.Boolean(compute="_compute_active", store=True)
 
-    def _get_pod_models(self):
+    def _get_medical_models(self):
         return []
 
     @api.depends("state")
@@ -71,7 +75,7 @@ class ActivityDefinition(models.Model):
             or "/"
         )
 
-    def _get_pod_values(
+    def _get_medical_values(
         self, vals, parent=False, plan=False, action=False
     ):
         if not vals.get("patient_id", False):
@@ -92,7 +96,7 @@ class ActivityDefinition(models.Model):
         self, vals, parent=False, plan=False, action=False
     ):
         values = vals.copy()
-        values.update(self._get_pod_values(vals, parent, plan, action))
+        values.update(self._get_medical_values(vals, parent, plan, action))
         return values
 
     def generate_record(self, values):
@@ -127,7 +131,7 @@ class ActivityDefinition(models.Model):
     def action_show_plans(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "pod_workflow.workflow_plan_definition"
+            "medical_workflow.workflow_plan_definition"
         )
         action["domain"] = [
             ("id", "in", self.action_ids.mapped("plan_definition_id").ids)

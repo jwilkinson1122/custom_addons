@@ -9,7 +9,7 @@ class TestRecursion(TransactionCase):
             {
                 "name": "Activity",
                 "model_id": self.browse_ref(
-                    "pod_clinical_request_group." "model_pod_request_group"
+                    "medical_clinical_request_group." "model_medical_request_group"
                 ).id,
             }
         )

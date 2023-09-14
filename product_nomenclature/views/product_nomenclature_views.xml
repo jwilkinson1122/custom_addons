@@ -6,9 +6,20 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                    <widget
+                        name="web_ribbon"
+                        text="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_button_box" name="button_box">
-                        <button type="object" name="action_view_items" class="oe_stat_button" icon="fa-bars" string="Items" />
+                        <button
+                            type="object"
+                            name="action_view_items"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Items"
+                        />
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -40,7 +51,11 @@
             <search string="Nomenclatures">
                 <field name="code" />
                 <field name="name" />
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]" />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active','=',False)]"
+                />
             </search>
         </field>
     </record>
@@ -55,5 +70,12 @@
             </p>
         </field>
     </record>
-    <menuitem id="nomenclature_menu" name="Nomenclatures" parent="sale.product_menu_catalog" action="product_nomenclature.product_nomenclature_action" groups="sales_team.group_sale_manager" sequence="35" />
+    <menuitem
+        id="nomenclature_menu"
+        name="Nomenclatures"
+        parent="sale.product_menu_catalog"
+        action="product_nomenclature.product_nomenclature_action"
+        groups="sales_team.group_sale_manager"
+        sequence="35"
+    />
 </odoo>

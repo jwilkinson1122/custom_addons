@@ -11,26 +11,9 @@
                 <attribute name="edit">false</attribute>
             </form>
             <div name="button_box" position="inside">
-                <button
-                    name="%(barcode_action.barcode_action_action)d"
-                    type="action"
-                    icon="fa-barcode"
-                    string="Scan"
-                    context="{'default_model': 'pos.session', 'default_res_id': active_id, 'default_method': 'open_validation_encounter'}"
-                    attrs="{'invisible': [('validation_status', '!=', 'in_progress')]}"
-                />
-                <button
-                    type="object"
-                    name="action_view_non_validated_encounters"
-                    class="oe_stat_button"
-                    icon="fa-hospital-o"
-                    attrs="{'invisible': [('validation_status', '!=', 'in_progress')]}"
-                >
-                    <field
-                        name="encounter_non_validated_count"
-                        widget="statinfo"
-                        string="Non validated"
-                    />
+                <button name="%(barcode_action.barcode_action_action)d" type="action" icon="fa-barcode" string="Scan" context="{'default_model': 'pos.session', 'default_res_id': active_id, 'default_method': 'open_validation_encounter'}" attrs="{'invisible': [('validation_status', '!=', 'in_progress')]}" />
+                <button type="object" name="action_view_non_validated_encounters" class="oe_stat_button" icon="fa-hospital-o" attrs="{'invisible': [('validation_status', '!=', 'in_progress')]}">
+                    <field name="encounter_non_validated_count" widget="statinfo" string="Non validated" />
                 </button>
             </div>
             <header position="inside">
@@ -71,16 +54,11 @@
         <field name="name">Validation</field>
         <field name="res_model">pos.session</field>
         <field name="view_mode">tree,form</field>
-        <field
-            name="view_ids"
-            eval="[(5, 0, 0),
+        <field name="view_ids" eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('point_of_sale.view_pos_session_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_pos_session_validation_form')})
-                          ]"
-        />
-        <field
-            name="context"
-        >{'search_default_validation_status': 'in_progress'}</field>
+                          ]" />
+        <field name="context">{'search_default_validation_status': 'in_progress'}</field>
         <field name="domain">[('validation_status', '!=', 'draft')]</field>
     </record>
     <record id="view_pos_session_search" model="ir.ui.view">
@@ -92,24 +70,10 @@
                 <field name="validation_status" invisible="1" />
             </field>
             <filter name="open_sessions" position="after">
-                <filter
-                    name="validation_in_progress"
-                    string="In Validation"
-                    domain="[('validation_status', '=', 'in_progress')]"
-                />
-                <filter
-                    name="validation_finished"
-                    string="Finished Validation"
-                    domain="[('validation_status', '=', 'finished')]"
-                />
+                <filter name="validation_in_progress" string="In Validation" domain="[('validation_status', '=', 'in_progress')]" />
+                <filter name="validation_finished" string="Finished Validation" domain="[('validation_status', '=', 'finished')]" />
             </filter>
         </field>
     </record>
-    <menuitem
-        id="pos_session_validation"
-        name="Sessions to validate"
-        parent="pod_sale"
-        action="session_to_validate_action"
-        sequence="1"
-    />
+    <menuitem id="pos_session_validation" name="Sessions to validate" parent="medical_sale" action="session_to_validate_action" sequence="1" />
 </odoo>

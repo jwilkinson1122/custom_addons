@@ -1,8 +1,12 @@
+# Copyright 2017 Creu Blanca
+# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 {
     "name": "Cash payments between intercompanies",
-    "version": "15.0.1.0.0",
-    "author": "NWPL",
-    "website": "https://nwpodiatric.com",
+    "version": "14.0.1.0.0",
+    "author": "Eficent, CreuBlanca",
+    "website": "https://github.com/tegin/cb-addons",
     "summary": "Payment of invoices to another company",
     "sequence": 30,
     "category": "Accounting",

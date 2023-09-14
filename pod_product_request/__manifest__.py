@@ -1,29 +1,33 @@
+# Copyright 2022 Creu Blanca
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 {
-    "name": "Podiatry Product Request",
+    "name": "Medical Product Request",
     "summary": """
-        This addon sets the base of device.request and device.request""",
-    "version": "15.0.1.0.0",
+        This addon sets the base of the medical fhir concepts
+        of medication.request and device.request""",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
-    "author": "NWPL",
-    "website": "https://nwpodiatric.com",
+    "author": "CreuBlanca,Odoo Community Association (OCA)",
+    "website": "https://github.com/tegin/medical-fhir",
     "depends": [
-        "pod_administration_encounter",
+        "medical_administration_encounter",
         "mail",
-        "pod_administration_practitioner",
+        "medical_administration_practitioner",
         "web_domain_field",
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/pod_patient.xml",
-        "views/pod_encounter.xml",
+        "views/medical_patient.xml",
+        "views/medical_encounter.xml",
         "data/ir_sequence_data.xml",
-        "views/pod_product_template.xml",
-        "views/pod_product_product.xml",
-        "views/pod_product_administration.xml",
-        "views/pod_product_request_order.xml",
-        "views/pod_product_request.xml",
-        "views/device_form.xml",
-        "views/pod_administration_route.xml",
+        "views/medical_product_template.xml",
+        "views/medical_product_product.xml",
+        "views/medical_product_administration.xml",
+        "views/medical_product_request_order.xml",
+        "views/medical_product_request.xml",
+        "views/medication_form.xml",
+        "views/medical_administration_route.xml",
     ],
-    "demo": ["demo/pod_product_request_demo.xml"],
+    "demo": ["demo/medical_product_request_demo.xml"],
 }

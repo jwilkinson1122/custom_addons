@@ -20,10 +20,10 @@ class TestCertify(SavepointCase):
     def _setup_records(cls):
         cls.loader = FakeModelLoader(cls.env, cls.__module__)
         cls.loader.backup_registry()
-        from .fake_models import PodiatryCertify
+        from .fake_models import MedicalCertify
 
-        cls.loader.update_registry((PodiatryCertify,))
-        cls.record = cls.env["pod.certify.demo"].create({"name": "NAME"})
+        cls.loader.update_registry((MedicalCertify,))
+        cls.record = cls.env["medical.certify.demo"].create({"name": "NAME"})
 
     def test_qr(self):
         self.record._sign_document()

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<odoo>
-    <menuitem id="pod_conf_requester_menu" name="Requester" parent="pod_base.pod_root_administration" action="pod_requester_action" groups="pod_base.group_pod_configurator" sequence="20" />
-</odoo>

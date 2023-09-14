@@ -1,19 +1,23 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo.tests.common import TransactionCase
 
 
-class TestPodiatryEncounter(TransactionCase):
+class TestMedicalEncounter(TransactionCase):
     def setUp(self):
-        super(TestPodiatryEncounter, self).setUp()
-        self.pod_user = self._create_user(
-            "pod_user", self.env.ref("pod_base.group_pod_admin").id
+        super(TestMedicalEncounter, self).setUp()
+        self.medical_user = self._create_user(
+            "medical_user", self.env.ref("medical_base.group_medical_admin").id
         )
-        self.pod_reception = self._create_user(
-            "pod_reception",
-            self.env.ref("pod_base.group_pod_reception").id,
+        self.medical_reception = self._create_user(
+            "medical_reception",
+            self.env.ref("medical_base.group_medical_reception").id,
         )
-        self.patient_model = self.env["pod.patient"]
+        self.patient_model = self.env["medical.patient"]
         self.location_model = self.env["res.partner"]
-        self.encounter_model = self.env["pod.encounter"]
+        self.encounter_model = self.env["medical.encounter"]
         self.patient_1 = self._create_patient()
         self.location_1 = self._create_location()
 
@@ -60,7 +64,7 @@ class TestPodiatryEncounter(TransactionCase):
             "state": "arrived",
         }
         encounter = self.encounter_model.with_user(
-            self.pod_reception
+            self.medical_reception
         ).create(encounter_vals)
         self.assertTrue(encounter)
 

@@ -1,3 +1,7 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -7,7 +11,7 @@ from .base_result import combine_result
 class PlanDefinitionAction(models.Model):
     # FHIR entity: Action
     _name = "workflow.plan.definition.action"
-    _description = "Podiatry Plan Definition Action"
+    _description = "Medical Plan Definition Action"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _parent_name = "parent_id"
     _parent_store = True

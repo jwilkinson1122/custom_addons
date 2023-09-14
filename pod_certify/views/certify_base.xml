@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record model="ir.ui.view" id="certify_base_form_view">
-        <field name="name">certify.base.form (in pod_certify)</field>
+        <field name="name">certify.base.form (in medical_certify)</field>
         <field name="model">digest.base</field>
         <field name="arch" type="xml">
             <form>

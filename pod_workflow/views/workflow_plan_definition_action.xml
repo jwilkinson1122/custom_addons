@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017 ForgeFlow
+    Copyright 2017 CreuBlanca
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+-->
 <odoo>
-
     <record model="ir.ui.view" id="workflow_plan_definition_action_tree">
         <field name="name">workflow.plan.definition.action.tree</field>
         <field name="model">workflow.plan.definition.action</field>
@@ -12,7 +16,6 @@
             </tree>
         </field>
     </record>
-
     <record model="ir.ui.view" id="workflow_plan_definition_action_form">
         <field name="name">workflow.plan.definition.action.form</field>
         <field name="model">workflow.plan.definition.action</field>
@@ -27,13 +30,25 @@
                     </group>
                     <group>
                         <group>
-                            <field name="activity_definition_id" options="{'no_create': True}" />
-                            <field name="plan_definition_id" options="{'no_create': True}" />
+                            <field
+                                name="activity_definition_id"
+                                options="{'no_create': True}"
+                            />
+                            <field
+                                name="plan_definition_id"
+                                options="{'no_create': True}"
+                            />
                         </group>
                         <group>
-                            <field name="direct_plan_definition_id" options="{'no_create': True}" />
+                            <field
+                                name="direct_plan_definition_id"
+                                options="{'no_create': True}"
+                            />
                             <field name="parent_id" />
-                            <field name="execute_plan_definition_id" options="{'no_create': True}" />
+                            <field
+                                name="execute_plan_definition_id"
+                                options="{'no_create': True}"
+                            />
                         </group>
                     </group>
                     <group>
@@ -42,7 +57,10 @@
                     </group>
                     <notebook>
                         <page string="Child actions" name="child_actions">
-                            <field name="child_ids" context="{'default_plan_definition_id': plan_definition_id,'default_direct_plan_definition_id': direct_plan_definition_id, 'default_parent_id': active_id}" />
+                            <field
+                                name="child_ids"
+                                context="{'default_plan_definition_id': plan_definition_id,'default_direct_plan_definition_id': direct_plan_definition_id, 'default_parent_id': active_id}"
+                            />
                         </page>
                     </notebook>
                 </sheet>
@@ -54,7 +72,6 @@
             </form>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="workflow_plan_definition_action">
         <field name="name">Action</field>
         <field name="type">ir.actions.act_window</field>
@@ -62,12 +79,10 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>
-
     <record model="ir.ui.menu" id="workflow_plan_definition_actions_menu">
         <field name="name">Actions</field>
-        <field name="parent_id" ref="pod_base.pod_root_workflow" />
+        <field name="parent_id" ref="medical_base.medical_root_workflow" />
         <field name="action" ref="workflow_plan_definition_action" />
         <field name="sequence" eval="20" />
     </record>
-    
 </odoo>

@@ -1,3 +1,6 @@
+# Copyright 2021 Creu Blanca
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import fields, models
 
 
@@ -13,7 +16,7 @@ class ResUsers(models.Model):
     def update_signature(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id(
-            "pod_signature_storage.res_users_update_signature_act_window"
+            "medical_signature_storage.res_users_update_signature_act_window"
         )
         action["context"] = {
             "default_user_id": self.id,

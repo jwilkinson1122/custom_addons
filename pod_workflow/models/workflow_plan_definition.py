@@ -1,17 +1,21 @@
+# Copyright 2017 CreuBlanca
+# Copyright 2017 ForgeFlow
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 from .base_result import combine_result
 
-# FHIR Entity: Plan Definition
-# (https://www.hl7.org/fhir/plandefinition.html)
 
 class PlanDefinition(models.Model):
+    # FHIR Entity: Plan Definition
+    # (https://www.hl7.org/fhir/plandefinition.html)
     _name = "workflow.plan.definition"
     _description = "Plan Definition"
     _order = "name"
     _parent_order = "name"
-    _inherit = ["mail.thread", "mail.activity.mixin", "pod.abstract"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "medical.abstract"]
 
     name = fields.Char(
         string="Name",
@@ -90,7 +94,7 @@ class PlanDefinition(models.Model):
         result = {}
         if (
             self.env.user._has_group(
-                "pod_workflow." "group_main_activity_plan_definition"
+                "medical_workflow." "group_main_activity_plan_definition"
             )
             and self.activity_definition_id
         ):

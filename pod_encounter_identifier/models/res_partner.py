@@ -25,7 +25,7 @@ class ResPartner(models.Model):
         """
         vals = {
             "name": "Center " + prefix,
-            "code": "res.partner.pod.center - " + prefix,
+            "code": "res.partner.medical.center - " + prefix,
             "padding": 5,
             "prefix": self._compute_encounter_prefix(prefix),
             "company_id": False,

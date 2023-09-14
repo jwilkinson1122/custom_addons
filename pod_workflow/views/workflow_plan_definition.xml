@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017 ForgeFlow
+    Copyright 2017 CreuBlanca
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+-->
 <odoo>
-
     <record model="ir.ui.view" id="workflow_plan_definition_tree">
         <field name="name">workflow.plan.definition.tree</field>
         <field name="model">workflow.plan.definition</field>
@@ -13,7 +17,6 @@
             </tree>
         </field>
     </record>
-
     <record model="ir.ui.view" id="workflow_plan_definition_form">
         <field name="name">workflow.plan.definition.form</field>
         <field name="model">workflow.plan.definition</field>
@@ -21,9 +24,24 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="activate" string="Activate" type="object" states="draft" />
-                    <button name="retire" string="Retire" type="object" states="active" />
-                    <button name="reactivate" string="Reactivate" type="object" states="retired" />
+                    <button
+                        name="activate"
+                        string="Activate"
+                        type="object"
+                        states="draft"
+                    />
+                    <button
+                        name="retire"
+                        string="Retire"
+                        type="object"
+                        states="active"
+                    />
+                    <button
+                        name="reactivate"
+                        string="Reactivate"
+                        type="object"
+                        states="retired"
+                    />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -37,9 +55,13 @@
                             <field name="description" />
                         </group>
                         <group>
-                            <field name="activity_definition_id" options="{'no_create': True}" groups="pod_workflow.group_main_activity_plan_definition" />
+                            <field
+                                name="activity_definition_id"
+                                options="{'no_create': True}"
+                                groups="medical_workflow.group_main_activity_plan_definition"
+                            />
                         </group>
-                        <group name="pod">
+                        <group name="medical">
                         </group>
                     </group>
                     <notebook>
@@ -71,19 +93,16 @@
             </form>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="workflow_plan_definition">
         <field name="name">Plan definition</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">workflow.plan.definition</field>
         <field name="view_mode">tree,form</field>
     </record>
-
     <record model="ir.ui.menu" id="workflow_plan_definitions_menu">
         <field name="name">Plan definitions</field>
-        <field name="parent_id" ref="pod_base.pod_root_workflow" />
+        <field name="parent_id" ref="medical_base.medical_root_workflow" />
         <field name="action" ref="workflow_plan_definition" />
         <field name="sequence" eval="10" />
     </record>
-    
 </odoo>

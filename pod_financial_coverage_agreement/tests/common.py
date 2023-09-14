@@ -5,20 +5,20 @@ class AgrementSavepointCase(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.pod_user_group = cls.env.ref("pod_base.group_pod_configurator")
-        cls.pod_financial_group = cls.env.ref(
-            "pod_base.group_pod_financial"
+        cls.medical_user_group = cls.env.ref("medical_base.group_medical_configurator")
+        cls.medical_financial_group = cls.env.ref(
+            "medical_base.group_medical_financial"
         )
-        cls.pod_user = cls._create_user(
-            "group_pod_user", cls.pod_user_group.id
+        cls.medical_user = cls._create_user(
+            "group_medical_user", cls.medical_user_group.id
         )
-        cls.pod_user.groups_id |= cls.pod_financial_group
-        cls.patient_model = cls.env["pod.patient"]
-        cls.coverage_model = cls.env["pod.coverage"]
-        cls.coverage_template_model = cls.env["pod.coverage.template"]
+        cls.medical_user.groups_id |= cls.medical_financial_group
+        cls.patient_model = cls.env["medical.patient"]
+        cls.coverage_model = cls.env["medical.coverage"]
+        cls.coverage_template_model = cls.env["medical.coverage.template"]
         cls.payor_model = cls.env["res.partner"]
-        cls.coverage_agreement_model = cls.env["pod.coverage.agreement"]
-        cls.coverage_agreement_model_item = cls.env["pod.coverage.agreement.item"]
+        cls.coverage_agreement_model = cls.env["medical.coverage.agreement"]
+        cls.coverage_agreement_model_item = cls.env["medical.coverage.agreement.item"]
         cls.center_model = cls.env["res.partner"]
         cls.product_model = cls.env["product.product"]
         # cls.type_model = cls.env["workflow.type"]

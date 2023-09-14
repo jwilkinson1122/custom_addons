@@ -1,3 +1,7 @@
+# Copyright 2017 Creu Blanca
+# Copyright 2017 Eficent Business and IT Consulting Services, S.L.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 from odoo import api, fields, models
 
 
@@ -8,7 +12,7 @@ class ActivityDefinition(models.Model):
         compute="_compute_requires_document_template"
     )
     document_type_id = fields.Many2one(
-        "pod.document.type",
+        "medical.document.type",
         domain=[("state", "=", "current")],
         ondelete="restrict",
     )
@@ -17,21 +21,21 @@ class ActivityDefinition(models.Model):
     def _compute_requires_document_template(self):
         for record in self:
             record.requires_document_template = bool(
-                record.model_id.model == "pod.document.reference"
+                record.model_id.model == "medical.document.reference"
             )
 
-    def _get_pod_models(self):
-        return super()._get_pod_models() + ["pod.document.reference"]
+    def _get_medical_models(self):
+        return super()._get_medical_models() + ["medical.document.reference"]
 
     @api.onchange("model_id")
     def _onchange_model(self):
-        if self.model_id.model != "pod.document.reference":
+        if self.model_id.model != "medical.document.reference":
             self.document_type_id = False
 
-    def _get_pod_values(self, vals, parent=False, plan=False, action=False):
-        values = super(ActivityDefinition, self)._get_pod_values(
+    def _get_medical_values(self, vals, parent=False, plan=False, action=False):
+        values = super(ActivityDefinition, self)._get_medical_values(
             vals, parent, plan, action
         )
-        if self.model_id.model == "pod.document.reference":
+        if self.model_id.model == "medical.document.reference":
             values["document_type_id"] = self.document_type_id.id
         return values

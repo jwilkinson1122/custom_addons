@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_pod_encounter_change_partner,access_pod_encounter_change_partner,model_pod_encounter_change_partner,pod_base.group_pod_reception,1,1,1,0
