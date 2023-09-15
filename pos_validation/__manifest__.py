@@ -28,6 +28,11 @@
         "views/pod_encounter_view.xml",
         "views/administration_menu.xml",
         "views/pos_session_views.xml",
-        "templates/templates.xml",
+        # "templates/templates.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "pos_validation/static/src/js/action.js",
+        ],
+    },
 }

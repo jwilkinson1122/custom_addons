@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Podiatry Block requests",
+    "name": "Podiatry Block Requests",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Podiatry",

@@ -4,10 +4,7 @@
     <record id="pod_authorization_method_form" model="ir.ui.view">
         <field name="name">pod.authorization.method.form</field>
         <field name="model">pod.authorization.method</field>
-        <field
-            name="inherit_id"
-            ref="pod_financial_coverage_request.pod_authorization_method_form"
-        />
+        <field name="inherit_id" ref="pod_financial_coverage_request.pod_authorization_method_form" />
         <field name="arch" type="xml">
             <field name="authorization_required" position="after">
                 <field name="check_required" />
