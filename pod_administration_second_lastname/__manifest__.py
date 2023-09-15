@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Podiatry Patient second lastname",
+    "name": "Podiatry Patient Second Lastname",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": ["pod_administration_firstname", "partner_second_lastname"],

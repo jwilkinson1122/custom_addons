@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Podiatry link to PoS",
+    "name": "Podiatry PoS Link",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": [

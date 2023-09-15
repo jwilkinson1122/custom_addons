@@ -1,7 +1,3 @@
-.. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg
-   :target: https://www.gnu.org/licenses/AGPL-3.0-standalone.html
-   :alt: License: AGPL-3
-
 =============================================
 Podiatry Administration Practitioner Specialty
 =============================================
@@ -19,16 +15,3 @@ Usage
 #. Go to Podiatry / Administration / Practitioner / Practitioners
 #. Specialties can be added on roles
 
-Credits
-=======
-
-Images
-------
-
-* Clker-Free-Vector-Images: `Icon <https://pixabay.com/es/de-salud-medicina-serpiente-alas-304919/>`_
-
-Contributors
-------------
-
-* Enric Tobella <etobella@creublanca.es>
-* Roser Garcia <roser.garcia@eficent.com>

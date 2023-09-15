@@ -1,6 +1,6 @@
-=======================
+========================
 Podiatry Plan Definition
-=======================
+========================
 
 Adds to Plan Definition the following concepts:
 

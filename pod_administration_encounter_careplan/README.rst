@@ -1,6 +1,6 @@
-===========================
-Podiatry Encounter Care plan
-===========================
+============================
+Podiatry Encounter Care Plan
+============================
 
 This module links Encounters and Care plans requests.
 

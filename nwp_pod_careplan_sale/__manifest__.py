@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Podiatry Careplan to sales",
+    "name": "Podiatry Careplan Sales",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Podiatry",
