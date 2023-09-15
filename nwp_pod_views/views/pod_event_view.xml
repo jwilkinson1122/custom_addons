@@ -10,9 +10,7 @@
                 <attribute name="decoration-success">state == 'in-progress'</attribute>
                 <attribute name="decoration-info">state == 'suspended'</attribute>
                 <attribute name="decoration-muted">state == 'completed'</attribute>
-                <attribute
-                    name="decoration-danger"
-                >state == 'entered-in-error'</attribute>
+                <attribute name="decoration-danger">state == 'entered-in-error'</attribute>
                 <attribute name="decoration-warning">state == 'cancelled'</attribute>
                 <attribute name="decoration-primary">state == 'unknown'</attribute>
             </xpath>

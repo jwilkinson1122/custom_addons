@@ -1,40 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="pod_diagnostic_report_form_view">
-        <field
-            name="name"
-        >pod.diagnostic.report.form (in nwp_pod_diagnostic_report)</field>
+        <field name="name">pod.diagnostic.report.form (in nwp_pod_diagnostic_report)</field>
         <field name="model">pod.diagnostic.report</field>
-        <field
-            name="inherit_id"
-            ref="pod_diagnostic_report.pod_diagnostic_report_form_view"
-        />
+        <field name="inherit_id" ref="pod_diagnostic_report.pod_diagnostic_report_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="create">false</attribute>
                 <attribute name="js_class">diagnostic_report</attribute>
             </xpath>
             <notebook position="before">
-                <div
-                    class="o_diagnostic_report_paste_image o_diagnostic_report_paste_image_parent"
-                    attrs="{'invisible': [('fhir_state', '!=', 'registered')]}"
-                >
-                    <span
-                        class="o_diagnostic_report_paste_image_unclicked o_diagnostic_report_paste_image"
-                    >Click here in order to paste an image</span>
-                    <span
-                        class="o_diagnostic_report_paste_image_clicked o_diagnostic_report_paste_image"
-                    >Paste the image</span>
+                <div class="o_diagnostic_report_paste_image o_diagnostic_report_paste_image_parent" attrs="{'invisible': [('fhir_state', '!=', 'registered')]}">
+                    <span class="o_diagnostic_report_paste_image_unclicked o_diagnostic_report_paste_image">Click here in order to paste an image</span>
+                    <span class="o_diagnostic_report_paste_image_clicked o_diagnostic_report_paste_image">Paste the image</span>
                 </div>
             </notebook>
             <xpath expr="//form/header" position="inside">
-                <button
-                    name="copy_action"
-                    type="object"
-                    string="Duplicate"
-                    states="final,cancelled"
-                    confirm="Are you sure you want to duplicate this report?"
-                />
+                <button name="copy_action" type="object" string="Duplicate" states="final,cancelled" confirm="Are you sure you want to duplicate this report?" />
             </xpath>
             <field name="patient_origin" position="after">
                 <field name="with_department" invisible="1" />
@@ -64,11 +46,7 @@
                         </form>
                     </field>
                 </page>
-                <page
-                    name="pod_department_header"
-                    string="Podiatry Department"
-                    attrs="{'invisible': [('with_department', '=', False)]}"
-                >
+                <page name="pod_department_header" string="Podiatry Department" attrs="{'invisible': [('with_department', '=', False)]}">
                     <field name="pod_department_header" />
                 </page>
             </xpath>

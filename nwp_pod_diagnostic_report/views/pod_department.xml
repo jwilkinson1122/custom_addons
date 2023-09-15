@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="pod_department_form_view">
-        <field
-            name="name"
-        >pod.department.form (in nwp_pod_diagnostic_report)</field>
+        <field name="name">pod.department.form (in nwp_pod_diagnostic_report)</field>
         <field name="model">pod.department</field>
         <field name="arch" type="xml">
             <form>
@@ -16,17 +14,10 @@
                     <group>
                         <field name="name" />
                         <field name="without_practitioner" />
-                        <field
-                            name="with_department_report_header"
-                            sting="Report with header"
-                        />
+                        <field name="with_department_report_header" sting="Report with header" />
                     </group>
                     <notebook>
-                        <page
-                            name="diagnostic_report_header"
-                            string="Report Header"
-                            attrs="{'invisible': [('with_department_report_header', '=', False)]}"
-                        >
+                        <page name="diagnostic_report_header" string="Report Header" attrs="{'invisible': [('with_department_report_header', '=', False)]}">
                             <field name="diagnostic_report_header" />
                         </page>
                         <page name="user" string="Users">
@@ -38,9 +29,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="pod_department_tree_view">
-        <field
-            name="name"
-        >pod.department.tree (in nwp_pod_diagnostic_report)</field>
+        <field name="name">pod.department.tree (in nwp_pod_diagnostic_report)</field>
         <field name="model">pod.department</field>
         <field name="arch" type="xml">
             <tree>
@@ -54,11 +43,5 @@
         <field name="res_model">pod.department</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem
-        id="pod_department_menu"
-        name="Departments"
-        parent="pod_base.pod_root_configuration"
-        action="pod_department_act_window"
-        sequence="20"
-    />
+    <menuitem id="pod_department_menu" name="Departments" parent="pod_base.pod_root_configuration" action="pod_department_act_window" sequence="20" />
 </odoo>

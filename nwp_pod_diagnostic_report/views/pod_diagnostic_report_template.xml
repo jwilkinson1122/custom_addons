@@ -3,37 +3,21 @@
     <record model="ir.ui.view" id="pod_diagnostic_report_template_form_view">
         <field name="name">pod.diagnostic.report.template.form</field>
         <field name="model">pod.diagnostic.report.template</field>
-        <field
-            name="inherit_id"
-            ref="pod_diagnostic_report.pod_report_template_form_view"
-        />
+        <field name="inherit_id" ref="pod_diagnostic_report.pod_report_template_form_view" />
         <field name="arch" type="xml">
             <field name="with_conclusion" position="after">
-                <field
-                    name="report_category_id"
-                    attrs="{'invisible': [('template_type', '!=', 'general')], 'required': [('template_type', '=', 'general')]}"
-                />
-                <field
-                    name="user_report_category_id"
-                    attrs="{'invisible': [('template_type', '!=', 'user')], 'required': [('template_type', '=', 'user')]}"
-                    domain="['|', ('pod_department_id', '=', False), ('pod_department_id.user_ids','=',uid)]"
-                />
+                <field name="report_category_id" attrs="{'invisible': [('template_type', '!=', 'general')], 'required': [('template_type', '=', 'general')]}" />
+                <field name="user_report_category_id" attrs="{'invisible': [('template_type', '!=', 'user')], 'required': [('template_type', '=', 'user')]}" domain="['|', ('pod_department_id', '=', False), ('pod_department_id.user_ids','=',uid)]" />
                 <field name="pod_department_id" />
                 <field name="with_department_report_header" invisible="1" />
             </field>
             <xpath expr="//notebook/page[last()]" position="after">
-                <page
-                    name="pod_department_header"
-                    string="Podiatry Department"
-                    attrs="{'invisible': [('with_department_report_header', '=', False)]}"
-                >
+                <page name="pod_department_header" string="Podiatry Department" attrs="{'invisible': [('with_department_report_header', '=', False)]}">
                     <field name="pod_department_header" />
                 </page>
             </xpath>
             <field name="template_type" position="attributes">
-              <attribute
-                    name="groups"
-                >pod_base.group_pod_configurator,pod_base.group_pod_practitioner_manager</attribute>
+                <attribute name="groups">pod_base.group_pod_configurator,pod_base.group_pod_practitioner_manager</attribute>
             </field>
         </field>
     </record>

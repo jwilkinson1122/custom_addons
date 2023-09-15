@@ -22,10 +22,7 @@
             </field>
         </field>
     </record>
-    <record
-        model="ir.actions.act_window"
-        id="pod_base.pod_patient_window_action"
-    >
+    <record model="ir.actions.act_window" id="pod_base.pod_patient_window_action">
         <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>
