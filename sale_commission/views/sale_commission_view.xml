@@ -36,7 +36,7 @@
                     </group>
                     <field
                         name="section_ids"
-                        widget="one2many_list"
+                        widget="one2many"
                         colspan="4"
                         nolabel="1"
                         attrs="{'invisible': [('commission_type', '!=', 'section')]}"

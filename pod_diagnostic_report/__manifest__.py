@@ -43,13 +43,13 @@
         "reports/pod_diagnostic_report_report_preview.xml",
     ],
     'assets': {
+        'web.report_assets_common': [
+            'pod_diagnostic_report/static/src/scss/pod_report_layout.scss',
+        ],
         'web.assets_backend': [
             'pod_diagnostic_report/static/src/js/list_renderer.js',
             'pod_diagnostic_report/static/src/js/field_dynamic_options_dropdown.js',
             'pod_diagnostic_report/static/src/js/fields.js',
-        ],
-        'web.report_assets_common': [
-            'pod_diagnostic_report/static/src/scss/pod_report_layout.scss',
         ],
     },
     "demo": ["demo/pod_diagnostic_report.xml"],

@@ -3,7 +3,7 @@
 {
     "name": "Mgmtsystem Issue",
     "summary": """
-        Managemente System Issues""",
+        Management System Issues""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "NWPL",

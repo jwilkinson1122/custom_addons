@@ -10,10 +10,7 @@
                     <label for="pod_location_primary_id" />
                     <field name="pod_location_primary_id" />
                     <label for="pod_location_secondary_ids" />
-                    <field
-                        name="pod_location_secondary_ids"
-                        widget="many2many_tags"
-                    />
+                    <field name="pod_location_secondary_ids" widget="many2many_tags" />
                 </h4>
             </xpath>
         </field>

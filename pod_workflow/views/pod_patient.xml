@@ -7,13 +7,7 @@
         <field name="inherit_id" ref="pod_base.pod_patient_form" />
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button
-                    name="%(pod_workflow.action_pod_add_plan_definition_form)d"
-                    type="action"
-                    string="Add Plan definition"
-                    groups="pod_workflow.group_patient_add_plan_definition"
-                    class="oe_highlight"
-                />
+                <button name="%(pod_workflow.action_pod_add_plan_definition_form)d" type="action" string="Add Plan definition" groups="pod_workflow.group_patient_add_plan_definition" class="oe_highlight" />
             </xpath>
         </field>
     </record>

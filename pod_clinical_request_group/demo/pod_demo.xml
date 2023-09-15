@@ -2,7 +2,7 @@
 
 <odoo>
     <record id="check_up_product" model="product.product">
-        <field name="name">Check Up service</field>
+        <field name="name">Check Up Service</field>
         <field name="type">service</field>
     </record>
     <record id="check_up_activity" model="workflow.activity.definition">

@@ -1,5 +1,3 @@
-
-
 {
     "name": "Podiatry Clinical Impression",
     "summary": """
@@ -28,11 +26,13 @@
         "reports/pod_impression_report.xml",
     ],
     'assets': {
-        'web.assets_backend': [
-            'pod_clinical_impression/static/src/scss/widget_warning_dropdown.scss',
-            'pod_clinical_impression/static/src/js/widget_warning_dropdown.js',
+    'web.assets_backend': [
+        'pod_clinical_impression/static/src/scss/widget_warning_dropdown.scss',
+        'pod_clinical_impression/static/src/js/widget_warning_dropdown.js',
+        ],
+    'web.assets_qweb': [
+        'pod_clinical_impression/static/src/xml/widget_warning_dropdown.xml',
         ],
     },
-    "qweb": ["static/src/xml/widget_warning_dropdown.xml"],
     "demo": ["demo/pod_demo.xml"],
 }

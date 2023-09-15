@@ -6,7 +6,13 @@
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
-    "depends": ["mail", "base_fontawesome", "uom"],
+    "depends": [
+        "base",
+        "base_setup",
+        "mail", 
+        "base_fontawesome", 
+        "uom"
+        ],
     "data": [
         "security/pod_security.xml",
         "security/ir.model.access.csv",

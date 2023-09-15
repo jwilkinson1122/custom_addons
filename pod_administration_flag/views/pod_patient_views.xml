@@ -7,12 +7,7 @@
         <field name="inherit_id" ref="pod_base.pod_patient_form" />
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button
-                    type="object"
-                    name="action_view_flags"
-                    class="oe_stat_button"
-                    icon="fa-flag"
-                >
+                <button type="object" name="action_view_flags" class="oe_stat_button" icon="fa-flag">
                     <field name="pod_flag_count" widget="statinfo" string="Flags" />
                     <field name='pod_flag_ids' invisible="1" />
                 </button>

@@ -2,9 +2,7 @@
 
 <odoo>
     <record model="ir.ui.view" id="pod_authorization_web_form_view">
-        <field
-            name="name"
-        >pod.authorization.web.form (in pod_financial_coverage_request)</field>
+        <field name="name">pod.authorization.web.form (in pod_financial_coverage_request)</field>
         <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <form>
@@ -22,9 +20,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="pod_authorization_web_search_view">
-        <field
-            name="name"
-        >pod.authorization.web.search (in pod_financial_coverage_request)</field>
+        <field name="name">pod.authorization.web.search (in pod_financial_coverage_request)</field>
         <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <search>
@@ -36,9 +32,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="pod_authorization_web_tree_view">
-        <field
-            name="name"
-        >pod.authorization.web.tree (in pod_financial_coverage_request)</field>
+        <field name="name">pod.authorization.web.tree (in pod_financial_coverage_request)</field>
         <field name="model">pod.authorization.web</field>
         <field name="arch" type="xml">
             <tree>
