@@ -13,10 +13,7 @@
                         <field name="group_main_activity_plan_definition" />
                     </div>
                     <div class="o_setting_right_pane">
-                        <label
-                            string="Main activity on plan definition"
-                            for="group_main_activity_plan_definition"
-                        />
+                        <label string="Main activity on plan definition" for="group_main_activity_plan_definition" />
                         <div class="text-muted">
                             Add a main activity definition on plan definition
                             that will be its main parent
@@ -28,10 +25,7 @@
                         <field name="group_patient_add_plan_definition" />
                     </div>
                     <div class="o_setting_right_pane">
-                        <label
-                            string="Plan definition on patients"
-                            for="group_patient_add_plan_definition"
-                        />
+                        <label string="Plan definition on patients" for="group_patient_add_plan_definition" />
                         <div class="text-muted">
                             Allows to add plan definitions on patients
                         </div>

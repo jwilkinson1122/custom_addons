@@ -22,46 +22,12 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button
-                        string="Activate"
-                        type="object"
-                        name="preparation2in_progress"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('fhir_state','!=','preparation')]}"
-                    />
-                    <button
-                        string="Complete"
-                        type="object"
-                        name="in_progress2completed"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('fhir_state','!=','in-progress')]}"
-                    />
-                    <button
-                        string="Suspend"
-                        type="object"
-                        name="in_progress2suspended"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('fhir_state','!=','in-progress')]}"
-                    />
-                    <button
-                        string="Abort"
-                        type="object"
-                        name="in_progress2aborted"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('fhir_state','!=','in-progress')]}"
-                    />
-                    <button
-                        string="Reactivate"
-                        type="object"
-                        name="suspended2in_progress"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('fhir_state','!=','suspended')]}"
-                    />
-                    <field
-                        name="fhir_state"
-                        widget="statusbar"
-                        statusbar_visible="preparation,in-progress,suspended,completed"
-                    />
+                    <button string="Activate" type="object" name="preparation2in_progress" class="oe_highlight" attrs="{'invisible': [('fhir_state','!=','preparation')]}" />
+                    <button string="Complete" type="object" name="in_progress2completed" class="oe_highlight" attrs="{'invisible': [('fhir_state','!=','in-progress')]}" />
+                    <button string="Suspend" type="object" name="in_progress2suspended" class="oe_highlight" attrs="{'invisible': [('fhir_state','!=','in-progress')]}" />
+                    <button string="Abort" type="object" name="in_progress2aborted" class="oe_highlight" attrs="{'invisible': [('fhir_state','!=','in-progress')]}" />
+                    <button string="Reactivate" type="object" name="suspended2in_progress" class="oe_highlight" attrs="{'invisible': [('fhir_state','!=','suspended')]}" />
+                    <field name="fhir_state" widget="statusbar" statusbar_visible="preparation,in-progress,suspended,completed" />
                 </header>
                 <field name="state" invisible="1" />
                 <sheet>
@@ -86,11 +52,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page
-                            name="Inheritance"
-                            string="Inheritance"
-                            groups="base.group_no_one"
-                        >
+                        <page name="Inheritance" string="Inheritance" groups="base.group_no_one">
                             <group name="inheritance" />
                         </page>
                     </notebook>

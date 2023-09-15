@@ -1,8 +1,7 @@
 {
     "name": "Podiatry Administration Practitioner",
     "version": "15.0.1.0.0",
-    "author": "NWPL"
-    "Odoo Community Association (OCA)",
+    "author": "NWPL",
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",
     "license": "LGPL-3",

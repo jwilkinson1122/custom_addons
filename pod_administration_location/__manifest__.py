@@ -3,8 +3,7 @@
     "version": "15.0.1.0.0",
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",
-    "author": "NWPL"
-    "Odoo Community Association (OCA)",
+    "author": "NWPL",
     "license": "LGPL-3",
     "depends": ["pod_base"],
     "data": [

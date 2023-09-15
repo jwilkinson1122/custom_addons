@@ -6,20 +6,14 @@
         <field name="inherit_id" ref="pod_base.res_partner_view_form" />
         <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//field[@name='child_ids']//form//field[@name='parent_id']"
-                position="after"
-            >
+            <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_requester" invisible="1" />
             </xpath>
             <field name="is_pod" position="before">
                 <field name="is_requester" />
             </field>
             <field name="vat" position="after">
-                <field
-                    name="college_number"
-                    attrs="{'invisible': [('is_requester','=',False), ('is_practitioner', '=', False)]}"
-                />
+                <field name="college_number" attrs="{'invisible': [('is_requester','=',False), ('is_practitioner', '=', False)]}" />
             </field>
         </field>
     </record>
@@ -29,8 +23,6 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_requester', '=', True)]</field>
-        <field
-            name="context"
-        >{'default_company_type':'person', 'default_is_company':False, 'default_is_requester': True, 'default_is_pod': True, 'default_is_customer': False}</field>
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_requester': True, 'default_is_pod': True, 'default_is_customer': False}</field>
     </record>
 </odoo>
