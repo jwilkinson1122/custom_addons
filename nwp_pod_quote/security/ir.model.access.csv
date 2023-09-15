@@ -1,11 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_pod_quote_user,access.pod.quote.user,model_pod_quote,pod_base.group_pod_user,1,0,0,0
-access_pod_quote_manager,access.pod.quote.manager,model_pod_quote,pod_base.group_pod_reception,0,1,1,1
-access_pod_quote_line_user,access.pod.quote.line.user,model_pod_quote_line,pod_base.group_pod_user,1,0,0,0
-access_pod_quote_line_manager,access.pod.quote.line.manager,model_pod_quote_line,pod_base.group_pod_reception,0,1,1,1
-access_pod_quote_layout_category_user,access.pod.quote.layout_category.user,model_pod_quote_layout_category,pod_base.group_pod_user,1,0,0,0
+access_pod_quote_user,access.pod.quote.user,model_pod_quote,pod_base.group_pod_user,1,1,1,0
+access_pod_quote_manager,access.pod.quote.manager,model_pod_quote,pod_base.group_pod_reception,1,1,1,1
+access_pod_quote_line_user,access.pod.quote.line.user,model_pod_quote_line,pod_base.group_pod_user,1,1,1,0
+access_pod_quote_line_manager,access.pod.quote.line.manager,model_pod_quote_line,pod_base.group_pod_reception,1,1,1,1
+access_pod_quote_layout_category_user,access.pod.quote.layout_category.user,model_pod_quote_layout_category,pod_base.group_pod_user,1,1,1,0
 access_pod_quote_layout_category_manager,access.pod.quote.layout_category.manager,model_pod_quote_layout_category,pod_base.group_pod_reception,1,1,1,1
-access_base_comment_template_pod_quote_user,access_base_comment_template pod quote user,base_comment_template.model_base_comment_template,pod_base.group_pod_user,1,0,0,0
+access_base_comment_template_pod_quote_user,access_base_comment_template pod quote user,base_comment_template.model_base_comment_template,pod_base.group_pod_user,1,1,1,0
 access_base_comment_template_pod_quote_manager,access_base_comment_template pod quote manager,base_comment_template.model_base_comment_template,pod_base.group_pod_reception,1,1,1,1
-
 access_wizard_create_quote_agreement,access_wizard_create_quote_agreement,model_wizard_create_quote_agreement,pod_base.group_pod_user,1,1,1,0

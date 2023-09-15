@@ -1,8 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_pod_cancel_reason_user,access_pod_cancel_reason_user,model_pod_cancel_reason,pod_base.group_pod_user,1,0,0,0
+access_pod_cancel_reason_user,access_pod_cancel_reason_user,model_pod_cancel_reason,pod_base.group_pod_user,1,1,1,0
 access_pod_cancel_reason_manager,access_pod_cancel_reason_manager,model_pod_cancel_reason,pod_base.group_pod_configurator,1,1,1,0
-
-
 access_pod_careplan_cancel,access_pod_careplan_cancel,model_pod_careplan_cancel,pod_base.group_pod_user,1,1,1,0
 access_pod_laboratory_request_cancel,access_pod_laboratory_request_cancel,model_pod_laboratory_request_cancel,pod_base.group_pod_user,1,1,1,0
 access_pod_procedure_request_cancel,access_pod_procedure_request_cancel,model_pod_procedure_request_cancel,pod_base.group_pod_user,1,1,1,0

@@ -14,4 +14,4 @@ from . import pod_procedure_request
 from . import pod_request
 from . import pod_request_group
 from . import res_partner
-from . import pod_diagnostic_report
+# from . import pod_diagnostic_report

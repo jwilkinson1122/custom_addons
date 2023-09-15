@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_careplan_display,pod_careplan_display,model_pod_careplan,pod_base.group_pod_user,1,0,0,0
-pod_careplan_reception_manager,pod_careplan_manager,model_pod_careplan,pod_base.group_pod_reception,0,1,1,0
+pod_careplan_display,pod_careplan_display,model_pod_careplan,pod_base.group_pod_user,1,1,1,0
+pod_careplan_reception_manager,pod_careplan_manager,model_pod_careplan,pod_base.group_pod_reception,1,1,1,0
 pod_careplan_practitioner_manager,pod_careplan_manager,model_pod_careplan,pod_base.group_pod_practitioner,0,1,1,0
 access_pod_careplan_add_plan_definition,access_pod_careplan_add_plan_definition,model_pod_careplan_add_plan_definition,pod_base.group_pod_user,1,1,1,0

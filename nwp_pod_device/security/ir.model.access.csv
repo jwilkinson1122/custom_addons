@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 pod_device_item_access,pod_device_item_access,model_pod_device_item,pod_base.group_pod_user,1,1,1,0
 pod_device_item_manager,pod_device_item_access,model_pod_device_item,pod_base.group_pod_assistance_user,1,1,1,1
-pod_location_type_access,pod_location_type_access,model_pod_location_type,pod_base.group_pod_user,1,0,0,0
+pod_location_type_access,pod_location_type_access,model_pod_location_type,pod_base.group_pod_user,1,1,1,0
 pod_location_type_manager,pod_location_type_manager,model_pod_location_type,pod_base.group_pod_admin,1,1,1,0
 access_pod_encounter_device,access_pod_encounter_device,model_pod_encounter_device,pod_base.group_pod_user,1,1,1,0

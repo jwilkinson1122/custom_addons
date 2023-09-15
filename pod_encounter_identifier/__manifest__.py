@@ -13,7 +13,7 @@
         "pod_document",
         "pod_clinical_laboratory",
         "sequence_parser",
-        "pod_diagnostic_report",
+        # "pod_diagnostic_report",
         "pod_administration_center",
         # "sequence_safe",
     ],

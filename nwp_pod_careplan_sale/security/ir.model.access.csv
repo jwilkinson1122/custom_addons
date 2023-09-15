@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_invoice_group_method,access.invoice.group.method,model_invoice_group_method,base.group_user,1,0,0,0
-access_pod_sale_discount_user,access_pod_sale_discount_user,model_pod_sale_discount,pod_base.group_pod_user,1,0,0,0
+access_invoice_group_method,access.invoice.group.method,model_invoice_group_method,base.group_user,1,1,1,0
+access_pod_sale_discount_user,access_pod_sale_discount_user,model_pod_sale_discount,pod_base.group_pod_user,1,1,1,0
 access_pod_sale_discount_manager,access_pod_sale_discount_manager,model_pod_sale_discount,pod_base.group_pod_financial,1,1,1,1
 salemanager_product_nomenclature,salemanager_product_nomenclature,product_nomenclature.model_product_nomenclature,pod_base.group_pod_financial,1,1,1,1
 salemanager_product_nomenclature_product,salemanager_product_nomenclature_product,product_nomenclature.model_product_nomenclature_product,pod_base.group_pod_financial,1,1,1,1
