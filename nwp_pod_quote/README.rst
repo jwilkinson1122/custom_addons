@@ -1,5 +1,5 @@
 ================
-NWP Podiatry Quote
+Podiatry Quote
 ================
 
 This module allows to create quotes for agreements.

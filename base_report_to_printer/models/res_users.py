@@ -13,9 +13,7 @@ class ResUsers(models.Model):
         ]
 
     printing_action = fields.Selection(selection=_user_available_action_types)
-    printing_printer_id = fields.Many2one(
-        comodel_name="printing.printer", string="Default Printer"
-    )
+    printing_printer_id = fields.Many2one(comodel_name="printing.printer", string="Default Printer")
 
     @property
     def SELF_READABLE_FIELDS(self):

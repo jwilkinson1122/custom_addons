@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWPL Stock Location Warning",
+    "name": "Stock Location Warning",
     "summary": """
         Add warnings to stock locations""",
     "version": "15.0.1.0.0",

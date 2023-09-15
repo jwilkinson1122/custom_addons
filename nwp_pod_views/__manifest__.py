@@ -1,15 +1,13 @@
 
 
 {
-    "name": "NWP Podiatry Views",
+    "name": "Podiatry Views",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": [
         "account",
         "barcode_action",
         "nwp_pod_careplan_sale",
-        "l10n_es_partner",
-        "l10n_es",
     ],
     "data": [
         "security/pod_encounter_create_group.xml",

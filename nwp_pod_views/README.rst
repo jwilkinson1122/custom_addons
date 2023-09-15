@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 ================
-NWP Podiatry Views
+Podiatry Views
 ================
 
 This module fixes all views of pod in order to accomplish NWP Standard.

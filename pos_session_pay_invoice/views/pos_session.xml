@@ -9,7 +9,7 @@
                 <button
                     t-if="record.current_session_state.raw_value === 'opened'"
                     class="btn btn-info"
-                    name="open_existing_session_nwp"
+                    name="open_existing_session_cb"
                     type="object"
                 >Summary</button>
             </button>

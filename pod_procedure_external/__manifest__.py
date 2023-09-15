@@ -14,6 +14,7 @@
         "pod_administration_encounter",
     ],
     "data": [
+        "security/security.xml",
         "data/report_paper_format.xml",
         "data/ir_sequence_data.xml",
         "security/ir.model.access.csv",

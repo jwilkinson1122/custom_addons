@@ -14,7 +14,7 @@
         "pod_administration_practitioner_specialty",
     ],
     "data": [
-        "views/assets.xml",
+        # "views/assets.xml",
         "security/pod_security.xml",
         "security/ir.model.access.csv",
         "data/ir_sequence_data.xml",
@@ -27,6 +27,12 @@
         "views/pod_family_member_history.xml",
         "reports/pod_impression_report.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'pod_clinical_impression/static/src/scss/widget_warning_dropdown.scss',
+            'pod_clinical_impression/static/src/js/widget_warning_dropdown.js',
+        ],
+    },
     "qweb": ["static/src/xml/widget_warning_dropdown.xml"],
     "demo": ["demo/pod_demo.xml"],
 }

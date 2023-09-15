@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWPL Nonconformity Encounter",
+    "name": "Nonconformity Encounter",
     "summary": """
         NWP custom nonconformity management""",
     "version": "15.0.1.1.0",

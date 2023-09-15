@@ -1,8 +1,8 @@
 ======================
-NWPL Sale Report Invoice
+Sale Report Invoice
 ======================
 
-Sale Report invoice modification for NWP
+Sale Report invoice modification
 
 Installation
 ============

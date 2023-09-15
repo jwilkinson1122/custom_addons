@@ -1,4 +1,4 @@
-NWP Podiatry Guard
+Podiatry Guard
 ================
 
-NWP Podiatry Guard
+Podiatry Guard

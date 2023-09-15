@@ -9,6 +9,11 @@
     "category": "Website",
     "summary": "Allows to us a flag box with icons / buttons",
     "depends": ["web"],
-    "data": ["views/templates.xml"],
+    "data": [],
+    "assets": {
+        "web.assets_backend": [
+            "web_flagbox/static/src/scss/flag_box.scss",
+        ],
+    },
     "installable": True,
 }

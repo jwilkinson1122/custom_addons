@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWP Podiatry Workflow Activity",
+    "name": "Podiatry Workflow Activity",
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "depends": ["pod_clinical_procedure"],

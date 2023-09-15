@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWPL Mgmtsystem Issue",
+    "name": "Mgmtsystem Issue",
     "summary": """
         Managemente System Issues""",
     "version": "15.0.1.0.0",

@@ -1,8 +1,8 @@
 
 
 {
-    "name": "NWPL Management system Issue Purchase",
-    "summary": """NWPL Management system Issue Purchase""",
+    "name": "Management system Issue Purchase",
+    "summary": """Management system Issue Purchase""",
     "version": "15.0.1.0.0",
     "license": "AGPL-3",
     "author": "NWPL",

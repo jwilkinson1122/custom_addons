@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWPL Knowledge",
+    "name": "Knowledge Base",
     "summary": """
         Knowledge for NWP""",
     "version": "15.0.1.0.0",

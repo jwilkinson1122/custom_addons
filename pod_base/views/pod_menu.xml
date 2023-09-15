@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <menuitem
-        id="pod_root"
-        name="Podiatry"
-        sequence="10"
-        groups="group_pod_user"
-        web_icon="pod_base,static/description/icon.png"
-    />
+    <menuitem id="pod_root" name="POD ERP" sequence="10" groups="group_pod_user" web_icon="pod_base,static/description/icon.png" />
 
     <record model="ir.ui.menu" id="pod_root_administration">
         <field name="name">Administration</field>
@@ -20,9 +14,7 @@
         <field name="name">Clinical</field>
         <field name="parent_id" ref="pod_root" />
         <field name="sequence" eval="10" />
-        <field
-            name="groups_id"
-            eval="[
+        <field name="groups_id" eval="[
             (6, 0, [ref('group_pod_technician'),
                     ref('group_pod_practitioner'),
                     ref('group_pod_nurse'),
@@ -30,8 +22,7 @@
                     ref('group_pod_pharmacy')
                     ]
             ),
-        ]"
-        />
+        ]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_clinical_request">
@@ -49,28 +40,22 @@
         <field name="name">Diagnostics</field>
         <field name="parent_id" ref="pod_root" />
         <field name="sequence" eval="20" />
-        <field
-            name="groups_id"
-            eval="[(6, 0, [ref('group_pod_practitioner'),
+        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'),
                        ref('group_pod_technician')
                        ]
              ),
-        ]"
-        />
+        ]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_root_devices">
         <field name="name">Devices</field>
         <field name="parent_id" ref="pod_root" />
         <field name="sequence" eval="30" />
-        <field
-            name="groups_id"
-            eval="[(6, 0, [ref('group_pod_practitioner'),
+        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'),
                        ref('group_pod_pharmacy')
                       ]
              ),
-        ]"
-        />
+        ]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_root_financial">

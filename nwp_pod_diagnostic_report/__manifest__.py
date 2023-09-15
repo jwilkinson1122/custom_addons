@@ -1,7 +1,7 @@
 
 
 {
-    "name": "NWPL Podiatry Diagnostic Report",
+    "name": "Podiatry Diagnostic Report",
     "summary": """Allows the creation of pod diagnostic reports""",
     "version": "15.0.2.0.0",
     "license": "AGPL-3",

@@ -8,6 +8,11 @@
     "website": "https://nwpodiatric.com",
     "depends": ["sale_commission"],
     "data": ["views/sale_commission_view.xml"],
+    "assets": {
+        "web.assets_backend": [
+            "sale_commission_formula/static/src/css/sale_commission_formula.css",
+        ],
+    },
     "demo": ["demo/commission_demo.xml"],
     "installable": True,
 }

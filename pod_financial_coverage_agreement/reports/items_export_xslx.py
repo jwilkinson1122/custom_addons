@@ -4,7 +4,7 @@ from odoo import models
 class PodiatryCoverageAgreementItem(models.AbstractModel):
 
     _name = "report.pod_financial_coverage_agreement.items_xslx"
-    _description = "Report NWP Podiatry Financial Coverage Agreement Items"
+    _description = "Report Podiatry Financial Coverage Agreement Items"
     _inherit = "report.report_xlsx.abstract"
 
     def generate_xlsx_report(self, workbook, data, items):
