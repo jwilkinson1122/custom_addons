@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="partner_type_contact" model="res.partner.type">
+        <field name="name">Contact Address</field>
+        <field name="description">Contact</field>
+    </record>
+    <record id="partner_type_patient" model="res.partner.type">
+        <field name="name">Patient Address</field>
+        <field name="description">Patient</field>
+    </record>
+    <record id="partner_type_invoice" model="res.partner.type">
+        <field name="name">Invoice Address</field>
+        <field name="description">Invoice</field>
+    </record>
+    <record id="partner_type_billing" model="res.partner.type">
+        <field name="name">Billing Address</field>
+        <field name="description">Billing</field>
+    </record>
+    <record id="partner_type_delivery" model="res.partner.type">
+        <field name="name">Delivery Address</field>
+        <field name="description">Delivery</field>
+    </record>
+    <record id="partner_type_private" model="res.partner.type">
+        <field name="name">Private Address</field>
+        <field name="description">Private</field>
+    </record>
+    <record id="partner_type_other" model="res.partner.type">
+        <field name="name">Other Address</field>
+        <field name="description">Other</field>
+    </record>
+
+</odoo>

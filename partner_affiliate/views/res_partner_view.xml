@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Actions -->
+    <record id="action_affiliates_window" model="ir.actions.act_window">
+        <field name="name">Affiliates</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[("is_company", "=", True), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new affiliate
+            </p>
+            <p>
+                Organize and manage affiliates at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_contacts_window" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[("is_company", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new contact
+            </p>
+            <p>
+                Organize and manage contacts at a glance.
+            </p>
+        </field>
+    </record>
+
+    <!-- View Extensions -->
+    <record id="view_partner_form_add_affiliate" model="ir.ui.view">
+        <field name="model">res.partner</field>
+        <field eval="1" name="priority" />
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+
+            <!-- parent_id adjustments -->
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="parent_id_is_company" invisible="1" />
+            </xpath>
+            <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="attrs"></attribute>
+            </xpath>
+            <!-- <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_company', '=', True)]}</attribute>
+            </xpath> -->
+
+            <!-- button_box adjustments -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="action" name="%(action_affiliates_window)d" class="oe_stat_button" icon="fa-sitemap" attrs="{'invisible': [('affiliate_count', '=', 0)]}">
+                    <field name="affiliate_count" widget="statinfo" string="Practices" />
+                    <field name='affiliate_ids' invisible="1" />
+                </button>
+                <button type="action" name="%(action_contacts_window)d" class="oe_stat_button" icon="fa-address-book" attrs="{'invisible': [('child_count', '=', 0)]}">
+                    <field name="child_count" widget="statinfo" string="Contacts" />
+                    <field name='child_ids' invisible="1" />
+                </button>
+            </xpath>
+
+            <!-- Address Types adjustments -->
+            <xpath expr="//span[@name='address_name']" position="replace">
+                <span class="o_form_label o_td_label" name="podiatry_address">
+                    <field name="type" widget="many2many_tags" placeholder="Address Type" attrs="{'invisible': [('parent_id_is_company','=', False)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                    <b attrs="{'invisible': [('parent_id_is_company', '=', True)]}">Address</b>
+                </span>
+            </xpath>
+
+            <!-- Add Affiliates Page -->
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Affiliates" attrs="{'invisible': [('is_company','=',False)]}" autofocus="autofocus">
+                    <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
+                        <kanban on_create="base.view_partner_form">
+                            <field name="id" />
+                            <field name="color" />
+                            <field name="name" />
+                            <field name="title" />
+                            <field name="type" />
+                            <field name="email" />
+                            <field name="parent_id" />
+                            <field name="is_company" />
+                            <field name="function" />
+                            <field name="phone" />
+                            <field name="street" />
+                            <field name="street2" />
+                            <field name="zip" />
+                            <field name="city" />
+                            <field name="country_id" />
+                            <field name="mobile" />
+                            <field name="state_id" />
+                            <field name="image_128" />
+                            <field name="lang" />
+                            <field name="comment" />
+                            <field name="display_name" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <t t-set="color" t-value="kanban_color(record.color.raw_value)" />
+                                    <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                        <div class="o_kanban_image">
+                                            <img alt="Contact image" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)" />
+                                            <t t-if="!record.image_128.raw_value">
+                                                <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
+                                                <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
+                                                <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                    <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
+                                                    <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar_grey.png"'/>
+                                                </t>
+                                            </t>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <field name="name" />
+                                            <div t-if="record.function.raw_value">
+                                                <field name="function" />
+                                            </div>
+                                            <div t-if="record.email.raw_value">
+                                                <field name="email" widget="email" />
+                                            </div>
+                                            <div t-if="record.type.raw_value != 'contact'">
+                                                <div>
+                                                    <field name="zip" />
+                                                    <field name="city" />
+                                                </div>
+                                                <field t-if="record.state_id.raw_value" name="state_id" />
+                                                <field name="country_id" />
+                                            </div>
+                                            <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value" />
+                                            </div>
+                                            <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </page>
+            </xpath>
+            <!-- Page for child records -->
+            <xpath expr='//page[@name="contact_addresses"]' position="attributes">
+                <attribute name="string">Contacts</attribute>
+            </xpath>
+            <xpath expr='//page[@name="contact_addresses"]' position="inside">
+                <field name="child_ids" context="{'default_parent_id': active_id, 'default_is_company': False}" mode="kanban">
+                    <!-- kanban structure here... -->
+                </field>
+            </xpath>
+            
+            <xpath expr="//field[@name='child_ids']" position="attributes">
+                <attribute name="domain">[('is_company','=',False)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
