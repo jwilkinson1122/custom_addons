@@ -8,10 +8,10 @@ class TestEncounterCreate(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.center = cls.env["res.partner"].create(
+        cls.practice = cls.env["res.partner"].create(
             {
-                "is_center": True,
-                "name": "Center",
+                "is_practice": True,
+                "name": "Practice",
                 "encounter_sequence_prefix": "1",
             }
         )
@@ -20,7 +20,7 @@ class TestEncounterCreate(SavepointCase):
     def test_create_encounter_constrain_01(self):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create_encounter(
-                center=self.center,
+                practice=self.practice,
             )
 
     def test_create_encounter_constrain_02(self):
@@ -37,32 +37,32 @@ class TestEncounterCreate(SavepointCase):
 
     def test_create_encounter_id(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
-            patient=self.patient.id, center=self.center.id
+            patient=self.patient.id, practice=self.practice.id
         )
         encounter = self.env[encounter_action["res_model"]].browse(
             encounter_action["res_id"]
         )
-        self.assertEqual(self.center, encounter.center_id)
+        self.assertEqual(self.practice, encounter.practice_id)
         self.assertEqual(self.patient, encounter.patient_id)
 
     def test_create_encounter(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
-            patient=self.patient, center=self.center
+            patient=self.patient, practice=self.practice
         )
         encounter = self.env[encounter_action["res_model"]].browse(
             encounter_action["res_id"]
         )
-        self.assertEqual(self.center, encounter.center_id)
+        self.assertEqual(self.practice, encounter.practice_id)
         self.assertEqual(self.patient, encounter.patient_id)
 
     def test_create_encounter_create_patient(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
-            patient_vals={"name": "New patient"}, center=self.center
+            patient_vals={"name": "New patient"}, practice=self.practice
         )
         encounter = self.env[encounter_action["res_model"]].browse(
             encounter_action["res_id"]
         )
-        self.assertEqual(self.center, encounter.center_id)
+        self.assertEqual(self.practice, encounter.practice_id)
         self.assertNotEqual(self.patient, encounter.patient_id)
         self.assertEqual(encounter.patient_id.name, "New patient")
 
@@ -70,12 +70,12 @@ class TestEncounterCreate(SavepointCase):
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient_vals={"name": "New patient"},
             patient=self.patient,
-            center=self.center,
+            practice=self.practice,
         )
         encounter = self.env[encounter_action["res_model"]].browse(
             encounter_action["res_id"]
         )
-        self.assertEqual(self.center, encounter.center_id)
+        self.assertEqual(self.practice, encounter.practice_id)
         self.assertEqual(self.patient, encounter.patient_id)
         self.assertEqual(self.patient.name, "New patient")
 
@@ -84,7 +84,7 @@ class TestEncounterCreate(SavepointCase):
             self.env["pod.encounter"].create_encounter(
                 patient_vals={"name": "New patient"},
                 patient=self.patient,
-                center=self.center,
+                practice=self.practice,
             )
             patient_write.assert_called()
 
@@ -93,11 +93,11 @@ class TestEncounterCreate(SavepointCase):
             encounter_action = self.env["pod.encounter"].create_encounter(
                 patient_vals={"name": self.patient.name},
                 patient=self.patient,
-                center=self.center,
+                practice=self.practice,
             )
             patient_write.assert_not_called()
         encounter = self.env[encounter_action["res_model"]].browse(
             encounter_action["res_id"]
         )
-        self.assertEqual(self.center, encounter.center_id)
+        self.assertEqual(self.practice, encounter.practice_id)
         self.assertEqual(self.patient, encounter.patient_id)

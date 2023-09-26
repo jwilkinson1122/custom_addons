@@ -5,7 +5,7 @@
         inherit_id="pod_diagnostic_report.pod_diagnostic_report_template"
     >
         <xpath expr="//t[@t-set='partner']" position="attributes">
-            <attribute name="t-value">doc.encounter_id.center_id</attribute>
+            <attribute name="t-value">doc.encounter_id.practice_id</attribute>
         </xpath>
     </template>
     <template

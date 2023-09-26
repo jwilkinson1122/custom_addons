@@ -14,11 +14,11 @@ class TestNWP(TransactionCase):
             {"payor_id": self.payor.id, "name": "Coverage"}
         )
         self.company = self.browse_ref("base.main_company")
-        self.center = self.env["res.partner"].create(
+        self.practice = self.env["res.partner"].create(
             {
-                "name": "Center",
+                "name": "Practice",
                 "is_pod": True,
-                "is_center": True,
+                "is_practice": True,
                 "encounter_sequence_prefix": "S",
                 "stock_location_id": self.browse_ref("stock.warehouse0").id,
                 "stock_picking_type_id": self.env["stock.picking.type"]
@@ -31,7 +31,7 @@ class TestNWP(TransactionCase):
                 "name": "Location",
                 "is_pod": True,
                 "is_location": True,
-                "center_id": self.center.id,
+                "practice_id": self.practice.id,
                 "stock_location_id": self.browse_ref("stock.warehouse0").id,
                 "stock_picking_type_id": self.env["stock.picking.type"]
                 .search([], limit=1)
@@ -41,7 +41,7 @@ class TestNWP(TransactionCase):
         self.agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Agreement",
-                "center_ids": [(4, self.center.id)],
+                "practice_ids": [(4, self.practice.id)],
                 "coverage_template_ids": [(4, self.coverage_template.id)],
                 "company_id": self.company.id,
                 "authorization_method_id": self.browse_ref(
@@ -201,12 +201,12 @@ class TestNWP(TransactionCase):
 
     def create_careplan_and_group(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan = self.env["pod.careplan"].create(
             {
                 "patient_id": encounter.patient_id.id,
-                "center_id": encounter.center_id.id,
+                "practice_id": encounter.practice_id.id,
                 "coverage_id": self.coverage_01.id,
             }
         )
@@ -221,7 +221,7 @@ class TestNWP(TransactionCase):
             [("careplan_id", "=", careplan.id)]
         )
         group.ensure_one()
-        self.assertEqual(group.center_id, encounter.center_id)
+        self.assertEqual(group.practice_id, encounter.practice_id)
         return encounter, careplan, group
 
     def test_change_plan(self):

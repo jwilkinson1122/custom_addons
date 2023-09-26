@@ -9,7 +9,7 @@ class PodiatrySavePointCase(common.PodiatrySavePointCase):
             {
                 "name": "Reina",
                 "is_pod": True,
-                "is_center": True,
+                "is_practice": True,
                 "encounter_sequence_prefix": "9",
             }
         )

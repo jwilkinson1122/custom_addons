@@ -7,7 +7,7 @@
     "website": "https://nwpodiatric.com",
     "author": "NWPL",
     "license": "AGPL-3",
-    "depends": ["pod_administration_center"],
+    "depends": ["pod_administration_practice"],
     "data": [
         # "security/pod_security.xml",
         # "data/ir_sequence_data.xml",

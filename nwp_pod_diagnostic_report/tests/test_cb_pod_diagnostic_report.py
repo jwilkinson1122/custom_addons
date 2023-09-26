@@ -51,10 +51,10 @@ class TestNWPLPodiatryDiagnosticReport(TransactionCase):
         self.patient_1 = self.env["pod.patient"].create(
             {"name": "Patient 1", "vat": "47238567H"}
         )
-        self.center_1 = self.env["res.partner"].create(
+        self.practice_1 = self.env["res.partner"].create(
             {
-                "name": "Center 1",
-                "is_center": True,
+                "name": "Practice 1",
+                "is_practice": True,
                 "encounter_sequence_prefix": "C",
             }
         )
@@ -62,7 +62,7 @@ class TestNWPLPodiatryDiagnosticReport(TransactionCase):
             {
                 "name": "Encounter 1",
                 "patient_id": self.patient_1.id,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
             }
         )
         self.template_1 = self.env["pod.diagnostic.report.template"].create(

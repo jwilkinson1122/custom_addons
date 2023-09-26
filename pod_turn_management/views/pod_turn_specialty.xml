@@ -41,7 +41,7 @@
                                         name="default_practitioner_id"
                                         domain="[('id', 'in', parent.practitioner_ids), ('is_practitioner', '=', True)]"
                                     />
-                                    <field name="center_ids" widget="many2many_tags" />
+                                    <field name="practice_ids" widget="many2many_tags" />
                                 </tree>
                             </field>
                         </page>

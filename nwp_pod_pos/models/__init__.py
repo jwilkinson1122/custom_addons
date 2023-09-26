@@ -9,4 +9,4 @@ from . import res_company
 from . import pos_payment
 from . import pos_order
 from . import product_template
-from . import product_pod_center_company
+from . import product_pod_practice_company

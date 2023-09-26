@@ -19,8 +19,8 @@ Usage
 #. Click 'Create'.
 #. Provide a name and any other personal information.
 #. Click 'Save'.
-4 - Create a center
-#. Go to 'Administration / Centers'
+4 - Create a practice
+#. Go to 'Administration / Practices'
 #. Click 'Create'.
 #. Provide a name, prefix for Encounter sequence and any other information.
 #. Click 'Save'.
@@ -32,5 +32,5 @@ Usage
 6 - Create an encounter and generate a pod report
 #. Go to 'Administration / Encounters'
 #. Click 'Create'.
-#. Provide a patient, center and any other information.
+#. Provide a patient, practice and any other information.
 #. Click 'Generate Podiatry Report' and select a template.

@@ -64,11 +64,11 @@ class PodiatryTurnSpecialtyRule(models.Model):
     )
     start_hour = fields.Float(required=True)
     duration = fields.Float(required=True)
-    center_ids = fields.Many2many(
-        string="Centers",
+    practice_ids = fields.Many2many(
+        string="Practices",
         required=True,
         comodel_name="res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
     )
 
     def _generate_record(self, date):
@@ -84,6 +84,6 @@ class PodiatryTurnSpecialtyRule(models.Model):
             "specialty_id": self.turn_specialty_id.id,
             "duration": self.duration,
             "practitioner_id": self.default_practitioner_id.id or False,
-            "center_ids": [(6, 0, self.center_ids.ids)],
+            "practice_ids": [(6, 0, self.practice_ids.ids)],
             "date": fields.Datetime.to_string(rule_date.astimezone(utc)),
         }

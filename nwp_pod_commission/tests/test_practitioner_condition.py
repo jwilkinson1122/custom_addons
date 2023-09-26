@@ -79,7 +79,7 @@ class TestPractitionerCondition(TransactionCase):
             }
         )
 
-    def test_condition_center_1(self):
+    def test_condition_practice_1(self):
         practitioner = self.env["res.partner"].create(
             {
                 "name": "Practitioner",
@@ -87,11 +87,11 @@ class TestPractitionerCondition(TransactionCase):
                 "is_practitioner": True,
             }
         )
-        center_01 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_center": True}
+        practice_01 = self.env["res.partner"].create(
+            {"name": "Practitioner", "is_pod": True, "is_practice": True}
         )
-        center_02 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_center": True}
+        practice_02 = self.env["res.partner"].create(
+            {"name": "Practitioner", "is_pod": True, "is_practice": True}
         )
         self.env["pod.practitioner.condition"].create(
             {"practitioner_id": practitioner.id}
@@ -99,18 +99,18 @@ class TestPractitionerCondition(TransactionCase):
         self.env["pod.practitioner.condition"].create(
             {
                 "practitioner_id": practitioner.id,
-                "center_ids": [(4, center_01.id), (4, center_02.id)],
+                "practice_ids": [(4, practice_01.id), (4, practice_02.id)],
             }
         )
         with self.assertRaises(ValidationError):
             self.env["pod.practitioner.condition"].create(
                 {
                     "practitioner_id": practitioner.id,
-                    "center_ids": [(4, center_01.id)],
+                    "practice_ids": [(4, practice_01.id)],
                 }
             )
 
-    def test_condition_center_2(self):
+    def test_condition_practice_2(self):
         practitioner = self.env["res.partner"].create(
             {
                 "name": "Practitioner",
@@ -118,11 +118,11 @@ class TestPractitionerCondition(TransactionCase):
                 "is_practitioner": True,
             }
         )
-        center_01 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_center": True}
+        practice_01 = self.env["res.partner"].create(
+            {"name": "Practitioner", "is_pod": True, "is_practice": True}
         )
-        center_02 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_center": True}
+        practice_02 = self.env["res.partner"].create(
+            {"name": "Practitioner", "is_pod": True, "is_practice": True}
         )
         self.env["pod.practitioner.condition"].create(
             {"practitioner_id": practitioner.id}
@@ -130,13 +130,13 @@ class TestPractitionerCondition(TransactionCase):
         self.env["pod.practitioner.condition"].create(
             {
                 "practitioner_id": practitioner.id,
-                "center_ids": [(4, center_01.id)],
+                "practice_ids": [(4, practice_01.id)],
             }
         )
         with self.assertRaises(ValidationError):
             self.env["pod.practitioner.condition"].create(
                 {
                     "practitioner_id": practitioner.id,
-                    "center_ids": [(4, center_01.id), (4, center_02.id)],
+                    "practice_ids": [(4, practice_01.id), (4, practice_02.id)],
                 }
             )

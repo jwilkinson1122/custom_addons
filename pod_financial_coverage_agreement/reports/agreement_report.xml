@@ -80,7 +80,7 @@
                 <t t-set="company" t-value="o.company_id.sudo()" />
                 <t t-call="web.external_layout_standard">
                     <t t-set="print_coverage" t-value="True" />
-                    <t t-set="centers" t-value="o.center_ids" />
+                    <t t-set="practices" t-value="o.practice_ids" />
                     <t t-set="items" t-value="o.item_ids" />
                     <t
                         t-set="data"

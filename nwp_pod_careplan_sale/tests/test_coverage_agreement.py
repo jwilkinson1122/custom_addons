@@ -41,7 +41,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         agr2 = self._create_coverage_agreement(self.coverage_template_1)
         self._create_coverage_agreement_item(agr, self.product_1)
         self._create_coverage_agreement_item(agr2, self.product_2)
-        (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
+        (agr | agr2).write({"practice_ids": [(4, self.practice_1.id)]})
         agr.invoice_group_method_id = self.env.ref(
             "nwp_pod_careplan_sale.by_customer"
         )
@@ -56,7 +56,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         agr2 = self._create_coverage_agreement(self.coverage_template_1)
         self._create_coverage_agreement_item(agr, self.product_1)
         self._create_coverage_agreement_item(agr2, self.product_2)
-        (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
+        (agr | agr2).write({"practice_ids": [(4, self.practice_1.id)]})
         agr.invoice_group_method_id = self.env.ref(
             "nwp_pod_careplan_sale.by_customer"
         )

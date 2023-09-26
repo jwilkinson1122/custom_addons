@@ -7,7 +7,7 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    pod_center_company_ids = fields.One2many(
-        "product.pod.center.company",
+    pod_practice_company_ids = fields.One2many(
+        "product.pod.practice.company",
         inverse_name="product_tmpl_id",
     )

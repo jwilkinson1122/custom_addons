@@ -6,9 +6,9 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="pod_encounter_identifier.res_partner_view_form" />
         <field name="arch" type="xml">
-            <field name="center_alias" position="after">
-                <!-- <field name="integer_center_identifier" attrs="{'required': [('is_center', '=', True)]}" /> -->
-                <field name="integer_center_identifier" string="Center ID" widget="integer" attrs="{'required': [('is_center', '=', True)]}" options="{'format': 0}"/>
+            <field name="practice_alias" position="after">
+                <!-- <field name="integer_practice_identifier" attrs="{'required': [('is_practice', '=', True)]}" /> -->
+                <field name="integer_practice_identifier" string="Practice ID" widget="integer" attrs="{'required': [('is_practice', '=', True)]}" options="{'format': 0}"/>
             </field>
         </field>
     </record>

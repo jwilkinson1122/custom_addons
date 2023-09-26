@@ -107,7 +107,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
     # flake8: noqa: C901
     def test_careplan_sale(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan = self.env["pod.careplan"].new(
             {
@@ -119,7 +119,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         )
         careplan._onchange_encounter()
         careplan = careplan.create(careplan._convert_to_write(careplan._cache))
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
@@ -170,7 +170,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         )
         self.assertGreater(len(procedure_requests), 0)
         for request in procedure_requests:
-            self.assertEqual(request.center_id, encounter.center_id)
+            self.assertEqual(request.practice_id, encounter.practice_id)
             self.assertEqual(request.fhir_state, "draft")
             procedure = request.generate_event()
             procedure.write({"performer_id": self.practitioner_01.id})
@@ -371,7 +371,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
             self.assertTrue(encounter.mapped("careplan_ids.procedure_request_ids"))
             for request in encounter.mapped("careplan_ids.procedure_request_ids"):
                 request.draft2active()
-                self.assertEqual(request.center_id, encounter.center_id)
+                self.assertEqual(request.practice_id, encounter.practice_id)
                 procedure = request.generate_event()
                 procedure.performer_id = self.practitioner_02
             encounter.refresh()
@@ -472,7 +472,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         for encounter in encounters:
             for request in encounter.careplan_ids.mapped("procedure_request_ids"):
                 request.draft2active()
-                self.assertEqual(request.center_id, encounter.center_id)
+                self.assertEqual(request.practice_id, encounter.practice_id)
                 procedure = request.generate_event()
                 procedure.performer_id = self.practitioner_02
             encounter.recompute_commissions()

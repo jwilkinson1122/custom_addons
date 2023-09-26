@@ -20,7 +20,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         coverage_template = self._create_coverage_template()
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.env.ref("base.main_company").id,
             "coverage_template_ids": [(6, 0, [coverage_template.id])],
         }
@@ -52,11 +52,11 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_constrains_01(self):
         temp_01 = self._create_coverage_template()
         temp_02 = self._create_coverage_template()
-        cent_01 = self._create_center()
+        cent_01 = self._create_practice()
         agr = self._create_coverage_agreement(temp_01)
         agr.write(
             {
-                "center_ids": [(4, cent_01.id)],
+                "practice_ids": [(4, cent_01.id)],
                 "coverage_template_ids": [(4, temp_02.id)],
             }
         )
@@ -68,7 +68,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_constrains_02(self):
         temp_01 = self._create_coverage_template()
         temp_02 = self._create_coverage_template()
-        cent_01 = self._create_center()
+        cent_01 = self._create_practice()
         agr = self._create_coverage_agreement(temp_01)
         agr2 = self._create_coverage_agreement(temp_02)
         self._create_coverage_agreement_item(agr, self.product_1)
@@ -76,7 +76,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         with self.assertRaises(ValidationError):
             agr.write(
                 {
-                    "center_ids": [(4, cent_01.id)],
+                    "practice_ids": [(4, cent_01.id)],
                     "coverage_template_ids": [(4, temp_02.id)],
                 }
             )
@@ -84,7 +84,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_constrains_03(self):
         temp_01 = self._create_coverage_template()
         temp_02 = self._create_coverage_template()
-        cent_01 = self._create_center()
+        cent_01 = self._create_practice()
         agr = self._create_coverage_agreement(temp_01)
         agr2 = self._create_coverage_agreement(temp_02)
         agr.write({"date_from": "2018-01-01", "date_to": "2018-01-31"})
@@ -93,7 +93,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_1)
         agr.write(
             {
-                "center_ids": [(4, cent_01.id)],
+                "practice_ids": [(4, cent_01.id)],
                 "coverage_template_ids": [(4, temp_02.id)],
             }
         )
@@ -103,7 +103,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_constrains_04(self):
         temp_01 = self._create_coverage_template()
         temp_02 = self._create_coverage_template()
-        cent_01 = self._create_center()
+        cent_01 = self._create_practice()
         agr = self._create_coverage_agreement(temp_01)
         agr2 = self._create_coverage_agreement(temp_02)
         agr.write({"date_from": "2018-01-01", "date_to": "2018-01-31"})
@@ -112,7 +112,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_1)
         agr.write(
             {
-                "center_ids": [(4, cent_01.id)],
+                "practice_ids": [(4, cent_01.id)],
                 "coverage_template_ids": [(4, temp_02.id)],
             }
         )
@@ -123,7 +123,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         # case 1
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.ref("base.main_company"),
         }
         coverage_agreement = self.coverage_agreement_model.create(
@@ -151,7 +151,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         # case 1
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.ref("base.main_company"),
             "date_to": fields.Date.today(),
             "coverage_template_ids": [(4, self.coverage_template_1.id)],
@@ -203,7 +203,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
 
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.ref("base.main_company"),
         }
         coverage_agreement = self.coverage_agreement_model.create(
@@ -279,7 +279,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
     def test_export_xslx(self):
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.ref("base.main_company"),
         }
         coverage_agreement = self.coverage_agreement_model.create(
@@ -345,7 +345,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_2)
         (agr | agr2).write(
             {
-                "center_ids": [(4, self.center_1.id)],
+                "practice_ids": [(4, self.practice_1.id)],
                 "coverage_template_ids": [(4, temp_01.id)],
             }
         )
@@ -363,7 +363,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         agr2 = self._create_coverage_agreement(self.coverage_template_1)
         self._create_coverage_agreement_item(agr, self.product_1)
         self._create_coverage_agreement_item(agr2, self.product_2)
-        (agr | agr2).write({"center_ids": [(4, self.center_1.id)]})
+        (agr | agr2).write({"practice_ids": [(4, self.practice_1.id)]})
         with self.assertRaises(ValidationError):
             self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
@@ -376,8 +376,8 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         agr2 = self._create_coverage_agreement(temp_01)
         self._create_coverage_agreement_item(agr, self.product_1)
         self._create_coverage_agreement_item(agr2, self.product_2)
-        agr2.center_ids = self.center_1
-        agr.center_ids = self._create_center()
+        agr2.practice_ids = self.practice_1
+        agr.practice_ids = self._create_practice()
         with self.assertRaises(ValidationError):
             self.env["pod.coverage.agreement.join"].with_context(
                 active_model=(agr | agr2)._name,
@@ -388,7 +388,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         temp_01 = self._create_coverage_template()
         agr = self._create_coverage_agreement(temp_01)
         self._create_coverage_agreement_item(agr, self.product_1)
-        agr.center_ids = self._create_center()
+        agr.practice_ids = self._create_practice()
         with self.assertRaises(ValidationError):
             self.env["pod.coverage.agreement.join"].with_context(
                 active_model=agr._name,
@@ -403,7 +403,7 @@ class TestPodiatryCoverageAgreement(common.AgrementSavepointCase):
         self._create_coverage_agreement_item(agr2, self.product_2)
         (agr | agr2).write(
             {
-                "center_ids": [(4, self.center_1.id)],
+                "practice_ids": [(4, self.practice_1.id)],
                 "coverage_template_ids": [(4, temp_01.id)],
             }
         )

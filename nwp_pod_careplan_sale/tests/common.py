@@ -89,11 +89,11 @@ class PodiatrySavePointCase(SavepointCase):
                 "company_id": self.company.id,
             }
         )
-        self.center = self.env["res.partner"].create(
+        self.practice = self.env["res.partner"].create(
             {
-                "name": "Center",
+                "name": "Practice",
                 "is_pod": True,
-                "is_center": True,
+                "is_practice": True,
                 "encounter_sequence_prefix": "S",
             }
         )
@@ -102,7 +102,7 @@ class PodiatrySavePointCase(SavepointCase):
                 "name": "Location",
                 "is_pod": True,
                 "is_location": True,
-                "center_id": self.center.id,
+                "practice_id": self.practice.id,
                 "stock_location_id": self.env.ref("stock.warehouse0").lot_stock_id.id,
                 "stock_picking_type_id": self.env["stock.picking.type"]
                 .search([], limit=1)
@@ -144,7 +144,7 @@ class PodiatrySavePointCase(SavepointCase):
         self.agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Agreement",
-                "center_ids": [(4, self.center.id)],
+                "practice_ids": [(4, self.practice.id)],
                 "coverage_template_ids": [(4, self.coverage_template.id)],
                 "company_id": self.company.id,
                 "invoice_group_method_id": self.env.ref(
@@ -438,7 +438,7 @@ class PodiatrySavePointCase(SavepointCase):
             {
                 "name": "Reina",
                 "is_pod": True,
-                "is_center": True,
+                "is_practice": True,
                 "encounter_sequence_prefix": "9",
             }
         )
@@ -479,7 +479,7 @@ class PodiatrySavePointCase(SavepointCase):
         if not coverage:
             coverage = self.coverage_01
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan_wizard = (
             self.env["pod.encounter.add.careplan"]
@@ -493,10 +493,10 @@ class PodiatrySavePointCase(SavepointCase):
             careplan_wizard._convert_to_write(careplan_wizard._cache)
         )
         self.assertEqual(encounter, careplan_wizard.encounter_id)
-        self.assertEqual(encounter.center_id, careplan_wizard.center_id)
+        self.assertEqual(encounter.practice_id, careplan_wizard.practice_id)
         careplan_wizard.run()
         careplan = encounter.careplan_ids
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
@@ -514,7 +514,7 @@ class PodiatrySavePointCase(SavepointCase):
         )
         group.ensure_one()
         group.refresh()
-        self.assertEqual(group.center_id, encounter.center_id)
+        self.assertEqual(group.practice_id, encounter.practice_id)
         return encounter, careplan, group
 
     @classmethod

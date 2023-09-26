@@ -1,7 +1,7 @@
 
 
 {
-    "name": "Podiatry Administration Center",
+    "name": "Podiatry Administration Practice",
     "version": "15.0.1.0.0",
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",

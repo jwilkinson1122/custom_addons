@@ -19,10 +19,10 @@ class TestPodiatryGuard(TransactionCase):
                 "supplier_taxes_id": [],
             }
         )
-        self.center = self.env["res.partner"].create(
+        self.practice = self.env["res.partner"].create(
             {
-                "name": "Center",
-                "is_center": True,
+                "name": "Practice",
+                "is_practice": True,
                 "is_pod": True,
                 "guard_journal_id": self.journal.id,
             }
@@ -38,7 +38,7 @@ class TestPodiatryGuard(TransactionCase):
     def test_complex_plan(self):
         plan = self.env["pod.guard.plan"].create(
             {
-                "location_id": self.center.id,
+                "location_id": self.practice.id,
                 "product_id": self.product.id,
                 "start_time": 0,
                 "delay": 1,
@@ -109,7 +109,7 @@ class TestPodiatryGuard(TransactionCase):
     def check_apply_plan(self, key, value, modulus, difference):
         plan = self.env["pod.guard.plan"].create(
             {
-                "location_id": self.center.id,
+                "location_id": self.practice.id,
                 "product_id": self.product.id,
                 "start_time": 0,
                 "delay": 1,
@@ -155,7 +155,7 @@ class TestPodiatryGuard(TransactionCase):
         guard = self.env["pod.guard"].create(
             {
                 "product_id": self.product.id,
-                "location_id": self.center.id,
+                "location_id": self.practice.id,
                 "date": Datetime.now(),
                 "delay": 1,
             }

@@ -14,7 +14,7 @@ class PodiatryLaboratoryEvent(models.Model):
             )
             vals["coverage_agreement_item_id"] = (
                 self.env["pod.coverage.agreement.item"]
-                .get_item(self.service_id, cov, self.laboratory_request_id.center_id)
+                .get_item(self.service_id, cov, self.laboratory_request_id.practice_id)
                 .id
             )
         return vals

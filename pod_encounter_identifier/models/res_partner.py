@@ -11,7 +11,7 @@ class ResPartner(models.Model):
         string="Prefix for Encounter sequence",
         help="Prefix used to generate the internal identifier of encounters",
     )
-    center_alias = fields.Char()
+    practice_alias = fields.Char()
 
     @api.model
     def _compute_encounter_prefix(self, prefix):
@@ -24,8 +24,8 @@ class ResPartner(models.Model):
         :return: a dict with the values.
         """
         vals = {
-            "name": "Center " + prefix,
-            "code": "res.partner.pod.center - " + prefix,
+            "name": "Practice " + prefix,
+            "code": "res.partner.pod.practice - " + prefix,
             "padding": 5,
             "prefix": self._compute_encounter_prefix(prefix),
             "company_id": False,

@@ -11,11 +11,11 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page
-                    name="pod_center"
-                    string="Podiatry centers"
+                    name="pod_practice"
+                    string="Podiatry practices"
                     attrs="{'invisible': [('type', '!=', 'service')]}"
                 >
-                    <field name="pod_center_company_ids" />
+                    <field name="pod_practice_company_ids" />
                 </page>
             </notebook>
         </field>

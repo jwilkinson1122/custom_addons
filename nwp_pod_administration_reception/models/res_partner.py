@@ -28,10 +28,10 @@ class ResPartner(models.Model):
                 record.location_ids.filtered(lambda r: r.is_location)
             )
 
-    @api.constrains("is_reception", "center_id")
-    def check_reception_center(self):
-        if self.is_reception and not self.center_id:
-            raise ValidationError(_("Center must be fullfilled on receptions"))
+    @api.constrains("is_reception", "practice_id")
+    def check_reception_practice(self):
+        if self.is_reception and not self.practice_id:
+            raise ValidationError(_("Practice must be fullfilled on receptions"))
 
     @api.model
     def default_pod_fields(self):

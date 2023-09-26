@@ -20,7 +20,7 @@ class PodiatryEncounterValidationAddService(models.TransientModel):
     coverage_template_id = fields.Many2one(related=False, readonly=False)
     sub_payor_id = fields.Many2one("res.partner")
     sub_payor_required = fields.Boolean()
-    center_id = fields.Many2one(related="encounter_id.center_id", readonly=True)
+    practice_id = fields.Many2one(related="encounter_id.practice_id", readonly=True)
     subscriber_id = fields.Char()
     is_phantom = fields.Boolean()
 
@@ -75,7 +75,7 @@ class PodiatryEncounterValidationAddService(models.TransientModel):
                 {
                     "patient_id": self.patient_id.id,
                     "encounter_id": self.encounter_id.id,
-                    "center_id": self.encounter_id.center_id.id,
+                    "practice_id": self.encounter_id.practice_id.id,
                     "coverage_template_id": self.coverage_template_id.id,
                     "payor_id": self.payor_id.id,
                     "sub_payor_id": self.sub_payor_id.id or False,

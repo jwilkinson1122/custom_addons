@@ -65,7 +65,7 @@ class PodiatryProcedure(models.Model):
             rec.practitioner_condition_id = conditions.get_condition(
                 rec.service_id,
                 rec.procedure_service_id,
-                rec.procedure_request_id.center_id,
+                rec.procedure_request_id.practice_id,
             )
 
     @api.depends(

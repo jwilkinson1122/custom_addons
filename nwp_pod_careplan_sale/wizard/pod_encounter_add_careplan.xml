@@ -9,7 +9,7 @@
                 <group>
                     <field name="encounter_id" options="{'no_create': True}" />
                     <field name="patient_id" options="{'no_create': True}" />
-                    <field name="center_id" options="{'no_create': True}" />
+                    <field name="practice_id" options="{'no_create': True}" />
                 </group>
                 <group>
                     <group>

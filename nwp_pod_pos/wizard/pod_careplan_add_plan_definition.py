@@ -6,8 +6,8 @@ class PodiatryCareplanAddPlanDefinition(models.TransientModel):
     _inherit = "pod.careplan.add.plan.definition"
 
     def _run(self):
-        company = self.product_id.product_tmpl_id.pod_center_company_ids.filtered(
-            lambda r: r.center_id == self.center_id
+        company = self.product_id.product_tmpl_id.pod_practice_company_ids.filtered(
+            lambda r: r.practice_id == self.practice_id
         ).company_id
         if (
             company

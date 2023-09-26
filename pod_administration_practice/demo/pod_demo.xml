@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="partner_center_1" model="res.partner">
-        <field name="name">Test Center</field>
+    <record id="partner_practice_1" model="res.partner">
+        <field name="name">Test Practice</field>
         <field name="street">123 Test St.</field>
         <field name="street2">Suite 1337</field>
         <field name="city">Las Vegas</field>
@@ -9,10 +9,10 @@
         <field name="phone">+1-888-888-8888</field>
         <field name="email">email@example.com</field>
         <field name="state_id" ref="base.state_us_23" />
-        <field name="is_center" eval="True" />
+        <field name="is_practice" eval="True" />
         <field name="is_pod" eval="True" />
     </record>
     <record id="pod_administration_location.partner_location_1" model="res.partner">
-        <field name="center_id" ref="partner_center_1" />
+        <field name="practice_id" ref="partner_practice_1" />
     </record>
 </odoo>

@@ -14,13 +14,13 @@ class PodiatryCoverageAgreement(models.Model):
 
     name = fields.Char(string="Agreement Name", required=True, translate=True)
     active = fields.Boolean(default=True)
-    center_ids = fields.Many2many(
-        string="Centers",
+    practice_ids = fields.Many2many(
+        string="Practices",
         comodel_name="res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
         required=True,
         index=True,
-        help="Podiatry centers",
+        help="Podiatry practices",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -81,7 +81,7 @@ class PodiatryCoverageAgreement(models.Model):
         for record in self:
             record.child_count = len(record.child_ids)
 
-    @api.constrains("date_to", "date_from", "coverage_template_ids", "center_ids")
+    @api.constrains("date_to", "date_from", "coverage_template_ids", "practice_ids")
     def _check_product_unicity(self):
         for rec in self:
             rec.item_ids._check_product()

@@ -10,13 +10,13 @@
             <form string="Podiatry Quote">
                 <group>
                     <field name="possible_template_ids" invisible="1" />
-                    <field name="possible_center_ids" invisible="1" />
+                    <field name="possible_practice_ids" invisible="1" />
                     <field
                         name="coverage_template_id"
                         options="{'no_create': True, 'no_open': True}"
                     />
                     <field
-                        name="center_id"
+                        name="practice_id"
                         options="{'no_create': True, 'no_open': True}"
                     />
                 </group>

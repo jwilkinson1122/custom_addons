@@ -9,8 +9,8 @@ class PodiatryCareplanAddPlanDefinition(models.TransientModel):
     coverage_id = fields.Many2one(
         "pod.coverage", related="careplan_id.coverage_id", readonly=True
     )
-    center_id = fields.Many2one(
-        "res.partner", related="careplan_id.center_id", readonly=True
+    practice_id = fields.Many2one(
+        "res.partner", related="careplan_id.practice_id", readonly=True
     )
     coverage_template_id = fields.Many2one(
         "pod.coverage.template",
@@ -72,7 +72,7 @@ class PodiatryCareplanAddPlanDefinition(models.TransientModel):
     def _get_careplan_date(self):
         return self.careplan_id.encounter_id.create_date or self.careplan_id.create_date
 
-    @api.depends("coverage_template_id", "center_id")
+    @api.depends("coverage_template_id", "practice_id")
     def _compute_agreements(self):
         for rec in self:
             date = rec._get_careplan_date()
@@ -83,7 +83,7 @@ class PodiatryCareplanAddPlanDefinition(models.TransientModel):
                         "=",
                         rec.coverage_template_id.id,
                     ),
-                    ("center_ids", "=", rec.center_id.id),
+                    ("practice_ids", "=", rec.practice_id.id),
                     ("date_from", "<=", date),
                     "|",
                     ("date_to", "=", False),
@@ -102,7 +102,7 @@ class PodiatryCareplanAddPlanDefinition(models.TransientModel):
             "coverage_agreement_id"
         ] = self.agreement_line_id.coverage_agreement_id.id
         values["plan_definition_id"] = self.plan_definition_id.id
-        values["center_id"] = self.center_id.id
+        values["practice_id"] = self.practice_id.id
         if self.performer_required:
             values["performer_id"] = self.performer_id.id
         return values

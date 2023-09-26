@@ -17,11 +17,11 @@ class ActivityDefinition(models.Model):
         if parent:
             res["parent_model"] = parent._name
             res["parent_id"] = parent.id
-        if parent and not res.get("center_id", False):
-            res["center_id"] = parent.center_id.id
-        elif res.get("careplan_id", False) and not res.get("center_id", False):
-            res["center_id"] = (
-                self.env["pod.careplan"].browse(res["careplan_id"]).center_id.id
+        if parent and not res.get("practice_id", False):
+            res["practice_id"] = parent.practice_id.id
+        elif res.get("careplan_id", False) and not res.get("practice_id", False):
+            res["practice_id"] = (
+                self.env["pod.careplan"].browse(res["careplan_id"]).practice_id.id
             )
         if not self.env[self.model_id.model]._pass_performer(
             self, parent, plan, action
@@ -41,7 +41,7 @@ class ActivityDefinition(models.Model):
                 .coverage_template_id
             )
             cai = self.env["pod.coverage.agreement.item"].get_item(
-                self.service_id, coverage_template, vals["center_id"]
+                self.service_id, coverage_template, vals["practice_id"]
             )
             if not cai:
                 raise ValidationError(

@@ -145,7 +145,7 @@ class PodiatryRequest(models.AbstractModel):
         ].get_item(
             self.service_id,
             self.coverage_id.coverage_template_id,
-            self.center_id,
+            self.practice_id,
         )
         if not self.coverage_agreement_item_id:
             raise ValidationError(_("Agreement must be defined"))

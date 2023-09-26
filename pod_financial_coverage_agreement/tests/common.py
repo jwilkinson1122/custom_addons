@@ -19,7 +19,7 @@ class AgrementSavepointCase(SavepointCase):
         cls.payor_model = cls.env["res.partner"]
         cls.coverage_agreement_model = cls.env["pod.coverage.agreement"]
         cls.coverage_agreement_model_item = cls.env["pod.coverage.agreement.item"]
-        cls.center_model = cls.env["res.partner"]
+        cls.practice_model = cls.env["res.partner"]
         cls.product_model = cls.env["product.product"]
         # cls.type_model = cls.env["workflow.type"]
         cls.act_def_model = cls.env["workflow.activity.definition"]
@@ -30,7 +30,7 @@ class AgrementSavepointCase(SavepointCase):
         cls.payor_1 = cls._create_payor()
         cls.coverage_template_1 = cls._create_coverage_template()
         cls.coverage = cls._create_coverage(cls.coverage_template_1)
-        cls.center_1 = cls._create_center()
+        cls.practice_1 = cls._create_practice()
         cls.product_1 = cls._create_product("test 1")
         cls.product_2 = cls._create_product("test 2")
         # cls.type_1 = cls._create_type()
@@ -101,8 +101,8 @@ class AgrementSavepointCase(SavepointCase):
         }
 
     @classmethod
-    def _create_center(cls):
-        return cls.center_model.create({"name": "Test location", "is_center": True})
+    def _create_practice(cls):
+        return cls.practice_model.create({"name": "Test location", "is_practice": True})
 
     @classmethod
     def _create_product(cls, name):
@@ -151,7 +151,7 @@ class AgrementSavepointCase(SavepointCase):
     def _create_coverage_agreement_vals(cls, coverage_template):
         return {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [cls.center_1.id])],
+            "practice_ids": [(6, 0, [cls.practice_1.id])],
             "company_id": cls.env.ref("base.main_company").id,
             "coverage_template_ids": [(6, 0, coverage_template.ids)],
             "principal_concept": "coverage",

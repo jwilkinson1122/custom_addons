@@ -17,12 +17,12 @@ class PodiatryEncounterAddCareplan(models.TransientModel):
         return ["draft", "active"]
 
     @api.model
-    def default_center(self):
+    def default_practice(self):
         if self._context.get("default_encounter_id", False):
             return (
                 self.env["pod.encounter"]
                 .browse(self._context.get("default_encounter_id", False))
-                .center_id
+                .practice_id
             )
 
     encounter_id = fields.Many2one(
@@ -34,11 +34,11 @@ class PodiatryEncounterAddCareplan(models.TransientModel):
     patient_id = fields.Many2one(
         "pod.patient", related="encounter_id.patient_id", readonly=True
     )
-    center_id = fields.Many2one(
+    practice_id = fields.Many2one(
         "res.partner",
-        default=default_center,
+        default=default_practice,
         required=True,
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
     )
     payor_id = fields.Many2one(
         "res.partner", required=True, domain="[('is_payor', '=', True)]"
@@ -62,7 +62,7 @@ class PodiatryEncounterAddCareplan(models.TransientModel):
         return {
             "patient_id": self.patient_id.id,
             "encounter_id": self.encounter_id.id,
-            "center_id": self.center_id.id,
+            "practice_id": self.practice_id.id,
             "coverage_id": self.patient_id.get_coverage(
                 template=self.coverage_template_id,
                 coverage=self.coverage_id,

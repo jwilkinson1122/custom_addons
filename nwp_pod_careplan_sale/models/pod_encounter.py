@@ -157,9 +157,9 @@ class PodiatryEncounter(models.Model):
 
     @api.model
     def _create_encounter(
-        self, patient=False, patient_vals=False, center=False, **kwargs
+        self, patient=False, patient_vals=False, practice=False, **kwargs
     ):
-        encounter = super()._create_encounter(patient, patient_vals, center, **kwargs)
+        encounter = super()._create_encounter(patient, patient_vals, practice, **kwargs)
         careplan_data = kwargs.get("careplan_data") or []
         for careplan_vals in careplan_data:
             careplan_kwargs = kwargs.copy()

@@ -6,25 +6,25 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="pod_administration_center.res_partner_view_form"
+            ref="pod_administration_practice.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page
-                    name="center"
-                    string="Center"
-                    attrs="{'invisible': [('is_center', '!=', True)]}"
+                    name="practice"
+                    string="Practice"
+                    attrs="{'invisible': [('is_practice', '!=', True)]}"
                 >
                     <group>
                         <group>
-                            <field name="center_alias" />
+                            <field name="practice_alias" />
                         </group>
                         <group>
                             <field
                                 name="encounter_sequence_prefix"
                                 style="padding-right: 1.0em"
                                 class="oe_inline"
-                                attrs="{'required': [('is_center', '=', True)]}"
+                                attrs="{'required': [('is_practice', '=', True)]}"
                             />
                             <field
                                 name="encounter_sequence_id"

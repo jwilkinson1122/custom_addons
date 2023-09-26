@@ -47,9 +47,9 @@ class PodiatryRequest(models.AbstractModel):
     is_billable = fields.Boolean(string="Is billable?", default=False, tracking=True)
     is_breakdown = fields.Boolean(default=False, tracking=True)
     third_party_bill = fields.Boolean(default=False, tracking=True)
-    center_id = fields.Many2one(
+    practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
         required=True,
         tracking=True,
         readonly=True,

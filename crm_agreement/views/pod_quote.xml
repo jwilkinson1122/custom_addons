@@ -5,7 +5,7 @@
         <field name="model">pod.quote</field>
         <field name="inherit_id" ref="nwp_pod_quote.pod_quote_form" />
         <field name="arch" type="xml">
-            <field name="center_id" position="after">
+            <field name="practice_id" position="after">
                 <field
                     name="lead_id"
                     domain="[('partner_id.commercial_partner_id','=', payor_id)]"

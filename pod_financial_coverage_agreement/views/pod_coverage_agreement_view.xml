@@ -95,7 +95,7 @@
                                 attrs="{'invisible': [('is_template','=', True)]}"
                             />
                             <field
-                                name="center_ids"
+                                name="practice_ids"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                             />

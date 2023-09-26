@@ -14,11 +14,11 @@ class TestWizard(TransactionCase):
         self.template2 = self.env["pod.coverage.template"].create(
             {"name": "Template2", "payor_id": self.payor.id}
         )
-        self.center = self.env["res.partner"].create(
+        self.practice = self.env["res.partner"].create(
             {
                 "name": "Location",
                 "encounter_sequence_prefix": "S",
-                "is_center": True,
+                "is_practice": True,
             }
         )
         self.coverage = self.env["pod.coverage"].create(
@@ -34,14 +34,14 @@ class TestWizard(TransactionCase):
             }
         )
         self.encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient.id, "center_id": self.center.id}
+            {"patient_id": self.patient.id, "practice_id": self.practice.id}
         )
         self.careplan = self.env["pod.careplan"].create(
             {
                 "patient_id": self.patient.id,
                 "coverage_id": self.coverage.id,
                 "encounter_id": self.encounter.id,
-                "center_id": self.encounter.center_id.id,
+                "practice_id": self.encounter.practice_id.id,
             }
         )
         self.format = self.env["pod.authorization.format"].create(
@@ -54,7 +54,7 @@ class TestWizard(TransactionCase):
         self.agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Agreement",
-                "center_ids": [(6, 0, self.center.ids)],
+                "practice_ids": [(6, 0, self.practice.ids)],
                 "coverage_template_ids": [
                     (4, self.template.id),
                     (4, self.template2.id),
@@ -127,7 +127,7 @@ class TestWizard(TransactionCase):
                 "patient_id": self.patient.id,
                 "coverage_id": self.coverage2.id,
                 "encounter_id": self.encounter.id,
-                "center_id": self.encounter.center_id.id,
+                "practice_id": self.encounter.practice_id.id,
             }
         )
 

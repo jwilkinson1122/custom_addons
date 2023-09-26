@@ -7,9 +7,9 @@ from odoo.addons.base.models.ir_sequence import _update_nogap
 class PodiatryEncounter(models.Model):
     _inherit = "pod.encounter"
 
-    center_id = fields.Many2one(
+    practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
         required=True,
         tracking=True,
     )
@@ -36,10 +36,10 @@ class PodiatryEncounter(models.Model):
 
     @api.model
     def _get_identifier_values(self, vals):
-        center = self.env["res.partner"].browse(vals.get("center_id", False))
-        if not center or not center.encounter_sequence_id:
-            raise ValidationError(_("Center and center sequence are required"))
-        return center.encounter_sequence_id.with_context(
+        practice = self.env["res.partner"].browse(vals.get("practice_id", False))
+        if not practice or not practice.encounter_sequence_id:
+            raise ValidationError(_("Practice and practice sequence are required"))
+        return practice.encounter_sequence_id.with_context(
             sequence_tuple=True
         ).next_by_id()
 

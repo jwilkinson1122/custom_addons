@@ -67,9 +67,9 @@ class PodiatryQuote(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
-    center_id = fields.Many2one(
+    practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
@@ -135,7 +135,7 @@ class PodiatryQuote(models.Model):
     @api.model
     def _get_agreements_domain(self):
         return [
-            ("center_ids", "=", self.center_id.id),
+            ("practice_ids", "=", self.practice_id.id),
             ("coverage_template_ids", "=", self.coverage_template_id.id),
             "|",
             ("date_from", "=", False),
@@ -145,7 +145,7 @@ class PodiatryQuote(models.Model):
             ("date_to", ">=", self.quote_date),
         ]
 
-    @api.depends("coverage_template_id", "center_id", "quote_date")
+    @api.depends("coverage_template_id", "practice_id", "quote_date")
     def _compute_agreements(self):
         for rec in self:
             domain = rec._get_agreements_domain()
@@ -209,7 +209,7 @@ class PodiatryQuote(models.Model):
                     service = activity and activity.service_id
                     qty = activity.quantity
                     agreement = self.env["pod.coverage.agreement.item"].get_item(
-                        service, self.coverage_template_id, self.center_id
+                        service, self.coverage_template_id, self.practice_id
                     )
                     items.append([agreement, qty])
 

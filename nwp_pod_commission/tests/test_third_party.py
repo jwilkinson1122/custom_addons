@@ -38,7 +38,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
             }
         )
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan_wizard = (
             self.env["pod.encounter.add.careplan"]
@@ -52,10 +52,10 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
             careplan_wizard._convert_to_write(careplan_wizard._cache)
         )
         self.assertEqual(encounter, careplan_wizard.encounter_id)
-        self.assertEqual(encounter.center_id, careplan_wizard.center_id)
+        self.assertEqual(encounter.practice_id, careplan_wizard.practice_id)
         careplan_wizard.run()
         careplan = encounter.careplan_ids
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
@@ -71,7 +71,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         )
         group.ensure_one()
         group.refresh()
-        self.assertEqual(group.center_id, encounter.center_id)
+        self.assertEqual(group.practice_id, encounter.practice_id)
         self.assertEqual(group.performer_id, self.practitioner_01)
         self.assertEqual(len(group.procedure_request_ids.ids), 2)
         self.assertTrue(
@@ -95,7 +95,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         self.assertTrue(group.procedure_request_ids)
         for request in group.procedure_request_ids:
             request.draft2active()
-            self.assertEqual(request.center_id, encounter.center_id)
+            self.assertEqual(request.practice_id, encounter.practice_id)
             procedure = request.generate_event()
             procedure.performer_id = self.practitioner_02
         self.practitioner_02.third_party_sequence_id = self.env["ir.sequence"].create(
@@ -126,7 +126,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         self.assertTrue(group.procedure_request_ids)
         for request in group.procedure_request_ids:
             request.draft2active()
-            self.assertEqual(request.center_id, encounter.center_id)
+            self.assertEqual(request.practice_id, encounter.practice_id)
             procedure = request.generate_event()
             procedure.performer_id = self.practitioner_02
         self.practitioner_02.third_party_sequence_id = self.env["ir.sequence"].create(
@@ -184,7 +184,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
         self.assertTrue(group.procedure_request_ids)
         for request in group.procedure_request_ids:
             request.draft2active()
-            self.assertEqual(request.center_id, encounter.center_id)
+            self.assertEqual(request.practice_id, encounter.practice_id)
             procedure = request.generate_event()
             procedure.performer_id = self.practitioner_02
         self.assertTrue(group.is_sellable_insurance or group.is_sellable_private)

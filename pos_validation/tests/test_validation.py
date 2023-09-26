@@ -349,7 +349,7 @@ class TestPosValidation(common.PodiatrySavePointCase):
             self.assertTrue(encounter.mapped("careplan_ids.procedure_request_ids"))
             for request in encounter.mapped("careplan_ids.procedure_request_ids"):
                 request.draft2active()
-                self.assertEqual(request.center_id, encounter.center_id)
+                self.assertEqual(request.practice_id, encounter.practice_id)
                 procedure = request.generate_event()
                 procedure.performer_id = self.practitioner_02
             encounter.refresh()
@@ -458,7 +458,7 @@ class TestPosValidation(common.PodiatrySavePointCase):
         for encounter in self.session.encounter_ids:
             for request in encounter.careplan_ids.mapped("procedure_request_ids"):
                 request.draft2active()
-                self.assertEqual(request.center_id, encounter.center_id)
+                self.assertEqual(request.practice_id, encounter.practice_id)
                 procedure = request.generate_event()
                 procedure.performer_id = self.practitioner_02
             encounter.recompute_commissions()

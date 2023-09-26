@@ -12,7 +12,7 @@ class PodiatryCareplan(models.Model):
     @api.onchange("encounter_id")
     def _onchange_encounter(self):
         for record in self:
-            record.center_id = self.encounter_id.center_id
+            record.practice_id = self.encounter_id.practice_id
 
     def get_payor(self):
         if self.sub_payor_id:

@@ -4,10 +4,10 @@ from odoo.addons.nwp_pod_careplan_sale.tests import common
 class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_sale(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         encounter_02 = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan = self.env["pod.careplan"].new(
             {
@@ -19,7 +19,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         )
         careplan._onchange_encounter()
         careplan = careplan.create(careplan._convert_to_write(careplan._cache))
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,

@@ -7,7 +7,7 @@ class PodiatryPractitionerCondition(models.Model):
     _description = "Practitioner condition"
 
     practitioner_id = fields.Many2one("res.partner", required=True, readonly=True)
-    center_ids = fields.Many2many("res.partner", domain=[("is_center", "=", True)])
+    practice_ids = fields.Many2many("res.partner", domain=[("is_practice", "=", True)])
     service_id = fields.Many2one("product.product", domain=[("type", "=", "service")])
     procedure_service_id = fields.Many2one(
         "product.product", domain=[("activity_definition_ids", "!=", False)]
@@ -30,8 +30,8 @@ class PodiatryPractitionerCondition(models.Model):
                 ("active", "=", True),
                 ("id", "!=", rec.id),
             ]
-            for center in rec.center_ids.ids or [False]:
-                if self.search(domain + [("center_ids", "=", center)], limit=1):
+            for practice in rec.practice_ids.ids or [False]:
+                if self.search(domain + [("practice_ids", "=", practice)], limit=1):
                     raise ValidationError(
                         _(
                             "Only one condition is allowed for practitioner, "
@@ -39,50 +39,50 @@ class PodiatryPractitionerCondition(models.Model):
                         )
                     )
 
-    def get_functions(self, service, procedure_service, center):
+    def get_functions(self, service, procedure_service, practice):
         return [
             lambda r: (
                 r.service_id == service
                 and r.procedure_service_id == procedure_service
-                and center in r.center_ids
+                and practice in r.practice_ids
             ),
             lambda r: (
                 r.service_id == service
                 and r.procedure_service_id == procedure_service
-                and not r.center_ids
+                and not r.practice_ids
             ),
             lambda r: (
                 r.service_id == service
                 and not r.procedure_service_id
-                and center in r.center_ids
+                and practice in r.practice_ids
             ),
             lambda r: (
                 r.service_id == service
                 and not r.procedure_service_id
-                and not r.center_ids
+                and not r.practice_ids
             ),
             lambda r: (
                 not r.service_id
                 and r.procedure_service_id == procedure_service
-                and center in r.center_ids
+                and practice in r.practice_ids
             ),
             lambda r: (
                 not r.service_id
                 and r.procedure_service_id == procedure_service
-                and not r.center_ids
+                and not r.practice_ids
             ),
             lambda r: (
                 not r.service_id
                 and not r.procedure_service_id
-                and center in r.center_ids
+                and practice in r.practice_ids
             ),
             lambda r: (
-                not r.service_id and not r.procedure_service_id and not r.center_ids
+                not r.service_id and not r.procedure_service_id and not r.practice_ids
             ),
         ]
 
-    def get_condition(self, service, procedure_service, center):
-        for function in self.get_functions(service, procedure_service, center):
+    def get_condition(self, service, procedure_service, practice):
+        for function in self.get_functions(service, procedure_service, practice):
             condition = self.filtered(function)
             if condition:
                 return condition[0]

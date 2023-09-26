@@ -9,7 +9,7 @@
                 <field name="service_id" />
                 <field name="procedure_service_id" />
                 <field
-                    name="center_ids"
+                    name="practice_ids"
                     widget="many2many_tags"
                     options="{'no_create': True}"
                 />
@@ -48,7 +48,7 @@
                             <field name="service_id" />
                             <field name="procedure_service_id" />
                             <field
-                                name="center_ids"
+                                name="practice_ids"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                             />

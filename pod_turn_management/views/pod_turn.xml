@@ -13,7 +13,7 @@
                             name="practitioner_id"
                             domain="[('turn_specialty_ids', '=', specialty_id), ('is_practitioner', '=', True)]"
                         />
-                        <field name="center_ids" widget="many2many_tags" />
+                        <field name="practice_ids" widget="many2many_tags" />
                         <field name="specialty_id" />
                         <field name="turn_tag_ids" widget="many2many_tags" />
                     </group>
@@ -38,7 +38,7 @@
                 <field name="practitioner_id" />
                 <field name="date" />
                 <field name="specialty_id" />
-                <field name="center_ids" />
+                <field name="practice_ids" />
                 <field name="turn_tag_ids" string="Tag" />
                 <separator />
                 <filter
@@ -95,7 +95,7 @@
                 <field name="date" />
                 <field name="specialty_id" />
                 <field name="practitioner_id" />
-                <field name="center_ids" widget="many2many_tags" />
+                <field name="practice_ids" widget="many2many_tags" />
                 <field name="turn_tag_ids" widget="many2many_tags" />
             </tree>
         </field>

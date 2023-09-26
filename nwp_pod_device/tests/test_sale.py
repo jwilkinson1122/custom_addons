@@ -101,7 +101,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
 
     def test_bom(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         self.env["mrp.bom"].create(
             {

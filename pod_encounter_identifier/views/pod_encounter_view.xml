@@ -10,7 +10,7 @@
         />
         <field name="arch" type="xml">
             <field name="location_id" position="after">
-                <field name="center_id" />
+                <field name="practice_id" />
             </field>
         </field>
     </record>
@@ -24,7 +24,7 @@
         <field name="arch" type="xml">
             <field name="location_id" position="after">
                 <field
-                    name="center_id"
+                    name="practice_id"
                     options="{'no_create': True, 'no_open': True}"
                 />
             </field>

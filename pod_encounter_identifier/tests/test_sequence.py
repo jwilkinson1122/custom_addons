@@ -6,16 +6,16 @@ class TestSequence(TransactionCase):
     def setUp(self):
         super().setUp()
         self.patient = self.env["pod.patient"].create({"name": "Patient"})
-        self.center = self.env["res.partner"].create(
+        self.practice = self.env["res.partner"].create(
             {
-                "name": "Center",
+                "name": "Practice",
                 "is_pod": True,
-                "is_center": True,
+                "is_practice": True,
                 "encounter_sequence_prefix": "S",
             }
         )
         self.encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient.id, "center_id": self.center.id}
+            {"patient_id": self.patient.id, "practice_id": self.practice.id}
         )
         self.product = self.env["product.product"].create(
             {"name": "Product", "type": "consu"}
@@ -172,13 +172,13 @@ class TestSequence(TransactionCase):
     def test_encounter(self):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create(
-                {"patient_id": self.patient.id, "center_id": False}
+                {"patient_id": self.patient.id, "practice_id": False}
             )
 
     def test_res_partner(self):
         vals = {"name": "Prova"}
         exemple = self.env["res.partner"].create(vals)
         exemple.write(
-            {"encounter_sequence_prefix": self.center.encounter_sequence_prefix}
+            {"encounter_sequence_prefix": self.practice.encounter_sequence_prefix}
         )
         exemple.write({"encounter_sequence_prefix": "O", "encounter_sequence_id": 15})

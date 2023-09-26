@@ -74,23 +74,23 @@ class PodiatryCoverageAgreementItem(models.Model):
         res["authorization_format_id"] = self.authorization_format_id.id
         return res
 
-    def get_item(self, product, coverage_template, center, date=False, plan=False):
+    def get_item(self, product, coverage_template, practice, date=False, plan=False):
         if not date:
             date = fields.Date.today()
         if isinstance(product, int):
             product_id = product
         else:
             product_id = product.id
-        if isinstance(center, int):
-            center_id = center
+        if isinstance(practice, int):
+            practice_id = practice
         else:
-            center_id = center.id
+            practice_id = practice.id
         if isinstance(coverage_template, int):
             coverage_template_id = coverage_template
         else:
             coverage_template_id = coverage_template.id
         domain = [
-            ("coverage_agreement_id.center_ids", "=", center_id),
+            ("coverage_agreement_id.practice_ids", "=", practice_id),
             ("product_id", "=", product_id),
             ("coverage_template_ids", "=", coverage_template_id),
             "|",

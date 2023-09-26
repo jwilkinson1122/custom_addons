@@ -8,24 +8,24 @@ class TestPodiatryLocation(TransactionCase):
     def setUp(self):
         super().setUp()
         self.partner_obj = self.env["res.partner"].with_context(
-            test_check_location_center=True
+            test_check_location_practice=True
         )
 
-    def test_center(self):
+    def test_practice(self):
         vals = {
             "name": "location",
             "is_location": True,
         }
         with self.assertRaises(ValidationError):
             self.partner_obj.create(vals)
-        center_vals = {
+        practice_vals = {
             "name": "test name",
-            "is_center": True,
+            "is_practice": True,
         }
-        center = self.partner_obj.create(center_vals)
-        self.assertTrue(center.is_center)
-        vals["center_id"] = center.id
-        self.assertEqual(center.location_count, 0)
+        practice = self.partner_obj.create(practice_vals)
+        self.assertTrue(practice.is_practice)
+        vals["practice_id"] = practice.id
+        self.assertEqual(practice.location_count, 0)
         location = self.partner_obj.create(vals)
         self.assertTrue(location.is_location)
-        self.assertEqual(center.location_count, 1)
+        self.assertEqual(practice.location_count, 1)

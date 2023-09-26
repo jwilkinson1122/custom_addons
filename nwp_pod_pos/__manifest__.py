@@ -11,7 +11,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/product_pod_center_company.xml",
+        "views/product_pod_practice_company.xml",
         "views/product_template.xml",
         "views/pos_order.xml",
         "views/pos_payment.xml",

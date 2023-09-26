@@ -15,7 +15,7 @@ class TestPodiatryQuote(TransactionCase):
         self.payor_model = self.env["res.partner"]
         self.coverage_agreement_model = self.env["pod.coverage.agreement"]
         self.coverage_agreement_model_item = self.env["pod.coverage.agreement.item"]
-        self.center_model = self.env["res.partner"]
+        self.practice_model = self.env["res.partner"]
         self.product_model = self.env["product.product"]
         # self.type_model = self.env["workflow.type"]
         self.act_def_model = self.env["workflow.activity.definition"]
@@ -26,7 +26,7 @@ class TestPodiatryQuote(TransactionCase):
         self.payor_1 = self._create_payor()
         self.coverage_template_1 = self._create_coverage_template()
         self.coverage = self._create_coverage(self.coverage_template_1)
-        self.center_1 = self._create_center()
+        self.practice_1 = self._create_practice()
         self.product_1 = self._create_product("test 1")
         self.product_2 = self._create_product("test 2")
         # self.type_1 = self._create_type()
@@ -45,7 +45,7 @@ class TestPodiatryQuote(TransactionCase):
         # case 1
         coverage_agreement_vals = {
             "name": "test coverage agreement",
-            "center_ids": [(6, 0, [self.center_1.id])],
+            "practice_ids": [(6, 0, [self.practice_1.id])],
             "company_id": self.ref("base.main_company"),
             "authorization_method_id": auth_method.id,
             "authorization_format_id": self.browse_ref(
@@ -118,8 +118,8 @@ class TestPodiatryQuote(TransactionCase):
         coverage = self.coverage_model.create(vals)
         return coverage
 
-    def _create_center(self):
-        return self.center_model.create({"name": "Test location", "is_center": True})
+    def _create_practice(self):
+        return self.practice_model.create({"name": "Test location", "is_practice": True})
 
     def _create_product(self, name):
         return self.product_model.create({"name": name, "type": "service"})
@@ -158,7 +158,7 @@ class TestPodiatryQuote(TransactionCase):
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
                 "coverage_template_id": self.coverage_template_1.id,
                 "company_id": self.ref("base.main_company"),
             }
@@ -184,7 +184,7 @@ class TestPodiatryQuote(TransactionCase):
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
                 "coverage_template_id": self.coverage_template_1.id,
                 "company_id": self.ref("base.main_company"),
             }
@@ -204,7 +204,7 @@ class TestPodiatryQuote(TransactionCase):
             {
                 "payor_id": self.payor_1.id,
                 "is_private": True,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
                 "coverage_template_id": self.coverage_template_1.id,
                 "company_id": self.ref("base.main_company"),
             }
@@ -225,7 +225,7 @@ class TestPodiatryQuote(TransactionCase):
             {
                 "payor_id": self.payor_1.id,
                 "is_private": False,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
                 "coverage_template_id": self.coverage_template_1.id,
                 "company_id": self.ref("base.main_company"),
             }
@@ -252,7 +252,7 @@ class TestPodiatryQuote(TransactionCase):
             .create(
                 {
                     "coverage_template_id": self.coverage_template_1.id,
-                    "center_id": self.center_1.id,
+                    "practice_id": self.practice_1.id,
                 }
             )
         )
@@ -270,7 +270,7 @@ class TestPodiatryQuote(TransactionCase):
             {
                 "payor_id": self.payor_1.id,
                 "is_private": False,
-                "center_id": self.center_1.id,
+                "practice_id": self.practice_1.id,
                 "coverage_template_id": self.coverage_template_1.id,
                 "company_id": self.ref("base.main_company"),
             }

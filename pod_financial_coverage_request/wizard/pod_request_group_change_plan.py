@@ -21,8 +21,8 @@ class PodiatryRequestGroupChangePlan(models.TransientModel):
     coverage_id = fields.Many2one(
         "pod.coverage", readonly=True, related="careplan_id.coverage_id"
     )
-    center_id = fields.Many2one(
-        "res.partner", related="careplan_id.center_id", readonly=True
+    practice_id = fields.Many2one(
+        "res.partner", related="careplan_id.practice_id", readonly=True
     )
     coverage_template_id = fields.Many2one(
         "pod.coverage.template",
@@ -77,7 +77,7 @@ class PodiatryRequestGroupChangePlan(models.TransientModel):
         readonly=True,
     )
 
-    @api.depends("coverage_template_id", "center_id")
+    @api.depends("coverage_template_id", "practice_id")
     def _compute_agreements(self):
         for rec in self:
             rec.agreement_ids = self.env["pod.coverage.agreement"].search(
@@ -87,7 +87,7 @@ class PodiatryRequestGroupChangePlan(models.TransientModel):
                         "=",
                         rec.coverage_template_id.id,
                     ),
-                    ("center_ids", "=", rec.center_id.id),
+                    ("practice_ids", "=", rec.practice_id.id),
                 ]
             )
 

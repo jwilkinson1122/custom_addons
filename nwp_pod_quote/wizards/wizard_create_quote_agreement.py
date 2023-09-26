@@ -17,11 +17,11 @@ class WizardCreateQuoteAgreement(models.TransientModel):
         domain="[('id', 'in', possible_template_ids)]",
     )
 
-    possible_center_ids = fields.Many2many("res.partner")
-    center_id = fields.Many2one(
+    possible_practice_ids = fields.Many2many("res.partner")
+    practice_id = fields.Many2one(
         "res.partner",
         required=True,
-        domain="[('id', 'in', possible_center_ids)]",
+        domain="[('id', 'in', possible_practice_ids)]",
     )
 
     @api.model
@@ -30,7 +30,7 @@ class WizardCreateQuoteAgreement(models.TransientModel):
         agreement_id = self.env.context.get("active_id", False)
         rec["agreement_id"] = agreement_id
         agreement = self.env["pod.coverage.agreement"].browse(agreement_id)
-        rec["possible_center_ids"] = [(6, 0, agreement.center_ids.ids)]
+        rec["possible_practice_ids"] = [(6, 0, agreement.practice_ids.ids)]
         rec["possible_template_ids"] = [(6, 0, agreement.coverage_template_ids.ids)]
         return rec
 
@@ -38,7 +38,7 @@ class WizardCreateQuoteAgreement(models.TransientModel):
         self.ensure_one()
         quote = self.env["pod.quote"].create(
             {
-                "center_id": self.center_id.id,
+                "practice_id": self.practice_id.id,
                 "coverage_template_id": self.coverage_template_id.id,
                 "payor_id": self.coverage_template_id.payor_id.id,
                 "origin_agreement_id": self.agreement_id.id,

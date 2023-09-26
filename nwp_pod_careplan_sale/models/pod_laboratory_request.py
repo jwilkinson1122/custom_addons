@@ -19,7 +19,7 @@ class LaboratoryRequest(models.Model):
         cai = self.env["pod.coverage.agreement.item"].get_item(
             self.service_id,
             self.coverage_id.coverage_template_id,
-            self.center_id,
+            self.practice_id,
         )
         if cai:
             res["coverage_agreement_id"] = cai.coverage_agreement_id.id

@@ -42,7 +42,7 @@ class PodiatryLaboratoryEvent(models.Model):
                 lambda r: r.laboratory_code == cov.laboratory_code
             )
             cai = self.env["pod.coverage.agreement.item"].get_item(
-                self.service_id, cov, self.laboratory_request_id.center_id
+                self.service_id, cov, self.laboratory_request_id.practice_id
             )
             if (
                 rec.laboratory_service_id.id

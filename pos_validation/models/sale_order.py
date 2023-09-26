@@ -148,6 +148,6 @@ class SalerOrderLine(models.Model):
             raise UserError(_("Change of plan can only be applied to request groups"))
         request.with_context(validation_change=True).change_plan_definition(
             self.env["pod.coverage.agreement.item"].get_item(
-                service, request.coverage_template_id, request.center_id
+                service, request.coverage_template_id, request.practice_id
             )
         )

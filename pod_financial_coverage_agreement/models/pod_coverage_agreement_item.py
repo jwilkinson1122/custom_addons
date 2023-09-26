@@ -148,9 +148,9 @@ class PodiatryCoverageAgreementItem(models.Model):
                 ("product_id", "=", rec.product_id.id),
                 ("coverage_agreement_id", "!=", aggr.id),
                 (
-                    "coverage_agreement_id.center_ids",
+                    "coverage_agreement_id.practice_ids",
                     "in",
-                    aggr.center_ids.ids,
+                    aggr.practice_ids.ids,
                 ),
                 (
                     "coverage_agreement_id.coverage_template_ids",

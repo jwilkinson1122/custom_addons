@@ -9,11 +9,11 @@ class PodiatryTurn(models.Model):
     _order = "date asc"
     _description = "Podiatry Turn"
 
-    center_ids = fields.Many2many(
-        string="Centers",
+    practice_ids = fields.Many2many(
+        string="Practices",
         required=True,
         comodel_name="res.partner",
-        domain=[("is_center", "=", True)],
+        domain=[("is_practice", "=", True)],
         tracking=True,
     )
     practitioner_id = fields.Many2one(
@@ -36,7 +36,7 @@ class PodiatryTurn(models.Model):
     )
     duration = fields.Float("Duration (in hours)", tracking=True, required=True)
 
-    @api.depends("practitioner_id", "center_ids", "specialty_id")
+    @api.depends("practitioner_id", "practice_ids", "specialty_id")
     def _compute_display_name(self):
         return super()._compute_display_name()
 
@@ -46,7 +46,7 @@ class PodiatryTurn(models.Model):
             name = "{} [{}] ({})".format(
                 rec.specialty_id.name,
                 rec.practitioner_id.display_name or _("Pending to assign"),
-                ",".join([c.ref or c.name for c in rec.center_ids]),
+                ",".join([c.ref or c.name for c in rec.practice_ids]),
             )
             result.append((rec.id, name))
         return result

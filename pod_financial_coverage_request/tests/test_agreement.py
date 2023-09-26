@@ -25,8 +25,8 @@ class TestAgreementTemplate(SavepointCase):
                 "is_template": True,
             }
         )
-        cls.center = cls.env["res.partner"].create(
-            {"name": "Center", "is_center": True}
+        cls.practice = cls.env["res.partner"].create(
+            {"name": "Practice", "is_practice": True}
         )
         cls.item_01 = (
             cls.env["pod.coverage.agreement.item"]
@@ -174,49 +174,49 @@ class TestAgreementTemplate(SavepointCase):
     def test_get_item_01(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         item = self.env["pod.coverage.agreement.item"].get_item(
-            self.product_01, self.coverage, self.center
+            self.product_01, self.coverage, self.practice
         )
         self.assertEqual(item, self.item_01)
 
     def test_get_item_02(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         item = self.env["pod.coverage.agreement.item"].get_item(
-            self.product_01.id, self.coverage.id, self.center.id
+            self.product_01.id, self.coverage.id, self.practice.id
         )
         self.assertEqual(item, self.item_01)
 
     def test_get_item_03(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         item = self.env["pod.coverage.agreement.item"].get_item(
-            self.product_01.id, self.coverage.id, self.center.id, plan=True
+            self.product_01.id, self.coverage.id, self.practice.id, plan=True
         )
         self.assertFalse(item)
 
     def test_get_item_04(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         self.template.date_from = date.today() + timedelta(days=1)
         item = self.env["pod.coverage.agreement.item"].get_item(
-            self.product_01.id, self.coverage.id, self.center.id
+            self.product_01.id, self.coverage.id, self.practice.id
         )
         self.assertFalse(item)
 
     def test_get_item_05(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         self.template.date_from = date.today()
         item = self.env["pod.coverage.agreement.item"].get_item(
             self.product_01.id,
             self.coverage.id,
-            self.center.id,
+            self.practice.id,
             date=date.today() + timedelta(days=-1),
         )
         self.assertFalse(item)
@@ -224,13 +224,13 @@ class TestAgreementTemplate(SavepointCase):
     def test_get_item_06(self):
         self.template.is_template = False
         self.template.coverage_template_ids = self.coverage
-        self.template.center_ids = self.center
+        self.template.practice_ids = self.practice
         self.template.date_from = date.today()
         self.template.date_to = date.today() + timedelta(days=1)
         item = self.env["pod.coverage.agreement.item"].get_item(
             self.product_01.id,
             self.coverage.id,
-            self.center.id,
+            self.practice.id,
             date=date.today() + timedelta(days=2),
         )
         self.assertFalse(item)

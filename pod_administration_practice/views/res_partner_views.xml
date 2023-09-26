@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <odoo>
-    <record id="pod_center_location_action" model="ir.actions.act_window">
+    <record id="pod_practice_location_action" model="ir.actions.act_window">
         <field name="name">Podiatry Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_location', '=', True), ('center_id', '=', active_id)]
+        <field name="domain">[('is_location', '=', True), ('practice_id', '=', active_id)]
         </field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True, 
             'default_is_location': True,
             'default_is_pod': True,
-            'default_center_id': active_id,
+            'default_practice_id': active_id,
             }
         </field>
     </record>
@@ -24,25 +24,25 @@
         <field name="inherit_id" ref="pod_administration_location.res_partner_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
-                <field name="is_center" invisible="1" />
+                <field name="is_practice" invisible="1" />
             </xpath>
             <field name="is_pod" position="before">
-                <field name="is_center" />
+                <field name="is_practice" />
             </field>
             <xpath expr="//field[@name='is_pod']/.." position="after">
                 <group name="location_config" attrs="{'invisible': [('is_location','=',False)]}">
-                    <field name="center_id" attrs="{'required': [('is_location', '=', True)]}" />
+                    <field name="practice_id" attrs="{'required': [('is_location', '=', True)]}" />
                 </group>
             </xpath>
             <div name="button_box" position="inside">
-                <button type="action" name="%(pod_center_location_action)d" class="oe_stat_button" icon="fa-h-square" attrs="{'invisible': [('is_center', '=', False)]}">
+                <button type="action" name="%(pod_practice_location_action)d" class="oe_stat_button" icon="fa-h-square" attrs="{'invisible': [('is_practice', '=', False)]}">
                     <field name="location_count" widget="statinfo" string="Locations" />
                     <field name='location_ids' invisible="1" />
                 </button>
             </div>
             <!-- <xpath expr='//page[@name="internal_notes"]' position="before">
-                <page string="Locations" attrs="{'invisible': [('is_center','=',False)]}">
-                    <field name="location_ids" context="{'center_id': active_id, 'default_is_location': True, 'default_type':'other'}" mode="kanban">
+                <page string="Locations" attrs="{'invisible': [('is_practice','=',False)]}">
+                    <field name="location_ids" context="{'practice_id': active_id, 'default_is_location': True, 'default_type':'other'}" mode="kanban">
                         <kanban on_create="base.view_partner_form">
                             <field name="id" />
                             <field name="color" />
@@ -50,7 +50,7 @@
                             <field name="title" />
                             <field name="type" />
                             <field name="email" />
-                            <field name="center_id" />
+                            <field name="practice_id" />
                             <field name="is_location" />
                             <field name="function" />
                             <field name="phone" />
@@ -111,16 +111,16 @@
         </field>
     </record>
 
-    <record id="pod_center_action" model="ir.actions.act_window">
-        <field name="name">Podiatry Centers</field>
+    <record id="pod_practice_action" model="ir.actions.act_window">
+        <field name="name">Podiatry Practices</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_center', '=', True)]</field>
+        <field name="domain">[('is_practice', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True, 
-            'default_is_center': True,
+            'default_is_practice': True,
             'default_is_pod': True}
         </field>
     </record>

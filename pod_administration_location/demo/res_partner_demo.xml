@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="partner_location_1" model="res.partner">
-        <field name="name">Test Center</field>
+        <field name="name">Test Practice</field>
         <field name="street">123 Test St.</field>
         <field name="street2">Suite 1337</field>
         <field name="city">Las Vegas</field>

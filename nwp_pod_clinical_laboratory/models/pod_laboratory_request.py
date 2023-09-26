@@ -21,13 +21,13 @@ class PodiatryLaboratoryRequest(models.Model):
         compute="_compute_event_coverage_agreement_id",
     )
 
-    @api.depends("service_id", "coverage_id.coverage_template_id", "center_id")
+    @api.depends("service_id", "coverage_id.coverage_template_id", "practice_id")
     def _compute_event_coverage_agreement_id(self):
         for record in self:
             cai = self.env["pod.coverage.agreement.item"].get_item(
                 record.service_id,
                 record.coverage_id.coverage_template_id,
-                record.center_id,
+                record.practice_id,
             )
             agreement = self.env["pod.coverage.agreement"]
             if cai:

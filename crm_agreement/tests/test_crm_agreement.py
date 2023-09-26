@@ -22,8 +22,8 @@ class TestCrmAgreement(TransactionCase):
             {"payor_id": self.payor.id, "name": "Template 02"}
         )
         self.company = self.browse_ref("base.main_company")
-        self.center = self.env["res.partner"].create(
-            {"name": "Center", "is_center": True, "is_pod": True}
+        self.practice = self.env["res.partner"].create(
+            {"name": "Practice", "is_practice": True, "is_pod": True}
         )
         self.method = self.env["pod.authorization.method"].create(
             {"name": "Test method", "code": "TEST"}
@@ -52,7 +52,7 @@ class TestCrmAgreement(TransactionCase):
             .create(
                 {
                     "name": "Test agreement",
-                    "center_ids": [(4, self.center.id)],
+                    "practice_ids": [(4, self.practice.id)],
                     "company_id": self.company.id,
                     "authorization_method_id": self.method.id,
                     "authorization_format_id": self.format.id,
@@ -79,7 +79,7 @@ class TestCrmAgreement(TransactionCase):
             .create(
                 {
                     "name": "Test agreement",
-                    "center_ids": [(4, self.center.id)],
+                    "practice_ids": [(4, self.practice.id)],
                     "company_id": self.company.id,
                     "authorization_method_id": self.method.id,
                     "authorization_format_id": self.format.id,
@@ -104,7 +104,7 @@ class TestCrmAgreement(TransactionCase):
         agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
-                "center_ids": [(4, self.center.id)],
+                "practice_ids": [(4, self.practice.id)],
                 "company_id": self.company.id,
                 "authorization_method_id": self.method.id,
                 "authorization_format_id": self.format.id,
@@ -150,7 +150,7 @@ class TestCrmAgreement(TransactionCase):
         agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
-                "center_ids": [(4, self.center.id)],
+                "practice_ids": [(4, self.practice.id)],
                 "company_id": self.company.id,
                 "authorization_method_id": self.method.id,
                 "authorization_format_id": self.format.id,
@@ -179,7 +179,7 @@ class TestCrmAgreement(TransactionCase):
         agreement = self.env["pod.coverage.agreement"].create(
             {
                 "name": "Test agreement",
-                "center_ids": [(4, self.center.id)],
+                "practice_ids": [(4, self.practice.id)],
                 "company_id": self.company.id,
                 "authorization_method_id": self.method.id,
                 "authorization_format_id": self.format.id,
@@ -219,7 +219,7 @@ class TestCrmAgreement(TransactionCase):
             .create(
                 {
                     "coverage_template_id": self.template_1.id,
-                    "center_id": self.center.id,
+                    "practice_id": self.practice.id,
                 }
             )
         )

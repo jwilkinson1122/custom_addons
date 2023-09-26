@@ -11,7 +11,7 @@ from ..tests import common
 class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_sale_fail(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan = self.env["pod.careplan"].new(
             {
@@ -23,7 +23,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         )
         careplan._onchange_encounter()
         careplan = careplan.create(careplan._convert_to_write(careplan._cache))
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
@@ -95,7 +95,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
 
     def test_careplan_sale(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan = self.env["pod.careplan"].new(
             {
@@ -107,7 +107,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         )
         careplan._onchange_encounter()
         careplan = careplan.create(careplan._convert_to_write(careplan._cache))
-        self.assertEqual(careplan.center_id, encounter.center_id)
+        self.assertEqual(careplan.practice_id, encounter.practice_id)
         wizard = self.env["pod.careplan.add.plan.definition"].create(
             {
                 "careplan_id": careplan.id,
@@ -235,7 +235,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_add_function_01(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "coverage": self.coverage_01.id,
@@ -252,7 +252,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_add_function_02(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "payor": self.payor.id,
@@ -270,7 +270,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
     def test_careplan_add_function_sub_payor(self):
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "payor": self.payor.id,
@@ -294,7 +294,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         self.plan_definition2.performer_required = True
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "payor": self.payor.id,
@@ -325,7 +325,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create_encounter(
                 patient=self.patient_01.id,
-                center=self.center.id,
+                practice=self.practice.id,
                 careplan_data=[
                     {
                         "coverage": self.coverage_01,
@@ -338,7 +338,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create_encounter(
                 patient=self.patient_01.id,
-                center=self.center.id,
+                practice=self.practice.id,
                 careplan_data=[{"service": self.agreement_line3.product_id.id}],
             )
 
@@ -346,7 +346,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create_encounter(
                 patient=self.patient_01.id,
-                center=self.center.id,
+                practice=self.practice.id,
                 careplan_data=[
                     {
                         "payor": self.payor,
@@ -359,7 +359,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create_encounter(
                 patient=self.patient_01.id,
-                center=self.center.id,
+                practice=self.practice.id,
                 careplan_data=[
                     {
                         "payor": self.payor,
@@ -372,7 +372,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         self.plan_definition2.third_party_bill = False
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "coverage": self.coverage_01.id,
@@ -392,7 +392,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         self.plan_definition2.is_breakdown = True
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "coverage": self.coverage_01.id,
@@ -413,7 +413,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         self.plan_definition2.is_breakdown = True
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "coverage": self.coverage_01.id,
@@ -447,7 +447,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
         )
         encounter_action = self.env["pod.encounter"].create_encounter(
             patient=self.patient_01.id,
-            center=self.center.id,
+            practice=self.practice.id,
             careplan_data=[
                 {
                     "coverage": self.coverage_01.id,
@@ -463,7 +463,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
 
     def test_careplan_add_wizard(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         careplan_wizard = (
             self.env["pod.encounter.add.careplan"]
@@ -477,7 +477,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
             careplan_wizard._convert_to_write(careplan_wizard._cache)
         )
         self.assertEqual(encounter, careplan_wizard.encounter_id)
-        self.assertEqual(encounter.center_id, careplan_wizard.center_id)
+        self.assertEqual(encounter.practice_id, careplan_wizard.practice_id)
         careplan_wizard.run()
         careplan = encounter.careplan_ids
         careplan_wizard_2 = (
@@ -492,7 +492,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
             careplan_wizard_2._convert_to_write(careplan_wizard_2._cache)
         )
         self.assertEqual(encounter, careplan_wizard_2.encounter_id)
-        self.assertEqual(encounter.center_id, careplan_wizard_2.center_id)
+        self.assertEqual(encounter.practice_id, careplan_wizard_2.practice_id)
         cp_2 = careplan_wizard_2.run()
         self.assertEqual(cp_2, careplan)
         careplan_wizard_3 = (
@@ -507,7 +507,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
             careplan_wizard_3._convert_to_write(careplan_wizard_3._cache)
         )
         self.assertEqual(encounter, careplan_wizard_3.encounter_id)
-        self.assertEqual(encounter.center_id, careplan_wizard_3.center_id)
+        self.assertEqual(encounter.practice_id, careplan_wizard_3.practice_id)
         cp_3 = careplan_wizard_3.run()
         self.assertNotEqual(cp_3, careplan)
 
@@ -579,7 +579,7 @@ class TestNWPSale(common.PodiatrySavePointCase):
 
     def test_add_careplan_form(self):
         encounter = self.env["pod.encounter"].create(
-            {"patient_id": self.patient_01.id, "center_id": self.center.id}
+            {"patient_id": self.patient_01.id, "practice_id": self.practice.id}
         )
         payor = self.env["res.partner"].create(
             {

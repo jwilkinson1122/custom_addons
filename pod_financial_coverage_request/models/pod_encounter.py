@@ -10,12 +10,12 @@ class PodiatryEncounter(models.Model):
 
     @api.model
     def create_encounter(
-        self, patient=False, patient_vals=False, center=False, **kwargs
+        self, patient=False, patient_vals=False, practice=False, **kwargs
     ):
         encounter = self._create_encounter(
             patient=patient,
             patient_vals=patient_vals,
-            center=center,
+            practice=practice,
             **kwargs,
         )
         result = self.env["ir.actions.act_window"]._for_xml_id(
@@ -27,12 +27,12 @@ class PodiatryEncounter(models.Model):
 
     @api.model
     def _create_encounter(
-        self, patient=False, patient_vals=False, center=False, **kwargs
+        self, patient=False, patient_vals=False, practice=False, **kwargs
     ):
         if not patient_vals and not patient:
             raise ValidationError(_("Patient information is required"))
-        if not center:
-            raise ValidationError(_("Center is required"))
+        if not practice:
+            raise ValidationError(_("Practice is required"))
         if not patient_vals:
             patient_vals = {}
         if not patient:
@@ -52,9 +52,9 @@ class PodiatryEncounter(models.Model):
             if new_patient_vals:
                 patient.write(new_patient_vals)
                 patient.flush()
-        if isinstance(center, int):
-            center = self.env["res.partner"].browse(center)
-        return self.create(self._create_encounter_vals(patient, center, **kwargs))
+        if isinstance(practice, int):
+            practice = self.env["res.partner"].browse(practice)
+        return self.create(self._create_encounter_vals(patient, practice, **kwargs))
 
-    def _create_encounter_vals(self, patient, center, **kwargs):
-        return {"patient_id": patient.id, "center_id": center.id}
+    def _create_encounter_vals(self, patient, practice, **kwargs):
+        return {"patient_id": patient.id, "practice_id": practice.id}

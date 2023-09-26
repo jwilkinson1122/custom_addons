@@ -19,12 +19,12 @@ class PodiatryCoverageAgreementJoin(models.TransientModel):
         if len(company) > 1:
             raise ValidationError(_("The company must be the same"))
         coverages = self.agreement_ids.mapped("coverage_template_ids")
-        centers = self.agreement_ids.mapped("center_ids")
+        practices = self.agreement_ids.mapped("practice_ids")
         for agreement in self.agreement_ids:
             if coverages != agreement.coverage_template_ids:
                 raise ValidationError(_("The templates must be the same"))
-            if centers != agreement.center_ids:
-                raise ValidationError(_("The centers must be the same"))
+            if practices != agreement.practice_ids:
+                raise ValidationError(_("The practices must be the same"))
 
     def run(self):
         if len(self.agreement_ids) < 2:

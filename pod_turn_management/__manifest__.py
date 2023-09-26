@@ -12,7 +12,7 @@
         "pod_administration_practitioner",
         "web_view_calendar_list",
         "pod_base",
-        "pod_administration_center",
+        "pod_administration_practice",
         "mail",
     ],
     "data": [
