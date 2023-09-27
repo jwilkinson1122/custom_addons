@@ -9,7 +9,7 @@ class PodiatryGuardPlanApply(models.TransientModel):
 
     date_from = fields.Date(required=True, default=fields.Date.today())
     date_to = fields.Date(required=True)
-    practitioner_ids = fields.Many2many(
+    child_ids = fields.Many2many(
         "res.partner",
         domain=[("is_practitioner", "=", True)],
         relation="pract_res",

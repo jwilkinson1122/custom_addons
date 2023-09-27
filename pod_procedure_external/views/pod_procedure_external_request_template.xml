@@ -56,7 +56,7 @@
     </record>
     <record model="ir.ui.menu" id="pod_request_template_menu">
         <field name="name">External Request Templates</field>
-        <field name="parent_id" ref="pod_base.pod_root_configuration" />
+        <field name="parent_id" ref="contacts.res_partner_menu_config" />
         <field
             name="action"
             ref="pod_procedure_external_request_template_act_window"

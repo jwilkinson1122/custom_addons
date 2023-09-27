@@ -94,7 +94,7 @@
         id="pod_laboratory_service_menu"
         name="Laboratory services"
         sequence="90"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
         action="pod_laboratory_service_action"
     />
 </odoo>

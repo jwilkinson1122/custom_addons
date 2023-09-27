@@ -13,13 +13,13 @@
         id="menu_base_comment_template_pod_quote"
         action="base_comment_template.action_base_comment_template"
         groups="pod_base.group_pod_user"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
     />
     <menuitem
         action="pod_quote_report_configuration_action"
         id="pod_quote_report_configuration"
         groups="pod_base.group_pod_user"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
         name="Podiatry Quote Report Layout Categories"
     />
 </odoo>

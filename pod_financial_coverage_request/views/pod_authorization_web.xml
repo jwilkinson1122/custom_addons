@@ -52,7 +52,7 @@
     </record>
     <record model="ir.ui.menu" id="pod_authorization_web_menu">
         <field name="name">Podiatry Authorization Web</field>
-        <field name="parent_id" ref="pod_base.pod_root_configuration" />
+        <field name="parent_id" ref="contacts.res_partner_menu_config" />
         <field name="action" ref="pod_authorization_web_act_window" />
         <field name="sequence" eval="16" />
     </record>

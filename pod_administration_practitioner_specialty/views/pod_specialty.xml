@@ -48,7 +48,7 @@
     <menuitem
         id="pod_specialty_menu"
         name="Specialties"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
         action="pod_specialty_action"
         sequence="60"
     />

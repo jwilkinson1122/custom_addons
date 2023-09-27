@@ -43,5 +43,5 @@
         <field name="res_model">pod.department</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem id="pod_department_menu" name="Departments" parent="pod_base.pod_root_configuration" action="pod_department_act_window" sequence="20" />
+    <menuitem id="pod_department_menu" name="Departments" parent="contacts.res_partner_menu_config" action="pod_department_act_window" sequence="20" />
 </odoo>

@@ -20,7 +20,7 @@ class PodiatryTurnSpecialty(models.Model):
         copy=True,
     )
 
-    practitioner_ids = fields.Many2many(
+    child_ids = fields.Many2many(
         "res.partner",
         string="Practitioners",
         domain=[("is_practitioner", "=", True)],

@@ -107,7 +107,7 @@
     </record>
     <record model="ir.ui.menu" id="pod_product_menu">
         <field name="name">Podiatry Product</field>
-        <field name="parent_id" ref="pod_base.pod_root_configuration" />
+        <field name="parent_id" ref="contacts.res_partner_menu_config" />
         <field name="sequence" eval="50" />
     </record>
     <record model="ir.actions.act_window" id="pod_product_template_act_window">

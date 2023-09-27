@@ -157,7 +157,7 @@
     </record>
     <menuitem
         id="pod_document_type_menu"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
         action="pod_document_type_action"
         name="Document actions"
     />

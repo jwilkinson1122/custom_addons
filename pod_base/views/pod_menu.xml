@@ -17,21 +17,21 @@
 
     <menuitem id="contacts.res_partner_menu_contacts" name="Practices" action="pod_base.pod_practice_action" parent="pod_root_menu_administration" sequence="2"/> 
     <menuitem id="pod_location_menu" name="Locations" action="pod_base.pod_location_action" parent="pod_root_menu_administration" sequence="3"/> 
-    <menuitem id="pod_practitioner_menu" name="Practitioners" action="pod_base.pod_practitioner_action" parent="pod_root_menu_administration" sequence="4"/> 
+    <menuitem id="pod_practitioner_menu" name="Contacts" action="pod_base.pod_practitioner_action" parent="pod_root_menu_administration" sequence="4"/> 
     
-    <record model="ir.ui.menu" id="pod_patient_menu">
+    <!-- <record model="ir.ui.menu" id="pod_patient_menu">
         <field name="name">Patients</field>
         <field name="parent_id" ref="pod_root_menu_administration" />
         <field name="action" ref="pod_base.pod_patient_window_action" />
         <field name="sequence" eval="5" />
-    </record>
+    </record> -->
 
-    <record model="ir.ui.menu" id="pod_patient_his_menu">
+    <!-- <record model="ir.ui.menu" id="pod_patient_his_menu">
         <field name="name">History</field>
         <field name="parent_id" ref="pod_root_menu_administration" />
         <field name="action" ref="pod_base.pod_patient_his_window_action" />
         <field name="sequence" eval="6" />
-    </record>
+    </record> -->
 
     <record model="ir.ui.menu" id="contacts.res_partner_menu_config">
         <field name="name">Configuration</field>
@@ -110,7 +110,7 @@
  -->
 
 
-    <menuitem id="pod_root_settings" name="Settings" parent="contacts.menu_contacts" action="pod_base.action_pod_config" sequence="100" groups="base.group_system"/>
+    <!-- <menuitem id="pod_root_settings" name="Settings" parent="contacts.menu_contacts" action="pod_base.action_pod_config" sequence="100" groups="base.group_system"/> -->
     <!-- <menuitem id="menu_pod_config" name="Settings" parent="pod_root_settings" sequence="0" action="action_pod_config" groups="base.group_system" /> -->
 
 </odoo>

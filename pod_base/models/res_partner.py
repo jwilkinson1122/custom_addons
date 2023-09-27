@@ -29,7 +29,7 @@ class Partner(models.Model):
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
 
-    practitioner_ids = fields.One2many(
+    child_ids = fields.One2many(
         "res.partner", 
         compute="_compute_practitioners", 
         string="Practitioners", 
@@ -85,12 +85,12 @@ class Partner(models.Model):
                     ("is_practitioner", "=", True),  
                     ("active", "=", True)
                 ])
-                record.practitioner_ids = all_practitioners
+                record.child_ids = all_practitioners
             else:
-                record.practitioner_ids = self.env['res.partner']  # Empty recordset
+                record.child_ids = self.env['res.partner']  # Empty recordset
   
   
-    @api.depends('practitioner_ids', 'practitioner_ids.is_company')
+    @api.depends('child_ids', 'child_ids.is_company')
     def _compute_location_and_practitioner_counts(self):
         for record in self:
             if not isinstance(record.id, models.NewId):

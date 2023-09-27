@@ -48,5 +48,8 @@
         <field name="target">inline</field>
         <field name="context">{'module' : 'pod_base'}</field>
     </record>
+
+    <menuitem id="pod_root_settings" name="Settings" parent="contacts.menu_contacts" action="action_pod_config" sequence="100" groups="base.group_system"/>
+
     <!-- <menuitem id="menu_pod_config" name="Settings" parent="pod_root_settings" sequence="0" action="action_pod_config" groups="base.group_system" /> -->
 </odoo>

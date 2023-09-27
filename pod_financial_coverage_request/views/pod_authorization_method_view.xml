@@ -58,7 +58,7 @@
         id="pod_authorization_method_menu"
         name="Authorization methods"
         sequence="90"
-        parent="pod_base.pod_root_configuration"
+        parent="contacts.res_partner_menu_config"
         action="pod_authorization_method_action"
     />
 </odoo>

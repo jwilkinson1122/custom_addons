@@ -20,7 +20,7 @@
                         <field name="active" invisible="1" />
                         <field name="name" />
                         <field
-                            name="practitioner_ids"
+                            name="child_ids"
                             widget="many2many_tags"
                             options="{'no_create': True}"
                         />
@@ -39,7 +39,7 @@
                                     <field name="duration" widget="float_time" />
                                     <field
                                         name="default_practitioner_id"
-                                        domain="[('id', 'in', parent.practitioner_ids), ('is_practitioner', '=', True)]"
+                                        domain="[('id', 'in', parent.child_ids), ('is_practitioner', '=', True)]"
                                     />
                                     <field name="practice_ids" widget="many2many_tags" />
                                 </tree>
