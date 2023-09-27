@@ -12,12 +12,9 @@
                         <field name="module_pod_device_request" />
                     </div>
                     <div class="o_setting_right_pane">
-                        <label
-                            string="Device administration &amp; Device requests"
-                            for="module_pod_device_request"
-                        />
+                        <label string="Device Requests" for="module_pod_device_request" />
                         <div class="text-muted">
-                            Allows to use Device administrations &amp; requests
+                            Allows Device Requests
                         </div>
                     </div>
                 </div>

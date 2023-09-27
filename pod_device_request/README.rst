@@ -21,7 +21,7 @@ Installation
 ============
 
 To install this module, go to 'Podiatry / Configuration / Settings' and inside
-'Device' activate 'Device administration & Device requests'.
+'Device' activate 'Product Requests'.
 
 Usage
 =====
