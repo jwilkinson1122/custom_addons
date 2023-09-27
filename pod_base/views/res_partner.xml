@@ -238,7 +238,7 @@
     </record>
 
     <!-- <record id="pod_practice_action" model="ir.actions.act_window">
-        <field name="domain">[('is_practice', '=', True), ('is_location', '=', False)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False)]</field>
     </record>
      -->
 
@@ -247,7 +247,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True, 
