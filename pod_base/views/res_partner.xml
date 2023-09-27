@@ -31,6 +31,50 @@
         </field>
     </record>
 
+    <record id="view_res_partner_kanban_inherit" model="ir.ui.view">
+        <field name="name">res.partner.kanban.view.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="location_count"/>
+                <field name="practitioner_count"/>
+            </xpath>
+
+            <!-- <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="replace">
+                <div class="o_badge_group mb-1">
+                    <div class="badge badge-primary">Locations: <t t-esc="record.location_count.raw_value"/></div>
+                    <div class="badge badge-secondary">Practitioners: <t t-esc="record.practitioner_count.raw_value"/></div>
+                </div>
+                <div class="oe_kanban_partner_links position-absolute" style="right: 5px; bottom: 5px;">
+                    <a class="ml4" t-if="record.email.raw_value" t-attf-href="mailto:#{record.email.raw_value}" title="Mail"><i class="fa fa-envelope-o"/></a>
+                    <a class="ml4" t-if="record.mobile.raw_value" t-attf-href="tel:#{record.mobile.raw_value}" title="Call mobile"><i class="fa fa-mobile-phone"/></a>
+                </div>
+            </xpath> -->
+
+            <!-- <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="inside">
+                    <span class="badge badge-pill" t-if="record.meeting_count.value>0">
+                        <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
+                        <t t-esc="record.meeting_count.value"/>
+                    </span>
+                </xpath> -->
+
+                <!-- <div class="oe_module_action">
+                    <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', 'in', (False, ''))]}" class="btn btn-sm btn-secondary float-right o-hidden-ios" role="button">Learn More</a>
+                </div> -->
+            <xpath expr="//kanban" position="inside">
+                <field name="location_count"/>
+                <field name="practitioner_count"/>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'o_kanban_record')]" position="inside">
+                <div class="o_badge_group position-absolute" style="right: 5px; bottom: 5px;">
+                    <div class="badge badge-info mb-1">Locations: <t t-esc="record.location_count.raw_value"/></div>
+                    <div class="badge badge-info">Contacts: <t t-esc="record.practitioner_count.raw_value"/></div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <!-- View Extensions -->
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
