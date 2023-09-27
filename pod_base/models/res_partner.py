@@ -29,12 +29,6 @@ class Partner(models.Model):
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
 
-    # practitioner_ids = fields.One2many(
-    #     comodel_name="res.partner", 
-    #     inverse_name="parent_id", 
-    #     domain=[("active", "=", True), ("is_company", "=", False)]
-    # )
-    
     practitioner_ids = fields.One2many(
         "res.partner", 
         compute="_compute_practitioners", 
