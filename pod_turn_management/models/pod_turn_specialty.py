@@ -68,7 +68,7 @@ class PodiatryTurnSpecialtyRule(models.Model):
         string="Practices",
         required=True,
         comodel_name="res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
     )
 
     def _generate_record(self, date):

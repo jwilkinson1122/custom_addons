@@ -6,7 +6,7 @@
     "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
     "depends": [
-        "pod_administration_practitioner",
+        "pod_base",
         "pod_terminology_sct",
     ],
     "data": [

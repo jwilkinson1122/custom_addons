@@ -49,7 +49,7 @@ class PodiatryRequest(models.AbstractModel):
     third_party_bill = fields.Boolean(default=False, tracking=True)
     practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
         required=True,
         tracking=True,
         readonly=True,

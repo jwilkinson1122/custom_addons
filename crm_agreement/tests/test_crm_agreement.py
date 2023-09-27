@@ -23,7 +23,7 @@ class TestCrmAgreement(TransactionCase):
         )
         self.company = self.browse_ref("base.main_company")
         self.practice = self.env["res.partner"].create(
-            {"name": "Practice", "is_practice": True, "is_pod": True}
+            {"name": "Practice", "is_company": True, "is_pod": True}
         )
         self.method = self.env["pod.authorization.method"].create(
             {"name": "Test method", "code": "TEST"}

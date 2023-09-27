@@ -13,7 +13,7 @@ class PodiatryTurn(models.Model):
         string="Practices",
         required=True,
         comodel_name="res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
         tracking=True,
     )
     practitioner_id = fields.Many2one(

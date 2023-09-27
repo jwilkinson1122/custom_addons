@@ -11,7 +11,7 @@ class ProductPodiatryPracticeCompany(models.Model):
     product_tmpl_id = fields.Many2one("product.template", required=True)
     practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_pod", "=", True), ("is_practice", "=", True)],
+        domain=[("is_pod", "=", True), ("is_company", "=", True)],
         required=True,
     )
     company_id = fields.Many2one("res.company")

@@ -10,7 +10,7 @@
     "license": "LGPL-3",
     "depends": [
         "pod_workflow",
-        "pod_administration_location",
+        "pod_base",
     ],
     "data": [
         "security/pod_security.xml",

@@ -8,7 +8,7 @@
     "category": "Podiatry",
     "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
-    "depends": ["pod_administration_location"],
+    "depends": ["pod_base"],
     "data": [
         "security/ir.model.access.csv",
         "views/pod_encounter_view.xml",

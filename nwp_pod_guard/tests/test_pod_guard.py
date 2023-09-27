@@ -22,7 +22,7 @@ class TestPodiatryGuard(TransactionCase):
         self.practice = self.env["res.partner"].create(
             {
                 "name": "Practice",
-                "is_practice": True,
+                "is_company": True,
                 "is_pod": True,
                 "guard_journal_id": self.journal.id,
             }

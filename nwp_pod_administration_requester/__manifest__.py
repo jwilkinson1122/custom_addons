@@ -9,7 +9,7 @@
     "application": False,
     "summary": "NWP pod location data",
     "depends": [
-        "pod_administration_practitioner",
+        "pod_base",
         "pod_workflow",
         "pod_clinical_careplan",
     ],

@@ -119,7 +119,7 @@ class TestPodiatryQuote(TransactionCase):
         return coverage
 
     def _create_practice(self):
-        return self.practice_model.create({"name": "Test location", "is_practice": True})
+        return self.practice_model.create({"name": "Test location", "is_company": True})
 
     def _create_product(self, name):
         return self.product_model.create({"name": name, "type": "service"})

@@ -9,7 +9,7 @@ class TestNWPPodiatryCommission(common.PodiatrySavePointCase):
             {
                 "name": "Reina",
                 "is_pod": True,
-                "is_practice": True,
+                "is_company": True,
                 "encounter_sequence_prefix": "9",
             }
         )

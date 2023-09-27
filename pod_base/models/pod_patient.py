@@ -15,6 +15,17 @@ class PodiatryPatient(models.Model):
     partner_id = fields.Many2one(
         "res.partner", required=True, ondelete="restrict"
     )
+    
+    pod_location_primary_id = fields.Many2one(
+        string="Primary Podiatry Practice",
+        comodel_name="res.partner",
+        domain=[("is_location", "=", True)],
+    )
+    pod_location_secondary_ids = fields.Many2many(
+        string="Secondary Podiatry Practices",
+        comodel_name="res.partner",
+        domain=[("is_location", "=", True)],
+    )
 
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female"), ("other", "Other")]

@@ -10,7 +10,7 @@ class TestCoverage(TransactionCase):
         self.patient = self.env["pod.patient"].create({"name": "Patient"})
 
     def test_write_sequence(self):
-        practice = self.env["res.partner"].create({"name": "Practice", "is_practice": True})
+        practice = self.env["res.partner"].create({"name": "Practice", "is_company": True})
         self.assertFalse(practice.encounter_sequence_id)
         with self.assertRaises(ValidationError):
             self.env["pod.encounter"].create(
@@ -31,7 +31,7 @@ class TestCoverage(TransactionCase):
         practice = self.env["res.partner"].create(
             {
                 "name": "Practice",
-                "is_practice": True,
+                "is_company": True,
                 "encounter_sequence_prefix": "S",
             }
         )

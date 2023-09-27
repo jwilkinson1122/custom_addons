@@ -2,13 +2,23 @@
 <odoo>
 
     <menuitem id="pod_root" name="POD ERP" sequence="10" groups="group_pod_user" web_icon="pod_base,static/description/icon.png" />
-
+    
     <record model="ir.ui.menu" id="pod_root_administration">
         <field name="name">Administration</field>
         <field name="parent_id" ref="pod_root" />
         <field name="sequence" eval="2" />
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_reception')])]" />
     </record>
+
+    <record model="ir.ui.menu" id="pod_practice_menu">
+        <field name="name">Practices</field>
+        <field name="parent_id" ref="pod_root_administration" />
+        <field name="action" ref="pod_base.pod_practice_action" />
+        <field name="sequence" eval="10" />
+    </record>
+    
+    <menuitem id="pod_location_menu" name="Locations" sequence="20" parent="pod_root_administration" groups="pod_base.group_pod_configurator" action="pod_base.pod_location_action" />
+    <menuitem id="pod_conf_practitioner_menu" name="Practitioners" parent="pod_root_administration" action="pod_base.pod_practitioner_action" sequence="30" />
 
     <record model="ir.ui.menu" id="pod_root_clinical">
         <field name="name">Clinical</field>
@@ -91,6 +101,9 @@
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_configurator')])]" />
         <field name="sequence" eval="90" />
     </record>
+
+    <menuitem id="pod_role_menu" name="Roles" parent="pod_root_configuration" action="pod_base.pod_role_action" sequence="60" />
+
 
     <record model="ir.ui.menu" id="pod_root_settings">
         <field name="name">Settings</field>

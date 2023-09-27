@@ -6,14 +6,14 @@
         <field name="model">res.partner</field>
         <field
             name="inherit_id"
-            ref="pod_administration_practice.res_partner_view_form"
+            ref="pod_base.res_partner_view_form"
         />
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page
                     name="practice"
                     string="Practice"
-                    attrs="{'invisible': [('is_practice', '!=', True)]}"
+                    attrs="{'invisible': [('is_company', '!=', True)]}"
                 >
                     <group>
                         <group>
@@ -24,7 +24,7 @@
                                 name="encounter_sequence_prefix"
                                 style="padding-right: 1.0em"
                                 class="oe_inline"
-                                attrs="{'required': [('is_practice', '=', True)]}"
+                                attrs="{'required': [('is_company', '=', True)]}"
                             />
                             <field
                                 name="encounter_sequence_id"

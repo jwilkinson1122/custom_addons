@@ -56,7 +56,7 @@ class PodiatryGuardPlan(models.Model):
     delay = fields.Integer(required=True)
     location_id = fields.Many2one(
         "res.partner",
-        domain=[("is_practice", "=", True), ("guard_journal_id", "!=", False)],
+        domain=[("is_company", "=", True), ("guard_journal_id", "!=", False)],
         required=True,
     )
     product_id = fields.Many2one(

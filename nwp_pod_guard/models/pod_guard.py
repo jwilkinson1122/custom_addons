@@ -38,7 +38,7 @@ class PodiatryGuard(models.Model):
     )
     location_id = fields.Many2one(
         "res.partner",
-        domain=[("is_practice", "=", True), ("guard_journal_id", "!=", False)],
+        domain=[("is_company", "=", True), ("guard_journal_id", "!=", False)],
         tracking=True,
         readonly=True,
         required=True,

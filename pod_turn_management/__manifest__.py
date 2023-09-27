@@ -9,10 +9,10 @@
     "author": "NWPL",
     "website": "https://nwpodiatric.com",
     "depends": [
-        "pod_administration_practitioner",
+        "pod_base",
         "web_view_calendar_list",
         "pod_base",
-        "pod_administration_practice",
+        "pod_base",
         "mail",
     ],
     "data": [

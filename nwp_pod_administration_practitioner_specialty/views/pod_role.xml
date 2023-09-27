@@ -6,7 +6,7 @@
         <field name="model">pod.role</field>
         <field
             name="inherit_id"
-            ref="pod_administration_practitioner.pod_role_view_form"
+            ref="pod_base.pod_role_view_form"
         />
         <field name="arch" type="xml">
             <field name="description" position="after">

@@ -7,7 +7,7 @@
     "category": "Podiatry",
     "depends": [
         "pod_financial_coverage",
-        "pod_administration_practice",
+        "pod_base",
         "pod_workflow",
         "product_nomenclature",
         "report_xlsx",

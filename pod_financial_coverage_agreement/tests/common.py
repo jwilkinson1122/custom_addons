@@ -102,7 +102,7 @@ class AgrementSavepointCase(SavepointCase):
 
     @classmethod
     def _create_practice(cls):
-        return cls.practice_model.create({"name": "Test location", "is_practice": True})
+        return cls.practice_model.create({"name": "Test location", "is_company": True})
 
     @classmethod
     def _create_product(cls, name):

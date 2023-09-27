@@ -9,7 +9,7 @@ class PodiatryEncounter(models.Model):
 
     practice_id = fields.Many2one(
         "res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
         required=True,
         tracking=True,
     )

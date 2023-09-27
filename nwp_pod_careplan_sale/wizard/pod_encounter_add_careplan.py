@@ -38,7 +38,7 @@ class PodiatryEncounterAddCareplan(models.TransientModel):
         "res.partner",
         default=default_practice,
         required=True,
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
     )
     payor_id = fields.Many2one(
         "res.partner", required=True, domain="[('is_payor', '=', True)]"

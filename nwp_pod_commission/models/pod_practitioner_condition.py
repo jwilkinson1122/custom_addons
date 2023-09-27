@@ -7,7 +7,7 @@ class PodiatryPractitionerCondition(models.Model):
     _description = "Practitioner condition"
 
     practitioner_id = fields.Many2one("res.partner", required=True, readonly=True)
-    practice_ids = fields.Many2many("res.partner", domain=[("is_practice", "=", True)])
+    practice_ids = fields.Many2many("res.partner", domain=[("is_company", "=", True)])
     service_id = fields.Many2one("product.product", domain=[("type", "=", "service")])
     procedure_service_id = fields.Many2one(
         "product.product", domain=[("activity_definition_ids", "!=", False)]

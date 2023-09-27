@@ -13,7 +13,7 @@
     "depends": [
         "pod_administration_encounter",
         "mail",
-        "pod_administration_practitioner",
+        "pod_base",
         "web_domain_field",
     ],
     "data": [

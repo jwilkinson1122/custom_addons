@@ -8,7 +8,7 @@
     "author": "NWPL",
     "website": "https://nwpodiatric.com",
     "license": "LGPL-3",
-    "depends": ["pod_administration_location", "stock"],
+    "depends": ["pod_base", "stock"],
     "data": ["views/res_partner_views.xml"],
     "demo": [],
     "application": False,

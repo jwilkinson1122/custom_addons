@@ -18,7 +18,7 @@ class TestWizard(TransactionCase):
             {
                 "name": "Location",
                 "encounter_sequence_prefix": "S",
-                "is_practice": True,
+                "is_company": True,
             }
         )
         self.coverage = self.env["pod.coverage"].create(

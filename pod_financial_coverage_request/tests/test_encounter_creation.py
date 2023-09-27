@@ -10,7 +10,7 @@ class TestEncounterCreate(SavepointCase):
         super().setUpClass()
         cls.practice = cls.env["res.partner"].create(
             {
-                "is_practice": True,
+                "is_company": True,
                 "name": "Practice",
                 "encounter_sequence_prefix": "1",
             }

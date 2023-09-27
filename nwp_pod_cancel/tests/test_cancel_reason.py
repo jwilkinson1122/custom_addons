@@ -9,7 +9,7 @@ class TestCancelReason(TransactionCase):
         self.practice = self.env["res.partner"].create(
             {
                 "name": "practice",
-                "is_practice": True,
+                "is_company": True,
                 "is_pod": True,
                 "encounter_sequence_prefix": "C",
             }

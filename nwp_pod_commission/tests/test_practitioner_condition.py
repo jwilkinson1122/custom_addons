@@ -88,10 +88,10 @@ class TestPractitionerCondition(TransactionCase):
             }
         )
         practice_01 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_practice": True}
+            {"name": "Practitioner", "is_pod": True, "is_company": True}
         )
         practice_02 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_practice": True}
+            {"name": "Practitioner", "is_pod": True, "is_company": True}
         )
         self.env["pod.practitioner.condition"].create(
             {"practitioner_id": practitioner.id}
@@ -119,10 +119,10 @@ class TestPractitionerCondition(TransactionCase):
             }
         )
         practice_01 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_practice": True}
+            {"name": "Practitioner", "is_pod": True, "is_company": True}
         )
         practice_02 = self.env["res.partner"].create(
-            {"name": "Practitioner", "is_pod": True, "is_practice": True}
+            {"name": "Practitioner", "is_pod": True, "is_company": True}
         )
         self.env["pod.practitioner.condition"].create(
             {"practitioner_id": practitioner.id}

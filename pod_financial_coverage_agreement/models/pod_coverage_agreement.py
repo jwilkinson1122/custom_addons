@@ -17,7 +17,7 @@ class PodiatryCoverageAgreement(models.Model):
     practice_ids = fields.Many2many(
         string="Practices",
         comodel_name="res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_company", "=", True)],
         required=True,
         index=True,
         help="Podiatry practices",

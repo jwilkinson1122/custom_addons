@@ -17,7 +17,7 @@ class TestNWP(TransactionCase):
             {
                 "name": "Practice",
                 "is_pod": True,
-                "is_practice": True,
+                "is_company": True,
                 "encounter_sequence_prefix": "S",
                 "stock_location_id": self.browse_ref("stock.warehouse0").id,
                 "stock_picking_type_id": self.env["stock.picking.type"]

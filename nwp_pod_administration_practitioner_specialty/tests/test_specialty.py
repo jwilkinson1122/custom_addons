@@ -12,8 +12,8 @@ class TestPodiatryCommission(SavepointCase):
             {"name": "Trauma", "description": "Traumatology", "code": "TRA"}
         )
         cls.specialty.sequence_number_next = 21
-        cls.practitioner = cls.env.ref("pod_administration_practitioner.practitioner")
-        cls.ict = cls.env.ref("pod_administration_practitioner.ict")
+        cls.practitioner = cls.env.ref("pod_base.practitioner")
+        cls.ict = cls.env.ref("pod_base.ict")
 
     def test_create_practitioner_practitioner(self):
         practitioner = self.env["res.partner"].create(

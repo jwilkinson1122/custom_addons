@@ -14,7 +14,7 @@
         "pod_clinical_laboratory",
         "sequence_parser",
         "pod_diagnostic_report",
-        "pod_administration_practice",
+        "pod_base",
         # "sequence_safe",
     ],
     "demo": ["demo/pod_demo.xml"],

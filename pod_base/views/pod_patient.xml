@@ -54,6 +54,12 @@
                         <div class="o_row">
                             <field name="parent_id" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True}" attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}" />
                             <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}" />
+                            <h4>
+                                <label for="pod_location_primary_id" />
+                                <field name="pod_location_primary_id" />
+                                <label for="pod_location_secondary_ids" />
+                                <field name="pod_location_secondary_ids" widget="many2many_tags" />
+                            </h4>
                         </div>
                     </div>
                     <group name="contact">
@@ -244,7 +250,7 @@
         <field name="name">Patients</field>
         <field name="parent_id" ref="pod_base.pod_root_administration" />
         <field name="action" ref="pod_patient_window_action" />
-        <field name="sequence" eval="10" />
+        <field name="sequence" eval="40" />
     </record>
 
     <record model="ir.ui.menu" id="pod_patient_his">

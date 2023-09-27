@@ -26,7 +26,7 @@ class TestAgreementTemplate(SavepointCase):
             }
         )
         cls.practice = cls.env["res.partner"].create(
-            {"name": "Practice", "is_practice": True}
+            {"name": "Practice", "is_company": True}
         )
         cls.item_01 = (
             cls.env["pod.coverage.agreement.item"]

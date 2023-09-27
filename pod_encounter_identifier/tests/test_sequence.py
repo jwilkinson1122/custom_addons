@@ -10,7 +10,7 @@ class TestSequence(TransactionCase):
             {
                 "name": "Practice",
                 "is_pod": True,
-                "is_practice": True,
+                "is_company": True,
                 "encounter_sequence_prefix": "S",
             }
         )

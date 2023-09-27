@@ -54,7 +54,7 @@ class TestNWPLPodiatryDiagnosticReport(TransactionCase):
         self.practice_1 = self.env["res.partner"].create(
             {
                 "name": "Practice 1",
-                "is_practice": True,
+                "is_company": True,
                 "encounter_sequence_prefix": "C",
             }
         )
