@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 class PodiatryProductTemplate(models.Model):
 
     _name = "pod.product.template"
-    _description = "Podiatry Product Template"
+    _description = "Product Template"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "name_template"
 
@@ -77,7 +77,7 @@ class PodiatryProductTemplate(models.Model):
 class PodiatryProductProduct(models.Model):
 
     _name = "pod.product.product"
-    _description = "Podiatry Product Product"
+    _description = "Product Product"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _inherits = {"pod.product.template": "product_tmpl_id"}
     _rec_name = "name_product"

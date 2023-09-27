@@ -291,7 +291,7 @@
         model="ir.actions.act_window"
         id="pod_product_administration_act_window"
     >
-        <field name="name">Podiatry Product Administration</field>
+        <field name="name">Product Administration</field>
         <field name="res_model">pod.product.administration</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_not_cancelled': 1}</field>

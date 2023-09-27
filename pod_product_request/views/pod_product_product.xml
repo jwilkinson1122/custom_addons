@@ -110,12 +110,12 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="pod_product_product_act_window">
-        <field name="name">Podiatry Product</field>
+        <field name="name">Product</field>
         <field name="res_model">pod.product.product</field>
         <field name="view_mode">tree,form</field>
     </record>
     <record model="ir.ui.menu" id="pod_product_product_menu">
-        <field name="name">Podiatry Product</field>
+        <field name="name">Product</field>
         <field name="parent_id" ref="pod_product_menu" />
         <field name="action" ref="pod_product_product_act_window" />
         <field name="sequence" eval="16" />

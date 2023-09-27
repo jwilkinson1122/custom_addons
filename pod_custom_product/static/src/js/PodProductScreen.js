@@ -62,9 +62,8 @@ odoo.define('pod_custom_product.PodProductScreen', function(require) {
 	                        if (DeviceRadio){
 	                            DeviceRadio.checked = false;
 	                            $('.modifiers-product-list').hide();
-	                            $('#full_device').hide();
-	                            $('#half_device').hide();
-	                            $('#quater_device').hide();
+	                            $('#single_device').hide();
+	                            $('#bilateral_device').hide();
 	                            $('#ask').show();
 	                        }
 	                    }

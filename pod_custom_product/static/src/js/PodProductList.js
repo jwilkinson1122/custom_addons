@@ -1,4 +1,3 @@
-
 // PodProductList js
 odoo.define('pod_custom_product.PodProductList', function(require) {
 	"use strict";
@@ -31,15 +30,13 @@ odoo.define('pod_custom_product.PodProductList', function(require) {
                 $('.products-widget-control').show();
             	self.modifier_attribute = [];
             	
-                var DeviceRadio = document.querySelector(
-					'input[type=radio][name=x]:checked'
+                var DeviceRadio = document.querySelector( 'input[type=radio][name=x]:checked'
 				);
 				if (DeviceRadio){
 					DeviceRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_device').hide();
-		    		$('#half_device').hide();
-		    		$('#quater_device').hide();
+					$('#single_device').hide();
+		    		$('#bilateral_device').hide();
 		    		$('#ask').show();
 				}
 			}
@@ -50,48 +47,26 @@ odoo.define('pod_custom_product.PodProductList', function(require) {
             	$('.side-prod-list').show();
 			}
 			
-			full_size(){
+			single_side(){
 	            var self = this;
-	            $('#full_device').show();
-	    		$('#half_device').hide();
-	    		$('#quater_device').hide();
+	            $('#single_device').show();
+	    		$('#bilateral_device').hide();
 	    		$('#ask').hide();
-	    		$('#half_size_device').hide();
-	    		$('#quater_size_device').hide();
+	    		$('#bilateral_side_device').hide();
 	    		$('.modifiers-product-list').show();
 	    		self.modifier_attribute = [];
 	        }
-	        half_size(){
+	        bilateral_side(){
 	        	var self = this;
 	        	$('#ask').hide();
-	        	$('#half_device').show();
-	        	$('#half_size_device').show();
+	        	$('#bilateral_device').show();
+	        	$('#bilateral_side_device').show();
 	    		$('.modifiers-product-list').show();
-	        	$('#quater_device').hide();
-	        	$('#full_device').hide();
-	        	$('#quater_size_device').hide();
+	        	$('#single_device').hide();
 	        	self.modifier_attribute = [];
-	        	var inHalfRadio = document.querySelector(
-					'input[name="half"]:checked'
+	        	var sideRadio = document.querySelector( 'input[name="bilateral"]:checked'
 				);
-        		if (inHalfRadio){
-        			$('.modifiers-product-list').show();	
-        		}
-	        }
-	        quater_size(){
-	        	var self = this;
-	        	$('#ask').hide();
-	        	$('#quater_device').show();
-	        	$('#quater_size_device').show();
-	    		$('.modifiers-product-list').show();
-	        	$('#half_device').hide();
-	        	$('#full_device').hide();
-	        	$('#half_size_device').hide();
-	        	self.modifier_attribute = [];
-	        	var inQuaterRadio = document.querySelector(
-					'input[name="quater"]:checked'
-				);
-        		if (inQuaterRadio){
+        		if (sideRadio){
         			$('.modifiers-product-list').show();	
         		}
 	        }
@@ -103,46 +78,30 @@ odoo.define('pod_custom_product.PodProductList', function(require) {
 
             	var product = self.env.pos.db.get_product_by_id(selected_modifier_id)
             	
-            	var checkRadio = document.querySelector(
-					'input[name="x"]:checked'
+            	var checkRadio = document.querySelector( 'input[name="x"]:checked'
 				);
-            	var portion = false;
-            	var portion_type = false;
-				if(checkRadio.value == "full"){
-					portion = "Full Device"
-					portion_type ="full"
-				}else if(checkRadio.value == "half"){
-					var halfRadio = document.querySelector(
-						'input[name="half"]:checked'
+            	var side = false;
+            	var side_type = false;
+				if(checkRadio.value == "single"){
+					side = "Single Device"
+					side_type ="single"
+				}else if(checkRadio.value == "bilateral"){
+					var bilateralRadio = document.querySelector( 'input[name="bilateral"]:checked'
 					);
-					portion_type ="half"
-					if (halfRadio.value == "left half"){
-						portion = "Left Half";
-					}else if(halfRadio.value == "right half"){
-						portion = "Right Half";
-					}
-				}else if(checkRadio.value == "quater"){
-					var quaterRadio = document.querySelector(
-						'input[name="quater"]:checked'
-					);
-					portion_type ="quater"
-					if (quaterRadio.value == "1st quater"){
-						portion = "1st quater";
-					}else if(quaterRadio.value == "2nd quater"){
-						portion = "2nd quater";
-					}else if(quaterRadio.value == "3rd quater"){
-						portion = "3rd quater";
-					}else if(quaterRadio.value == "4th quater"){
-						portion = "4th quater";
+					side_type ="bilateral"
+					if (bilateralRadio.value == "left side"){
+						side = "Left Side";
+					}else if(bilateralRadio.value == "right side"){
+						side = "Right Side";
 					}
 				}
-
+		
             	product['image_url'] = `/web/image?model=product.product&field=image_128&id=${product.id}&write_date=${product.write_date}&unique=1`;
             	modifier_prod_list.push(product)
             	self.showPopup('ModifierProductPopup',{
                     modifier_prod: modifier_prod_list,
-                    portion: portion,
-                    portion_type: portion_type,
+                    side: side,
+                    side_type: side_type,
                     modifier_attribute: self.modifier_attribute,
                 })
 	        }
@@ -168,15 +127,13 @@ odoo.define('pod_custom_product.PodProductList', function(require) {
             	$('.side-prod-list').hide();
 	        	$('.product-list').show();
                 $('.products-widget-control').show();
-                var DeviceRadio = document.querySelector(
-					'input[type=radio][name=x]:checked'
+                var DeviceRadio = document.querySelector( 'input[type=radio][name=x]:checked'
 				);
 				if (DeviceRadio){
 					DeviceRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_device').hide();
-		    		$('#half_device').hide();
-		    		$('#quater_device').hide();
+					$('#single_device').hide();
+		    		$('#bilateral_device').hide();
 		    		$('#ask').show();
 				}
 	        }
@@ -226,15 +183,13 @@ odoo.define('pod_custom_product.PodProductList', function(require) {
 	        	$('.side-prod-info').hide();
 	        	$('.product-list').show();
                 $('.products-widget-control').show();
-                var DeviceRadio = document.querySelector(
-					'input[type=radio][name=x]:checked'
+                var DeviceRadio = document.querySelector( 'input[type=radio][name=x]:checked'
 				);
 				if (DeviceRadio){
 					DeviceRadio.checked = false;
 					$('.modifiers-product-list').hide();
-					$('#full_device').hide();
-		    		$('#half_device').hide();
-		    		$('#quater_device').hide();
+					$('#single_device').hide();
+		    		$('#bilateral_device').hide();
 		    		$('#ask').show();
 				}
 	        }

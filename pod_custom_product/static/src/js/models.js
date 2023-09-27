@@ -68,19 +68,14 @@ odoo.define('pod_custom_product.models', function (require) {
                 if(prod)
                 {
                     
-                    if(prod.portion_type == "full"){
+                    if(prod.side_type == "single"){
                         total += (prod.lst_price * prod.qty) 
                     }
 
-                    if(prod.portion_type == "half"){
+                    if(prod.side_type == "bilateral"){
                         var value = (prod.lst_price/2) * prod.qty 
                         total += value;
                     }
-
-                    if(prod.portion_type == "quater"){
-                        total += (prod.lst_price/4) * prod.qty 
-                    }
-
                     if(prod.is_sub){
                         total += (prod.lst_price * prod.qty)
                     }

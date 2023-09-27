@@ -1,5 +1,3 @@
-
-
 from odoo import api, models
 from odoo.osv import expression
 

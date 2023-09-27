@@ -6,19 +6,9 @@ class ProductProduct(models.Model):
 
     @api.model
     def _name_search(
-        self,
-        name="",
-        args=None,
-        operator="ilike",
-        limit=100,
-        name_get_uid=None,
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None,
     ):
-        res = super()._name_search(
-            name=name,
-            args=args,
-            operator=operator,
-            limit=limit,
-            name_get_uid=name_get_uid,
+        res = super()._name_search( name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid,
         )
         if not res and self.env.context.get("search_on_supplier"):
             suppliers = self.env["product.supplierinfo"].search(
@@ -30,7 +20,6 @@ class ProductProduct(models.Model):
             )
             if suppliers:
                 return self.search(
-                    [("product_tmpl_id.seller_ids", "in", suppliers.ids)],
-                    limit=limit,
+                    [("product_tmpl_id.seller_ids", "in", suppliers.ids)], limit=limit,
                 ).name_get()
         return res

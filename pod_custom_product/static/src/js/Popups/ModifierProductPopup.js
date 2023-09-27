@@ -40,13 +40,13 @@ odoo.define('pod_custom_product.ModifierProductPopup', function(require) {
 	        	vals_list.taxes_id = product.taxes_id;
 	        	vals_list.template_name = product.template_name;
 	        	vals_list.uom_id = product.uom_id;
-	        	vals_list.portion = self.props.portion;
-	        	vals_list.portion_type = self.props.portion_type;
+	        	vals_list.side = self.props.side;
+	        	vals_list.side_type = self.props.side_type;
         	}
         	if (modifier_list.length > 0){
     			if (_.findWhere(modifier_list, {id: vals_list.id,})){
-    				var increse = _.findWhere(modifier_list, {id:vals_list.id , portion: vals_list.portion})
-    				if (increse && increse.portion == vals_list.portion){
+    				var increse = _.findWhere(modifier_list, {id:vals_list.id , side: vals_list.side})
+    				if (increse && increse.side == vals_list.side){
     					increse.qty += 1; 
     				}
     				else{

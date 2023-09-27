@@ -6,9 +6,7 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     activity_definition_ids = fields.One2many(
-        "workflow.activity.definition",
-        inverse_name="service_id",
-        readonly=True,
+        "workflow.activity.definition", inverse_name="service_id", readonly=True,
     )
 
     def _get_activity_vals(self):

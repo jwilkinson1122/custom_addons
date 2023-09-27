@@ -81,28 +81,20 @@
 	            <li class="package_info" style="margin-left: 20px;font-size: 14px;">
 	                <t t-if="props.line.get_modifier()">
 	                	<t t-foreach="props.line.get_modifier()" t-as="line">
-	                		<t t-if="line.portion_type == 'full'">
+	                		<t t-if="line.side_type == 'single'">
 		                    	<span style="font-weight: bold;"><t t-esc="line.display_name" /></span>
 		                    	<span style="color:#888">
-			                    	<t t-esc="(line.qty).toFixed(2)"/> <t t-esc="line.uom_id[1]"/> (<t t-esc="line.portion"/>)
+			                    	<t t-esc="(line.qty).toFixed(2)"/> <t t-esc="line.uom_id[1]"/> (<t t-esc="line.side"/>)
 			                    	<br/>
 			                    </span>
 		                    </t>
 
-		                    <t t-if="line.portion_type == 'half'">
+		                    <t t-if="line.side_type == 'bilateral'">
 		                    	<span style="font-weight: bold;"><t t-esc="line.display_name" /></span>
 		                    	<span style="color:#888">
-		                    		<t t-esc="(line.qty).toFixed(2)/2"/> <t t-esc="line.uom_id[1]"/> (<t t-esc="line.portion"/>)
+		                    		<t t-esc="(line.qty).toFixed(2)/2"/> <t t-esc="line.uom_id[1]"/> (<t t-esc="line.side"/>)
 		                    		<br/>
 		                    	</span>
-		                    </t>
-
-		                    <t t-if="line.portion_type == 'quater'">
-		                    	<span style="font-weight: bold;"><t t-esc="line.display_name" /></span>
-		                    	<span style="color:#888">
-			                    	<t t-esc="(line.qty).toFixed(2)/4"/> <t t-esc="line.uom_id[1]"/> (<t t-esc="line.portion"/>)
-			                    	<br/>
-			                    </span>
 		                    </t>
 
 		                    <t t-if="line.is_sub">
@@ -141,13 +133,12 @@
 	                        </div>
 	                    </div>
 	                </t>
-	                <div class="main-content modifier-full-content">
+	                <div class="main-content modifier-single-content">
 	                	<div style="left: 0px;width: 100%;height: 100%;display: table;border: none;overflow: hidden;text-align: center;">
 	                		<div class="device_info">
 	                			<p id="ask">How Would you modify your item??</p>
-		                		<p style="display:none;" id="full_device">You Selected Full Size Device Please Choose Modifier.</p>
-		                		<p style="display:none;" id="half_device">You Selected Half Size Device Please Choose Modifier For Left Half Or Right Half.</p>
-	                			<p id="quater_device" style="display:none;">You Selected Quater Size Device Please Choose Modifier For First/Second/Third/Fourth Quater.</p>
+		                		<p style="display:none;" id="single_device">You Selected Single Device, Please Choose Modifier.</p>
+		                		<p style="display:none;" id="bilateral_device">You Selected A Bilateral Device, Please Choose Modifier For Left Side Or Right Side.</p>
 	                		</div>
 	                		
 
@@ -155,41 +146,22 @@
 	                		
 		                		<div class="hiddenradio" style="width: 140%">
 									<label>
-										<input style="width: 30px;float: left;cursor: pointer" type="radio" class="radio" name="x" value="full" id="y" t-on-click="full_size"/>
-									  	<img src="/pod_custom_product/static/src/img/full.jpg" style="margin:14px;width:23%;border-radius: 120px" />
+										<input style="width: 30px;float: left;cursor: pointer" type="radio" class="radio" name="x" value="single" id="y" t-on-click="single_side"/>
+									  	<img src="/pod_custom_product/static/src/img/single.jpg" style="margin:14px;width:23%;border-radius: 120px" />
 									</label>
 
 									<label>
-										<input style="width: 30px;float: left;" type="radio"  class="radio" name="x" value="half" id="z" t-on-click="half_size"/>
-										<img src="/pod_custom_product/static/src/img/half1.jpg" style="margin:14px;width:23%;border-radius: 120px"/>
-									</label>
-
-									<label>
-										<input style="width: 30px;float: left;" type="radio"  class="radio" name="x" value="quater" id="x" t-on-click="quater_size"/>
-										<img src="/pod_custom_product/static/src/img/quater.jpg" style="margin:14px;width:23%;border-radius: 120px"/>
+										<input style="width: 30px;float: left;" type="radio"  class="radio" name="x" value="bilateral" id="z" t-on-click="bilateral_side"/>
+										<img src="/pod_custom_product/static/src/img/bilateral1.jpg" style="margin:14px;width:23%;border-radius: 120px"/>
 									</label>
 								</div>
 
-								<div id="half_size_device" style="float: right;clear: none;margin-right:35px;margin-top:12px;display:none;">
-									<input checked="checked" style="width: 30px;float: left;" type="radio" class="radio" name="half" value="left half" id="left_half"/>
-									<label id="for_left_half" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="left_half">Left Half</label>
+								<div id="bilateral_side_device" style="float: right;clear: none;margin-right:35px;margin-top:12px;display:none;">
+									<input checked="checked" style="width: 30px;float: left;" type="radio" class="radio" name="bilateral" value="left side" id="left_bilateral"/>
+									<label id="for_left_bilateral" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="left_bilateral">Left Side</label>
 
-									<input style="width: 30px;float: left;" type="radio"  class="radio" name="half" value="right half" id="right_half"/>
-									<label id="for_right_half" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="right_half">Right Half</label>
-								</div>
-
-								<div id="quater_size_device" style="float: right;clear: none;margin-right:-145px;margin-top:12px;display:none;">
-									<input checked="checked" style="width: 30px;float: left;" type="radio" class="radio" name="quater" value="1st quater" id="1_quater"/>
-									<label id="for_1_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="1_quater">1st Quater</label>
-
-									<input style="width: 30px;float: left;" type="radio"  class="radio" name="quater" value="2nd quater" id="2_quater"/>
-									<label id="for_2_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="2_quater">2nd Quater</label>
-
-									<input style="width: 30px;float: left;" type="radio"  class="radio" name="quater" value="3rd quater" id="3_quater"/>
-									<label id="for_3_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="3_quater">3rd Quater</label>
-
-									<input style="width: 30px;float: left;" type="radio"  class="radio" name="quater" value="4th quater" id="4_quater"/>
-									<label id="for_4_quater" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="4_quater">4th Quater</label>
+									<input style="width: 30px;float: left;" type="radio"  class="radio" name="bilateral" value="right side" id="right_bilateral"/>
+									<label id="for_right_bilateral" style="font-size:18px;margin-top:-3px;float: left;clear: none;display: block;padding: 0px 1em 0px 8px;" for="right_bilateral">Right Side</label>
 								</div>
 
 								<br/><br/><br/>
@@ -282,28 +254,20 @@
 			                		
 	                		<div style="margin-left:7px;font-size:14px">
 		                		<t t-foreach="line.is_modifier" t-as="modifier">
-			                		<t t-if="modifier.portion_type == 'full'">
+			                		<t t-if="modifier.side_type == 'single'">
 				                    	<span><t t-esc="modifier.display_name" /></span>
 				                    	<span style="color:#888">
-					                    	<t t-esc="(modifier.qty).toFixed(2)"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
+					                    	<t t-esc="(modifier.qty).toFixed(2)"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.side"/>)
 					                    	<br/>
 					                    </span>
 				                    </t>
 
-				                    <t t-if="modifier.portion_type == 'half'">
+				                    <t t-if="modifier.side_type == 'bilateral'">
 				                    	<span><t t-esc="modifier.display_name" /></span>
 				                    	<span style="color:#888">
-				                    		<t t-esc="(modifier.qty).toFixed(2)/2"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
+				                    		<t t-esc="(modifier.qty).toFixed(2)/2"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.side"/>)
 				                    		<br/>
 				                    	</span>
-				                    </t>
-
-				                    <t t-if="modifier.portion_type == 'quater'">
-				                    	<span><t t-esc="modifier.display_name" /></span>
-				                    	<span style="color:#888">
-					                    	<t t-esc="(modifier.qty).toFixed(2)/4"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
-					                    	<br/>
-					                    </span>
 				                    </t>
 
 				                    <t t-if="modifier.is_sub">
@@ -325,28 +289,20 @@
 			                		
 	                		<div style="margin-left:7px;font-size:14px">
 		                		<t t-foreach="line.is_modifier" t-as="modifier">
-			                		<t t-if="modifier.portion_type == 'full'">
+			                		<t t-if="modifier.side_type == 'single'">
 				                    	<span><t t-esc="modifier.display_name" /></span>
 				                    	<span style="color:#888">
-					                    	<t t-esc="(modifier.qty).toFixed(2)"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
+					                    	<t t-esc="(modifier.qty).toFixed(2)"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.side"/>)
 					                    	<br/>
 					                    </span>
 				                    </t>
 
-				                    <t t-if="modifier.portion_type == 'half'">
+				                    <t t-if="modifier.side_type == 'bilateral'">
 				                    	<span><t t-esc="modifier.display_name" /></span>
 				                    	<span style="color:#888">
-				                    		<t t-esc="(modifier.qty).toFixed(2)/2"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
+				                    		<t t-esc="(modifier.qty).toFixed(2)/2"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.side"/>)
 				                    		<br/>
 				                    	</span>
-				                    </t>
-
-				                    <t t-if="modifier.portion_type == 'quater'">
-				                    	<span><t t-esc="modifier.display_name" /></span>
-				                    	<span style="color:#888">
-					                    	<t t-esc="(modifier.qty).toFixed(2)/4"/> <t t-esc="modifier.uom_id[1]"/> (<t t-esc="modifier.portion"/>)
-					                    	<br/>
-					                    </span>
 				                    </t>
 
 				                    <t t-if="modifier.is_sub">
@@ -363,7 +319,7 @@
                         <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
                             <div class="pos-receipt-left-padding">
                                 <t t-esc="env.pos.format_currency_no_symbol(line.price_lst)" />
-                                ->
+                           
                                 <t t-esc="env.pos.format_currency_no_symbol(line.price)" />
                             </div>
                         </t>

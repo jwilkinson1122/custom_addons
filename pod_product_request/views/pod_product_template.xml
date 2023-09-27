@@ -106,17 +106,17 @@
         </field>
     </record>
     <record model="ir.ui.menu" id="pod_product_menu">
-        <field name="name">Podiatry Product</field>
+        <field name="name">Product</field>
         <field name="parent_id" ref="contacts.res_partner_menu_config" />
         <field name="sequence" eval="50" />
     </record>
     <record model="ir.actions.act_window" id="pod_product_template_act_window">
-        <field name="name">Podiatry Product Template</field>
+        <field name="name">Product Template</field>
         <field name="res_model">pod.product.template</field>
         <field name="view_mode">tree,form</field>
     </record>
     <record model="ir.ui.menu" id="pod_product_template_menu">
-        <field name="name">Podiatry Product Template</field>
+        <field name="name">Product Template</field>
         <field name="parent_id" ref="pod_product_menu" />
         <field name="action" ref="pod_product_template_act_window" />
         <field name="sequence" eval="10" />

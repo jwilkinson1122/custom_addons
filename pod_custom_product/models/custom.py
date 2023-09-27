@@ -10,12 +10,12 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class CustomPOS(models.Model):
+class CustomProduct(models.Model):
 	_inherit = 'product.template'
 
 
 	bom_product = fields.Boolean(
-		string='POS BOM Product')
+		string='BOM Product')
 	modifier_ok = fields.Boolean(string='Modifier Product')
 	device_sides = fields.Boolean(string='Display Device Sides?')
 	modifier_groups_ids = fields.Many2many("modifier.product", string="Modifier Groups")
@@ -91,10 +91,8 @@ class pos_order(models.Model):
 								if 'is_sub' in prod:
 									qty = prod['qty'];
 								else:
-									if (prod['portion_type'] == 'half'):
+									if (prod['side_type'] == 'bilateral'):
 										qty = prod['qty']/2
-									elif (prod['portion_type'] == 'quater'):
-										qty = prod['qty']/4
 									else:
 										qty = prod['qty']
 

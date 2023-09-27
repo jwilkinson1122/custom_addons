@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 class PodiatryProductAdministration(models.Model):
 
     _name = "pod.product.administration"
-    _description = "Podiatry Product Administration"
+    _description = "Product Administration"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _rec_name = "internal_identifier"
 

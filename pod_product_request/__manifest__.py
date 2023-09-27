@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Podiatry Product Request",
+    "name": "Product Request",
     "summary": """
         This addon sets the base of the pod fhir concepts
         of device.request and device.request""",

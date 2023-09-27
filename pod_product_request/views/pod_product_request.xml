@@ -258,7 +258,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="pod_product_request_act_window">
-        <field name="name">Podiatry Product Request</field>
+        <field name="name">Product Request</field>
         <field name="res_model">pod.product.request</field>
         <field name="view_mode">tree,form</field>
     </record>

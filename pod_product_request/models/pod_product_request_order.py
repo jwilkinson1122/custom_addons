@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 class PodiatryProductRequestOrder(models.Model):
 
     _name = "pod.product.request.order"
-    _description = "Podiatry Product Request Order"
+    _description = "Product Request Order"
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _rec_name = "internal_identifier"
     _order = "id desc"

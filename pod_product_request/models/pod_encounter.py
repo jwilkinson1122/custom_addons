@@ -47,7 +47,7 @@ class PodiatryEncounter(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "pod.product.request.order",
-            "name": _("Podiatry Product Request"),
+            "name": _("Product Request"),
             "view_type": "form",
             "view_mode": "form",
             "views": [(view_id, "form")],
