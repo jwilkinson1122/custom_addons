@@ -3,7 +3,7 @@
     <menuitem
         id="pod_conf_requester_menu"
         name="Requester"
-        parent="pod_base.pod_root_administration"
+        parent="pod_base.pod_root_menu_administration"
         action="pod_requester_action"
         groups="pod_base.group_pod_configurator"
         sequence="20"

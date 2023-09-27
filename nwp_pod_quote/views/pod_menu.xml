@@ -4,7 +4,7 @@
         id="menu_pod_quote"
         name="Quotes"
         action="action_quotes"
-        parent="pod_base.pod_root_administration"
+        parent="pod_base.pod_root_menu_administration"
         sequence="10"
         groups="pod_base.group_pod_user"
     />

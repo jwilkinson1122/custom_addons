@@ -246,18 +246,4 @@
         <field name="view_id" ref="pod_patient_his_form" />
     </record>
 
-    <record model="ir.ui.menu" id="pod_patient">
-        <field name="name">Patients</field>
-        <field name="parent_id" ref="pod_base.pod_root_administration" />
-        <field name="action" ref="pod_patient_window_action" />
-        <field name="sequence" eval="40" />
-    </record>
-
-    <record model="ir.ui.menu" id="pod_patient_his">
-        <field name="name">HIS</field>
-        <field name="parent_id" ref="pod_root" />
-        <field name="action" ref="pod_patient_his_window_action" />
-        <field name="sequence" eval="1" />
-    </record>
-
 </odoo>

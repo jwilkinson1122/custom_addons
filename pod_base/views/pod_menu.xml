@@ -1,38 +1,55 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record model="ir.ui.menu" id="contacts.menu_contacts">
+        <field name="name">Contacts</field>
+    </record> 
 
-    <menuitem id="pod_root" name="POD ERP" sequence="10" groups="group_pod_user" web_icon="pod_base,static/description/icon.png" />
-    
-    <record model="ir.ui.menu" id="pod_root_administration">
+    <record model="ir.ui.menu" id="pod_root_menu_administration">
         <field name="name">Administration</field>
-        <field name="parent_id" ref="pod_root" />
-        <field name="sequence" eval="2" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_pod_reception')])]" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="groups_id" eval="[(6, 0, [ref('group_pod_configurator')])]" />
+        <field name="sequence" eval="1" />
     </record>
 
-    <record model="ir.ui.menu" id="pod_practice_menu">
-        <field name="name">Practices</field>
-        <field name="parent_id" ref="pod_root_administration" />
-        <field name="action" ref="pod_base.pod_practice_action" />
-        <field name="sequence" eval="10" />
+    <record id="pod_root_menu_administration" model="ir.ui.menu">
+        <field name="active" eval="True" />
     </record>
+
+    <menuitem id="contacts.res_partner_menu_contacts" name="Practices" action="pod_base.pod_practice_action" parent="pod_root_menu_administration" sequence="2"/> 
+    <menuitem id="pod_location_menu" name="Locations" action="pod_base.pod_location_action" parent="pod_root_menu_administration" sequence="3"/> 
+    <menuitem id="pod_practitioner_menu" name="Practitioners" action="pod_base.pod_practitioner_action" parent="pod_root_menu_administration" sequence="4"/> 
     
-    <menuitem id="pod_location_menu" name="Locations" sequence="20" parent="pod_root_administration" groups="pod_base.group_pod_configurator" action="pod_base.pod_location_action" />
-    <menuitem id="pod_conf_practitioner_menu" name="Practitioners" parent="pod_root_administration" action="pod_base.pod_practitioner_action" sequence="30" />
+    <record model="ir.ui.menu" id="pod_patient_menu">
+        <field name="name">Patients</field>
+        <field name="parent_id" ref="pod_root_menu_administration" />
+        <field name="action" ref="pod_base.pod_patient_window_action" />
+        <field name="sequence" eval="5" />
+    </record>
+
+    <record model="ir.ui.menu" id="pod_patient_his_menu">
+        <field name="name">History</field>
+        <field name="parent_id" ref="pod_root_menu_administration" />
+        <field name="action" ref="pod_base.pod_patient_his_window_action" />
+        <field name="sequence" eval="6" />
+    </record>
+
+    <record model="ir.ui.menu" id="contacts.res_partner_menu_config">
+        <field name="name">Configuration</field>
+        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />
+        <field name="sequence" eval="2" />
+    </record>
 
     <record model="ir.ui.menu" id="pod_root_clinical">
         <field name="name">Clinical</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="sequence" eval="10" />
         <field name="groups_id" eval="[
             (6, 0, [ref('group_pod_technician'),
                     ref('group_pod_practitioner'),
                     ref('group_pod_nurse'),
                     ref('group_pod_auxiliary'),
-                    ref('group_pod_pharmacy')
-                    ]
-            ),
-        ]" />
+                    ref('group_pod_pharmacy')])]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_clinical_request">
@@ -40,6 +57,7 @@
         <field name="parent_id" ref="pod_root_clinical" />
         <field name="sequence" eval="10" />
     </record>
+
     <record model="ir.ui.menu" id="pod_clinical_event">
         <field name="name">Events</field>
         <field name="parent_id" ref="pod_root_clinical" />
@@ -48,29 +66,21 @@
 
     <record model="ir.ui.menu" id="pod_root_diagnostics">
         <field name="name">Diagnostics</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="sequence" eval="20" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'),
-                       ref('group_pod_technician')
-                       ]
-             ),
-        ]" />
+        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'), ref('group_pod_technician')])]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_root_devices">
         <field name="name">Devices</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="sequence" eval="30" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'),
-                       ref('group_pod_pharmacy')
-                      ]
-             ),
-        ]" />
+        <field name="groups_id" eval="[(6, 0, [ref('group_pod_practitioner'), ref('group_pod_pharmacy')])]" />
     </record>
 
     <record model="ir.ui.menu" id="pod_root_financial">
         <field name="name">Financial</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_financial')])]" />
         <field name="sequence" eval="40" />
     </record>
@@ -83,32 +93,24 @@
 
     <record model="ir.ui.menu" id="pod_root_workflow">
         <field name="name">Workflow</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_financial')])]" />
         <field name="sequence" eval="50" />
     </record>
 
     <record model="ir.ui.menu" id="pod_root_terminologies">
         <field name="name">Terminologies</field>
-        <field name="parent_id" ref="pod_root" />
+        <field name="parent_id" ref="contacts.menu_contacts" />
         <field name="groups_id" eval="[(6, 0, [ref('group_pod_configurator')])]" />
         <field name="sequence" eval="60" />
     </record>
 
-    <record model="ir.ui.menu" id="pod_root_configuration">
-        <field name="name">Configuration</field>
-        <field name="parent_id" ref="pod_root" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_pod_configurator')])]" />
-        <field name="sequence" eval="90" />
-    </record>
-
-    <menuitem id="pod_role_menu" name="Roles" parent="pod_root_configuration" action="pod_base.pod_role_action" sequence="60" />
+    <menuitem id="pod_role_menu" name="Roles" parent="contacts.res_partner_menu_config" action="pod_base.pod_role_action" sequence="0" />
+    <!-- <menuitem id="pod_role_menu" name="Roles" parent="contacts.res_partner_menu_config" action="pod_base.pod_role_action" sequence="60" />
+ -->
 
 
-    <record model="ir.ui.menu" id="pod_root_settings">
-        <field name="name">Settings</field>
-        <field name="parent_id" ref="pod_root_configuration" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_pod_admin')])]" />
-        <field name="sequence" eval="1" />
-    </record>
+    <menuitem id="pod_root_settings" name="Settings" parent="contacts.menu_contacts" action="pod_base.action_pod_config" sequence="100" groups="base.group_system"/>
+    <!-- <menuitem id="menu_pod_config" name="Settings" parent="pod_root_settings" sequence="0" action="action_pod_config" groups="base.group_system" /> -->
+
 </odoo>

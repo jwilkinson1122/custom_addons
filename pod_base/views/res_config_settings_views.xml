@@ -7,44 +7,35 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div
-                    class="app_settings_block"
-                    data-string="Podiatry"
-                    data-key="pod_base"
-                    groups="pod_base.group_pod_configurator"
-                >
-                    <h2><i
-                            class="fa fa-user-md"
-                            aria-hidden="true"
-                        /> Administration</h2>
-                    <div
-                        class="row mt16 o_settings_container"
-                        id="pod_administration"
-                    />
-                    <h2><i class="fa fa-stethoscope" aria-hidden="true" /> Clinical</h2>
+                <div class="app_settings_block" data-string="Podiatry" data-key="pod_base" groups="pod_base.group_pod_configurator">
+                    <h2>
+                        <i class="fa fa-user-md" aria-hidden="true" />
+ Administration</h2>
+                    <div class="row mt16 o_settings_container" id="pod_administration" />
+                    <h2>
+                        <i class="fa fa-stethoscope" aria-hidden="true" />
+ Clinical</h2>
                     <div class="row mt16 o_settings_container" id="pod_clinical" />
-                    <h2><i class="fa fa-sitemap" aria-hidden="true" /> Workflow</h2>
+                    <h2>
+                        <i class="fa fa-sitemap" aria-hidden="true" />
+ Workflow</h2>
                     <div class="row mt16 o_settings_container" id="pod_workflow" />
-                    <h2><i class="fa fa-usd" aria-hidden="true" /> Financial</h2>
+                    <h2>
+                        <i class="fa fa-usd" aria-hidden="true" />
+ Financial</h2>
                     <div class="row mt16 o_settings_container" id="pod_financial" />
-                    <h2><i
-                            class="fa fa-heartbeat"
-                            aria-hidden="true"
-                        /> Diagnostics</h2>
-                    <div
-                        class="row mt16 o_settings_container"
-                        id="pod_diagnostics"
-                    />
-                    <h2><i class="fa fa-flask" aria-hidden="true" /> Device</h2>
-                    <div
-                        class="row mt16 o_settings_container"
-                        id="pod_device"
-                    />
-                    <h2><i class="fa fa-book" aria-hidden="true" /> Terminologies</h2>
-                    <div
-                        class="row mt16 o_settings_container"
-                        id="pod_terminology"
-                    />
+                    <h2>
+                        <i class="fa fa-heartbeat" aria-hidden="true" />
+ Diagnostics</h2>
+                    <div class="row mt16 o_settings_container" id="pod_diagnostics" />
+                    <h2>
+                        <i class="fa fa-flask" aria-hidden="true" />
+ Device</h2>
+                    <div class="row mt16 o_settings_container" id="pod_device" />
+                    <h2>
+                        <i class="fa fa-book" aria-hidden="true" />
+ Terminologies</h2>
+                    <div class="row mt16 o_settings_container" id="pod_terminology" />
                 </div>
             </xpath>
         </field>
@@ -57,12 +48,5 @@
         <field name="target">inline</field>
         <field name="context">{'module' : 'pod_base'}</field>
     </record>
-    <menuitem
-        id="menu_pod_config"
-        name="Settings"
-        parent="pod_root_settings"
-        sequence="0"
-        action="action_pod_config"
-        groups="base.group_system"
-    />
+    <!-- <menuitem id="menu_pod_config" name="Settings" parent="pod_root_settings" sequence="0" action="action_pod_config" groups="base.group_system" /> -->
 </odoo>

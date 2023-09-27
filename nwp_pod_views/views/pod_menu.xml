@@ -8,6 +8,6 @@
         <field name="active" eval="False" />
     </record>
     <record id="pod_financial_coverage.menu_pod_payor_root" model="ir.ui.menu">
-        <field name="parent_id" ref="pod_base.pod_root_administration" />
+        <field name="parent_id" ref="pod_base.pod_root_menu_administration" />
     </record>
 </odoo>

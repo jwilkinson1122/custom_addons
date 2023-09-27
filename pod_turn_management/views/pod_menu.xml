@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <menuitem
-        id="pod_turn_root"
-        name="Turns"
-        parent="pod_base.pod_root"
-        sequence="25"
-    />
+    <menuitem id="pod_turn_root" name="Turns" parent="contacts.menu_contacts" sequence="25" />
+
+    <!-- <menuitem id="pod_turn_root" name="Turns" parent="pod_base.pod_root" sequence="25" /> -->
 </odoo>

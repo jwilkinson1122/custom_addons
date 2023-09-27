@@ -2,7 +2,7 @@
 <odoo>
     <record model="ir.ui.menu" id="menu_pod_encounter_root">
         <field name="name">Encounters</field>
-        <field name="parent_id" ref="pod_base.pod_root_administration" />
+        <field name="parent_id" ref="pod_base.pod_root_menu_administration" />
         <field name="action" ref="pod_encounter_action" />
         <field name="sequence" eval="40" />
     </record>
