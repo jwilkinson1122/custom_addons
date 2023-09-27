@@ -241,13 +241,13 @@
         <field name="domain">[('is_company', '=', True), ('is_location', '=', False)]</field>
     </record>
      -->
-
+     <!-- <field name="domain">[('id', '!=', 1)]</field> -->
     <record id="pod_practice_action" model="ir.actions.act_window">
         <field name="name">Practices</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_company', '=', True), ('is_location', '=', False)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True, 
