@@ -17,12 +17,12 @@ class PodiatryPatient(models.Model):
     )
     
     pod_location_primary_id = fields.Many2one(
-        string="Primary Podiatry Practice",
+        string="Primary Practice",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )
     pod_location_secondary_ids = fields.Many2many(
-        string="Secondary Podiatry Practices",
+        string="Other Practices",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )

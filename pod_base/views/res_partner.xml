@@ -40,36 +40,16 @@
                 <field name="location_count"/>
                 <field name="practitioner_count"/>
             </xpath>
-
-            <!-- <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="replace">
-                <div class="o_badge_group mb-1">
-                    <div class="badge badge-primary">Locations: <t t-esc="record.location_count.raw_value"/></div>
-                    <div class="badge badge-secondary">Practitioners: <t t-esc="record.practitioner_count.raw_value"/></div>
-                </div>
-                <div class="oe_kanban_partner_links position-absolute" style="right: 5px; bottom: 5px;">
-                    <a class="ml4" t-if="record.email.raw_value" t-attf-href="mailto:#{record.email.raw_value}" title="Mail"><i class="fa fa-envelope-o"/></a>
-                    <a class="ml4" t-if="record.mobile.raw_value" t-attf-href="tel:#{record.mobile.raw_value}" title="Call mobile"><i class="fa fa-mobile-phone"/></a>
-                </div>
-            </xpath> -->
-
-            <!-- <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span class="badge badge-pill" t-if="record.meeting_count.value>0">
-                        <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
-                        <t t-esc="record.meeting_count.value"/>
-                    </span>
-                </xpath> -->
-
-                <!-- <div class="oe_module_action">
-                    <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', 'in', (False, ''))]}" class="btn btn-sm btn-secondary float-right o-hidden-ios" role="button">Learn More</a>
-                </div> -->
             <xpath expr="//kanban" position="inside">
                 <field name="location_count"/>
                 <field name="practitioner_count"/>
             </xpath>
             <xpath expr="//div[contains(@class, 'o_kanban_record')]" position="inside">
                 <div class="o_badge_group position-absolute" style="right: 5px; bottom: 5px;">
-                    <div class="badge badge-info mb-1">Locations: <t t-esc="record.location_count.raw_value"/></div>
-                    <div class="badge badge-info">Contacts: <t t-esc="record.practitioner_count.raw_value"/></div>
+                    <div class="badge badge-info mb-1">Locations: <t t-esc="record.location_count.raw_value"/>
+                    </div>
+                    <div class="badge badge-info">Contacts: <t t-esc="record.practitioner_count.raw_value"/>
+                    </div>
                 </div>
             </xpath>
         </field>
@@ -89,19 +69,38 @@
                 <field name="is_location" invisible="1" />
                 <field name="is_practitioner" invisible="1" />
             </xpath>
-
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
             <!-- parent_id adjustments -->
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="is_parent_practice" invisible="1" />
             </xpath>
 
+            <!-- <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_parent_practice', '=', True)]}</attribute>
+            </xpath> -->
+
             <xpath expr="//field[@name='function']" position="before">
                 <field name="practitioner_role_ids" placeholder="Roles" widget="many2many_tags" attrs="{'required': [('is_practitioner', '=', True)], 'invisible': [('is_practitioner','=',False)]}" options="{'no_create': True}" />
             </xpath>
 
+            <!-- <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_parent_practice', '=', False), ('is_location', '=', False), ('is_practitioner', '=', False)], 'required': [('is_location', '=', True), ('is_practitioner', '=', True)]}</attribute>
+            </xpath> -->
             <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
-                <attribute name="attrs">{'required': [('is_location', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible': [('is_location', '=', False), ('is_practitioner', '=', False)], 'required': [('is_location', '=', True), ('is_practitioner', '=', True)]}</attribute>
             </xpath>
+
+           
+            <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['&amp;', ('is_location', '=', False), ('is_practitioner', '=', False)],
+                    'required': ['|', ('is_location', '=', True), ('is_practitioner', '=', True)]
+                }</attribute>
+            </xpath>
+            
+            
 
             <!-- button_box adjustments -->
             <xpath expr="//div[@name='button_box']" position="inside">
@@ -118,10 +117,20 @@
             <!-- Address Types adjustments -->
             <xpath expr="//span[@name='address_name']" position="replace">
                 <span class="o_form_label o_td_label" name="podiatry_address">
-                    <field name="type" placeholder="Address Type" attrs="{'invisible': [('is_parent_practice','=', False)], 'required': [('is_company','=', False)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                    <field name="type" placeholder="Address Type" attrs="{'invisible': [('is_parent_practice','=', False)], 
+                                   'required': ['|', ('is_location','=', True), ('is_practitioner','=', True)],
+                                   'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
                     <b attrs="{'invisible': [('is_parent_practice', '=', True)]}">Address</b>
                 </span>
             </xpath>
+
+            <!-- Address Types adjustments -->
+            <!-- <xpath expr="//span[@name='address_name']" position="replace">
+                <span class="o_form_label o_td_label" name="podiatry_address">
+                    <field name="type" widget="many2many_tags" placeholder="Address Type" attrs="{'invisible': [('parent_id_is_company','=', False)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                    <b attrs="{'invisible': [('parent_id_is_company', '=', True)]}">Address</b>
+                </span>
+            </xpath> -->
 
             <!-- Add Locations Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
@@ -196,7 +205,7 @@
             <!-- Replace Contacts & Addresses Page with Practitioners -->
             <xpath expr='//page[@name="contact_addresses"]' position="replace">
                 <page string="Practitioners" attrs="{'invisible': [('is_company','=',False)]}">
-                    <field name="practitioner_ids" context="{'default_parent_id': active_id, 'default_is_company': False, 'default_type':'contact', 'search_default_parent_id': active_id}" mode="kanban">                        
+                    <field name="practitioner_ids" context="{'default_parent_id': active_id, 'default_is_company': False, 'default_type':'contact', 'search_default_parent_id': active_id}" mode="kanban">
                         <kanban on_create="base.view_partner_form">
                             <field name="id" />
                             <field name="color" />
@@ -285,7 +294,7 @@
         <field name="domain">[('is_company', '=', True), ('is_location', '=', False)]</field>
     </record>
      -->
-     <!-- <field name="domain">[('id', '!=', 1)]</field> -->
+    <!-- <field name="domain">[('id', '!=', 1)]</field> -->
     <record id="pod_practice_action" model="ir.actions.act_window">
         <field name="name">Practices</field>
         <field name="type">ir.actions.act_window</field>
@@ -310,6 +319,7 @@
             'default_is_company':True, 
             'default_is_location': True, 
             'default_is_pod': True,
+            'default_type': '',
         }</field>
     </record>
 

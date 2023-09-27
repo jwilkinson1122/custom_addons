@@ -17,7 +17,7 @@ class Partner(models.Model):
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
-    is_parent_practice = fields.Boolean( string='Parent Is a Practice', related='parent_id.is_company', readonly=True, store=False)
+    is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
     
     location_ids = fields.One2many(
         "res.partner", 
