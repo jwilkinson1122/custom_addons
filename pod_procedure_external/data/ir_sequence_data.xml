@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <record id="seq_pod_procedure_external_request" model="ir.sequence">
-        <field name="name">External Request</field>
-        <field name="code">pod.procedure.external.request</field>
-        <field name="prefix">MPER</field>
-        <field name="padding">6</field>
-    </record>
-</odoo>

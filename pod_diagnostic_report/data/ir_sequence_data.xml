@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <record id="seq_pod_diagnostic_report" model="ir.sequence">
-        <field name="name">Diagnostic Report</field>
-        <field name="code">pod.diagnostic.report</field>
-        <field name="prefix">MDR</field>
-        <field name="padding">6</field>
-    </record>
-</odoo>

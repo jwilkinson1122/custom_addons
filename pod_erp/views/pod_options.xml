@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--============ Podiatry Option ============ -->
+    <!-- Form view of pod option -->
+    <record id="view_pod_options_form" model="ir.ui.view">
+        <field name="name">.pod.options.form</field>
+        <field name="model">pod.options</field>
+        <field name="arch" type="xml">
+            <form string="Podiatry Options">
+                <sheet>
+                    <label for="name" string="Name" />
+                    <h1>
+                        <field name="name" select="1" />
+                    </h1>
+                    <notebook>
+                        <page string="Information">
+                            <group>
+                                <group colspan="4" col="4">
+                                    <field
+                                        name="type"
+                                        select="2"
+                                        string="Option Type"
+                                    />
+                                    <field
+                                        name="option_categ_id"
+                                        string="Option Category"
+                                    />
+                                    <field
+                                        name="product_manager"
+                                        select="2"
+                                        string="Option Manager"
+                                    />
+                                    <field name="uom_id" />
+                                    <field name="default_code" />
+                                    <field name="uom_po_id" />
+                                    <field
+                                        name="supplier_taxes_id"
+                                        widget="many2many_tags"
+                                        string="Supplier Taxes"
+                                    />
+                                    <field
+                                        name="taxes_id"
+                                        widget="many2many_tags"
+                                        string="Customer Taxes"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Procurement">
+                            <group colspan="4" col="4">
+                                <field name="active" select="2" />
+                                <field name="list_price" />
+                                <field name="cost_method" string="Cost Method" />
+                                <field name="sale_ok" select="2" />
+                                <field name="standard_price" />
+                            </group>
+                            <newline />
+                            <group>
+                                <separator string="Suplliers" />
+                                <field
+                                    name="seller_ids"
+                                    colspan="4"
+                                    nolabel="1"
+                                    widget="one2many_list"
+                                />
+                            </group>
+                        </page>
+                        <page string="Descriptions">
+                            <separator string="Description" />
+                            <field name="description" colspan="4" nolabel="1" />
+                            <separator string="Sale Description" />
+                            <field name="description_sale" colspan="4" nolabel="1" />
+                            <separator string="Purchase Description" />
+                            <field
+                                name="description_purchase"
+                                colspan="4"
+                                nolabel="1"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Search view of pod option -->
+    <record id="view_pod_options_search" model="ir.ui.view">
+        <field name="name">pod.options.search</field>
+        <field name="model">pod.options</field>
+        <field name="arch" type="xml">
+            <search string="Podiatry Options">
+                <field name="name" />
+                <field name="option_categ_id" string="Option Category" />
+                <field name="list_price" string="Option rate" />
+                <newline />
+            </search>
+        </field>
+    </record>
+    <!-- Tree view of pod option -->
+    <record id="view_pod_options_tree" model="ir.ui.view">
+        <field name="name">pod.options.tree</field>
+        <field name="model">pod.options</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="option_categ_id" string="Option Category" />
+                <field name="list_price" string="Option rate" />
+            </tree>
+        </field>
+    </record>
+</odoo>

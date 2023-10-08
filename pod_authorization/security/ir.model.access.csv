@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_pod_request_group_uncheck_authorization,access_pod_request_group_uncheck_authorization,model_pod_request_group_uncheck_authorization,pod_base.group_pod_user,1,1,1,0

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<odoo>
-    <menuitem id="pod_guard_root" name="Guards" parent="contacts.menu_contacts" sequence="40" groups="nwp_pod_guard.group_pod_guard_display" />
-
-    <!-- <menuitem id="pod_guard_root" name="Guards" parent="pod_base.pod_root" sequence="40" groups="nwp_pod_guard.group_pod_guard_display" /> -->
-</odoo>

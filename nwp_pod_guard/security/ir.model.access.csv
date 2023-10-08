@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_guard_access,pod_guard_access,model_pod_guard,group_pod_guard_display,1,0,0,0
-pod_guard_manager,pod_guard_manager,model_pod_guard,group_pod_guard_manager,1,1,1,1
-pod_guard_plan_access,pod_guard_plan_access,model_pod_guard_plan,group_pod_guard_display,1,0,0,0
-pod_guard_plan_manager,pod_guard_plan_manager,model_pod_guard_plan,group_pod_guard_manager,1,1,1,0
-access_pod_guard_invoice,access_pod_guard_invoice,model_pod_guard_invoice,base.group_user,1,1,1,0
-access_pod_guard_plan_apply,access_pod_guard_plan_apply,model_pod_guard_plan_apply,base.group_user,1,1,1,0

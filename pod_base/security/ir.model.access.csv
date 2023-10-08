@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_role_display,pod_role_display,model_pod_role,group_pod_user,1,0,0,0
-pod_role_manager,pod_role_manager,model_pod_role,group_pod_configurator,0,1,1,0
-pod_patient_display,pod_patient_display,model_pod_patient,group_pod_user,1,1,1,0
-pod_patient_manager,pod_patient_manager,model_pod_patient,group_pod_reception,1,1,1,0

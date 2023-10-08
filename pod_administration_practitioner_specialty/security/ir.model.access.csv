@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_specialty_display,pod_specialty_display,model_pod_specialty,pod_base.group_pod_user,1,0,0,0
-pod_specialty_manager,pod_specialty_manager,model_pod_specialty,pod_base.group_pod_configurator,0,1,1,0

@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_encounter_display,pod_encounter_display,model_pod_encounter,pod_base.group_pod_user,1,1,1,0
-pod_encounter_manager,pod_encounter_manager,model_pod_encounter,pod_base.group_pod_reception,1,1,1,0

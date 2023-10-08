@@ -1,0 +1,37 @@
+# See LICENSE file for full copyright and licensing details.
+
+{
+    "name": "Pod ERP",
+    "version": "15.0.1.0.0",
+    "author": "NWPL",
+    "category": "Podiatry",
+    "website": "https://nwpodiatric.com",
+    "depends": ["sale", "sale_management", "stock", "sale_stock", "account"],
+    "license": "LGPL-3",
+    "summary": "Podiatry Management to Manage Prescription and Podiatry Configuration",
+    "demo": ["demo/pod_data.xml"],
+    "data": [
+        "security/pod_security.xml",
+        "security/ir.model.access.csv",
+        "data/pod_sequence.xml",
+        "report/report_view.xml",
+        "report/pod_prescription_report_template.xml",
+        "views/pod_prescription.xml",
+        "views/pod_device.xml",
+        "views/pod_device_accommodations.xml",
+        "views/pod_device_type.xml",
+        "views/pod_option_type.xml",
+        "views/pod_options.xml",
+        "views/product_product.xml",
+        "views/res_company.xml",
+        "views/actions.xml",
+        "views/menus.xml",
+        "wizard/pod_wizard.xml",
+    ],
+    "assets": {
+        "web.assets_backend": ["pod_erp/static/src/css/device_kanban.css"],
+    },
+    "external_dependencies": {"python": ["python-dateutil"]},
+    "images": ["static/description/Podiatry.png"],
+    "application": True,
+}

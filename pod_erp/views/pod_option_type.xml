@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--============ Podiatry Option Type ============ -->
+    <!-- Form view of pod option type -->
+    <record id="view_pod_option_type_form" model="ir.ui.view">
+        <field name="name">pod.option.type.form</field>
+        <field name="model">pod.option.type</field>
+        <field name="arch" type="xml">
+            <form string="Option Type">
+                <sheet>
+                    <group>
+                        <field name="name" string="Option Name" />
+                        <field name="option_id" />
+                        <field name="child_ids" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of pod option type -->
+    <record id="view_pod_option_type_tree" model="ir.ui.view">
+        <field name="name">pod.option.type.tree</field>
+        <field name="model">pod.option.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+</odoo>
