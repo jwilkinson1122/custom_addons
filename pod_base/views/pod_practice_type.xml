@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="pod_practice_type_view_form" model="ir.ui.view">
+        <field name="name">pod.practice.type.view.form</field>
+        <field name="model">pod.practice.type</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Practice Types">
+                <group>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="pod_practice_type_view_tree" model="ir.ui.view">
+        <field name="name">pod.practice.type.view.tree</field>
+        <field name="model">pod.practice.type</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Practice Types">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pod_practice_type_action">
+        <field name="name">Practice Types</field>
+        <field name="res_model">pod.practice.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

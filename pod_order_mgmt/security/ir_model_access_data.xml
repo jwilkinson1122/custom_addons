@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        resource.resource
+        -->
+        <record id="access_resource_resource_group_manager" model="ir.model.access">
+            <field name="name">access.resource.resource.pod.group.manager</field>
+            <field name="model_id" ref="resource.model_resource_resource"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- <record id="access_res_partner_group_user" model="ir.model.access">
+            <field name="name">access.res.partner.group.user</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="access_res_partner_group_manager" model="ir.model.access">
+            <field name="name">access.res.partner.group.manager</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record> -->
+
+        <!--
+        pod.practitioner
+        -->
+        <record id="access_pod_practitioner_group_manager" model="ir.model.access">
+            <field name="name">access.pod.practitioner.group.manager</field>
+            <field name="model_id" ref="model_pod_practitioner"/>
+            <field name="group_id" ref="pod_order_management.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_practitioner_group_user" model="ir.model.access">
+            <field name="name">access.pod.practitioner.group.user</field>
+            <field name="model_id" ref="model_pod_practitioner"/>
+            <field name="group_id" ref="pod_order_management.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
+        <!--
+        pod.patient
+        -->
+        <record id="access_pod_patient_group_manager" model="ir.model.access">
+            <field name="name">access.pod.patient.group.manager</field>
+            <field name="model_id" ref="model_pod_patient"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_patient_group_user" model="ir.model.access">
+            <field name="name">access.pod.patient.group.user</field>
+            <field name="model_id" ref="model_pod_patient"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        pod.diagnosis
+        -->
+        <record id="access_pod_patient_diagnosis_group_manager" model="ir.model.access">
+            <field name="name">access.pod.diagnosis.group.manager</field>
+            <field name="model_id" ref="model_pod_patient_diagnosis"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_patient_diagnosis_group_user" model="ir.model.access">
+            <field name="name">access.pod.diagnosis.group.user</field>
+            <field name="model_id" ref="model_pod_patient_diagnosis"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        pod.practice
+        -->
+        <record id="access_pod_practice_group_manager" model="ir.model.access">
+            <field name="name">access.pod.practice.group.manager</field>
+            <field name="model_id" ref="model_pod_practice"/>
+            <field name="group_id" ref="pod_order_management.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_practice_group_user" model="ir.model.access">
+            <field name="name">access.pod.practice.group.user</field>
+            <field name="model_id" ref="model_pod_practice"/>
+            <field name="group_id" ref="pod_order_management.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        pod.type
+        -->
+        <record id="access_pod_type_group_manager" model="ir.model.access">
+            <field name="name">access.pod.type.group.manager</field>
+            <field name="model_id" ref="model_pod_type"/>
+            <field name="group_id" ref="pod_order_management.group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_type_group_user" model="ir.model.access">
+            <field name="name">access.pod.type.group.user</field>
+            <field name="model_id" ref="model_pod_type"/>
+            <field name="group_id" ref="pod_order_management.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        pod.prescription.order
+        -->
+        <record id="access_pod_prescription_order_group_manager" model="ir.model.access">
+            <field name="name">access.pod.prescription.order.group.manager</field>
+            <field name="model_id" ref="model_pod_prescription_order"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_prescription_order_group_user" model="ir.model.access">
+            <field name="name">access.pod.prescription.order.group.user</field>
+            <field name="model_id" ref="model_pod_prescription_order"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        create.prescription (wizard)
+        -->
+        <record id="access_create_prescription_obj_group_manager" model="ir.model.access">
+            <field name="name">access.create.prescription.group.obj.manager</field>
+            <field name="model_id" ref="model_create_prescription_obj"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_create_prescription_obj_group_user" model="ir.model.access">
+            <field name="name">access.create.prescription.group.obj.user</field>
+            <field name="model_id" ref="model_create_prescription_obj"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        sale.order.line
+        -->
+        <record id="access_pod_prescription_order_line_group_manager" model="ir.model.access">
+            <field name="name">access.sale.order.line.group.manager</field>
+            <field name="model_id" ref="model_pod_prescription_order_line"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_prescription_order_line_group_user" model="ir.model.access">
+            <field name="name">access.sale.order.line.group.user</field>
+            <field name="model_id" ref="model_pod_prescription_order_line"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        pod.prescription.order.stage
+        -->
+        <record id="access_pod_prescription_order_stage_group_manager" model="ir.model.access">
+            <field name="name">access.pod.prescription.order.stage.group.manager</field>
+            <field name="model_id" ref="model_pod_prescription_order_stage"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pod_prescription_order_stage_group_user" model="ir.model.access">
+            <field name="name">access.pod.prescription.order.stage.group.user</field>
+            <field name="model_id" ref="model_pod_prescription_order_stage"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+        'pod.prescription.order.massmessage'
+        -->
+
+        <record id="access_pod_prescription_order_massmessage_user" model="ir.model.access">
+            <field name="name">access.pod.prescription.order.massmessage.group.user</field>
+            <field name="model_id" ref="model_pod_prescription_order_massmessage"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!--
+        create.prescription.invoice
+        -->
+
+        <record id="access_create_prescription_invoice_group_manager" model="ir.model.access">
+            <field name="name">access.create.prescription.invoice.group.manager</field>
+            <field name="model_id" ref="model_create_prescription_invoice"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_create_prescription_invoice_group_user" model="ir.model.access">
+            <field name="name">access.create.prescription.invoice.group.user</field>
+            <field name="model_id" ref="model_create_prescription_invoice"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
+        <!--
+        'create.prescription.shipment'
+        -->
+
+        <record id="access_create_prescription_shipment_group_manager" model="ir.model.access">
+            <field name="name">access.create.prescription.shipment.group.manager</field>
+            <field name="model_id" ref="model_create_prescription_shipment"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_create_prescription_shipment_group_user" model="ir.model.access">
+            <field name="name">access.create.prescription.shipment.group.user</field>
+            <field name="model_id" ref="model_create_prescription_shipment"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- access_variants_tree,access.variants.tree,model_variants_tree,base.group_user,1,1,1,1 -->
+
+        <!--
+        'variants'
+        -->
+
+        <record id="access_variants_tree_group_manager" model="ir.model.access">
+            <field name="name">access.variants.tree.group.manager</field>
+            <field name="model_id" ref="model_variants_tree"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_variants_tree_group_user" model="ir.model.access">
+            <field name="name">access.variants.tree.group.user</field>
+            <field name="model_id" ref="model_variants_tree"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <!-- 
+        user_access_pos_customer_favorites,user.access.customer.favorite.product,model_customer_favorite_product,point_of_sale.group_pos_user,1,1,1,0
+manager_access_pos_customer_favorites,manager.access.customer.favorite.product,model_customer_favorite_product,point_of_sale.group_pos_manager,1,1,1,1 -->
+
+        <record id="access_pos_customer_favorites_group_manager" model="ir.model.access">
+            <field name="name">access.pos.customer.favorites.group.manager</field>
+            <field name="model_id" ref="model_customer_favorite_product"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_pos_customer_favorites_group_user" model="ir.model.access">
+            <field name="name">access.pos.customer.favorites.group.user</field>
+            <field name="model_id" ref="model_customer_favorite_product"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- access_pos_create_sales_order,access_pos_create_sales_order,pos_create_sales_order.model_pos_create_sales_order,base.group_user,1,1,1,1 -->
+
+        <!-- <record id="access_pos_create_sales_order_group_manager" model="ir.model.access">
+            <field name="name">access.pos.create.sales.order.group.manager</field>
+            <field name="model_id" ref="model_pos_create_sales_order"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record> -->
+
+        <record id="access_pos_create_sales_order_group_user" model="ir.model.access">
+            <field name="name">access.pos.create.sales.order.group.user</field>
+            <field name="model_id" ref="model_pos_create_sales_order"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- access_res_partner_info,res.partner.info,model_res_partner_info,,1,1,1,1
+access_custom_field,custom.partner.field,model_custom_field,,1,1,1,1 -->
+
+        <record id="access_res_partner_info_group_user" model="ir.model.access">
+            <field name="name">access.res.partner.info.group.user</field>
+            <field name="model_id" ref="model_res_partner_info"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="access_custom_partner_field_group_user" model="ir.model.access">
+            <field name="name">access.custom.partner.field.group.user</field>
+            <field name="model_id" ref="model_custom_partner_field"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!--
+         device.shell
+        -->
+        <record id="access_device_shell_group_manager" model="ir.model.access">
+            <field name="name">access.device.shell.group.manager</field>
+            <field name="model_id" ref="model_device_shell"/>
+            <field name="group_id" ref="group_manager"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="access_device_shell_group_user" model="ir.model.access">
+            <field name="name">access.device.shell.group.user</field>
+            <field name="model_id" ref="model_device_shell"/>
+            <field name="group_id" ref="group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+
+
+    </data>
+</odoo>

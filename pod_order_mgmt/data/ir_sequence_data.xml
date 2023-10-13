@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!--sequence for patient-->
+    <record id="sequence_pod_patient" model="ir.sequence">
+        <field name="name">Patient ID</field>
+        <field name="code">pod.patient</field>
+        <field name="prefix">PID</field>
+        <field name="padding">6</field>
+        <!-- <field name="company_id" eval="False"/> -->
+    </record>
+    <!--sequence for practice-->
+    <record id="sequence_pod_practice" model="ir.sequence">
+        <field name="name">Practice ID</field>
+        <field name="code">pod.practice</field>
+        <field name="prefix">ID</field>
+        <field name="padding">4</field>
+    </record>
+    <!--sequence for practitioner-->
+    <record id="sequence_pod_practitioner" model="ir.sequence">
+        <field name="name">Practitioner ID</field>
+        <field name="code">pod.practitioner</field>
+        <field name="prefix">ID</field>
+        <field name="padding">4</field>
+    </record>
+    <!--sequence for prescription-->
+    <record id="sequence_pod_prescription_order" model="ir.sequence">
+        <field name="name">Prescription Sequence</field>
+        <field name="code">pod.prescription.order</field>
+        <field name="prefix">Rx ID: %(y)s%(month)s-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <!--sequence for prescription-->
+    <record id="prescription_invoice_sequence" model="ir.sequence">
+        <field name="name">Prescription Invoice</field>
+        <field name="code">pres_inv_seq</field>
+        <field name="prefix">PRES/INV/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>
