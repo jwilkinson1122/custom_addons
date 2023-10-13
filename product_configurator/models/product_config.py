@@ -276,6 +276,13 @@ class ProductConfigStep(models.Model):
     #       step with higher sequence than the dependency
 
     name = fields.Char(required=True, translate=True)
+    session_id = fields.Many2one('product.config.session', string="Session")
+    quantity = fields.Integer(string="Quantity", default=1)
+    laterality = fields.Selection([
+            ('lt_single', 'Left'),
+            ('rt_single', 'Right'),
+            ('bl_pair', 'Bilateral')
+        ], string='Laterality', required=True, default='bl_pair')
 
 
 class ProductConfigStepLine(models.Model):
@@ -330,6 +337,29 @@ class ProductConfigSession(models.Model):
         "product_tmpl_id.attribute_line_ids.product_template_value_ids",
         "product_tmpl_id.attribute_line_ids." "product_template_value_ids.price_extra",
     )
+
+    # def _compute_cfg_price(self):
+    #     for session in self:
+    #         if session.product_tmpl_id:
+    #             price = session.get_cfg_price()
+    #             if session.laterality == 'bl_pair':
+    #                 price *= 2
+    #             price *= session.quantity
+    #         else:
+    #             price = 0.00
+    #         session.price = price
+    
+    # @api.depends('product_id', 'quantity', 'laterality')
+    # def _compute_step_price(self):
+    #     for session in self:
+    #         price = session.product_id.list_price
+    #         qty_multiplier = session.quantity
+    #         if session.laterality == 'bl_pair':
+    #             qty_multiplier *= 2
+
+    #         session.price = price * qty_multiplier
+    
+    @api.depends('product_tmpl_id', 'value_ids', 'laterality', 'quantity')
     def _compute_cfg_price(self):
         for session in self:
             if session.product_tmpl_id:
@@ -337,6 +367,7 @@ class ProductConfigSession(models.Model):
             else:
                 price = 0.00
             session.price = price
+            
 
     def get_custom_value_id(self):
         """Return record set of attribute value 'custom'"""
@@ -441,43 +472,62 @@ class ProductConfigSession(models.Model):
     config_step_name = fields.Char(
         compute="_compute_config_step_name", string="Configuration Step"
     )
+    
     product_id = fields.Many2one(
         comodel_name="product.product",
         name="Configured Variant",
         ondelete="cascade",
     )
+    
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         domain=[("config_ok", "=", True)],
         string="Configurable Template",
         required=True,
     )
+    
     value_ids = fields.Many2many(
         comodel_name="product.attribute.value",
         relation="product_config_session_attr_values_rel",
         column1="cfg_session_id",
         column2="attr_val_id",
     )
+    
     user_id = fields.Many2one(comodel_name="res.users", required=True)
+    
     custom_value_ids = fields.One2many(
         comodel_name="product.config.session.custom.value",
         inverse_name="cfg_session_id",
         string="Custom Values",
     )
+    
+    step_config_ids = fields.One2many('product.config.step', 'session_id', string="Step Configurations")
+    
+    laterality = fields.Selection([
+        ('lt_single', 'Left'),
+        ('rt_single', 'Right'),
+        ('bl_pair', 'Bilateral')
+    ], string='Laterality', required=True, default='bl_pair')
+    
+    quantity = fields.Float(string='Quantity', default=1.0)
+    
     price = fields.Float(
         compute="_compute_cfg_price",
         store=True,
         digits="Product Price",
     )
+    
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         compute="_compute_currency_id",
     )
+    
     state = fields.Selection(
         required=True,
         selection=[("draft", "Draft"), ("done", "Done")],
         default="draft",
     )
+    
     weight = fields.Float(compute="_compute_cfg_weight", digits="Stock Weight")
     # Product preset
     product_preset_id = fields.Many2one(
@@ -486,6 +536,12 @@ class ProductConfigSession(models.Model):
         domain="[('product_tmpl_id', '=', product_tmpl_id),\
             ('config_preset_ok', '=', True)]",
     )
+            
+    @api.onchange('quantity', 'laterality')
+    def _onchange_quantity_laterality(self):
+        # Recompute the price when quantity or laterality changes
+        self._compute_cfg_price()
+
 
     def action_confirm(self, product_id=None):
         for session in self:
@@ -796,7 +852,6 @@ class ProductConfigSession(models.Model):
     def get_cfg_price(self, value_ids=None, custom_vals=None):
         """Computes the price of the configured product based on the
             configuration passed in via value_ids and custom_values
-
         :param value_ids: list of attribute value_ids
         :param custom_vals: dictionary of custom attribute values
         :returns: final configuration price"""
@@ -809,18 +864,32 @@ class ProductConfigSession(models.Model):
 
         product_tmpl = self.product_tmpl_id
         self = self.with_context(active_id=product_tmpl.id)
-
         value_ids = self.flatten_val_ids(value_ids)
-
         price_extra = 0.0
         attr_val_obj = self.env["product.attribute.value"]
         av_ids = attr_val_obj.browse(value_ids)
-        extra_prices = attr_val_obj.get_attribute_value_extra_prices(
-            product_tmpl_id=product_tmpl.id, pt_attr_value_ids=av_ids
-        )
+        extra_prices = attr_val_obj.get_attribute_value_extra_prices(product_tmpl_id=product_tmpl.id, pt_attr_value_ids=av_ids)
         price_extra = sum(extra_prices.values())
-        return product_tmpl.list_price + price_extra
+        base_price = product_tmpl.list_price + price_extra
 
+        # Adjust the base price based on laterality
+        if self.laterality == 'bl_pair':
+            base_price *= 2
+
+        # Adjust the base price based on quantity
+        base_price *= self.quantity
+        
+        # Loop through each step and adjust the price
+        for step_config in self.step_config_ids:
+            # Adjust the base price based on step's laterality
+            if step_config.laterality == 'bl_pair':
+                base_price *= 2  # or any other calculation logic
+
+            # Adjust the base price based on step's quantity
+            base_price *= step_config.quantity
+
+        return base_price
+    
     def _get_config_image(self, value_ids=None, custom_vals=None, size=None):
         """
         Retreive the image object that most closely resembles the configuration

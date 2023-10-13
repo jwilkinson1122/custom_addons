@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
         ],
         string="Variant creation",
         required=True,
-        default="yes",
+        default="no",
         help="This selection defines if variants for all attribute "
         "combinations are going to be created automatically at saving "
         "time.",

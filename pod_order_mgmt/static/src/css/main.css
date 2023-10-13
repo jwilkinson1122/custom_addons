@@ -1,0 +1,18 @@
+.right-buttons {
+  display: flex;
+  gap: 10px;  /* This provides spacing between the right-side buttons. Adjust as needed. */
+}
+
+/* .nav-tabs .nav-item {
+  font-weight: bold;
+} */
+
+.group_field_right_pane {
+  margin-left: 24px;
+  border-left: 1px solid #C9CCD2;
+  padding-left: 12px;
+}
+
+.o_attachment.o_attachment_many2many {
+  width: 100%;
+}

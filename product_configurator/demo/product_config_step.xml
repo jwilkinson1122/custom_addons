@@ -63,4 +63,6 @@
             ref('product_attribute_line_2_series_options')])]" />
     </record>
 
+    <!-- Action > TODO: Add Prescription Summary Step -->
+
 </odoo>

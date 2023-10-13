@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_orthotic_configurator_wizard_form" model="ir.ui.view">
+        <field name="name">orthotic.configurator.wizard.form</field>
+        <field name="model">orthotic.configurator.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="prescription_order_id"/>
+                        <field name="laterality"/>
+                        <field name="quantity"/>
+                        <field name="total_price" readonly="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Shell/Foundation">
+                        <!-- <group>
+                            <field name="shell_product_id"/>
+                            <field name="shell_price"/>
+                        </group> -->
+                    </page>
+                    <page string="Top Cover">
+                        <!-- <group>
+                            <field name="top_cover_option_ids" widget="many2many_tags"/>
+                            <field name="top_cover_price"/>
+                        </group> -->
+                    </page>
+                    <!-- Add more pages for other configuration steps -->
+                </notebook>
+                <!-- <footer>
+                    <button string="Confirm" type="object" name="button_confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer> -->
+                <footer>
+                    <button string="Save" type="object" name="button_save" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_orthotic_configurator_wizard" model="ir.actions.act_window">
+        <field name="name">Orthotic Configurator</field>
+        <field name="res_model">orthotic.configurator.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_orthotic_configurator_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

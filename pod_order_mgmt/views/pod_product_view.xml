@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="inherit_product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description_sale']" position="after">
+                <separator string="Variant description" colspan="4" />
+                <field name="variant_description" colspan="4" nolabel="1" />
+            </xpath>
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name='helpdesk_ticket' string='Helpdesk'>
+                    <group>
+                        <field name='is_helpdesk'/>
+                        <field name='helpdesk_team' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                        <field name='helpdesk_assigned_to' attrs="{'invisible':[('is_helpdesk','=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="inherit_product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[2]" position="after">
+                <group string="Notes">
+                    <field name="variant_description" string="Sale Description" />
+                    <field name="variant_description_prescription" string="Prescription Description" />
+                </group>
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="inherit_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.view.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="product_sec_product_uom_qty" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                <field name="product_secondary_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
+
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- 
+    <record id="product_form_view_with_dimension_label" model="ir.ui.view">
+        <field name="name">Product Simplified Form With Dimensions</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <group name="weight" position="replace">
+                <group string="Dimensions" name="dimensions" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+
+                    <field name="length" widget="float_with_uom" uom_field="dimension_uom_id"/>
+                    <field name="width" widget="float_with_uom" uom_field="dimension_uom_id"/>
+                    <field name="height" widget="float_with_uom" uom_field="dimension_uom_id"/>
+                    <label for="dimension_uom_id" class="oe_edit_only"/>
+                    <field name="dimension_uom_id" class="oe_edit_only" nolabel="1" domain="[('has_category_length', '=', True)]" options="{'no_create': True}" attrs="{'required': ['|', '|', ('length', '!=', 0), ('width', '!=', 0), ('height', '!=', 0)]}"/>
+
+                    <field name="weight_in_uom" widget="float_with_uom" uom_field="specific_weight_uom_id"/>
+                    <label for="specific_weight_uom_id" class="oe_edit_only"/>
+                    <field name="specific_weight_uom_id" class="oe_edit_only" nolabel="1" domain="[('has_category_weight', '=', True)]" options="{'no_create': True}" attrs="{'required': [('weight_in_uom', '!=', 0)]}"/>
+
+                    <label for="weight" string="Weight (kg)"/>
+                    <div class="o_row" name="weight">
+                        <field name="weight" readonly="1"/>
+                        <span>kg</span>
+                    </div>
+
+                    <label for="volume"/>
+                    <div class="o_row" name="volume">
+                        <field name="volume" readonly="1"/>
+                        <span>m³</span>
+                    </div>
+
+                    <label for="density"/>
+                    <div class="o_row" name="density">
+                        <field name="density"/>
+                        <span>kg/m³</span>
+                    </div>
+
+                </group>
+            </group>
+        </field>
+    </record>
+ -->
+
+</odoo>

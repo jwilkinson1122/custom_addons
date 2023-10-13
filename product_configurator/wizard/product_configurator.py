@@ -33,8 +33,6 @@ class ProductConfigurator(models.TransientModel):
             "custom_field_prefix": "__custom-",
         }
 
-    # TODO: Remove _prefix suffix as this is implied by the class property name
-
     @api.model
     def _remove_dynamic_fields(self, fields):
         """Remove elements from the fields dictionary/list that begin with any
@@ -77,8 +75,6 @@ class ProductConfigurator(models.TransientModel):
             attribute_lines = configurator.product_tmpl_id.attribute_line_ids
             configurator.attribute_line_ids = attribute_lines
 
-    # TODO: We could use a m2o instead of a monkeypatched select field but
-    # adding new steps should be trivial via custom development
     def get_state_selection(self):
         """Get the states of the wizard using standard values and optional
         configuration steps set on the product.template via
@@ -179,19 +175,30 @@ class ProductConfigurator(models.TransientModel):
         """Onchange hook to add / modify returned values by onchange method"""
         if not config_session_id:
             config_session_id = self.config_session_id
+            
+        if not cfg_val_ids:
+            # Handle error or return default values
+            pass
 
-        # Remove None from cfg_val_ids if exist
         cfg_val_ids = [val for val in cfg_val_ids if val]
 
         product_img = config_session_id.get_config_image(cfg_val_ids)
+        laterality = config_session_id.laterality
+        quantity = config_session_id.quantity
         price = config_session_id.get_cfg_price(cfg_val_ids)
+        # price_left = config_session_id.get_cfg_price(cfg_val_ids)
+        # price_right = config_session_id.get_cfg_price(cfg_val_ids)
         weight = config_session_id.get_cfg_weight(value_ids=cfg_val_ids)
 
         return {
             "product_img": product_img,
             "value_ids": [(6, 0, cfg_val_ids)],
+            "laterality": laterality,
+            "quantity": quantity,
             "weight": weight,
             "price": price,
+            # "price_left": price_left,
+            # "price_right": price_right,
         }
 
     def get_form_vals(
@@ -202,15 +209,6 @@ class ProductConfigurator(models.TransientModel):
         product_tmpl_id=None,
         config_session_id=None,
     ):
-        """Generate a dictionary to return new values via onchange method.
-        Domains hold the values available, this method enforces these values
-        if a selection exists in the view that is not available anymore.
-
-        :param dynamic_fields: Dictionary with the current {dynamic_field: val}
-        :param domains: Odoo domains restricting attribute values
-
-        :returns vals: Dictionary passed to {'value': vals} by onchange method
-        """
         vals = {}
         dynamic_fields = {k: v for k, v in dynamic_fields.items() if v}
         for k, v in dynamic_fields.items():
@@ -240,10 +238,6 @@ class ProductConfigurator(models.TransientModel):
         return vals
 
     def apply_onchange_values(self, values, field_name, field_onchange):
-        """Called from web-controller
-        - original onchage return M2o values in formate
-        (attr-value.id, attr-value.name) but on website
-        we need only attr-value.id"""
         product_tmpl_id = self.env["product.template"].browse(
             values.get("product_tmpl_id", [])
         )

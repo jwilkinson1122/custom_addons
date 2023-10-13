@@ -43,6 +43,7 @@
     "auto_install": False,
     "assets": {
         "web.assets_backend": [
+            "product_configurator/static/css/custom_styles.css",
             "product_configurator/static/scss/form_widget.scss",
             "product_configurator/static/js/form_widgets.js",
             "product_configurator/static/js/data_manager.js",

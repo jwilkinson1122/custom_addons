@@ -9,6 +9,6 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).product_id_change()
         if self.product_id:
             product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
-            if product.variant_description_sale:
-                self.name = product.variant_description_sale
+            if product.variant_description:
+                self.name = product.variant_description
         return res

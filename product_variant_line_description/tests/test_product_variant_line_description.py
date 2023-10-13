@@ -33,7 +33,7 @@ class TestSaleOrderLineVariantDescription(TransactionCase):
         product = self.product_model.create(
             dict(
                 product_tmpl_id=product_tmpl.id,
-                variant_description_sale="Product variant description",
+                variant_description="Product variant description",
             )
         )
         fp = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
@@ -55,4 +55,4 @@ class TestSaleOrderLineVariantDescription(TransactionCase):
             }
         )
         so_line.product_id_change()
-        self.assertEqual(product.variant_description_sale, so_line.name)
+        self.assertEqual(product.variant_description, so_line.name)
