@@ -10,7 +10,18 @@ from odoo.tools import config
 _logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
+    
     _inherit = "res.partner"
+    
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.name or ''
+            if record.is_company:
+                res.append((record.id, name))
+            else:
+                res.append((record.id, name if not record.parent_id else record.parent_id.name))
+                return res
     
     is_pod = fields.Boolean(string='Podiatry', default=False)
     is_company = fields.Boolean(string='Company', default=False)
@@ -34,30 +45,6 @@ class Partner(models.Model):
     
     patient_ids = fields.One2many("pod.patient", inverse_name="partner_id")
     
-    # practice_flag_ids = fields.One2many("pod.flag", inverse_name="practice_id")
-    # practice_flag_count = fields.Integer(compute="_compute_partner_flag_count")
-    # practitioner_flag_ids = fields.One2many("pod.flag", inverse_name="practitioner_id")
-    # practitioner_flag_count = fields.Integer(compute="_compute_partner_flag_count")
-
-    # Flag Methods
-    # @api.depends("practice_flag_ids", "practitioner_flag_ids")
-    # def _compute_partner_flag_count(self):
-    #     for rec in self:
-    #         rec.practice_flag_count = len(rec.practice_flag_ids.ids)
-    #         rec.practitioner_flag_count = len(rec.practitioner_flag_ids.ids)
-
-    # def _get_action_partner_view_flags(self, flag_field, context_key):
-    #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("pod_base.pod_flag_action")
-    #     result["context"] = {context_key: self.id}
-    #     result["domain"] = "[('{}', '=', {})]".format(flag_field, self.id)
-        
-    #     flags = getattr(self, flag_field)
-    #     if len(flags) == 1:
-    #         res = self.env.ref("pod.flag.view.form", False)
-    #         result["views"] = [(res and res.id or False, "form")]
-    #         result["res_id"] = flags.id
-    #     return result
 
     # def action_view_practice_flags(self):
     #     return self._get_action_partner_view_flags("practice_flag_ids", "default_practice_id")
@@ -66,17 +53,6 @@ class Partner(models.Model):
     #     return self._get_action_partner_view_flags("practitioner_flag_ids", "default_practitioner_id")
         
               
-    # Role Methods
-    @api.depends('is_practitioner', 'practitioner_role_ids')
-    def _compute_is_role_required(self):
-        for record in self:
-            record.is_role_required = record.is_practitioner and not record.practitioner_role_ids
-
-    # Inverse method
-    def _inverse_is_role_required(self):
-        for record in self:
-            if record.is_role_required and not record.practitioner_role_ids:
-                raise ValidationError("Roles are required for practitioners.")
 
     @api.constrains('is_practitioner', 'practitioner_role_ids')
     def _check_practitioner_roles(self):
@@ -99,83 +75,6 @@ class Partner(models.Model):
                 record.location_ids = self.env['res.partner']  # Empty recordset
                 
 
-    # Compute Methods
-    @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
-    def _compute_practitioners(self):
-        for record in self:
-            # Check if the record has a proper ID
-            if not isinstance(record.id, models.NewId):
-                all_practitioners = self.env['res.partner'].search([
-                    ('id', 'child_of', record.id), 
-                    ("is_company", "=", False),
-                    ("is_practitioner", "=", True),  
-                    ("active", "=", True)
-                ])
-                record.child_ids = all_practitioners
-            else:
-                record.child_ids = self.env['res.partner']  # Empty recordset
-  
-  
-    @api.depends('child_ids', 'child_ids.is_company')
-    def _compute_location_and_practitioner_counts(self):
-        for record in self:
-            if not isinstance(record.id, models.NewId):
-                all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
-                all_partners -= record
-
-                locations = all_partners.filtered(lambda p: p.is_company)
-                record.location_count = len(locations)
-
-                practitioners = all_partners.filtered(lambda p: not p.is_company)
-                record.practitioner_count = len(practitioners)
-            else:
-                record.location_count = 0
-                record.practitioner_count = 0
-                
-    @api.depends('location_count')
-    def _compute_location_text(self):
-        for record in self:
-            if not record.location_count:
-                record.location_text = False
-            elif record.location_count == 1:
-                record.location_text = _("(1 Location)")
-            else:
-                record.location_text = _("(%s Locations)" % record.location_count)
-
-    @api.depends('practitioner_count')
-    def _compute_practitioner_text(self):
-        for record in self:
-            if not record.practitioner_count:
-                record.practitioner_text = False
-            elif record.practitioner_count == 1:
-                record.practitioner_text = _("(1 Practitioner)")
-            else:
-                record.practitioner_text = _("(%s Practitioners)" % record.practitioner_count)
-
-
-    @api.model
-    def _get_pod_identifiers(self):
-        """
-        It must return a list of triads of check field, identifier field and
-        defintion function
-        :return: list
-        """
-        return []
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        partners = super().create(vals_list)
-        for partner in partners:
-            if partner.is_pod or partner.patient_ids:
-                partner.check_pod("create")
-        return partners
-
-    def write(self, vals):
-        result = super().write(vals)
-        for partner in self:
-            if partner.is_pod or partner.patient_ids:
-                partner.check_pod("write")
-        return result
 
     def unlink(self):
         for partner in self:
