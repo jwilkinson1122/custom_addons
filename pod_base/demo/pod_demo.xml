@@ -8,7 +8,7 @@
             <field name="name">Fab Foot Clinic</field>
             <field name="is_company" eval="True"/>
             <field name="is_pod" eval="True"/>
-            <!-- <field name="practice_type_id" ref="Clinic"/> -->
+            <field name="practice_type_id" ref="pod_base.clinic"/>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -25,8 +25,8 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_pod" eval="True"/>
-            <!-- <field name="practice_type_id" ref="Clinic"/> -->
             <field name="parent_id" ref="parent_practice_1"/>
+            <field name="practice_type_id" ref="pod_base.clinic"/>
             <field name="type">delivery</field>
             <field name="street">1337 N San Joaquin St</field>
             <field name="city">Stockton</field>
@@ -42,8 +42,8 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_pod" eval="True"/>
-            <!-- <field name="practice_type_id" ref="Clinic"/> -->
             <field name="parent_id" ref="parent_practice_1"/>
+            <field name="practice_type_id" ref="pod_base.clinic"/>
             <field name="type">delivery</field>
             <field name="street">1611 Peony Dr</field>
             <field name="city">Tracy</field>
@@ -59,8 +59,8 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_pod" eval="True"/>
-            <!-- <field name="practice_type_id" ref="Clinic"/> -->
             <field name="parent_id" ref="child_practice_1"/>
+            <field name="practice_type_id" ref="pod_base.clinic"/>
             <field name="type">delivery</field>
             <field name="street">1839 Arbor Way</field>
             <field name="city">Turlock</field>
@@ -76,8 +76,8 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_pod" eval="True"/>
-            <!-- <field name="practice_type_id" ref="Clinic"/> -->
             <field name="parent_id" ref="child_practice_2"/>
+            <field name="practice_type_id" ref="pod_base.clinic"/>
             <field name="type">delivery</field>
             <field name="street">77 Santa Barbara Rd</field>
             <field name="city">Pleasant Hill</field>

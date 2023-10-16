@@ -19,6 +19,8 @@ class Partner(models.Model):
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
     is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
     
+    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
+    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")

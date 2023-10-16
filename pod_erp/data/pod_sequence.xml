@@ -1,9 +1,0 @@
-<odoo noupdate="1">
-    <!-- Sequences for pod prescription -->
-    <record id="seq_pod_prescription" model="ir.sequence">
-        <field name="name">Podiatry Prescription</field>
-        <field name="code">pod.prescription</field>
-        <field name="prefix">Prescription/</field>
-        <field name="padding">5</field>
-    </record>
-</odoo>

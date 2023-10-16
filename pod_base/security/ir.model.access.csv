@@ -3,9 +3,10 @@ pod_role_display,pod_role_display,model_pod_role,group_pod_user,1,0,0,0
 pod_role_manager,pod_role_manager,model_pod_role,group_pod_configurator,0,1,1,0
 pod_patient_display,pod_patient_display,model_pod_patient,group_pod_user,1,1,1,0
 pod_patient_manager,pod_patient_manager,model_pod_patient,group_pod_reception,1,1,1,0
-access_practice_type,access_practice_type,model_pod_practice_type,group_pod_user,1,1,1,1
-access_practice_type_display,access_practice_type_display,model_pod_practice_type,group_pod_user,1,1,1,1
+pod_practice_type,pod_practice_type,model_pod_practice_type,group_pod_user,1,0,0,0
+pod_practice_type_manager,pod_practice_type_manager,model_pod_practice_type,group_pod_configurator,0,1,1,0
 access_pod_flag_user,access_pod_flag_user,model_pod_flag,group_pod_flag_display,1,0,0,0
 access_pod_flag_manager,access_pod_flag_manager,model_pod_flag,group_pod_flag_manager,0,1,1,0
 access_pod_flag_category_user,access_pod_flag_category_user,model_pod_flag_category,group_pod_flag_category_display,1,0,0,0
 access_pod_flag_category_manager,access_pod_flag_category_manager,model_pod_flag_category,group_pod_flag_category_manager,0,1,1,0
+access_pod_diagnosis,access_pod_diagnosis,model_pod_diagnosis,group_pod_user,1,1,1,1
