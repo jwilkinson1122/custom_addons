@@ -183,24 +183,16 @@ class ProductConfigurator(models.TransientModel):
         cfg_val_ids = [val for val in cfg_val_ids if val]
 
         product_img = config_session_id.get_config_image(cfg_val_ids)
-        laterality = config_session_id.laterality
-        quantity = config_session_id.quantity
         price = config_session_id.get_cfg_price(cfg_val_ids)
-        # price_left = config_session_id.get_cfg_price(cfg_val_ids)
-        # price_right = config_session_id.get_cfg_price(cfg_val_ids)
         weight = config_session_id.get_cfg_weight(value_ids=cfg_val_ids)
 
         return {
             "product_img": product_img,
             "value_ids": [(6, 0, cfg_val_ids)],
-            "laterality": laterality,
-            "quantity": quantity,
             "weight": weight,
             "price": price,
-            # "price_left": price_left,
-            # "price_right": price_right,
         }
-
+        
     def get_form_vals(
         self,
         dynamic_fields,

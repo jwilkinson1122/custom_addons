@@ -2,6 +2,7 @@ import time
 import json
 from datetime import timedelta
 from odoo import _, api, fields, models, exceptions
+from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import get_lang
@@ -13,21 +14,40 @@ class Prescription(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "name"
 
-    company_id = fields.Many2one( comodel_name="res.company", default=lambda self: self.env.company, store=True
+    company_id = fields.Many2one(
+        comodel_name="res.company", 
+        default=lambda self: self.env.company, 
+        store=True
         )
 
     practice_id = fields.Many2one(
-        'res.partner', required=True, index=True, domain=[('is_company','=',True)], string="Practice"
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_company','=',True)], 
+        string="Practice"
         )
     
     practitioner_id = fields.Many2one(
-        'res.partner', required=True, index=True, domain=[('is_practitioner','=',True)], string="Practitioner"
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_practitioner','=',True)], 
+        string="Practitioner"
         )
     
+
     patient_id = fields.Many2one(
-        "pod.patient", required=True, index=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}
-    ) 
- 
+        "pod.patient", 
+        string="Patient",
+        required=True, 
+        index=True, 
+        states={"draft": [("readonly", False)], "done": [("readonly", True)]}
+    )
+
+    # patient_id = fields.Many2one("pod.patient", string="Patient")
+
+    
     user_id = fields.Many2one(
         'res.users', 
         'User', readonly=True, default=lambda self: self.env.user
@@ -110,6 +130,38 @@ class Prescription(models.Model):
     def _compute_num_prescription_items(self):
         for prescription in self:
             prescription.num_prescription_items = len(prescription.prescription_order_lines)
+             
+    @api.constrains('company_id', 'practitioner_id', 'patient_id')
+    def _check_company_practitioner_patient(self):
+        for record in self:
+            if record.practitioner_id and record.company_id and record.practitioner_id.company_id != record.company_id:
+                raise ValidationError('Practitioner does not belong to the selected company.')
+            if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
+                raise ValidationError('Patient does not belong to the selected practitioner.') 
+            
+    # @api.constrains('practice_id', 'practitioner_id', 'patient_id')
+    # def _check_practice_practitioner_patient(self):
+    #     for record in self:
+    #         if record.practitioner_id and record.practice_id and record.practitioner_id.practice_id != record.company_id:
+    #             raise ValidationError('Practitioner does not belong to the selected practice.')
+    #         if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
+    #             raise ValidationError('Patient does not belong to the selected practitioner.') 
+            
+    @api.onchange('partner_id')
+    def onchange_set_domain_practitioner_id(self):
+        if self.partner_id:
+            # Assuming partner_id has a direct reference to the practitioner
+            self.practitioner_id = self.partner_id.practitioner_id
+
+    @api.onchange('practitioner_id')
+    def onchange_set_domain_patient_id(self):
+        return {
+            'domain': {
+                'patient_id': [('practitioner_id', '=', self.practitioner_id.id)]
+            }
+        }
+       
+            
             
     # def action_config_start(self):
     #     """Return action to start configuration wizard"""
@@ -301,11 +353,6 @@ class Prescription(models.Model):
                         self.helpdesk_tickets_ids = helpdesk_ticket_list
         return True
     
-    @api.onchange('partner_id')
-    def onchange_set_domain_practitioner_id(self):
-            practice_obj = self.env['res.partner'].search([['full_name', '=' , self.partner_id.full_name]])
-            print(practice_obj.practitioner_id)
-            self.practitioner_id = practice_obj.practitioner_id.id
 
     # Forefoot Values
     ff_varus_lt = fields.Many2one(comodel_name='pod.forefoot.value', string='FF Varus LT', ondelete='restrict', copy=True)
@@ -396,7 +443,7 @@ class Prescription(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': 'https://nwpodiatric.com' % self.prescription,
+            'url': 'https://www.nwpodiatric.com' % self.prescription,
         }
 
     def create_sale_order(self):
@@ -486,6 +533,17 @@ class PrescriptionOrderLine(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Prescription Order Lines'
     _rec_name = 'prescription_order_id'
+    
+         # @api.depends('product_id')
+    # def onchange_product(self):
+    #     for each in self:
+    #         if each:
+    #             self.qty_available = self.product_id.qty_available
+    #             self.price = self.product_id.lst_price
+    #         else:
+    #             self.qty_available = 0
+    #             self.price = 0.0
+              
 
     name = fields.Text(string='Description')
     company_id = fields.Many2one(related='prescription_order_id.company_id', string='Company', store=True, index=True)
@@ -505,27 +563,11 @@ class PrescriptionOrderLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', default=True)
     remark = fields.Text(string='Remark')
+    
+    # custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
+    # config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
+    # config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
 
-    custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
-    config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
-    config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
-
-    def reconfigure_product(self):
-        """Creates and launches a product configurator wizard with a linked
-        template and variant in order to re-configure a existing product. It is
-        esetially a shortcut to pre-fill configuration data of a variant"""
-        wizard_model = "product.configurator.prescription"
-
-        extra_vals = {
-            "prescription_order_id": self.prescription_order_id.id,
-            "prescription_order_line_id": self.id,
-            "product_id": self.product_id.id,
-        }
-        self = self.with_context( default_prescription_order_id=self.prescription_order_id.id, default_prescription_order_line_id=self.id,
-        )
-        return self.product_id.product_tmpl_id.create_config_wizard( model_name=wizard_model, extra_vals=extra_vals
-        )
-        
     @api.model
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
@@ -538,20 +580,6 @@ class PrescriptionOrderLine(models.Model):
                 if field not in values:
                     res[field] = line._fields[field].convert_to_write(line[field], line)
         return res
-        
-    @api.onchange("product_uom", "product_uom_qty")
-    def product_uom_change(self):
-        if self.config_session_id:
-            account_tax_obj = self.env["account.tax"]
-            self.price_unit = account_tax_obj._fix_tax_included_price_company(
-                self.config_session_id.price,
-                self.product_id.taxes_id,
-                self.tax_id,
-                self.company_id,
-            )
-            return
-
-        return super(PrescriptionOrderLine, self).product_uom_change()
     
     @api.depends('state')
     def _compute_product_uom_readonly(self):
@@ -566,17 +594,7 @@ class PrescriptionOrderLine(models.Model):
             else:
                 line.product_updatable = True
  
-     # @api.depends('product_id')
-   
-    # def onchange_product(self):
-    #     for each in self:
-    #         if each:
-    #             self.qty_available = self.product_id.qty_available
-    #             self.price = self.product_id.lst_price
-    #         else:
-    #             self.qty_available = 0
-    #             self.price = 0.0
-                
+  
     @api.onchange("product_id")
     def onchange_product(self):
         res = super(PrescriptionOrderLine, self).product_id_change() if hasattr(super(), 'product_id_change') else {}

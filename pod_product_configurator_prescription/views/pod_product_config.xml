@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="config_step_form_view" model="ir.ui.view">
+        <field name="name">product.configurator.config.step.form</field>
+        <field name="model">product.config.step</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Step">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="config_step_tree_view" model="ir.ui.view">
+        <field name="name">product.configurator.config.step.tree</field>
+        <field name="model">product.config.step</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Step">
+                <tree name="name">
+                    <field name="name" />
+                </tree>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_product_config_step_line_form" model="ir.ui.view">
+        <field name="name">product.config.step.line.form.inherit</field>
+        <field name="model">product.config.step.line</field>
+        <field name="inherit_id" ref="product_configurator.view_product_config_step_line_form"/>
+        <field name="arch" type="xml">
+            <field name="attribute_line_ids" position="after">
+                <field name="laterality"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_attribute_custom_value_form" model="ir.ui.view">
+        <field name="name">product.attribute.custom.value.form.inherit</field>
+        <field name="model">product.attribute.custom.value</field>
+        <field name="inherit_id" ref="product_configurator.view_product_attribute_custom_value_form"/>
+        <field name="arch" type="xml">
+            <field name="custom_value" position="after">
+                <field name="laterality"/>
+            </field>
+        </field>
+    </record>
+
+
+
+    
+</odoo>

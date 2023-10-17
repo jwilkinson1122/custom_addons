@@ -67,19 +67,9 @@
                 <attribute name="invisible">True</attribute>
             </xpath>
             <!-- parent_id adjustments -->
-    
-            <!-- <xpath expr="//field[@name='parent_id']" position="attributes">
-                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
-            </xpath> -->
-
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
-                <attribute name="attrs">{'invisible': ['&amp;', ('is_location', '=', False), ('is_practitioner', '=', False)], 'required': ['|', ('is_location', '=', True), ('is_practitioner', '=', True)]}</attribute>
             </xpath>
-
-            <!-- <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
-                <attribute name="attrs">{'invisible': ['&amp;', ('is_location', '=', False), ('is_practitioner', '=', False)], 'required': ['|', ('is_location', '=', True), ('is_practitioner', '=', True)], 'domain': [('is_company', '=', True)]}</attribute>
-            </xpath> -->
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="is_parent_practice" invisible="1" />
             </xpath>
@@ -105,6 +95,13 @@
                 </div>
             </xpath>
 
+            <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['&amp;', ('is_location', '=', False), ('is_practitioner', '=', False)],
+                    'required': ['|', ('is_location', '=', True), ('is_practitioner', '=', True)]
+                }</attribute>
+            </xpath>
+
             <!-- button_box adjustments -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button type="action" name="%(action_locations_window)d" class="oe_stat_button" icon="fa-sitemap" attrs="{'invisible': [('location_count', '=', 0)]}">
@@ -115,6 +112,14 @@
                     <field name="practitioner_count" widget="statinfo" string="Contacts" />
                     <field name='child_ids' invisible="1" />
                 </button>
+                <!-- <button type="object" name="action_view_practice_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_company', '=', False)]}">
+                    <field name="practice_flag_count" widget="statinfo" string="Flags" />
+                    <field name='practice_flag_ids' invisible="1" />
+                </button>
+                <button type="object" name="action_view_practitioner_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_practitioner', '=', False)]}">
+                    <field name="practitioner_flag_count" widget="statinfo" string="Flags" />
+                    <field name='practitioner_flag_ids' invisible="1" />
+                </button> -->
             </xpath>
 
             <!-- Address Types adjustments -->
@@ -198,13 +203,6 @@
 
             <!-- Modify the contact_addresses page attributes -->
             <xpath expr="//page[@name='contact_addresses']" position="attributes">
-                <field name="parent_id"/>
-                <field name="street"/>
-                <field name="street2"/>
-                <field name="city"/>
-                <field name="state_id"/>
-                <field name="zip"/>
-                <field name="country_id"/>
                 <attribute name="string">Contacts</attribute>
                 <attribute name="attrs">{'invisible': [('is_company','=',False)]}</attribute>
             </xpath>

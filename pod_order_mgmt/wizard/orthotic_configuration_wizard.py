@@ -21,6 +21,9 @@ class OrthoticConfiguratorWizard(models.TransientModel):
         ('rt_single', 'Right'),
         ('bl_pair', 'Bilateral')
     ], string='Laterality', required=True, default='bl_pair')
+
+    quantity = fields.Float(string='Quantity', default=1.0)
+
     product_tmpl_id = fields.Many2one('product.template', string='Product Template')
 
     # product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
