@@ -29,12 +29,8 @@
                             </field>
                         </group>
                         <group colspan="1">
-                            <field name="laterality" class="o_radio_item" widget="radio"/>
-                            <field name="quantity" />
                             <field name="weight" />
                             <field name="price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                            <!-- <field name="left_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('laterality', '!=', 'left')]}" /> -->
-                            <!-- <field name="right_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('laterality', '!=', 'right')]}" /> -->
                         </group>
                     </group>
                 </sheet>

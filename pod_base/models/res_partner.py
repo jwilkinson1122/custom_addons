@@ -18,56 +18,18 @@ class Partner(models.Model):
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
     is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
-    
-    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
-    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
-    
     practice_type_id = fields.Many2one(string='Practice Type', comodel_name='pod.practice.type')
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
-    
-
+    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
     practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="pod.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
-    
     patient_ids = fields.One2many("pod.patient", inverse_name="partner_id")
-    
-    # practice_flag_ids = fields.One2many("pod.flag", inverse_name="practice_id")
-    # practice_flag_count = fields.Integer(compute="_compute_partner_flag_count")
-    # practitioner_flag_ids = fields.One2many("pod.flag", inverse_name="practitioner_id")
-    # practitioner_flag_count = fields.Integer(compute="_compute_partner_flag_count")
-
-    # Flag Methods
-    # @api.depends("practice_flag_ids", "practitioner_flag_ids")
-    # def _compute_partner_flag_count(self):
-    #     for rec in self:
-    #         rec.practice_flag_count = len(rec.practice_flag_ids.ids)
-    #         rec.practitioner_flag_count = len(rec.practitioner_flag_ids.ids)
-
-    # def _get_action_partner_view_flags(self, flag_field, context_key):
-    #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("pod_base.pod_flag_action")
-    #     result["context"] = {context_key: self.id}
-    #     result["domain"] = "[('{}', '=', {})]".format(flag_field, self.id)
         
-    #     flags = getattr(self, flag_field)
-    #     if len(flags) == 1:
-    #         res = self.env.ref("pod.flag.view.form", False)
-    #         result["views"] = [(res and res.id or False, "form")]
-    #         result["res_id"] = flags.id
-    #     return result
-
-    # def action_view_practice_flags(self):
-    #     return self._get_action_partner_view_flags("practice_flag_ids", "default_practice_id")
-
-    # def action_view_practitioner_flags(self):
-    #     return self._get_action_partner_view_flags("practitioner_flag_ids", "default_practitioner_id")
-        
-              
     # Role Methods
     @api.depends('is_practitioner', 'practitioner_role_ids')
     def _compute_is_role_required(self):
@@ -236,3 +198,17 @@ class Partner(models.Model):
             if result.get(field) and self.env.context.get("default_parent_id"):
                 result[field] = False
         return result
+    
+ 
+    def name_get(self):
+        res = super(Partner, self).name_get()
+        new_res = []
+        for record in res:
+            partner = self.browse(record[0])
+            if partner.is_practitioner:
+                name = partner.name
+                new_res.append((partner.id, name))
+            else:
+                new_res.append(record)
+        return new_res
+

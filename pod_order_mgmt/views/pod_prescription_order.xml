@@ -2,7 +2,7 @@
 <odoo>
     <!-- Tree View -->
     <record id="view_pod_prescription_order_list" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
+        <field name="name">pod.prescription.order.list</field>
         <field name="model">pod.prescription.order</field>
         <field name="arch" type="xml">
             <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='draft'">
@@ -24,7 +24,7 @@
     
     <!-- Form View -->
     <record id="view_pod_prescription_order_form" model="ir.ui.view">
-        <field name="name">Prescription</field>
+        <field name="name">pod.prescription.order.form</field>
         <field name="model">pod.prescription.order</field>
         <field name="arch" type="xml">
             <form string="Prescription">
@@ -52,12 +52,11 @@
                     </div>
                     <group>
                         <group string="Account Info">
-                            <!-- <field name="company_id"/> -->
-                            <field name="practice_id" placeholder="Company Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
-                            <field name="practitioner_id" placeholder="Practitioner Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
+                            <field name="practice_id" placeholder="Practice Name" class="font-weight-bold"/>
+                            <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', practice_id), ('is_practitioner', '=', True)]" class="font-weight-bold"/>
                         </group>
                         <group string="Patient Info">
-                            <field name="patient_id" placeholder="Patient Name" widget="res_partner_many2one" required="1" readonly="not context.get('can_edit_parent_id', True)" class="font-weight-bold"/>
+                            <field name="patient_id" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" class="font-weight-bold"/>
                             <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>
@@ -86,9 +85,9 @@
                                             <field name="prescription_order_id" invisible="1"/>
                                             <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
                                             <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
-                                            <field invisible="1" name="config_ok" />
+                                            <!-- <field invisible="1" name="config_ok" />
                                             <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','done'])]}" class="fa-lg" groups="product_configurator.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                                            <field name="config_session_id" />
+                                            <field name="config_session_id" /> -->
                                             <field name="quantity"/>
                                             <field name="uom_id"/>
                                             <field name="remark" string="Note"/>
@@ -97,108 +96,6 @@
                                 </div>
                             </group>
                         </page>
-
-                        <!-- <page string="Prescription Lines" name="prescription_lines">
-                            <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" type="object" />
-                            <group string="Product Details">
-                                <div style="max-height: 400px; overflow-y: auto;"> 
-                                    <field name="prescription_order_lines" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
-                                        <form>
-                                            <field name="display_type" invisible="1"/>
-                                            <field name="sequence" invisible="1"/>
-                                            <field name="product_uom_category_id" invisible="1"/>
-                                            <group>
-                                                <group attrs="{'invisible': [('display_type', '!=', False)]}">
-                                                    <field name="product_updatable" invisible="1"/>
-                                                    <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                                    <field name="product_uom_readonly" invisible="1"/>
-                                                    <field name="sequence" invisible="1"/>
-                                                </group>
-                                            </group>
-                                            <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
-                                            <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
-                                            <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
-                                            <field name="name"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="company_id" invisible="1"/>
-                                        </form>
-                                        <tree string="Prescription Order Lines" editable="bottom">
-                                            <control>
-                                                <create name="add_product_control" string="Add a product"/>
-                                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                                            </control>
-                                            <field name="sequence" widget="handle" />
-                                            <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
-                                            <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                            <field name="name" widget="section_and_note_text" optional="show"/>
-                                            <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','done'])]}" class="fa-lg" groups="product_configurator.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                                            <field name="config_session_id" invisible="1"/>
-                                            <field name="quantity"/>
-                                            <field name="uom_id"/>
-                                            <field name="prescription_order_id" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="display_type" invisible="1"/>
-                                            <field name="product_uom_category_id" invisible="1"/>
-                                            <field name="product_updatable" invisible="1"/>
-                                            <field name="company_id" invisible="1"/>
-                                            <field name="config_ok" invisible="1"/>
-                                        </tree>
-                                    </field>
-                                </div>
-                            </group>
-                        </page> -->
-
-                        <!-- <page string="Prescription Lines" name="prescription_lines">
-                            <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" type="object" />
-                            <group string="Product Details">
-                                <div style="max-height: 400px; overflow-y: auto;"> 
-                                    <field name="prescription_order_lines" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
-                                        <form>
-                                            <field name="display_type" invisible="1"/>
-                                            <field name="sequence" invisible="1"/>
-                                            <field name="product_uom_category_id" invisible="1"/>
-                                            <group>
-                                                <group attrs="{'invisible': [('display_type', '!=', False)]}">
-                                                    <field name="product_updatable" invisible="1"/>
-                                                    <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                                    <field name="product_uom_readonly" invisible="1"/>
-                                                    <field name="sequence" invisible="1"/>
-                                                </group>
-                                            </group>
-                                            <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
-                                            <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
-                                            <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
-                                            <field name="name"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="company_id" invisible="1"/>
-                                        </form>
-                                        <tree string="Prescription Order Lines" editable="bottom">
-                                            <control>
-                                                <create name="add_product_control" string="Add a product"/>
-                                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                                            </control>
-                                            <field name="sequence" widget="handle" />
-                                            <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
-                                            <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                            <field name="name" widget="section_and_note_text" optional="show"/>
-                                            <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','done'])]}" class="fa-lg" groups="product_configurator.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                                            <field name="config_session_id" invisible="1"/>
-                                            <field name="quantity"/>
-                                            <field name="uom_id"/>
-                                            <field name="prescription_order_id" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="display_type" invisible="1"/>
-                                            <field name="product_uom_category_id" invisible="1"/>
-                                            <field name="product_updatable" invisible="1"/>
-                                            <field name="company_id" invisible="1"/>
-                                            <field name="config_ok" invisible="1"/>
-                                        </tree>
-                                    </field>
-                                </div>
-                            </group>
-                        </page> -->
                         <page string="Values">
                             <group invisible="1">
                                 <field name="laterality" invisible="1"/>
@@ -469,6 +366,7 @@
 
     <!-- Activity View -->
     <record id="view_pod_prescription_order_activity" model="ir.ui.view">
+        <field name="name">pod.prescription.order.activity</field>
         <field name="model">pod.prescription.order</field>
         <field name="arch" type="xml">
             <activity string="Prescriptions">
@@ -485,7 +383,7 @@
 
     <!-- Calendar View -->
     <record id="view_pod_prescription_order_calendar" model="ir.ui.view">
-        <field name="name">Practitioner Prescriptions</field>
+        <field name="name">pod.prescription.order.calendar</field>
         <field name="model">pod.prescription.order</field>
         <field eval="2" name="priority" />
         <field name="arch" type="xml">
@@ -500,6 +398,7 @@
 
     <!-- Pivot View -->
     <record id="view_pod_prescription_order_pivot" model="ir.ui.view">
+        <field name="name">pod.prescription.order.pivot</field>
         <field name="model">pod.prescription.order</field>
         <field name="arch" type="xml">
             <pivot>
@@ -513,6 +412,7 @@
 
     <!-- Graph View -->
     <record id="view_pod_prescription_order_graph" model="ir.ui.view">
+        <field name="name">pod.prescription.order.graph</field>
         <field name="model">pod.prescription.order</field>
         <field name="arch" type="xml">
             <graph type="bar">
@@ -536,6 +436,14 @@
         <field name="search_view_id" ref="view_pod_prescription_order_filter" />
         <field name="context">{}</field>
     </record>
+
+    <!-- <record model="ir.actions.act_window" id="pod_prescription_action">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pod.prescription.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{}</field>
+    </record> -->
 
 </odoo>
 
