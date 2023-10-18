@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Configuration Steps -->
+
+        <!-- Define Configuration Steps:
+        define custom configuration steps. Each step represents a stage in the configuration process. -->
+        
+        <!-- <record id="config_step_custom" model="product.config.step">
+            <field name="name">Custom Step</field>
+        </record> -->
+        
+        <!-- Define Configuration Step Lines:
+        Associate each step with the product template and specify the attributes that should be configured in each step. -->
+    
+        <!-- <record id="product_config_step_line_custom" model="product.config.step.line">
+            <field name="product_tmpl_id" ref="your_product_template" />
+            <field name="config_step_id" ref="config_step_custom" />
+            <field name="attribute_line_ids" eval="[(6, 0, [ref('your_attribute_line')])]" />
+        </record> -->
+
+        <!-- Extending Views for Laterality and Dynamic Pricing: -->
+        <!-- View Code: product_config_lines.xml -->
+
+        <!-- <field name="laterality" attrs="{'invisible': [('config_step_id', '!=', ref('config_step_custom'))]}"/>
+        <field name="dynamic_price" attrs="{'invisible': [('config_step_id', '!=', ref('config_step_custom'))]}"/> -->
+
+
+    <record id="config_step_shell_foundation" model="product.config.step">
+        <field name="name">Shell / Foundation</field>
+    </record>
+
+    <record id="config_step_top_cover" model="product.config.step">
+        <field name="name">Top Cover</field>
+    </record>
+
+    <record id="config_step_arch_height" model="product.config.step">
+        <field name="name">Arch Height</field>
+    </record>
+
+    <record id="config_step_x_guard" model="product.config.step">
+        <field name="name">X-Guard</field>
+    </record>
+
+    <record id="config_step_cushion" model="product.config.step">
+        <field name="name">Cushion</field>
+    </record>
+
+    <record id="config_step_extension" model="product.config.step">
+        <field name="name">Extension</field>
+    </record>
+
+    <record id="config_step_options" model="product.config.step">
+        <field name="name">Options</field>
+    </record>
+
+    <!-- Define Configuration Step Lines:
+        Associate each step with the product template and specify the attributes that should be configured in each step. -->
+
+    <record id="device_config_step_shell_foundation" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_shell_foundation" />
+        <field name="attribute_line_ids" eval="[(6, 0, [
+            ref('product_attribute_line_device_model_line'),
+            ref('product_attribute_line_device_shell_foundation')])]" />
+    </record>
+
+
+    <!-- <record id="device_config_step_top_cover" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_top_cover" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ 
+        
+        ])]" />
+    </record> -->
+
+    <!-- <record id="device_config_step_arch_height" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_arch_height" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ 
+        
+        ])]" />
+    </record>
+
+    <record id="device_config_step_x_guard" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_x_guard" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ 
+        
+        ])]" />
+    </record>
+
+    <record id="device_config_step_cushion" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_cushion" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ 
+        
+        ])]" />
+    </record>
+
+    <record id="device_config_step_extension" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_extension" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ 
+        
+        ])]" />
+    </record> -->
+
+    <record id="device_config_step_options" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="config_step_id" ref="config_step_options" />
+        <field name="attribute_line_ids" eval="[(6, 0, [
+            ref('product_attribute_line_posting_options'),
+            ref('product_attribute_line_heel_options'),
+            ref('product_attribute_line_arch_midfoot_options'),
+            ref('product_attribute_line_metatarsal_options'),
+            ref('product_attribute_line_forefoot_options'),
+            ])]" />
+    </record>
+
+    <!-- Action > TODO: Add Prescription Summary Step -->
+
+</odoo>

@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- == DEVICE == -->
+
+    <record id="product_attribute_device" model="product.attribute">
+        <field name="name">Device</field>
+    </record>
+
+    <record id="product_attribute_value_custom_device" model="product.attribute.value">
+        <field name="name">Custom Device</field>
+        <field name="attribute_id" ref="product_attribute_device" />
+    </record>
+
+    <record id="product_attribute_value_otc" model="product.attribute.value">
+        <field name="name">OTC</field>
+        <field name="attribute_id" ref="product_attribute_device" />
+    </record>
+
+    <record id="product_attribute_value_richie_brace" model="product.attribute.value">
+        <field name="name">Richie Brace</field>
+        <field name="attribute_id" ref="product_attribute_device" />
+    </record>
+
+    <!-- == LINES == -->
+
+    <record id="product_attribute_model_line" model="product.attribute">
+        <field name="name">Product Lines</field>
+    </record>
+
+    <record id="product_attribute_value_superglass_line" model="product.attribute.value">
+        <field name="name">Superglass</field>
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="product_id" ref="product_superglass_line" />
+    </record>
+
+    <record id="product_attribute_value_polypropylene_line" model="product.attribute.value">
+        <field name="name">Polypropylene</field>
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="product_id" ref="product_polypropylene_line" />
+    </record>
+
+    <record id="product_attribute_value_ncv_line" model="product.attribute.value">
+        <field name="name">NCV</field>
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="product_id" ref="product_ncv_line" />
+    </record>
+
+    <record id="product_attribute_value_pc_line" model="product.attribute.value">
+        <field name="name">Prescription Comfort</field>
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="product_id" ref="product_pc_line" />
+    </record>
+
+    <record id="product_attribute_value_richie_brace_line" model="product.attribute.value">
+        <field name="name">Richie Brace</field>
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="product_id" ref="product_brace_line" />
+    </record>
+
+    <!-- == SHELL/FOUNDATION == -->
+
+    <record id="product_attribute_shell_foundation" model="product.attribute">
+        <field name="name">Shell / Foundation</field>
+    </record>
+
+    <!-- Superglass Shells -->
+
+    <record id="product_attribute_value_sg_flex" model="product.attribute.value">
+        <field name="name">Superglass Flex</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_sg_flex" />
+    </record>
+    <record id="product_attribute_value_sg_everyday" model="product.attribute.value">
+        <field name="name">Superglass Everyday</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_sg_everyday" />
+    </record>
+    <record id="product_attribute_value_sg_proformance" model="product.attribute.value">
+        <field name="name">Superglass Proformance</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_sg_proformance" />
+    </record>
+
+    <!-- Polypropylene Shells -->
+
+    <record id="product_attribute_value_poly_semi_flexible" model="product.attribute.value">
+        <field name="name">Polypropylene Semi-Flexible</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_poly_semi_flexible" />
+    </record>
+    <record id="product_attribute_value_poly_semi_rigid" model="product.attribute.value">
+        <field name="name">Polypropylene Semi-Rigid</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_poly_semi_rigid" />
+    </record>
+    <record id="product_attribute_value_poly_rigid" model="product.attribute.value">
+        <field name="name">Polypropylene Rigid</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_poly_rigid" />
+    </record>
+
+    <!-- NCV Shells -->
+
+    <record id="product_attribute_value_ncv_gentle" model="product.attribute.value">
+        <field name="name">NCV Gentle</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_ncv_gentle" />
+    </record>
+    <record id="product_attribute_value_ncv_firm" model="product.attribute.value">
+        <field name="name">NCV Firm</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_ncv_firm" />
+    </record>
+
+    <!-- Prescription Comfort Shells -->
+
+    <record id="product_attribute_value_pc_multi_density" model="product.attribute.value">
+        <field name="name">Prescription Comfort Multi-Density</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_pc_multi_density" />
+    </record>
+    <record id="product_attribute_value_pc_composite" model="product.attribute.value">
+        <field name="name">Prescription Comfort Composite</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_pc_composite" />
+    </record>
+
+    <!-- Braces -->
+    <record id="product_attribute_value_richie_brace_standard" model="product.attribute.value">
+        <field name="name">Richie Brace Standard</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_richie_brace_standard_brace_standard" />
+    </record>
+    <record id="product_attribute_value_richie_brace_dynamic_assist" model="product.attribute.value">
+        <field name="name">Richie Brace Dynamic Assist</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_richie_brace_dynamic_assist" />
+    </record>
+    <record id="product_attribute_value_richie_brace_gauntlet" model="product.attribute.value">
+        <field name="name">Richie Brace Gauntlet</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_richie_brace_gauntlet" />
+    </record>
+    <record id="product_attribute_value_richie_brace_california_afo" model="product.attribute.value">
+        <field name="name">Richie Brace California Afo</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_richie_brace_california_afo" />
+    </record>
+    <record id="product_attribute_value_richie_brace_solid_afo" model="product.attribute.value">
+        <field name="name">Richie Brace Solid Afo</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_richie_brace_solid_afo" />
+    </record>
+
+    <!-- OTC -->
+    <record id="product_attribute_value_otc_full_length" model="product.attribute.value">
+        <field name="name">Premium OTC - Full Length</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_otc_full_length" />
+    </record>
+    <record id="product_attribute_value_otc_3_4_length" model="product.attribute.value">
+        <field name="name">Premium OTC - 3/4 Length</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_otc_3_4_length" />
+    </record>
+    <record id="product_attribute_value_otc_high_heel" model="product.attribute.value">
+        <field name="name">Premium OTC - High Heel</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_otc_high_heel" />
+    </record>
+    <record id="product_attribute_value_childrens_otc" model="product.attribute.value">
+        <field name="name">Children's OTC</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_childrens_otc" />
+    </record>
+    <record id="product_attribute_value_elite_otc_full_length" model="product.attribute.value">
+        <field name="name">Elite OTC - Full Length</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_elite_otc_full_length" />
+    </record>
+    <record id="product_attribute_value_elite_otc_3_4_length" model="product.attribute.value">
+        <field name="name">Elite OTC - 3/4 Length</field>
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="product_id" ref="product_shell_elite_otc_3_4_length" />
+    </record>
+
+
+    <!-- == POSTING OPTIONS == -->
+
+    <record id="product_attribute_posting_options" model="product.attribute">
+        <field name="name">Posting Options</field>
+    </record>
+
+    <record id="product_attribute_value_heel_post" model="product.attribute.value">
+        <field name="name">Heel Post</field>
+        <field name="attribute_id" ref="product_attribute_posting_options" />
+        <field name="product_id" ref="product_device_heel_post" />
+    </record>
+
+    <record id="product_attribute_value_heel_lift" model="product.attribute.value">
+        <field name="name">Heel Lift</field>
+        <field name="attribute_id" ref="product_attribute_posting_options" />
+        <field name="product_id" ref="product_device_heel_lift" />
+    </record>
+
+    <record id="product_attribute_value_forefoot_post" model="product.attribute.value">
+        <field name="name">Forefoot Post</field>
+        <field name="attribute_id" ref="product_attribute_posting_options" />
+        <field name="product_id" ref="product_device_forefoot_post" />
+    </record>
+
+    <!-- == HEEL OPTIONS == -->
+    <record id="product_attribute_heel_options" model="product.attribute">
+        <field name="name">Heel Options</field>
+    </record>
+
+    <record id="product_attribute_value_deep_heel_cup" model="product.attribute.value">
+        <field name="name">Deep Heel Cup</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_deep_heel_cup" />
+    </record>
+
+    <record id="product_attribute_value_heel_cushion" model="product.attribute.value">
+        <field name="name">Heel Cushion</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_heel_cushion" />
+    </record>
+
+    <record id="product_attribute_value_donut_cushion" model="product.attribute.value">
+        <field name="name">Donut Cushion</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_donut_cushion" />
+    </record>
+
+    <record id="product_attribute_value_medial_heel_skive" model="product.attribute.value">
+        <field name="name">Medial Heel Skive</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_medial_heel_skive" />
+    </record>
+
+    <record id="product_attribute_value_horse_shoe_accom" model="product.attribute.value">
+        <field name="name">Horse Shoe Accom.</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_horse_shoe_accom" />
+    </record>
+
+    <record id="product_attribute_value_medial_accom" model="product.attribute.value">
+        <field name="name">Medial Accom.</field>
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="product_id" ref="product_device_medial_accom" />
+    </record>
+
+    <!-- == ARCH/MIDFOOT OPTIONS == -->
+    <record id="product_attribute_arch_midfoot_options" model="product.attribute">
+        <field name="name">Arch/Midfoot Options</field>
+    </record>
+
+    <record id="product_attribute_value_high_medial_overlay" model="product.attribute.value">
+        <field name="name">High Medial Overlay</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_high_medial_overlay" />
+    </record>
+
+    <record id="product_attribute_value_base_of_5th" model="product.attribute.value">
+        <field name="name">Base of 5th</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_base_of_5th" />
+    </record>
+
+    <record id="product_attribute_value_scaphoid_pad" model="product.attribute.value">
+        <field name="name">Scaphoid Pad</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_scaphoid_pad" />
+    </record>
+
+    <record id="product_attribute_value_cuboid_accom" model="product.attribute.value">
+        <field name="name">Cuboid Accom</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_cuboid_accom" />
+    </record>
+
+    <record id="product_attribute_value_flatten_plantar_medial" model="product.attribute.value">
+        <field name="name">Flatten Plantar Medial</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_flatten_plantar_medial" />
+    </record>
+
+    <record id="product_attribute_value_plantar_fascia_accom" model="product.attribute.value">
+        <field name="name">Plantar Fascia Accom</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_plantar_fascia_accom" />
+    </record>
+
+    <record id="product_attribute_value_high_medial" model="product.attribute.value">
+        <field name="name">High Medial</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_high_medial" />
+    </record>
+
+    <record id="product_attribute_value_navicular_accom" model="product.attribute.value">
+        <field name="name">Navicular Accom</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_navicular_accom" />
+    </record>
+
+    <record id="product_attribute_value_high_lateral" model="product.attribute.value">
+        <field name="name">High Lateral</field>
+        <field name="attribute_id" ref="product_attribute_midfoot_options" />
+        <field name="product_id" ref="product_device_high_lateral" />
+    </record>
+
+    
+    <!-- == METATARSAL OPTIONS == -->
+    <record id="product_attribute_metatarsal_options" model="product.attribute">
+        <field name="name">Metatarsal Options</field>
+    </record>
+
+    <record id="product_attribute_value_cutout" model="product.attribute.value">
+        <field name="name">Cutout</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_cutout" />
+    </record>
+
+    <record id="product_attribute_value_met_pad" model="product.attribute.value">
+        <field name="name">Met Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_met_pad" />
+    </record>
+
+    <record id="product_attribute_value_full_met_pad" model="product.attribute.value">
+        <field name="name">Full Met Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_full_met_pad" />
+    </record>
+
+    <record id="product_attribute_value_met_raise" model="product.attribute.value">
+        <field name="name">Met Raise</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_met_raise" />
+    </record>
+
+    <record id="product_attribute_value_dancers_pad" model="product.attribute.value">
+        <field name="name">Dancer's Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_dancers_pad" />
+    </record>
+
+    <record id="product_attribute_value_neuroma_pad" model="product.attribute.value">
+        <field name="name">Neuroma Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_neuroma_pad" />
+    </record>
+
+    <record id="product_attribute_value_shaft_pad" model="product.attribute.value">
+        <field name="name">Shaft Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_shaft_pad" />
+    </record>
+
+    <record id="product_attribute_value_full_met_pad" model="product.attribute.value">
+        <field name="name">Full Met Pad</field>
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="product_id" ref="product_device_full_met_pad" />
+    </record>
+
+    <!-- == FOREFOOT OPTIONS == -->
+    <record id="product_attribute_forefoot_options" model="product.attribute">
+        <field name="name">Forefoot Options</field>
+    </record>
+
+    <record id="product_attribute_value_forefoot_wedge" model="product.attribute.value">
+        <field name="name">Forefoot Wedge</field>
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="product_id" ref="product_device_forefoot_wedge" />
+    </record>
+
+    <record id="product_attribute_value_mortons_extension" model="product.attribute.value">
+        <field name="name">Mortons Extension</field>
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="product_id" ref="product_device_mortons_extension" />
+    </record>
+
+    <record id="product_attribute_value_rev_mortons_extension" model="product.attribute.value">
+        <field name="name">Rev. Mortons Extension</field>
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="product_id" ref="product_device_rev_mortons_extension" />
+    </record>
+
+    <record id="product_attribute_value_hallux_accom" model="product.attribute.value">
+        <field name="name">Hallux Accom.</field>
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="product_id" ref="product_device_hallux_accom" />
+    </record>
+
+    <record id="product_attribute_value_toe_crest_accom" model="product.attribute.value">
+        <field name="name">Toe Crest Accom.</field>
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="product_id" ref="product_device_toe_crest_accom" />
+    </record>
+
+    <!-- == Attribute Lines == -->
+
+    <record id="product_attribute_line_device" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_device" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_custom_device'),
+            ref('product_configurator.product_attribute_value_otc'),
+            ref('product_configurator.product_attribute_value_richie_brace')]
+        )]" />
+        <field name="required" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_device_model_line" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_model_line" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_superglass_line'),
+            ref('product_configurator.product_attribute_value_polypropylene_line'),
+            ref('product_configurator.product_attribute_value_ncv_line'),
+            ref('product_configurator.product_attribute_value_pc_line'),
+            ref('product_configurator.product_attribute_value_richie_brace_line'),
+            ]
+        )]" />
+        <field name="required" eval="False" />
+    </record>
+
+    <record id="product_attribute_line_device_shell_foundation" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_shell_foundation" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_sg_flex'),
+            ref('product_configurator.product_attribute_value_sg_everyday'),
+            ref('product_configurator.product_attribute_value_sg_proformance'),
+            ref('product_configurator.product_attribute_value_poly_semi_flexible'),
+            ref('product_configurator.product_attribute_value_poly_semi_rigid'),
+            ref('product_configurator.product_attribute_value_poly_rigid'),
+            ref('product_configurator.product_attribute_value_ncv_gentle'),
+            ref('product_configurator.product_attribute_value_ncv_firm'),
+            ref('product_configurator.product_attribute_value_pc_multi_density'),
+            ref('product_configurator.product_attribute_value_pc_composite'),
+            ref('product_configurator.product_attribute_value_richie_brace_standard'),
+            ref('product_configurator.product_attribute_value_richie_brace_dynamic_assist'),
+            ref('product_configurator.product_attribute_value_richie_brace_gauntlet'),
+            ref('product_configurator.product_attribute_value_richie_brace_california_afo'),
+            ref('product_configurator.product_attribute_value_richie_brace_solid_afo'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_posting_options" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_posting_options" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_heel_post'),
+            ref('product_configurator.product_attribute_value_heel_lift'),
+            ref('product_configurator.product_attribute_value_forefoot_post'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+        <field name="multi" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_heel_options" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_heel_options" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_deep_heel_cup'),
+            ref('product_configurator.product_attribute_value_heel_cushion'),
+            ref('product_configurator.product_attribute_value_donut_cushion'),
+            ref('product_configurator.product_attribute_value_medial_heel_skive'),
+            ref('product_configurator.product_attribute_value_horse_shoe_accom'),
+            ref('product_configurator.product_attribute_value_medial_accom'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+        <field name="multi" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_arch_midfoot_options" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_arch_midfoot_options" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_high_medial_overlay'),
+            ref('product_configurator.product_attribute_value_base_of_5th'),
+            ref('product_configurator.product_attribute_value_scaphoid_pad'),
+            ref('product_configurator.product_attribute_value_cuboid_accom'),
+            ref('product_configurator.product_attribute_value_flatten_plantar_medial'),
+            ref('product_configurator.product_attribute_value_plantar_fascia_accom'),
+            ref('product_configurator.product_attribute_value_high_medial'),
+            ref('product_configurator.product_attribute_value_navicular_accom'),
+            ref('product_configurator.product_attribute_value_high_lateral'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+        <field name="multi" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_metatarsal_options" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_metatarsal_options" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_cutout'),
+            ref('product_configurator.product_attribute_value_met_pad'),
+            ref('product_configurator.product_attribute_value_full_met_pad'),
+            ref('product_configurator.product_attribute_value_met_raise'),
+            ref('product_configurator.product_attribute_value_dancers_pad'),
+            ref('product_configurator.product_attribute_value_neuroma_pad'),
+            ref('product_configurator.product_attribute_value_shaft_pad'),
+            ref('product_configurator.product_attribute_value_full_met_pad'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+        <field name="multi" eval="True" />
+    </record>
+
+    <record id="product_attribute_line_forefoot_options" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="custom_device_series" />
+        <field name="attribute_id" ref="product_attribute_forefoot_options" />
+        <field name="value_ids" eval="[(6,0,[
+            ref('product_configurator.product_attribute_value_forefoot_wedge'),
+            ref('product_configurator.product_attribute_value_mortons_extension'),
+            ref('product_configurator.product_attribute_value_rev_mortons_extension'),
+            ref('product_configurator.product_attribute_value_hallux_accom'),
+            ref('product_configurator.product_attribute_value_toe_crest_accom'),
+            ]
+        )]" />
+        <field name="required" eval="True" />
+        <field name="multi" eval="True" />
+    </record>
+
+</odoo>
