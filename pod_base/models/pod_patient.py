@@ -40,6 +40,17 @@ class PodiatryPatient(models.Model):
     )
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Responsible:', readonly=True)
+    attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
+                                      'manager_id', 'attachment_id', string="Attachments",
+                                      help="Patient Image / File Attachments")
+    photo = fields.Binary(string="Picture")
+    image1 = fields.Binary("Right photo")
+    image2 = fields.Binary("Left photo")
+
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char(string="Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char(string="Right Obj File Name")
     
     # patient_prescription_ids = fields.One2many("pod.prescription.order", inverse_name="patient_id")
     # patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
@@ -60,7 +71,9 @@ class PodiatryPatient(models.Model):
     #         result["views"] = [(res and res.id or False, "form")]
     #         result["res_id"] = self.patient_prescription_ids.ids[0]   
     #     return result
-
+    shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
+        'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+    notes = fields.Text(string="Notes")
     gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])  
     birth_date = fields.Date(string="Birth date")  # FHIR Field: birthDate
     patient_age = fields.Integer(compute="_compute_age")

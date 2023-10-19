@@ -55,15 +55,15 @@
             <!-- <field name="company_id" position="after">
                 <field name="company_ids" groups="base.group_multi_company" widget="many2many_tags" options="{'no_create': True}" />
             </field> -->
-            <xpath expr="//div[@name='options']" position="inside">
+            <!-- <xpath expr="//div[@name='options']" position="inside">
                 <field name="is_custom_device"/>
                 <label for="is_custom_device" string="Custom"/>
                 <field name="is_otc_device"/>
                 <label for="is_otc_device" string="OTC"/>
                 <field name="is_brace_device"/>
                 <label for="is_brace_device" string="Brace"/>
-            </xpath>
-            <xpath expr="//div[@name='options']" position="after">
+            </xpath> -->
+            <!-- <xpath expr="//div[@name='options']" position="after">
                 <group invisible="context.get('def_categ_id') in ['Top Covers','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
                     <field name="shell_collection"/>
                 </group>
@@ -77,18 +77,18 @@
                 <group invisible="context.get('def_categ_id') in ['Top Covers','Shell / Foundation','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
                     <field name="xguard_length"/>
                 </group>
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='uom_po_id']" position="after">
                 <field name="secondary_uom_active" groups="uom.group_uom" />
                 <field name="secondary_uom" groups="uom.group_uom" required="1" attrs="{'invisible': [('secondary_uom_active', '=', False)]}"/>
             </xpath>
-            <xpath expr="//page[@name='general_information']" position="after">
+            <!-- <xpath expr="//page[@name='general_information']" position="after">
                 <page string="Shell / Foundation Elements" name="shell_elements" autofocus="autofocus" invisible="context.get('def_categ_id') in ['Top Covers','X-Guard','Arch Height','Cushion','Extension','Service','Accommodation','Miscellaneous']">
                     <group>
                         <field name="shell_type"/>
                     </group>
                 </page>
-            </xpath>
+            </xpath> -->
             <xpath expr="//page[@name='inventory']" position="after">
                 <page name='helpdesk_ticket_product' string='Helpdesk' attrs="{'invisible':[('product_variant_count','&gt;', 1)]}">
                     <group>

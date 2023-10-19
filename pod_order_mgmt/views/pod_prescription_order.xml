@@ -74,8 +74,57 @@
                     </group>
 
                     <notebook>
-                        <page string="Prescription Details" name="prescription_details" autofocus="autofocus">
-                            <!-- <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" style="margin-top: 15px;" type="object" /> -->
+                        <page string="Test Prescription Lines" name="prescription_lines" autofocus="autofocus">
+                            <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" type="object" />
+                            <group string="Product Details">
+                                <div style="max-height: 400px; overflow-y: auto;"> 
+                                    <field name="prescription_order_lines" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
+                                        <form>
+                                            <field name="display_type" invisible="1"/>
+                                            <field name="sequence" invisible="1"/>
+                                            <field name="product_uom_category_id" invisible="1"/>
+                                            <group>
+                                                <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                                                    <field name="product_updatable" invisible="1"/>
+                                                    <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                                    <field name="product_uom_readonly" invisible="1"/>
+                                                    <field name="sequence" invisible="1"/>
+                                                </group>
+                                            </group>
+                                            <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
+                                            <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                                            <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
+                                            <field name="name"/>
+                                            <field name="state" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                        </form>
+                                        <tree string="Prescription Order Lines" editable="bottom">
+                                            <control>
+                                                <create name="add_product_control" string="Add a product"/>
+                                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                            </control>
+                                            <field name="sequence" widget="handle" />
+                                            <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
+                                            <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                            <field name="name" widget="section_and_note_text" optional="show"/>
+                                            <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','done'])]}" class="fa-lg" groups="product_configurator.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
+                                            <field name="config_session_id" invisible="1"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id"/>
+                                            <field name="prescription_order_id" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <field name="display_type" invisible="1"/>
+                                            <field name="product_uom_category_id" invisible="1"/>
+                                            <field name="product_updatable" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                            <field name="config_ok" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Prescription Details" name="prescription_details">
                             <button name="button_launch_wizard" string="Launch Configurator" type="object" class="btn-primary"/>
                             <group string="Product Details">
                                 <div style="max-height: 400px; overflow-y: auto;"> 
@@ -85,9 +134,6 @@
                                             <field name="prescription_order_id" invisible="1"/>
                                             <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
                                             <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
-                                            <!-- <field invisible="1" name="config_ok" />
-                                            <button attrs="{'invisible': ['|', ('config_ok','=',False), ('state','not in',['draft','done'])]}" class="fa-lg" groups="product_configurator.group_product_configurator" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
-                                            <field name="config_session_id" /> -->
                                             <field name="quantity"/>
                                             <field name="uom_id"/>
                                             <field name="remark" string="Note"/>

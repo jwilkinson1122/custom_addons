@@ -66,6 +66,9 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            <!-- <xpath expr="//field[@name='name']" position="before">
+                <field name="ref" />
+            </xpath> -->
             <!-- parent_id adjustments -->
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
@@ -73,13 +76,19 @@
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="is_parent_practice" invisible="1" />
             </xpath>
-
+            <!-- <h1>
+                <field name="ref" />
+                <field name="name" default_focus="1" placeholder="Patient Name" attrs="{'required' : [('type', '=', 'contact')]}" />
+                <field name="is_company" invisible="True" />
+                <field name="parent_id" invisible="True" />
+            </h1> -->
 
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <div class="oe_title mb24">
                     <field name="is_company" invisible="1"/>
                     <field name="is_parent_practice" invisible="1"/>
                     <h1>
+                        <field name="ref" />
                         <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
                         <field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
                     </h1>
@@ -227,6 +236,59 @@
         </field>
     </record>
 
+    <record id="res_partner_search_view" model="ir.ui.view">
+        <field name="name">res.partner.search.view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Contacts">
+                <field name="name"/>
+                <field name="ref" operator="="/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <group name="group_by" string="Group By">
+                    <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Locations" name="is_location" domain="[('is_location', '=', True)]" />
+                    <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
+                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="parent_id" icon="fa-building-o" enable_counters="1"/>
+                    <!-- <field name="child_ids" icon="fa-sitemap" enable_counters="1"/> -->
+                    <field name="country_id" icon="fa-globe" enable_counters="1"/>
+                </searchpanel>
+
+            </search>
+        </field>
+    </record>
+
+    <!-- <record id="view_partner_search" model="ir.ui.view">
+        <field name="name">Is a Parent Partner Search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="before">
+                <field name="ref"/>
+            </field>
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Practices" name="is_company" domain="[('is_company', '=', True)]" />
+                <separator/>
+                <filter string="Practitioners" name="is_practitioner" domain="[('is_practitioner', '=', True)]" />
+                <separator/>
+                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
+                <separator/>
+            </xpath>
+            <xpath expr ="//search" position="inside"> 
+                <searchpanel> 
+                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
+                    <field name="parent_id" string="Practice" icon="fa fa-building" enable_counters="1" hierarchize="1" expand="1"/>
+                </searchpanel> 
+            </xpath> 
+
+        </field>
+    </record> -->
+
     <record id="pod_practice_action" model="ir.actions.act_window">
         <field name="name">Practices</field>
         <field name="type">ir.actions.act_window</field>
@@ -238,6 +300,15 @@
             'default_is_company':True, 
             'default_is_pod': True,
         }</field>
+        <field name="search_view_id" ref="res_partner_search_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new practice
+            </p>
+            <p>
+                Schedule and organize your practices efficiently.
+            </p>
+        </field>
     </record>
 
     <record id="pod_location_action" model="ir.actions.act_window">

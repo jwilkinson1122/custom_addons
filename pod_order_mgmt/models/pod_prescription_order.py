@@ -163,10 +163,10 @@ class Prescription(models.Model):
        
             
             
-    # def action_config_start(self):
-    #     """Return action to start configuration wizard"""
-    #     configurator_obj = self.env["product.configurator.prescription"]
-    #     return configurator_obj.with_context( default_prescription_order_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True).get_wizard_action()
+    def action_config_start(self):
+        """Return action to start configuration wizard"""
+        configurator_obj = self.env["product.configurator.prescription"]
+        return configurator_obj.with_context( default_prescription_order_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True).get_wizard_action()
     
     def button_launch_wizard(self):
         self.ensure_one()
@@ -534,16 +534,15 @@ class PrescriptionOrderLine(models.Model):
     _description = 'Prescription Order Lines'
     _rec_name = 'prescription_order_id'
     
-         # @api.depends('product_id')
-    # def onchange_product(self):
-    #     for each in self:
-    #         if each:
-    #             self.qty_available = self.product_id.qty_available
-    #             self.price = self.product_id.lst_price
-    #         else:
-    #             self.qty_available = 0
-    #             self.price = 0.0
-              
+    @api.depends('product_id')
+    def onchange_product(self):
+        for each in self:
+            if each:
+                self.qty_available = self.product_id.qty_available
+                self.price = self.product_id.lst_price
+            else:
+                self.qty_available = 0
+                self.price = 0.0
 
     name = fields.Text(string='Description')
     company_id = fields.Many2one(related='prescription_order_id.company_id', string='Company', store=True, index=True)
@@ -563,11 +562,27 @@ class PrescriptionOrderLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', default=True)
     remark = fields.Text(string='Remark')
-    
-    # custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
-    # config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
-    # config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
 
+    custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
+    config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
+    config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
+
+    def reconfigure_product(self):
+        """Creates and launches a product configurator wizard with a linked
+        template and variant in order to re-configure a existing product. It is
+        esetially a shortcut to pre-fill configuration data of a variant"""
+        wizard_model = "product.configurator.prescription"
+
+        extra_vals = {
+            "prescription_order_id": self.prescription_order_id.id,
+            "prescription_order_line_id": self.id,
+            "product_id": self.product_id.id,
+        }
+        self = self.with_context( default_prescription_order_id=self.prescription_order_id.id, default_prescription_order_line_id=self.id,
+        )
+        return self.product_id.product_tmpl_id.create_config_wizard( model_name=wizard_model, extra_vals=extra_vals
+        )
+        
     @api.model
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
@@ -580,6 +595,20 @@ class PrescriptionOrderLine(models.Model):
                 if field not in values:
                     res[field] = line._fields[field].convert_to_write(line[field], line)
         return res
+        
+    @api.onchange("product_uom", "product_uom_qty")
+    def product_uom_change(self):
+        if self.config_session_id:
+            account_tax_obj = self.env["account.tax"]
+            self.price_unit = account_tax_obj._fix_tax_included_price_company(
+                self.config_session_id.price,
+                self.product_id.taxes_id,
+                self.tax_id,
+                self.company_id,
+            )
+            return
+
+        return super(PrescriptionOrderLine, self).product_uom_change()
     
     @api.depends('state')
     def _compute_product_uom_readonly(self):
@@ -594,21 +623,21 @@ class PrescriptionOrderLine(models.Model):
             else:
                 line.product_updatable = True
  
-  
-    @api.onchange("product_id")
-    def onchange_product(self):
-        res = super(PrescriptionOrderLine, self).product_id_change() if hasattr(super(), 'product_id_change') else {}
-        for record in self:
-            if record.product_id:
-                record.qty_available = record.product_id.qty_available
-                record.price = record.product_id.lst_price
-                product_with_context = record.product_id.with_context(lang=record.prescription_order_id.partner_id.lang)
-                if product_with_context.variant_description:
-                    record.name = product_with_context.variant_description
-            else:
-                record.qty_available = 0
-                record.price = 0.0
-        return res
+                
+    # @api.onchange("product_id")
+    # def onchange_product(self):
+    #     res = super(PrescriptionOrderLine, self).product_id_change() if hasattr(super(), 'product_id_change') else {}
+    #     for record in self:
+    #         if record.product_id:
+    #             record.qty_available = record.product_id.qty_available
+    #             record.price = record.product_id.lst_price
+    #             product_with_context = record.product_id.with_context(lang=record.prescription_order_id.partner_id.lang)
+    #             if product_with_context.variant_description:
+    #                 record.name = product_with_context.variant_description
+    #         else:
+    #             record.qty_available = 0
+    #             record.price = 0.0
+    #     return res
     
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
