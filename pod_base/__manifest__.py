@@ -65,6 +65,7 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'pod_base/static/src/scss/main.scss',
             'pod_base/static/src/js/one2many_field.js',
         ],
         

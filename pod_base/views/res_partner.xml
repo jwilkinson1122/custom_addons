@@ -20,6 +20,7 @@
         <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
+        <!-- <field name="search_view_id" ref="view_practitioner_filter"/> -->
         <field name="domain">[("is_company", "=", False), ('parent_id', 'child_of', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -31,8 +32,10 @@
         </field>
     </record>
 
+ 
+
     <!-- View Extensions -->
-    <record id="view_res_partner_kanban_inherit" model="ir.ui.view">
+    <!-- <record id="view_res_partner_kanban_inherit" model="ir.ui.view">
         <field name="name">res.partner.kanban.view.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.res_partner_kanban_view"/>
@@ -48,6 +51,92 @@
                     <t t-esc="record.location_count.value"/>
                 </span>
             </xpath>
+        </field>
+    </record> -->
+
+    <record id="view_res_partner_kanban_custom" model="ir.ui.view" >
+        <field name="name">res.partner.kanban.custom</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_pod_custom_kanban" sample="1">
+                <field name="id"/>
+                <field name="ref"/>
+                <field name="color"/>
+                <field name="display_name"/>
+                <field name="title"/>
+                <field name="email"/>
+                <field name="company_id"/>
+                <field name="parent_id"/>
+                <field name="is_company"/>
+                <field name="is_location"/>
+                <field name="is_parent_practice"/>
+                <field name="is_practitioner"/>
+                <field name="location_count"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="avatar_128"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <a type="edit">
+                                            <field name="display_name"/>
+                                        </a>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="ref"/>
+                                        <!-- <field name="parent_id" groups="base.group_multi_company"/> -->
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section" t-if="!selection_mode">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                <div class="row o_kanban_card_upper_content">
+                                    <div class="col-4 o_kanban_primary_left">
+                                        <button class="btn btn-primary" name="%(action_locations_window)d" type="action">Locations</button>
+                                        <button class="btn btn-primary" name="%(action_contacts_window)d" type="action">Contacts</button>
+                                    </div>
+                                    <div class="col-8 o_kanban_primary_right">
+                                    </div>
+                                </div>
+                                <div class="row o_kanban_card_lower_content">
+                                    <span class="oe_kanban_partner_links">
+                                        <span t-if="record.is_company.raw_value and record.location_count.value>0" class="badge badge-pill">
+                                            <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations"/>
+                                            <t t-esc="record.location_count.value"/>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                <div class="o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div class="o_kanban_card_manage_title">
+                                            <strong><span>Reporting</span></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                                <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                            </div>
+                        </div>
+                        
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -66,9 +155,6 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            <!-- <xpath expr="//field[@name='name']" position="before">
-                <field name="ref" />
-            </xpath> -->
             <!-- parent_id adjustments -->
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
@@ -76,19 +162,12 @@
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="is_parent_practice" invisible="1" />
             </xpath>
-            <!-- <h1>
-                <field name="ref" />
-                <field name="name" default_focus="1" placeholder="Patient Name" attrs="{'required' : [('type', '=', 'contact')]}" />
-                <field name="is_company" invisible="True" />
-                <field name="parent_id" invisible="True" />
-            </h1> -->
-
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <div class="oe_title mb24">
                     <field name="is_company" invisible="1"/>
                     <field name="is_parent_practice" invisible="1"/>
                     <h1>
-                        <field name="ref" />
+                        <!-- <field name="ref" /> -->
                         <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
                         <field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
                     </h1>
@@ -121,14 +200,6 @@
                     <field name="practitioner_count" widget="statinfo" string="Contacts" />
                     <field name='child_ids' invisible="1" />
                 </button>
-                <!-- <button type="object" name="action_view_practice_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_company', '=', False)]}">
-                    <field name="practice_flag_count" widget="statinfo" string="Flags" />
-                    <field name='practice_flag_ids' invisible="1" />
-                </button>
-                <button type="object" name="action_view_practitioner_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_practitioner', '=', False)]}">
-                    <field name="practitioner_flag_count" widget="statinfo" string="Flags" />
-                    <field name='practitioner_flag_ids' invisible="1" />
-                </button> -->
             </xpath>
 
             <!-- Address Types adjustments -->
@@ -263,50 +334,27 @@
         </field>
     </record>
 
-    <!-- <record id="view_partner_search" model="ir.ui.view">
-        <field name="name">Is a Parent Partner Search</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <field name="parent_id" position="before">
-                <field name="ref"/>
-            </field>
-            <xpath expr="//filter[@name='inactive']" position="before">
-                <filter string="Practices" name="is_company" domain="[('is_company', '=', True)]" />
-                <separator/>
-                <filter string="Practitioners" name="is_practitioner" domain="[('is_practitioner', '=', True)]" />
-                <separator/>
-                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
-                <separator/>
-            </xpath>
-            <xpath expr ="//search" position="inside"> 
-                <searchpanel> 
-                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
-                    <field name="parent_id" string="Practice" icon="fa fa-building" enable_counters="1" hierarchize="1" expand="1"/>
-                </searchpanel> 
-            </xpath> 
-
-        </field>
-    </record> -->
+  
 
     <record id="pod_practice_action" model="ir.actions.act_window">
         <field name="name">Practices</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="res_partner_search_view"/>
+        <field name="view_id" ref="pod_base.view_res_partner_kanban_custom"/>
         <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True, 
             'default_is_pod': True,
         }</field>
-        <field name="search_view_id" ref="res_partner_search_view"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new practice
-            </p>
-            <p>
-                Schedule and organize your practices efficiently.
+              Add a new practice
+            </p><p>
+              With just a quick glance on the practice screen, you
+              can easily find all the information you need for each practice.
             </p>
         </field>
     </record>
@@ -316,6 +364,8 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="res_partner_search_view"/>
+        <field name="view_id" ref="pod_base.view_res_partner_kanban_custom"/>
         <field name="domain">[('is_location', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company', 
@@ -324,6 +374,14 @@
             'default_is_pod': True,
             'default_type': '',
         }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new location
+            </p><p>
+              With just a quick glance on the location screen, you
+              can easily find all the information you need for each practice location.
+            </p>
+        </field>
     </record>
 
     <record id="pod_practitioner_action" model="ir.actions.act_window">
@@ -331,14 +389,25 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="res_partner_search_view"/>
+        <!-- <field name="view_id" ref="pod_base.view_res_partner_kanban_custom"/> -->
         <field name="domain">[('is_practitioner', '=', True)]</field>
         <field name="context">{
             'default_company_type':'person', 
             'default_is_company':False, 
             'default_is_practitioner': True, 
             'default_is_pod': True,
-
         }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new practitioner
+            </p><p>
+              With just a quick glance on the practitioner screen, you
+              can easily find all the information you need for each person.
+            </p>
+        </field>
     </record>
+
+
 
 </odoo>

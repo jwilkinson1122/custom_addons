@@ -7,7 +7,7 @@
     'sequence': 95,
     'summary': 'Centralize practitioner information',
     'description': "",
-    'website': 'https://www.odoo.com/app/practitioners',
+    'website': 'https://www.nwpodiatric.com',
     'images': [
         'images/pod_practice.jpeg',
         'images/pod_practitioner.jpeg',
