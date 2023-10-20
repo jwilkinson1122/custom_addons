@@ -22,6 +22,30 @@ class Partner(models.Model):
         domain=[("active", "=", True)],
     )
     
+    practice_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_company','=',True)], 
+        string="Practice"
+        )
+    
+    practitioner_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_practitioner','=',True)], 
+        string="Practitioner"
+        )
+    
+    patient_id = fields.Many2one(
+        "pod.patient", 
+        string="Patient",
+        required=True, 
+        index=True, 
+        states={"draft": [("readonly", False)], "done": [("readonly", True)]}
+    )
+
     # prescription_count = fields.Integer(compute='get_prescription_count')
 
     # def open_partner_prescriptions(self):

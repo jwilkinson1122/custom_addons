@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem
+            id="menu_pod_root"
+            name="Practitioners"
+            groups="group_pod_manager,group_pod_user,base.group_user"
+            web_icon="pod_manager,static/description/icon.png"
+            sequence="185"/>
+
+        <menuitem
+            id="menu_pod_main"
+            name="Podiatry"
+            parent="menu_pod_root"
+            sequence="0"/>
+
+        <menuitem
+            id="menu_pod_practitioner_payroll"
+            name="Practitioners"
+            parent="menu_pod_root"
+            groups="group_pod_user"
+            sequence="3"/>
+
+            <menuitem
+                id="menu_pod_practitioner_user"
+                name="Practitioners"
+                action="open_view_practitioner_list_my"
+                parent="menu_pod_practitioner_payroll"
+                sequence="1"/>
+
+        <menuitem
+            id="menu_pod_practitioner"
+            name="Directory"
+            action="pod_practitioner_public_action"
+            parent="menu_pod_root"
+            sequence="4"/>
+
+        <menuitem
+            id="pod_menu_pod_reports"
+            name="Reporting"
+            parent="menu_pod_root"
+            sequence="95"/>
+
+        <menuitem
+           id="menu_pod_reporting_timesheet"
+           name="Reporting"
+           parent="menu_pod_root"
+           groups="group_pod_manager,group_pod_user"
+           sequence="99"/>
+
+        <menuitem
+            id="menu_podiatry_configuration"
+            name="Configuration"
+            parent="menu_pod_root"
+            groups="pod_manager.group_pod_user"
+            sequence="100"/>
+
+            <menuitem
+                id="menu_view_pod_role"
+                action="action_pod_role"
+                parent="menu_podiatry_configuration"
+                sequence="1"/>
+
+            <menuitem
+                id="menu_podiatry_configuration_practitioner"
+                name="Practitioner"
+                parent="menu_podiatry_configuration"
+                groups="base.group_no_one"
+                sequence="1"/>
+
+                <menuitem
+                    id="menu_view_practitioner_category_form"
+                    name="Tags"
+                    action="open_view_categ_form"
+                    parent="menu_podiatry_configuration_practitioner"
+                    groups="base.group_no_one"
+                    sequence="1"/>
+
+            <menuitem
+                id="menu_pod_practice_tree"
+                action="pod_practice_tree_action"
+                parent="menu_podiatry_configuration"
+                sequence="2"
+                groups="group_pod_user"/>
+
+            <menuitem
+                id="menu_pod_practice_kanban"
+                action="pod_practice_kanban_action"
+                parent="menu_pod_root"
+                groups="group_pod_user"/>
+
+            <menuitem
+                id="menu_pod_practice_location_tree"
+                action="pod_practice_location_action"
+                parent="menu_podiatry_configuration"
+                sequence="5"
+                groups="group_pod_user"/>
+
+            <menuitem
+                id="menu_pod_deactivate_reason_tree"
+                action="pod_deactivate_reason_action"
+                parent="menu_podiatry_configuration"
+                sequence="5"
+                groups="group_pod_user"/>
+
+            <menuitem
+                id="menu_config_plan"
+                name="Activity Planning"
+                parent="menu_podiatry_configuration"
+                groups="group_pod_manager"
+                sequence="100"/>
+
+                <menuitem
+                    id="menu_config_plan_types"
+                    name="Planning Types"
+                    action="pod_plan_activity_type_action"
+                    parent="menu_config_plan"
+                    groups="base.group_no_one"
+                    sequence="99"/>
+
+                <menuitem
+                    id="menu_config_plan_plan"
+                    name="Plans"
+                    action="pod_plan_action"
+                    parent="menu_config_plan"
+                    groups="group_pod_manager"
+                    sequence="100"/>
+
+    </data>
+</odoo>

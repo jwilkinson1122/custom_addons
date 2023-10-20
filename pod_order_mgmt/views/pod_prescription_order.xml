@@ -52,11 +52,12 @@
                     </div>
                     <group>
                         <group string="Account Info">
-                            <field name="practice_id" placeholder="Practice Name" class="font-weight-bold"/>
-                            <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', practice_id), ('is_practitioner', '=', True)]" class="font-weight-bold"/>
+                            <field name="practice_id" placeholder="Practice Name" context="{'show_address': 1}" options="{'always_reload': True}" class="font-weight-bold" />
+                            <!-- <field name="partner_id" context="{'search_default_customer':1, 'show_address': 1}" options="{'always_reload': True}" class="font-weight-bold"/> -->
+                            <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', practice_id), ('is_practitioner', '=', True)]" options="{'always_reload': True}" class="font-weight-bold"/>
                         </group>
                         <group string="Patient Info">
-                            <field name="patient_id" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" class="font-weight-bold"/>
+                            <field name="patient_id" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" options="{'always_reload': True}" class="font-weight-bold"/>
                             <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>

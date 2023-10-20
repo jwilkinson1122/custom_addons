@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+    <!--Practice-->
+
+      <record id="practice_management" model="pod.practice">
+          <field name="name">Management</field>
+      </record>
+
+      <record id="practice_role" model="pod.practice">
+          <field name="name">Research &amp; Development</field>
+      </record>
+
+      <record id="practice_services" model="pod.practice">
+          <field name="name">Professional Services</field>
+      </record>
+
+    <!--Roles-->
+
+      <record id="role_ceo" model="pod.role">
+          <field name="name">Chief Executive Officer</field>
+          <field name="practice_id" ref="practice_management"/>
+          <field name="description">Demonstration of different Odoo services for each client and convincing the client about functionality of the application.
+The candidate should have excellent communication skills.
+Relationship building and influencing skills
+Expertise in New Client Acquisition (NCAs) and Relationship Management.
+Gathering market and customer information.
+Coordinating with the sales and support team for adopting different strategies
+Reviewing progress and identifying opportunities and new areas for development.
+Building strong relationships with clients / customers for business growth profitability.
+Keep regular interaction with key clients for better extraction and expansion.</field>
+          <field name="requirements">MBA in Marketing is must.
+Good Communication skills.
+Only Fresher's can apply.
+Candidate should be ready to work in young and dynamic environment..
+Candidate should be able to work in “start- up” fast paced environment,hands on attitude.
+Honest,approachable and fun team player.
+Result driven.
+Excellent analytical skills, ability to think logically and "out of the box"</field>
+      </record>
+
+      <record id="role_cto" model="pod.role">
+          <field name="name">Chief Technical Officer</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="description">You will take part in the consulting services we provide to our partners and customers : design, analysis, development, testing, project management, support/assistanting. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.
+
+The role is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur).</field>
+          <field name="requirements">Bachelor, master or engineering degree in Computer Science or equivalent by experience
+Preferably at least 1 years of experience
+Interest for enterprise application development
+Customer-minded
+Willing to travel abroad occasionally for short term missions.
+Passion for the Internet and its culture
+Quick and autonomous learner, problem-solving personality, enthusiastic when faced with technical challenges
+Team spirit and good communication
+Required skills:
+Good knowledge of object oriented programming, object modeling, relational databases, Unix/Linux platform
+Fluent in English, especially read and written
+Nice-to-have skills:
+Good knowledge of Python
+Good knowledge of HTML and Javascript
+Knowledge of UML-like modeling
+Good language skills, other than English (Dutch and French preferred, others welcome)
+          </field>
+      </record>
+
+      <record id="role_consultant" model="pod.role">
+          <field name="name">Consultant</field>
+          <field name="practice_id" ref="practice_services"/>
+      </record>
+
+      <record id="role_technical" model="pod.role">
+          <field name="name">Experienced Developer</field>
+          <field name="practice_id" ref="practice_role"/>
+      </record>
+
+      <record id="role_manager" model="pod.role">
+          <field name="name">Podiatry Manager</field>
+          <field name="practice_id" ref="practice_administration"/>
+          <field name="description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</field>
+          <field name="requirements">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</field>
+      </record>
+
+      <record id="role_marketing" model="pod.role">
+          <field name="name">Marketing and Community Manager</field>
+          <field name="practice_id" ref="practice_sales"/>
+      </record>
+
+      <record id="role_trainee" model="pod.role">
+          <field name="name">Trainee</field>
+          <field name="description">You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.
+You will have to become familiar with the existing tools (books, class supports, Odoo activeation’s slides, commercial tools),
+to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,
+to suggest improvements in order to cover the new domains of the software.
+You join the Implementation Assistance practice. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be
+to animate webinars in order to show the different functionalities of the software.
+to be involved in the support of the customers and
+to answer to their questions.
+You help the support manager to set up new support services by
+being involved in the treatment of new cases,
+contributing to the set up of a new politic,
+being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers.</field>
+          <field name="requirements">You speak fluently English and French (one other European language is a +)
+At the time of your traineeship at Odoo, you will be in the last year of a Master or Bachelor Degree (ideally in the following sector: Business Management, IT Management, Computer Sciences)
+You have a software and new technology awareness
+You are ready to join a young and dynamic company, you are able to work in a “start up” fast paced environment, hands on attitude
+You are approachable, honest and a fun team player
+If you have development competencies, we can propose you specific traineeships</field>
+      </record>
+
+      <!-- Practice Locations -->
+
+      <record id="practice_location_1" model="pod.practice.location">
+          <field name="name">Building 1, Second Floor</field>
+          <field name="address_id" ref="base.main_partner" />
+      </record>
+
+    <!-- Practitioner categories -->
+
+      <record id="practitioner_category_2" model="pod.practitioner.category">
+          <field name="name">Sales</field>
+          <field name="color" eval="1"/>
+      </record>
+
+      <record id="practitioner_category_3" model="pod.practitioner.category">
+          <field name="name">Trainer</field>
+          <field name="color" eval="2"/>
+      </record>
+
+      <record id="practitioner_category_4" model="pod.practitioner.category">
+          <field name="name">Practitioner</field>
+          <field name="color" eval="6"/>
+      </record>
+
+      <record id="practitioner_category_5" model="pod.practitioner.category">
+          <field name="name">Consultant</field>
+          <field name="color" eval="4"/>
+      </record>
+
+      <!-- Address -->
+
+      <record id="res_partner_admin_private_address" model="res.partner">
+          <field name="name">Mitchell Admin</field>
+          <field name="street">215 Vine St</field>
+          <field name="city">Scranton</field>
+          <field name="zip">18503</field>
+          <field name="country_id" ref="base.us"/>
+          <field name='state_id' ref="base.state_us_39"/>
+          <field name="phone">+1 555-555-5555</field>
+          <field name="email">admin@yourcompany.example.com</field>
+      </record>
+      <record id="res_partner_demo_private_address" model="res.partner">
+          <field name="name">Mark Demo</field>
+          <field name="street">361-7936 Feugiat St.</field>
+          <field name="zip">58521</field>
+          <field name="city">Williston</field>
+          <field name="country_id" ref="base.us"/>
+          <field name="phone">+1 555-555-5757</field>
+          <field name="email">demo@yourcompany.example.com</field>
+          <field name="type">private</field>
+      </record>
+
+    <!--Practitioners-->
+
+      <record id="practitioner_admin" model="pod.practitioner">
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(237)-125-2389</field>
+          <field name="practice_email">aiden.hughes71@example.com</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4'), ref('practitioner_category_3')])]"/>
+          <field name="role_id" ref="pod_manager.role_ceo"/>
+          <field name="role_title">Chief Executive Officer</field>
+          <field name="practice_id" ref="practice_management"/>
+      </record>
+
+      <record id="practitioner_al" model="pod.practitioner">
+          <field name="name">Ronnie Hart</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="role_id" ref="pod_manager.role_cto"/>
+          <field name="role_title">Chief Technical Officer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4'), ref('practitioner_category_3')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(376)-310-7863</field>
+          <field name="practice_email">ronnie.hart87@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_al-image.jpg"/>
+      </record>
+
+      <record id="practitioner_mit" model="pod.practitioner">
+          <field name="name">Anita Oliver</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="parent_id" ref="practitioner_al"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(538)-497-4804</field>
+          <field name="mobile_phone">(538)-672-3185</field>
+          <field name="practice_email">anita.oliver32@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_mit-image.jpg"/>
+      </record>
+
+      <record id="practitioner_niv" model="pod.practitioner">
+          <field name="name">Sharlene Rhodes</field>
+          <field name="practice_id" ref="practice_management"/>
+          <field name="parent_id" ref="practitioner_al"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(450)-719-4182</field>
+          <field name="practice_email">sharlene.rhodes49@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_niv-image.jpg"/>
+      </record>
+
+      <record id="practitioner_stw" model="pod.practitioner">
+          <field name="name">Randall Lewis</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="parent_id" ref="practitioner_al"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(332)-775-6660</field>
+          <field name="practice_email">randall.lewis74@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_stw-image.jpg"/>
+      </record>
+
+      <record id="practitioner_chs" model="pod.practitioner">
+          <field name="name">Jennie Fletcher</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="parent_id" ref="practitioner_al"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(157)-363-8229</field>
+          <field name="practice_email">jennie.fletcher76@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_chs-image.jpg"/>
+      </record>
+
+      <record id="practitioner_qdp" model="pod.practitioner">
+          <field name="name">Marc Demo</field>
+          <field name="user_id" ref="base.user_demo"/>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="parent_id" ref="practitioner_admin"/>
+          <field name="private_address_id" ref="res_partner_demo_private_address"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">+3281813700</field>
+          <field name="practice_email">gilles@odoo.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_qdp-image.png"/>
+      </record>
+
+      <record id="practitioner_fme" model="pod.practitioner">
+          <field name="name">Keith Byrd</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="parent_id" ref="practitioner_al"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(449)-505-5146</field>
+          <field name="practice_email">keith.byrd52@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_fme-image.jpg"/>
+      </record>
+
+      <record id="practitioner_fpi" model="pod.practitioner">
+          <field name="name">Audrey Peterson</field>
+          <field name="practice_id" ref="practice_services"/>
+          <field name="parent_id" ref="practitioner_admin"/>
+          <field name="role_id" ref="pod_manager.role_consultant"/>
+          <field name="role_title">Consultant</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4'), ref('practitioner_category_5')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(203)-276-7903</field>
+          <field name="practice_email">audrey.peterson25@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_fpi-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jth" model="pod.practitioner">
+          <field name="name">Toni Jimenez</field>
+          <field name="practice_id" ref="practice_services"/>
+          <field name="parent_id" ref="practitioner_admin"/>
+          <field name="role_id" ref="pod_manager.role_consultant"/>
+          <field name="role_title">Consultant</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4'), ref('practitioner_category_5')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(663)-707-8451</field>
+          <field name="practice_email">toni.jimenez23@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jth-image.jpg"/>
+      </record>
+
+      <record id="practitioner_ngh" model="pod.practitioner">
+          <field name="name">Jeffrey Kelly</field>
+          <field name="practice_id" ref="practice_sales"/>
+          <field name="parent_id" ref="practitioner_admin"/>
+          <field name="role_id" ref="pod_manager.role_marketing"/>
+          <field name="role_title">Marketing and Community Manager</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4'), ref('practitioner_category_2')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(916)-264-7362</field>
+          <field name="practice_email">jeffrey.kelly72@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_ngh-image.jpg"/>
+      </record>
+
+      <record id="practitioner_vad" model="pod.practitioner">
+          <field name="name">Tina Williamson</field>
+          <field name="practice_id" ref="practice_administration"/>
+          <field name="parent_id" ref="practitioner_admin"/>
+          <field name="role_id" ref="pod_manager.role_manager"/>
+          <field name="role_title">Podiatry Manager</field>
+          <field name="category_ids" eval="[(6, 0, [ref('practitioner_category_4')])]"/>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(360)-694-7266</field>
+          <field name="practice_email">tina.williamson98@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_vad-image.jpg"/>
+      </record>
+
+      <record id="practitioner_han" model="pod.practitioner">
+          <field name="name">Walter Horton</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(350)-912-1201</field>
+          <field name="practice_email">walter.horton80@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_han-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jve" model="pod.practitioner">
+          <field name="name">Paul Williams</field>
+          <field name="practice_id" ref="practice_management"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(114)-262-1607</field>
+          <field name="practice_email">paul.williams59@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jve-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jep" model="pod.practitioner">
+          <field name="name">Doris Cole</field>
+          <field name="practice_id" ref="practice_services"/>
+          <field name="role_id" ref="pod_manager.role_consultant"/>
+          <field name="role_title">Consultant</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(883)-331-5378</field>
+          <field name="practice_email">doris.cole31@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jep-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jod" model="pod.practitioner">
+          <field name="name">Rachel Perry</field>
+          <field name="practice_id" ref="practice_sales"/>
+          <field name="role_id" ref="pod_manager.role_marketing"/>
+          <field name="role_title">Marketing and Community Manager</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(206)-267-3735</field>
+          <field name="practice_email">jod@odoo.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jod-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jog" model="pod.practitioner">
+          <field name="name">Beth Evans</field>
+          <field name="practice_id" ref="practice_role"/>
+          <field name="role_id" ref="pod_manager.role_technical"/>
+          <field name="role_title">Experienced Developer</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(754)-532-3841</field>
+          <field name="practice_email">beth.evans77@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jog-image.jpg"/>
+      </record>
+
+      <record id="practitioner_jgo" model="pod.practitioner">
+          <field name="name">Ernest Reed</field>
+          <field name="practice_id" ref="practice_services"/>
+          <field name="role_id" ref="pod_manager.role_consultant"/>
+          <field name="role_title">Consultant</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(944)-518-8232</field>
+          <field name="practice_email">ernest.reed47@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_jgo-image.jpg"/>
+      </record>
+
+      <record id="practitioner_lur" model="pod.practitioner">
+          <field name="name">Eli Lambert</field>
+          <field name="practice_id" ref="practice_sales"/>
+          <field name="role_id" ref="pod_manager.role_marketing"/>
+          <field name="role_title">Marketing and Community Manager</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_phone">(644)-169-1352</field>
+          <field name="practice_email">eli.lambert22@example.com</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_lur-image.jpg"/>
+      </record>
+
+      <record id="practitioner_hne" model="pod.practitioner">
+          <field name="name">Abigail Peterson</field>
+          <field name="practice_id" ref="practice_services"/>
+          <field name="role_id" ref="pod_manager.role_consultant"/>
+          <field name="role_title">Consultant</field>
+          <field name="practice_location_id" ref="practice_location_1"/>
+          <field name="practice_email">abigail.peterson39@example.com</field>
+          <field name="practice_phone">(482)-233-3393</field>
+          <field name="image_1920" type="base64" file="pod_manager/static/img/practitioner_hne-image.jpg"/>
+      </record>
+    </data>
+</odoo>

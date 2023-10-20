@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the preference view to remove title, image and footer -->
+        <!-- This view is meant to be included in the practitioner profile view -->
+        <!-- It ensures that if the 'normal' Preferences view is changed, it's
+            also reflected in the practitioner's profile -->
+        <record id="res_users_view_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.simplified.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <footer position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </footer>
+                <h1 position="replace"/>
+                <xpath expr="//field[@name='image_1920']" position="replace"/>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="tz" position="after">
+                    <field name="is_system" invisible="1"/>
+                </field>
+                <xpath expr="//button[@name='%(base.res_lang_act_window)d']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_system', '=', False)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_profile" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
+                    <attribute name="js_class">pod_practitioner_profile_form</attribute>
+                </form>
+                <notebook position="replace">
+                        <field name="pod_existence_state" invisible="1"/>
+                        <header>
+                        </header>
+                        <sheet>$0</sheet>
+                </notebook>
+                <notebook position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            id="pod_existence_button"
+                            class="oe_stat_button"
+                            disabled="1"
+                            invisible="context.get('from_user_profile', False)"
+                            attrs="{'invisible': [('pod_existence_state', '=', 'inactive')]}">
+                            <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'active')]}" aria-label="Available" title="Available"/>
+                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                            <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'inactive')]}" aria-label="Not available" title="Not available"/>
+
+                            <div class="o_stat_info" attrs="{'invisible': [('pod_existence_state', '=', 'active')]}">
+                                <span class="o_stat_text">
+                                    Not Connected
+                                </span>
+                            </div>
+                            <div class="o_stat_info" attrs="{'invisible': [('pod_existence_state', '!=', 'active')]}">
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                    <field name="last_activity_time"/>
+                                </span>
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
+                                    <field name="last_activity"/>
+                                </span>
+                                <span class="o_stat_text">Connected Since</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Practitioner's Name" required="True" readonly="context.get('from_user_profile', False)"/>
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <h2 class="col-6 pl-0">
+                            <field name="role_title" placeholder="Role Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="can_edit" invisible="1"/>
+                            <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                            <field name="practice_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                        </group>
+                        <group>
+                            <field name="practice_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="practice_location_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="practitioner_parent_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="assistant_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                        </group>
+                    </group>
+                </notebook>
+                <notebook position="inside">
+                    <page name="public" string="Practice Information">
+                        <div id="o_practice_practitioner_container"> <!-- These two div are used to position org_chart -->
+                            <div id="o_practice_practitioner_main">
+                                <group string="Location">
+                                    <field name="practice_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="address_id"
+                                        context="{'show_address': 1}"
+                                        options='{"always_reload": True, "highlight_first_line": True}'
+                                        attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                </group>
+                                <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                    <!-- overridden in other modules -->
+                                </group>
+                            </div>
+                        </div>
+                    </page>
+                    <page name="personal_information" string="Private Information">
+                        <group>
+                            <group string="Contact Information">
+                                <field name="practitioner_ids" invisible="1"/>
+                                <field name="private_address_id" invisible="1"/>
+                                <label for="private_street" string="Private Address"/>
+                                <div class="o_address_format">
+                                    <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+
+                                <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('private_address_id', '=', False)]}"/>
+                                <field name="practitioner_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('private_address_id', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="private_lang" string="Language" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('private_address_id', '=', False)]}"/>
+                            </group>
+                            <group string="Additional Info">
+                                <field name="practitioner_country_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="identification_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="secondary_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="secondary_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="specialty_field" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                     <page name="pod_settings" string="POD Settings">
+                        <group>
+                            <group string='Status' name="active_group">
+                                <field name="practitioner_type" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                            <group string="Attendance" name="identification_group">
+                                <field name="pin" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="barcode" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="res_users_action_preferences" model="ir.actions.act_window">
+            <field name="name">Change Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'from_user_profile': True}</field>
+            <field name="view_id" ref="pod_manager.res_users_view_form_profile"/>
+        </record>
+
+        <record id="pod_practitioner_action_from_user" model="ir.actions.act_window">
+            <field name="name">Practitioners</field>
+            <field name="res_model">pod.practitioner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('user_id', '=', active_id)]</field>
+        </record>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                    <field name="share" invisible="1"/>
+                    <field name="practitioner_ids" invisible="1"/>
+                    <field name="practitioner_id" invisible="1"/>
+                    <button string="Create practitioner"
+                            type="object" name="action_create_practitioner"
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('practitioner_id', '!=', False)]}"/>
+                            <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(pod_practitioner_action_from_user)d"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        attrs="{'invisible': [('practitioner_count', '=', 0)]}"
+                        context="{'active_test': False}"
+                        type="action">
+                        <field name="practitioner_count" widget="statinfo" string="Practitioner(s)"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

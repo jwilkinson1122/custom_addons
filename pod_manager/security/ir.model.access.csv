@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pod_practitioner_category_user,pod.practitioner.category.user,model_pod_practitioner_category,group_pod_user,1,1,1,1
+access_pod_practitioner_category_emp,pod.practitioner.category.emp,model_pod_practitioner_category,base.group_user,1,0,0,0
+access_pod_practitioner_user,pod.practitioner user,model_pod_practitioner,group_pod_user,1,1,1,1
+access_pod_practitioner_system_user,pod.practitioner system user,model_pod_practitioner,base.group_user,0,0,0,0
+access_pod_practitioner_public_user,pod.practitioner_public,model_pod_practitioner_public,base.group_user,1,0,0,0
+access_pod_practitioner_resource_user,resource.resource.user,resource.model_resource_resource,group_pod_user,1,1,1,1
+access_pod_practice_user,pod.practice.user,model_pod_practice,group_pod_user,1,1,1,1
+access_pod_practice_practitioner,pod.practice.practitioner,model_pod_practice,base.group_user,1,0,0,0
+access_pod_role_user,pod.role user,model_pod_role,group_pod_user,1,1,1,1
+access_pod_plan_activity_type_practitioner,access_pod_plan_activity_type,model_pod_plan_activity_type,base.group_user,1,0,0,0
+access_pod_plan_practitioner,access_pod_plan_practitioner,model_pod_plan,base.group_user,1,0,0,0
+access_pod_plan_activity_type_pod_user,access_pod_plan_activity_type,model_pod_plan_activity_type,group_pod_user,1,1,1,1
+access_pod_plan_pod_user,access_pod_plan_pod_user,model_pod_plan,group_pod_user,1,1,1,1
+access_pod_plan_wizard,access.pod.plan.wizard,model_pod_plan_wizard,pod_manager.group_pod_manager,1,1,1,0
+access_pod_deactivate_wizard,access.pod.deactivate.wizard,model_pod_deactivate_wizard,pod_manager.group_pod_user,1,1,1,0
+access_pod_practice_location_user,access_pod_practice_location_user,model_pod_practice_location,base.group_user,1,0,0,0
+access_pod_practice_location_manager,access_pod_practice_location_manager,model_pod_practice_location,group_pod_manager,1,1,1,1
+access_pod_deactivate_reason,access_pod_deactivate_reason_user,model_pod_deactivate_reason,group_pod_user,1,1,1,1

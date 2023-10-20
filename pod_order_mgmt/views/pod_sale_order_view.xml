@@ -75,10 +75,11 @@
                     <attribute name="domain">[('is_company', '=', True)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field string="Practitioner" name="practitioner_id"/>
-                    <field string="Patient" name="patient_id"/>
+                    <field name="practitioner_id" string="Practitioner" domain="[('is_practitioner', '=', True), ('parent_id', '=', partner_id)]"/>
+                    <field name="patient_id" string="Patient" domain="[('practitioner_id', '=', practitioner_id)]"/>
                 </xpath>
  
+              
                 <!-- To make config_session_id invisible in form view -->
                 <!-- <xpath expr="//field[@name='order_line']/form//field[@name='config_session_id']" position="attributes">
                     <attribute name="invisible">1</attribute>

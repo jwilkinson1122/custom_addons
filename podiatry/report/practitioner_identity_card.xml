@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="practitioner_identity_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="height: 2px;">
+                        <div class="oe_structure"/>
+                        <t t-foreach="o" t-as="practitioner">
+                        <table width="40%" height="280px" style="border: 3px solid black;" align="center">
+                            <tr style="margin-top:5px">
+                                <td colspan="2" align="center">
+                                    <h1><strong>
+                                        <span t-field="practitioner.sudo().practice_id.name" />
+                                    </strong></h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="top">
+                                    <img t-if="practitioner.avatar_128"
+                                        t-att-src="'data:image/png;base64,%s' % to_text(practitioner.avatar_128)"/>
+                                </td>
+                                <td align="left">
+                                    <table width="100%">
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Name</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Gender</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.gender"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>BirthDate</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.birthday" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Standard</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.standard_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Email</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.email" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Contact</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="practitioner.mobile" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                </td>
+                            </tr>
+                        </table>
+                      </t>
+                   </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

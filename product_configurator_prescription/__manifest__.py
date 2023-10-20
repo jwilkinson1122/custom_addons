@@ -5,7 +5,7 @@
     "summary": "Product configuration for prescriptions",
     "author": "NWPL",
     "license": "AGPL-3",
-    "website": "https://nwpodiatric.com",
+    "website": "https://www.nwpodiatric.com",
     "depends": ["sale_management", "product_configurator"],
     "data": [
         "security/ir.model.access.csv",

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_practitioner_filter" model="ir.ui.view">
+            <field name="name">pod.practitioner.search</field>
+            <field name="model">pod.practitioner</field>
+            <field name="arch" type="xml">
+                <search string="Practitioners">
+                    <field name="name" string="Practitioner" filter_domain="['|', ('practice_email', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="category_ids" groups="pod_manager.group_pod_user"/>
+                    <field name="role_id"/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_practice" string="Practice" domain="[]" context="{'group_by': 'practice_id'}"/>
+                        <filter name="group_role" string="Role" domain="[]" context="{'group_by': 'role_id'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="practice_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+             </field>
+        </record>
+
+        <record id="view_practitioner_form" model="ir.ui.view">
+            <field name="name">pod.practitioner.form</field>
+            <field name="model">pod.practitioner</field>
+            <field name="arch" type="xml">
+                <form string="Practitioner" js_class="pod_practitioner_form" class='o_practitioner_form'>
+                    <field name="active" invisible="1"/>
+                    <field name="user_partner_id" invisible="1"/>
+                    <field name="pod_existence_state" invisible="1"/>
+                    <field name="image_128" invisible="1" />
+                    <header>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="pod_manager.group_pod_manager"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button
+                                id="pod_existence_button"
+                                class="oe_stat_button"
+                                disabled="1"
+                                attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
+                                <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'active')]}" aria-label="Available" title="Available"/>
+                                <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                                <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('pod_existence_state', '!=', 'inactive')]}" aria-label="Not available" title="Not available"/>
+
+                                <div class="o_stat_info" attrs="{'invisible': [('pod_existence_state', '=', 'active')]}">
+                                    <span class="o_stat_text">
+                                        Not Connected
+                                    </span>
+                                </div>
+                                <div class="o_stat_info" attrs="{'invisible': [('pod_existence_state', '!=', 'active')]}">
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                        <field name="last_activity_time"/>
+                                    </span>
+                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
+                                        <field name="last_activity"/>
+                                    </span>
+                                    <span class="o_stat_text">Active Since</span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="avatar_128" invisible="1"/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                        <div class="oe_title">
+                            <h1 class="d-flex">
+                                <field name="name" placeholder="Practitioner's Name" required="True"/>
+                                <a title="Chat" icon="fa-comments" href="#" class="ml8 o_practitioner_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                            </h1>
+                            <h2>
+                                <field name="role_title" placeholder="Role Position" />
+                            </h2>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="pod_manager.group_pod_manager"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="mobile_phone" widget="phone"/>
+                                <field name="practice_phone" widget="phone"/>
+                                <field name="practice_email" widget="email"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_country_id" invisible="1"/>
+                                <field name="company_country_code" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="practice_id"/>
+                                <field name="parent_id"/>
+                                <field name="assistant_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="public" string="Practice Information">
+                                <div id="o_practice_practitioner_container"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_practice_practitioner_main">
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="practice_location_id" context="{'default_address_id': address_id}" />
+                                        </group>
+                                        <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                            <!-- is overridden in other pod_manager related modules -->
+                                        </group>
+                                        <group name="deactivate" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
+                                            <field name="deactivate_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                            <field name="deactivate_description"/>
+                                            <field name="deactivate_date"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page name="personal_information" string="Private Information" groups="pod_manager.group_pod_user">
+                                <group>
+                                    <group string="Private Contact">
+                                        <field name="private_address_id"
+                                            context="{
+                                                'show_address': 1,
+                                                'default_type': 'private',
+                                                'form_view_ref': 'base.res_partner_view_form_private'}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="phone" class="o_force_ltr" groups="pod_manager.group_pod_user" string="Phone" readonly="True"/>
+                                        <field name="lang" string="Language"/>
+                                    </group>
+                                    <group string="Additional Info">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="pod_manager.group_pod_user"/>
+                                        <field name="secondary_contact"/>
+                                        <field name="secondary_phone" class="o_force_ltr"/>
+                                        <field name="specialty_field"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="pod_settings" string="POD Settings" groups="pod_manager.group_pod_user">
+                                <group>
+                                    <group string='Status' name="active_group">
+                                        <field name="practitioner_type"/>
+                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]"/>
+                                    </group>
+                                    <group string="Attendance/Point of Sale" name="identification_group">
+                                        <field name="pin" string="PIN Code"/>
+                                        <label for="barcode"/>
+                                        <div class="o_row">
+                                            <field name="barcode"/>
+                                            <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
+                                        </div>
+                                    </group>
+                                    <group string='Payroll' name="payroll_group">
+                                        <field name="role_id"/>
+                                    </group>
+                                    <group name="application_group"/>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_practitioner_tree" model="ir.ui.view">
+            <field name="name">pod.practitioner.tree</field>
+            <field name="model">pod.practitioner</field>
+            <field name="arch" type="xml">
+                <tree string="Practitioners" multi_edit="1" sample="1" js_class="pod_practitioner_list">
+                    <field name="name" readonly="1"/>
+                    <field name="practice_phone" class="o_force_ltr" readonly="1"/>
+                    <field name="practice_email"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
+                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="practice_id"/>
+                    <field name="role_id"/>
+                    <field name="parent_id"/>
+                    <field name="address_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="practice_location_id" optional="hide"/>
+                    <field name="assistant_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="pod_kanban_view_practitioners" model="ir.ui.view">
+           <field name="name">pod.practitioner.kanban</field>
+           <field name="model">pod.practitioner</field>
+           <field name="priority">10</field>
+           <field name="arch" type="xml">
+               <kanban class="o_pod_practitioner_kanban" js_class="pod_practitioner_kanban" sample="1">
+                   <field name="id"/>
+                   <field name="pod_existence_state"/>
+                   <field name="user_id"/>
+                   <field name="user_partner_id"/>
+                   <field name="pod_icon_display"/>
+                   <field name="image_128" />
+                   <templates>
+                       <t t-name="kanban-box">
+                       <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_pod_kanban_record">
+                           <field name="avatar_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+
+                            <div class="oe_kanban_details">
+                               <div class="o_kanban_record_top">
+                                   <div class="o_kanban_record_headings">
+                                       <strong class="o_kanban_record_title">
+                                            <div class="float-right"
+                                                 t-if="record.pod_icon_display.raw_value == 'existence_active'"
+                                                 name="existence_active">
+                                                <!-- Practitioner is active/connected and it is normal according to his work schedule  -->
+                                                <span class="fa fa-circle text-success" role="img" aria-label="Active"
+                                                      title="Active" name="existence_active">
+                                                </span>
+                                            </div>
+                                            <div class="float-right"
+                                                 t-if="record.pod_icon_display.raw_value == 'existence_inactive'"
+                                                 name="existence_inactive">
+                                                <!-- Practitioner is not active and it is normal according to his work schedule -->
+                                                <span class="fa fa-circle-o text-muted" role="img" aria-label="Inactive"
+                                                      title="Inactive" name="existence_inactive">
+                                                </span>
+                                            </div>
+                                            <div class="float-right"
+                                                 t-if="record.pod_icon_display.raw_value == 'existence_to_define'"
+                                                    name="existence_to_define">
+                                                <!-- Practitioner is not here but according to his work schedule, he should be connected -->
+                                                <span class="fa fa-circle text-warning" role="img"
+                                                      aria-label="To define" title="To define"
+                                                      name="existence_to_define">
+                                                </span>
+                                            </div>
+                                            <field name="name" placeholder="Practitioner's Name"/>
+                                       </strong>
+                                       <span t-if="record.role_title.raw_value" class="o_kanban_record_subtitle"><field name="role_title"/></span>
+                                   </div>
+                               </div>
+                               <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="pod_manager.group_pod_manager"/>
+                               <ul>
+                                   <li id="last_login"/>
+                                   <li t-if="record.practice_email.raw_value" class="o_text_overflow"><field name="practice_email" /></li>
+                                   <li t-if="record.practice_phone.raw_value" class="o_force_ltr"><field name="practice_phone" /></li>
+                               </ul>
+                           </div>
+                           <div class="oe_kanban_content position-absolute fixed-bottom mr-2 o_pod_practitioner_kanban_bottom">
+                               <div class="o_kanban_record_bottom">
+                                   <div class="oe_kanban_bottom_left"/>
+                                   <div class="oe_kanban_bottom_right float-right">
+                                       <a title="Chat" icon="fa-comments" href="#" class="ml8 o_practitioner_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                       <div class="pod_activity_container">
+                                           <field name="activity_ids" widget="kanban_activity"/>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       </t>
+                   </templates>
+               </kanban>
+            </field>
+        </record>
+
+        <record id="pod_practitioner_view_activity" model="ir.ui.view">
+            <field name="name">pod.practitioner.activity</field>
+            <field name="model">pod.practitioner</field>
+            <field name="arch" type="xml">
+                <activity string="Practitioners">
+                    <field name="id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('pod.practitioner', 'avatar_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="role_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
+        <record id="open_view_practitioner_list_my" model="ir.actions.act_window">
+            <field name="name">Practitioners</field>
+            <field name="res_model">pod.practitioner</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[]</field>
+            <field name="context">{'chat_icon': True}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_practitioner_filter"/>
+            <field name="help" type="html">
+             <p class="o_view_nocontent_smiling_face">
+               Add a new practitioner
+             </p><p>
+               With just a quick glance on the Odoo practitioner screen, you
+               can easily find all the information you need for each person;
+               contact data, role position, availability, etc.
+             </p>
+            </field>
+        </record>
+
+        <record id="open_view_practitioner_tree" model="ir.actions.act_window">
+            <field name="name">Practitioners Structure</field>
+            <field name="res_model">pod.practitioner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_practitioner_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="search_view_id" ref="view_practitioner_filter"/>
+        </record>
+
+        <record id="open_view_practitioner_list" model="ir.actions.act_window">
+            <field name="name">Practitioners</field>
+            <field name="res_model">pod.practitioner</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_practitioner_filter"/>
+        </record>
+
+        <!-- Practitioner tree by manager -->
+        <record id="view_partner_tree2" model="ir.ui.view">
+            <field name="name">pod.practitioner.tree</field>
+            <field name="model">pod.practitioner</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Practitioners">
+                    <field name="name"/>
+                    <field name="practice_phone" class="o_force_ltr"/>
+                    <field name="practice_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="practice_id"/>
+                    <field name="role_id"/>
+                    <field name="assistant_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_practitioner_from_practice" model="ir.actions.act_window">
+            <field name="name">Contacts</field>
+            <field name="res_model">pod.practitioner</field>
+            <field name="view_mode">kanban,form,tree</field>
+            <field name="search_view_id" ref="view_practitioner_filter"/>
+            <field name="context">{
+                "searchpanel_default_practice_id": active_id,
+                "default_practice_id": active_id}
+            </field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new practitioner
+              </p><p>
+                With just a quick glance on the Odoo practitioner screen, you
+                can easily find all the information you need for each person;
+                contact data, role position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

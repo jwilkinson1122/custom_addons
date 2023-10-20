@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.module_category_podiatry_practitioners" model="ir.module.category">
+        <field name="description">Helps you manage your practitioners.</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="group_pod_user" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="base.module_category_podiatry_practitioners"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('base.group_private_addresses'), ref('base.group_user')])]"/>
+        <field name="comment">The user will be able to approve document created by practitioners.</field>
+    </record>
+
+    <record id="group_pod_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="comment">The user will have access to the human resources configuration as well as statistic reports.</field>
+        <field name="category_id" ref="base.module_category_podiatry_practitioners"/>
+        <field name="implied_ids" eval="[(4, ref('group_pod_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+<data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('group_pod_manager'))]"/>
+    </record>
+
+    <record id="pod_practitioner_comp_rule" model="ir.rule">
+        <field name="name">Practitioner multi company rule</field>
+        <field name="model_id" ref="model_pod_practitioner"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="pod_dept_comp_rule" model="ir.rule">
+        <field name="name">Practice multi company rule</field>
+        <field name="model_id" ref="model_pod_practice"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="pod_practitioner_public_comp_rule" model="ir.rule">
+        <field name="name">Practitioner multi company rule</field>
+        <field name="model_id" ref="model_pod_practitioner_public"/>
+        <field name="domain_force">['|',('company_id', '=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="pod_role_comp_rule" model="ir.rule">
+        <field name="name">Role multi company rule</field>
+        <field name="model_id" ref="model_pod_role"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+</data>
+</odoo>

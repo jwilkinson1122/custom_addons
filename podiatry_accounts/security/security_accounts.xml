@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data>
+        <!-- Record Rule patient can see his own account recipt -->
+        <record id="account_receipt_rule_patient" model="ir.rule">
+            <field name="name">Patient Accounts Record Rule</field>
+            <field name="model_id" ref="model_patient_payslip"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('patient_id.partner_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient'))]"/>
+        </record>
+
+        <!-- Record Rule Doctors can see own child Account recipt -->
+        <record id="account_receipt_rule_doctor" model="ir.rule">
+            <field name="name">Doctors Accounts Record Rule</field>
+            <field name="model_id" ref="model_patient_payslip"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('patient_id.doctor_id.partner_id','=',partner.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_doctor'))]"/>
+        </record>
+
+        <!-- Record Rule Patient can see own Account Register -->
+        <record id="accounts_register_rule_patient" model="ir.rule">
+            <field name="name">Patients Accounts Register Rule</field>
+            <field name="model_id" ref="model_patient_accounts_register"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('line_ids.patient_id.partner_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('podiatry.group_podiatry_patient'))]"/>
+        </record>
+
+    </data>
+</odoo>

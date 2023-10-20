@@ -25,6 +25,7 @@ class Prescription(models.Model):
         required=True, 
         index=True, 
         domain=[('is_company','=',True)], 
+        states={"draft": [("readonly", False)], "done": [("readonly", True)]},
         string="Practice"
         )
     
@@ -32,7 +33,8 @@ class Prescription(models.Model):
         'res.partner', 
         required=True, 
         index=True, 
-        domain=[('is_practitioner','=',True)], 
+        domain=[('is_practitioner','=',True)],
+        states={"draft": [("readonly", False)], "done": [("readonly", True)]}, 
         string="Practitioner"
         )
     
@@ -45,9 +47,6 @@ class Prescription(models.Model):
         states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
 
-    # patient_id = fields.Many2one("pod.patient", string="Patient")
-
-    
     user_id = fields.Many2one(
         'res.users', 
         'User', readonly=True, default=lambda self: self.env.user
@@ -139,30 +138,16 @@ class Prescription(models.Model):
             if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
                 raise ValidationError('Patient does not belong to the selected practitioner.') 
             
-    # @api.constrains('practice_id', 'practitioner_id', 'patient_id')
-    # def _check_practice_practitioner_patient(self):
-    #     for record in self:
-    #         if record.practitioner_id and record.practice_id and record.practitioner_id.practice_id != record.company_id:
-    #             raise ValidationError('Practitioner does not belong to the selected practice.')
-    #         if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
-    #             raise ValidationError('Patient does not belong to the selected practitioner.') 
             
-    @api.onchange('partner_id')
-    def onchange_set_domain_practitioner_id(self):
-        if self.partner_id:
-            # Assuming partner_id has a direct reference to the practitioner
-            self.practitioner_id = self.partner_id.practitioner_id
-
-    @api.onchange('practitioner_id')
-    def onchange_set_domain_patient_id(self):
-        return {
-            'domain': {
-                'patient_id': [('practitioner_id', '=', self.practitioner_id.id)]
-            }
-        }
-       
-            
-            
+            # is_practitioner = fields.Boolean(string='Practitioner', default=False)
+    @api.onchange('practice_id', 'practitioner_id')
+    def onchange_set_domain_practice_practitioner(self):
+        if self.practice_id and not self.practitioner_id:
+            self.practitioner_id = self.practice_id.practitioner_id
+        if self.practitioner_id and not self.patient_id:
+            # Set patient_id based on practitioner_id
+            self.patient_id = self.practitioner_id.patient_id
+ 
     def action_config_start(self):
         """Return action to start configuration wizard"""
         configurator_obj = self.env["product.configurator.prescription"]
@@ -188,26 +173,7 @@ class Prescription(models.Model):
             'res_id': wizard.id,
             'target': 'new',
         }
-
-        
-    # def button_launch_wizard(self):
-    #     self.ensure_one()
-    #     view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
-    #     wizard = self.env['orthotic.configurator.wizard'].create({
-    #         'prescription_order_id': self.id,
-    #         'product_tmpl_id': self.product_tmpl_id.id,  
-    #     })
-    #     return {
-    #         'name': _('Orthotic Configurator'),
-    #         'type': 'ir.actions.act_window',
-    #         'view_mode': 'form',
-    #         'res_model': 'orthotic.configurator.wizard',
-    #         'view_id': view_id,
-    #         'res_id': wizard.id,
-    #         'target': 'new',
-    #     }
-
-            
+   
     @api.model
     def _default_stage(self):
         Stage = self.env["pod.prescription.order.stage"]
@@ -534,15 +500,32 @@ class PrescriptionOrderLine(models.Model):
     _description = 'Prescription Order Lines'
     _rec_name = 'prescription_order_id'
     
+    # @api.depends('product_id')
+    # def onchange_product(self):
+    #     for each in self:
+    #         if each:
+    #             self.qty_available = self.product_id.qty_available
+    #             self.price = self.product_id.lst_price
+    #         else:
+    #             self.qty_available = 0
+    #             self.price = 0.0
+    
+     # Onchange and Compute Methods
     @api.depends('product_id')
     def onchange_product(self):
         for each in self:
-            if each:
-                self.qty_available = self.product_id.qty_available
-                self.price = self.product_id.lst_price
+            if each.product_id:
+                product_with_context = each.product_id.with_context(uom_qty_change=True)
+                each.qty_available = product_with_context.qty_available
+                each.price = product_with_context.lst_price
+                # Setting the name based on variant_description if it exists
+                if product_with_context.variant_description:
+                    each.name = product_with_context.variant_description
             else:
-                self.qty_available = 0
-                self.price = 0.0
+                # Handling the case when product_id is not set
+                each.qty_available = 0
+                each.price = 0.0
+                each.name = ""  # Clearing the name or setting it to a default text if needed
 
     name = fields.Text(string='Description')
     company_id = fields.Many2one(related='prescription_order_id.company_id', string='Company', store=True, index=True)
@@ -623,22 +606,5 @@ class PrescriptionOrderLine(models.Model):
             else:
                 line.product_updatable = True
  
-                
-    # @api.onchange("product_id")
-    # def onchange_product(self):
-    #     res = super(PrescriptionOrderLine, self).product_id_change() if hasattr(super(), 'product_id_change') else {}
-    #     for record in self:
-    #         if record.product_id:
-    #             record.qty_available = record.product_id.qty_available
-    #             record.price = record.product_id.lst_price
-    #             product_with_context = record.product_id.with_context(lang=record.prescription_order_id.partner_id.lang)
-    #             if product_with_context.variant_description:
-    #                 record.name = product_with_context.variant_description
-    #         else:
-    #             record.qty_available = 0
-    #             record.price = 0.0
-    #     return res
-    
-    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

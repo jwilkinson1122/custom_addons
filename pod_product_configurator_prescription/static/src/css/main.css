@@ -1,6 +1,0 @@
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;  /* This will ensure the buttons are vertically centered in case they have different heights */
-  padding-bottom: 15px;
-}

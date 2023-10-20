@@ -39,6 +39,22 @@ class InheritedSaleOrder(models.Model):
     prescription_order_id = fields.Many2one('pod.prescription.order', readonly=False) 
     prescription_order_lines = fields.One2many('pod.prescription.order.line', 'prescription_order_id', readonly=False)
     
+    @api.onchange('partner_id', 'practitioner_id')
+    def onchange_set_domain_partner_practitioner(self):
+        if self.partner_id and not self.practitioner_id:
+            self.practitioner_id = self.partner_id.practitioner_id
+        if self.practitioner_id and not self.patient_id:
+            # Set patient_id based on practitioner_id
+            self.patient_id = self.practitioner_id.patient_id
+    # @api.onchange('partner_id', 'practitioner_id')
+    # def _onchange_partner_practitioner(self):
+    #     if self.partner_id:
+    #         self.practitioner_id = False
+    #         self.patient_id = False
+            
+    #     if self.practitioner_id:
+    #         self.patient_id = False
+    
     @api.onchange("product_id")
     def product_id_change(self):
         res = super(InheritedSaleOrder, self).product_id_change()

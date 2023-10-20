@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_pod_role_form" model="ir.ui.view">
+            <field name="name">pod.role.form</field>
+            <field name="model">pod.role</field>
+            <field name="arch" type="xml">
+                <form string="Role">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Manager"/></h1>
+                        </div>
+                        <notebook> 
+                            <page string="Role Description">
+                                <field name="description" options="{'collaborative': true}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pod_role_tree" model="ir.ui.view">
+            <field name="name">pod.role.tree</field>
+            <field name="model">pod.role</field>
+            <field name="arch" type="xml">
+                <tree string="Role" sample="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="practice_id"/>
+                    <field name="no_of_practitioner"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="pod_role_view_kanban" model="ir.ui.view">
+            <field name="name">pod.role.kanban</field>
+            <field name="model">pod.role</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div>
+                                    <span><field name="practice_id"/>&amp;nbsp;</span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_role_filter" model="ir.ui.view">
+            <field name="name">pod.role.search</field>
+            <field name="model">pod.role</field>
+            <field name="arch" type="xml">
+                <search string="Roles">
+                    <field name="name" string="Role Position"/>
+                    <field name="practice_id" operator="child_of"/>
+                    <separator/>
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Practice" name="practice" domain="[]" context="{'group_by': 'practice_id'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_pod_role" model="ir.actions.act_window">
+            <field name="name">Role Positions</field>
+            <field name="res_model">pod.role</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_role_filter"/>
+            <field name="context">{"search_default_Current":1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add and manage roles.
+              </p><p>
+                Let's create a role position.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
