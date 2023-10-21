@@ -5,7 +5,7 @@
     "summary": "Manage custom orthotics ordering",
     "author": "NWPL",
     "license": "AGPL-3",
-    "website": "https://nwpodiatrtic.com",
+    "website": "https://www.nwpodiatrtic.com",
     "depends": [
         "pod_base",
         # "sale_management",
@@ -93,7 +93,7 @@
     },
     # "demo": ["demo/res_partner_demo.xml"],
     # "external_dependencies": {"python": ["boto3"]},
-    "images": ["static/description/orders.png"],
+    "images": ["pod_order_mgmt/static/description/file_prescription.png"],
     "development_status": "Beta",
     "maintainers": ["NWPL"],
     "installable": True,

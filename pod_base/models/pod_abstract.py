@@ -1,8 +1,10 @@
 
+import logging
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
 
 class PodiatryAbstract(models.AbstractModel):
     # FHIR Entity: default entity, as all models have internal_identifiers
@@ -29,5 +31,6 @@ class PodiatryAbstract(models.AbstractModel):
  
 
     def _get_internal_identifier(self, vals):
+        _logger.info("Executing _get_internal_identifier in pod.abstract")
         # It should be rewritten for each element
         raise UserError(_("Function is not defined"))

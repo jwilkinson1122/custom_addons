@@ -4,7 +4,7 @@
     "version": "15.0.1.0.0",
     "author": "NWPL",
     "category": "Podiatry",
-    'sequence': 1,
+    "sequence": 1,
     "website": "https://www.nwpodiatric.com",
     "license": "LGPL-3",
     "depends": [
@@ -60,19 +60,17 @@
         "views/pod_patient.xml",
         "views/pod_flag_views.xml",
         "views/pod_flag_category_views.xml",
-        "views/res_config_settings_views.xml",
+        # "views/res_config_settings_views.xml",
         # "templates/assets.xml",
     ],
     'assets': {
         'web.assets_backend': [
+            'pod_base/static/src/css/custom.css',
             'pod_base/static/src/scss/main.scss',
             'pod_base/static/src/js/one2many_field.js',
         ],
-        
-        'web.assets_backend': [
-            'pod_base/static/src/css/custom.css',
-        ],
     },
+    "images": ["pod_base/static/description/icon.png"],
     "demo": ["demo/pod_demo.xml"],
     "application": True,
     "installable": True,

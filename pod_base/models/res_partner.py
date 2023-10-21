@@ -29,7 +29,8 @@ class Partner(models.Model):
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
     patient_ids = fields.One2many("pod.patient", inverse_name="partner_id")
-        
+    # internal_code = fields.Char('Internal Code', copy=False)
+    
     # Role Methods
     @api.depends('is_practitioner', 'practitioner_role_ids')
     def _compute_is_role_required(self):
@@ -116,30 +117,77 @@ class Partner(models.Model):
             else:
                 record.practitioner_text = _("(%s Practitioners)" % record.practitioner_count)
 
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get('internal_code'):
+    #             vals['internal_code'] = self.env['ir.sequence'].next_by_code('partner.internal.code')
+    #     return super().create(vals)
 
-    @api.model
-    def _get_pod_identifiers(self):
-        """
-        It must return a list of triads of check field, identifier field and
-        defintion function
-        :return: list
-        """
-        return []
-
+    # _sql_constraints = {
+    #     ('internal_code_uniq', 'unique(internal_code)',
+    #         'Internal Code must be unique!')
+    # }
     @api.model_create_multi
     def create(self, vals_list):
-        partners = super().create(vals_list)
+        partners = super(Partner, self).create(vals_list)
         for partner in partners:
+            if partner.is_company:
+                partner.ref = self.env['ir.sequence'].next_by_code('pod.practice') or '/'
+            elif partner.is_location and partner.parent_id:
+                parent_ref = partner.parent_id.ref
+                location_number = self.env['res.partner'].search_count([
+                    ('parent_id', '=', partner.parent_id.id),
+                    ('is_location', '=', True)
+                ])
+                partner.ref = f"{parent_ref}-{location_number}"
+            elif partner.is_practitioner:
+                partner.ref = self.env['ir.sequence'].next_by_code('pod.practitioner') or '/'
             if partner.is_pod or partner.patient_ids:
                 partner.check_pod("create")
         return partners
 
     def write(self, vals):
-        result = super().write(vals)
+        if 'parent_id' in vals or 'is_location' in vals:
+            for partner in self:
+                new_parent_id = vals.get('parent_id', partner.parent_id.id)
+                new_is_location = vals.get('is_location', partner.is_location)
+                if new_is_location and new_parent_id:
+                    parent_ref = self.browse(new_parent_id).ref
+                    if parent_ref:
+                        suffix = 1
+                        while self.search([('ref', '=', f"{parent_ref}-{suffix}")]):
+                            suffix += 1
+                        vals['ref'] = f"{parent_ref}-{suffix}"
+        
+        result = super(Partner, self).write(vals)
         for partner in self:
             if partner.is_pod or partner.patient_ids:
                 partner.check_pod("write")
+                
         return result
+
+    @api.model
+    def load(self, fields, data):
+        ref_index = fields.index('ref')
+        is_company_index = fields.index('is_company')
+        is_location_index = fields.index('is_location')
+        is_practitioner_index = fields.index('is_practitioner')
+        parent_id_index = fields.index('parent_id')
+        for record in data:
+            if record[is_company_index] == '1':
+                record[ref_index] = self.env['ir.sequence'].next_by_code('pod.practice') or '/'
+            elif record[is_location_index] == '1':
+                parent_ref = self.browse(record[parent_id_index]).ref
+                location_number = self.env['res.partner'].search_count([
+                    ('parent_id', '=', record[parent_id_index]),
+                    ('is_location', '=', True)
+                ]) + 1
+                record[ref_index] = f"{parent_ref}-{location_number}"
+            elif record[is_practitioner_index] == '1':
+                record[ref_index] = self.env['ir.sequence'].next_by_code('pod.practitioner') or '/'
+        return super(Partner, self).load(fields, data)
+
 
     def unlink(self):
         for partner in self:

@@ -55,11 +55,13 @@
                         <field name="commercial_partner_id" invisible="1" />
                         <field name="company_type" widget="radio" class="oe_edit_only" options="{'horizontal': true}" invisible="1" />
                         <h1>
-                            <field name="internal_identifier" />
                             <field name="name" default_focus="1" placeholder="Patient Name" attrs="{'required' : [('type', '=', 'contact')]}" />
                             <field name="is_company" invisible="True" />
                             <field name="parent_id" invisible="True" />
                         </h1>
+                        <h2>
+                            <field name="internal_identifier" />
+                        </h2>
                         <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                             <field name="parent_id" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True}" />
                             <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}" />
