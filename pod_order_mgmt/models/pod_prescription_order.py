@@ -19,6 +19,12 @@ class Prescription(models.Model):
         default=lambda self: self.env.company, 
         store=True
         )
+    
+    # partner_id = fields.Many2one(
+    #     'res.partner', string='Customer', readonly=True,
+    #     states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+    #     index=True, 
+    #     tracking=1)
 
     practice_id = fields.Many2one(
         'res.partner', 

@@ -10,15 +10,23 @@ from datetime import date,datetime
 from dateutil.relativedelta import relativedelta
 
 class Partner(models.Model):
-    _inherit = ["multi.company.abstract", "res.partner"]
-    _name = 'res.partner'
+    _inherit = "res.partner"
+    # _inherit = ["multi.company.abstract", "res.partner"]
+    
+    # channel_ids = fields.Many2many(
+    #     'your.other.model',  
+    #     relation='unique_relation_table_name', 
+    #     column1='partner_id',
+    #     column2='other_model_id',
+    #     string='Channels'
+    # )
 
     prescription_order_lines = fields.One2many('pod.prescription.order.line', 'prescription_order_id', 'Prescription Line')
-
+    prescription_order_count = fields.Integer(string='Prescription Count', compute='_compute_prescription_order_count')
     prescription_order_ids = fields.One2many(
         "pod.prescription.order",
-        "practice_id",
-        string="Practice Prescriptions",
+        "partner_id",
+        string="Prescriptions",
         domain=[("active", "=", True)],
     )
     
@@ -46,25 +54,19 @@ class Partner(models.Model):
         states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
 
-    # prescription_count = fields.Integer(compute='get_prescription_count')
+    @api.depends('prescription_order_ids')
+    def _compute_prescription_order_count(self):
+        for partner in self:
+            partner.prescription_order_count = len(partner.prescription_order_ids)
 
-    # def open_partner_prescriptions(self):
-    #     for records in self:
-    #         return {
-    #             'name':_('Prescriptions'),
-    #             'view_type': 'form',
-    #             'domain': [('partner_id', '=',records.id)],
-    #             'res_model': 'pod.prescription.order',
-    #             'view_id': False,
-    #             'view_mode':'tree,form',
-    #             'context':{'default_partner_id':self.id},
-    #             'type': 'ir.actions.act_window',
-    #         }
-
-    # def get_prescription_count(self):
-    #     for records in self:
-    #         count = self.env['pod.prescription.order'].search_count([('partner_id','=',records.id)])
-    #         records.prescription_count = count
-    
-
-
+    def action_view_prescription_orders(self):
+        self.ensure_one()
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'view_mode': 'kanban,tree,form',
+            'res_model': 'pod.prescription.order',
+            'domain': [('id', 'in', self.prescription_order_ids.ids)],  
+            'context': {'default_partner_id': self.id},
+        }
+        return action

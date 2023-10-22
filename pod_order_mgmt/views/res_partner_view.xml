@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- <record id="view_res_partner_form_inherit_pod" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.pod</field>
+    <record id="res_partner_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="pod_base.res_partner_view_form"/>
         <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button name="open_partner_prescriptions" class="oe_stat_button" type="object" icon="fa-file-prescription">
-                    <field string="Prescription" name="prescription_count" widget="statinfo"/>
-                </button>
-            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="patient_ids" invisible="1"/>
-                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
-                    <field name="patient_count" string="Patients" widget="statinfo"/>
+                <field name="prescription_order_ids" invisible="1"/>
+                <button type="object" name="action_view_prescription_orders" class="oe_stat_button" icon="fa-file-prescription">
+                    <div class="o_stat_info">
+                        <field name="prescription_order_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Prescriptions</span>
+                    </div>
                 </button>
             </xpath>
         </field>
-    </record> -->
+    </record>
 
     <!-- Search -->
     <record id="view_res_partner_search_inherit_pod" model="ir.ui.view">

@@ -32,6 +32,23 @@
         </field>
     </record>
 
+    <!-- <record id="action_prescriptions_window" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">pod.prescription.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_practitioner_filter"/>
+        <field name="domain">[("is_company", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                    Create a new contact
+            </p>
+            <p>
+                    Organize and manage contacts at a glance.
+            </p>
+        </field>
+    </record> -->
+
+
  
 
     <!-- View Extensions -->
@@ -109,7 +126,6 @@
                                     </div>
                                     <div class="o_secondary">
                                         <field name="ref"/>
-                                        <!-- <field name="parent_id" groups="base.group_multi_company"/> -->
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section" t-if="!selection_mode">
@@ -152,7 +168,102 @@
             </kanban>
         </field>
     </record>
+<!-- 
+    <record id="helpdesk_team_view_kanban" model="ir.ui.view" >
+        <field name="name">helpdesk.team.dashboard</field>
+        <field name="model">helpdesk.team</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_helpdesk_kanban" group_create="0" create="0" js_class="helpdesk_dashboard">
+                <field name="id"/>
+                <field name="ref"/>
+                <field name="color"/>
+                <field name="display_name"/>
+                <field name="title"/>
+                <field name="email"/>
+                <field name="company_id"/>
+                <field name="parent_id"/>
+                <field name="is_company"/>
+                <field name="is_location"/>
+                <field name="is_parent_practice"/>
+                <field name="is_practitioner"/>
+                <field name="location_count"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="avatar_128"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <span class="oe_kanban_color_help" t-attf-title="In #{kanban_getcolorname(record.color.raw_value)}" role="img" t-attf-aria-label="In #{kanban_getcolorname(record.color.raw_value)}"/>
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="name"/></div>
+                                    <small t-if="record.use_alias.value and record.alias_name.value and record.alias_domain.value"><i class="fa fa-envelope-o" title="Domain alias" role="img" aria-label="Domain alias"></i>&amp;nbsp; <t t-esc="record.alias_id.value"/></small>
+                                </div>
+                                <div class="o_kanban_manage_button_section" t-if="!selection_mode" groups="helpdesk.group_helpdesk_manager">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_primary_left">
+                                        <button class="btn btn-primary o_helpdesk_ticket_btn" name="action_view_ticket" type="object">Tickets</button>
+                                    </div>
+                                    <div class="col-6 o_kanban_primary_right">
+                                        <div class="mb4" groups="helpdesk.group_use_sla" attrs="{'invisible': [('use_sla', '=', False)]}">
+                                            <a name="%(helpdesk.action_upcoming_sla_fail_all_tickets)d" type="action"  context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.upcoming_sla_fail_tickets.raw_value"/> SLA Issues</a>
+                                        </div>
+                                        <div class="mb4">
+                                            <a name="%(helpdesk.helpdesk_ticket_action_unassigned)d" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.unassigned_tickets.raw_value"/> Unassigned Tickets</a>
+                                        </div>
+                                        <div class="mb4" t-if="record.use_rating.raw_value">
+                                            <a name="action_view_all_rating" type="object">See Customer Satisfaction</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
 
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                    <div role="menuitem" aria-haspopup="true" class="col-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
+                                    <div role="menuitem" class="col-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_kanban_view" model="ir.ui.view">
+        <field name="name">helpdesk.team.kanban.view</field>
+        <field name="model">helpdesk.team</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="class">oe_background_grey o_kanban_dashboard</attribute>
+                <attribute name="js_class"></attribute>
+                <attribute name="create">1</attribute>
+             </xpath>
+        </field>
+    </record>
+ -->
+
+ 
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
@@ -424,7 +535,5 @@
             </p>
         </field>
     </record>
-
-
 
 </odoo>
