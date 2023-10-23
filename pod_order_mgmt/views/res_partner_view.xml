@@ -32,7 +32,6 @@
                         </span>
                     </div>
                 </button>
-
                 <!-- Button to view practitioner prescriptions with a count -->
                 <button name="action_open_practitioner_prescriptions" type="object" class="oe_stat_button" icon="fa-user-md" attrs="{'invisible': [('is_practitioner', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
@@ -42,6 +41,24 @@
                     </div>
                 </button>
             </xpath>
+             <!-- Page for prescriptions list -->
+             <xpath expr='//page[@name="sales_purchases"]' position="before">
+                <page name="practice_perscriptions_list" string="Prescriptions" attrs="{'invisible': [('is_company', '=', False)]}">
+                    <separator name="prescriptions" string="Prescriptions"/>
+                    <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practice_prescription_orders', '!=', ())]}">
+                        No Prescriptions Available
+                    </div>
+                    <field name="practice_prescription_orders" mode="kanban"/>
+                </page>
+                <page name="practitioner_perscriptions_list" string="Prescriptions" attrs="{'invisible': [('is_practitioner', '=', False)]}">
+                    <separator name="prescriptions" string="Prescriptions"/>
+                    <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practitioner_prescription_orders', '!=', ())]}">
+                        No Prescriptions Available
+                    </div>
+                    <field name="practitioner_prescription_orders" mode="kanban"/>
+                </page>
+            </xpath>
+
         </field>
     </record>
 

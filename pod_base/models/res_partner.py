@@ -48,7 +48,8 @@ class Partner(models.Model):
         for record in self:
             if record.is_practitioner and not record.practitioner_role_ids:
                 raise ValidationError(_("Roles are required for practitioners."))
-        
+    
+    # Compute Methods
     @api.depends('parent_id', 'is_company', 'active')
     def _compute_locations(self):
         for record in self:
@@ -57,14 +58,14 @@ class Partner(models.Model):
                 all_locations = self.env['res.partner'].search([
                     ('id', 'child_of', record.id), 
                     ("is_company", "=", True), 
+                    ("patient_ids", "=", False),  # Exclude records that have associated patients
                     ("active", "=", True)
                 ])
                 record.location_ids = all_locations - record
             else:
                 record.location_ids = self.env['res.partner']  # Empty recordset
-                
+   
 
-    # Compute Methods
     @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
     def _compute_practitioners(self):
         for record in self:
@@ -74,11 +75,12 @@ class Partner(models.Model):
                     ('id', 'child_of', record.id), 
                     ("is_company", "=", False),
                     ("is_practitioner", "=", True),  
+                    ("patient_ids", "=", False),  # Exclude records that have associated patients
                     ("active", "=", True)
                 ])
                 record.child_ids = all_practitioners
             else:
-                record.child_ids = self.env['res.partner']  # Empty recordset
+                record.child_ids = self.env['res.partner']  # Empty recordset 
           
     @api.depends('child_ids', 'child_ids.is_company')
     def _compute_location_and_practitioner_counts(self):
