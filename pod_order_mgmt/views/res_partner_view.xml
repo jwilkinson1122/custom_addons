@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- <record id="view_res_partner_form_inherit_pod" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.pod</field>
+    <!-- <record id="action_contacts_window" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[("is_company", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                    Create a new contact
+            </p>
+            <p>
+                    Organize and manage contacts at a glance.
+            </p>
+        </field>
+    </record> -->
+
+
+    <record id="view_res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button name="open_partner_prescriptions" class="oe_stat_button" type="object" icon="fa-file-prescription">
-                    <field string="Prescription" name="prescription_count" widget="statinfo"/>
+                <!-- Button to view practice prescriptions with a count -->
+                <button name="action_open_practice_prescriptions" type="object" class="oe_stat_button" icon="fa-file-prescription" attrs="{'invisible': [('is_company', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="prescription_order_count" widget="statinfo" string="Prescriptions"/>
+                        </span>
+                    </div>
                 </button>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="patient_ids" invisible="1"/>
-                <button type="action" name="%(action_pod_patients_from_partner)d" class="oe_stat_button" icon="fa-user" attrs="{'invisible' : [('patient_ids', '=', [])]}">
-                    <field name="patient_count" string="Patients" widget="statinfo"/>
-                </button>
-            </xpath>
-        </field>
-    </record> -->
 
-    <!-- Search -->
-    <record id="view_res_partner_search_inherit_pod" model="ir.ui.view">
-        <field name="name">res.partner.search.inherit.pod</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='inactive']" position="before">
-                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
-                <separator/>
+                <!-- Button to view practitioner prescriptions with a count -->
+                <button name="action_open_practitioner_prescriptions" type="object" class="oe_stat_button" icon="fa-user-md" attrs="{'invisible': [('is_practitioner', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="prescription_order_count" widget="statinfo" string="Prescriptions"/>
+                        </span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>
 
-    <!-- Action > TODO: Add integration with the Contacts module -->
-    <record id="action_res_partner_patients" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="context">{'search_default_is_patient': True}</field>
-    </record>
+
+
 
     <!-- <menuitem id="menu_res_partners" name="Contacts" action="action_res_partner_patients" parent="pod_order_management.menu_configuration_root" sequence="20"/> -->
 

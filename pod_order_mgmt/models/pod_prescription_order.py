@@ -131,21 +131,21 @@ class Prescription(models.Model):
         for prescription in self:
             prescription.num_prescription_items = len(prescription.prescription_order_lines)
              
-    @api.constrains('company_id', 'practitioner_id', 'patient_id')
-    def _check_company_practitioner_patient(self):
-        for record in self:
-            if record.practitioner_id and record.company_id and record.practitioner_id.company_id != record.company_id:
-                raise ValidationError('Practitioner does not belong to the selected company.')
-            if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
-                raise ValidationError('Patient does not belong to the selected practitioner.') 
+    # @api.constrains('company_id', 'practitioner_id', 'patient_id')
+    # def _check_company_practitioner_patient(self):
+    #     for record in self:
+    #         if record.practitioner_id and record.company_id and record.practitioner_id.company_id != record.company_id:
+    #             raise ValidationError('Practitioner does not belong to the selected company.')
+    #         if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
+    #             raise ValidationError('Patient does not belong to the selected practitioner.') 
             
     # @api.constrains('practice_id', 'practitioner_id', 'patient_id')
     # def _check_practice_practitioner_patient(self):
     #     for record in self:
-    #         if record.practitioner_id and record.practice_id and record.practitioner_id.practice_id != record.company_id:
+    #         if record.practitioner_id and record.practice_id and record.practitioner_id.practice_id != record.practice_id:
     #             raise ValidationError('Practitioner does not belong to the selected practice.')
     #         if record.patient_id and record.practitioner_id and record.patient_id.practitioner_id != record.practitioner_id:
-    #             raise ValidationError('Patient does not belong to the selected practitioner.') 
+    #             raise ValidationError('Patient does not belong to the selected practitioner.')
             
     @api.onchange('partner_id')
     def onchange_set_domain_practitioner_id(self):

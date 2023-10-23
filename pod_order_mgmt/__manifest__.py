@@ -57,7 +57,7 @@
         'report/pod_prescription_order_report.xml',
         'report/sale_order_report.xml',
         # 'views/res_company_view.xml',
-        # 'views/res_partner_view.xml',
+        'views/res_partner_view.xml',
         'views/res_config_settings_view.xml',
     ],
     "assets": {

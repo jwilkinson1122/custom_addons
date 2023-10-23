@@ -29,6 +29,7 @@ class Partner(models.Model):
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
     patient_ids = fields.One2many("pod.patient", inverse_name="partner_id")
+    
         
     # Role Methods
     @api.depends('is_practitioner', 'practitioner_role_ids')
