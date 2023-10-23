@@ -78,8 +78,7 @@ class Partner(models.Model):
                 record.child_ids = all_practitioners
             else:
                 record.child_ids = self.env['res.partner']  # Empty recordset
-  
-  
+          
     @api.depends('child_ids', 'child_ids.is_company')
     def _compute_location_and_practitioner_counts(self):
         for record in self:
@@ -90,11 +89,13 @@ class Partner(models.Model):
                 locations = all_partners.filtered(lambda p: p.is_company)
                 record.location_count = len(locations)
 
-                practitioners = all_partners.filtered(lambda p: not p.is_company)
+                # Adjusting the domain to exclude records related to patients
+                practitioners = all_partners.filtered(lambda p: not p.is_company and not p.patient_ids)
                 record.practitioner_count = len(practitioners)
             else:
                 record.location_count = 0
                 record.practitioner_count = 0
+
                 
     @api.depends('location_count')
     def _compute_location_text(self):
