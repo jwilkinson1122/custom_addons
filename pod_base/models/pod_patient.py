@@ -15,17 +15,13 @@ class PodiatryPatient(models.Model):
     _inherit = ["pod.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 
-    partner_id = fields.Many2one(
-        "res.partner", required=True, ondelete="restrict"
-    )
+    partner_id = fields.Many2one("res.partner", required=True, ondelete="restrict")
     
-    # practice_id = fields.Many2one(
-    #     'res.partner', 
-    #     required=True, 
-    #     index=True, 
-    #     domain=[('is_company','=',True)], 
-    #     string="Practice"
-    #     )
+    practice_id = fields.Many2one(
+        string="Practice",
+        comodel_name="res.partner",
+        domain=[("is_practice", "=", True)],
+    )
 
     practitioner_id = fields.Many2one(
         string="Primary Practitioner",

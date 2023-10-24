@@ -29,8 +29,123 @@ class Partner(models.Model):
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
     patient_ids = fields.One2many("pod.patient", inverse_name="partner_id")
+    patient_count = fields.Integer(string='Patient Count', compute='_compute_patient_counts')
+    patient_records = fields.One2many('pod.patient', compute='_compute_patient_records', string="Patients")
+    patient_text = fields.Char(compute="_compute_patient_text")
     
+    # Compute Methods
+    @api.depends('parent_id', 'is_company', 'active')
+    def _compute_locations(self):
+        for record in self:
+            # Check if the record has a proper ID
+            if not isinstance(record.id, models.NewId):
+                all_locations = self.env['res.partner'].search([
+                    ('id', 'child_of', record.id), 
+                    ("is_company", "=", True), 
+                    ("patient_ids", "=", False),  # Exclude records that have associated patients
+                    ("active", "=", True)
+                ])
+                record.location_ids = all_locations - record
+            else:
+                record.location_ids = self.env['res.partner']  # Empty recordset
+  
+    @api.depends('location_count')
+    def _compute_location_text(self):
+        for record in self:
+            if not record.location_count:
+                record.location_text = False
+            elif record.location_count == 1:
+                record.location_text = _("(1 Location)")
+            else:
+                record.location_text = _("(%s Locations)" % record.location_count)
+
+    @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
+    def _compute_practitioners(self):
+        for record in self:
+            # Check if the record has a proper ID
+            if not isinstance(record.id, models.NewId):
+                all_practitioners = self.env['res.partner'].search([
+                    ('id', 'child_of', record.id), 
+                    ("is_company", "=", False),
+                    ("is_practitioner", "=", True),  
+                    ("patient_ids", "=", False),  # Exclude records that have associated patients
+                    ("active", "=", True)
+                ])
+                record.child_ids = all_practitioners
+            else:
+                record.child_ids = self.env['res.partner']  # Empty recordset 
         
+    @api.depends('practitioner_count')
+    def _compute_practitioner_text(self):
+        for record in self:
+            if not record.practitioner_count:
+                record.practitioner_text = False
+            elif record.practitioner_count == 1:
+                record.practitioner_text = _("(1 Practitioner)")
+            else:
+                record.practitioner_text = _("(%s Practitioners)" % record.practitioner_count)
+      
+    @api.depends('child_ids', 'child_ids.is_company')
+    def _compute_location_and_practitioner_counts(self):
+        for record in self:
+            if not isinstance(record.id, models.NewId):
+                all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
+                all_partners -= record
+
+                locations = all_partners.filtered(lambda p: p.is_company)
+                record.location_count = len(locations)
+
+                # Adjusting the domain to exclude records related to patients
+                practitioners = all_partners.filtered(lambda p: not p.is_company and not p.patient_ids)
+                record.practitioner_count = len(practitioners)
+            else:
+                record.location_count = 0
+                record.practitioner_count = 0
+    
+    @api.depends('child_ids', 'child_ids.patient_ids')
+    def _compute_patient_counts(self):
+        for record in self:
+            if record.is_practitioner or record.is_company:
+                all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
+                all_partners -= record
+                patients = all_partners.mapped('patient_ids')
+                record.patient_count = len(patients)
+            else:
+                record.patient_count = 0
+                
+    @api.depends('child_ids', 'child_ids.patient_ids')
+    def _compute_patient_records(self):
+        for record in self:
+            if record.is_practitioner or record.is_company:
+                all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
+                all_partners -= record
+            
+                record.patient_records = all_partners.mapped('patient_ids')
+            else:
+                record.patient_records = self.env['pod.patient']  
+
+    # def action_show_patients(self):
+    #         self.ensure_one()
+    #         action = {
+    #             'name': _('Patients'),
+    #             'type': 'ir.actions.act_window',
+    #             'res_model': 'pod.patient',  
+    #             'view_mode': 'tree,form',
+    #             'domain': [('partner_id', '=', self.id)],
+    #             'context': {'default_partner_id': self.id},
+    #         }
+    #         return action
+        
+    @api.depends('patient_count')
+    def _compute_patient_text(self):
+        for record in self:
+            if not record.patient_count:
+                record.patient_text = False
+            elif record.patient_count == 1:
+                record.patient_text = _("(1 Patient)")
+            else:
+                record.patient_text = _("(%s Patients)" % record.patient_count)
+
     # Role Methods
     @api.depends('is_practitioner', 'practitioner_role_ids')
     def _compute_is_role_required(self):
@@ -49,78 +164,6 @@ class Partner(models.Model):
             if record.is_practitioner and not record.practitioner_role_ids:
                 raise ValidationError(_("Roles are required for practitioners."))
     
-    # Compute Methods
-    @api.depends('parent_id', 'is_company', 'active')
-    def _compute_locations(self):
-        for record in self:
-            # Check if the record has a proper ID
-            if not isinstance(record.id, models.NewId):
-                all_locations = self.env['res.partner'].search([
-                    ('id', 'child_of', record.id), 
-                    ("is_company", "=", True), 
-                    ("patient_ids", "=", False),  # Exclude records that have associated patients
-                    ("active", "=", True)
-                ])
-                record.location_ids = all_locations - record
-            else:
-                record.location_ids = self.env['res.partner']  # Empty recordset
-   
-
-    @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
-    def _compute_practitioners(self):
-        for record in self:
-            # Check if the record has a proper ID
-            if not isinstance(record.id, models.NewId):
-                all_practitioners = self.env['res.partner'].search([
-                    ('id', 'child_of', record.id), 
-                    ("is_company", "=", False),
-                    ("is_practitioner", "=", True),  
-                    ("patient_ids", "=", False),  # Exclude records that have associated patients
-                    ("active", "=", True)
-                ])
-                record.child_ids = all_practitioners
-            else:
-                record.child_ids = self.env['res.partner']  # Empty recordset 
-          
-    @api.depends('child_ids', 'child_ids.is_company')
-    def _compute_location_and_practitioner_counts(self):
-        for record in self:
-            if not isinstance(record.id, models.NewId):
-                all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
-                all_partners -= record
-
-                locations = all_partners.filtered(lambda p: p.is_company)
-                record.location_count = len(locations)
-
-                # Adjusting the domain to exclude records related to patients
-                practitioners = all_partners.filtered(lambda p: not p.is_company and not p.patient_ids)
-                record.practitioner_count = len(practitioners)
-            else:
-                record.location_count = 0
-                record.practitioner_count = 0
-
-                
-    @api.depends('location_count')
-    def _compute_location_text(self):
-        for record in self:
-            if not record.location_count:
-                record.location_text = False
-            elif record.location_count == 1:
-                record.location_text = _("(1 Location)")
-            else:
-                record.location_text = _("(%s Locations)" % record.location_count)
-
-    @api.depends('practitioner_count')
-    def _compute_practitioner_text(self):
-        for record in self:
-            if not record.practitioner_count:
-                record.practitioner_text = False
-            elif record.practitioner_count == 1:
-                record.practitioner_text = _("(1 Practitioner)")
-            else:
-                record.practitioner_text = _("(%s Practitioners)" % record.practitioner_count)
-
-
     @api.model
     def _get_pod_identifiers(self):
         """

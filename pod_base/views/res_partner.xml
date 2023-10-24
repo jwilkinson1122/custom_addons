@@ -30,6 +30,7 @@
             </p>
         </field>
     </record>
+ 
 
     <!-- View Extensions -->
     <record id="view_res_partner_kanban_inherit" model="ir.ui.view">
@@ -112,7 +113,7 @@
             </xpath>
 
             <!-- button_box adjustments -->
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <!-- <xpath expr="//div[@name='button_box']" position="inside">
                 <button type="action" name="%(action_locations_window)d" class="oe_stat_button" icon="fa-sitemap" attrs="{'invisible': [('location_count', '=', 0)]}">
                     <field name="location_count" widget="statinfo" string="Locations" />
                     <field name='location_ids' invisible="1" />
@@ -121,15 +122,7 @@
                     <field name="practitioner_count" widget="statinfo" string="Contacts" />
                     <field name='child_ids' invisible="1" />
                 </button>
-                <!-- <button type="object" name="action_view_practice_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_company', '=', False)]}">
-                    <field name="practice_flag_count" widget="statinfo" string="Flags" />
-                    <field name='practice_flag_ids' invisible="1" />
-                </button>
-                <button type="object" name="action_view_practitioner_flags" class="oe_stat_button" icon="fa-flag" attrs="{'invisible': [('is_practitioner', '=', False)]}">
-                    <field name="practitioner_flag_count" widget="statinfo" string="Flags" />
-                    <field name='practitioner_flag_ids' invisible="1" />
-                </button> -->
-            </xpath>
+            </xpath> -->
 
             <!-- Address Types adjustments -->
             <xpath expr="//span[@name='address_name']" position="replace">
@@ -235,12 +228,12 @@
 
             <!-- Page for patients list -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
-                <page name="patients_list" string="Patient List">
+                <page name="patients_list" string="Patients">
                     <separator name="patients" string="Patients"/>
-                    <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_ids', '!=', ())]}">
+                    <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_records', '!=', ())]}">
                         No Patients Available
                     </div>
-                    <field name="patient_ids" mode="kanban"/>
+                    <field name="patient_records" mode="kanban"/>
                 </page>
             </xpath>
 

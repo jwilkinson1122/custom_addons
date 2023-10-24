@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- <record id="action_contacts_window" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_company", "=", False), ('parent_id', 'child_of', active_id)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                    Create a new contact
-            </p>
-            <p>
-                    Organize and manage contacts at a glance.
-            </p>
-        </field>
-    </record> -->
-
-
     <record id="view_res_partner_form_inherit" model="ir.ui.view">
         <field name="name">res.partner.form.inherit</field>
         <field name="model">res.partner</field>
@@ -24,25 +8,18 @@
         <field name="groups_id" eval="[(4, ref('pod_base.group_pod_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <!-- Button to view practice prescriptions with a count -->
-                <button name="action_open_practice_prescriptions" type="object" class="oe_stat_button" icon="fa-file-prescription" attrs="{'invisible': [('is_company', '=', False)]}">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="prescription_order_count" widget="statinfo" string="Prescriptions"/>
-                        </span>
-                    </div>
-                </button>
                 <!-- Button to view practitioner prescriptions with a count -->
-                <button name="action_open_practitioner_prescriptions" type="object" class="oe_stat_button" icon="fa-user-md" attrs="{'invisible': [('is_practitioner', '=', False)]}">
+                <button name="action_open_practice_prescriptions" type="object" class="oe_stat_button" icon="fa-prescription" attrs="{'invisible': [('is_company', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="prescription_order_count" widget="statinfo" string="Prescriptions"/>
+                            <field name="prescription_order_count"/>
                         </span>
+                        <span class="o_stat_text">Prescriptions</span>
                     </div>
                 </button>
             </xpath>
-             <!-- Page for prescriptions list -->
-             <xpath expr='//page[@name="sales_purchases"]' position="before">
+            <!-- Page for prescriptions list -->
+            <xpath expr='//page[@name="sales_purchases"]' position="before">
                 <page name="practice_perscriptions_list" string="Prescriptions" attrs="{'invisible': [('is_company', '=', False)]}">
                     <separator name="prescriptions" string="Prescriptions"/>
                     <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('practice_prescription_orders', '!=', ())]}">
@@ -58,6 +35,8 @@
                     <field name="practitioner_prescription_orders" mode="kanban"/>
                 </page>
             </xpath>
+
+
 
         </field>
     </record>

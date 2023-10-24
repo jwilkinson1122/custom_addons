@@ -38,18 +38,16 @@ class Partner(models.Model):
         index=True, 
         states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
-
+    
     practice_prescription_orders = fields.One2many(
         "pod.prescription.order",
         "practice_id",
-        string="Practice Prescriptions",
         domain=[("active", "=", True)],
     )
     
     practitioner_prescription_orders = fields.One2many(
         "pod.prescription.order",
         "practitioner_id",
-        string="Practitioner Prescriptions",
         domain=[("active", "=", True)],
     )
     
