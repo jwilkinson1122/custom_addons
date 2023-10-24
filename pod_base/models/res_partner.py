@@ -102,9 +102,15 @@ class Partner(models.Model):
                 record.location_count = 0
                 record.practitioner_count = 0
     
+   
+
     @api.depends('child_ids', 'child_ids.patient_ids')
     def _compute_patient_counts(self):
         for record in self:
+            if isinstance(record.id, models.NewId):
+                record.patient_count = 0  # Assigning a default value for new records
+                continue
+
             if record.is_practitioner or record.is_company:
                 all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
                 all_partners -= record
@@ -112,17 +118,20 @@ class Partner(models.Model):
                 record.patient_count = len(patients)
             else:
                 record.patient_count = 0
-                
+
     @api.depends('child_ids', 'child_ids.patient_ids')
     def _compute_patient_records(self):
         for record in self:
+            if isinstance(record.id, models.NewId):
+                record.patient_records = self.env['pod.patient']  # Assigning a default value for new records
+                continue
+
             if record.is_practitioner or record.is_company:
                 all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
                 all_partners -= record
-            
                 record.patient_records = all_partners.mapped('patient_ids')
             else:
-                record.patient_records = self.env['pod.patient']  
+                record.patient_records = self.env['pod.patient']
 
     # def action_show_patients(self):
     #         self.ensure_one()
