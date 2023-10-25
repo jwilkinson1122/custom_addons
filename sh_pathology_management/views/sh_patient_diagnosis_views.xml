@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_patho_request_line_detail_form" model="ir.ui.view">
+        <field name="name">sh.request.line.detail.form</field>
+        <field name="model">sh.patho.request.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state_type" widget="statusbar" statusbar_visible="draft,sample_received,processing,done" options="{'clickable': '1'}" />
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                            <field name="product_id" readonly="1" />
+                            <field name="technician_id" readonly="1" />
+                            <field name="patho_request_id" readonly="1" />
+                            <field name="user_id" invisible="1" />
+                            <field name="appointment_date" />
+                        </group>
+                        <group></group>
+                    </group>
+
+                    <group string="Lab Center">
+                        <group>
+                            <field name="collection_center_id" />
+                        </group>
+
+                        <group>
+                            <field name="laboratory_center_id" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="test_parameters" string="Test Parameters" sequence="1">
+                            <field name="test_parameters_line" nolabel="1">
+                                <tree editable="bottom" delete="false">
+                                    <field name="sequence" widget="handle" optional="show" />
+                                    <field name="name" required="1" optional="show" readonly="1" />
+                                    <field name="min_value" optional="show" readonly="1" />
+                                    <field name="max_value" optional="show" readonly="1" />
+                                    <field name="normal_value" optional="show" readonly="1" />
+                                    <field name="unit_id" optional="show" readonly="1" />
+                                    <field name="patient_value" optional="show" decoration-success="patient_value >= min_value and max_value >= patient_value" decoration-danger="patient_value &lt; min_value or patient_value > max_value" />
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page name="test_description" string="Test Description" sequence="2">
+                            <field name="desc" placeholder="Test Description"/>
+                        </page>
+
+                        <page name="description" string="Report Description" sequence="3">
+                            <field name="report_description" placeholder="Report Description" />
+                        </page>
+
+                        <page name="patient_details" string="Patient Details" sequence="4">
+                            <group>
+                                <group>
+                                    <field name="patient_details_id" />
+                                </group>
+                                <group></group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_patho_request_line_detail_tree" model="ir.ui.view">
+        <field name="name">sh.request.line.detail.tree</field>
+        <field name="model">sh.patho.request.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" optional="show" />
+                <field name="currency_id" invisible="1" />
+                <field name="product_id" optional="show" />
+                <field name="technician_id" optional="show" />
+                <field name="patient_details_id" optional="show" />
+                <field name="collection_center_id" optional="show" />
+                <field name="laboratory_center_id" optional="show" />
+                <field name="state_type" decoration-success="state_type == 'done'" decoration-info="state_type == 'sample_received'" decoration-primary="state_type == 'processing'" widget="badge" optional="show" />
+                <field name="price_total" optional="hide" widget="monetary" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sh_request_line_detail_activity" model="ir.ui.view">
+        <field name="name">Request Line Activity</field>
+        <field name="model">sh.patho.request.line</field>
+        <field name="arch" type="xml">
+            <activity string="">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" display="full" />
+                            <field name="patient_details_id" muted="1" display="full" />
+                            <field name="product_id" muted="1" display="full" />
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="sh_patho_request_line_action" model="ir.actions.act_window">
+        <field name="name">Diagnosis</field>
+        <field name="res_model">sh.patho.request.line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Diagnosis</p>
+        </field>
+    </record>
+</odoo>

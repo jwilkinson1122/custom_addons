@@ -70,6 +70,23 @@ class Prescription(models.Model):
     name = fields.Char( string='Order Reference', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
     prescription = fields.Text(string="Prescription")
     prescription_order_lines = fields.One2many('pod.prescription.order.line', 'prescription_order_id', string="Products")
+    prescription_order_details_ids = fields.One2many('prescription.order.history.line', 'prescription_order_id')
+
+    @api.onchange('partner_id')
+    def prescription_order_domain(self):
+        self.write({'prescription_order_details_ids': [(5,)]})
+        new_lines = []
+        lines = self.env['pod.prescription.order.line'].search(
+            [('prescription_order_id.partner_id', '=', self.partner_id.id), ('prescription_order_id.state', 'in', ('draft', 'done'))])
+        for rec in lines:
+            new_lines.append((0, 0, {
+                'name': rec.prescription_order_id.name,
+                'product_id': rec.product_id,
+                'product_uom_qty': rec.product_uom_qty,
+                'price_unit': rec.price_unit,
+            }))
+        self.write({'prescription_order_details_ids': new_lines})
+    
     test_file = fields.Binary(string='Test')
     laterality = fields.Selection([
             ('lt_single', 'Left'),
@@ -99,9 +116,7 @@ class Prescription(models.Model):
     inv_id = fields.Many2one('account.invoice', 'Invoice')
     prior_rx = fields.Boolean('Use Prior Rx#')
     product_id = fields.Many2one('product.product', 'Name')
-    
     prescription_type = fields.Selection([('Custom', 'Custom'), ('OTC', 'OTC'), ('Brace', 'Brace')], default='Custom', Required=True)
-
     prescription_count = fields.Integer( string='Prescription Count', compute='_compute_prescription_count')
 
     def _compute_prescription_count_DISABLED(self):
@@ -189,25 +204,6 @@ class Prescription(models.Model):
             'target': 'new',
         }
 
-        
-    # def button_launch_wizard(self):
-    #     self.ensure_one()
-    #     view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
-    #     wizard = self.env['orthotic.configurator.wizard'].create({
-    #         'prescription_order_id': self.id,
-    #         'product_tmpl_id': self.product_tmpl_id.id,  
-    #     })
-    #     return {
-    #         'name': _('Orthotic Configurator'),
-    #         'type': 'ir.actions.act_window',
-    #         'view_mode': 'form',
-    #         'res_model': 'orthotic.configurator.wizard',
-    #         'view_id': view_id,
-    #         'res_id': wizard.id,
-    #         'target': 'new',
-    #     }
-
-            
     @api.model
     def _default_stage(self):
         Stage = self.env["pod.prescription.order.stage"]
@@ -500,49 +496,21 @@ class Prescription(models.Model):
     def print_pod_prescription_order_report(self):
         return self.env.ref("pod_order_management.practitioner_prescription_pod_ticket_size2").report_action(self)
 
-
-FIELDS_PROPERTIES = {
-    'pod.forefoot.value': ['ff_varus', 'ff_valgus'],
-    'pod.forefoot.correction': ['ff_varus_intrinsic', 'ff_varus_extrinsic', 'ff_valgus_intrinsic', 'ff_valgus_extrinsic'],
-    'pod.rearfoot.correction': ['rf_varus', 'rf_valgus', 'rf_neutral'],
-    'pod.orthotic.measure': ['ff_length', 'heel_depth', 'orthotic_length', 'cap_size']
-}
-
-SIDE_SUFFIXES = ['lt', 'rt']
-
-def add_dynamic_fields_to_class(cls):
-    for model, field_names in FIELDS_PROPERTIES.items():
-        for field_name in field_names:
-            for side in SIDE_SUFFIXES:
-                field_identifier = f"{field_name}_{side}"
-                # Dynamically set the field on the class
-                setattr(
-                    cls,
-                    field_identifier,
-                    fields.Many2one( comodel_name=model, string=field_identifier.replace("_", " ").title(),
-                        # relation=f"rx_{field_identifier}", ondelete='restrict', copy=True
-                    )
-                )
-
-# Add the dynamic fields to the Prescription class
-add_dynamic_fields_to_class(Prescription)
-
-
 class PrescriptionOrderLine(models.Model):
     _name = "pod.prescription.order.line"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Prescription Order Lines'
     _rec_name = 'prescription_order_id'
     
-    @api.depends('product_id')
-    def onchange_product(self):
-        for each in self:
-            if each:
-                self.qty_available = self.product_id.qty_available
-                self.price = self.product_id.lst_price
-            else:
-                self.qty_available = 0
-                self.price = 0.0
+    # @api.depends('product_id')
+    # def onchange_product(self):
+    #     for each in self:
+    #         if each:
+    #             self.qty_available = self.product_id.qty_available
+    #             self.price = self.product_id.lst_price
+    #         else:
+    #             self.qty_available = 0
+    #             self.price = 0.0
 
     name = fields.Text(string='Description')
     company_id = fields.Many2one(related='prescription_order_id.company_id', string='Company', store=True, index=True)
@@ -622,7 +590,24 @@ class PrescriptionOrderLine(models.Model):
                 line.product_updatable = False
             else:
                 line.product_updatable = True
- 
+                
+
+    @api.depends('product_id')
+    def onchange_product(self):
+        for each in self:
+            if each.product_id:
+                product_with_context = each.product_id.with_context(uom_qty_change=True)
+                each.qty_available = product_with_context.qty_available
+                each.price = product_with_context.lst_price
+
+                if product_with_context.variant_description:
+                    each.name = product_with_context.variant_description
+            else:
+                each.qty_available = 0
+                each.price = 0.0
+                each.name = "" 
+
+    
                 
     # @api.onchange("product_id")
     # def onchange_product(self):
@@ -639,6 +624,52 @@ class PrescriptionOrderLine(models.Model):
     #             record.price = 0.0
     #     return res
     
-    
+class PrescriptionOrderHistoryLine(models.Model):
+    _name = 'prescription.order.history.line'
+    _description = 'Prescription Order History Line'
+
+    prescription_order_id = fields.Many2one('pod.prescription.order', string='Prescription')
+    name = fields.Char('Prescription')
+    product_id = fields.Many2one('product.product')
+    product_uom_qty = fields.Integer('Quantity')
+    price_unit = fields.Integer('Unit price')
+    company_id = fields.Many2one('res.company',default=lambda self: self.env.company)
+
+    def action_add(self):
+        vals = {
+            'prescription_order_id': self.prescription_order_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_uom_qty,
+            'price_unit': self.price_unit,
+            'company_id':self.company_id,
+        }
+        self.env['pod.prescription.order.line'].sudo().create(vals)
+
+FIELDS_PROPERTIES = {
+    'pod.forefoot.value': ['ff_varus', 'ff_valgus'],
+    'pod.forefoot.correction': ['ff_varus_intrinsic', 'ff_varus_extrinsic', 'ff_valgus_intrinsic', 'ff_valgus_extrinsic'],
+    'pod.rearfoot.correction': ['rf_varus', 'rf_valgus', 'rf_neutral'],
+    'pod.orthotic.measure': ['ff_length', 'heel_depth', 'orthotic_length', 'cap_size']
+}
+
+SIDE_SUFFIXES = ['lt', 'rt']
+
+def add_dynamic_fields_to_class(cls):
+    for model, field_names in FIELDS_PROPERTIES.items():
+        for field_name in field_names:
+            for side in SIDE_SUFFIXES:
+                field_identifier = f"{field_name}_{side}"
+                # Dynamically set the field on the class
+                setattr(
+                    cls,
+                    field_identifier,
+                    fields.Many2one( comodel_name=model, string=field_identifier.replace("_", " ").title(),
+                        # relation=f"rx_{field_identifier}", ondelete='restrict', copy=True
+                    )
+                )
+
+# Add the dynamic fields to the Prescription class
+add_dynamic_fields_to_class(Prescription)
+   
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -170,7 +170,7 @@ class TestProductVariantConfigurator(TransactionCase):
         )
         self.assertEqual(len(tmpl.product_variant_ids), 1)
 
-    def test_update_product_tempalte(self):
+    def test_update_product_template(self):
         tmpl = self.product_template.create(
             {
                 "name": "Create variants template",

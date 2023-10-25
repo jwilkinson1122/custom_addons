@@ -1,5 +1,5 @@
 
-
+from . import base_partner_merge
 from . import pod_abstract
 from . import pod_patient
 from . import pod_role

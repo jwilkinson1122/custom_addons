@@ -21,7 +21,7 @@
             </tree>
         </field>
     </record>
-    
+
     <!-- Form View -->
     <record id="view_pod_prescription_order_form" model="ir.ui.view">
         <field name="name">pod.prescription.order.form</field>
@@ -74,10 +74,10 @@
                     </group>
 
                     <notebook>
-                        <page string="Test Prescription Lines" name="prescription_lines" autofocus="autofocus">
+                        <page string="Test RX Lines" name="prescription_lines" autofocus="autofocus">
                             <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" type="object" />
                             <group string="Product Details">
-                                <div style="max-height: 400px; overflow-y: auto;"> 
+                                <div style="max-height: 400px; overflow-y: auto;">
                                     <field name="prescription_order_lines" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                         <form>
                                             <field name="display_type" invisible="1"/>
@@ -127,7 +127,7 @@
                         <page string="Prescription Details" name="prescription_details">
                             <button name="button_launch_wizard" string="Launch Configurator" type="object" class="btn-primary"/>
                             <group string="Product Details">
-                                <div style="max-height: 400px; overflow-y: auto;"> 
+                                <div style="max-height: 400px; overflow-y: auto;">
                                     <field name="prescription_order_lines" widget="one2many_list" nolabel="1">
                                         <tree editable="bottom">
                                             <field name="state" invisible="1"/>
@@ -338,6 +338,7 @@
                             </group>
                         </page>
                         <page string="Special Instructions">
+
                         </page>
                         <!-- <page string="Casting">
                         </page>
@@ -350,6 +351,18 @@
                             <group>
                                 <field name="practitioner_id"/>
                             </group>
+                        </page> -->
+                        <!-- <page string="History">
+                            <field name="prescription_order_details_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="price_unit"/>
+                                    <button id="button_confirm" name="action_add" string="Add" class="btn-primary" type="object"/>
+                                </tree>
+                            </field>
                         </page> -->
                     </notebook>
                     <!-- <button name="prescription_report" type="object" string="Print Prescription" class="oe_highlight" />

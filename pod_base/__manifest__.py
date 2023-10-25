@@ -66,10 +66,8 @@
     'assets': {
         'web.assets_backend': [
             'pod_base/static/src/js/one2many_field.js',
-        ],
-        
-        'web.assets_backend': [
             'pod_base/static/src/css/custom.css',
+            # 'pod_base/static/src/js/partner_hierarchy.js',
         ],
     },
     "demo": ["demo/pod_demo.xml"],

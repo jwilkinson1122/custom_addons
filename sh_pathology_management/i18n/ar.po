@@ -1,0 +1,1434 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sh_pathology_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-18 05:13+0000\n"
+"PO-Revision-Date: 2021-03-18 05:13+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sh_pathology_management
+#: model:mail.template,report_name:sh_pathology_management.email_template_sh_patho_lab_request
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
+
+#. module: sh_pathology_management
+#: model:mail.template,subject:sh_pathology_management.email_template_sh_patho_lab_request
+msgid "${object.company_id.name} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} (Ref ${object.name or 'n/a' })"
+
+#. module: sh_pathology_management
+#: code:addons/sh_pathology_management/controllers/portal.py:0
+#, python-format
+msgid "%s is not the reference of a report"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.report,print_report_name:sh_pathology_management.action_report_patient
+msgid "'Appointment - %s' % (object.name)"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:mail.template,body_html:sh_pathology_management.email_template_sh_patho_lab_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello,\n"
+"                        <br/>\n"
+"                        <br/>\n"
+"                        Your Appointment <strong>${object.name}</strong> amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong> is ready. <br/>\n"
+"                        <br/>\n"
+"                        Do not hesitate to contact us if you have any questions.\n"
+"                        <br/>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid ""
+"<i class=\"fa fa-comment\"/>\n"
+"                                            Send message"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid ""
+"<i class=\"fa fa-download\"/>\n"
+"                                            Download"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid ""
+"<i class=\"fa fa-print\"/>\n"
+"                                            Print"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+msgid "<span class=\"badge badge-dark float-right mr-3\">Draft</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "<span class=\"badge badge-dark\">Draft</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+msgid ""
+"<span class=\"badge badge-info text-right float-right "
+"mr-3\">Processing</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "<span class=\"badge badge-info\">Processing</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+msgid ""
+"<span class=\"badge badge-primary float-right mr-3\">Sample Received</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "<span class=\"badge badge-primary\">Sample Received</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+msgid ""
+"<span class=\"badge badge-success text-right float-right mr-3\">Done</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "<span class=\"badge badge-success\">Done</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid ""
+"<span class=\"o_form_label o_td_label\">\n"
+"                                <b>Address</b>\n"
+"                            </span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "<span class=\"o_stat_text\">Diagnosis</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_partner_patient_info_inherit_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_product_general_inherit_form
+msgid "<span class=\"o_stat_text\">Test</span>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid "<strong class=\"text-muted\">Responsible</strong>"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__report_token
+msgid "Access Token"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__access_warning
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__access_warning
+msgid "Access warning"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_needaction
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__active
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__active
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__active
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__active
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__active
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__active
+msgid "Active"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_exception_decoration
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_state
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_type_icon
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_age
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_age
+msgid "Age"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Age:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__amount_tax
+msgid "Amount Tax"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__amount_total
+msgid "Amount Total"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__amount_untaxed
+msgid "Amount Untaxed"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_request_action
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__appointment_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__appointment_date
+#: model:ir.ui.menu,name:sh_pathology_management.sh_patho_request_menu
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Appointment"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+msgid "Appointment Date"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_patho_request
+msgid "Appointment Detail"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_patho_request_line
+msgid "Appointment Line Detail"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_collection_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_laboratory_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_parameter_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_parameter_patient_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_source_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_unit_filter
+msgid "Archieved"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_patient_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_source_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_unit_detail_form
+msgid "Archived"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_attachment_count
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_birthdate
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_birthdate
+msgid "Birth Date"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request__state_type__cancel
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Cancel"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+msgid "Cancel Appointment"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_centers_detail_menu
+msgid "Centers"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__city
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__city
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "City"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__code
+msgid "Code"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__collection_center_id
+msgid "Collection"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__collection_center_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Collection Center"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Collection Center:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_collection_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_collection_detail_menu
+msgid "Collection Centers"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_collection_center
+msgid "Collection Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__collection_line
+msgid "Collection Line"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "Collection name"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "Collections"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__company_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__company_id
+msgid "Company"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_configuration_detail_menu
+msgid "Configuration"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_res_partner
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid "Contact"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__country_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__country_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_collection_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_laboratory_filter
+msgid "Country"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_request_action
+msgid "Create A New Appointment"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_collection_action
+msgid "Create A New Collection"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_patho_request_line_action
+msgid "Create A New Diagnosis"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_lab_test_action
+msgid "Create A New Lab Test"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_laboratory_action
+msgid "Create A New Laboratory"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_parameter_action
+msgid "Create A New Parameter"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_pathologist_action
+msgid "Create A New Pathologist"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_patient_action
+msgid "Create A New Patient"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_parameter_patient_action
+msgid "Create A New Patient Parameter"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_sample_action
+msgid "Create A New Sample"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_source_action
+msgid "Create A New Source"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_technicians_action
+msgid "Create A New Technicican"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_information_action
+msgid "Create A New Test Information"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.actions.act_window,help:sh_pathology_management.sh_unit_action
+msgid "Create A New Unit"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__create_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__create_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__currency_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__access_url
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__access_url
+msgid "Customer Portal URL"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__product_product__sh_patho_report_delivery_type__day
+msgid "Day"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__description
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__description
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__desc
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_patient_detail_form
+msgid "Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_patho_request_line_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_patho_request_line_menu
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_home_diagnosis
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_home_menu_diagnosis
+msgid "Diagnosis"
+msgstr "Diagnostic"
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Diagnosis #"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.report,name:sh_pathology_management.action_report_patient
+msgid "Diagnosis Report"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__display_name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request__state_type__done
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request_line__state_type__done
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Done"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+msgid "Done Appointment"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid "Download"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request_line__state_type__draft
+msgid "Draft"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__email
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__email
+msgid "Email"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Email:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__res_partner__sh_patho_gender_type__female
+msgid "Female"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_follower_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_channel_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_partner_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__activity_type_icon
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_gender_type
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_gender_type
+msgid "Gender"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Gender:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_collection_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_laboratory_filter
+msgid "Group By"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid "History"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__id
+msgid "ID"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_exception_icon
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__activity_exception_icon
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_needaction
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_unread
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_needaction
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_has_error
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_has_sms_error
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_has_error
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__image
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__image
+msgid "Image"
+msgstr ""
+
+#. module: sh_pathology_management
+#: code:addons/sh_pathology_management/controllers/portal.py:0
+#, python-format
+msgid "Invalid report type: %s"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_is_follower
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_is_pathologist
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_is_pathologist
+msgid "Is Pathologist?"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_is_patient
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_is_patient
+msgid "Is Patient?"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_is_technician
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_is_technician
+msgid "Is Technician?"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_patho_request_line_detail_form
+msgid "Lab Center"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Lab Center:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_lab_test444_detail_menu
+msgid "Lab Test"
+msgstr "Test de laboratoire"
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_product_general_inherit_form
+msgid "Lab Test Details"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_is_lab_test_product
+msgid "Lab Test Product"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_lab_test_action
+msgid "Lab Tests"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__laboratory_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__lab_center_id
+msgid "Laboratory"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__laboratory_center_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Laboratory Center"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_laboratory_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_laboratory_detail_menu
+msgid "Laboratory Centers"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_center
+msgid "Laboratory Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line____last_update
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__write_uid
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__write_date
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_main_attachment_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__res_partner__sh_patho_gender_type__male
+msgid "Male"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__max_value
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__max_value
+msgid "Maximum Value"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_has_error
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__min_value
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__min_value
+msgid "Minimum Value"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Mobile:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_pre_info__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_sample_type__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_unit__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__name
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_source__name
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_detail_form
+msgid "Name"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Name:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request__state_type__new
+msgid "New"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_date_deadline
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_summary
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_type_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Normal"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__normal_value
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__normal_value
+msgid "Normal Value"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__note
+msgid "Note"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_needaction_counter
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_has_error_counter
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_needaction_counter
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_has_error_counter
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__message_unread_counter
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Obtained"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__patient_value
+msgid "Obtained Value"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__res_partner__sh_patho_gender_type__other
+msgid "Other"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_test_parameter
+msgid "Parameter Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+msgid "Parameter Details"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__test_parameters_line
+msgid "Parameter Name"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_parameter_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_parameter_detail_menu
+msgid "Parameters"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_pathologist_menu
+#: model:res.groups,name:sh_pathology_management.sh_pathology_pathologist
+msgid "Pathologist"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_pathologist_action
+msgid "Pathologists"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.module.category,name:sh_pathology_management.sh_pathology_category
+#: model:ir.ui.menu,name:sh_pathology_management.sh_pathology_menu
+#: model:ir.ui.menu,name:sh_pathology_management.sh_second_pathology_menu
+msgid "Pathology"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__patient_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__patient_details_id
+#: model:ir.ui.menu,name:sh_pathology_management.sh_patient_menu
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+msgid "Patient"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_patho_request_line_detail_form
+msgid "Patient Details"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_test_parameter_patient
+msgid "Patient Parameter Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_parameter_patient_action
+msgid "Patient's Parameters "
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_patient_action
+msgid "Patients"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_partner_patient_info_inherit_form
+msgid "Personal Information"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__mobile
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__mobile
+msgid "Phone"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__access_url
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__access_url
+msgid "Portal Access URL"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_information_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_information_detail_menu
+msgid "Pre Informations"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_pre_info_id
+msgid "Pre-information"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__price
+msgid "Price"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_template
+msgid "Print"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request_line__state_type__processing
+msgid "Processing"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_product_product
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__product_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Product"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Range"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_report_delivery_time
+msgid "Report Delivery Time"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__report_description
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_patho_request_line_detail_form
+msgid "Report Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__patho_request_id
+msgid "Request"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__request_line_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__request_line_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__request_line
+msgid "Request Line"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__activity_user_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_has_sms_error
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_test_sample_type
+msgid "Sample Information"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__sh_patho_request_line__state_type__sample_received
+msgid "Sample Received"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_sample_type_id
+msgid "Sample Type"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_sample_detail_menu
+msgid "Sample Types"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_sample_action
+msgid "Samples"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__access_token
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Send by Email"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Send by WhatsApp"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__sequence
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Set To New"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_product_total_tests
+msgid "Sh Patho Product Total Tests"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_test_parameter_ids
+msgid "Sh Patho Test Parameter"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_partner__sh_patho_total_tests
+#: model:ir.model.fields,field_description:sh_pathology_management.field_res_users__sh_patho_total_tests
+msgid "Sh Patho Total Tests"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_source_detail_menu
+msgid "Source"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_patho_source
+msgid "Source Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_source_action
+msgid "Sources"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_parameter_patient_detail_form
+msgid "Standard Specification"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__state_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__state_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_collection_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_laboratory_filter
+msgid "State"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__state_type
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__state_type
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Status"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__activity_state
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__street
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__street
+msgid "Street"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "Street 2..."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "Street..."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__street2
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__street2
+msgid "Street2"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__subtotal
+msgid "Subtotal"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__tax_ids
+msgid "Tax"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__technician_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__technician_id
+#: model:res.groups,name:sh_pathology_management.sh_pathology_technician
+msgid "Technician"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Technician:"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_technicicans_menu
+msgid "Technicians"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_filter
+msgid "Technicican"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_technicians_action
+msgid "Technicicans"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_request_detail_form
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Test"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_patho_request_line_detail_form
+msgid "Test Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_test_pre_info
+msgid "Test Information"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_patho_request_line_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_product_test_inherit_form
+msgid "Test Parameters"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.ui.menu,name:sh_pathology_management.sh_lab_test_detail_menu
+#: model:ir.ui.menu,name:sh_pathology_management.sh_tests_detail_menu
+msgid "Tests"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "There are currently no diagnosis for your account"
+msgstr ""
+
+#. module: sh_pathology_management
+#: code:addons/sh_pathology_management/controllers/portal.py:0
+#, python-format
+msgid "This document does not exist."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__price_total
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.portal_my_diagnosis
+msgid "Total"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__total_diagnosis
+msgid "Total Diagnosis"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__price_tax
+msgid "Total Tax"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__activity_exception_decoration
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_collection_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_laboratory_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_parameter_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_parameter_patient_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_source_filter
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.view_sh_unit_filter
+msgid "Unarchieved"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter__unit_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_test_parameter_patient__unit_id
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.diagnosis_entry_portal_content
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.report_patient
+msgid "Unit"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.actions.act_window,name:sh_pathology_management.sh_unit_action
+#: model:ir.ui.menu,name:sh_pathology_management.sh_unit_detail_menu
+msgid "Units"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model,name:sh_pathology_management.model_sh_lab_test_unit
+msgid "Units Description"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_unread
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__message_unread_counter
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__user_id
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__user_id
+msgid "User"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request__website_message_ids
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_patho_request_line__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request__website_message_ids
+#: model:ir.model.fields,help:sh_pathology_management.field_sh_patho_request_line__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields.selection,name:sh_pathology_management.selection__product_product__sh_patho_report_delivery_type__week
+msgid "Week"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_product_product__sh_patho_report_delivery_type
+msgid "With In"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_collection_detail_form
+#: model_terms:ir.ui.view,arch_db:sh_pathology_management.sh_laboratory_detail_form
+msgid "ZIP"
+msgstr ""
+
+#. module: sh_pathology_management
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_collection_center__zip
+#: model:ir.model.fields,field_description:sh_pathology_management.field_sh_lab_center__zip
+msgid "Zip"
+msgstr ""

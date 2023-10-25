@@ -31,8 +31,6 @@
         </field>
     </record>
  
-
-    <!-- View Extensions -->
     <record id="view_res_partner_kanban_inherit" model="ir.ui.view">
         <field name="name">res.partner.kanban.view.inherit</field>
         <field name="model">res.partner</field>
@@ -278,32 +276,6 @@
             </search>
         </field>
     </record>
-
-    <!-- <record id="view_partner_search" model="ir.ui.view">
-        <field name="name">Is a Parent Partner Search</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <field name="parent_id" position="before">
-                <field name="ref"/>
-            </field>
-            <xpath expr="//filter[@name='inactive']" position="before">
-                <filter string="Practices" name="is_company" domain="[('is_company', '=', True)]" />
-                <separator/>
-                <filter string="Practitioners" name="is_practitioner" domain="[('is_practitioner', '=', True)]" />
-                <separator/>
-                <filter string="Patients" name="is_patient" domain="[('is_patient', '=', True)]" />
-                <separator/>
-            </xpath>
-            <xpath expr ="//search" position="inside"> 
-                <searchpanel> 
-                    <field name="company_id" icon="fa fa-building" enable_counters="1" groups="base.group_multi_company"/>
-                    <field name="parent_id" string="Practice" icon="fa fa-building" enable_counters="1" hierarchize="1" expand="1"/>
-                </searchpanel> 
-            </xpath> 
-
-        </field>
-    </record> -->
 
     <record id="pod_practice_action" model="ir.actions.act_window">
         <field name="name">Practices</field>

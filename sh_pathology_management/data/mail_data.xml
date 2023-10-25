@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_sh_patho_lab_request" model="mail.template">
+            <field name="name">Lab Request: Send by email</field>
+            <field name="model_id" ref="sh_pathology_management.model_sh_patho_request" />
+            <field name="subject">{{object.company_id.name}} Ref {{object.name}} </field>
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="partner_to">{{object.patient_id.id}}</field>
+
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello,
+                        <br />
+                        <br />
+                        Your Appointment <strong><t t-out="object.name or ''" /></strong> amounting in <strong><t t-out="format_amount(object.amount_total, object.currency_id) or ''" /></strong> is ready. <br />
+                        <br />
+                        Do not hesitate to contact us if you have any questions.
+                        <br />
+                    </p>
+                </div>
+            </field>
+
+            <field name="report_template" ref="action_report_patient" />
+            <field name="report_name">{{(object.name or '').replace('/','_')}}</field>
+            <field name="lang">{{object.patient_id.lang}}</field>
+            <field name="auto_delete" eval="True" />
+        </record>
+    </data>
+</odoo>

@@ -15,6 +15,7 @@
         <field name="active" eval="True" />
     </record>
 
+    <!-- <menuitem id="contacts_hierarchy_menu" name="Contacts Hierarchy" action="action_contacts_hierarchy" parent="sale.sale_order_menu" sequence="99"/> -->
     <menuitem id="contacts.res_partner_menu_contacts" name="Practices" action="pod_base.pod_practice_action" parent="pod_root_menu_administration" sequence="2"/> 
     <menuitem id="pod_location_menu" name="Locations" action="pod_base.pod_location_action" parent="pod_root_menu_administration" sequence="3"/> 
     <menuitem id="pod_practitioner_menu" name="Contacts" action="pod_base.pod_practitioner_action" parent="pod_root_menu_administration" sequence="4"/> 
