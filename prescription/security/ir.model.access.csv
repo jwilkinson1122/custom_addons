@@ -1,0 +1,19 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+cashmove_user,"Cashmove user",model_prescription_cashmove,group_prescription_user,1,0,0,0
+cashmove_manager,"Cashmove user",model_prescription_cashmove,group_prescription_manager,1,1,1,1
+order_user,"Order Line user",model_prescription_order,group_prescription_user,1,1,1,1
+order_manager,"Order Line user",model_prescription_order,group_prescription_manager,1,1,1,1
+product_user,"Product user",model_prescription_product,group_prescription_user,1,0,0,0
+product_manager,"Product user",model_prescription_product,group_prescription_manager,1,1,1,1
+product_category_user,"Product category user",model_prescription_product_category,group_prescription_user,1,0,0,0
+product_category_manager,"Product category user",model_prescription_product_category,group_prescription_manager,1,1,1,1
+prescription_alert_access,access_prescription_alert_user,model_prescription_alert,base.group_user,1,0,0,0
+prescription_alert_user,access_prescription_alert_prescription_user,model_prescription_alert,group_prescription_user,1,1,1,1
+prescription_alert_manager,access_prescription_alert_manager,model_prescription_alert,group_prescription_manager,1,1,1,1
+prescription_cashmove_report_manager,access_prescription_cashmove_report,model_prescription_cashmove_report,base.group_user,1,0,0,0
+prescription_location_user,access_prescription_location,model_prescription_location,group_prescription_user,1,1,0,0
+prescription_location_manager,access_prescription_location,model_prescription_location,group_prescription_manager,1,1,1,1
+prescription_option_user,access_prescription_option,model_prescription_option,group_prescription_user,1,0,0,0
+prescription_option_manager,access_prescription_option,model_prescription_option,group_prescription_manager,1,1,1,1
+prescription_partner_user,"Prescription Partner User Rights",model_prescription_partner,group_prescription_user,1,0,0,0
+prescription_partner_manager,"Prescription Partner Manager Rights",model_prescription_partner,group_prescription_manager,1,1,1,1

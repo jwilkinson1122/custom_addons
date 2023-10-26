@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- <data noupdate="1"> -->
+        <record id="prescription_location_main" model="prescription.location">
+            <field name="name">NWPL</field>
+        </record>
+
+        <record id="categ_custom_device" model="prescription.product.category">
+            <field name="name">Custom</field>
+            <field name="image_1920" type="base64" file="prescription/static/img/sg.jpg"/>
+        </record>
+   
+        <record id="categ_otc_device" model="prescription.product.category">
+            <field name="name">OTC</field>
+            <field name="image_1920" type="base64" file="prescription/static/img/otc-full-length.jpg"/>
+        </record>
+
+        <record id="categ_brace_device" model="prescription.product.category">
+            <field name="name">Brace</field>
+            <!-- <field name="image_1920" type="base64" file="prescription/static/img/burger.png"/> -->
+        </record>
+
+        <record id="categ_top_cover" model="prescription.product.category">
+            <field name="name">Top Cover</field>
+            <!-- <field name="image_1920" type="base64" file="prescription/static/img/drink.png"/> -->
+        </record>
+
+        <record id="partner_fab_foot_clinic" model="res.partner">
+            <field name="name">Podiatry Partner</field>
+        </record>
+
+        <record id="partner_fab_foot_clinic" model="prescription.partner">
+            <field name="partner_id" ref="partner_fab_foot_clinic"/>
+            <field name="available_location_ids" eval="[
+            (6, 0, [ref('prescription_location_main')]),
+            ]"/>
+        </record>
+    </data>
+    <data>
+        <record id="prescription_order_action_confirm" model="ir.actions.server">
+            <field name="name">Prescription: Receive</field>
+            <field name="model_id" ref="model_prescription_order"/>
+            <field name="binding_model_id" ref="model_prescription_order"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">records.action_confirm()</field>
+        </record>
+
+        <record id="prescription_order_action_cancel" model="ir.actions.server">
+            <field name="name">Prescription: Cancel</field>
+            <field name="model_id" ref="model_prescription_order"/>
+            <field name="binding_model_id" ref="model_prescription_order"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">records.action_cancel()</field>
+        </record>
+    </data>
+
+</odoo>

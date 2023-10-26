@@ -1,0 +1,11 @@
+.o_prescription_content {
+    .o_list_button {
+        width: 1px;
+    }
+
+    .o_prescription_list_view {
+        td:last-child {
+            padding-right: 16px;
+        }
+    }
+}
