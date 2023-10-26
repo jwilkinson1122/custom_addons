@@ -2,4 +2,4 @@
 Sale Configurator Option
 ========================
 
-This module will allow you to sell product by options.
+This module will allow you to sell products by options.

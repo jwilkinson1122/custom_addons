@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template
-        id="report_saleorder_document"
-        inherit_id="sale.report_saleorder_document"
-    >
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
         <!--Apply distinct style to children lines-->
-        <xpath
-            expr="//t[@t-if='not line.display_type']//td[@name='td_name']//span"
-            position="replace"
-        >
+        <xpath expr="//t[@t-if='not line.display_type']//td[@name='td_name']//span" position="replace">
             <t t-if="line.parent_id">
-                <span
-                    t-field="line.name"
-                    style="padding-left:50px;font-style:italic;"
-                />
+                <span t-field="line.name" style="padding-left:50px;font-style:italic;" />
             </t>
             <t t-if="not line.parent_id">
                 <span t-field="line.name" />
@@ -59,14 +50,8 @@
             <t t-if="doc.mapped('order_line').mapped('child_ids')">
                 <td name="td_config_subtotal" class="text-right o_price_total">
                     <t t-if="not line.parent_id">
-                        <span
-                            t-field="line.price_config_subtotal"
-                            groups="account.group_show_line_subtotals_tax_excluded"
-                        />
-                        <span
-                            t-field="line.price_config_total"
-                            groups="account.group_show_line_subtotals_tax_included"
-                        />
+                        <span t-field="line.price_config_subtotal" groups="account.group_show_line_subtotals_tax_excluded" />
+                        <span t-field="line.price_config_total" groups="account.group_show_line_subtotals_tax_included" />
                     </t>
                 </td>
             </t>
@@ -91,32 +76,18 @@
             </t>
             <t t-else="">
                 <td name="td_taxes" class="text-right">
-                    <span
-                        t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"
-                    />
+                    <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))" />
                 </td>
             </t>
         </xpath>
         <xpath expr="//td[@name='td_subtotal']" position="replace">
             <td name="td_subtotal" class="text-right o_price_total">
                 <t t-set="is_child" t-value="line.parent_id" />
-                <t
-                    t-set="is_parent_with_price"
-                    t-value="line.child_ids and (not line.report_line_is_empty_parent)"
-                />
-                <t
-                    t-set="fallback_default_odoo"
-                    t-value="not doc.mapped('order_line').mapped('child_ids')"
-                />
+                <t t-set="is_parent_with_price" t-value="line.child_ids and (not line.report_line_is_empty_parent)" />
+                <t t-set="fallback_default_odoo" t-value="not doc.mapped('order_line').mapped('child_ids')" />
                 <t t-if="is_child or is_parent_with_price or fallback_default_odoo">
-                    <span
-                        t-field="line.price_subtotal"
-                        groups="account.group_show_line_subtotals_tax_excluded"
-                    />
-                    <span
-                        t-field="line.price_total"
-                        groups="account.group_show_line_subtotals_tax_included"
-                    />
+                    <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded" />
+                    <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included" />
                 </t>
             </td>
         </xpath>

@@ -12,6 +12,8 @@ _logger = logging.getLogger(__name__)
 
 class InheritedProduct(models.Model):
     _inherit = "product.product"
+    
+    config_ok = fields.Boolean(string="Can be Configured")
 
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')

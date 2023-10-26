@@ -1,2 +1,2 @@
-This module allow the manage stock of configurable product.
-We can get in the picking only configurable product without option for exemple (the pack).
+This module will allow you to manage stock of configurable product.
+

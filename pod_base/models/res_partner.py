@@ -256,15 +256,15 @@ class Partner(models.Model):
         return result
     
  
-    def name_get(self):
-        res = super(Partner, self).name_get()
-        new_res = []
-        for record in res:
-            partner = self.browse(record[0])
-            if partner.is_practitioner:
-                name = partner.name
-                new_res.append((partner.id, name))
-            else:
-                new_res.append(record)
-        return new_res
+    # def name_get(self):
+    #     res = super(Partner, self).name_get()
+    #     new_res = []
+    #     for record in res:
+    #         partner = self.browse(record[0])
+    #         if partner.is_practitioner:
+    #             name = partner.name
+    #             new_res.append((partner.id, name))
+    #         else:
+    #             new_res.append(record)
+    #     return new_res
 

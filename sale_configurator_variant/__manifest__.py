@@ -1,15 +1,10 @@
-# Copyright 2020 Akretion (http://www.akretion.com).
-# @author Sébastien BEAU <sebastien.beau@akretion.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-
 {
     "name": "Sale Configurator Variant",
-    "summary": "Extend sale configurator to manage product variant",
-    "version": "14.0.1.1.1",
+    "summary": "Extend sale configurator to manage product variants",
+    "version": "15.0.1.1.1",
     "category": "Sale",
-    "website": "https://github.com/akretion/sale-configurator",
-    "author": " Akretion",
+    "website": "https://www.nwpodiatric.com",
+    "author": "NWPL",
     "license": "AGPL-3",
     "application": False,
     "installable": True,

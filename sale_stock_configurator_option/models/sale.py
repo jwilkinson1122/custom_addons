@@ -1,14 +1,7 @@
-# Copyright 2020 Akretion (http://www.akretion.com).
-# @author Sébastien BEAU <sebastien.beau@akretion.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-
 from odoo import api, fields, models
 
 
-# TODO for now we simply round with integer qty
-# see when we will have the case to support float qty
-# but not sure we will have the case so let's see latter
+# TODO for now we simply round with integer qty (see when we will have the case to support float qty)
 def round_up(val):
     rounded_qty = round(val, 0)
     if rounded_qty <= val:

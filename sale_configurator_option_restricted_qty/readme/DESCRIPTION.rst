@@ -1,2 +1,2 @@
-This module allow to applay restricted quantities (min, max)
+This module allow to restrict quantities (min, max)
 on product options (configurable product).

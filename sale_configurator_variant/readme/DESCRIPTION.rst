@@ -1,1 +1,1 @@
-This module Allow to sale multivariant product and applining quantities discount based on all variants quantities.
+This module will allow you to sell multi-variant product and apply discounts based on all variants.

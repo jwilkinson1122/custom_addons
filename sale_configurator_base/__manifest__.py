@@ -1,15 +1,10 @@
-# Copyright 2020 Akretion (http://www.akretion.com).
-# @author Sébastien BEAU <sebastien.beau@akretion.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-
 {
     "name": "Sale Configurator Base",
     "summary": "Base module for sale configurator",
-    "version": "14.0.1.0.2",
+    "version": "15.0.1.0.2",
     "category": "Uncategorized",
-    "website": "https://github.com/akretion/sale-configurator",
-    "author": " Akretion",
+    "website": "https://www.nwpodiatric.com",
+    "author": " NWPL",
     "license": "AGPL-3",
     "application": False,
     "installable": True,
@@ -19,7 +14,6 @@
         ],
     "data": [
         "views/sale_view.xml",
-        # "views/assets.xml",
         "templates/sale_report_templates.xml",
         "templates/account_invoice_templates.xml",
     ],
