@@ -207,7 +207,7 @@
                 <div class="o_prescription_wizard">
                     <div class="row">
                         <div class="col-2">
-                            <field name="option_label_1" nolabel="1" attrs="{'invisible': [('available_options_1', '=', False)]}" class="font-weight-bold"/>
+                            <field name="option_label_1" nolabel="1" attrs="{'invisible': [('available_options_1', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="option_ids_1" attrs="{'invisible': [('available_options_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('option_category', '=', 1), ('partner_id', '=', partner_id)]"/>
@@ -215,7 +215,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <field name="option_label_2" nolabel="1" attrs="{'invisible': [('available_options_2', '=', False)]}" class="font-weight-bold"/>
+                            <field name="option_label_2" nolabel="1" attrs="{'invisible': [('available_options_2', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="option_ids_2" attrs="{'invisible': [('available_options_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('option_category', '=', 2), ('partner_id', '=', partner_id)]"/>
@@ -223,7 +223,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <field name="option_label_3" nolabel="1" attrs="{'invisible': [('available_options_3', '=', False)]}" class="font-weight-bold"/>
+                            <field name="option_label_3" nolabel="1" attrs="{'invisible': [('available_options_3', '=', False)]}" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="option_ids_3" attrs="{'invisible': [('available_options_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('option_category', '=', 3), ('partner_id', '=', partner_id)]"/>
@@ -231,7 +231,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <label for="product_description" class="font-weight-bold"/>
+                            <label for="product_description" class="fw-bold"/>
                         </div>
                         <div class="col-10">
                             <field name="product_description" nolabel="1"/>
@@ -239,7 +239,7 @@
                     </div>
                     <div class="row">
                         <div class="col-2">
-                            <label for="note" class="font-weight-bold" />
+                            <label for="note" class="fw-bold" />
                         </div>
                         <div class="col-10">
                             <field name="note" nolabel="1" placeholder="Information, allergens, ..." />

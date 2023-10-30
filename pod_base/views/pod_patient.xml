@@ -63,8 +63,8 @@
                         <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                             <field name="parent_id" placeholder="Practice" domain="[('is_company', '=', True)]" context="{'default_is_company': True}" />
                             <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}" />
-                            <field name="partner_relation_label" class="text-center font-weight-bold" nolabel="1"/>
-                            <field name="practitioner_id" placeholder="Practitioner" class="font-weight-bold"/>
+                            <field name="partner_relation_label" class="text-center fw-bold" nolabel="1"/>
+                            <field name="practitioner_id" placeholder="Practitioner" class="fw-bold"/>
                         </div>
                     </div>
 

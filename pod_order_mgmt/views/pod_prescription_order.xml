@@ -52,11 +52,11 @@
                     </div>
                     <group>
                         <group string="Account Info">
-                            <field name="practice_id" placeholder="Practice Name" class="font-weight-bold"/>
-                            <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', practice_id), ('is_practitioner', '=', True)]" class="font-weight-bold"/>
+                            <field name="practice_id" placeholder="Practice Name" class="fw-bold"/>
+                            <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', practice_id), ('is_practitioner', '=', True)]" class="fw-bold"/>
                         </group>
                         <group string="Patient Info">
-                            <field name="patient_id" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" class="font-weight-bold"/>
+                            <field name="patient_id" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" class="fw-bold"/>
                             <field name="prescription_type" attrs="{'readonly': [('state','=','done')]}" required="1"/>
                         </group>
                     </group>

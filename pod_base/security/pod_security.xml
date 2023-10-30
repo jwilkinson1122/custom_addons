@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <odoo>
-    <!-- Podiatry Category -->
     <record id="ir_module_category_pod" model="ir.module.category">
         <field name="name">Podiatry Practice</field>
     </record>
-
-    <!-- Base Group -->
     <record id="group_pod_user" model="res.groups">
         <field name="name">General User</field>
         <field name="category_id" ref="base.module_category_hidden" />
@@ -16,8 +13,6 @@
         <field name="category_id" ref="base.module_category_hidden" />
         <field name="implied_ids" eval="[(4, ref('group_pod_user'))]" />
     </record>
-
-    <!-- Groups -->
     <record id="group_pod_practitioner" model="res.groups">
         <field name="name">Practitioner</field>
         <field name="category_id" ref="ir_module_category_pod" />

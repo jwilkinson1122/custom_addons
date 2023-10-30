@@ -52,15 +52,15 @@ items
                                     </div>
                                     <div>
                                         <span class="oe_read_only">Practice:</span>
-                                        <field name="practice_id" class="oe_inline font-weight-bold" />
+                                        <field name="practice_id" class="oe_inline fw-bold" />
                                     </div>
                                     <div>
                                         <span class="oe_read_only">Practitioner:</span>
-                                        <field name="practitioner_id" class="oe_inline font-weight-bold" />
+                                        <field name="practitioner_id" class="oe_inline fw-bold" />
                                     </div>
                                     <div>
                                         <span class="oe_read_only">Patient:</span>
-                                        <field name="patient_id" class="oe_inline font-weight-bold" />
+                                        <field name="patient_id" class="oe_inline fw-bold" />
                                     </div>
                                 </div>
 
