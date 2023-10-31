@@ -83,7 +83,7 @@
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px" attrs="{'invisible': [('is_location','=', False), ('is_practitioner','=', False)]}">
                         <field name="active" invisible="1"/>
-                        <field name="partner_relation_label" class="fw-bold" nolabel="1"/>
+                        <label for="parent_id" string="Parent Company" class="oe_label"/>
                         <field name="parent_id" placeholder="Company Name" class="fw-bold"/>
                     </div>
                 </div>
@@ -115,7 +115,8 @@
 
             <!-- Add Locations Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
-                <page string="Locations" name="location_addresses" attrs="{'invisible': [('is_company','=', False)]}" autofocus="autofocus">                    <separator name="locations" string="Affiliate Locations"/>
+                <page string="Locations" name="location_addresses" attrs="{'invisible': [('is_company','=', False)]}" autofocus="autofocus">
+                    <separator name="locations" string="Locations List"/>
                     <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('location_ids', '!=', ())]}">
                         No Locations Available
                     </div>
@@ -139,6 +140,7 @@
                             <field name="mobile" />
                             <field name="state_id" />
                             <field name="image_128" />
+                            <field name="avatar_128"/>
                             <field name="lang" />
                             <field name="comment" />
                             <field name="display_name" />
@@ -180,7 +182,6 @@
                                         </div>
                                     </div>
                                 </t> -->
-
                                 <t t-name="kanban-box">
                                     <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                     <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
@@ -198,12 +199,14 @@
                                             <div t-if="record.type.raw_value != 'contact'">
                                                 <div>
                                                     <field name="zip"/>
-                                                    <t t-if="record.city"></t>
+                                                    <t t-if="record.zip.raw_value">, </t>
                                                     <field name="city"/>
                                                 </div>
-                                                <field t-if="record.state_id.raw_value" name="state_id"/>
-                                                <t t-if="record.country_id"></t>
-                                                <field name="country_id"/>
+                                                <div>
+                                                    <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                    <t t-if="record.state_id.raw_value">, </t>
+                                                    <field name="country_id"/>
+                                                </div>
                                             </div>
                                             <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/>
                                             </div>
@@ -283,23 +286,25 @@
             </xpath>
 
             <!-- Add an alert to the contact_addresses page -->
-            <xpath expr="//page[@name='contact_addresses']" position="inside">
-                <separator name="contacts_alert" string="Contacts Alert"/>
-                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('child_ids', '!=', ())]}">
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
+                <separator name="contacts" string="Contacts List"/>
+                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('child_ids', '!=', False)]}">
                     No Contacts Available
                 </div>
             </xpath>
 
+
             <!-- Page for patients list -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
                 <page name="patients_list" string="Patients">
-                    <separator name="patients" string="Patients"/>
+                    <separator name="patients" string="Patients List"/>
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" attrs="{'invisible': [('patient_records', '!=', ())]}">
                         No Patients Available
                     </div>
                     <field name="patient_records" mode="kanban"/>
                 </page>
             </xpath>
+
 
             <!-- Page for partner info -->
             <xpath expr='//page[@name="internal_notes"]' position="before">

@@ -69,7 +69,7 @@ class Prescription(models.Model):
     
     name = fields.Char( string='Order Reference', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
     prescription = fields.Text(string="Prescription")
-    prescription_order_lines = fields.One2many('pod.prescription.order.line', 'prescription_order_id', string="Products")
+    prescription_order_lines = fields.One2many('pod.prescription.order.line', 'prescription_order_id')
     prescription_order_details_ids = fields.One2many('prescription.order.history.line', 'prescription_order_id')
 
     @api.onchange('partner_id')
@@ -178,31 +178,30 @@ class Prescription(models.Model):
        
             
             
-    def action_config_start(self):
-        """Return action to start configuration wizard"""
-        configurator_obj = self.env["product.configurator.prescription"]
-        return configurator_obj.with_context( default_prescription_order_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True).get_wizard_action()
+    # def action_config_start(self):
+    #     """Return action to start configuration wizard"""
+    #     configurator_obj = self.env["product.configurator.prescription"]
+    #     return configurator_obj.with_context( default_prescription_order_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True).get_wizard_action()
     
-    def button_launch_wizard(self):
-        self.ensure_one()
-        view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
+    # def button_launch_wizard(self):
+    #     self.ensure_one()
+    #     view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
         
-        default_product_tmpl_id = self.env['product.template'].search([], limit=1).id
+    #     default_product_tmpl_id = self.env['product.template'].search([], limit=1).id
 
-        # Creating a new wizard, without setting product_tmpl_id here
-        wizard = self.env['orthotic.configurator.wizard'].create({
-            'prescription_order_id': self.id,
-            'product_tmpl_id': default_product_tmpl_id,
-        })
-        return {
-            'name': _('Orthotic Configurator'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'orthotic.configurator.wizard',
-            'view_id': view_id,
-            'res_id': wizard.id,
-            'target': 'new',
-        }
+    #     wizard = self.env['orthotic.configurator.wizard'].create({
+    #         'prescription_order_id': self.id,
+    #         'product_tmpl_id': default_product_tmpl_id,
+    #     })
+    #     return {
+    #         'name': _('Orthotic Configurator'),
+    #         'type': 'ir.actions.act_window',
+    #         'view_mode': 'form',
+    #         'res_model': 'orthotic.configurator.wizard',
+    #         'view_id': view_id,
+    #         'res_id': wizard.id,
+    #         'target': 'new',
+    #     }
 
     @api.model
     def _default_stage(self):
@@ -517,112 +516,96 @@ class PrescriptionOrderLine(models.Model):
     helpdesk_description_id = fields.Many2one('helpdesk.ticket',string='Helpdesk')
     prescription_order_id = fields.Many2one('pod.prescription.order', string='Prescription')
     product_id = fields.Many2one('product.product', string='Products')
-    prescription_order_line_image = fields.Binary(related="product_id.image_1920")
+    prescription_order_line_image = fields.Binary(related="product_id.image_128", string='Image')
     uom_id = fields.Many2one('uom.uom', string='Unit')
     quantity = fields.Float(string='Quantity', digits='Product Quantity')
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_uom_readonly = fields.Boolean(compute='_compute_product_uom_readonly')
+    # product_uom_readonly = fields.Boolean(compute='_compute_product_uom_readonly')
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     state = fields.Selection(related="prescription_order_id.stage_id.state", string='Status', copy=False, store=True)
-    display_type = fields.Selection([('line_section', "Section"), ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
-    sequence = fields.Integer(string='Sequence', default=10)
-    product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', default=True)
+    # display_type = fields.Selection([('line_section', "Section"), ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+    # sequence = fields.Integer(string='Sequence', default=10)
+    # product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', default=True)
     remark = fields.Text(string='Remark')
 
-    custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
-    config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
-    config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
+    # custom_value_ids = fields.One2many( comodel_name="product.config.session.custom.value", inverse_name="cfg_session_id", related="config_session_id.custom_value_ids", string="Configurator Custom Values")
+    # config_ok = fields.Boolean( related="product_id.config_ok", string="Configurable", readonly=True)
+    # config_session_id = fields.Many2one( comodel_name="product.config.session", string="Config Session")
 
-    def reconfigure_product(self):
-        """Creates and launches a product configurator wizard with a linked
-        template and variant in order to re-configure a existing product. It is
-        esetially a shortcut to pre-fill configuration data of a variant"""
-        wizard_model = "product.configurator.prescription"
+    # def reconfigure_product(self):
+    #     """Creates and launches a product configurator wizard with a linked
+    #     template and variant in order to re-configure a existing product. It is
+    #     esetially a shortcut to pre-fill configuration data of a variant"""
+    #     wizard_model = "product.configurator.prescription"
 
-        extra_vals = {
-            "prescription_order_id": self.prescription_order_id.id,
-            "prescription_order_line_id": self.id,
-            "product_id": self.product_id.id,
-        }
-        self = self.with_context( default_prescription_order_id=self.prescription_order_id.id, default_prescription_order_line_id=self.id,
-        )
-        return self.product_id.product_tmpl_id.create_config_wizard( model_name=wizard_model, extra_vals=extra_vals
-        )
+    #     extra_vals = {
+    #         "prescription_order_id": self.prescription_order_id.id,
+    #         "prescription_order_line_id": self.id,
+    #         "product_id": self.product_id.id,
+    #     }
+    #     self = self.with_context( default_prescription_order_id=self.prescription_order_id.id, default_prescription_order_line_id=self.id,
+    #     )
+    #     return self.product_id.product_tmpl_id.create_config_wizard( model_name=wizard_model, extra_vals=extra_vals
+    #     )
         
-    @api.model
-    def _prepare_add_missing_fields(self, values):
-        """ Deduce missing required fields from the onchange """
-        res = {}
-        onchange_fields = ['name', 'price_unit', 'product_uom']
-        if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
-            line = self.new(values)
-            line.product_id_change()
-            for field in onchange_fields:
-                if field not in values:
-                    res[field] = line._fields[field].convert_to_write(line[field], line)
-        return res
-        
-    @api.onchange("product_uom", "product_uom_qty")
-    def product_uom_change(self):
-        if self.config_session_id:
-            account_tax_obj = self.env["account.tax"]
-            self.price_unit = account_tax_obj._fix_tax_included_price_company(
-                self.config_session_id.price,
-                self.product_id.taxes_id,
-                self.tax_id,
-                self.company_id,
-            )
-            return
-
-        return super(PrescriptionOrderLine, self).product_uom_change()
-    
-    @api.depends('state')
-    def _compute_product_uom_readonly(self):
-        for line in self:
-            line.product_uom_readonly = line.state in ['done', 'cancel']
-    
-    @api.depends('product_id', 'prescription_order_id.state')
-    def _compute_product_updatable(self):
-        for line in self:
-            if line.state in ['done', 'cancel']:
-                line.product_updatable = False
-            else:
-                line.product_updatable = True
-                
-
-    @api.depends('product_id')
-    def onchange_product(self):
-        for each in self:
-            if each.product_id:
-                product_with_context = each.product_id.with_context(uom_qty_change=True)
-                each.qty_available = product_with_context.qty_available
-                each.price = product_with_context.lst_price
-
-                if product_with_context.variant_description:
-                    each.name = product_with_context.variant_description
-            else:
-                each.qty_available = 0
-                each.price = 0.0
-                each.name = "" 
-
-    
-                
-    # @api.onchange("product_id")
-    # def onchange_product(self):
-    #     res = super(PrescriptionOrderLine, self).product_id_change() if hasattr(super(), 'product_id_change') else {}
-    #     for record in self:
-    #         if record.product_id:
-    #             record.qty_available = record.product_id.qty_available
-    #             record.price = record.product_id.lst_price
-    #             product_with_context = record.product_id.with_context(lang=record.prescription_order_id.partner_id.lang)
-    #             if product_with_context.variant_description:
-    #                 record.name = product_with_context.variant_description
-    #         else:
-    #             record.qty_available = 0
-    #             record.price = 0.0
+    # @api.model
+    # def _prepare_add_missing_fields(self, values):
+    #     """ Deduce missing required fields from the onchange """
+    #     res = {}
+    #     onchange_fields = ['name', 'price_unit', 'product_uom']
+    #     if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
+    #         line = self.new(values)
+    #         line.product_id_change()
+    #         for field in onchange_fields:
+    #             if field not in values:
+    #                 res[field] = line._fields[field].convert_to_write(line[field], line)
     #     return res
+        
+    # @api.onchange("product_uom", "product_uom_qty")
+    # def product_uom_change(self):
+    #     if self.config_session_id:
+    #         account_tax_obj = self.env["account.tax"]
+    #         self.price_unit = account_tax_obj._fix_tax_included_price_company(
+    #             self.config_session_id.price,
+    #             self.product_id.taxes_id,
+    #             self.tax_id,
+    #             self.company_id,
+    #         )
+    #         return
+
+    #     return super(PrescriptionOrderLine, self).product_uom_change()
+    
+    # @api.depends('state')
+    # def _compute_product_uom_readonly(self):
+    #     for line in self:
+    #         line.product_uom_readonly = line.state in ['done', 'cancel']
+    
+    # @api.depends('product_id', 'prescription_order_id.state')
+    # def _compute_product_updatable(self):
+    #     for line in self:
+    #         if line.state in ['done', 'cancel']:
+    #             line.product_updatable = False
+    #         else:
+    #             line.product_updatable = True
+                
+
+    # @api.depends('product_id')
+    # def onchange_product(self):
+    #     for each in self:
+    #         if each.product_id:
+    #             product_with_context = each.product_id.with_context(uom_qty_change=True)
+    #             each.qty_available = product_with_context.qty_available
+    #             each.price = product_with_context.lst_price
+
+    #             if product_with_context.variant_description:
+    #                 each.name = product_with_context.variant_description
+    #         else:
+    #             each.qty_available = 0
+    #             each.price = 0.0
+    #             each.name = "" 
+
     
 class PrescriptionOrderHistoryLine(models.Model):
     _name = 'prescription.order.history.line'

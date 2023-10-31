@@ -8,12 +8,9 @@ from odoo.tools import float_round
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    sale_catalog_quantity = fields.Float('SOL Quantity', compute="_compute_sale_catalog_quantity",
-                                         inverse="_inverse_sale_catalog_quantity",
-                                         search="_search_sale_catalog_quantity")
+    sale_catalog_quantity = fields.Float('SOL Quantity', compute="_compute_sale_catalog_quantity", inverse="_inverse_sale_catalog_quantity", search="_search_sale_catalog_quantity")
     sale_catalog_partner_price = fields.Float('Partner Price', compute="_compute_sale_catalog_partner_price")
-    sale_catalog_partner_price_currency_id = fields.Many2one('res.currency',
-                                                             compute="_compute_sale_catalog_partner_price")
+    sale_catalog_partner_price_currency_id = fields.Many2one('res.currency', compute="_compute_sale_catalog_partner_price")
 
     @api.model
     def _get_contextual_sale_order(self):
@@ -53,8 +50,7 @@ class ProductProduct(models.Model):
                 ('order_id', '=', order.id),
                 ('product_id', 'in', self.ids)],
                 ['product_id', 'sequence', 'ids:array_agg(id)'],
-                ['product_id', 'sequence'],
-                lazy=False)
+                ['product_id', 'sequence'], lazy=False)
             sale_lines_per_product = defaultdict(lambda: self.env['sale.order.line'])
             for sol in sale_lines_read_group:
                 sale_lines_per_product[sol['product_id'][0]] |= SaleOrderLine_sudo.browse(sol['ids'])
@@ -69,8 +65,7 @@ class ProductProduct(models.Model):
                             'product_uom_qty': all_editable_lines[0].product_uom_qty + diff_qty,
                         }
                         if all_editable_lines[0].qty_delivered_method == 'manual':
-                            vals['qty_delivered'] = all_editable_lines[0].product_uom_qty + diff_qty
-                        all_editable_lines[0].with_context(sale_catalog_no_message_post=True).write(vals)
+                            vals['qty_delivered'] = all_editable_lines[0].product_uom_qty + diff_qty all_editable_lines[0].with_context(sale_catalog_no_message_post=True).write(vals)
                         continue
                     # diff_qty is negative, we remove the quantities from existing editable lines:
                     for line in all_editable_lines:
@@ -80,8 +75,7 @@ class ProductProduct(models.Model):
                             'product_uom_qty': new_line_qty
                         }
                         if line.qty_delivered_method == 'manual':
-                            vals['qty_delivered'] = new_line_qty
-                        line.with_context(sale_catalog_no_message_post=True).write(vals)
+                            vals['qty_delivered'] = new_line_qty line.with_context(sale_catalog_no_message_post=True).write(vals)
                         if diff_qty == 0:
                             break
                 elif diff_qty > 0:  # create new SOL

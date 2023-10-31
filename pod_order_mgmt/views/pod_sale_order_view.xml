@@ -89,7 +89,7 @@
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
 
-                <xpath expr="//div[@name='order_button_group']" position="inside">
+                <xpath expr="//group[@name='sale_header']" position="after">
                     <div class="right-buttons">
                         <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Complete Pair" type="action"></button>
                         <button name="%(complete_pair_order_wizard)d" states="draft,sent" class="btn btn-info" string="Accommodations" type="action" style="margin-left: 3px;"></button>
@@ -99,6 +99,7 @@
                     <!-- <hr states="draft,sent"/> -->
                 </xpath>
 
+          
                 <!-- <xpath expr="//page[@name='order_lines']" position="after">
                     <page string="Sale order History">
                         <field name="order_details_ids">

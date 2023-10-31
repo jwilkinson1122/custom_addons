@@ -1,8 +1,8 @@
 import logging
 from io import StringIO
 
-from mako.runtime import Context
-from mako.template import Template
+# from mako.runtime import Context
+# from mako.template import Template
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError

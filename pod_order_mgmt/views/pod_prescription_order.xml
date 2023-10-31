@@ -74,7 +74,7 @@
                     </group>
 
                     <notebook>
-                        <page string="Test RX Lines" name="prescription_lines" autofocus="autofocus">
+                        <!-- <page string="Test RX Lines" name="prescription_lines" autofocus="autofocus">
                             <button class="oe_highlight" groups="product_configurator.group_product_configurator" name="action_config_start" states="draft,sent" string="Configure Product" type="object" />
                             <group string="Product Details">
                                 <div style="max-height: 400px; overflow-y: auto;">
@@ -123,25 +123,40 @@
                                     </field>
                                 </div>
                             </group>
-                        </page>
-                        <page string="Prescription Details" name="prescription_details">
-                            <button name="button_launch_wizard" string="Launch Configurator" type="object" class="btn-primary"/>
-                            <group string="Product Details">
-                                <div style="max-height: 400px; overflow-y: auto;">
-                                    <field name="prescription_order_lines" widget="one2many_list" nolabel="1">
+                        </page> -->
+                        <page string="Prescription Details" name="prescription_details" autofocus="autofocus">
+                            <group>
+                                <group string="Right" name="right_foot">
+                                    <field name="prescription_order_lines" nolabel="1" colspan="2" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                         <tree editable="bottom">
                                             <field name="state" invisible="1"/>
                                             <field name="prescription_order_id" invisible="1"/>
                                             <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                            <field name="prescription_order_line_image" widget="image" style="height:30px ;width:30px;" readonly="1"/>
                                             <field name="quantity"/>
                                             <field name="uom_id"/>
-                                            <field name="remark" string="Note"/>
                                         </tree>
                                     </field>
-                                </div>
+                                </group>
+                                <group string="Left" name="left_foot">
+                                    <field name="prescription_order_lines" nolabel="1" colspan="2" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
+                                        <tree editable="bottom">
+                                            <field name="state" invisible="1"/>
+                                            <field name="prescription_order_id" invisible="1"/>
+                                            <field name="product_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group colspan="4">
+                                    <field colspan="2" name="notes" nolabel="1" placeholder="Notes..."/>
+                                </group>
                             </group>
                         </page>
+
+
                         <page string="Values">
                             <group invisible="1">
                                 <field name="laterality" invisible="1"/>

@@ -16,3 +16,11 @@
 .o_attachment.o_attachment_many2many {
   width: 100%;
 }
+
+.o_group[name="right_foot"],
+.o_group[name="left_foot"] {
+    border: 2px solid #000; /* Adjust border color and width as needed */
+    border-radius: 10px; /* Adjust the border-radius for rounded corners */
+    padding: 10px; /* Adjust padding as needed */
+    margin-bottom: 20px; /* Adjust margin as needed */
+}

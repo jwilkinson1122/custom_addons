@@ -4,11 +4,11 @@
 # from . import product_uom
 # from . import product
 
-from . import pod_product_template
-from . import pod_product_category
-from . import pod_product_attribute
+# from . import pod_product_template
+# from . import pod_product_category
+# from . import pod_product_attribute
 from . import pod_product
-from . import pod_product_uom
+# from . import pod_product_uom
 from . import pod_ir_actions
 from . import pod_sale_order
 from . import pod_account_move

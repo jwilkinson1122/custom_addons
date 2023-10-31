@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_device_design_user,device_design user,model_device_design,device_group_user,1,0,0,0
+access_device_design_manager,device_design manager,model_device_design,device_group_manager,1,1,1,1
+access_device_die_user,device_die user,model_device_die,device_group_user,1,0,0,0
+access_device_die_manager,device_die manager,model_device_die,device_group_manager,1,1,1,1
+access_device_difficulty_user,device_difficulty user,model_device_difficulty,device_group_user,1,0,0,0
+access_device_difficulty_manager,device_difficulty manager,model_device_difficulty,device_group_manager,1,1,1,1
+access_device_finishing_user,device_finishing user,model_device_finishing,device_group_user,1,0,0,0
+access_device_finishing_manager,device_finishing manager,model_device_finishing,device_group_manager,1,1,1,1
+access_device_material_user,device_material user,model_device_material,device_group_user,1,0,0,0
+access_device_material_manager,device_material manager,model_device_material,device_group_manager,1,1,1,1
+access_device_pricelist_user,device_pricelist user,model_device_pricelist,device_group_user,1,0,0,0
+access_device_pricelist_manager,device_pricelist manager,model_device_pricelist,device_group_manager,1,1,1,1
+access_device_pricelist_item_user,device_pricelist_item user,model_device_pricelist_item,device_group_user,1,0,0,0
+access_device_pricelist_item_manager,device_pricelist_item manager,model_device_pricelist_item,device_group_manager,1,1,1,1
+access_device_configure_user,device_configure user,model_device_configure,device_group_user,1,1,1,0
+access_device_configure_manager,device_configure manager,model_device_configure,device_group_manager,1,1,1,1
