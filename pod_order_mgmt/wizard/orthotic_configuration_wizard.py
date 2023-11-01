@@ -25,7 +25,6 @@ class OrthoticConfiguratorWizard(models.TransientModel):
     quantity = fields.Float(string='Quantity', default=1.0)
 
     product_tmpl_id = fields.Many2one('product.template', string='Product Template')
-
     # product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
     product_id = fields.Many2one('product.product', string='Product')
     attribute_value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')

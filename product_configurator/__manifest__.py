@@ -8,9 +8,7 @@
     "website": "https://github.com/GlodoUK/product-configurator",
     "depends": ["account"],
     "external_dependencies": {
-        "python": [
-            "Mako",
-        ]
+        "python": ["Mako"]
     },
     "data": [
         "security/configurator_security.xml",

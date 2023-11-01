@@ -6,14 +6,10 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    module_pod_calendar = fields.Boolean(
-        string="Prescriptions for Patients")
-    module_pod_encounter = fields.Boolean(
-        string="Encounters for Patients")
-    module_pod_patient_tags = fields.Boolean(string="Tags for Patients")
-    module_pod_phone_validation = fields.Boolean(
-        string="Phone Number Validation for Patients")
-    
+    # module_pod_calendar = fields.Boolean(string="Prescriptions for Patients")
+    # module_pod_encounter = fields.Boolean(string="Encounters for Patients")
+    # module_pod_patient_tags = fields.Boolean(string="Tags for Patients")
+    # module_pod_phone_validation = fields.Boolean(string="Phone Number Validation for Patients")
     show_product_image_line_item = fields.Boolean(string="Show Product Image", default=False)
 
     @api.model

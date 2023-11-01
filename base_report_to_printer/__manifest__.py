@@ -1,11 +1,18 @@
+# Copyright (c) 2007 Ferran Pegueroles <ferran@pegueroles.com>
+# Copyright (c) 2009 Albert Cervera i Areny <albert@nan-tic.com>
+# Copyright (C) 2011 Agile Business Group sagl (<http://www.agilebg.com>)
+# Copyright (C) 2011 Domsense srl (<http://www.domsense.com>)
+# Copyright (C) 2013-2014 Camptocamp (<http://www.camptocamp.com>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 {
     "name": "Report to printer",
-    "version": "15.0.1.1.0",
+    "version": "16.0.1.1.4",
     "category": "Generic Modules/Base",
-    "author": "NWPL"
+    "author": "Agile Business Group & Domsense, Pegueroles SCP, NaN,"
     " LasLabs, Camptocamp, Odoo Community Association (OCA),"
     " Open for Small Business Ltd",
-    "website": "https://www.nwpodiatric.com",
+    "website": "https://github.com/OCA/report-print-send",
     "license": "AGPL-3",
     "depends": ["web"],
     "data": [
@@ -27,5 +34,5 @@
     },
     "installable": True,
     "application": False,
-    # "external_dependencies": {"python": ["pycups"]},
+    "external_dependencies": {"python": ["cups"]},
 }

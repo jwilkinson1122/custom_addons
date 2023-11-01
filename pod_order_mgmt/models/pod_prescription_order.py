@@ -183,25 +183,25 @@ class Prescription(models.Model):
     #     configurator_obj = self.env["product.configurator.prescription"]
     #     return configurator_obj.with_context( default_prescription_order_id=self.id, wizard_model="product.configurator.prescription", allow_preset_selection=True).get_wizard_action()
     
-    # def button_launch_wizard(self):
-    #     self.ensure_one()
-    #     view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
+    def button_launch_wizard(self):
+        self.ensure_one()
+        view_id = self.env.ref('pod_order_mgmt.view_orthotic_configurator_wizard_form').id
         
-    #     default_product_tmpl_id = self.env['product.template'].search([], limit=1).id
+        default_product_tmpl_id = self.env['product.template'].search([], limit=1).id
 
-    #     wizard = self.env['orthotic.configurator.wizard'].create({
-    #         'prescription_order_id': self.id,
-    #         'product_tmpl_id': default_product_tmpl_id,
-    #     })
-    #     return {
-    #         'name': _('Orthotic Configurator'),
-    #         'type': 'ir.actions.act_window',
-    #         'view_mode': 'form',
-    #         'res_model': 'orthotic.configurator.wizard',
-    #         'view_id': view_id,
-    #         'res_id': wizard.id,
-    #         'target': 'new',
-    #     }
+        wizard = self.env['orthotic.configurator.wizard'].create({
+            'prescription_order_id': self.id,
+            'product_tmpl_id': default_product_tmpl_id,
+        })
+        return {
+            'name': _('Orthotic Configurator'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'orthotic.configurator.wizard',
+            'view_id': view_id,
+            'res_id': wizard.id,
+            'target': 'new',
+        }
 
     @api.model
     def _default_stage(self):
@@ -627,6 +627,7 @@ class PrescriptionOrderHistoryLine(models.Model):
             'company_id':self.company_id,
         }
         self.env['pod.prescription.order.line'].sudo().create(vals)
+
 
 FIELDS_PROPERTIES = {
     'pod.forefoot.value': ['ff_varus', 'ff_valgus'],

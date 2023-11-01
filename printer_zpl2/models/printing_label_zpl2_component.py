@@ -218,7 +218,7 @@ class PrintingLabelZpl2Component(models.Model):
     block_justify = fields.Selection(
         selection=[
             (str(zpl2.JUSTIFY_LEFT), "Left"),
-            (str(zpl2.JUSTIFY_CENTER), "Practice"),
+            (str(zpl2.JUSTIFY_CENTER), "Center"),
             (str(zpl2.JUSTIFY_JUSTIFIED), "Justified"),
             (str(zpl2.JUSTIFY_RIGHT), "Right"),
         ],

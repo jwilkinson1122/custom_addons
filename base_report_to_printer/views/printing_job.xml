@@ -6,7 +6,12 @@
         <field name="arch" type="xml">
             <form string="Job">
                 <header>
-                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': [('job_state', 'in', ('canceled', 'aborted', 'completed'))]}" />
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        attrs="{'invisible': [('job_state', 'in', ('canceled', 'aborted', 'completed'))]}"
+                    />
                     <field name="job_state" widget="statusbar" />
                 </header>
                 <sheet>

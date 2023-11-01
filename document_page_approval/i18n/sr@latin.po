@@ -32,27 +32,27 @@ msgstr ""
 #: model:mail.template,body_html:document_page_approval.email_template_new_draft_need_approval
 msgid ""
 "<p>Hello,</p>\n"
-"            <p><t t-out=\"object.create_uid.name\"/> submited a new Change "
-"Request for <b t-out=\"object.page_id.name\"/> and it needs your approval.</"
-"p>\n"
+"            <p><t t-out=\"object.create_uid.name\"></t> submited a new "
+"Change Request for <b t-out=\"object.page_id.name\"></b> and it needs your "
+"approval.</p>\n"
 "            <h1>\n"
 "                <a t-att-href=\"object.page_url\" t-out=\"object.display_name"
-"\"/>\n"
+"\"></a>\n"
 "            </h1>\n"
-"            <p><b>Modified by:</b> <t t-out=\"object.create_uid.name\"/></"
+"            <p><b>Modified by:</b> <t t-out=\"object.create_uid.name\"></t></"
 "p>\n"
-"            <p><b>Date:</b> <t t-out=\"object.create_date\"/></p>\n"
+"            <p><b>Date:</b> <t t-out=\"object.create_date\"></t></p>\n"
 "            <t t-if=\"object.summary\">\n"
 "                <h3>Summary</h3>\n"
-"                <p t-out=\"object.summary\"/>\n"
+"                <p t-out=\"object.summary\"></p>\n"
 "            </t>\n"
 "            <h3>Diff</h3>\n"
 "            <div style=\"overflow-x:scroll; font-size:0.85em; margin-"
 "bottom:2em;\">\n"
-"                <t t-out=\"object.diff\"/>\n"
+"                <t t-out=\"object.diff\"></t>\n"
 "            </div>\n"
 "            <p>Have a great day.</p>\n"
-"            <br/>\n"
+"            <br>\n"
 "            <p>Odoo</p>\n"
 "        "
 msgstr ""
@@ -134,12 +134,14 @@ msgid "Back to draft"
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "Can't approve page in '%s' state."
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "Can't approve pages in '%s' state."
@@ -164,12 +166,14 @@ msgid "Change Requests"
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "Change request <b>%(name)s</b> has been cancelled by %(user)s."
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "Change request has been approved by %s."
@@ -223,7 +227,6 @@ msgstr ""
 
 #. module: document_page_approval
 #: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction
-#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
@@ -260,6 +263,7 @@ msgid "Messages"
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "New version of the document %s approved."
@@ -282,17 +286,12 @@ msgstr ""
 
 #. module: document_page_approval
 #: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: document_page_approval
 #: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: document_page_approval
-#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: document_page_approval
@@ -351,16 +350,6 @@ msgid "URL"
 msgstr ""
 
 #. module: document_page_approval
-#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: document_page_approval
-#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: document_page_approval
 #: model:ir.model.fields,field_description:document_page_approval.field_document_page__user_has_drafts
 msgid "User has drafts?"
 msgstr ""
@@ -371,16 +360,7 @@ msgid "Users must also belong to the Approvers group"
 msgstr ""
 
 #. module: document_page_approval
-#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: document_page_approval
-#: model:ir.model.fields,help:document_page_approval.field_document_page_history__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid ""
@@ -389,6 +369,7 @@ msgid ""
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid ""
@@ -397,6 +378,7 @@ msgid ""
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid ""
@@ -405,6 +387,7 @@ msgid ""
 msgstr ""
 
 #. module: document_page_approval
+#. odoo-python
 #: code:addons/document_page_approval/models/document_page_history.py:0
 #, python-format
 msgid "You need to cancel it before reopening."

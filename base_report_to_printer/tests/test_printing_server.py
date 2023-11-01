@@ -1,3 +1,6 @@
+# Copyright 2016 LasLabs Inc.
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 from unittest import mock
 
 from odoo import fields
@@ -92,7 +95,7 @@ class TestPrintingServer(TransactionCase):
         """It should update status even if printer is archived"""
         rec_id = self.new_printer()
         rec_id.toggle_active()
-        self.server.refresh()
+        self.server.invalidate_model()
         cups.Connection().getPrinters().get.return_value = False
         self.Model.action_update_printers()
         self.assertEqual(

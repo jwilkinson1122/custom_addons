@@ -1,3 +1,6 @@
+# Copyright (C) 2016 SYLEAM (<http://www.syleam.fr>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 import logging
 from datetime import datetime
 
@@ -63,7 +66,7 @@ class PrintingServer(models.Model):
                 if self.encryption_policy:
                     cups.setEncryption(int(self.encryption_policy))
                 if self.password:
-                    cups.setPasswordNWP(pw_callback)
+                    cups.setPasswordCB(pw_callback)
 
             connection = cups.Connection(host=self.address, port=self.port)
         except Exception:

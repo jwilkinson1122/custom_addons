@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-17 00:50+0000\n"
-"PO-Revision-Date: 2023-03-30 15:22+0000\n"
+"PO-Revision-Date: 2023-03-30 14:34+0000\n"
 "Last-Translator: Matjaz Mozetic <matjaz@luxim.si>\n"
 "Language-Team: Slovenian (https://www.transifex.com/oca/teams/23907/sl/)\n"
 "Language: sl\n"
@@ -21,6 +21,7 @@ msgstr ""
 "X-Generator: Weblate 4.14.1\n"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "%s (copy)"
@@ -180,8 +181,9 @@ msgstr "Prikazani naziv"
 
 #. module: document_page
 #: model_terms:ir.ui.view,arch_db:document_page.view_document_category_filter
+#, fuzzy
 msgid "Document Category"
-msgstr "Kategorija dokumenta"
+msgstr "Zgodovina strani dokumentov"
 
 #. module: document_page
 #: model:ir.actions.report,name:document_page.report_document_page
@@ -273,7 +275,6 @@ msgstr ""
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
@@ -416,17 +417,12 @@ msgstr ""
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: document_page
@@ -488,6 +484,7 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/wizard/document_page_show_diff.py:0
 #, python-format
 msgid "Select one or maximum two history revisions!"
@@ -505,7 +502,6 @@ msgstr ""
 #. module: document_page
 #: model:ir.model.fields,field_description:document_page.field_document_page__draft_summary
 #: model:ir.model.fields,field_description:document_page.field_document_page_history__summary
-#: model_terms:ir.ui.view,arch_db:document_page.view_wiki_filter
 msgid "Summary"
 msgstr ""
 
@@ -523,6 +519,7 @@ msgid ""
 msgstr ""
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page_history.py:0
 #, python-format
 msgid "There are no changes in revisions."
@@ -545,28 +542,8 @@ msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__backend_url
 msgid "Use it to link resources univocally"
-msgstr ""
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: document_page
@@ -575,6 +552,7 @@ msgid "Wizard Create Menu"
 msgstr ""
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -599,7 +577,11 @@ msgid "or"
 msgstr "ali"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "summary"
 msgstr ""
+
+#~ msgid "Document History"
+#~ msgstr "Zgodovina dokumenta"

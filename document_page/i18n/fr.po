@@ -21,6 +21,7 @@ msgstr ""
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "%s (copy)"
@@ -272,7 +273,6 @@ msgstr "Icône indiquant une activité d’exception."
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Si coché, de nouveaux messages requièrent votre attention."
 
@@ -415,18 +415,13 @@ msgstr "Nombre d’erreurs"
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages qui requièrent une action"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Nombre de message avec une erreur d’envoi"
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de messages non lus"
 
 #. module: document_page
 #: model:ir.model.fields,field_description:document_page.field_document_page_history__page_id
@@ -487,6 +482,7 @@ msgid "SMS Delivery error"
 msgstr "Erreur d’envoi du minimessage"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/wizard/document_page_show_diff.py:0
 #, python-format
 msgid "Select one or maximum two history revisions!"
@@ -508,7 +504,6 @@ msgstr ""
 #. module: document_page
 #: model:ir.model.fields,field_description:document_page.field_document_page__draft_summary
 #: model:ir.model.fields,field_description:document_page.field_document_page_history__summary
-#: model_terms:ir.ui.view,arch_db:document_page.view_wiki_filter
 msgid "Summary"
 msgstr "Résumé"
 
@@ -528,6 +523,7 @@ msgstr ""
 "cette catégorie."
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page_history.py:0
 #, python-format
 msgid "There are no changes in revisions."
@@ -550,30 +546,9 @@ msgid "Type of the exception activity on record."
 msgstr "Type d’activité d’exception enregistrée."
 
 #. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread
-msgid "Unread Messages"
-msgstr "Messages non lus"
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Nombre de messages non lus"
-
-#. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__backend_url
 msgid "Use it to link resources univocally"
 msgstr "À utiliser pour lier les ressources de façon univoque"
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Messages"
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__website_message_ids
-msgid "Website communication history"
-msgstr ""
 
 #. module: document_page
 #: model:ir.model,name:document_page.model_document_page_create_menu
@@ -581,6 +556,7 @@ msgid "Wizard Create Menu"
 msgstr "Assistant de création de menu"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -605,6 +581,7 @@ msgid "or"
 msgstr "ou"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "summary"
@@ -613,8 +590,24 @@ msgstr "résumé"
 #~ msgid "Document History"
 #~ msgstr "Historique du document"
 
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Nombre de messages qui requièrent une action"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de messages non lus"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Messages non lus"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Nombre de messages non lus"
+
 #~ msgid "Followers (Channels)"
 #~ msgstr "Abonnés (Canaux)"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Messages"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si coché, de nouveaux messages requièrent votre attention."

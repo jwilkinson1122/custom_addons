@@ -22,6 +22,7 @@ msgstr ""
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "%s (copy)"
@@ -273,7 +274,6 @@ msgstr "Значок, обозначающий действие исключен
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Если флажок установлен, новые сообщения требуют вашего внимания."
 
@@ -417,18 +417,13 @@ msgstr "Количество ошибок"
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих действия"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Количество сообщений с ошибкой доставки"
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Количество непрочитанных сообщений"
 
 #. module: document_page
 #: model:ir.model.fields,field_description:document_page.field_document_page_history__page_id
@@ -489,6 +484,7 @@ msgid "SMS Delivery error"
 msgstr "Ошибка доставки SMS"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/wizard/document_page_show_diff.py:0
 #, python-format
 msgid "Select one or maximum two history revisions!"
@@ -510,7 +506,6 @@ msgstr ""
 #. module: document_page
 #: model:ir.model.fields,field_description:document_page.field_document_page__draft_summary
 #: model:ir.model.fields,field_description:document_page.field_document_page_history__summary
-#: model_terms:ir.ui.view,arch_db:document_page.view_wiki_filter
 msgid "Summary"
 msgstr "Резюме"
 
@@ -530,6 +525,7 @@ msgstr ""
 "новых страниц этой категории."
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page_history.py:0
 #, python-format
 msgid "There are no changes in revisions."
@@ -552,29 +548,9 @@ msgid "Type of the exception activity on record."
 msgstr "Тип исключения."
 
 #. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread
-msgid "Unread Messages"
-msgstr "Непрочитанные сообщения"
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Счетчик непрочитанных сообщений"
-
-#. module: document_page
 #: model:ir.model.fields,help:document_page.field_document_page__backend_url
 msgid "Use it to link resources univocally"
 msgstr "Используйте для ссылки на ресурсы"
-
-#. module: document_page
-#: model:ir.model.fields,field_description:document_page.field_document_page__website_message_ids
-msgid "Website Messages"
-msgstr "Сообщения веб-сайта"
-
-#. module: document_page
-#: model:ir.model.fields,help:document_page.field_document_page__website_message_ids
-msgid "Website communication history"
-msgstr "История общения на сайте"
 
 #. module: document_page
 #: model:ir.model,name:document_page.model_document_page_create_menu
@@ -582,6 +558,7 @@ msgid "Wizard Create Menu"
 msgstr "Мастер создания меню"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -606,6 +583,7 @@ msgid "or"
 msgstr "или"
 
 #. module: document_page
+#. odoo-python
 #: code:addons/document_page/models/document_page.py:0
 #, python-format
 msgid "summary"
@@ -614,5 +592,23 @@ msgstr ""
 #~ msgid "Document History"
 #~ msgstr "История документа"
 
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Количество сообщений, требующих действия"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Количество непрочитанных сообщений"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочитанные сообщения"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Счетчик непрочитанных сообщений"
+
 #~ msgid "Followers (Channels)"
 #~ msgstr "Подписчики (каналы)"
+
+#~ msgid "Website Messages"
+#~ msgstr "Сообщения веб-сайта"
+
+#~ msgid "Website communication history"
+#~ msgstr "История общения на сайте"

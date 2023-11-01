@@ -124,9 +124,13 @@
                                 </div>
                             </group>
                         </page> -->
+
+      
                         <page string="Prescription Details" name="prescription_details" autofocus="autofocus">
                             <group>
                                 <group string="Right" name="right_foot">
+                                    <button name="button_launch_wizard" string="Launch Configurator" type="object" class="btn-primary"/>
+
                                     <field name="prescription_order_lines" nolabel="1" colspan="2" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                         <tree editable="bottom">
                                             <field name="state" invisible="1"/>
@@ -138,6 +142,8 @@
                                     </field>
                                 </group>
                                 <group string="Left" name="left_foot">
+                                    <button name="button_launch_wizard" string="Launch Configurator" type="object" class="btn-primary"/>
+
                                     <field name="prescription_order_lines" nolabel="1" colspan="2" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                         <tree editable="bottom">
                                             <field name="state" invisible="1"/>
@@ -456,7 +462,7 @@
     </record>
 
     <!-- Calendar View -->
-    <record id="view_pod_prescription_order_calendar" model="ir.ui.view">
+    <!-- <record id="view_pod_prescription_order_calendar" model="ir.ui.view">
         <field name="name">pod.prescription.order.calendar</field>
         <field name="model">pod.prescription.order</field>
         <field eval="2" name="priority" />
@@ -468,7 +474,7 @@
                 <field name="date" />
             </calendar>
         </field>
-    </record>
+    </record> -->
 
     <!-- Pivot View -->
     <record id="view_pod_prescription_order_pivot" model="ir.ui.view">
@@ -506,7 +512,7 @@
         <field name="name">Prescriptions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pod.prescription.order</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,activity</field>
         <field name="search_view_id" ref="view_pod_prescription_order_filter" />
         <field name="context">{}</field>
     </record>

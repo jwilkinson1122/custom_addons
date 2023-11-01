@@ -1,3 +1,10 @@
+# Copyright (c) 2007 Ferran Pegueroles <ferran@pegueroles.com>
+# Copyright (c) 2009 Albert Cervera i Areny <albert@nan-tic.com>
+# Copyright (C) 2011 Agile Business Group sagl (<http://www.agilebg.com>)
+# Copyright (C) 2011 Domsense srl (<http://www.domsense.com>)
+# Copyright (C) 2013-2014 Camptocamp (<http://www.camptocamp.com>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import _, api, exceptions, fields, models
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -103,7 +110,7 @@ class IrActionsReport(models.Model):
         method_name = "_render_qweb_%s" % (report_type)
         document, doc_format = getattr(
             self.with_context(must_skip_send_to_printer=True), method_name
-        )(record_ids, data=data)
+        )(self.report_name, record_ids, data=data)
         behaviour = self.behaviour()
         printer = behaviour.pop("printer", None)
 
@@ -143,40 +150,44 @@ class IrActionsReport(models.Model):
             res["id"] = self.id
         return res
 
-    def _render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         """Generate a PDF and returns it.
 
         If the action configured on the report is server, it prints the
         generated document as well.
         """
-        document, doc_format = super()._render_qweb_pdf(res_ids=res_ids, data=data)
-
-        behaviour = self.behaviour()
+        document, doc_format = super()._render_qweb_pdf(
+            report_ref, res_ids=res_ids, data=data
+        )
+        report = self._get_report(report_ref)
+        behaviour = report.behaviour()
         printer = behaviour.pop("printer", None)
-        can_print_report = self._can_print_report(behaviour, printer, document)
+        can_print_report = report._can_print_report(behaviour, printer, document)
 
         if can_print_report:
             printer.print_document(
-                self, document, doc_format=self.report_type, **behaviour
+                report, document, doc_format=report.report_type, **behaviour
             )
 
         return document, doc_format
 
-    def _render_qweb_text(self, docids, data=None):
+    def _render_qweb_text(self, report_ref, docids, data=None):
         """Generate a TEXT file and returns it.
 
         If the action configured on the report is server, it prints the
         generated document as well.
         """
-        document, doc_format = super()._render_qweb_text(docids=docids, data=data)
-
-        behaviour = self.behaviour()
+        document, doc_format = super()._render_qweb_text(
+            report_ref, docids=docids, data=data
+        )
+        report = self._get_report(report_ref)
+        behaviour = report.behaviour()
         printer = behaviour.pop("printer", None)
-        can_print_report = self._can_print_report(behaviour, printer, document)
+        can_print_report = report._can_print_report(behaviour, printer, document)
 
         if can_print_report:
             printer.print_document(
-                self, document, doc_format=self.report_type, **behaviour
+                report, document, doc_format=report.report_type, **behaviour
             )
 
         return document, doc_format

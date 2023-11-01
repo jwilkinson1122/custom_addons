@@ -1,3 +1,10 @@
+# Copyright (c) 2007 Ferran Pegueroles <ferran@pegueroles.com>
+# Copyright (c) 2009 Albert Cervera i Areny <albert@nan-tic.com>
+# Copyright (C) 2011 Agile Business Group sagl (<http://www.agilebg.com>)
+# Copyright (C) 2011 Domsense srl (<http://www.domsense.com>)
+# Copyright (C) 2013-2014 Camptocamp (<http://www.camptocamp.com>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from odoo import api, fields, models
 
 
@@ -13,7 +20,9 @@ class ResUsers(models.Model):
         ]
 
     printing_action = fields.Selection(selection=_user_available_action_types)
-    printing_printer_id = fields.Many2one(comodel_name="printing.printer", string="Default Printer")
+    printing_printer_id = fields.Many2one(
+        comodel_name="printing.printer", string="Default Printer"
+    )
 
     @property
     def SELF_READABLE_FIELDS(self):
