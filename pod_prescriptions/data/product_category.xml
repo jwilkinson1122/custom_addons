@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <!-- Custom -->
+    <record id="product_category_custom" model="product.category">
+        <field name="name">Custom Devices</field>
+    </record>
+    <!-- Superglass -->
+    <record id="product_category_superglass" model="product.category">
+        <field name="name">Superglass</field>
+        <field name="parent_id" ref="product_category_custom"/>
+    </record>
+    <record id="product_category_superglass_flex" model="product.category">
+        <field name="name">Flex</field>
+        <field name="parent_id" ref="product_category_superglass"/>
+    </record>
+    <record id="product_category_superglass_everyday" model="product.category">
+        <field name="name">Everyday</field>
+        <field name="parent_id" ref="product_category_superglass"/>
+    </record>
+    <record id="product_category_superglass_proformance" model="product.category">
+        <field name="name">Proformance</field>
+        <field name="parent_id" ref="product_category_superglass"/>
+    </record>
+
+    <!-- Polypropylene -->
+    <record id="product_category_polypropylene" model="product.category">
+        <field name="name">Polypropylene</field>
+        <field name="parent_id" ref="product_category_custom"/>
+    </record>
+    <record id="product_category_polypropylene_semi_flexible" model="product.category">
+        <field name="name">Semi-Flexible</field>
+        <field name="parent_id" ref="product_category_polypropylene"/>
+    </record>
+    <record id="product_category_polypropylene_semi_rigid" model="product.category">
+        <field name="name">Semi-Rigid</field>
+        <field name="parent_id" ref="product_category_polypropylene"/>
+    </record>
+    <record id="product_category_polypropylene_rigid" model="product.category">
+        <field name="name">Rigid</field>
+        <field name="parent_id" ref="product_category_polypropylene"/>
+    </record>
+
+
+    <!-- NCV -->
+    <record id="product_category_ncv" model="product.category">
+        <field name="name">NCV</field>
+        <field name="parent_id" ref="product_category_custom"/>
+    </record>
+    <record id="product_category_ncv_gentle" model="product.category">
+        <field name="name">Gentle</field>
+        <field name="parent_id" ref="product_category_ncv"/>
+    </record>
+    <record id="product_category_ncv_firm" model="product.category">
+        <field name="name">Firm</field>
+        <field name="parent_id" ref="product_category_ncv"/>
+    </record>
+
+    <!-- Prescription Comfort -->
+    <record id="product_category_prescription_comfort" model="product.category">
+        <field name="name">Prescription Comfort</field>
+        <field name="parent_id" ref="product_category_custom"/>
+    </record>
+    <record id="product_category_prescription_comfort_multi_density" model="product.category">
+        <field name="name">Multi-Density</field>
+        <field name="parent_id" ref="product_category_prescription_comfort"/>
+    </record>
+    <record id="product_category_prescription_comfort_composite" model="product.category">
+        <field name="name">Composite</field>
+        <field name="parent_id" ref="product_category_prescription_comfort"/>
+    </record>
+
+    <!-- OTC -->
+    <record id="product_category_otc" model="product.category">
+        <field name="name">OTC Devices</field>
+    </record>
+    <record id="product_category_otc_premium" model="product.category">
+        <field name="name">Premium</field>
+        <field name="parent_id" ref="product_category_otc"/>
+    </record>
+    <record id="product_category_otc_elite" model="product.category">
+        <field name="name">Elite</field>
+        <field name="parent_id" ref="product_category_otc"/>
+    </record>
+    <record id="product_category_otc_childrens" model="product.category">
+        <field name="name">Childrens</field>
+        <field name="parent_id" ref="product_category_otc"/>
+    </record>
+
+    <!-- Braces -->
+    <record id="product_category_brace" model="product.category">
+        <field name="name">Brace Devices</field>
+    </record>
+    <record id="product_category_brace_aerospring" model="product.category">
+        <field name="name">Richie – Aerospring</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+    <record id="product_category_brace_standard" model="product.category">
+        <field name="name">Richie – Standard</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+    <record id="product_category_brace_dynamic_assist" model="product.category">
+        <field name="name">Richie – Dynamic Assist</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+    <record id="product_category_brace_gauntlet" model="product.category">
+        <field name="name">Richie – Gauntlet</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+    <record id="product_category_brace_california_afo" model="product.category">
+        <field name="name">Richie – California AFO</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+    <record id="product_category_brace_solid_afo" model="product.category">
+        <field name="name">Richie – Solid AFO</field>
+        <field name="parent_id" ref="product_category_brace"/>
+    </record>
+
+    <!-- Arch Height -->
+    <record id="product_category_arch_height" model="product.category">
+        <field name="name">Arch Height</field>
+    </record>
+    <record id="product_category_arch_height_standard" model="product.category">
+        <field name="name">Standard</field>
+        <field name="parent_id" ref="product_category_arch_height"/>
+    </record>
+    <record id="product_category_arch_height_sulcus" model="product.category">
+        <field name="name">Sulcus</field>
+        <field name="parent_id" ref="product_category_arch_height"/>
+    </record>
+    <record id="product_category_arch_height_full" model="product.category">
+        <field name="name">Full</field>
+        <field name="parent_id" ref="product_category_arch_height"/>
+    </record>
+    <record id="product_category_arch_height_complete" model="product.category">
+        <field name="name">Complete</field>
+        <field name="parent_id" ref="product_category_arch_height"/>
+    </record>
+    
+</odoo>

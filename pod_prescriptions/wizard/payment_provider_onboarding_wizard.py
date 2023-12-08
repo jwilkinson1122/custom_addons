@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+
+
+from odoo import fields, models
+
+
+class PaymentWizard(models.TransientModel):
+    """ Override for the prescriptions quotation onboarding panel. """
+
+    _inherit = 'payment.provider.onboarding.wizard'
+    _name = 'prescriptions.payment.provider.onboarding.wizard'
+    _description = 'Prescription Payment provider onboarding wizard'
+
+    def _get_default_payment_method(self):
+        return self.env.company.prescriptions_onboarding_payment_method or 'digital_signature'
+
+    payment_method = fields.Selection(selection_add=[
+        ('digital_signature', "Electronic signature"),
+        ('stripe', "Credit & Debit card (via Stripe)"),
+        ('paypal', "PayPal"),
+        ('manual', "Custom payment instructions"),
+    ], default=_get_default_payment_method)
+
+    def add_payment_methods(self):
+        self.env.company.prescriptions_onboarding_payment_method = self.payment_method
+        if self.payment_method == 'digital_signature':
+            self.env.company.portal_confirmation_sign = True
+        if self.payment_method in ('paypal', 'stripe', 'other', 'manual'):
+            self.env.company.portal_confirmation_pay = True
+
+        return super().add_payment_methods()
+
+    def _start_stripe_onboarding(self):
+        """ Override of payment to set the prescriptions menu as start menu of the payment onboarding. """
+        menu_id = self.env.ref('pod_prescriptions.prescriptions_menu_root').id
+        return self.env.company._run_payment_onboarding_step(menu_id)

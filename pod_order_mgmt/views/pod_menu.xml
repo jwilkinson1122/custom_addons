@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-    <menuitem id="pod_order_mgmt.pod_prescription_orders_menu" name="Prescriptions" parent="sale.sale_order_menu" sequence="0" action="pod_order_mgmt.action_pod_prescription_orders"/>
-
-</odoo>
