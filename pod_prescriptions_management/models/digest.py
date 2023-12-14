@@ -19,7 +19,7 @@ class Digest(models.Model):
             'prescriptions.report',
             'kpi_all_prescriptions_total_value',
             date_field='date',
-            additional_domain=[('state', 'not in', ['draft', 'cancel', 'sent'])],
+            additional_domain=[('state', 'not in', ['draft', 'cancel', 'ongoing'])],
             sum_field='price_total',
         )
 

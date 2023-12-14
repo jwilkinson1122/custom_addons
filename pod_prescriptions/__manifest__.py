@@ -12,6 +12,7 @@
 This module contains all the common features of Prescriptions Management and eCommerce.
     """,
     'depends': [
+        'pod_contacts',
         'account',
         'account_accountant',
         'account_payment',  # -> account, payment, portal
@@ -70,7 +71,9 @@ This module contains all the common features of Prescriptions Management and eCo
         'wizard/prescriptions_order_cancel_views.xml',
         'wizard/prescriptions_order_discount_views.xml',
 
+
         # Define prescriptions order views before their references
+        'views/sale_order_views.xml',
         'views/prescriptions_order_views.xml',
 
         'views/account_views.xml',

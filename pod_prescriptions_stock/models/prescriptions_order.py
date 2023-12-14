@@ -66,7 +66,7 @@ class PrescriptionOrder(models.Model):
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
         for order in self:
-            pickings = order.picking_ids.filtered(lambda x: x.state == 'sales' and x.location_dest_id.usage == 'customer')
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             dates_list = [date for date in pickings.mapped('date_done') if date]
             order.effective_date = min(dates_list, default=False)
 
@@ -75,9 +75,9 @@ class PrescriptionOrder(models.Model):
         for order in self:
             if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
                 order.delivery_status = False
-            elif all(p.state in ['sales', 'cancel'] for p in order.picking_ids):
+            elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'sales' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids):
                 order.delivery_status = 'partial'
             else:
                 order.delivery_status = 'pending'
@@ -95,14 +95,14 @@ class PrescriptionOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
     def write(self, values):
-        if values.get('order_line') and self.state == 'sales':
+        if values.get('order_line') and self.state == 'done':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
         if values.get('partner_shipping_id'):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
-                picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('sales', 'cancel'))
+                picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
                 message = _("""The delivery address has been changed on the Prescriptions Order<br/>
                         From <strong>"%s"</strong> To <strong>"%s"</strong>,
                         You should probably update the partner on this document.""",
@@ -117,7 +117,7 @@ class PrescriptionOrder(models.Model):
                 order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
 
         res = super(PrescriptionOrder, self).write(values)
-        if values.get('order_line') and self.state == 'sales':
+        if values.get('order_line') and self.state == 'done':
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for order in self:
                 to_log = {}
@@ -160,7 +160,7 @@ class PrescriptionOrder(models.Model):
         for order in self:
             default_warehouse_id = self.env['ir.default'].with_company(
                 order.company_id.id)._get_model_defaults('prescriptions.order').get('warehouse_id')
-            if order.state in ['draft', 'sent'] or not order.ids:
+            if order.state in ['draft', 'ongoing'] or not order.ids:
                 # Should expect empty
                 if default_warehouse_id is not None:
                     order.warehouse_id = default_warehouse_id
@@ -171,7 +171,7 @@ class PrescriptionOrder(models.Model):
     def _onchange_partner_shipping_id(self):
         res = {}
         pickings = self.picking_ids.filtered(
-            lambda p: p.state not in ['sales', 'cancel'] and p.partner_id != self.partner_shipping_id
+            lambda p: p.state not in ['done', 'cancel'] and p.partner_id != self.partner_shipping_id
         )
         if pickings:
             res['warning'] = {
@@ -188,10 +188,10 @@ class PrescriptionOrder(models.Model):
     def _action_cancel(self):
         documents = None
         for prescriptions_order in self:
-            if prescriptions_order.state == 'sales' and prescriptions_order.order_line:
+            if prescriptions_order.state == 'done' and prescriptions_order.order_line:
                 prescriptions_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in prescriptions_order.order_line}
                 documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(prescriptions_order_lines_quantities, 'move_ids', 'UP')
-        self.picking_ids.filtered(lambda p: p.state != 'sales').action_cancel()
+        self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
         if documents:
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
@@ -241,7 +241,7 @@ class PrescriptionOrder(models.Model):
             visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
             order_line_ids = self.env['prescriptions.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
             prescriptions_order_ids = order_line_ids.mapped('order_id')
-            impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('sales', 'cancel')).mapped('picking_id')
+            impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {
                 'prescriptions_order_ids': prescriptions_order_ids,
                 'order_exceptions': order_exceptions.values(),

@@ -48,7 +48,7 @@ class PodiatryPatient(models.Model):
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     
-    # patient_prescription_ids = fields.One2many("pod.prescription.order", inverse_name="patient_id")
+    # patient_prescription_ids = fields.One2many("prescriptions.order", inverse_name="patient_id")
     # patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
             
     # @api.depends("patient_prescription_ids")
@@ -171,7 +171,7 @@ class PodiatryPatient(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prescriptions',
-            'res_model': 'pod.prescription.order',
+            'res_model': 'prescriptions.order',
             'domain': [('patient_id', '=', self.id)],
             'context': {'default_patient_id': self.id},
             'view_mode': 'kanban,tree,form',

@@ -21,10 +21,32 @@ INVOICE_STATUS = [
 
 PRESCRIPTION_STATE = [
     ('draft', "Draft Rx"),
+    ('ongoing', 'Ongoing'),
     ('sent', "Draft Rx Sent"),
     ('sales', "Sale"),
+    ('done', 'Closed'),
     ('cancel', "Cancelled"),
 ]
+
+
+READONLY_FIELD_STATES = {
+    state: [('readonly', True)]
+    for state in {
+        'ongoing', 'done', 'cancel'}
+}
+
+    # state = fields.Selection(
+    #     selection=[
+    #         ('draft', 'Quotation'),
+    #         ('ongoing', 'Ongoing'),
+    #         ('done', 'Closed'),
+    #         ('cancel', 'Cancelled'),
+    #     ],
+    #     string="Status",
+    #     readonly=True, copy=False, index=True,
+    #     tracking=3,
+    #     default='draft'
+    # )
 
 
 class PrescriptionOrder(models.Model):
@@ -229,6 +251,11 @@ class PrescriptionOrder(models.Model):
         inverse_name='order_id',
         string="Order Lines",
         copy=True, auto_join=True)
+    
+    order_count = fields.Integer(
+        string='Prescription Order Count', 
+        compute='_get_sale_ordered', 
+    )
 
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
@@ -419,6 +446,22 @@ class PrescriptionOrder(models.Model):
             order = order.with_company(order.company_id)
             order.pricelist_id = order.partner_id.property_product_pricelist
 
+    #=== Create SO ===#
+    @api.depends()
+    def _get_sale_ordered(self):
+        for rec in self:
+            order_ids = self.env['sale.order'].search([('prescriptions_order_id', '=', self.id)])
+            if order_ids:
+                rec.order_count = len(order_ids.ids)
+            else:
+                rec.order_count = 0
+
+    def action_view_sale_order(self):
+        orders = self.env['sale.order'].search([('prescriptions_order_id', '=', self.id)])
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
+        action['domain'] = [('id', 'in', orders.ids)]
+        return action
+
     @api.depends('pricelist_id', 'company_id')
     def _compute_currency_id(self):
         for order in self:
@@ -446,9 +489,6 @@ class PrescriptionOrder(models.Model):
     def _compute_user_id(self):
         for order in self:
             if order.partner_id and not (order._origin.id and order.user_id):
-                # Recompute the prescriptionsman on partner change
-                #   * if partner is set (is required anyway, so it will be set sooner or later)
-                #   * if the order is not saved or has no prescriptionsman already
                 order.user_id = (
                     order.partner_id.user_id
                     or order.partner_id.commercial_partner_id.user_id
@@ -496,10 +536,6 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
-        # The invoice_ids are obtained thanks to the invoice lines of the RX
-        # lines, and we also search for possible refunds created directly from
-        # existing invoices. This is necessary since such a refund is not
-        # directly linked to the RX.
         for order in self:
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
@@ -793,8 +829,82 @@ class PrescriptionOrder(models.Model):
                     "You can not delete a sent quotation or a confirmed prescriptions order."
                     " You must first cancel it."))
 
-    #=== ACTION METHODS ===#
+  
+    # @api.model
+    # def default_get(self,  default_fields):
+    #     res = super(PrescriptionOrder, self).default_get(default_fields)
+    #     record = self.env['prescriptions.order'].browse(self._context.get('active_ids',[]))
+    #     update = []
+    #     for record in record.order_line:
+    #         update.append((0,0,{
+	# 				'product_id' : record.product_id.id,
+	# 				'name' : record.name,
+	# 				'product_uom_qty' : record.product_uom_qty,
+	# 				'price_unit' : record.price_unit,
+	# 				'price_subtotal' : record.price_subtotal,
+	# 				'date_order' : record.date_order,
+	# 			}))
+    #         res.update({'order_line':update})
+    #         return res	
+    
+    # def action_create_prescription_order_to_so(self):
+    #     self.ensure_one()
+    #     res = self.env['sale.order'].browse(self._context.get('id',[]))
+    #     value = [] 
+    #     for data in self.order_line:
+    #         value.append(
+    #             [0,0,{
+    #             'product_id' : data.product_id.id,
+    #             'name' : data.name,
+    #             'product_uom_qty' : data.product_uom_qty,
+    #             'price_unit' : data.price_unit,
+    #             }
+    #              ])
+    #         res.create({
+    #             'partner_id' : self.partner_id.id,
+    #             'date_order' : self.date_order,
+    #             'order_line' : value,
+    #             })
+    #         return 
+        
+    def action_create_prescription_order_to_so(self):
+        sale_order = self.env['sale.order'].search([('prescriptions_order_id', '=', self.id)], limit=1)
+        if sale_order:
+            return self._prepare_action(_('Prescription Sale Order'), 'sale.order', sale_order.id)
+        vals = {
+            'prescriptions_order_id': self.id,
+            'partner_id': self.id,
+            'invoice_status': 'to invoice',
+        }
+        new_sale_order = self.env['sale.order'].create(vals)
+        for line in self.order_line:
+            line_vals = {
+                'order_id': new_sale_order.id,
+                'product_id': line.product_id.id,
+                'name': line.name,
+                'product_uom': line.product_id.uom_id.id,
+                'product_uom_qty': line.product_uom_qty,
+                'price_unit': line.price_unit,  
+            }
+            self.env['sale.order.line'].create(line_vals)
+        return self._prepare_action(_('Prescription Order'), 'sale.order', new_sale_order.id)
 
+    def _prepare_action(self, name, res_model, res_id=None, context=None):
+        action = {
+            'name': name,
+            'view_type': 'form',
+            'res_model': res_model,
+            'view_id': False,
+            'view_mode': 'form',
+            'type': 'ir.actions.act_window',
+        }
+        if res_id:
+            action['res_id'] = res_id
+        if context:
+            action['context'] = context
+        return action
+
+    
     def action_open_discount_wizard(self):
         self.ensure_one()
         return {
@@ -806,13 +916,21 @@ class PrescriptionOrder(models.Model):
         }
 
     def action_draft(self):
-        orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
-        return orders.write({
+        self.write({
             'state': 'draft',
             'signature': False,
             'signed_by': False,
             'signed_on': False,
         })
+
+    # def action_draft(self):
+    #     orders = self.filtered(lambda s: s.state not in ['cancel', 'done'])
+    #     return orders.write({
+    #         'state': 'draft',
+    #         'signature': False,
+    #         'signed_by': False,
+    #         'signed_on': False,
+    #     })
 
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
@@ -887,20 +1005,11 @@ class PrescriptionOrder(models.Model):
 
         self.write({'state': 'sent'})
 
+    # def action_confirm(self):
+    #     self.write({
+    #         'state': 'ongoing'
+    #     })
     def action_confirm(self):
-        """ Confirm the given quotation(s) and set their confirmation date.
-
-        If the corresponding setting is enabled, also locks the Prescription Order.
-
-        :return: True
-        :rtype: bool
-        :raise: UserError if trying to confirm cancelled RX's
-        """
-        if not all(order._can_be_confirmed() for order in self):
-            raise UserError(_(
-                "The following orders are not in a state requiring confirmation: %s",
-                ", ".join(self.mapped('display_name')),
-            ))
 
         self.order_line._validate_analytic_distribution()
 
@@ -911,9 +1020,6 @@ class PrescriptionOrder(models.Model):
             order.message_subscribe([order.partner_id.id])
 
         self.write(self._prepare_confirmation_values())
-
-        # Context key 'default_name' is sometimes propagated up to here.
-        # We don't need it and it creates issues in the creation of linked records.
         context = self._context.copy()
         context.pop('default_name', None)
 
@@ -923,39 +1029,23 @@ class PrescriptionOrder(models.Model):
 
         return True
 
-    def _can_be_confirmed(self):
-        self.ensure_one()
-        return self.state in {'draft', 'sent'}
+    # def _can_be_confirmed(self):
+    #     self.ensure_one()
+    #     return self.state in {'draft', 'sent'}
 
     def _prepare_confirmation_values(self):
-        """ Prepare the prescriptions order confirmation values.
-
-        Note: self can contain multiple records.
-
-        :return: Prescriptions Order confirmation values
-        :rtype: dict
-        """
         return {
-            'state': 'sales',
+            'state': 'ongoing',
             'date_order': fields.Datetime.now()
         }
 
     def _action_confirm(self):
-        """ Implementation of additional mechanism of Prescriptions Order confirmation.
-            This method should be extended when the confirmation should generated
-            other documents. In this method, the RX are in 'sales' state (not yet 'done').
-        """
-        # create an analytic account if at least an expense product
         for order in self:
             if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy')):
                 if not order.analytic_account_id:
                     order._create_analytic_account()
 
     def _send_order_confirmation_mail(self):
-        """ Send a mail to the RX customer to inform them that their order has been confirmed.
-
-        :return: None
-        """
         for order in self:
             mail_template = order._get_confirmation_template()
             order._send_order_notification_mail(mail_template)
@@ -972,13 +1062,6 @@ class PrescriptionOrder(models.Model):
             order._send_order_notification_mail(mail_template)
 
     def _send_order_notification_mail(self, mail_template):
-        """ Send a mail to the customer
-
-        Note: self.ensure_one()
-
-        :param mail.template mail_template: the template used to generate the mail
-        :return: None
-        """
         self.ensure_one()
 
         if not mail_template:
@@ -1005,13 +1088,12 @@ class PrescriptionOrder(models.Model):
     def action_unlock(self):
         self.locked = False
 
+    # def action_cancel(self):
+    #     self.write({
+    #         'state': 'cancel'
+    #     })
+
     def action_cancel(self):
-        """ Cancel RX after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
-
-        For post-cancel operations, please only override :meth:`_action_cancel`.
-
-        note: self.ensure_one() if the wizard is shown.
-        """
         if any(order.locked for order in self):
             raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
         cancel_warning = self._show_cancel_wizard()
@@ -1049,11 +1131,6 @@ class PrescriptionOrder(models.Model):
         return self.write({'state': 'cancel'})
 
     def _show_cancel_wizard(self):
-        """ Decide whether the prescriptions.order.cancel wizard should be shown to cancel specified orders.
-
-        :return: True if there is any non-draft order in the given orders
-        :rtype: bool
-        """
         if self.env.context.get('disable_cancel_warning'):
             return False
         return any(rx.state != 'draft' for rx in self)
@@ -1118,6 +1195,11 @@ class PrescriptionOrder(models.Model):
 
     def _get_product_catalog_domain(self):
         return expression.AND([super()._get_product_catalog_domain(), [('prescriptions_ok', '=', True)]])
+
+    def action_close(self):
+        self.write({
+            'state': 'done'
+        })
 
     # INVOICING #
 
@@ -1210,15 +1292,12 @@ class PrescriptionOrder(models.Model):
 
         for line in self.order_line:
             if line.display_type == 'line_section':
-                # Only invoice the section if one of its lines is invoiceable
                 pending_section = line
                 continue
             if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 continue
             if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
                 if line.is_downpayment:
-                    # Keep down payment lines separately, to put them together
-                    # at the end of the invoice, in a specific dedicated section.
                     down_payment_line_ids.append(line.id)
                     continue
                 if pending_section:
@@ -1229,16 +1308,6 @@ class PrescriptionOrder(models.Model):
         return self.env['prescriptions.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
 
     def _create_invoices(self, grouped=False, final=False, date=None):
-        """ Create invoice(s) for the given Prescriptions Order(s).
-
-        :param bool grouped: if True, invoices are grouped by RX id.
-            If False, invoices are grouped by keys returned by :meth:`_get_invoice_grouping_keys`
-        :param bool final: if True, refunds will be generated if necessary
-        :param date: unused parameter
-        :returns: created invoices
-        :rtype: `account.move` recordset
-        :raises: UserError if one of the orders has no invoiceable lines.
-        """
         if not self.env['account.move'].check_access_rights('create', False):
             try:
                 self.check_access_rights('write')
@@ -1315,26 +1384,6 @@ class PrescriptionOrder(models.Model):
                 new_invoice_vals_list.append(ref_invoice_vals)
             invoice_vals_list = new_invoice_vals_list
 
-        # 3) Create invoices.
-
-        # As part of the invoice creation, we make sure the sequence of multiple RX do not interfere
-        # in a single invoice. Example:
-        # RX 1:
-        # - Section A (sequence: 10)
-        # - Product A (sequence: 11)
-        # RX 2:
-        # - Section B (sequence: 10)
-        # - Product B (sequence: 11)
-        #
-        # If RX 1 & 2 are grouped in the same invoice, the result will be:
-        # - Section A (sequence: 10)
-        # - Section B (sequence: 10)
-        # - Product A (sequence: 11)
-        # - Product B (sequence: 11)
-        #
-        # Resequencing should be safe, however we resequence only if there are less invoices than
-        # orders, meaning a grouping might have been done. This could also mean that only a part
-        # of the selected RX are invoiceable, but resequencing in this case shouldn't be an issue.
         if len(invoice_vals_list) < len(self):
             PrescriptionOrderLine = self.env['prescriptions.order.line']
             for invoice in invoice_vals_list:
@@ -1343,24 +1392,11 @@ class PrescriptionOrder(models.Model):
                     line[2]['sequence'] = PrescriptionOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a prescriptionsperson must be able to generate an invoice from a
-        # prescriptions order without "billing" access rights. However, he should not be able to create an invoice from scratch.
         moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
-
-        # 4) Some moves might actually be refunds: convert them if the total amount is negative
-        # We do this after the moves have been created since we need taxes, etc. to know if the total
-        # is actually negative or not
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
             if final:
-                # Downpayment might have been determined by a fixed amount set by the user.
-                # This amount is tax included. This can lead to rounding issues.
-                # E.g. a user wants a 100€ DP on a product with 21% tax.
-                # 100 / 1.21 = 82.64, 82.64 * 1,21 = 99.99
-                # This is already corrected by adding/removing the missing cents on the DP invoice,
-                # but must also be accounted for on the final invoice.
-
                 delta_amount = 0
                 for order_line in self.order_line:
                     if not order_line.is_downpayment:

@@ -1173,6 +1173,17 @@ class PrescriptionOrderLine(models.Model):
                 'company_id': line.company_id.id,
             })
 
+    def _prepare_sale_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+        self.ensure_one()
+        return {
+            'name': name,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_id.uom_po_id.id,
+            'product_uom_qty': product_qty,
+            'price_unit': price_unit,
+            # 'tax_id': [(6, 0, taxes_ids)],
+        }
+    
     #=== CORE METHODS OVERRIDES ===#
 
     def _get_partner_display(self):

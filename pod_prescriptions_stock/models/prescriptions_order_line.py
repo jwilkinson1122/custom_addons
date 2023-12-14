@@ -33,8 +33,8 @@ class PrescriptionOrderLine(models.Model):
         """Compute the visibility of the inventory widget."""
         for line in self:
             line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
-            if line.state in ('draft', 'sent', 'sales') and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
-                if line.state == 'sales' and not line.move_ids:
+            if line.state in ('draft', 'ongoing', 'done') and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
+                if line.state == 'done' and not line.move_ids:
                     line.display_qty_widget = False
                 else:
                     line.display_qty_widget = True
@@ -54,7 +54,7 @@ class PrescriptionOrderLine(models.Model):
         treated = self.browse()
         # If the state is already in prescriptions the picking is created and a simple forecasted quantity isn't enough
         # Then used the forecasted data of the related stock.move
-        for line in self.filtered(lambda l: l.state == 'sales'):
+        for line in self.filtered(lambda l: l.state == 'done'):
             if not line.display_qty_widget:
                 continue
             moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
@@ -72,7 +72,7 @@ class PrescriptionOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['prescriptions.order.line'])
         # We first loop over the RX lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
-        for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
+        for line in self.filtered(lambda l: l.state in ('draft', 'ongoing')):
             if not (line.product_id and line.display_qty_widget):
                 continue
             grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
@@ -157,11 +157,11 @@ class PrescriptionOrderLine(models.Model):
                 qty = 0.0
                 outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
                 for move in outgoing_moves:
-                    if move.state != 'sales':
+                    if move.state != 'done':
                         continue
                     qty += move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                 for move in incoming_moves:
-                    if move.state != 'sales':
+                    if move.state != 'done':
                         continue
                     qty -= move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                 line.qty_delivered = qty
@@ -169,17 +169,17 @@ class PrescriptionOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(PrescriptionOrderLine, self).create(vals_list)
-        lines.filtered(lambda line: line.state == 'sales')._action_launch_stock_rule()
+        lines.filtered(lambda line: line.state == 'done')._action_launch_stock_rule()
         return lines
 
     def write(self, values):
         lines = self.env['prescriptions.order.line']
         if 'product_uom_qty' in values:
-            lines = self.filtered(lambda r: r.state == 'sales' and not r.is_expense)
+            lines = self.filtered(lambda r: r.state == 'done' and not r.is_expense)
 
         if 'product_packaging_id' in values:
             self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'sales']
+                lambda m: m.state not in ['cancel', 'done']
             ).product_packaging_id = values['product_packaging_id']
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
@@ -203,7 +203,7 @@ class PrescriptionOrderLine(models.Model):
 
     def _inverse_customer_lead(self):
         for line in self:
-            if line.state == 'sales' and not line.order_id.commitment_date:
+            if line.state == 'done' and not line.order_id.commitment_date:
                 # Propagate deadline on related stock move
                 line.move_ids.date_deadline = line.order_id.date_order + timedelta(days=line.customer_lead or 0.0)
 
@@ -237,10 +237,10 @@ class PrescriptionOrderLine(models.Model):
         qty = 0.0
         outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
         for move in outgoing_moves:
-            qty_to_compute = move.quantity if move.state == 'sales' else move.product_uom_qty
+            qty_to_compute = move.quantity if move.state == 'done' else move.product_uom_qty
             qty += move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
         for move in incoming_moves:
-            qty_to_compute = move.quantity if move.state == 'sales' else move.product_uom_qty
+            qty_to_compute = move.quantity if move.state == 'done' else move.product_uom_qty
             qty -= move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
         return qty
 
@@ -290,7 +290,7 @@ class PrescriptionOrderLine(models.Model):
         procurements = []
         for line in self:
             line = line.with_company(line.company_id)
-            if line.state != 'sales' or line.order_id.locked or not line.product_id.type in ('consu', 'product'):
+            if line.state != 'done' or line.order_id.locked or not line.product_id.type in ('consu', 'product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:
@@ -324,7 +324,7 @@ class PrescriptionOrderLine(models.Model):
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
         orders = self.mapped('order_id')
         for order in orders:
-            pickings_to_confirm = order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'sales'])
+            pickings_to_confirm = order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
                 pickings_to_confirm.action_confirm()

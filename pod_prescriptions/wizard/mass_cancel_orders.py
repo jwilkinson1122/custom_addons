@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class MassCancelOrders(models.TransientModel):
     _name = 'prescriptions.mass.cancel.orders'
-    _description = "Cancel multiple quotations"
+    _description = "Cancel multiple prescriptions"
 
     prescriptions_order_ids = fields.Many2many(
         string="Prescription orders to cancel",
@@ -25,7 +25,7 @@ class MassCancelOrders(models.TransientModel):
     def _compute_has_confirmed_order(self):
         for wizard in self:
             wizard.has_confirmed_order = bool(
-                wizard.prescriptions_order_ids.filtered(lambda rx: rx.state in ['sales', 'sales'])
+                wizard.prescriptions_order_ids.filtered(lambda rx: rx.state not in ['ongoing', 'draft'])
             )
 
     def action_mass_cancel(self):

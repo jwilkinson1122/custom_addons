@@ -147,4 +147,4 @@ class PrescriptionOrder(models.Model):
 
     def _can_be_edited_on_portal(self):
         self.ensure_one()
-        return self.state in ('draft', 'sent')
+        return self.state in ('draft', 'ongoing')

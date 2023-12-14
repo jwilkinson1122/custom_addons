@@ -71,9 +71,9 @@ class PrescriptionOrder(models.Model):
                 # TODO keep qty check? cannot be 0 because we only get cell changes ...
                 if order_lines:
                     if qty == 0:
-                        if self.state in ['draft', 'sent']:
+                        if self.state in ['draft', 'ongoing']:
                             # Remove lines if qty was set to 0 in matrix
-                            # only if RX state = draft/sent
+                            # only if RX state = draft/ongoing
                             self.order_line -= order_lines
                         else:
                             order_lines.update({'product_uom_qty': 0.0})

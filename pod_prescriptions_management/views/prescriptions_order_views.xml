@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
         <field name="arch" type="xml">
             <page name="order_lines" position="after">
-                <page string="Optional Products" name="optional_products" invisible="state not in ['draft', 'sent']">
-                    <field name="prescriptions_order_option_ids" mode="tree,kanban" readonly="state in ['cancel', 'sales']">
+                <page string="Optional Products" name="optional_products" invisible="state not in ['draft', 'ongoing']">
+                    <field name="prescriptions_order_option_ids" mode="tree,kanban" readonly="state in ['cancel', 'done']">
                         <form string="Optional Products">
                             <group>
                                 <field name="product_id" domain="[('prescriptions_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
@@ -83,7 +83,7 @@
             </page>
 
             <field name="partner_shipping_id" position="after">
-                <field name="prescriptions_order_template_id" options="{'no_create': True}" groups="pod_prescriptions_management.group_prescriptions_order_template" readonly="state in ['cancel', 'sales']"/>
+                <field name="prescriptions_order_template_id" options="{'no_create': True}" groups="pod_prescriptions_management.group_prescriptions_order_template" readonly="state in ['cancel', 'done']"/>
             </field>
         </field>
     </record>

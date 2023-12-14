@@ -13,14 +13,7 @@
         <!-- Show configuration button for custom lines/products -->
         <xpath expr="//t[@t-if='hasExternalButton']" position="before">
             <t t-if="hasConfigurationButton">
-                <button
-                    type="button"
-                    t-att-class="configurationButtonIcon"
-                    tabindex="-1"
-                    draggable="false"
-                    t-att-aria-label="configurationButtonHelp"
-                    t-att-data-tooltip="configurationButtonHelp"
-                    t-on-click="onEditConfiguration"/>
+                <button type="button" t-att-class="configurationButtonIcon" tabindex="-1" draggable="false" t-att-aria-label="configurationButtonHelp" t-att-data-tooltip="configurationButtonHelp" t-on-click="onEditConfiguration"/>
             </t>
         </xpath>
     </t>

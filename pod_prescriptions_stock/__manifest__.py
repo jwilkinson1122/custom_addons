@@ -21,7 +21,7 @@ Preferences
 
 """,
     'depends': [
-        'pod_prescriptions', 
+        # 'pod_prescriptions', 
         'stock_account'
         ],
     'data': [

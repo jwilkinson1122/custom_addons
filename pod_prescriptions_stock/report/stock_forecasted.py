@@ -44,7 +44,7 @@ class StockForecasted(models.AbstractModel):
         return res
 
     def _product_prescriptions_domain(self, product_template_ids, product_ids):
-        domain = [('state', 'in', ['draft', 'sent'])]
+        domain = [('state', 'in', ['draft', 'ongoing'])]
         if product_template_ids:
             domain += [('product_template_id', 'in', product_template_ids)]
         elif product_ids:

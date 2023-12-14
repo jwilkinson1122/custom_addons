@@ -180,7 +180,7 @@ class StockLot(models.Model):
     @api.depends('name')
     def _compute_prescriptions_order_ids(self):
         prescriptions_orders = defaultdict(lambda: self.env['prescriptions.order'])
-        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'sales')]):
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
             move = move_line.move_id
             if move.picking_id.location_dest_id.usage == 'customer' and move.prescriptions_line_id.order_id:
                 prescriptions_orders[move_line.lot_id.id] |= move.prescriptions_line_id.order_id
