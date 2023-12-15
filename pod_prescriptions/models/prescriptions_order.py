@@ -830,43 +830,6 @@ class PrescriptionOrder(models.Model):
                     " You must first cancel it."))
 
   
-    # @api.model
-    # def default_get(self,  default_fields):
-    #     res = super(PrescriptionOrder, self).default_get(default_fields)
-    #     record = self.env['prescriptions.order'].browse(self._context.get('active_ids',[]))
-    #     update = []
-    #     for record in record.order_line:
-    #         update.append((0,0,{
-	# 				'product_id' : record.product_id.id,
-	# 				'name' : record.name,
-	# 				'product_uom_qty' : record.product_uom_qty,
-	# 				'price_unit' : record.price_unit,
-	# 				'price_subtotal' : record.price_subtotal,
-	# 				'date_order' : record.date_order,
-	# 			}))
-    #         res.update({'order_line':update})
-    #         return res	
-    
-    # def action_create_prescription_order_to_so(self):
-    #     self.ensure_one()
-    #     res = self.env['sale.order'].browse(self._context.get('id',[]))
-    #     value = [] 
-    #     for data in self.order_line:
-    #         value.append(
-    #             [0,0,{
-    #             'product_id' : data.product_id.id,
-    #             'name' : data.name,
-    #             'product_uom_qty' : data.product_uom_qty,
-    #             'price_unit' : data.price_unit,
-    #             }
-    #              ])
-    #         res.create({
-    #             'partner_id' : self.partner_id.id,
-    #             'date_order' : self.date_order,
-    #             'order_line' : value,
-    #             })
-    #         return 
-        
     def action_create_prescription_order_to_so(self):
         sale_order = self.env['sale.order'].search([('prescriptions_order_id', '=', self.id)], limit=1)
         if sale_order:

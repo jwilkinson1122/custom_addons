@@ -9,8 +9,8 @@ class SaleOrder(models.Model):
         'prescriptions.order',
         string="Prescriptions Order"
     )
-    prescriptions_order_lines = fields.One2many(
-        'prescriptions.order.line', 'order_id', readonly=False)
+    # prescriptions_order_lines = fields.One2many(
+    #     'prescriptions.order.line', 'order_id', readonly=False)
     
     # practice_id = fields.Many2one(
     #     'res.partner',
