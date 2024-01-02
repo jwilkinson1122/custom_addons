@@ -12,28 +12,28 @@ class SaleOrder(models.Model):
     # prescriptions_order_lines = fields.One2many(
     #     'prescriptions.order.line', 'order_id', readonly=False)
     
-    # practice_id = fields.Many2one(
-    #     'res.partner',
-    #     domain=[('is_company','=',True)],
-    #     string="Practice"
-    #     )
-    # practitioner_id = fields.Many2one(
-    #     'res.partner',
-    #     domain=[('is_practitioner','=',True)],
-    #     string="Practitioner"
-    #     )
-    # patient_id = fields.Many2one(
-    #     "pod.patient", 
-    #     states={"draft": [("readonly", False)], "done": [("readonly", True)]}
-    # ) 
+    partner_id = fields.Many2one(
+        'res.partner',
+        domain=[('is_company','=',True)],
+        string="Practice"
+        )
+    practitioner_id = fields.Many2one(
+        'res.partner',
+        domain=[('is_practitioner','=',True)],
+        string="Practitioner"
+        )
+    patient_id = fields.Many2one(
+        "pod.patient", 
+        states={"draft": [("readonly", False)], "done": [("readonly", True)]}
+    ) 
     
 
-    # @api.onchange('partner_id', 'practitioner_id')
-    # def onchange_set_domain_partner_practitioner(self):
-    #     if self.partner_id and not self.practitioner_id:
-    #         self.practitioner_id = self.partner_id.practitioner_id
-    #     if self.practitioner_id and not self.patient_id:
-    #         self.patient_id = self.practitioner_id.patient_id
+    @api.onchange('partner_id', 'practitioner_id')
+    def onchange_set_domain_partner_practitioner(self):
+        if self.partner_id and not self.practitioner_id:
+            self.practitioner_id = self.partner_id.practitioner_id
+        if self.practitioner_id and not self.patient_id:
+            self.patient_id = self.practitioner_id.patient_id
 
 
 class SaleOrderLine(models.Model):

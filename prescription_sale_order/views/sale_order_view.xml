@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <button name="action_show_prescription_order" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('prescription_order_count', '=', 0.0)]}">
+                    <field name="prescription_order_count" widget="statinfo" string="Prescription Order(s)" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="view_sale_order_form_inherit_prescription" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.prescription</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button name="action_show_prescription" type="object" class="oe_stat_button" icon="fa-wrench" invisible="prescription_count == 0" groups="stock.group_stock_user">
+                    <field name="prescription_count" widget="statinfo" string="Prescriptions"/>
+                </button>
+            </xpath>
+        </field>
+    </record> -->
+</odoo>

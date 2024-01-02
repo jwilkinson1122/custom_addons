@@ -8,6 +8,9 @@
     'summary': 'Centralize contacts',
     'description': """Manage contacts directory""",
     'depends': [
+        # 'pod_qrcode',
+        # 'pod_barcodes_abstract',
+        # 'pod_barcodes_partner',
         'base',
         "base_setup", 
         'mail',

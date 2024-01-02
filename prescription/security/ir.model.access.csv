@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prescription_user,Prescription user,model_prescription_order,stock.group_stock_user,1,1,1,1
+access_prescription_tag_user,Prescription Tags user,model_prescription_tags,stock.group_stock_user,1,1,1,1
+access_stock_warn_insufficient_qty_prescription,access.stock.warn.insufficient.qty.prescription,model_stock_warn_insufficient_qty_prescription,stock.group_stock_user,1,1,1,0
+access_prescription_warn_uncomplete_move,access.prescription.warn.uncomplete.move,model_prescription_warn_uncomplete_move,stock.group_stock_user,1,1,1,0

@@ -82,10 +82,13 @@ class PrescriptionOrder(models.Model):
         default=lambda self: self.env.company)
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        string="Customer",
-        required=True, change_default=True, index=True,
+        string="Practice",
+        required=True, 
+        change_default=True, 
+        index=True,
         tracking=1,
-        domain="[('company_id', 'in', (False, company_id))]")
+        domain=[('is_company','=',True)],
+        )
     # practice_id = fields.Many2one(
     #     'res.partner', 
     #     string="Practice",
@@ -95,22 +98,31 @@ class PrescriptionOrder(models.Model):
     #     domain=[('is_company','=',True)], 
     #     check_company=True,
     #     )
-    # practitioner_id = fields.Many2one(
+    
+    # practice_id = fields.Many2one(
     #     'res.partner', 
-    #     string="Practitioner",
     #     required=True, 
     #     index=True, 
-    #     tracking=True,
-    #     domain=[('is_practitioner','=',True)], 
-    #     check_company=True,
+    #     domain=[('is_company','=',True)], 
+    #     string="Practice"
     #     )
-    # patient_id = fields.Many2one(
-    #     "pod.patient", 
-    #     string="Patient",
-    #     required=True, 
-    #     index=True, 
-    #     tracking=True,
-    # )
+  
+    practitioner_id = fields.Many2one(
+        'res.partner', 
+        string="Practitioner",
+        required=True, 
+        index=True, 
+        tracking=True,
+        domain=[('is_practitioner','=',True)], 
+        # check_company=True,
+        )
+    patient_id = fields.Many2one(
+        "pod.patient", 
+        string="Patient",
+        required=True, 
+        index=True, 
+        tracking=True,
+    )
     state = fields.Selection(
         selection=PRESCRIPTION_STATE,
         string="Status",
@@ -836,7 +848,10 @@ class PrescriptionOrder(models.Model):
             return self._prepare_action(_('Prescription Sale Order'), 'sale.order', sale_order.id)
         vals = {
             'prescriptions_order_id': self.id,
-            'partner_id': self.id,
+            # 'partner_id': self.id,
+            'partner_id': self.partner_id.id,
+            'practitioner_id': self.practitioner_id.id,
+            'patient_id': self.patient_id.id,
             'invoice_status': 'to invoice',
         }
         new_sale_order = self.env['sale.order'].create(vals)
@@ -972,6 +987,7 @@ class PrescriptionOrder(models.Model):
     #     self.write({
     #         'state': 'ongoing'
     #     })
+    
     def action_confirm(self):
 
         self.order_line._validate_analytic_distribution()

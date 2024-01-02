@@ -13,11 +13,6 @@ Manage prescriptions quotations and orders
 
 This module makes the link between the prescriptions and warehouses management applications.
 
-Preferences
------------
-* Shipping: Choice of delivery at once or partial delivery
-* Invoicing: choose how invoices will be paid
-* Incoterms: International Commercial terms
 
 """,
     'depends': [
