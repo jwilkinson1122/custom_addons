@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.python.status</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- <block title="Performance" groups="base.group_no_one" name="performance">
+                <setting id="profiling_enabled_until" help="Enable the profiling tool. Profiling may impact performance while being active.">
+                    <field name="profiling_enabled_until"/>
+                </setting>
+            </block> -->
+
+
+            <xpath expr="//block[@name='performance']" position="after">
+                <h2>Python Version</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <label string="Version:" for="running_python_version"/>
+                        <field name="running_python_version" readonly="1"/>
+                        <br/>
+                        <button name="button_open_python_packages" type="object" string="Installed Python Packages" class="oe_link" icon="fa-list" style="margin-left:-12px;"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- <xpath expr="//block[@name='integration']" position="inside">
+                <setting help="Schedule &amp; make calls from your database">
+                    <field name="module_voip"/>
+                    <div class="content-group" invisible="not module_voip">
+                        <div class="row mt16">
+                            <label for="pbx_ip" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="pbx_ip" nolabel="1"/>
+                            <label for="wsServer" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="wsServer" nolabel="1"/>
+                            <label for="mode" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="mode" nolabel="1"/>
+                        </div>
+                    </div>
+                </setting>
+             </xpath> -->
+        </field>
+    </record>
+
+
+    <record id="view_form_python_package_installed" model="ir.ui.view">
+        <field name="name">python.package.installed.tree</field>
+        <field name="model">python.package.installed</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0">
+                <field name="name"/>
+                <field name="version"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

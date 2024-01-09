@@ -17,23 +17,23 @@ class SaleOrder(models.Model):
         domain=[('is_company','=',True)],
         string="Practice"
         )
-    practitioner_id = fields.Many2one(
-        'res.partner',
-        domain=[('is_practitioner','=',True)],
-        string="Practitioner"
-        )
+    # practitioner_id = fields.Many2one(
+    #     'res.partner',
+    #     domain=[('is_practitioner','=',True)],
+    #     string="Practitioner"
+    #     )
     patient_id = fields.Many2one(
-        "pod.patient", 
+        "prescriptions.patient", 
         states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     ) 
     
 
-    @api.onchange('partner_id', 'practitioner_id')
-    def onchange_set_domain_partner_practitioner(self):
-        if self.partner_id and not self.practitioner_id:
-            self.practitioner_id = self.partner_id.practitioner_id
-        if self.practitioner_id and not self.patient_id:
-            self.patient_id = self.practitioner_id.patient_id
+    # @api.onchange('partner_id', 'practitioner_id')
+    # def onchange_set_domain_partner_practitioner(self):
+    #     if self.partner_id and not self.practitioner_id:
+    #         self.practitioner_id = self.partner_id.practitioner_id
+    #     if self.practitioner_id and not self.patient_id:
+    #         self.patient_id = self.practitioner_id.patient_id
 
 
 class SaleOrderLine(models.Model):

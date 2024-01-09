@@ -20,7 +20,7 @@ This module contains all the common features of Prescriptions Management and eCo
         'account_accountant',
         'account_payment',  # -> account, payment, portal
         'l10n_us',
-        'pod_contacts',
+        'pod_prescriptions_partner',
         'knowledge',
         # 'pos_sale',
         # 'purchase_stock',
@@ -35,6 +35,7 @@ This module contains all the common features of Prescriptions Management and eCo
         'website_sale_stock',
         # 'website_sale_wishlist',
         'mrp',
+        'mrp_workorder',
         'pod_prescriptions_team',
         'utm',
         'theme_orchid',

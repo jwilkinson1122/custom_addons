@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_patient_user,User Access for Patients,model_prescriptions_patient,group_prescriptions_partner_user,1,1,1,0
+access_patient_treatment_pro,Treatment Professional Access for Patients,model_prescriptions_patient,group_prescriptions_partner_treatment_professional,1,1,1,1
+access_patient_admin,Admin Access for Patients,model_prescriptions_patient,group_prescriptions_partner_admin,1,1,1,1
+access_patient_portal,Portal Access for Patients,model_prescriptions_patient,base.group_portal,1,1,1,0
+access_patient_contact_user,User Access for Patient Contacts,model_prescriptions_patient_contact,group_prescriptions_partner_user,1,1,1,1
+access_injury_treatment_pro,Treatment Professional Access for Injuries,model_prescriptions_patient_injury,group_prescriptions_partner_treatment_professional,1,1,1,1
+access_injury_portal,Portal Access for Injuries,model_prescriptions_patient_injury,base.group_portal,1,0,0,0
+access_partner_user,User Access for Partners,model_prescriptions_partner,group_prescriptions_partner_user,1,1,1,0
+access_partner_admin,Admin Access for Partners,model_prescriptions_partner,group_prescriptions_partner_admin,1,1,1,1
+access_partner_portal,Portal Access for Partners,model_prescriptions_partner,base.group_portal,1,0,0,0
+access_partner_personnel_user,User Access for Partner Personnel,model_prescriptions_partner_personnel,group_prescriptions_partner_user,1,1,1,1
+access_partner_personnel_portal,Portal Access for Partner Personnel,model_prescriptions_partner_personnel,base.group_portal,1,0,0,0

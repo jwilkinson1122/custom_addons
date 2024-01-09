@@ -107,17 +107,16 @@ class PrescriptionOrder(models.Model):
     #     string="Practice"
     #     )
   
-    practitioner_id = fields.Many2one(
-        'res.partner', 
-        string="Practitioner",
-        required=True, 
-        index=True, 
-        tracking=True,
-        domain=[('is_practitioner','=',True)], 
-        # check_company=True,
-        )
+    # practitioner_id = fields.Many2one(
+    #     'res.partner', 
+    #     string="Practitioner",
+    #     required=True, 
+    #     index=True, 
+    #     tracking=True,
+    #     domain=[('is_practitioner','=',True)], 
+    #     )
     patient_id = fields.Many2one(
-        "pod.patient", 
+        "prescriptions.patient", 
         string="Patient",
         required=True, 
         index=True, 

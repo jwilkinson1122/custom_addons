@@ -16,7 +16,7 @@ This module makes the link between the prescriptions and warehouses management a
 
 """,
     'depends': [
-        # 'pod_prescriptions', 
+        'pod_prescriptions', 
         'stock_account'
         ],
     'data': [

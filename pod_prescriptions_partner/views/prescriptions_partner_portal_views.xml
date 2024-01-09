@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="portal_my_home" inherit_id="portal.portal_my_home">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Partners</t>
+                    <t t-set="url">/my/partners</t>
+                    <t t-set="placeholder_count">partners_count</t>
+                </t>
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Patients</t>
+                    <t t-set="url">/my/patients</t>
+                    <t t-set="placeholder_count">patients_count</t>
+                </t>
+            </xpath>
+        </template>
+        <template id="portal_my_partners">
+            <t t-call="portal.portal_layout">
+                <h1>Your Partners</h1>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Partner Name</th>
+                            <th>Parent Company</th>
+                            <th>Total Patients</th>
+                            <th>Injured</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="partners" t-as="partner">
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <a t-attf-href="/my/partner?prescriptions_partner_id={{ partner.id }}"
+                                           t-field="partner.name"/>
+                                    </strong>
+                                </td>
+                                <td><span t-field="partner.parent_id"/></td>
+                                <td><span t-field="partner.patient_count"/></td>
+                                <td><span t-field="partner.injured_count"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+        <template id="portal_my_partner_patients">
+            <t t-call="portal.portal_layout">
+                <h1><span t-field="partner.name"/> Patients</h1>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Active Injuries</th>
+                            <th>Match Status</th>
+                            <th>Practice Status</th>
+                            <th>Estimated Return Date</th>
+                            <th>Last Consultation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="patients" t-as="patient">
+                            <t t-set="stage" t-value="patient.stage"/>
+                            <t t-set="url"
+                               t-value="'/my/patient?patient_id=' + str(patient.id) + '&amp;prescriptions_partner_id=' + str(partner.id)"/>
+                            <tr t-attf-class="{{ ('text-danger' if stage == 'no_play'
+                                                 else 'text-warning') if stage != 'healthy'
+                                                 else '' }}">
+                                <td>
+                                    <strong><span t-field="patient.last_name"/></strong>
+                                </td>
+                                <td>
+                                    <strong><span t-field="patient.first_name"/></strong>
+                                </td>
+                                <td class="text-center">
+                                    <a t-if="patient.active_injury_count" t-attf-href="{{ url }}">
+                                        <span t-field="patient.active_injury_count"/>
+                                        <span class="fa fa-external-link"></span>
+                                    </a>
+                                    <span t-else="">0</span>
+                                </td>
+                                <td><span t-field="patient.match_status"/></td>
+                                <td><span t-field="patient.practice_status"/></td>
+                                <td>
+                                    <span t-field="patient.predicted_return_date"
+                                          t-options="{'widget': 'date'}"/>
+                                </td>
+                                <td>
+                                    <span t-field="patient.last_consultation_date"
+                                          t-options="{'widget': 'date'}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+        <template id="portal_my_patients">
+            <t t-call="portal.portal_layout">
+                <h1>Your Patients</h1>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Partners</th>
+                            <th>Active Injuries</th>
+                            <th>Match Status</th>
+                            <th>Practice Status</th>
+                            <th>Estimated Return Date</th>
+                            <th>Last Consultation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="patients" t-as="patient">
+                            <t t-set="stage" t-value="patient.stage"/>
+                            <t t-set="url" t-value="'/my/patient?patient_id=' + str(patient.id)"/>
+                            <tr t-attf-class="{{ ('text-danger' if stage == 'no_play'
+                                                 else 'text-warning') if stage != 'healthy'
+                                                 else '' }}">
+                                <td>
+                                    <strong><span t-field="patient.last_name"/></strong>
+                                </td>
+                                <td>
+                                    <strong><span t-field="patient.first_name"/></strong>
+                                </td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <t t-foreach="patient.prescriptions_partner_ids" t-as="partner">
+                                            <li>
+                                                <a t-attf-href="/my/partner?prescriptions_partner_id={{ partner.id }}"
+                                                   t-field="partner.name"/>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </td>
+                                <td class="text-center">
+                                    <a t-if="patient.active_injury_count" t-attf-href="{{ url }}">
+                                        <span t-field="patient.active_injury_count"/>
+                                        <span class="fa fa-external-link"></span>
+                                    </a>
+                                    <span t-else="">0</span>
+                                </td>
+                                <td><span t-field="patient.match_status"/></td>
+                                <td><span t-field="patient.practice_status"/></td>
+                                <td>
+                                    <span t-field="patient.predicted_return_date"
+                                          t-options="{'widget': 'date'}"/>
+                                </td>
+                                <td>
+                                    <span t-field="patient.last_consultation_date"
+                                          t-options="{'widget': 'date'}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+        <template id="portal_my_patient_injuries">
+            <t t-call="portal.portal_layout">
+                <h1>Injury Record for <span t-field="patient.name"/></h1>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th width="20%">Active Injury</th>
+                            <th width="80%">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="injuries" t-as="injury">
+                            <tr>
+                                <td>
+                                    <span t-field="injury.diagnosis"/>
+                                </td>
+                                <td>
+                                    <span t-field="injury.external_notes"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+        <template id="portal_breadcrumbs" inherit_id="portal.portal_breadcrumbs">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+                <!-- Show link back to partners if partner is set, otherwise just title the Partners-->
+                <t t-if="page_name == 'my_partners'">
+                    <li t-attf-class="breadcrumb-item #{'active ' if not partner else ''}">
+                        <a t-if="partner" t-attf-href="/my/partners">Partners</a>
+                        <t t-else="">Partners</t>
+                    </li>
+                    <!-- Show the partner name as the title if we're looking at a specific partner -->
+                    <li t-if="partner" class="breadcrumb-item active" t-esc="partner.name"/>
+                </t>
+                <!-- If just listing patients, show the "Patients" title -->
+                <li t-if="page_name == 'my_patients'" class="breadcrumb-item active">Patients</li>
+                <t t-if="page_name == 'my_patient'">
+                    <!-- The single patient page can be reached from the patients list or the partners list.
+                         If it was reached from the partners list, the partner parameter will be set and should be the first
+                         breadcrumb -->
+                    <t t-if="partner">
+                        <li class="breadcrumb-item">
+                            <a href="/my/partners">Partners</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a t-attf-href="/my/partner?prescriptions_partner_id={{ partner.id }}"><span t-field="partner.name"/></a>
+                        </li>
+                    </t>
+                    <li t-else="" class="breadcrumb-item">
+                        <a t-attf-href="/my/patients">Patients</a>
+                    </li>
+                    <li class="breadcrumb-item active"><span t-field="patient.name"/></li>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

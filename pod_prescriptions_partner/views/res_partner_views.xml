@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_partner_view_form_prescriptions_partners" model="ir.ui.view">
+        <field name="name">res.partner.view.form.prescriptions.partners</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <page name="contact_addresses" position="after">
+                <page name="Partners">
+                    <field name="managed_partner_ids" invisible="not is_company" string="Partners"/>
+                    <field name="partners_served_ids" invisible="is_company" string="Partners Served"/>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

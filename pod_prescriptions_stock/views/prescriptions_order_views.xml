@@ -6,7 +6,7 @@
             <field name="model">prescriptions.order</field>
             <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <xpath expr="//button[@name='action_view_sale_order']" position="before">
                     <button type="object" name="action_view_delivery" class="oe_stat_button" icon="fa-truck" invisible="delivery_count == 0" groups="stock.group_stock_user">
                         <field name="delivery_count" widget="statinfo" string="Delivery"/>
                     </button>

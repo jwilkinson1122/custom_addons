@@ -15,8 +15,8 @@
                     <attribute name="domain">[('is_company', '=', True)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="practitioner_id" string="Practitioner" domain="[('is_practitioner', '=', True), ('parent_id', '=', partner_id)]"/>
-                    <field name="patient_id" string="Patient" domain="[('practitioner_id', '=', practitioner_id)]"/>
+                    <!-- <field name="practitioner_id" string="Practitioner" domain="[('is_practitioner', '=', True), ('parent_id', '=', partner_id)]"/> -->
+                    <field name="patient_id" string="Patient" domain="[('partner_id', '=', partner_id)]"/>
                 </xpath>
  
                <!-- <xpath expr="//field[@name='payment_term_id']" position="after">
