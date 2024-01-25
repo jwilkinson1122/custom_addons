@@ -4,7 +4,7 @@
 {
     'name': 'NWPL Prescription Teams',
     "author": "NWPL",
-    'version': '1.1',
+    'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'summary': 'Prescriptions Teams',
     'description': """

@@ -4,7 +4,7 @@
 {
     'name': 'NWPL Prescriptions and Warehouse Management',
     "author": "NWPL",
-    'version': '1.0',
+    'version': '17.0.0.0.0',
     'category': 'Hidden',
     'summary': 'Draft Rx, Prescriptions Orders, Delivery & Invoicing Control',
     'description': """

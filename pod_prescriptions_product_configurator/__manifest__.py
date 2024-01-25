@@ -3,7 +3,7 @@
 {
     'name': "NWPL Prescription Product Configurator",
     "author": "NWPL",
-    'version': '1.0',
+    'version': '17.0.0.0.0',
     'category': 'Hidden',
     'summary': "Configure your products",
 

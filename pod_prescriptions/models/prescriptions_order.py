@@ -80,6 +80,7 @@ class PrescriptionOrder(models.Model):
         comodel_name='res.company',
         required=True, index=True,
         default=lambda self: self.env.company)
+    
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Practice",
@@ -89,45 +90,22 @@ class PrescriptionOrder(models.Model):
         tracking=1,
         domain=[('is_company','=',True)],
         )
-    # practice_id = fields.Many2one(
-    #     'res.partner', 
-    #     string="Practice",
-    #     required=True, 
-    #     index=True, 
-    #     tracking=True,
-    #     domain=[('is_company','=',True)], 
-    #     check_company=True,
-    #     )
     
-    # practice_id = fields.Many2one(
-    #     'res.partner', 
-    #     required=True, 
-    #     index=True, 
-    #     domain=[('is_company','=',True)], 
-    #     string="Practice"
-    #     )
-  
-    # practitioner_id = fields.Many2one(
-    #     'res.partner', 
-    #     string="Practitioner",
-    #     required=True, 
-    #     index=True, 
-    #     tracking=True,
-    #     domain=[('is_practitioner','=',True)], 
-    #     )
     patient_id = fields.Many2one(
-        "prescriptions.patient", 
+        "pod.patient", 
         string="Patient",
         required=True, 
         index=True, 
         tracking=True,
     )
+
     state = fields.Selection(
         selection=PRESCRIPTION_STATE,
         string="Status",
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
+    
     locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
     create_date = fields.Datetime(  # Override of default create_date field from ORM

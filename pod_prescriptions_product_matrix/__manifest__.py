@@ -9,7 +9,7 @@ This module allows to fill Prescriptions Order rapidly
 by choosing product variants quantity through a Grid Entry.
     """,
     'category': 'Podiatry/Prescriptions',
-    'version': '1.0',
+    'version': '17.0.0.0.0',
     'depends': [
         'pod_prescriptions', 
         'product_matrix', 
@@ -28,5 +28,6 @@ by choosing product variants quantity through a Grid Entry.
             'pod_prescriptions_product_matrix/static/src/**/*',
         ],
     },
+    'auto_install': True,
     'license': 'LGPL-3',
 }

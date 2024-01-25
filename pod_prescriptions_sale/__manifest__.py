@@ -2,7 +2,7 @@
 
 {
     'name' : "NWPL Prescriptions to Sales",
-    'version' : "17.0.0.1",
+    'version': '17.0.0.0.0',
     'category' : "Sales",
     'license': 'LGPL-3',
     'summary': 'This apps helps to Convert Prescription Orders to Sales Orders',

@@ -6,27 +6,17 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     prescriptions_order_id = fields.Many2one(
-        'prescriptions.order',
-        string="Prescriptions Order"
+        'prescriptions.order', string="Prescriptions Order"
     )
     # prescriptions_order_lines = fields.One2many(
     #     'prescriptions.order.line', 'order_id', readonly=False)
     
-    partner_id = fields.Many2one(
-        'res.partner',
-        domain=[('is_company','=',True)],
-        string="Practice"
-        )
-    # practitioner_id = fields.Many2one(
-    #     'res.partner',
-    #     domain=[('is_practitioner','=',True)],
-    #     string="Practitioner"
-    #     )
+    partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)], string="Practice")
+ 
     patient_id = fields.Many2one(
-        "prescriptions.patient", 
-        states={"draft": [("readonly", False)], "done": [("readonly", True)]}
+        "pod.patient",
+        # states={"draft": [("readonly", False)], "sent": [("readonly", True)]}
     ) 
-    
 
     # @api.onchange('partner_id', 'practitioner_id')
     # def onchange_set_domain_partner_practitioner(self):
