@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pod_program_tree" model="ir.ui.view">
+        <field name="name">pod.program.tree</field>
+        <field name="model">pod.program</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" string="Programs">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pod_program_form" model="ir.ui.view">
+        <field name="name">pod.program.form</field>
+        <field name="model">pod.program</field>
+        <field name="arch" type="xml">
+            <form string="Program">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pod_program" model="ir.actions.act_window">
+        <field name="name">Pod Program</field>
+        <field name="res_model">pod.program</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_pod_program" parent ="contacts.res_partner_menu_config"
+                action="action_pod_program" name="Pod Programs" sequence='4'/>    
+</odoo>

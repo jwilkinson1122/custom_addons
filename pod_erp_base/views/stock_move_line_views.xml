@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_move_line_form_patient_inherit" model="ir.ui.view">
+        <field name="name">stock.move.line.form.inherit.from.patient</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml"> 
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="pod_owner_id"/>
+                <field name="picking_partner_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_move_line_tree_inherit_custom" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.from.patient.custom</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">date desc</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="picking_partner_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

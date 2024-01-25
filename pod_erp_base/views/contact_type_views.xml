@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_contact_type_tree" model="ir.ui.view">
+        <field name="name">contact.type.tree</field>
+        <field name="model">contact.type</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" string="Contact Types">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_contact_type_form" model="ir.ui.view">
+        <field name="name">contact.type.form</field>
+        <field name="model">contact.type</field>
+        <field name="arch" type="xml">
+            <form string="Contact Type">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_contact_type" model="ir.actions.act_window">
+        <field name="name">Contact Type</field>
+        <field name="res_model">contact.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_contact_type" parent ="contacts.res_partner_menu_config"
+                action="action_contact_type" name="Contact Types" sequence='2'/> 
+</odoo>

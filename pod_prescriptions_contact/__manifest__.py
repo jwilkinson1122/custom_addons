@@ -3,6 +3,7 @@
 {
     'name': 'NWPL Contacts',
     "author": "NWPL",
+    'version': '17.0.0.0.0',
     'category': 'Podiatry/Contacts',
     'sequence': 0,
     'summary': 'Centralize contacts',

@@ -17,7 +17,8 @@ class Partner(models.Model):
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
-    is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    # is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
@@ -33,6 +34,7 @@ class Partner(models.Model):
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
+
     practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="pod.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")

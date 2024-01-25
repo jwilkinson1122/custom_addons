@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_internal_search_inherit_from_custom" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+        <xpath expr="//search/field[@name='name']" position="after">
+            <field name="pod_practice_id"/>
+            <field name="pod_organization_id"/>
+            <field name="pod_sales_partner_id"/> 
+        </xpath>
+        <xpath expr="//filter[@name='picking_type']" position="after">
+            <separator/>
+            <filter name="group_pod_practice" string="Practice" context="{'group_by': 'pod_practice_id'}"/>
+            <filter name="group_pod_organization" string="Organization" context="{'group_by': 'pod_organization_id'}"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="stock_vpicktree_inherit" model="ir.ui.view">
+        <field name="name">stock.vpicktree.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='json_popover']" position="after">
+            <field name="pod_practice_id" optional="hide"/>
+            <field name="pod_organization_id" optional="hide"/>
+            <field name="pod_owner_id" optional="hide"/>
+            <field name="pod_sales_partner_id" optional="hide"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_form_stock_picking_inherit_from_custom" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.from.patient.custom</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='other_infos']" position="inside">
+				<field name="pod_order_uuid" readonly="1"/>
+			</xpath>
+        </field>
+    </record>
+
+<!--    <record id="stock_picking_form_patient_inherit" model="ir.ui.view">-->
+<!--        <field name="name">stock.picking.form.inherit.from.patient</field>-->
+<!--        <field name="model">stock.picking</field>-->
+<!--        <field name="inherit_id" ref="stock.view_picking_form"/>-->
+<!--        <field name="arch" type="xml"> -->
+<!--            <xpath expr="//field[@name='location_id']" position="after">-->
+<!--                <field name="pod_owner_id"/>-->
+<!--                <field name="pod_practice_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
+<!--                <field name="pod_organization_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
+<!--                <field name="pod_medical_record_number" groups="pod_erp_base.group_manager_patients_custom"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+</odoo>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action to Show Patient's Devices -->
+    <!--    <record id="act_res_partner_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Patient's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'default_patient_stored_id': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Patient!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Patient, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show Practice's Devices -->
+    <!--    <record id="act_res_partner_practice_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Practice's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_pod_practice_id': active_id, 'default_pod_practice_id': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Practice!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Practice, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show pod_organization's Devices -->
+    <!--    <record id="act_res_partner_organization_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Organization's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_pod_organization_id': active_id, 'default_pod_organization_id': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--            <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Organization!-->
+    <!--            </p><p>-->
+    <!--            Once a Device is Assigned to a Organization, It'll be Visible Here.-->
+    <!--            </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show Sales Partner's Devices -->
+    <!--    <record id="act_res_partner_sales_partner_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Partner's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_pod_sales_partner': active_id, 'default_pod_sales_partner': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Partner!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Partner, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="view_res_partner_pivot" model="ir.ui.view">
+        <field name="name">res.partner.pivot</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <pivot string="Contacts">
+                <field name="name" type="row"/>
+                <!-- <field name="date" type="col"/> -->
+            </pivot>
+        </field>
+    </record>
+
+    <record id="res_partner_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- PHI Details Tab -->
+            <xpath expr="//form/sheet/notebook" position="inside">
+                <page name="phi" string="PHI Details">
+                    <group>
+                        <group>
+                            <field name="is_patient"/>
+                            <field name="pod_practice"/>
+                            <field name="pod_staff"/>
+                            <field name="pod_medical_provider"/>
+                            <field name="pod_organization"/>
+                            <field name="pod_sales_partner"/>
+                            <field name="pod_medical_record_number"/>
+                            <field name="pod_patient_birthday"/>
+                        </group>
+                        <group>
+                            <field name="pod_program_group"/>
+                        </group>
+                    </group>
+                </page>
+                <!-- <page name="insurance_info" string="Insurance Information" invisible="is_patient == False">
+                    <group>
+                        <group>
+                            <field name="primary_subscriber_id" readonly="1"/>
+                            <field name="primary_carrier" readonly="1"/>
+                            <field name="primary_group_name" readonly="1"/>
+                            <field name="primary_group_number" readonly="1"/>
+                            <field name="primary_relationship" readonly="1"/>
+                            <field name="primary_start_date" readonly="1"/>
+                            <field name="primary_subscriber_name" readonly="1"/>
+                            <field name="primary_subscriber_birthdate" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="secondary_subscriber_id" readonly="1"/>
+                            <field name="secondary_carrier" readonly="1"/>
+                            <field name="secondary_group_name" readonly="1"/>
+                            <field name="secondary_group_number" readonly="1"/>
+                            <field name="secondary_relationship" readonly="1"/>
+                            <field name="secondary_start_date" readonly="1"/>
+                            <field name="secondary_subscriber_name" readonly="1"/>
+                            <field name="secondary_subscriber_birthdate" readonly="1"/>
+                        </group>
+                    </group>
+                </page> -->
+            </xpath>
+            <!-- Removing Base Fields -->
+            <xpath expr="//field[@name='title']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='website']" position="replace">
+            </xpath>
+            <!-- Redesign Left -->
+            <xpath expr="//field[@name='vat']" position="replace">
+                <field name="lang"/>
+                <field name="tz"/>
+                <field name="vat"/>
+                <field name="pod_warehouse_id" invisible="pod_practice == False"/>
+                <field name="pod_uuid" groups="base.group_no_one" readonly="1"/>
+                <field name="pod_order_uuid" groups="base.group_no_one" readonly="1"/>
+            </xpath>
+            <!-- Redesign Right-->
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="pod_patient_gender" invisible="is_patient != True"/>
+                <field name="website" widget="url" string="Website"/>
+                <field name="pod_patient_url" widget="url"/>
+                <field name="function"/>
+                <!--This below fields is inherited in this same file please review before change in fields view-->
+                <field name="pod_practice_id" domain="[('pod_practice', '=', True)]"/>
+                <field name="pod_medical_id" domain="[('pod_medical_provider', '=', True)]"/>
+                <field name="pod_medical_coach_id" domain="[('pod_medical_provider', '=', True)]"/>
+                <field name="pod_organization_id" domain="[('pod_organization', '=', True)]"/>
+                <field name="pod_medical_billing_id" domain="[('pod_medical_provider', '=', True)]"/>
+                <field name="pod_sales_partner_id" domain="[('pod_sales_partner', '=', True)]"/>
+                <!--**************************************************-->
+                <field name="pod_fax" invisible="is_patient == True" widget="phone"/>
+            </xpath>
+            <!--xpath expr="//field[@name='child_ids']/form/sheet/group/group[3]" position="after"-->
+            <xpath expr="//field[@name='child_ids']//form/sheet/group/group[2]" position="after">
+                <group string="Partner Type">
+                    <field name="is_patient"/>
+                </group>
+            </xpath>
+            <!--     add chatter       -->
+            <!--            <xpath expr="//sheet" position="after">-->
+            <!--                <div class="oe_chatter">-->
+            <!--                    <field name="message_follower_ids"/>-->
+            <!--                    <field name="activity_ids"/>-->
+            <!--                    <field name="message_ids"/>-->
+            <!--                </div>-->
+            <!--            </xpath>-->
+            <!--div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_patient_devices" icon="fa-mobile" attrs="{'invisible': [('is_patient', '=', False)]}">
+                    <field string="Devices" name="pod_device_count" widget="statinfo"/>
+                </button>
+            </div-->
+        </field>
+    </record>
+    <!--
+    <record id="res_partner_form_view_inherit_for_group" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit.for.group</field>
+        <field name="model">res.partner</field>
+        <field name="groups_id" eval="[(4,ref('pod_erp_base.group_patient_editable'))]"/>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="pod_erp_base.res_partner_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="pod_practice_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="pod_medical_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="pod_medical_coach_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="pod_organization_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="pod_medical_billing_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="pod_sales_partner_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+        </field>
+    </record> -->
+
+    <record id="rom_view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">rom.view.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="is_patient" invisible='1'/>
+                <field name="pod_patient_url" widget="url" optional="hide"/>
+                <field name="pod_practice_id" optional="hide"/>
+                <field name="pod_medical_id" optional="hide"/>
+                <field name="pod_medical_coach_id" optional="hide"/>
+                <field name="pod_organization_id" optional="hide"/>
+                <field name="pod_medical_billing_id" optional="hide"/>
+                <field name="pod_sales_partner_id" optional="hide"/>
+                <!--                <field name="pod_contact_type_id" optional="hide"/>-->
+            </field>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="pod_patient_birthday"/>
+                <field name="pod_medical_record_number"/>
+                <field name="pod_program_group"/>
+                <field name="pod_patient_gender"/>
+                <field name="pod_warehouse_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pod_search_view_partner_inherit" model="ir.ui.view">
+        <field name="name">pod.view.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="pod_practice_id"/>
+                <field name="pod_organization_id"/>
+                <field name="pod_sales_partner_id"/>
+                <field name="pod_patient_birthday"/>
+                <field name="pod_medical_record_number"/>
+                <filter string="Practices" name="filter_pod_practice" domain="[('pod_practice','=', True)]"/>
+                <filter string="Staff" name="filter_pod_staff" domain="[('pod_staff','=', True)]"/>
+                <filter string="Medical Providers" name="filter_pod_medical_provider" domain="[('pod_medical_provider','=', True)]"/>
+                <filter string="Organizations" name="filter_pod_organization" domain="[('pod_organization','=', True)]"/>
+                <filter string="Sales Partners" name="filter_pod_sales_partner" domain="[('pod_sales_partner','=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_country']" position="after">
+                <separator/>
+                <filter name="group_pod_practice" string="Practice" context="{'group_by': 'pod_practice_id'}"/>
+                <filter name="group_pod_organization" string="Organization" context="{'group_by': 'pod_organization_id'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="rom_res_partner_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">rom.res.partner.kanban.view.inheri</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="is_patient" invisible='1'/>
+            </field>
+        </field>
+    </record>
+
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity,pivot</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+            </p>
+            <p>
+            Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.menu" id="pod_root_menu_administration">
+        <field name="name">Administration</field>
+        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="pod_root_menu_administration" model="ir.ui.menu">
+        <field name="active" eval="True" />
+    </record>
+
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" action="contacts.action_contacts" parent="pod_root_menu_administration" sequence="1"/>
+
+</odoo>
