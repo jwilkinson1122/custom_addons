@@ -4,7 +4,7 @@ from odoo import fields, models, _, api
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    pod_owner_id = fields.Many2one("res.partner", string="Billing Physician", compute="compute_pod_owner_id", readonly=True,
+    pod_owner_id = fields.Many2one("res.partner", string="Billing Practitioner", compute="compute_pod_owner_id", readonly=True,
                                    store=True)
 
     @api.depends('picking_id', 'picking_id.pod_owner_id')

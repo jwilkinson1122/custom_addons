@@ -17,7 +17,20 @@ class ResPartner(models.Model):
     state_id = fields.Many2one('res.country.state', tracking=True)
     country_id = fields.Many2one('res.country', tracking=True)
 
+    
+   # Identifier Booleans
     is_patient = fields.Boolean('Patient', tracking=True)
+    is_organization = fields.Boolean(string="Organization", tracking=True)
+    is_practice = fields.Boolean(string="Practice", tracking=True)
+    is_practitioner = fields.Boolean(string="Practitioner", tracking=True)
+    is_personnel = fields.Boolean(string="Personnel", tracking=True)
+    is_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
+    # pod_organization = fields.Boolean(string="Organization", tracking=True)
+    # pod_practice = fields.Boolean(string="Practice", tracking=True)
+    # pod_practitioner = fields.Boolean(string="Practitioner", tracking=True)
+    # pod_personnel = fields.Boolean(string="Personnel", tracking=True)
+    # pod_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
+
     # pod_contact_type_id = fields.Many2one("contact.type",string="Contact Type", tracking=True)
     pod_uuid = fields.Char(string="Contact UUID", index=True)
     pod_medical_record_number = fields.Char(string="Medical Record Number", tracking=True)
@@ -34,18 +47,14 @@ class ResPartner(models.Model):
                                            store=True, help='Technical Date of Birth in string format for search')
     pod_patient_url = fields.Char(string="Patient URL", tracking=True)
     pod_fax = fields.Char(string="Fax", tracking=True)
-    # Identifier Booleans
-    pod_practice = fields.Boolean(string="Practice", tracking=True)
-    pod_staff = fields.Boolean(string="Staff", tracking=True)
-    pod_medical_provider = fields.Boolean(string="Medical Provider", tracking=True,
-                                          help="Primary & Billing Physician are considered as Medical Provider")
-    pod_organization = fields.Boolean(string="Organization", tracking=True)
-    pod_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
+ 
+    
+    
     # Types of contacts
     pod_practice_id = fields.Many2one("res.partner", string="Practice", tracking=True)
-    pod_medical_id = fields.Many2one("res.partner", string="Primary Physician", tracking=True)
-    pod_medical_billing_id = fields.Many2one("res.partner", string="Billing Physician", tracking=True)
-    pod_medical_coach_id = fields.Many2one("res.partner", string="Nurse Coach", tracking=True)
+    pod_medical_id = fields.Many2one("res.partner", string="Primary Practitioner", tracking=True)
+    pod_medical_billing_id = fields.Many2one("res.partner", string="Billing Practitioner", tracking=True)
+    pod_medical_asst_id = fields.Many2one("res.partner", string="Assitant", tracking=True)
     pod_organization_id = fields.Many2one("res.partner", string="Organization", tracking=True)
     pod_sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
     pod_warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
@@ -94,7 +103,7 @@ class ResPartner(models.Model):
     #         for field in res['fields']:
     #             for node in doc.xpath("//field[@name='pod_practice_id'] \
     #                                 | //field[@name='pod_medical_id'] \
-    #                                 | //field[@name='pod_medical_coach_id'] \
+    #                                 | //field[@name='pod_medical_asst_id'] \
     #                                 | //field[@name='pod_organization_id'] \
     #                                 | //field[@name='pod_medical_billing_id'] \
     #                                 | //field[@name='pod_sales_partner_id']"):

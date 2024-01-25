@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_customp_patient" model="ir.actions.act_window">
+    <record id="action_custom_patient" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -16,27 +16,27 @@
         </field>
     </record>
 
-    <record id="action_customp_patient_view_kanban" model="ir.actions.act_window.view">
+    <record id="action_custom_patient_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="0"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="base.res_partner_kanban_view"/>
-        <field name="act_window_id" ref="action_customp_patient"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
     </record>
 
-    <record id="action_customp_patient_view_tree" model="ir.actions.act_window.view">
+    <record id="action_custom_patient_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="base.view_partner_tree"/>
-        <field name="act_window_id" ref="action_customp_patient"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
     </record>
 
-    <record id="action_customp_patient_view_form" model="ir.actions.act_window.view">
+    <record id="action_custom_patient_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="base.view_partner_form"/>
-        <field name="act_window_id" ref="action_customp_patient"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
     </record>
 
-    <menuitem id="customp_patient_menu" name="Patients" action="action_customp_patient" parent="pod_erp_base.pod_root_menu_administration" sequence="2"/>
+    <menuitem id="custom_patient_menu" name="Patients" action="action_custom_patient" parent="pod_erp_base.pod_root_menu_administration" sequence="10"/>
 
 </odoo>

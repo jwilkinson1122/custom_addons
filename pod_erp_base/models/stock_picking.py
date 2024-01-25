@@ -5,7 +5,7 @@ from odoo import fields, models, _, api
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    pod_owner_id = fields.Many2one("res.partner", string="Billing Physician", compute="compute_pod_medical_billing_id", store=True)
+    pod_owner_id = fields.Many2one("res.partner", string="Billing Practitioner", compute="compute_pod_medical_billing_id", store=True)
     pod_practice_id = fields.Many2one('res.partner', string='Practice', compute='compute_pod_practice_id', store=True)
     pod_organization_id = fields.Many2one('res.partner', string='Organization', compute='compute_pod_organization_id', store=True)
     pod_sales_partner_id = fields.Many2one("res.partner", string='Pod Partner', compute="compute_pod_sales_partner_id", store=True)

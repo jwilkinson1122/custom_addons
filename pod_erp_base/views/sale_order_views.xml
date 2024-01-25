@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/notebook" position="inside">
-                <page name="phi" string="PHI Details" groups="pod_erp_base.group_manager_patients_custom">
+                <page name="details" string="Details" groups="pod_erp_base.group_manager_patients_custom">
                     <group>
                         <group>
                             <field name="pod_uuid"/>
@@ -16,7 +16,7 @@
                         </group>
                         <group>
                             <field name="pod_medical_id"/>
-                            <field name="pod_medical_coach_id"/>
+                            <field name="pod_medical_asst_id"/>
                             <field name="pod_medical_billing_id"/>
                             <field name="pod_sales_partner_id"/>
                         </group>
@@ -57,7 +57,7 @@
             <field name="invoice_status" position="after">
                 <field name="pod_practice_id" optional="hide"/>
                 <field name="pod_medical_id" optional="hide"/>
-                <field name="pod_medical_coach_id" optional="hide"/>
+                <field name="pod_medical_asst_id" optional="hide"/>
                 <field name="pod_organization_id" optional="hide"/>
                 <field name="pod_medical_billing_id" optional="hide"/>
                 <field name="pod_sales_partner_id" optional="hide"/>
@@ -73,7 +73,7 @@
             <field name="invoice_status" position="after">
                 <field name="pod_practice_id" optional="hide"/>
                 <field name="pod_medical_id" optional="hide"/>
-                <field name="pod_medical_coach_id" optional="hide"/>
+                <field name="pod_medical_asst_id" optional="hide"/>
                 <field name="pod_organization_id" optional="hide"/>
                 <field name="pod_medical_billing_id" optional="hide"/>
                 <field name="pod_sales_partner_id" optional="hide"/>
