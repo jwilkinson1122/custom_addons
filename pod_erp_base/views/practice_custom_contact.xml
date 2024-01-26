@@ -7,8 +7,8 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity,pivot</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
-        <field name="context">{'default_is_company': True, 'default_is_practice':True, 'default_company_type': 'company'}</field>
-        <field name="domain">[('is_practice', '=', True)]</field>
+        <field name="context">{'default_is_company': True, 'default_is_pod_account':True, 'default_company_type': 'company'}</field>
+        <field name="domain">[('is_pod_account', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new practice!

@@ -10,22 +10,22 @@
                     <group>
                         <group>
                             <field name="contact_uuid"/>
-                            <field name="order_uuid" readonly="1"/>
+                            <field name="pod_order_uuid" readonly="1"/>
                             <field name="owner_id"/>
                             <field name="app_url" widget="url"/>
                         </group>
                         <group>
-                            <field name="practice_practitioner_id"/>
-                            <field name="practice_assistant_id"/>
-                            <field name="practice_billing_id"/>
-                            <field name="sales_partner_id"/>
+                            <field name="pod_practitioner_id"/>
+                            <field name="pod_assistant_id"/>
+                            <field name="pod_billing_id"/>
+                            <field name="pod_sales_partner_id"/>
                         </group>
                     </group>
                 </page>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="practice_location_id"/>
-                <field name="practice_id"/>
+                <field name="pod_location_id"/>
+                <field name="pod_account_id"/>
                 <field name="customer_phone" string=""/>
             </xpath>
         </field>
@@ -37,14 +37,14 @@
         <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='partner_id']" position="after">
-                <field name="practice_location_id"/>
-                <field name="practice_id"/>
-                <field name="sales_partner_id"/> 
+                <field name="pod_location_id"/>
+                <field name="pod_account_id"/>
+                <field name="pod_sales_partner_id"/> 
             </xpath>
             <xpath expr="//filter[@name='order_month']" position="after">
                 <separator/>
-                <filter name="group_location" string="Location" context="{'group_by': 'practice_location_id'}"/>
-                <filter name="group_practice" string="Practice" context="{'group_by': 'practice_id'}"/>
+                <filter name="group_location" string="Location" context="{'group_by': 'pod_location_id'}"/>
+                <filter name="group_practice" string="Practice" context="{'group_by': 'pod_account_id'}"/>
             </xpath>
         </field>
     </record>
@@ -55,12 +55,12 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <field name="invoice_status" position="after">
-                <field name="practice_location_id" optional="hide"/>
-                <field name="practice_practitioner_id" optional="hide"/>
-                <field name="practice_assistant_id" optional="hide"/>
-                <field name="practice_id" optional="hide"/>
-                <field name="practice_billing_id" optional="hide"/>
-                <field name="sales_partner_id" optional="hide"/>
+                <field name="pod_location_id" optional="hide"/>
+                <field name="pod_practitioner_id" optional="hide"/>
+                <field name="pod_assistant_id" optional="hide"/>
+                <field name="pod_account_id" optional="hide"/>
+                <field name="pod_billing_id" optional="hide"/>
+                <field name="pod_sales_partner_id" optional="hide"/>
             </field>
         </field>
     </record>
@@ -71,12 +71,12 @@
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <field name="invoice_status" position="after">
-                <field name="practice_location_id" optional="hide"/>
-                <field name="practice_practitioner_id" optional="hide"/>
-                <field name="practice_assistant_id" optional="hide"/>
-                <field name="practice_id" optional="hide"/>
-                <field name="practice_billing_id" optional="hide"/>
-                <field name="sales_partner_id" optional="hide"/>
+                <field name="pod_location_id" optional="hide"/>
+                <field name="pod_practitioner_id" optional="hide"/>
+                <field name="pod_assistant_id" optional="hide"/>
+                <field name="pod_account_id" optional="hide"/>
+                <field name="pod_billing_id" optional="hide"/>
+                <field name="pod_sales_partner_id" optional="hide"/>
             </field>
         </field>
     </record>

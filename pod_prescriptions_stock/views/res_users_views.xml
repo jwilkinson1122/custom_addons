@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <group name="signature" position="after">
                     <group name="Warehouses">
-                        <field name="property_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                        <field name="property_pod_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     </group>
                 </group>
             </field>
@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                 <group name="phone_numbers" position="after">
                     <group name="Warehouses">
-                        <field name="property_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                        <field name="property_pod_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     </group>
                 </group>
             </field>
@@ -34,7 +34,7 @@
             <field name="arch" type="xml">
                 <group name="messaging" position="after">
                     <group name="Warehouses" string="Inventory" groups="stock.group_stock_multi_warehouses">
-                        <field name="property_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                        <field name="property_pod_warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     </group>
                 </group>
             </field>

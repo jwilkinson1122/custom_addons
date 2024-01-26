@@ -24,7 +24,7 @@ class RmaReDeliveryWizard(models.TransientModel):
     )
     product_uom = fields.Many2one(comodel_name="uom.uom", string="Unit of measure")
     scheduled_date = fields.Datetime(required=True, default=fields.Datetime.now)
-    warehouse_id = fields.Many2one(
+    pod_warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         string="Warehouse",
         required=True,
@@ -47,7 +47,7 @@ class RmaReDeliveryWizard(models.TransientModel):
         res = super().default_get(fields_list)
         rma_ids = self.env.context.get("active_ids")
         rma = self.env["rma"].browse(rma_ids)
-        warehouse_id = (
+        pod_warehouse_id = (
             self.env["stock.warehouse"]
             .search([("company_id", "=", rma[0].company_id.id)], limit=1)
             .id
@@ -61,7 +61,7 @@ class RmaReDeliveryWizard(models.TransientModel):
             product_uom_qty = rma.remaining_qty
         res.update(
             rma_count=len(rma),
-            warehouse_id=warehouse_id,
+            pod_warehouse_id=pod_warehouse_id,
             type=delivery_type,
             product_id=product_id,
             product_uom_qty=product_uom_qty,
@@ -81,7 +81,7 @@ class RmaReDeliveryWizard(models.TransientModel):
         if self.type == "replace":
             rma.create_replace(
                 self.scheduled_date,
-                self.warehouse_id,
+                self.pod_warehouse_id,
                 self.product_id,
                 self.product_uom_qty,
                 self.product_uom,

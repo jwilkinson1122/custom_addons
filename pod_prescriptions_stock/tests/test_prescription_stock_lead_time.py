@@ -30,7 +30,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
             'partner_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
-            'warehouse_id': self.company_data['default_warehouse'].id,
+            'pod_warehouse_id': self.company_data['default_warehouse'].id,
             'order_line': [(0, 0, {
                 'product_id': self.test_product_order.id,
                 'product_uom_qty': 10,
@@ -69,7 +69,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
-            'warehouse_id': self.company_data['default_warehouse'].id,
+            'pod_warehouse_id': self.company_data['default_warehouse'].id,
             'order_line': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
                                    'product_uom_qty': 5,
@@ -141,7 +141,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
-            'warehouse_id': self.company_data['default_warehouse'].id,
+            'pod_warehouse_id': self.company_data['default_warehouse'].id,
             'order_line': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
                                    'product_uom_qty': 5,
@@ -216,7 +216,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
             'partner_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
-            'warehouse_id': self.company_data['default_warehouse'].id,
+            'pod_warehouse_id': self.company_data['default_warehouse'].id,
         })
 
         order_line = self.env['prescriptions.order.line'].create({

@@ -7,7 +7,7 @@ class PodiatryFlag(models.Model):
     _description = "Podiatry Flag"
     _inherit = "pod.abstract"
     
-    # practice_id = fields.Many2one(
+    # pod_account_id = fields.Many2one(
     #     'res.partner',
     #     required=True,
     #     index=True, 
@@ -19,7 +19,7 @@ class PodiatryFlag(models.Model):
     #     'res.partner',
     #     required=True,
     #     index=True, 
-    #     domain=[('is_practitioner','=',True)],
+    #     domain=[('is_pod_practitioner','=',True)],
     #     string="Practitioner"
     #     )
 

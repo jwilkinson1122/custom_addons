@@ -101,8 +101,8 @@ class TestRma(TransactionCase):
             [
                 ("code", "=", "outgoing"),
                 "|",
-                ("warehouse_id.company_id", "=", self.company.id),
-                ("warehouse_id", "=", False),
+                ("pod_warehouse_id.company_id", "=", self.company.id),
+                ("pod_warehouse_id", "=", False),
             ],
             limit=1,
         )
@@ -151,8 +151,8 @@ class TestRmaCase(TestRma):
             [
                 ("code", "=", "outgoing"),
                 "|",
-                ("warehouse_id.company_id", "=", self.company.id),
-                ("warehouse_id", "=", False),
+                ("pod_warehouse_id.company_id", "=", self.company.id),
+                ("pod_warehouse_id", "=", False),
             ],
             limit=1,
         )

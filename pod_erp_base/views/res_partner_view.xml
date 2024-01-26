@@ -19,7 +19,7 @@
     <!--        <field name="name">Location's Devices</field>-->
     <!--        <field name="res_model">stock.production.lot</field>-->
     <!--        <field name="view_mode">tree,form,graph</field>-->
-    <!--        <field name="context">{'search_default_practice_location_id': active_id, 'default_practice_location_id': active_id}</field>-->
+    <!--        <field name="context">{'search_default_pod_location_id': active_id, 'default_pod_location_id': active_id}</field>-->
     <!--        <field name="help" type="html">-->
     <!--          <p class="o_view_nocontent_smiling_face">-->
     <!--            Assign a Device to this Location!-->
@@ -28,12 +28,12 @@
     <!--          </p>-->
     <!--        </field>-->
     <!--    </record>-->
-    <!-- Action to Show is_practice's Devices -->
+    <!-- Action to Show is_company's Devices -->
     <!--    <record id="act_res_partner_practice_2_stock_production_lot_custom" model="ir.actions.act_window">-->
     <!--        <field name="name">Practice's Devices</field>-->
     <!--        <field name="res_model">stock.production.lot</field>-->
     <!--        <field name="view_mode">tree,form,graph</field>-->
-    <!--        <field name="context">{'search_default_practice_id': active_id, 'default_practice_id': active_id}</field>-->
+    <!--        <field name="context">{'search_default_pod_account_id': active_id, 'default_pod_account_id': active_id}</field>-->
     <!--        <field name="help" type="html">-->
     <!--            <p class="o_view_nocontent_smiling_face">-->
     <!--            Assign a Device to this Practice!-->
@@ -80,14 +80,14 @@
                     <group>
                         <group>
 
-                            <field name="is_practice"/>
-                            <field name="is_location"/>
-                            <field name="is_practitioner"/>
-                            <field name="is_personnel"/>
-                            <field name="is_patient" invisible="1"/>
-                            <field name="is_sales_partner"/>
+                            <field name="is_pod_account" invisible="1"/>
+                            <field name="is_pod_location" invisible="1"/>
+                            <field name="is_pod_practitioner" invisible="company_type != 'person'"/>
+                            <field name="is_pod_personnel" invisible="company_type != 'person'"/>
+                            <field name="is_pod_patient" invisible="1"/>
+                            <field name="is_pod_sales_partner" invisible="company_type != 'person'"/>
                             <field name="record_num"/>
-                            <field name="patient_birthday"/>
+                            <field name="patient_birthday" invisible="not is_pod_patient"/>
                         </group>
                         <group>
                             <field name="program_group"/>
@@ -95,10 +95,25 @@
                     </group>
                 </page>
             </xpath>
-            <xpath expr="//field[@name='company_type']" position="attributes">
+            <!-- <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">not is_company</attribute>
-            </xpath>
+            </xpath> -->
             <!-- Removing Base Fields -->
+            <!-- <h1>
+                <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
+                <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact'"/>
+            </h1> -->
+            <xpath expr="//h1" position="replace">
+                <h1>
+                    <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Account Name" invisible="not is_pod_account" required="type == 'contact'"/>
+                    <field id="location" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Location Name" invisible="not is_pod_location" required="type == 'contact'"/>
+                    <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Contact Name" invisible="is_pod_account or is_pod_location or is_pod_patient" required="type == 'contact'"/>
+                    <field id="patient" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Patient Name" invisible="not is_pod_patient" required="type == 'contact'"/>
+                </h1>
+            </xpath>
+            <!-- <xpath expr="//h1/field[@id='company']" position="after">
+                <field id="location" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="type == 'contact'"/>
+            </xpath> -->
             <xpath expr="//field[@name='title']" position="replace">
             </xpath>
             <xpath expr="//field[@name='category_id']" position="replace">
@@ -108,32 +123,33 @@
             <!-- Redesign Left -->
             <xpath expr="//field[@name='vat']" position="replace">
                 <field name="lang"/>
-                <field name="tz"/>
-                <field name="vat"/>
-                <field name="warehouse_id" invisible="is_location == False"/>
+                <field name="tz" invisible="1"/>
+                <field name="vat" invisible="1"/>
+                <field name="pod_warehouse_id" invisible="not is_pod_account or not is_pod_location"/>
+                <!-- <field name="pod_warehouse_id" invisible="is_pod_location == False"/> -->
                 <field name="contact_uuid" groups="base.group_no_one" readonly="1"/>
-                <field name="order_uuid" groups="base.group_no_one" readonly="1"/>
+                <field name="pod_order_uuid" groups="base.group_no_one" readonly="1"/>
             </xpath>
             <!-- Redesign Right-->
             <xpath expr="//field[@name='function']" position="replace">
-                <field name="patient_gender" invisible="is_patient != True"/>
+                <field name="patient_gender" invisible="not is_pod_patient"/>
                 <field name="website" widget="url" string="Website"/>
                 <field name="patient_url" widget="url" invisible="1"/>
-                <field name="function" invisible="is_company"/>
+                <field name="function" invisible="is_pod_account or is_pod_location or is_pod_patient"/>
                 <!--This below fields is inherited in this same file please review before change in fields view-->
-                <field name="practice_id" domain="[('is_practice', '=', True)]"/>
-                <field name="practice_location_id" domain="[('is_location', '=', True)]" invisible="is_company"/>
-                <field name="practice_practitioner_id" domain="[('is_practitioner', '=', True)]"/>
-                <field name="practice_assistant_id" domain="[('is_practitioner', '=', True)]"/>
-                <field name="practice_billing_id" domain="[('is_practitioner', '=', True)]"/>
-                <field name="sales_partner_id" domain="[('is_sales_partner', '=', True)]"/>
+                <field name="pod_account_id" domain="[('is_pod_account', '=', True)]" invisible="is_pod_account"/>
+                <field name="pod_location_id" domain="[('is_pod_location', '=', True)]" invisible="is_pod_account or is_pod_location"/>
+                <field name="pod_practitioner_id" domain="[('is_pod_practitioner', '=', True)]" invisible="not is_pod_patient"/>
+                <field name="pod_assistant_id" domain="[('is_pod_practitioner', '=', True)]" invisible="not is_pod_patient"/>
+                <field name="pod_billing_id" domain="[('is_pod_practitioner', '=', True)]" invisible="is_pod_patient"/>
+                <field name="pod_sales_partner_id" domain="[('is_pod_sales_partner', '=', True)]" invisible="is_pod_patient"/>
                 <!--**************************************************-->
-                <field name="fax" invisible="is_patient == True" widget="phone"/>
+                <field name="fax" invisible="is_pod_patient" widget="phone"/>
             </xpath>
             <!--xpath expr="//field[@name='child_ids']/form/sheet/group/group[3]" position="after"-->
             <xpath expr="//field[@name='child_ids']//form/sheet/group/group[2]" position="after">
                 <group string="Partner Type">
-                    <field name="is_patient"/>
+                    <field name="is_pod_patient"/>
                 </group>
             </xpath>
             <!--     add chatter       -->
@@ -145,7 +161,7 @@
             <!--                </div>-->
             <!--            </xpath>-->
             <!--div name="button_box" position="inside">
-                <button class="oe_stat_button" type="object" name="action_view_patient_devices" icon="fa-mobile" attrs="{'invisible': [('is_patient', '=', False)]}">
+                <button class="oe_stat_button" type="object" name="action_view_patient_devices" icon="fa-mobile" attrs="{'invisible': [('is_pod_patient', '=', False)]}">
                     <field string="Devices" name="device_count" widget="statinfo"/>
                 </button>
             </div-->
@@ -159,23 +175,23 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="pod_erp_base.res_partner_form_view_inherit"/>
         <field name="arch" type="xml">
-            <field name="practice_location_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_location_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
-            <field name="practice_practitioner_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_practitioner_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
-            <field name="practice_assistant_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_assistant_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
-            <field name="practice_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_account_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
-            <field name="practice_billing_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_billing_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
-            <field name="sales_partner_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            <field name="pod_sales_partner_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_pod_patient', '!=', True)]}</attribute>
             </field>
         </field>
     </record> -->
@@ -186,15 +202,15 @@
         <field name="inherit_id" ref="base.view_partner_tree" />
         <field name="arch" type="xml">
             <field name="country_id" position="after">
-                <field name="is_patient"/>
-                <!-- <field name="is_patient" invisible='1'/> -->
+                <field name="is_pod_patient"/>
+                <!-- <field name="is_pod_patient" invisible='1'/> -->
                 <field name="patient_url" widget="url" optional="hide"/>
-                <field name="practice_location_id" optional="hide"/>
-                <field name="practice_practitioner_id" optional="hide"/>
-                <field name="practice_assistant_id" optional="hide"/>
-                <field name="practice_id" optional="hide"/>
-                <field name="practice_billing_id" optional="hide"/>
-                <field name="sales_partner_id" optional="hide"/>
+                <field name="pod_location_id" optional="hide"/>
+                <field name="pod_practitioner_id" optional="hide"/>
+                <field name="pod_assistant_id" optional="hide"/>
+                <field name="pod_account_id" optional="hide"/>
+                <field name="pod_billing_id" optional="hide"/>
+                <field name="pod_sales_partner_id" optional="hide"/>
                 <!--                <field name="contact_type_id" optional="hide"/>-->
             </field>
             <xpath expr="//field[@name='email']" position="after">
@@ -202,7 +218,7 @@
                 <field name="record_num"/>
                 <field name="program_group"/>
                 <field name="patient_gender"/>
-                <field name="warehouse_id"/>
+                <field name="pod_warehouse_id"/>
             </xpath>
         </field>
     </record>
@@ -213,21 +229,21 @@
         <field name="inherit_id" ref="base.view_res_partner_filter" />
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='name']" position="after">
-                <field name="practice_id"/>
-                <field name="practice_location_id"/>
-                <field name="sales_partner_id"/>
+                <field name="pod_account_id"/>
+                <field name="pod_location_id"/>
+                <field name="pod_sales_partner_id"/>
                 <field name="patient_birthday"/>
                 <field name="record_num"/>
-                <filter string="Locations" name="filter_location" domain="[('is_location','=', True)]"/>
-                <filter string="Staff" name="filter_personnel" domain="[('is_personnel','=', True)]"/>
-                <filter string="Practitioners" name="filter_practitioner" domain="[('is_practitioner','=', True)]"/>
-                <filter string="Practices" name="filter_practice" domain="[('is_practice','=', True)]"/>
-                <filter string="Sales Partners" name="filter_sales_partner" domain="[('is_sales_partner','=', True)]"/>
+                <filter string="Locations" name="filter_location" domain="[('is_pod_location','=', True)]"/>
+                <filter string="Staff" name="filter_personnel" domain="[('is_pod_personnel','=', True)]"/>
+                <filter string="Practitioners" name="filter_practitioner" domain="[('is_pod_practitioner','=', True)]"/>
+                <filter string="Practices" name="filter_practice" domain="[('is_pod_account','=', True)]"/>
+                <filter string="Sales Partners" name="filter_sales_partner" domain="[('is_pod_sales_partner','=', True)]"/>
             </xpath>
             <xpath expr="//filter[@name='group_country']" position="after">
                 <separator/>
-                <filter name="group_location" string="Location" context="{'group_by': 'practice_location_id'}"/>
-                <filter name="group_practice" string="Practice" context="{'group_by': 'practice_id'}"/>
+                <filter name="group_location" string="Location" context="{'group_by': 'pod_location_id'}"/>
+                <filter name="group_practice" string="Practice" context="{'group_by': 'pod_account_id'}"/>
             </xpath>
 
         </field>
@@ -239,7 +255,7 @@
         <field name="inherit_id" ref="base.res_partner_kanban_view" />
         <field name="arch" type="xml">
             <field name="country_id" position="after">
-                <field name="is_patient" invisible='1'/>
+                <field name="is_pod_patient" invisible='1'/>
             </field>
         </field>
     </record>
@@ -250,8 +266,8 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity,pivot</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
-        <field name="context">{'default_is_company': True, 'default_is_practice':True, 'default_company_type': 'company'}</field>
-        <field name="domain">[('is_practice', '=', True)]</field>
+        <field name="context">{'default_is_company': True, 'default_is_pod_account':True, 'default_company_type': 'company'}</field>
+        <field name="domain">[('is_pod_account', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new practice!
@@ -268,8 +284,8 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity,pivot</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
-        <field name="context">{'default_is_company': True, 'default_is_practice':True, 'default_company_type': 'company'}</field>
-        <field name="domain">[('is_practice', '=', True)]</field>
+        <field name="context">{'default_is_company': True, 'default_is_pod_account':True, 'default_company_type': 'company'}</field>
+        <field name="domain">[('is_pod_account', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new practice!
@@ -281,10 +297,26 @@
     </record> -->
 
     <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="name">Practices</field>
+        <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity,pivot</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True, 'default_company_type': 'company'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+            </p>
+            <p>
+            Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record>
+
+    <!-- <record id="action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
         <field name="context">{'default_is_company': True}</field>
         <field name="help" type="html">
@@ -295,7 +327,7 @@
             Odoo helps you track all activities related to your contacts.
             </p>
         </field>
-    </record>
+    </record> -->
 
     <record model="ir.ui.menu" id="root_menu_administration">
         <field name="name">Administration</field>
@@ -307,6 +339,6 @@
         <field name="active" eval="True" />
     </record>
 
-    <menuitem id="contacts.res_partner_menu_contacts" name="Practices" action="contacts.action_contacts" parent="root_menu_administration" sequence="1"/>
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" action="contacts.action_contacts" parent="root_menu_administration" sequence="1"/>
 
 </odoo>

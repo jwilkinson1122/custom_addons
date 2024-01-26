@@ -11,7 +11,7 @@ def post_init_hook(cr, registry):
         """Choose the next available color for the operation types."""
         stock_picking_type = env["stock.picking.type"]
         picking_type = stock_picking_type.search_read(
-            [("warehouse_id", "!=", False), ("color", "!=", False)],
+            [("pod_warehouse_id", "!=", False), ("color", "!=", False)],
             ["color"],
             order="color",
         )
@@ -50,7 +50,7 @@ def post_init_hook(cr, registry):
                 picking_sequence = sequence_data[picking_type]
                 sequence = ir_sequence_sudo.create(picking_sequence)
                 values.update(
-                    warehouse_id=whs.id,
+                    pod_warehouse_id=whs.id,
                     color=color,
                     sequence_id=sequence.id,
                 )

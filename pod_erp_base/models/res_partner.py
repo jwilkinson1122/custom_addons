@@ -19,18 +19,22 @@ class ResPartner(models.Model):
 
     
    # Identifier Booleans
-    is_patient = fields.Boolean('Patient', tracking=True)
-    is_practice = fields.Boolean(string="Practice", tracking=True)
-    is_location = fields.Boolean(string="Location", tracking=True)
-    is_practitioner = fields.Boolean(string="Practitioner", tracking=True)
-    is_personnel = fields.Boolean(string="Personnel", tracking=True)
-    is_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
- 
+    is_pod_account = fields.Boolean(string="Account", tracking=True)
+    is_pod_location = fields.Boolean(string="Location", tracking=True)
+    is_pod_practitioner = fields.Boolean(string="Practitioner", tracking=True)
+    is_pod_personnel = fields.Boolean(string="Personnel", tracking=True)
+    is_pod_patient = fields.Boolean('Patient', tracking=True)
+    is_pod_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
     # company_type = fields.Selection(selection_add=[('location', 'Location')])
 
-    company_type = fields.Selection(string='Company Type',
-        selection=[('company', 'Company'), ('person', 'Location')],
-        compute='_compute_company_type', inverse='_write_company_type')
+    company_type = fields.Selection(
+        string='Company Type',
+        selection=[('company', 'Account'), ('location', 'Location'), ('person', 'Person')],
+        compute='_compute_company_type',
+        inverse='_write_company_type',
+        store=True  # Add store=True to store the value in the database
+    )
+
 
     # contact_type_id = fields.Many2one("contact.type",string="Contact Type", tracking=True)
     contact_uuid = fields.Char(string="Contact UUID", index=True)
@@ -50,14 +54,14 @@ class ResPartner(models.Model):
     fax = fields.Char(string="Fax", tracking=True)
  
     # Types of contacts
-    practice_id = fields.Many2one("res.partner", string="Practice", tracking=True)
-    practice_location_id = fields.Many2one("res.partner", string="Practice Location", tracking=True)
-    practice_practitioner_id = fields.Many2one("res.partner", string="Practitioner", tracking=True)
-    practice_billing_id = fields.Many2one("res.partner", string="Billing", tracking=True)
-    practice_assistant_id = fields.Many2one("res.partner", string="Medical Assitant", tracking=True)
-    sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
-    warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
-    order_uuid = fields.Char(string="Order UUID", index=True)
+    pod_account_id = fields.Many2one("res.partner", string="Account", tracking=True)
+    pod_location_id = fields.Many2one("res.partner", string="Location", tracking=True)
+    pod_practitioner_id = fields.Many2one("res.partner", string="Practitioner", tracking=True)
+    pod_billing_id = fields.Many2one("res.partner", string="Billing", tracking=True)
+    pod_assistant_id = fields.Many2one("res.partner", string="Assistant", tracking=True)
+    pod_sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
+    pod_warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
+    pod_order_uuid = fields.Char(string="Order UUID", index=True)
 
     _sql_constraints = [("contact_uuid_unique", "unique(contact_uuid)", 'Contact UUID Must be Unique!')]
 
@@ -68,6 +72,29 @@ class ResPartner(models.Model):
         """
         for partner in self:
             partner.patient_birthday_str = partner.patient_birthday and partner.patient_birthday.strftime("%m/%d/%Y") or ""
+
+    @api.depends('company_type')
+    def _compute_company_type(self):
+        for record in self:
+            field_mapping = {
+                'company': ('is_pod_account', False, False, False, False),
+                'location': (False, 'is_pod_location', False, False, False),
+                'person': (False, False, record.is_pod_practitioner, record.is_pod_personnel, record.is_pod_patient),
+            }
+            fields_to_set = field_mapping.get(record.company_type, (False, False, False, False, False))
+            record.is_pod_account, record.is_pod_location, record.is_pod_practitioner, record.is_pod_personnel, record.is_pod_patient = fields_to_set
+
+    def _write_company_type(self):
+        for record in self:
+            if record.is_pod_account:
+                record.company_type = 'company'
+            elif record.is_pod_location:
+                record.company_type = 'location'
+            elif any([record.is_pod_practitioner, record.is_pod_personnel, record.is_pod_patient]):
+                record.company_type = 'person'
+            else:
+                # Handle the case where neither is selected, e.g., raise an error or set a default value.
+                pass
 
 
     # @api.model
@@ -80,12 +107,12 @@ class ResPartner(models.Model):
     #     if self.env.user.has_group('pod_erp_base.group_patient_editable'):
     #         doc = etree.XML(res['arch'])
     #         for field in res['fields']:
-    #             for node in doc.xpath("//field[@name='practice_location_id'] \
-    #                                 | //field[@name='practice_practitioner_id'] \
-    #                                 | //field[@name='practice_assistant_id'] \
-    #                                 | //field[@name='practice_id'] \
-    #                                 | //field[@name='practice_billing_id'] \
-    #                                 | //field[@name='sales_partner_id']"):
+    #             for node in doc.xpath("//field[@name='pod_location_id'] \
+    #                                 | //field[@name='pod_practitioner_id'] \
+    #                                 | //field[@name='pod_assistant_id'] \
+    #                                 | //field[@name='pod_account_id'] \
+    #                                 | //field[@name='pod_billing_id'] \
+    #                                 | //field[@name='pod_sales_partner_id']"):
     #                 node.set("readonly", "0")
     #                 modifiers = json.loads(node.get("modifiers"))
     #                 modifiers['readonly'] = False

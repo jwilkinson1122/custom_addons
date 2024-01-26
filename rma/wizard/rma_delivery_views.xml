@@ -12,7 +12,7 @@
                     <group>
                         <field name="scheduled_date" />
                         <field
-                            name="warehouse_id"
+                            name="pod_warehouse_id"
                             attrs="{'invisible': [('type', '!=', 'replace')]}"
                         />
                         <field

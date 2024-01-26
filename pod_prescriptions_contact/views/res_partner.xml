@@ -5,7 +5,7 @@
         <field name="name">Locations</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_location", "=", True), ("patient_ids", "=", False), ('parent_id',
+        <field name="domain">[("is_pod_location", "=", True), ("patient_ids", "=", False), ('parent_id',
             'child_of', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -67,8 +67,8 @@
             </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_company" invisible="1" />
-                <field name="is_location" invisible="1" />
-                <field name="is_practitioner" invisible="1" />
+                <field name="is_pod_location" invisible="1" />
+                <field name="is_pod_practitioner" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
@@ -88,7 +88,7 @@
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="parent_id" placeholder="Parent Company" invisible="not is_location and not is_practitioner" class="fw-bold" />
+                        <field name="parent_id" placeholder="Parent Company" invisible="not is_pod_location and not is_pod_practitioner" class="fw-bold" />
                         <field name="active"/>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                         <group>
                             <span class="o_form_label o_td_label" name="address_name">
                                 <field name="type" readonly="user_ids" required="1" class="fw-bold"/>
-                                <field name="practice_type" placeholder="Practice Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                                <field name="practice_type" placeholder="Practice Type" required="1" invisible="is_pod_practitioner and not is_company" class="fw-bold" />
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
@@ -120,7 +120,7 @@
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director" invisible="1" />
-                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_pod_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
                             <field name="phone" placeholder='Phone' widget="phone" />
                             <field name="mobile" placeholder='Mobile' widget="phone" />
                             <field name="user_ids" placeholder='User' invisible="1" />
@@ -139,8 +139,8 @@
                     <group name="pod_config">
                         <field name="is_pod" invisible="1" />
                         <field name="is_company" invisible="1" />
-                        <field name="is_location" invisible="1" />
-                        <field name="is_practitioner" invisible="1" />
+                        <field name="is_pod_location" invisible="1" />
+                        <field name="is_pod_practitioner" invisible="1" />
                         <field name="active" />
                     </group>
                     <separator name="contact_info" string="Contact Information" />
@@ -164,7 +164,7 @@
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director" invisible="1" />
-                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_pod_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
                             <field name="phone" placeholder='Phone' widget="phone" />
                             <field name="mobile" placeholder='Mobile' widget="phone" />
                             <field name="user_ids" placeholder='User' invisible="1" />
@@ -325,7 +325,7 @@
                         </group>
                         <group name="test_group_6uh_right">
                             <field name="function" placeholder="e.g. Sales Director" invisible="1" />
-                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                            <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_pod_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
                             <field name="phone" placeholder='Phone' widget="phone" />
                             <field name="mobile" placeholder='Mobile' widget="phone" />
                             <field name="user_ids" placeholder='User' invisible="1" />
@@ -379,8 +379,8 @@
                     <group name="pod_config">
                         <field name="is_pod" />
                         <field name="is_company" invisible="not is_company"/>
-                        <field name="is_location" invisible="not is_location"/>
-                        <field name="is_practitioner" invisible="not is_practitioner"/>
+                        <field name="is_pod_location" invisible="not is_pod_location"/>
+                        <field name="is_pod_practitioner" invisible="not is_pod_practitioner"/>
                     </group>
                 </page>
             </xpath> -->
@@ -420,9 +420,9 @@
         <field name="inherit_id" ref="base.view_res_partner_filter" />
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='name']" position="after">
-                <field name="rcp_practice_id"/>
+                <field name="rcp_pod_account_id"/>
                 <field name="rcp_organization_id"/>
-                <field name="rcp_sales_partner_id"/>
+                <field name="rcp_pod_sales_partner_id"/>
                 <field name="rcp_patient_birthday"/>
                 <field name="rcp_medical_record_number"/>
                 <filter string="Practices" name="filter_rcp_practice" domain="[('rcp_practice','=', True)]"/>
@@ -433,11 +433,11 @@
             </xpath>
             <xpath expr="//filter[@name='group_country']" position="after">
                 <separator/>
-                <filter name="group_rcp_practice" string="Practice" context="{'group_by': 'rcp_practice_id'}"/>
+                <filter name="group_rcp_practice" string="Practice" context="{'group_by': 'rcp_pod_account_id'}"/>
                 <filter name="group_rcp_organization" string="Organization" context="{'group_by': 'rcp_organization_id'}"/>
             
                 <filter name="parent_id" string="Practice" context="{'group_by': 'parent_id'}" />
-                <filter name="is_location" string="Locations" domain="[('is_location', '=', True)]" />
+                <filter name="is_pod_location" string="Locations" domain="[('is_pod_location', '=', True)]" />
  
             </xpath>
 
@@ -460,7 +460,7 @@
                 <separator />
                 <group name="group_by" string="Group By">
                     <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}" />
-                    <filter string="Locations" name="is_location" domain="[('is_location', '=', True)]" />
+                    <filter string="Locations" name="is_pod_location" domain="[('is_pod_location', '=', True)]" />
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}" />
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}" />
                 </group>
@@ -478,7 +478,7 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="res_partner_search_view" />
-        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_pod_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_pod': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -493,8 +493,8 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="res_partner_search_view" />
-        <field name="domain">[('is_location', '=', True)]</field>
-        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_location': True, 'default_is_pod': True, 'default_type': ''}</field>
+        <field name="domain">[('is_pod_location', '=', True)]</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_pod_location': True, 'default_is_pod': True, 'default_type': ''}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new practice location!
@@ -508,8 +508,8 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="res_partner_search_view" />
-        <field name="domain">[('is_practitioner', '=', True)]</field>
-        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_practitioner': True, 'default_is_pod': True}</field>
+        <field name="domain">[('is_pod_practitioner', '=', True)]</field>
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_pod_practitioner': True, 'default_is_pod': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new practice contact!

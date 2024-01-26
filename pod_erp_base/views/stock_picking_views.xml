@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
         <xpath expr="//search/field[@name='name']" position="after">
-            <field name="practice_location_id"/>
-            <field name="practice_id"/>
-            <field name="sales_partner_id"/> 
+            <field name="pod_location_id"/>
+            <field name="pod_account_id"/>
+            <field name="pod_sales_partner_id"/> 
         </xpath>
         <xpath expr="//filter[@name='picking_type']" position="after">
             <separator/>
-            <filter name="group_location" string="Location" context="{'group_by': 'practice_location_id'}"/>
-            <filter name="group_practice" string="Practice" context="{'group_by': 'practice_id'}"/>
+            <filter name="group_location" string="Location" context="{'group_by': 'pod_location_id'}"/>
+            <filter name="group_practice" string="Practice" context="{'group_by': 'pod_account_id'}"/>
         </xpath>
         </field>
     </record>
@@ -24,10 +24,10 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
         <xpath expr="//field[@name='json_popover']" position="after">
-            <field name="practice_location_id" optional="hide"/>
-            <field name="practice_id" optional="hide"/>
+            <field name="pod_location_id" optional="hide"/>
+            <field name="pod_account_id" optional="hide"/>
             <field name="owner_id" optional="hide"/>
-            <field name="sales_partner_id" optional="hide"/>
+            <field name="pod_sales_partner_id" optional="hide"/>
         </xpath>
         </field>
     </record>
@@ -38,7 +38,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='other_infos']" position="inside">
-				<field name="order_uuid" readonly="1"/>
+				<field name="pod_order_uuid" readonly="1"/>
 			</xpath>
         </field>
     </record>
@@ -50,8 +50,8 @@
 <!--        <field name="arch" type="xml"> -->
 <!--            <xpath expr="//field[@name='location_id']" position="after">-->
 <!--                <field name="owner_id"/>-->
-<!--                <field name="practice_location_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
-<!--                <field name="practice_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
+<!--                <field name="pod_location_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
+<!--                <field name="pod_account_id" groups="pod_erp_base.group_manager_patients_custom"/>-->
 <!--                <field name="record_num" groups="pod_erp_base.group_manager_patients_custom"/>-->
 <!--            </xpath>-->
 <!--        </field>-->

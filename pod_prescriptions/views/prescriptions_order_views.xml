@@ -256,11 +256,11 @@
                     <group name="prescriptions_header">
                         <group name="partner_details">
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" placeholder="Practice Name" readonly="state in ['cancel', 'done']"/>
-                            <!-- <field name="practice_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" placeholder="Practice Name" readonly="state in ['cancel', 'done']"/> -->
-                            <!-- <field name="practice_id" placeholder="Practice Name"/> -->
-                            <!-- <field name="practice_id" placeholder="Practice Name" context="{'show_address': 1}" options="{'always_reload': True}" readonly="state in ['cancel', 'done']"/> -->
+                            <!-- <field name="pod_account_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" placeholder="Practice Name" readonly="state in ['cancel', 'done']"/> -->
+                            <!-- <field name="pod_account_id" placeholder="Practice Name"/> -->
+                            <!-- <field name="pod_account_id" placeholder="Practice Name" context="{'show_address': 1}" options="{'always_reload': True}" readonly="state in ['cancel', 'done']"/> -->
 
-                            <!-- <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', partner_id), ('is_practitioner', '=', True)]" readonly="state in ['cancel', 'done']"/> -->
+                            <!-- <field name="practitioner_id" placeholder="Practitioner Name" domain="[('parent_id', '=', partner_id), ('is_pod_practitioner', '=', True)]" readonly="state in ['cancel', 'done']"/> -->
                             <field name="patient_id" placeholder="Patient Name" readonly="state in ['cancel', 'done']"/>
 
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>

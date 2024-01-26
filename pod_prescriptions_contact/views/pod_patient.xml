@@ -292,8 +292,8 @@
                                             <li t-if="record.internal_identifier.raw_value">
                                                 <field name="internal_identifier" />
                                             </li>
-                                            <li t-if="record.practice_id.raw_value">
-                                                Practice: <field name="practice_id" />
+                                            <li t-if="record.pod_account_id.raw_value">
+                                                Practice: <field name="pod_account_id" />
                                             </li>
                                             <li t-if="record.practitioner_id.raw_value">
                                                 Practitioner: <field name="practitioner_id" />

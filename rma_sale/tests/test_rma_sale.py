@@ -94,7 +94,7 @@ class TestRmaSale(TestRmaSaleBase):
             "order_id": self.sale_order.id,
             "product_id": self.product_1.id,
             "product_uom_qty": 5,
-            "location_id": self.sale_order.warehouse_id.rma_loc_id.id,
+            "location_id": self.sale_order.pod_warehouse_id.rma_loc_id.id,
         }
         rma = self.env["rma"].create(rma_vals)
         rma.action_confirm()
@@ -168,7 +168,7 @@ class TestRmaSale(TestRmaSaleBase):
         wizard = wizard_obj.create(
             {
                 "line_ids": line_vals,
-                "location_id": order.warehouse_id.rma_loc_id.id,
+                "location_id": order.pod_warehouse_id.rma_loc_id.id,
             }
         )
         rma = wizard.sudo().create_rma(from_portal=True)

@@ -13,7 +13,7 @@ class TestPodiatryAdministrationFlag(TransactionCase):
     def test_service(self):
         category = self.FlagCategory.create({"name": "Category"})
         # practice = self.Partner.create({"name": "Practice", "is_company": True})
-        # practitioner = self.Partner.create({"name": "Practitioner", "is_practitioner": True})
+        # practitioner = self.Partner.create({"name": "Practitioner", "is_pod_practitioner": True})
         patient = self.Patient.create({"name": "Patient"})
 
         # self.assertEqual(practice.practice_flag_count, 0)
@@ -22,7 +22,7 @@ class TestPodiatryAdministrationFlag(TransactionCase):
 
         # Create flags
         # practice_flag = self.Flag.create({
-        #     "practice_id": practice.id,
+        #     "pod_account_id": practice.id,
         #     "description": "Description",
         #     "category_id": category.id
         # })

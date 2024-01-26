@@ -23,9 +23,9 @@ class PrescriptionOrder(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
-    warehouse_id = fields.Many2one(
+    pod_warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
-        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        compute='_compute_pod_warehouse_id', store=True, readonly=False, precompute=True,
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'prescriptions_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
@@ -44,14 +44,14 @@ class PrescriptionOrder(models.Model):
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
 
     def _init_column(self, column_name):
-        """ Ensure the default warehouse_id is correctly assigned
+        """ Ensure the default pod_warehouse_id is correctly assigned
 
-        At column initialization, the ir.model.fields for res.users.property_warehouse_id isn't created,
+        At column initialization, the ir.model.fields for res.users.property_pod_warehouse_id isn't created,
         which means trying to read the property field to get the default value will crash.
         We therefore enforce the default here, without going through
-        the default function on the warehouse_id field.
+        the default function on the pod_warehouse_id field.
         """
-        if column_name != "warehouse_id":
+        if column_name != "pod_warehouse_id":
             return super(PrescriptionOrder, self)._init_column(column_name)
         field = self._fields[column_name]
         default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -156,16 +156,16 @@ class PrescriptionOrder(models.Model):
             order.delivery_count = len(order.picking_ids)
 
     @api.depends('user_id', 'company_id')
-    def _compute_warehouse_id(self):
+    def _compute_pod_warehouse_id(self):
         for order in self:
-            default_warehouse_id = self.env['ir.default'].with_company(
-                order.company_id.id)._get_model_defaults('prescriptions.order').get('warehouse_id')
+            default_pod_warehouse_id = self.env['ir.default'].with_company(
+                order.company_id.id)._get_model_defaults('prescriptions.order').get('pod_warehouse_id')
             if order.state in ['draft', 'ongoing'] or not order.ids:
                 # Should expect empty
-                if default_warehouse_id is not None:
-                    order.warehouse_id = default_warehouse_id
+                if default_pod_warehouse_id is not None:
+                    order.pod_warehouse_id = default_pod_warehouse_id
                 else:
-                    order.warehouse_id = order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
+                    order.pod_warehouse_id = order.user_id.with_company(order.company_id.id)._get_default_pod_warehouse_id()
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):

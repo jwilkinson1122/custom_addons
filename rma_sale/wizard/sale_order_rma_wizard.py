@@ -31,7 +31,7 @@ class SaleOrderRmaWizard(models.TransientModel):
         comodel_name="stock.location",
         string="RMA location",
         domain=_domain_location_id,
-        default=lambda r: r.order_id.warehouse_id.rma_loc_id.id,
+        default=lambda r: r.order_id.pod_warehouse_id.rma_loc_id.id,
     )
     commercial_partner_id = fields.Many2one(
         comodel_name="res.partner",

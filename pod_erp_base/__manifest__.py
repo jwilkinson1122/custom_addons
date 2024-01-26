@@ -8,6 +8,7 @@
     'category': 'Base',
     'website': 'https://www.nwpodiatric.com',
     'depends': [
+        'pod_theme',
         'base', 
         'mail', 
         'sale',
@@ -21,7 +22,7 @@
         'views/res_partner_view.xml',
         # 'views/practice_custom_contact.xml',
         # 'views/location_custom_contact.xml',
-        'views/practitioner_custom_contact.xml',
+        # 'views/practitioner_custom_contact.xml',
         'views/patient_custom_contact.xml',
         'views/patient_contact.xml',
         # 'views/contact_type_views.xml',

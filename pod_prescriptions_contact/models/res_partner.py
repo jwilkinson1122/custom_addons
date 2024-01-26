@@ -14,8 +14,8 @@ class Partner(models.Model):
     
     is_pod = fields.Boolean(string='Podiatry', default=False)
     is_company = fields.Boolean(string='Company', default=False)
-    is_location = fields.Boolean(string='Location', default=False)
-    is_practitioner = fields.Boolean(string='Practitioner', default=False)
+    is_pod_location = fields.Boolean(string='Location', default=False)
+    is_pod_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
     # is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
     
@@ -60,7 +60,7 @@ class Partner(models.Model):
             return "base/static/img/truck.png"
         elif self.type == 'invoice':
             return "base/static/img/money.png"
-        elif self.is_company or self.is_location:
+        elif self.is_company or self.is_pod_location:
             return "base/static/img/company_image.png"
         else:
             return super()._avatar_get_placeholder_path()
@@ -91,7 +91,7 @@ class Partner(models.Model):
             else:
                 record.location_text = _("(%s Locations)" % record.location_count)
 
-    @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
+    @api.depends('parent_id', 'is_company', 'is_pod_practitioner', 'active')
     def _compute_practitioners(self):
         for record in self:
             # Check if the record has a proper ID
@@ -99,7 +99,7 @@ class Partner(models.Model):
                 all_practitioners = self.env['res.partner'].search([
                     ('id', 'child_of', record.id), 
                     ("is_company", "=", False),
-                    ("is_practitioner", "=", True),  
+                    ("is_pod_practitioner", "=", True),  
                     ("patient_ids", "=", False),  # Exclude records that have associated patients
                     ("active", "=", True)
                 ])
@@ -143,7 +143,7 @@ class Partner(models.Model):
                 record.patient_count = 0  # Assigning a default value for new records
                 continue
 
-            if record.is_practitioner or record.is_company:
+            if record.is_pod_practitioner or record.is_company:
                 all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
                 all_partners -= record
                 patients = all_partners.mapped('patient_ids')
@@ -158,7 +158,7 @@ class Partner(models.Model):
                 record.patient_records = self.env['pod.patient']  # Assigning a default value for new records
                 continue
 
-            if record.is_practitioner or record.is_company:
+            if record.is_pod_practitioner or record.is_company:
                 all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
                 all_partners -= record
                 record.patient_records = all_partners.mapped('patient_ids')
@@ -188,10 +188,10 @@ class Partner(models.Model):
                 record.patient_text = _("(%s Patients)" % record.patient_count)
 
     # Role Methods
-    @api.depends('is_practitioner', 'practitioner_role_ids')
+    @api.depends('is_pod_practitioner', 'practitioner_role_ids')
     def _compute_is_role_required(self):
         for record in self:
-            record.is_role_required = record.is_practitioner and not record.practitioner_role_ids
+            record.is_role_required = record.is_pod_practitioner and not record.practitioner_role_ids
 
     # Inverse method
     def _inverse_is_role_required(self):
@@ -199,10 +199,10 @@ class Partner(models.Model):
             if record.is_role_required and not record.practitioner_role_ids:
                 raise ValidationError("Roles are required for practitioners.")
 
-    @api.constrains('is_practitioner', 'practitioner_role_ids')
+    @api.constrains('is_pod_practitioner', 'practitioner_role_ids')
     def _check_practitioner_roles(self):
         for record in self:
-            if record.is_practitioner and not record.practitioner_role_ids:
+            if record.is_pod_practitioner and not record.practitioner_role_ids:
                 raise ValidationError(_("Roles are required for practitioners."))
     
     @api.model
@@ -237,17 +237,17 @@ class Partner(models.Model):
     
     @api.model
     def default_pod_fields(self):
-        fields = ["is_pod", "is_company", "is_location", "is_practitioner"]
+        fields = ["is_pod", "is_company", "is_pod_location", "is_pod_practitioner"]
         # If there's a need to add more fields from parent or other inheriting models, you can do rx here.
         return fields
 
-    @api.constrains("is_location", "parent_id")
+    @api.constrains("is_pod_location", "parent_id")
     def check_location_practice(self):
         test_condition = not config["test_enable"] or self.env.context.get("test_check_location_practice")
         if not test_condition:
             return
         for record in self:
-            if record.is_location and not record.parent_id:
+            if record.is_pod_location and not record.parent_id:
                 raise ValidationError(_("Parent Company must be fullfilled on locations"))
 
     def check_pod(self, mode="write"):
@@ -261,7 +261,7 @@ class Partner(models.Model):
         checks = [
             (self.is_pod, self._check_pod_user, "pod_prescriptions_contact.group_pod_user"),
             (self.is_company, self._check_pod_practice, "pod_prescriptions_contact.group_pod_configurator"),
-            (self.is_practitioner, self._check_pod_practitioner, "pod_prescriptions_contact.group_pod_configurator")
+            (self.is_pod_practitioner, self._check_pod_practitioner, "pod_prescriptions_contact.group_pod_configurator")
         ]
         
         for condition, check_method, group in checks:
@@ -293,7 +293,7 @@ class Partner(models.Model):
     #     new_res = []
     #     for record in res:
     #         partner = self.browse(record[0])
-    #         if partner.is_practitioner:
+    #         if partner.is_pod_practitioner:
     #             name = partner.name
     #             new_res.append((partner.id, name))
     #         else:

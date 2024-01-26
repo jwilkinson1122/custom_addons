@@ -49,7 +49,7 @@ class StockForecasted(models.AbstractModel):
             domain += [('product_template_id', 'in', product_template_ids)]
         elif product_ids:
             domain += [('product_id', 'in', product_ids)]
-        warehouse_id = self.env.context.get('warehouse', False)
-        if warehouse_id:
-            domain += [('warehouse_id', '=', warehouse_id)]
+        pod_warehouse_id = self.env.context.get('warehouse', False)
+        if pod_warehouse_id:
+            domain += [('pod_warehouse_id', '=', pod_warehouse_id)]
         return domain

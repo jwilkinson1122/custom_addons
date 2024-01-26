@@ -16,9 +16,9 @@
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
-                    <field name="warehouse_id" invisible="1" readonly="state == 'sales'"/>
+                    <field name="pod_warehouse_id" invisible="1" readonly="state == 'sales'"/>
                     <!-- needed for js logic -->
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'sales'"/>
+                    <field name="pod_warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'sales'"/>
                     <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
                     <field name="incoterm_location"/>
                     <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>
@@ -56,7 +56,7 @@
             <field name="inherit_id" ref="pod_prescriptions.prescriptions_order_tree"/>
             <field name="arch" type="xml">
                 <field name="tag_ids" position="after">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" readonly="state == 'sales'"/>
+                    <field name="pod_warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" readonly="state == 'sales'"/>
                 </field>
             </field>
         </record>
@@ -96,7 +96,7 @@
                     <field name="free_qty_today" invisible="1"/>
                     <field name="scheduled_date" invisible="1"/>
                     <field name="forecast_expected_date" invisible="1"/>
-                    <field name="warehouse_id" invisible="1"/>
+                    <field name="pod_warehouse_id" invisible="1"/>
                     <field name="move_ids" invisible="1"/>
                     <field name="qty_to_deliver" invisible="1"/>
                     <field name="is_mto" invisible="1"/>
@@ -110,7 +110,7 @@
                     <field name="free_qty_today" column_invisible="True"/>
                     <field name="scheduled_date" column_invisible="True"/>
                     <field name="forecast_expected_date" column_invisible="True"/>
-                    <field name="warehouse_id" column_invisible="True"/>
+                    <field name="pod_warehouse_id" column_invisible="True"/>
                     <field name="move_ids" column_invisible="True"/>
                     <field name="qty_to_deliver" column_invisible="True"/>
                     <field name="is_mto" column_invisible="True"/>

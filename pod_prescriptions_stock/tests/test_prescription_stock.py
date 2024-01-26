@@ -590,16 +590,16 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(line.virtual_available_at_date, 10)
         self.assertEqual(line.free_qty_today, 7)
         self.assertEqual(line.qty_available_today, 10)
-        self.assertEqual(line.warehouse_id, warehouse1)
+        self.assertEqual(line.pod_warehouse_id, warehouse1)
         self.assertEqual(line.qty_to_deliver, 1)
-        rx.warehouse_id = warehouse2
+        rx.pod_warehouse_id = warehouse2
         # invalidate product cache to ensure qty_available is recomputed
         # bc warehouse isn't in the depends_context of qty_available
         self.env.invalidate_all()
         self.assertEqual(line.virtual_available_at_date, 5)
         self.assertEqual(line.free_qty_today, 5)
         self.assertEqual(line.qty_available_today, 5)
-        self.assertEqual(line.warehouse_id, warehouse2)
+        self.assertEqual(line.pod_warehouse_id, warehouse2)
         self.assertEqual(line.qty_to_deliver, 1)
 
     def test_10_qty_available(self):
@@ -1281,7 +1281,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
         rx = self.env['prescriptions.order'].create({
             'partner_id': self.partner_a.id,
-            'warehouse_id': warehouse.id,
+            'pod_warehouse_id': warehouse.id,
             'order_line': [(0, 0, {
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,

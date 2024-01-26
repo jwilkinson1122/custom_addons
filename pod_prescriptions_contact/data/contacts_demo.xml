@@ -23,7 +23,7 @@
         <record id="child_practice_1" model="res.partner">
             <field name="name">Fab Foot Clinic - C1</field>
             <field name="is_company" eval="True"/>
-            <field name="is_location" eval="True"/>
+            <field name="is_pod_location" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="practice_type_id" ref="clinic"/>
             <field name="parent_id" ref="parent_practice_1"/>
@@ -40,7 +40,7 @@
         <record id="child_practice_2" model="res.partner">
             <field name="name">Fab Foot Clinic - C2</field>
             <field name="is_company" eval="True"/>
-            <field name="is_location" eval="True"/>
+            <field name="is_pod_location" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="practice_type_id" ref="clinic"/>
             <field name="parent_id" ref="parent_practice_1"/>
@@ -57,7 +57,7 @@
         <record id="grand_child_practice_1" model="res.partner">
             <field name="name">Fab Foot Clinic - GC1</field>
             <field name="is_company" eval="True"/>
-            <field name="is_location" eval="True"/>
+            <field name="is_pod_location" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="practice_type_id" ref="clinic"/>
             <field name="parent_id" ref="child_practice_1"/>
@@ -74,7 +74,7 @@
         <record id="grand_child_practice_2" model="res.partner">
             <field name="name">Fab Foot Clinic - GC2</field>
             <field name="is_company" eval="True"/>
-            <field name="is_location" eval="True"/>
+            <field name="is_pod_location" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="practice_type_id" ref="clinic"/>
             <field name="parent_id" ref="child_practice_2"/>
@@ -91,7 +91,7 @@
         <!-- Practitioners -->
         <record id="practitioner_01_partner" model="res.partner">
             <field name="name">Doogie Howser</field>
-            <field name="is_practitioner" eval="True"/>
+            <field name="is_pod_practitioner" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="parent_id" ref="parent_practice_1"/>
             <field name="practitioner_role_ids" eval="[(4, ref('practitioner'))]"/>
@@ -101,7 +101,7 @@
 
         <record id="practitioner_02_partner" model="res.partner">
             <field name="name">Willie Burke</field>
-            <field name="is_practitioner" eval="True"/>
+            <field name="is_pod_practitioner" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="parent_id" ref="child_practice_1"/>
             <field name="practitioner_role_ids" eval="[(4, ref('practitioner'))]"/>
@@ -111,7 +111,7 @@
 
         <record id="practitioner_03_partner" model="res.partner">
             <field name="name">Bob Ross</field>
-            <field name="is_practitioner" eval="True"/>
+            <field name="is_pod_practitioner" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="parent_id" ref="child_practice_2"/>
             <field name="practitioner_role_ids" eval="[(4, ref('practitioner'))]"/>
@@ -121,7 +121,7 @@
 
         <record id="practitioner_04_partner" model="res.partner">
             <field name="name">Ron Gibson</field>
-            <field name="is_practitioner" eval="True"/>
+            <field name="is_pod_practitioner" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="parent_id" ref="grand_child_practice_1"/>
             <field name="practitioner_role_ids" eval="[(4, ref('practitioner'))]"/>
@@ -131,7 +131,7 @@
 
         <record id="practitioner_05_partner" model="res.partner">
             <field name="name">Michelle Ford</field>
-            <field name="is_practitioner" eval="True"/>
+            <field name="is_pod_practitioner" eval="True"/>
             <field name="is_pod" eval="True"/>
             <field name="parent_id" ref="grand_child_practice_2"/>
             <field name="practitioner_role_ids" eval="[(4, ref('practitioner'))]"/>

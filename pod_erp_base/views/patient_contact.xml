@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="domain">[('is_patient', '=', False)]</field>
+        <field name="domain">[('is_pod_patient', '=', False)]</field>
     </record>
 </odoo>

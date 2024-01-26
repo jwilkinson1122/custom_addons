@@ -14,7 +14,7 @@ class TestPodiatryLocation(TransactionCase):
     def test_practice(self):
         vals = {
             "name": "location",
-            "is_location": True,
+            "is_pod_location": True,
         }
         with self.assertRaises(ValidationError):
             self.partner_obj.create(vals)
@@ -24,8 +24,8 @@ class TestPodiatryLocation(TransactionCase):
         }
         practice = self.partner_obj.create(practice_vals)
         self.assertTrue(practice.is_company)
-        vals["practice_id"] = practice.id
+        vals["pod_account_id"] = practice.id
         self.assertEqual(practice.location_count, 0)
         location = self.partner_obj.create(vals)
-        self.assertTrue(location.is_location)
+        self.assertTrue(location.is_pod_location)
         self.assertEqual(practice.location_count, 1)

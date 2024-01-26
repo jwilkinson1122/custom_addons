@@ -15,23 +15,23 @@ class PodiatryPatient(models.Model):
     _inherits = {"res.partner": "partner_id"}
 
     partner_id = fields.Many2one("res.partner", required=True, ondelete="restrict")
-    is_patient = fields.Boolean()
-    practice_id = fields.Many2one(
+    is_pod_patient = fields.Boolean()
+    pod_account_id = fields.Many2one(
         string="Practice",
         comodel_name="res.partner",
-        domain=[("is_practice", "=", True)],
+        domain=[("is_pod_account", "=", True)],
     )
 
     practitioner_id = fields.Many2one(
         string="Primary Practitioner",
         comodel_name="res.partner",
-        domain=[("is_practitioner", "=", True)],
+        domain=[("is_pod_practitioner", "=", True)],
     )
 
     other_practitioner_ids = fields.Many2many(
         string="Other Practitioners",
         comodel_name="res.partner",
-        domain=[("is_practitioner", "=", True)],
+        domain=[("is_pod_practitioner", "=", True)],
     )
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Responsible:', readonly=True)
@@ -123,7 +123,7 @@ class PodiatryPatient(models.Model):
         if self.parent_id:
             # Searching for practitioners whose parent_id matches the selected practice
             practitioners = self.env['res.partner'].search([
-                ('is_practitioner', '=', True), 
+                ('is_pod_practitioner', '=', True), 
                 ('parent_id', '=', self.parent_id.id)
             ])
             # If any practitioners are found, assign the first one to the patient
@@ -139,14 +139,14 @@ class PodiatryPatient(models.Model):
             # Set the domain to include only practitioners whose parent_id matches the selected practice
             return {
                 'domain': {
-                    'practitioner_id': [('is_practitioner', '=', True), ('parent_id', '=', self.parent_id.id)]
+                    'practitioner_id': [('is_pod_practitioner', '=', True), ('parent_id', '=', self.parent_id.id)]
                 }
             }
         else:
             # If no practice is selected, revert to the initial domain
             return {
                 'domain': {
-                    'practitioner_id': [('is_practitioner', '=', True)]
+                    'practitioner_id': [('is_pod_practitioner', '=', True)]
                 }
             }
 

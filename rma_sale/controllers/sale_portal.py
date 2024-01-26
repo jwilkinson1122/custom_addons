@@ -54,7 +54,7 @@ class CustomerPortal(CustomerPortal):
         ]
         # Create wizard an generate rmas
         order = order_obj.browse(order_id).sudo()
-        location_id = order.warehouse_id.rma_loc_id.id
+        location_id = order.pod_warehouse_id.rma_loc_id.id
         # Add custom fields text
         custom_description = ""
         if custom_vals:

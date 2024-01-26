@@ -3,27 +3,27 @@
     <data noupdate="0">
 
         <record id="pod_prescriptions.prescriptions_order_1" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="pod_prescriptions.prescriptions_order_2" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="pod_prescriptions.prescriptions_order_3" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="pod_prescriptions.prescriptions_order_5" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="pod_prescriptions.prescriptions_order_6" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="pod_prescriptions.prescriptions_order_8" model="prescriptions.order">
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <!-- Create some new prescriptions orders to have more data for the forecast report -->
@@ -37,7 +37,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="pod_prescriptions.utm_source_prescriptions_order_0"/>
             <field name="date_order" eval="(datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="prescriptions_order_line_42" model="prescriptions.order.line">
@@ -68,7 +68,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="pod_prescriptions.utm_source_prescriptions_order_0"/>
             <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="prescriptions_order_line_44" model="prescriptions.order.line">
@@ -90,7 +90,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="pod_prescriptions.utm_source_prescriptions_order_0"/>
             <field name="date_order" eval="(datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="prescriptions_order_line_45" model="prescriptions.order.line">
@@ -121,7 +121,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="pod_prescriptions.utm_source_prescriptions_order_0"/>
             <field name="date_order" eval="(datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="pod_warehouse_id" ref="stock.warehouse0"/>
         </record>
 
         <record id="prescriptions_order_line_47" model="prescriptions.order.line">

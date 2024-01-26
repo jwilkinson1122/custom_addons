@@ -26,7 +26,7 @@
                 <separator />
                 <group name="group_by" string="Group By">
                     <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}" />
-                    <filter string="Locations" name="is_location" domain="[('is_location', '=', True)]" />
+                    <filter string="Locations" name="is_pod_location" domain="[('is_pod_location', '=', True)]" />
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}" />
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}" />
                 </group>

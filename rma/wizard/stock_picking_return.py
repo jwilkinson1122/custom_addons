@@ -34,7 +34,7 @@ class ReturnPicking(models.TransientModel):
     @api.onchange("create_rma")
     def _onchange_create_rma(self):
         if self.create_rma:
-            warehouse = self.picking_id.picking_type_id.warehouse_id
+            warehouse = self.picking_id.picking_type_id.pod_warehouse_id
             self.location_id = warehouse.rma_loc_id.id
             # We want to avoid setting the return move `to_refund` as it will change
             # the delivered quantities in the sale and set them to invoice.

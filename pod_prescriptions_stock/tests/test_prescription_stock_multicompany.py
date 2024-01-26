@@ -25,8 +25,8 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_multi_locations')
         cls.env.user.groups_id |= cls.env.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman')
 
-        cls.env.user.with_company(cls.company_data['company']).property_warehouse_id = cls.warehouse_A.id
-        cls.env.user.with_company(cls.company_data_2['company']).property_warehouse_id = cls.warehouse_B.id
+        cls.env.user.with_company(cls.company_data['company']).property_pod_warehouse_id = cls.warehouse_A.id
+        cls.env.user.with_company(cls.company_data_2['company']).property_pod_warehouse_id = cls.warehouse_B.id
 
     def test_warehouse_definition_on_rx(self):
 
@@ -50,8 +50,8 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
         prescriptions_order = self.env['prescriptions.order']
 
         rx_no_user = prescriptions_order.create(prescriptions_order_vals)
-        self.assertFalse(rx_no_user.user_id.property_warehouse_id)
-        self.assertEqual(rx_no_user.warehouse_id.id, self.warehouse_A.id)
+        self.assertFalse(rx_no_user.user_id.property_pod_warehouse_id)
+        self.assertEqual(rx_no_user.pod_warehouse_id.id, self.warehouse_A.id)
 
         prescriptions_order_vals2 = {
             'partner_id': partner.id,
@@ -67,7 +67,7 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
         rx_company_A = prescriptions_order.with_company(self.env.company).create(prescriptions_order_vals2)
-        self.assertEqual(rx_company_A.warehouse_id.id, self.warehouse_A.id)
+        self.assertEqual(rx_company_A.pod_warehouse_id.id, self.warehouse_A.id)
 
         prescriptions_order_vals3 = {
             'partner_id': partner.id,
@@ -83,4 +83,4 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
         rx_company_B = prescriptions_order.with_company(self.company_data_2['company']).create(prescriptions_order_vals3)
-        self.assertEqual(rx_company_B.warehouse_id.id, self.warehouse_B.id)
+        self.assertEqual(rx_company_B.pod_warehouse_id.id, self.warehouse_B.id)

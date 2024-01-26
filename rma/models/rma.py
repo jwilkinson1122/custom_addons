@@ -236,9 +236,9 @@ class Rma(models.Model):
         store=True,
         readonly=False,
     )
-    warehouse_id = fields.Many2one(
+    pod_warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        compute="_compute_warehouse_id",
+        compute="_compute_pod_warehouse_id",
         store=True,
     )
     reception_move_id = fields.Many2one(
@@ -470,9 +470,9 @@ class Rma(models.Model):
             ]
 
     @api.depends("location_id")
-    def _compute_warehouse_id(self):
+    def _compute_pod_warehouse_id(self):
         for record in self.filtered("location_id"):
-            record.warehouse_id = self.env["stock.warehouse"].search(
+            record.pod_warehouse_id = self.env["stock.warehouse"].search(
                 [("rma_loc_id", "parent_of", record.location_id.id)], limit=1
             )
 
@@ -544,7 +544,7 @@ class Rma(models.Model):
     def _compute_location_id(self):
         for record in self:
             if record.picking_id:
-                warehouse = record.picking_id.picking_type_id.warehouse_id
+                warehouse = record.picking_id.picking_type_id.pod_warehouse_id
                 record.location_id = warehouse.rma_loc_id.id
             elif not record.location_id:
                 company = record.company_id or self.env.company
@@ -1036,7 +1036,7 @@ class Rma(models.Model):
 
     def _prepare_picking_vals(self):
         return {
-            "picking_type_id": self.warehouse_id.rma_in_type_id.id,
+            "picking_type_id": self.pod_warehouse_id.rma_in_type_id.id,
             "origin": self.name,
             "partner_id": self.partner_shipping_id.id,
             "location_id": self.partner_shipping_id.property_stock_customer.id,
@@ -1147,7 +1147,7 @@ class Rma(models.Model):
             key = (
                 record.partner_shipping_id.id,
                 record.company_id.id,
-                record.warehouse_id,
+                record.pod_warehouse_id,
             )
             group_dict.setdefault(key, self.env["rma"])
             group_dict[key] |= record
@@ -1183,7 +1183,7 @@ class Rma(models.Model):
     def _prepare_returning_picking_vals(self, origin=None):
         self.ensure_one()
         return {
-            "picking_type_id": self.warehouse_id.rma_out_type_id.id,
+            "picking_type_id": self.pod_warehouse_id.rma_out_type_id.id,
             "location_id": self.location_id.id,
             "location_dest_id": self.reception_move_id.location_id.id,
             "origin": origin or self.name,
@@ -1314,7 +1314,7 @@ class Rma(models.Model):
             "company_id": self.company_id,
             "group_id": group_id,
             "date_planned": scheduled_date,
-            "warehouse_id": warehouse,
+            "pod_warehouse_id": warehouse,
             "partner_id": self.partner_shipping_id.id,
             "rma_id": self.id,
             "priority": self.priority,

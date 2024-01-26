@@ -20,7 +20,7 @@ class PrescriptionOrderLine(models.Model):
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
+    pod_warehouse_id = fields.Many2one(related='order_id.pod_warehouse_id')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
@@ -44,7 +44,7 @@ class PrescriptionOrderLine(models.Model):
     @api.depends(
         'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date',
         'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability',
-        'warehouse_id')
+        'pod_warehouse_id')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -75,7 +75,7 @@ class PrescriptionOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state in ('draft', 'ongoing')):
             if not (line.product_id and line.display_qty_widget):
                 continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+            grouped_lines[(line.pod_warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
             product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
@@ -109,7 +109,7 @@ class PrescriptionOrderLine(models.Model):
         remaining.free_qty_today = False
         remaining.qty_available_today = False
 
-    @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
+    @api.depends('product_id', 'route_id', 'order_id.pod_warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availability in stock does
@@ -123,7 +123,7 @@ class PrescriptionOrderLine(models.Model):
             product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO
-            mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
+            mto_route = line.order_id.pod_warehouse_id.mto_pull_id.route_id
             if not mto_route:
                 try:
                     mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
@@ -223,7 +223,7 @@ class PrescriptionOrderLine(models.Model):
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_id,
-            'warehouse_id': self.order_id.warehouse_id or False,
+            'pod_warehouse_id': self.order_id.pod_warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_prescriptions_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
@@ -341,7 +341,7 @@ class PrescriptionOrderLine(models.Model):
 
     def _get_action_add_from_catalog_extra_context(self, order):
         extra_context = super()._get_action_add_from_catalog_extra_context(order)
-        extra_context.update(warehouse=order.warehouse_id.id)
+        extra_context.update(warehouse=order.pod_warehouse_id.id)
         return extra_context
 
     def _get_product_catalog_lines_data(self, **kwargs):
