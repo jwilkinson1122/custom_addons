@@ -5,108 +5,108 @@ from odoo import fields, models, _, api
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    pod_uuid = fields.Char(compute="compute_pod_uuid", store=True)
-    pod_order_uuid = fields.Char(string="Order UUID", index=True, copy=False)
-    pod_owner_id = fields.Many2one("res.partner", string="Billing Practitioner", compute="compute_pod_owner_id", store=True)
-    pod_practice_id = fields.Many2one('res.partner', string='Practice', compute='compute_pod_practice_id', store=True)
-    pod_medical_id = fields.Many2one('res.partner', string='Primary Practitioner', compute="compute_pod_medical_id", store=True)
-    pod_medical_asst_id = fields.Many2one('res.partner', string='Assitant', compute="compute_pod_medical_asst_id", store=True)
-    pod_organization_id = fields.Many2one('res.partner', string='Organization', compute='compute_pod_organization_id', store=True)
-    pod_medical_billing_id = fields.Many2one('res.partner', string='Billing Practitioner', compute="compute_pod_medical_billing_id", store=True)
-    pod_sales_partner_id = fields.Many2one("res.partner", string="Pod Partner",
-                                           compute="compute_pod_sales_partner_id", store=True)
-    pod_app_url = fields.Char(string="Pod App URL")
-    pod_customer_phone = fields.Char(compute="compute_pod_customer_phone", store=True)
+    contact_uuid = fields.Char(compute="compute_contact_uuid", store=True)
+    order_uuid = fields.Char(string="Order UUID", index=True, copy=False)
+    owner_id = fields.Many2one("res.partner", string="Billing", compute="compute_owner_id", store=True)
+    practice_id = fields.Many2one('res.partner', string='Practice', compute='compute_practice_id', store=True)
+    practice_location_id = fields.Many2one('res.partner', string='Location', compute='compute_practice_location_id', store=True)
+    practice_practitioner_id = fields.Many2one('res.partner', string='Practitioner', compute="compute_practice_practitioner_id", store=True)
+    practice_assistant_id = fields.Many2one('res.partner', string='Medical Assitant', compute="compute_practice_assistant_id", store=True)
+    practice_billing_id = fields.Many2one('res.partner', string='Billing', compute="compute_practice_billing_id", store=True)
+    sales_partner_id = fields.Many2one("res.partner", string="Partner",
+                                           compute="compute_sales_partner_id", store=True)
+    app_url = fields.Char(string="App URL")
+    customer_phone = fields.Char(compute="compute_customer_phone", store=True)
 
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
         # Adding parent ID of medical assistant to followers if available
-        if res.partner_id and res.pod_medical_asst_id:
-            if res.pod_medical_asst_id.parent_id:
+        if res.partner_id and res.practice_assistant_id:
+            if res.practice_assistant_id.parent_id:
                 self.env["mail.followers"].create(
                     {
                         "res_model": "sale.order",
                         "res_id": res.id,
-                        "partner_id": res.pod_medical_asst_id.parent_id.id,
+                        "partner_id": res.practice_assistant_id.parent_id.id,
                     })
         return res
 
-    @api.depends('partner_id', 'partner_id.pod_uuid')
-    def compute_pod_uuid(self):
+    @api.depends('partner_id', 'partner_id.contact_uuid')
+    def compute_contact_uuid(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_uuid': sale.partner_id.pod_uuid or False})
+            sale.update({'contact_uuid': sale.partner_id.contact_uuid or False})
 
-    @api.depends('partner_id', 'partner_id.pod_medical_billing_id')
-    def compute_pod_owner_id(self):
+    @api.depends('partner_id', 'partner_id.practice_billing_id')
+    def compute_owner_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_owner_id': sale.partner_id.pod_medical_billing_id and
-                                         sale.partner_id.pod_medical_billing_id.id or False})
+            sale.update({'owner_id': sale.partner_id.practice_billing_id and
+                                         sale.partner_id.practice_billing_id.id or False})
 
-    @api.depends('partner_id', 'partner_id.pod_medical_id')
-    def compute_pod_medical_id(self):
+    @api.depends('partner_id', 'partner_id.practice_practitioner_id')
+    def compute_practice_practitioner_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_medical_id': sale.partner_id.pod_medical_id and sale.partner_id.pod_medical_id.id
+            sale.update({'practice_practitioner_id': sale.partner_id.practice_practitioner_id and sale.partner_id.practice_practitioner_id.id
                                            or False})
 
-    @api.depends('partner_id', 'partner_id.pod_medical_asst_id')
-    def compute_pod_medical_asst_id(self):
+    @api.depends('partner_id', 'partner_id.practice_assistant_id')
+    def compute_practice_assistant_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_medical_asst_id': sale.partner_id.pod_medical_asst_id and
-                                                 sale.partner_id.pod_medical_asst_id.id or False})
+            sale.update({'practice_assistant_id': sale.partner_id.practice_assistant_id and
+                                                 sale.partner_id.practice_assistant_id.id or False})
 
-    @api.depends('partner_id', 'partner_id.pod_medical_billing_id')
-    def compute_pod_medical_billing_id(self):
+    @api.depends('partner_id', 'partner_id.practice_billing_id')
+    def compute_practice_billing_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_medical_billing_id': sale.partner_id.pod_medical_billing_id and
-                                                   sale.partner_id.pod_medical_billing_id.id or False})
+            sale.update({'practice_billing_id': sale.partner_id.practice_billing_id and
+                                                   sale.partner_id.practice_billing_id.id or False})
 
-    @api.depends('partner_id', 'partner_id.pod_sales_partner_id')
-    def compute_pod_sales_partner_id(self):
+    @api.depends('partner_id', 'partner_id.sales_partner_id')
+    def compute_sales_partner_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_sales_partner_id': sale.partner_id.pod_sales_partner_id and
-                                                 sale.partner_id.pod_sales_partner_id.id or False})
+            sale.update({'sales_partner_id': sale.partner_id.sales_partner_id and
+                                                 sale.partner_id.sales_partner_id.id or False})
 
     @api.depends('partner_id', 'partner_id.phone')
-    def compute_pod_customer_phone(self):
+    def compute_customer_phone(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_customer_phone': sale.partner_id.phone or False})
+            sale.update({'customer_phone': sale.partner_id.phone or False})
 
-    @api.depends('partner_id', 'partner_id.pod_practice_id')
-    def compute_pod_practice_id(self):
+    @api.depends('partner_id', 'partner_id.practice_location_id')
+    def compute_practice_location_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_practice_id': sale.partner_id.pod_practice_id and sale.partner_id.pod_practice_id.id
+            sale.update({'practice_location_id': sale.partner_id.practice_location_id and sale.partner_id.practice_location_id.id
                                             or False})
 
-    @api.depends('partner_id', 'partner_id.pod_organization_id')
-    def compute_pod_organization_id(self):
+    @api.depends('partner_id', 'partner_id.practice_id')
+    def compute_practice_id(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'pod_organization_id': sale.partner_id.pod_organization_id and
-                                                sale.partner_id.pod_organization_id.id or False})
+            sale.update({'practice_id': sale.partner_id.practice_id and
+                                                sale.partner_id.practice_id.id or False})

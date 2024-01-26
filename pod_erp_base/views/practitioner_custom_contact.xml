@@ -44,6 +44,6 @@
         <field name="act_window_id" ref="action_custom_practitioner"/>
     </record>
 
-    <menuitem id="custom_practitioner_menu" name="Practitioners" action="action_custom_practitioner" parent="pod_erp_base.pod_root_menu_administration" sequence="3"/>
+    <menuitem id="custom_practitioner_menu" name="Practitioners" action="action_custom_practitioner" parent="pod_erp_base.root_menu_administration" sequence="3"/>
 
 </odoo>

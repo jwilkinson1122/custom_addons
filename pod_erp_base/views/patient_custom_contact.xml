@@ -37,6 +37,6 @@
         <field name="act_window_id" ref="action_custom_patient"/>
     </record>
 
-    <menuitem id="custom_patient_menu" name="Patients" action="action_custom_patient" parent="pod_erp_base.pod_root_menu_administration" sequence="10"/>
+    <menuitem id="custom_patient_menu" name="Patients" action="action_custom_patient" parent="pod_erp_base.root_menu_administration" sequence="10"/>
 
 </odoo>

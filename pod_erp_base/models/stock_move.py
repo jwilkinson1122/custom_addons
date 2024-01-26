@@ -12,7 +12,7 @@ class StockMove(models.Model):
         # Setting the value or order_uuid if it's from sale order
         model = dict(self.env.context).get("params") and dict(self.env.context).get("params")["model"] or False
 
-        if model and model == 'sale.order' and self.group_id.sale_id.pod_order_uuid:
-            res.update({'pod_order_uuid': self.group_id.sale_id.pod_order_uuid})
+        if model and model == 'sale.order' and self.group_id.sale_id.order_uuid:
+            res.update({'order_uuid': self.group_id.sale_id.order_uuid})
     
         return res

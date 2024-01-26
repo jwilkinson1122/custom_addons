@@ -3,6 +3,6 @@ from odoo import fields, models, _
 
 class PodPrograms(models.Model):
     _name = 'pod.program'
-    _description = 'Adds Pod Programs for Contacts'
+    _description = 'Adds Programs for Contacts'
 
     name = fields.Char("Program")

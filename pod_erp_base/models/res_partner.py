@@ -20,76 +20,55 @@ class ResPartner(models.Model):
     
    # Identifier Booleans
     is_patient = fields.Boolean('Patient', tracking=True)
-    is_organization = fields.Boolean(string="Organization", tracking=True)
     is_practice = fields.Boolean(string="Practice", tracking=True)
+    is_location = fields.Boolean(string="Location", tracking=True)
     is_practitioner = fields.Boolean(string="Practitioner", tracking=True)
     is_personnel = fields.Boolean(string="Personnel", tracking=True)
     is_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
-    # pod_organization = fields.Boolean(string="Organization", tracking=True)
-    # pod_practice = fields.Boolean(string="Practice", tracking=True)
-    # pod_practitioner = fields.Boolean(string="Practitioner", tracking=True)
-    # pod_personnel = fields.Boolean(string="Personnel", tracking=True)
-    # pod_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
+ 
+    # company_type = fields.Selection(selection_add=[('location', 'Location')])
 
-    # pod_contact_type_id = fields.Many2one("contact.type",string="Contact Type", tracking=True)
-    pod_uuid = fields.Char(string="Contact UUID", index=True)
-    pod_medical_record_number = fields.Char(string="Medical Record Number", tracking=True)
-    pod_program_group = fields.Char(string="Program Group", tracking=True)
-    # pod_program_ids = fields.Many2many("pod.program", "res_partner_pod_program_rel", "partner_id", "pod_program_id", string="Programs", tracking=True)
-    # pod_status_ids = fields.Many2one("pod.status", string="Status", tracking=True)
-    pod_patient_gender = fields.Selection([
+    company_type = fields.Selection(string='Company Type',
+        selection=[('company', 'Company'), ('person', 'Location')],
+        compute='_compute_company_type', inverse='_write_company_type')
+
+    # contact_type_id = fields.Many2one("contact.type",string="Contact Type", tracking=True)
+    contact_uuid = fields.Char(string="Contact UUID", index=True)
+    record_num = fields.Char(string="Medical Record Number", tracking=True)
+    program_group = fields.Char(string="Program Group", tracking=True)
+    # program_ids = fields.Many2many("pod.program", "res_partner_program_rel", "partner_id", "program_id", string="Programs", tracking=True)
+    # status_ids = fields.Many2one("pod.status", string="Status", tracking=True)
+    patient_gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
     ], string="Gender", tracking=True)
-    pod_patient_birthday = fields.Date('Date of Birth', tracking=True)
-    pod_patient_birthday_str = fields.Char(string='Birthday string', compute='compute_pod_patient_birthday_str',
-                                           store=True, help='Technical Date of Birth in string format for search')
-    pod_patient_url = fields.Char(string="Patient URL", tracking=True)
-    pod_fax = fields.Char(string="Fax", tracking=True)
+
+    patient_birthday = fields.Date('Date of Birth', tracking=True)
+    patient_birthday_str = fields.Char(string='Birthday string', compute='compute_patient_birthday_str', store=True)
+    patient_url = fields.Char(string="Patient URL", tracking=True)
+    fax = fields.Char(string="Fax", tracking=True)
  
-    
-    
     # Types of contacts
-    pod_practice_id = fields.Many2one("res.partner", string="Practice", tracking=True)
-    pod_medical_id = fields.Many2one("res.partner", string="Primary Practitioner", tracking=True)
-    pod_medical_billing_id = fields.Many2one("res.partner", string="Billing Practitioner", tracking=True)
-    pod_medical_asst_id = fields.Many2one("res.partner", string="Assitant", tracking=True)
-    pod_organization_id = fields.Many2one("res.partner", string="Organization", tracking=True)
-    pod_sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
-    pod_warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
+    practice_id = fields.Many2one("res.partner", string="Practice", tracking=True)
+    practice_location_id = fields.Many2one("res.partner", string="Practice Location", tracking=True)
+    practice_practitioner_id = fields.Many2one("res.partner", string="Practitioner", tracking=True)
+    practice_billing_id = fields.Many2one("res.partner", string="Billing", tracking=True)
+    practice_assistant_id = fields.Many2one("res.partner", string="Medical Assitant", tracking=True)
+    sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
+    warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
+    order_uuid = fields.Char(string="Order UUID", index=True)
 
-    # Insurance Fields
-    # primary_subscriber_id = fields.Char(string="Primary Subscriber ID")
-    # primary_carrier = fields.Char(string="Primary Carrier")
-    # primary_group_name = fields.Char(string="Primary Group Name")
-    # primary_group_number = fields.Char(string="Primary Group Number")
-    # primary_relationship = fields.Char(string="Primary Relationship")
-    # primary_start_date = fields.Datetime(string="Primary Start Date")
-    # primary_subscriber_name = fields.Char(string="Primary Subscriber Name")
-    # primary_subscriber_birthdate = fields.Date(string="Primary Subscriber Birthdate")
+    _sql_constraints = [("contact_uuid_unique", "unique(contact_uuid)", 'Contact UUID Must be Unique!')]
 
-    # secondary_subscriber_id = fields.Char(string="Secondary Subscriber ID")
-    # secondary_carrier = fields.Char(string="Secondary Carrier")
-    # secondary_group_name = fields.Char(string="Secondary Group Name")
-    # secondary_group_number = fields.Char(string="Secondary Group Number")
-    # secondary_relationship = fields.Char(string="Secondary Relationship")
-    # secondary_start_date = fields.Datetime(string="Secondary Start Date")
-    # secondary_subscriber_name = fields.Char(string="Secondary Subscriber Name")
-    # secondary_subscriber_birthdate = fields.Date(string="Secondary Subscriber Birthdate")
-    pod_order_uuid = fields.Char(string="Pod Order UUID", index=True)
-
-    _sql_constraints = [
-        ("pod_uuid_unique", "unique(pod_uuid)", 'Contact UUID Must be Unique!')
-    ]
-
-    @api.depends('pod_patient_birthday')
-    def compute_pod_patient_birthday_str(self):
+    @api.depends('patient_birthday')
+    def compute_patient_birthday_str(self):
         """
         Compute method to set birthdate as string in new field.
         """
         for partner in self:
-            partner.pod_patient_birthday_str = partner.pod_patient_birthday and partner.pod_patient_birthday.strftime("%m/%d/%Y") or ""
+            partner.patient_birthday_str = partner.patient_birthday and partner.patient_birthday.strftime("%m/%d/%Y") or ""
+
 
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -101,12 +80,12 @@ class ResPartner(models.Model):
     #     if self.env.user.has_group('pod_erp_base.group_patient_editable'):
     #         doc = etree.XML(res['arch'])
     #         for field in res['fields']:
-    #             for node in doc.xpath("//field[@name='pod_practice_id'] \
-    #                                 | //field[@name='pod_medical_id'] \
-    #                                 | //field[@name='pod_medical_asst_id'] \
-    #                                 | //field[@name='pod_organization_id'] \
-    #                                 | //field[@name='pod_medical_billing_id'] \
-    #                                 | //field[@name='pod_sales_partner_id']"):
+    #             for node in doc.xpath("//field[@name='practice_location_id'] \
+    #                                 | //field[@name='practice_practitioner_id'] \
+    #                                 | //field[@name='practice_assistant_id'] \
+    #                                 | //field[@name='practice_id'] \
+    #                                 | //field[@name='practice_billing_id'] \
+    #                                 | //field[@name='sales_partner_id']"):
     #                 node.set("readonly", "0")
     #                 modifiers = json.loads(node.get("modifiers"))
     #                 modifiers['readonly'] = False
@@ -121,8 +100,8 @@ class ResPartner(models.Model):
         name = partner.name or ''
         # custom code
         # commit_assetsbundle this is put for the report printing (so not print the birthdate)
-        if partner.pod_patient_birthday and 'commit_assetsbundle' not in self._context:
-            name += ' [' + partner.pod_patient_birthday.strftime("%m/%d/%Y") + ']'
+        if partner.patient_birthday and 'commit_assetsbundle' not in self._context:
+            name += ' [' + partner.patient_birthday.strftime("%m/%d/%Y") + ']'
         # end custom code
 
         if partner.company_name or partner.parent_id:
@@ -162,8 +141,8 @@ class ResPartner(models.Model):
         for res in res_data:
             partner = self.browse(res[0])
             partner_string = partner.name
-            if partner.pod_patient_birthday:
-                partner_string += ' [' + partner.pod_patient_birthday.strftime("%m/%d/%Y") + ']'
+            if partner.patient_birthday:
+                partner_string += ' [' + partner.patient_birthday.strftime("%m/%d/%Y") + ']'
             final_data.append((res[0], partner_string))
         return final_data
     '''

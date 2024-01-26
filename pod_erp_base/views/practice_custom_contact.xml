@@ -11,10 +11,10 @@
         <field name="domain">[('is_practice', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new pratice!
+            Create a new practice!
             </p>
             <p>
-            Practices are the child companies of practices.
+            Practices are the parent companies to locations.
             </p>
         </field>
     </record>
@@ -40,6 +40,6 @@
         <field name="act_window_id" ref="action_custom_practice"/>
     </record>
 
-    <menuitem id="custom_practice_menu" name="Practices" action="action_custom_practice" parent="pod_erp_base.pod_root_menu_administration" sequence="2"/>
+    <menuitem id="custom_practice_menu" name="Practices" action="action_custom_practice" parent="pod_erp_base.root_menu_administration" sequence="1"/>
 
 </odoo>

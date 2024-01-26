@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_pod_program_tree" model="ir.ui.view">
-        <field name="name">pod.program.tree</field>
+    <record id="view_program_tree" model="ir.ui.view">
+        <field name="name">view.program.tree</field>
         <field name="model">pod.program</field>
         <field name="arch" type="xml">
             <tree editable="bottom" string="Programs">
@@ -10,8 +10,8 @@
         </field>
     </record>
 
-    <record id="view_pod_program_form" model="ir.ui.view">
-        <field name="name">pod.program.form</field>
+    <record id="view_program_form" model="ir.ui.view">
+        <field name="name">view.program.form</field>
         <field name="model">pod.program</field>
         <field name="arch" type="xml">
             <form string="Program">
@@ -24,12 +24,12 @@
         </field>
     </record>
 
-    <record id="action_pod_program" model="ir.actions.act_window">
-        <field name="name">Pod Program</field>
+    <record id="action_program" model="ir.actions.act_window">
+        <field name="name">Program</field>
         <field name="res_model">pod.program</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_pod_program" parent ="contacts.res_partner_menu_config"
-                action="action_pod_program" name="Pod Programs" sequence='4'/>    
+    <menuitem id="menu_program" parent ="contacts.res_partner_menu_config"
+                action="action_program" name="Programs" sequence='4'/>    
 </odoo>
