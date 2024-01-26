@@ -17,6 +17,7 @@
         'stock',
         ],
     'data': [
+        'data/contact_data.xml',
         'security/patients_security.xml',
         'security/ir.model.access.csv',
         'views/res_partner_view.xml',

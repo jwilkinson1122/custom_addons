@@ -9,8 +9,8 @@
                 <page name="details" string="Details" groups="pod_erp_base.group_manager_patients_custom">
                     <group>
                         <group>
-                            <field name="contact_uuid"/>
-                            <field name="pod_order_uuid" readonly="1"/>
+                            <field name="contact_internal_code"/>
+                            <field name="order_internal_code" readonly="1"/>
                             <field name="owner_id"/>
                             <field name="app_url" widget="url"/>
                         </group>

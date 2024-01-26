@@ -10,7 +10,7 @@ class StockPicking(models.Model):
     pod_account_id = fields.Many2one('res.partner', string='Practice', compute='compute_pod_account_id', store=True)
     pod_sales_partner_id = fields.Many2one("res.partner", string='Partner', compute="compute_pod_sales_partner_id", store=True)
     record_num = fields.Char(compute="compute_record_num", store=True)
-    pod_order_uuid = fields.Char(string="Order UUID", index=True, copy=False)
+    order_internal_code = fields.Char(string="Order UUID", index=True, copy=False)
 
     @api.depends('partner_id', 'partner_id.parent_id', 'partner_id.pod_billing_id',
                  'partner_id.parent_id.pod_billing_id')

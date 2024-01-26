@@ -10,14 +10,6 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
 
-    street = fields.Char(tracking=True)
-    street2 = fields.Char(tracking=True)
-    zip = fields.Char(tracking=True)
-    city = fields.Char(tracking=True)
-    state_id = fields.Many2one('res.country.state', tracking=True)
-    country_id = fields.Many2one('res.country', tracking=True)
-
-    
    # Identifier Booleans
     is_pod_account = fields.Boolean(string="Account", tracking=True)
     is_pod_location = fields.Boolean(string="Location", tracking=True)
@@ -25,23 +17,33 @@ class ResPartner(models.Model):
     is_pod_personnel = fields.Boolean(string="Personnel", tracking=True)
     is_pod_patient = fields.Boolean('Patient', tracking=True)
     is_pod_sales_partner = fields.Boolean(string="Sales Partner", tracking=True)
-    # company_type = fields.Selection(selection_add=[('location', 'Location')])
 
-    company_type = fields.Selection(
-        string='Company Type',
-        selection=[('company', 'Account'), ('location', 'Location'), ('person', 'Person')],
-        compute='_compute_company_type',
-        inverse='_write_company_type',
-        store=True  # Add store=True to store the value in the database
+    # Types of contacts
+    pod_account_id = fields.Many2one("res.partner", string="Account", tracking=True)
+    pod_location_id = fields.Many2one("res.partner", string="Location", tracking=True)
+    pod_practitioner_id = fields.Many2one("res.partner", string="Practitioner", tracking=True)
+    pod_billing_id = fields.Many2one("res.partner", string="Billing", tracking=True)
+    pod_assistant_id = fields.Many2one("res.partner", string="Assistant", tracking=True)
+    pod_sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
+    pod_warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
+    
+    company_type = fields.Selection( string='Company Type', selection=[('company', 'Account'), ('location', 'Location'), ('person', 'Person')], compute='_compute_company_type', inverse='_write_company_type', store=True  # Add store=True to store the value in the database
     )
-
-
     # contact_type_id = fields.Many2one("contact.type",string="Contact Type", tracking=True)
-    contact_uuid = fields.Char(string="Contact UUID", index=True)
+    contact_internal_code = fields.Char(string="Contact UUID", index=True)
+    order_internal_code = fields.Char(string="Order UUID", index=True)
     record_num = fields.Char(string="Medical Record Number", tracking=True)
     program_group = fields.Char(string="Program Group", tracking=True)
     # program_ids = fields.Many2many("pod.program", "res_partner_program_rel", "partner_id", "program_id", string="Programs", tracking=True)
     # status_ids = fields.Many2one("pod.status", string="Status", tracking=True)
+    street = fields.Char(tracking=True)
+    street2 = fields.Char(tracking=True)
+    zip = fields.Char(tracking=True)
+    city = fields.Char(tracking=True)
+    state_id = fields.Many2one('res.country.state', tracking=True)
+    country_id = fields.Many2one('res.country', tracking=True)
+    fax = fields.Char(string="Fax", tracking=True)
+
     patient_gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -51,20 +53,7 @@ class ResPartner(models.Model):
     patient_birthday = fields.Date('Date of Birth', tracking=True)
     patient_birthday_str = fields.Char(string='Birthday string', compute='compute_patient_birthday_str', store=True)
     patient_url = fields.Char(string="Patient URL", tracking=True)
-    fax = fields.Char(string="Fax", tracking=True)
- 
-    # Types of contacts
-    pod_account_id = fields.Many2one("res.partner", string="Account", tracking=True)
-    pod_location_id = fields.Many2one("res.partner", string="Location", tracking=True)
-    pod_practitioner_id = fields.Many2one("res.partner", string="Practitioner", tracking=True)
-    pod_billing_id = fields.Many2one("res.partner", string="Billing", tracking=True)
-    pod_assistant_id = fields.Many2one("res.partner", string="Assistant", tracking=True)
-    pod_sales_partner_id = fields.Many2one("res.partner", string="Sales Partner", tracking=True)
-    pod_warehouse_id = fields.Many2one("stock.warehouse", string="Default Warehouse", tracking=True)
-    pod_order_uuid = fields.Char(string="Order UUID", index=True)
-
-    _sql_constraints = [("contact_uuid_unique", "unique(contact_uuid)", 'Contact UUID Must be Unique!')]
-
+    
     @api.depends('patient_birthday')
     def compute_patient_birthday_str(self):
         """
@@ -97,12 +86,21 @@ class ResPartner(models.Model):
                 pass
 
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('contact_internal_code'):
+                vals['contact_internal_code'] = self.env['ir.sequence'].next_by_code('contact.internal.code')
+        return super().create(vals)
+    
+    _sql_constraints = [("contact_internal_code_unique", "unique(contact_internal_code)", 'Contact UUID Must be Unique!')]
+
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     #     res = super(ResPartner, self).fields_view_get(view_id=view_id,
-    #                                                   view_type=view_type,
-    #                                                   toolbar=toolbar,
-    #                                                   submenu=submenu)
+    # view_type=view_type,
+    # toolbar=toolbar,
+    # submenu=submenu)
     #
     #     if self.env.user.has_group('pod_erp_base.group_patient_editable'):
     #         doc = etree.XML(res['arch'])
@@ -150,28 +148,9 @@ class ResPartner(models.Model):
             splitted_names = name.split("\n")
             name = ", ".join([n for n in splitted_names if n.strip()])
         if self._context.get('show_email') and partner.email:
-            name = "%s <%s>" % (name, partner.email)
+            name = "%s<%s>" % (name, partner.email)
         if self._context.get('html_format'):
             name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
             name = "%s ‒ %s" % (name, partner.vat)
         return name
-
-    '''
-    # commented due to buggy code
-    def name_get(self):
-        """
-        Append birthdate to the partner name.
-        """
-        res_data = super(ResPartner, self).name_get()
-        final_data = []
-        for res in res_data:
-            partner = self.browse(res[0])
-            partner_string = partner.name
-            if partner.patient_birthday:
-                partner_string += ' [' + partner.patient_birthday.strftime("%m/%d/%Y") + ']'
-            final_data.append((res[0], partner_string))
-        return final_data
-    '''
-
-# ResPartner()

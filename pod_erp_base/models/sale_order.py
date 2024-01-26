@@ -5,8 +5,8 @@ from odoo import fields, models, _, api
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    contact_uuid = fields.Char(compute="compute_contact_uuid", store=True)
-    pod_order_uuid = fields.Char(string="Order UUID", index=True, copy=False)
+    contact_internal_code = fields.Char(compute="compute_contact_internal_code", store=True)
+    order_internal_code = fields.Char(string="Order UUID", index=True, copy=False)
     owner_id = fields.Many2one("res.partner", string="Billing", compute="compute_owner_id", store=True)
     pod_account_id = fields.Many2one('res.partner', string='Practice', compute='compute_pod_account_id', store=True)
     pod_location_id = fields.Many2one('res.partner', string='Location', compute='compute_pod_location_id', store=True)
@@ -32,13 +32,13 @@ class SaleOrder(models.Model):
                     })
         return res
 
-    @api.depends('partner_id', 'partner_id.contact_uuid')
-    def compute_contact_uuid(self):
+    @api.depends('partner_id', 'partner_id.contact_internal_code')
+    def compute_contact_internal_code(self):
         """
         Due to huge data of partner on live database convert this fields to compute field instead of related field
         """
         for sale in self:
-            sale.update({'contact_uuid': sale.partner_id.contact_uuid or False})
+            sale.update({'contact_internal_code': sale.partner_id.contact_internal_code or False})
 
     @api.depends('partner_id', 'partner_id.pod_billing_id')
     def compute_owner_id(self):
