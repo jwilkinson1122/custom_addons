@@ -17,22 +17,30 @@
         'stock',
         ],
     'data': [
-        'data/contact_data.xml',
-        'security/patients_security.xml',
+        'security/pod_erp_security.xml',
         'security/ir.model.access.csv',
-        'views/res_partner_view.xml',
-        # 'views/practice_custom_contact.xml',
-        # 'views/location_custom_contact.xml',
-        # 'views/practitioner_custom_contact.xml',
-        'views/patient_custom_contact.xml',
-        'views/patient_contact.xml',
-        # 'views/contact_type_views.xml',
-        # 'views/program_views.xml',
-        # 'views/status_views.xml',
-        'views/sale_order_views.xml',
-        # 'views/stock_picking_views.xml',
-        # 'views/stock_move_line_views.xml',
-        # 'views/stock_picking_views.xml',
+        'data/pod_partner_data.xml',
+        'data/pod_location_type_data.xml',
+
+        'views/pod_location_type_views.xml',
+        'views/pod_flag_views.xml',
+        'views/pod_flag_category_views.xml',
+
+        'views/inherit_res_partner_view.xml',
+
+        'views/pod_patient_custom_views.xml',
+        'views/pod_patient_views.xml',
+
+        # 'views/pod_contact_type_views.xml',
+        # 'views/pod_program_views.xml',
+        # 'views/pod_status_views.xml',
+
+        
+        'views/inherit_sale_order_views.xml',
+
+        # 'views/inherit_stock_picking_views.xml',
+        # 'views/inherit_stock_move_line_views.xml',
+        # 'views/inherit_stock_picking_views.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

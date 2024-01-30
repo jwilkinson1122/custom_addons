@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_custom_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity,pivot</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': False, 'default_is_patient':True, 'default_company_type': 'person'}</field>
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Patient
+            </p>
+        </field>
+    </record>
+
+    <record id="action_custom_patient_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
+    </record>
+
+    <record id="action_custom_patient_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
+    </record>
+
+    <record id="action_custom_patient_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="act_window_id" ref="action_custom_patient"/>
+    </record>
+
+    <menuitem id="custom_patient_menu" name="Patients" action="action_custom_patient" parent="pod_erp_base.root_menu_administration" sequence="10"/>
+
+</odoo>

@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action to Show Patient's Devices -->
+    <!--    <record id="act_res_partner_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Patient's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'default_patient_stored_id': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Patient!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Patient, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show Location's Devices -->
+    <!--    <record id="act_res_partner_location_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Location's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_location_ids': active_id, 'default_location_ids': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Location!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Location, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show is_company's Devices -->
+    <!--    <record id="act_res_partner_practice_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Practice's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_parent_id': active_id, 'default_parent_id': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--            <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Practice!-->
+    <!--            </p><p>-->
+    <!--            Once a Device is Assigned to a Practice, It'll be Visible Here.-->
+    <!--            </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!-- Action to Show Sales Partner's Devices -->
+    <!--    <record id="act_res_partner_sales_partner_2_stock_production_lot_custom" model="ir.actions.act_window">-->
+    <!--        <field name="name">Partner's Devices</field>-->
+    <!--        <field name="res_model">stock.production.lot</field>-->
+    <!--        <field name="view_mode">tree,form,graph</field>-->
+    <!--        <field name="context">{'search_default_sales_partner': active_id, 'default_sales_partner': active_id}</field>-->
+    <!--        <field name="help" type="html">-->
+    <!--          <p class="o_view_nocontent_smiling_face">-->
+    <!--            Assign a Device to this Partner!-->
+    <!--          </p><p>-->
+    <!--            Once a Device is Assigned to a Partner, It'll be Visible Here.-->
+    <!--          </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="view_res_partner_pivot" model="ir.ui.view">
+        <field name="name">res.partner.pivot</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <pivot string="Contacts">
+                <field name="name" type="row"/>
+                <!-- <field name="date" type="col"/> -->
+            </pivot>
+        </field>
+    </record>
+
+    <record id="res_partner_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//h1" position="replace">
+                <h1>
+                    <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Account Name" invisible="not is_company" required="type == 'contact'"/>
+                    <field id="location" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Location Name" invisible="not is_location" required="type == 'contact'"/>
+                    <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Contact Name" invisible="is_company or is_location or is_patient" required="type == 'contact'"/>
+                    <field id="patient" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Patient Name" invisible="not is_patient" required="type == 'contact'"/>
+                </h1>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="replace">
+                <!-- <field name="internal_identifier"/> -->
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='website']" position="replace">
+            </xpath>
+            <!-- Redesign Left -->
+            <xpath expr="//field[@name='vat']" position="replace">
+                <field name="lang"/>
+                <field name="tz" invisible="1"/>
+                <field name="vat" invisible="1"/>
+                <field name="warehouse_id" invisible="not is_company or not is_location"/>
+                <!-- <field name="warehouse_id" invisible="is_location == False"/> -->
+                <field name="internal_identifier" groups="base.group_no_one" readonly="1"/>
+                <field name="order_internal_code" groups="base.group_no_one" readonly="1"/>
+            </xpath>
+            <!-- Redesign Right-->
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="patient_gender" invisible="not is_patient"/>
+                <field name="website" widget="url" string="Website"/>
+                <field name="patient_url" widget="url" invisible="1"/>
+                <field name="function" invisible="is_company or is_location or is_patient"/>
+                <field name="internal_identifier"/>
+                <field name="parent_id" domain="[('is_company', '=', True)]" invisible="is_company"/>
+                <!-- <field name="location_ids" domain="[('is_location', '=', True)]" invisible="is_company or is_location"/> -->
+                <field name="partner_id" widget="res_partner_many2one" placeholder="Location" domain="[('is_location', '=', True), ('parent_id', '=', parent_id)]" context="{'default_is_location': True, 'show_address': 1}" invisible="is_company or is_location"/>
+                <field name="child_ids" domain="[('is_practitioner', '=', True)]" invisible="not is_patient"/>
+                <field name="assistant_id" domain="[('is_practitioner', '=', True)]" invisible="not is_patient"/>
+                <field name="billing_id" domain="[('is_practitioner', '=', True)]" invisible="is_patient"/>
+                <field name="sales_partner_id" domain="[('is_sales_partner', '=', True)]" invisible="is_patient"/>
+                <!--**************************************************-->
+                <field name="fax" invisible="is_patient" widget="phone"/>
+            </xpath>
+            <!--xpath expr="//field[@name='child_ids']/form/sheet/group/group[3]" position="after"-->
+            <xpath expr="//field[@name='child_ids']//form/sheet/group/group[2]" position="after">
+                <group string="Partner Type">
+                    <field name="is_patient"/>
+                </group>
+            </xpath>
+
+            <!-- Details Tab -->
+            <!-- <xpath expr="//form/sheet/notebook" position="inside">
+                <page name="details" string="Details">
+                    <group>
+                        <group>
+
+                            <field name="is_company" invisible="1"/>
+                            <field name="is_location" invisible="1"/>
+                            <field name="is_practitioner" invisible="company_type != 'person'"/>
+                            <field name="is_personnel" invisible="company_type != 'person'"/>
+                            <field name="is_patient" invisible="1"/>
+                            <field name="is_sales_partner" invisible="company_type != 'person'"/>
+                            <field name="record_num"/>
+                            <field name="patient_birthday" invisible="not is_patient"/>
+                        </group>
+                        <group>
+                            <field name="program_group"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath> -->
+
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Details" name="partner_info" autofocus="autofocus">
+                    <group name="partner_config">
+                        <field name="is_pod" invisible="1" />
+                        <field name="is_company" invisible="1"/>
+                        <field name="is_location" invisible="1"/>
+                        <field name="is_practitioner" invisible="company_type != 'person'"/>
+                        <field name="is_personnel" invisible="company_type != 'person'"/>
+                        <field name="is_patient" invisible="1"/>
+                        <field name="is_sales_partner" invisible="company_type != 'person'"/>
+                        <field name="record_num"/>
+                        <field name="patient_birthday" invisible="not is_patient"/>
+                        <field name="active" />
+                    </group>
+                    <group>
+                        <field name="program_group"/>
+                    </group>
+                    <separator name="contact_info" string="Contact Information" />
+                    <group>
+                        <group>
+                            <span class="o_form_label o_td_label" name="address_name">
+                                <field name="type" readonly="user_ids" required="1" class="fw-bold"/>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                                <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id" />
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" />
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id" />
+                                <div name="partner_address_country" class="d-flex justify-content-between">
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="type == 'contact' and parent_id"/>
+                                </div>
+                                <button name="open_parent" type="object" string="Edit" class="oe_link oe_inline fw-bold" style="margin: 0px; padding: 0px;"/>
+                            </div>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director" invisible="1" />
+                            <field name="phone" placeholder='Phone' widget="phone" />
+                            <field name="mobile" placeholder='Mobile' widget="phone" />
+                            <field name="user_ids" placeholder='User' invisible="1" />
+                            <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
+                            <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
+                            <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
+                            <field name="active_lang_count" placeholder="Active Language" invisible="1" />
+                            <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
+                            <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
+                        </group>
+                    </group>
+                </page>
+                <page string="Locations" name="location_addresses" invisible="not is_company">
+                    <separator name="locations" string="Locations List" />
+                    <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" invisible="not location_ids">
+                        No Locations Available
+                    </div>
+                    <field name="location_ids" mode="kanban">
+
+                    </field>
+                </page>
+            </xpath>
+            <!-- Add Locations Page -->
+            <!-- <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Locations" name="location_addresses" invisible="not is_company">
+                    <separator name="locations" string="Locations List" />
+                    <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" invisible="not location_ids">
+                        No Locations Available
+                    </div>
+                    <field name="location_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
+
+                    </field>
+                </page>
+            </xpath> -->
+
+            <!-- Modify the contact_addresses page attributes -->
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="autofocus"></attribute>
+                <attribute name="string">Contacts</attribute>
+                <!-- <attribute name="invisible">is_practitioner or is_patient</attribute> -->
+            </xpath>
+
+            <!-- Add an alert to the contact_addresses page -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
+                <separator name="contacts" string="Contacts List" />
+                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids or child_ids == ''">
+                    No Locations Available
+                </div>
+            </xpath>
+
+            <!-- <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}"> -->
+
+            <!-- Modify the child_ids field context -->
+            <!-- <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="attributes">
+                <attribute name="context">{'default_parent_id': active_id, 'default_is_company':
+                    False, 'default_type':'contact', 'search_default_parent_id': active_id}</attribute>
+                <attribute name="options">{'kanban_view': {'create': True}}</attribute>
+            </xpath> -->
+
+            <!-- <xpath expr='//page[@name="contact_addresses"]' position="replace">
+                <page name="practitioners_list" string="Practitioners">
+                    <separator name="practitioners" string="Practitioners List" />
+                    <div name="alert_no_practitioners" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids or child_ids == ''">
+                        No Patients Available
+                    </div>
+                    <field name="child_ids" mode="kanban" />
+                </page>
+            </xpath> -->
+
+            <!-- Page for patients list -->
+            <xpath expr='//page[@name="contact_addresses"]' position="after">
+                <page name="patients_list" string="Patients">
+                    <separator name="patients" string="Patients List" />
+                    <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_ids or patient_ids == ''">
+                        No Patients Available
+                    </div>
+                    <field name="patient_ids" mode="kanban" />
+                </page>
+            </xpath>
+
+
+
+        </field>
+    </record>
+    <!--
+    <record id="res_partner_form_view_inherit_for_group" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit.for.group</field>
+        <field name="model">res.partner</field>
+        <field name="groups_id" eval="[(4,ref('pod_erp_base.group_patient_editable'))]"/>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="pod_erp_base.res_partner_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="location_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="child_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="assistant_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="parent_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="billing_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+            <field name="sales_partner_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_patient', '!=', True)]}</attribute>
+            </field>
+        </field>
+    </record> -->
+
+    <record id="view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">view.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="display_name" position="before">
+                <field name="internal_identifier"/>
+            </field>
+            <field name="country_id" position="after">
+                <field name="is_patient"/>
+                <field name="patient_url" widget="url" optional="hide"/>
+                <field name="location_ids" optional="hide"/>
+                <field name="child_ids" optional="hide"/>
+                <field name="assistant_id" optional="hide"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="billing_id" optional="hide"/>
+                <field name="sales_partner_id" optional="hide"/>
+            </field>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="patient_birthday"/>
+                <field name="record_num"/>
+                <field name="program_group"/>
+                <field name="patient_gender"/>
+                <field name="warehouse_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="search_view_partner_inherit" model="ir.ui.view">
+        <field name="name">view.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|','|','|',('display_name','ilike',self),('ref','=',self), ('email','ilike',self), ('internal_identifier','=',self)]</attribute>
+            </xpath>
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="internal_identifier"/>
+                <field name="parent_id"/>
+                <field name="location_ids"/>
+                <field name="sales_partner_id"/>
+                <field name="patient_birthday"/>
+                <field name="record_num"/>
+                <filter string="Practices" name="filter_practice" domain="[('is_company','=', True)]"/>
+                <filter string="Locations" name="filter_location" domain="[('is_location','=', True)]"/>
+                <filter string="Practitioners" name="filter_practitioner" domain="[('is_practitioner','=', True)]"/>
+                <filter string="Personnel" name="filter_personnel" domain="[('is_personnel','=', True)]"/>
+                <filter string="Sales Partners" name="filter_sales_partner" domain="[('is_sales_partner','=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_country']" position="after">
+                <separator/>
+                <filter name="group_location" string="Location" context="{'group_by': 'location_ids'}"/>
+                <filter name="group_practice" string="Practice" context="{'group_by': 'parent_id'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="res_partner_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.kanban.view.inheri</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="internal_identifier"/>
+            </field>
+            <field name="country_id" position="after">
+                <field name="is_patient" invisible='1'/>
+            </field>
+        </field>
+    </record>
+
+    <!-- <record id="prescription_practice_action" model="ir.actions.act_window">
+        <field name="name">Practices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=',
+            1)]</field>
+        <field name="context">{
+            'default_company_type':'company',
+            'default_is_company':True,
+            'default_is_pod': True,
+            }</field>
+        <field name="search_view_id" ref="res_partner_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new practice
+            </p>
+            <p>
+                Schedule and organize your practices efficiently.
+            </p>
+        </field>
+    </record> -->
+
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity,pivot</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True, 'default_is_pod': True, 'default_company_type': 'company'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+            </p>
+            <p>
+            Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.menu" id="root_menu_administration">
+        <field name="name">Administration</field>
+        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="root_menu_administration" model="ir.ui.menu">
+        <field name="active" eval="True" />
+    </record>
+
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" action="contacts.action_contacts" parent="root_menu_administration" sequence="1"/>
+
+</odoo>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Form
+    -->
+    <record id="view_pod_diagnosis_form" model="ir.ui.view">
+        <field name="name">pod.diagnosis.form</field>
+        <field name="model">pod.diagnosis</field>
+        <field name="arch" type="xml">
+            <form string="Diagnosis">
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <div name="button_box" class="oe_button_box"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1 name="name">
+                            <field name="name" placeholder="e.g. Heel Spurs"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="notes" string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pod_diagnosis_tree" model="ir.ui.view">
+        <field name="name">pod.diagnosis.tree</field>
+        <field name="model">pod.diagnosis</field>
+        <field name="arch" type="xml">
+            <tree string="Diagnosis" editable="top" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="code"/>
+                <field name="notes" optional="hide"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pod_diagnosis_search" model="ir.ui.view">
+        <field name="name">pod.diagnosis.search</field>
+        <field name="model">pod.diagnosis</field>
+        <field name="arch" type="xml">
+            <search string="Diagnosis">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="code" operator="="/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="pod_diagnosis_action" model="ir.actions.act_window">
+        <field name="name">Diagnosis</field>
+        <field name="res_model">pod.diagnosis</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pod_diagnosis_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new diagnosis
+            </p>
+            <p>
+                Organize and manage patient diagnosis.
+            </p>
+        </field>
+    </record>
+
+    <!-- <menuitem id="menu_pod_diagnosis" name="Diagnosis" action="pod_diagnosis_action" groups="group_manager" parent="pod_contacts.menu_pod_contacts_root" sequence="2" /> -->
+
+
+</odoo>

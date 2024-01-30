@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions -->
+    <record id="action_locations_window" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[("is_location", "=", True), ("pod_patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new location
+            </p>
+            <p>
+                Organize and manage locations at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_contacts_window" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[("is_company", "=", False), ("pod_patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new contact
+            </p>
+            <p>
+                Organize and manage contacts at a glance.
+            </p>
+        </field>
+    </record>
+
+    <record id="inherit_res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">inherit.res.partner.kanban.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="pod_internal_identifier"/>
+            </xpath>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="pod_location_count" />
+            </xpath>
+            <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+                <span t-if="record.is_company.raw_value and record.pod_location_count.value>0" class="badge badge-pill">
+                    <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations" />
+                    <t t-esc="record.pod_location_count.value" />
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_res_partner_form_view" model="ir.ui.view">
+        <field name="name">inherit.res.partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_pod_contacts" type="object" class="oe_stat_button" icon="fa-user">
+                    <field name="pod_contact_count" widget="statinfo" string="Contacts" />
+                    <field name='pod_contact_ids' invisible="1" />
+                </button>
+            </xpath> -->
+            <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
+                <field name="is_company" invisible="1" />
+                <field name="is_location" invisible="1" />
+                <field name="is_practitioner" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                <!-- <label for="pod_internal_identifier"/> -->
+                <h2>
+                    <field name="pod_internal_identifier" groups="base.group_no_one" readonly="1" nolabel="1" class="fw-bold"/>
+                </h2>
+
+
+                <!-- <separator name="contact_info" string="Contact Information" orientation="vertical"/> -->
+                <!-- <div role="separator" class="dropdown-divider"/> -->
+
+                <div class="oe_title mb24">
+                    <field name="is_company" invisible="1" />
+                    <h1>
+                        <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
+                        <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
+                    </h1>
+                    <!-- <h1>
+                        <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Account Name" invisible="not is_company" required="type == 'contact'"/>
+                        <field id="location" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Location Name" invisible="not is_location" required="type == 'contact'"/>
+                        <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Contact Name" invisible="is_company or is_location" required="type == 'contact'"/>
+                    </h1> -->
+                    <div class="o_row" style="margin-top:10px; margin-bottom:10px">
+                        <!-- <field name="active" invisible="1" /> -->
+                        <!-- <field name="pod_location_type_id" placeholder="Location Type" invisible="is_practitioner and not is_company" class="fw-bold" /> -->
+                        <field name="parent_id" placeholder="Parent Company" invisible="not is_location and not is_practitioner" class="fw-bold" />
+                        <field name="active" invisible="1"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath> -->
+
+            <xpath expr="//group" position="replace">
+            </xpath>
+            <!-- <xpath expr="//group" position="replace">
+                <separator name="contact_info" string="Contact Information"/>
+                <group>
+                    <group>
+                        <span class="o_form_label o_td_label" name="address_name">
+                            <field name="type" readonly="user_ids" required="1" class="fw-bold"/>
+                            <field name="pod_location_type" placeholder="Location Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                        </span>
+                        <div class="o_address_format">
+                            <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                            <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                            <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id" />
+                            <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" />
+                            <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id" />
+                            <div name="partner_address_country" class="d-flex justify-content-between">
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="type == 'contact' and parent_id"/>
+                            </div>
+                        </div>
+                        <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="function" placeholder="e.g. Sales Director" invisible="1" />
+                        <field name="pod_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                        <field name="phone" placeholder='Phone' widget="phone" />
+                        <field name="mobile" placeholder='Mobile' widget="phone" />
+                        <field name="user_ids" placeholder='User' invisible="1" />
+                        <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
+                        <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
+                        <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
+                        <field name="active_lang_count" placeholder="Active Language" invisible="1" />
+                        <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
+                        <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
+                    </group>
+                </group>
+            </xpath> -->
+
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Details" name="partner_details" autofocus="autofocus">
+                    <group name="pod_config">
+                        <field name="is_partner" invisible="1" />
+                        <field name="is_company" invisible="1" />
+                        <field name="is_location" invisible="1" />
+                        <field name="is_practitioner" invisible="1" />
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <separator name="contact_details" string="Contact Details" />
+                    <group>
+                        <group>
+                            <span class="o_form_label o_td_label" name="address_name">
+                                <field name="type" readonly="user_ids" required="1" class="fw-bold"/>
+                                <field name="pod_location_type" placeholder="Location Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                            </span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                                <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id" />
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" />
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id" />
+                                <div name="partner_address_country" class="d-flex justify-content-between">
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="type == 'contact' and parent_id"/>
+                                </div>
+                                <!-- <button name="open_parent" type="object" string="Edit" class="oe_link oe_inline fw-bold" style="margin: 0px; padding: 0px;"/> -->
+                                <!-- <button name="open_parent" type="button" string="Edit" class="btn btn-outline-primary fw-bold"/> -->
+                                <button name="open_parent" type="button" string="Edit" class="btn btn-primary"/> 
+                            </div>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
+                            <!-- <field name="pod_internal_identifier" groups="base.group_no_one" readonly="1" class="fw-bold"/> -->
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director" invisible="1" />
+                            <field name="pod_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                            <field name="phone" placeholder='Phone' widget="phone" />
+                            <field name="mobile" placeholder='Mobile' widget="phone" />
+                            <field name="user_ids" placeholder='User' invisible="1" />
+                            <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
+                            <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
+                            <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
+                            <field name="active_lang_count" placeholder="Active Language" invisible="1" />
+                            <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
+                            <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
+                        </group>
+                    </group>
+                </page>
+
+            </xpath>
+            <!-- Add Locations Page -->
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Locations" name="location_addresses" invisible="not is_company">
+                    <separator name="locations" string="Locations List" />
+                    <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" invisible="not pod_location_ids">
+                        No Locations Available
+                    </div>
+                    <field name="pod_location_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
+                        <kanban create="true" on_create="base.view_partner_form">
+                            <field name="id" />
+                            <field name="color" />
+                            <field name="name" />
+                            <field name="title" />
+                            <field name="type" />
+                            <field name="email" />
+                            <field name="parent_id" />
+                            <field name="is_company" />
+                            <field name="function" />
+                            <field name="phone" />
+                            <field name="street" />
+                            <field name="street2" />
+                            <field name="zip" />
+                            <field name="city" />
+                            <field name="country_id" />
+                            <field name="mobile" />
+                            <field name="state_id" />
+                            <field name="image_128" />
+                            <field name="avatar_128" />
+                            <field name="lang" />
+                            <field name="comment" />
+                            <field name="display_name" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <t t-set="color" t-value="kanban_color(record.color.raw_value)" />
+                                    <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                        <div class="o_kanban_image">
+                                            <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)" />
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <field name="name" />
+                                            <div t-if="record.parent_id.raw_value">
+                                                <field name="parent_id" />
+                                            </div>
+                                            <div t-if="record.email.raw_value">
+                                                <field name="email" widget="email" />
+                                            </div>
+                                            <div t-if="record.type.raw_value != 'contact'">
+                                                <div>
+                                                    <field name="zip" />
+                                                    <t t-if="record.zip.raw_value">, </t>
+                                                    <field name="city" />
+                                                </div>
+                                                <div>
+                                                    <field t-if="record.state_id.raw_value" name="state_id" />
+                                                    <t t-if="record.state_id.raw_value">, </t>
+                                                    <field name="country_id" />
+                                                </div>
+                                            </div>
+                                            <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value" />
+                                            </div>
+                                            <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form string="Location / Address">
+                            <sheet>
+                                <field name="type" required="1" widget="radio" options="{'horizontal': true}" />
+                                <!-- <field name="parent_id"/> -->
+                                <div class="text-muted oe_edit_only">
+                                    <!-- <p class="mb-0" invisible="type != 'contact'">
+                                        <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO,
+                                    ...).</span>
+                                    </p> -->
+                                    <p class="mb-0" invisible="type != 'invoice'">
+                                        <span>Preferred address for all invoices. Selected by
+                                            default when you invoice an order that belongs to this
+                                            company.</span>
+                                    </p>
+                                    <p class="mb-0" invisible="type != 'delivery'">
+                                        <span>Preferred address for all deliveries. Selected by
+                                            default when you deliver an order that belongs to this
+                                            company.</span>
+                                    </p>
+                                    <p class="mb-0" invisible="type != 'other'">
+                                        <span>Other address for the company (e.g. subsidiary, ...)</span>
+                                    </p>
+                                </div>
+                                <hr />
+                                <group>
+                                    <field name="parent_id" string="Parent Practice" />
+                                    <group>
+                                        <field name="name" string="Location Name" />
+                                        <label for="street" string="Address" />
+                                        <div>
+                                            <div class="o_address_format" name="div_address">
+                                                <field name="street" placeholder="Street..." class="o_address_street" />
+                                                <field name="street2" placeholder="Street 2..." class="o_address_street" />
+                                                <field name="city" placeholder="City" class="o_address_city" />
+                                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" />
+                                                <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' />
+                                            </div>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="email" widget="email" />
+                                        <field name="phone" widget="phone" />
+                                        <field name="mobile" widget="phone" />
+                                        <field name="company_id" invisible="1" />
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="comment" placeholder="Internal notes..." nolabel="1" colspan="2" />
+                                </group>
+                                <field name="lang" invisible="True" />
+                                <field name="user_id" invisible="True" />
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+
+            <!-- <xpath expr='//page[@name="contact_addresses"]' position="after">
+                <page string="Test" name="test_test">
+                    <group name="test_group_6uh">
+                        <group name="test_group_6uh_left">
+                            <label for="type" string="Type" />
+                            <field name="type" readonly="user_ids" required="1" class="fw-bold" />
+                            <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                            <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id" />
+                            <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id" />
+                            <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" />
+                            <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id" />
+                            <div name="partner_address_country" class="d-flex justify-content-between">
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="type == 'contact' and parent_id" />
+                            </div>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1" />
+                            <div class="oe_edit_only">
+                                <button name="open_parent" type="object" string="Edit Address" class="oe_link" />
+                            </div>
+                        </group>
+                        <group name="test_group_6uh_right">
+                            <field name="function" placeholder="e.g. Sales Director" invisible="1" />
+                            <field name="pod_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                            <field name="phone" placeholder='Phone' widget="phone" />
+                            <field name="mobile" placeholder='Mobile' widget="phone" />
+                            <field name="user_ids" placeholder='User' invisible="1" />
+                            <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
+                            <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
+                            <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
+                            <field name="active_lang_count" placeholder="Active Language" invisible="1" />
+                            <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
+                            <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
+                        </group>
+                    </group>
+                </page>
+            </xpath> -->
+
+            <!-- Modify the contact_addresses page attributes -->
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="autofocus"></attribute>
+                <attribute name="string">Contacts</attribute>
+                <attribute name="invisible">not is_company</attribute>
+            </xpath>
+
+            <!-- Add an alert to the contact_addresses page -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
+                <separator name="contacts" string="Contacts List" />
+                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids">
+                    No Locations Available
+                </div>
+            </xpath>
+
+            <!-- Modify the child_ids field context -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="attributes">
+                <attribute name="context">{'default_parent_id': active_id, 'default_is_company':
+                    False, 'default_type':'contact', 'search_default_parent_id': active_id}</attribute>
+                <attribute name="options">{'kanban_view': {'create': True}}</attribute>
+            </xpath>
+
+            <!-- Page for patients list -->
+            <xpath expr='//page[@name="contact_addresses"]' position="after">
+                <page name="patients_list" string="Patients">
+                    <separator name="patients" string="Patients List" />
+                    <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not pod_patient_records or pod_patient_records == ''">
+                        No Patients Available
+                    </div>
+                    <field name="pod_patient_records" mode="kanban" />
+                </page>
+            </xpath>
+
+            <!-- Page for partner info -->
+            <!-- <xpath expr='//page[@name="internal_notes"]' position="before">
+                <page name="partner_info" string="Information">
+                    <group name="pod_config">
+                        <field name="is_partner" />
+                        <field name="is_company" invisible="not is_company"/>
+                        <field name="is_location" invisible="not is_location"/>
+                        <field name="is_practitioner" invisible="not is_practitioner"/>
+                    </group>
+                </page>
+            </xpath> -->
+
+        </field>
+    </record>
+
+    <record id="inherit_res_partner_tree_view" model="ir.ui.view">
+        <field name="name">inherit.res.partner.tree.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="display_name" position="before">
+                <field name="pod_internal_identifier"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- <record id="search_view_partner_inherit" model="ir.ui.view">
+        <field name="name">view.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('pod_internal_identifier', '=', self)]</attribute>
+            </xpath>
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="pod_internal_identifier"/>
+                <field name="parent_id"/>
+                <field name="pod_location_ids"/>
+                <filter string="Accounts" name="filter_account" domain="[('is_company','=', True)]"/>
+                <filter string="Locations" name="filter_location" domain="[('is_location','=', True)]"/>
+                <filter string="Practitioners" name="filter_practitioner" domain="[('is_practitioner','=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_country']" position="after">
+                <separator/>
+                <filter name="group_account" string="Account" context="{'group_by': 'parent_id'}"/>
+                <filter name="group_location" string="Location" context="{'group_by': 'pod_location_ids'}"/>
+            </xpath>
+
+        </field>
+    </record> -->
+
+
+    <record id="inherit_res_partner_search_view" model="ir.ui.view">
+        <field name="name">inherit.res.partner.search.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('pod_internal_identifier', '=', self), ('company_registry', 'ilike', self)]</attribute>
+            </xpath>
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="pod_internal_identifier" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//search/filter[@name='type_company']" position="attributes">
+                <attribute name="string">Accounts</attribute>
+            </xpath>
+            <xpath expr="//search/filter[@name='type_company']" position="after">
+                <filter name="is_location" string="Locations" domain="[('is_location', '=', True)]"/>
+            </xpath>
+            <xpath expr="//search/filter[@name='inactive']" position="before">
+                <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]" />
+            </xpath>
+            <xpath expr="//search/group/filter[@name='group_company']" position="attributes">
+                <attribute name="string">Accounts</attribute>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='group_company']" position="after">
+                <filter name="is_location" string="Location" domain="[('is_location','=', True)]" context="{'group_by': 'is_location'}"/>
+            </xpath>
+            <xpath expr="//search/group[@name='group_by']" position="after">
+                <searchpanel>
+                    <field name="parent_id" string="Accounts" select="multi" icon="fa-building" enable_counters="1" />
+                    <field name="partner_id" string="Locations" select="multi" icon="fa-building-o" domain="[('is_location','=', True)]" enable_counters="1"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="pod_account_action" model="ir.actions.act_window">
+        <field name="name">Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="inherit_res_partner_search_view" />
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_partner': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new account
+            </p>
+            <p>
+                Accounts set up a hierarchical relationships with affilated locations and contacts.
+            </p>
+        </field>
+    </record> -->
+
+    <!-- <menuitem id="res_partner_menu_contacts" name="Contacts" action="action_contacts" parent="menu_contacts" sequence="2"/> -->
+
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="inherit_res_partner_search_view" />
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_partner': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new account
+            </p>
+            <p>
+                Accounts set up a hierarchical relationships with affilated locations and contacts.
+            </p>
+        </field>
+    </record>
+
+    <record id="pod_location_action" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="inherit_res_partner_search_view" />
+        <field name="domain">[('is_company', '=', True), ('is_location', '=', True)]</field>
+        <field name="context">{'default_company_type':'company', 'default_is_company':True, 'default_is_location': True, 'default_is_partner': True, 'default_type': ''}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new location
+            </p>
+            <p>
+                Locations are sub-accounts of a main account.
+            </p>
+        </field>
+    </record>
+
+    <record id="pod_practitioner_action" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_practitioner', '=', True)]</field>
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_practitioner': True, 'default_is_partner': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new contact
+            </p>
+            <p>
+                Contacts are members of locations and accounts.
+            </p>
+        </field>
+    </record>
+
+</odoo>
