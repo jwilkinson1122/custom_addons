@@ -31,17 +31,33 @@
         </field>
     </record>
 
+    <!-- 
+    <record id="res_partner_kanban_inherit" model="ir.ui.view">
+        <field name="name">Contact Kanban modification</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="after">
+                <strong class="o_kanban_record_title oe_partner_heading">
+                    <field name="ref"/>
+                </strong>
+            </xpath>
+        </field>
+    </record> -->
+
     <record id="inherit_res_partner_kanban_view" model="ir.ui.view">
         <field name="name">inherit.res.partner.kanban.view</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.res_partner_kanban_view" />
-        <field name="priority" eval="20" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='display_name']" position="after">
-                <field name="internal_identifier"/>
+            <field name="id" position="after">
+                <field name="location_count"/>
+            </field>
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="after">
+                <field name="ref"/>
             </xpath>
-            <xpath expr="//field[@name='active']" position="after">
-                <field name="location_count" />
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="attributes">
+                <attribute name="widget">text</attribute>
             </xpath>
             <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
                 <span t-if="record.is_company.raw_value and record.location_count.value>0" class="badge badge-pill">
@@ -51,6 +67,7 @@
             </xpath>
         </field>
     </record>
+
 
     <record id="inherit_res_partner_form_view" model="ir.ui.view">
         <field name="name">inherit.res.partner.form.view</field>
@@ -97,7 +114,7 @@
 
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <h2>
-                    <field name="internal_identifier" groups="base.group_no_one" readonly="1" nolabel="1" class="fw-bold"/>
+                    <field name="ref" readonly="1" nolabel="1" class="fw-bold"/>
                 </h2>
                 <div class="oe_title mb24">
                     <h1>
@@ -110,15 +127,17 @@
                         <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="Contact Name" invisible="is_company or is_location" required="type == 'contact'"/>
                     </h1> -->
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="parent_id" placeholder="Parent Company" class="fw-bold" invisible="not is_location and not is_practitioner" required="is_location or is_practitioner"/>
+                        <field name="parent_id" placeholder="Parent Company" class="fw-bold" domain="[('is_partner', '=', True)]" invisible="not is_location and not is_practitioner" required="is_location or is_practitioner"/>
                     </div>
+
+
                 </div>
             </xpath>
 
             <!-- Move Group to Partner Info Page -->
             <xpath expr="//group" position="replace">
             </xpath>
-       
+
             <!-- Locations List Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
                 <page name="partner_information" string="Contacts" autofocus="autofocus">
@@ -166,7 +185,7 @@
                         </group>
                     </group>
                 </page>
-    
+
                 <page string="Locations" name="location_addresses" invisible="not is_company">
                     <separator name="locations" string="Locations List" />
                     <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" invisible="not location_ids or location_ids == ''">
@@ -360,7 +379,7 @@
         <field name="inherit_id" ref="base.view_partner_tree" />
         <field name="arch" type="xml">
             <field name="display_name" position="before">
-                <field name="internal_identifier"/>
+                <field name="ref"/>
             </field>
         </field>
     </record>
@@ -372,10 +391,10 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='name']" position="attributes">
-                <attribute name="filter_domain">['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('internal_identifier', '=', self), ('company_registry', 'ilike', self)]</attribute>
+                <attribute name="filter_domain">['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('ref', '=', self), ('company_registry', 'ilike', self)]</attribute>
             </xpath>
             <xpath expr="//search/field[@name='name']" position="after">
-                <field name="internal_identifier" invisible="1"/>
+                <field name="ref" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
             </xpath>
             <xpath expr="//search/filter[@name='type_company']" position="attributes">

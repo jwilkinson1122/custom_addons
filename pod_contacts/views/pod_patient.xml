@@ -513,7 +513,7 @@
 
     <record model="ir.ui.menu" id="pod_patient_menu">
         <field name="name">Patients</field>
-        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="parent_id" ref="pod_contacts.pod_root_menu_administration" />
         <field name="action" ref="pod_patient_window_action" />
         <field name="sequence" eval="5" />
     </record>
@@ -523,7 +523,7 @@
 
     <record model="ir.ui.menu" id="pod_patient_his_menu">
         <field name="name">History</field>
-        <field name="parent_id" ref="contacts.menu_contacts" />
+        <field name="parent_id" ref="pod_contacts.pod_root_menu_administration" />
         <field name="action" ref="pod_patient_his_window_action" />
         <field name="sequence" eval="6" />
     </record>

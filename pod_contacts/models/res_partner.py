@@ -8,7 +8,7 @@ from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import _, models, fields, tools, api, Command
+from odoo import _, models, fields, tools, api, exceptions, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.module import get_module_resource
 from odoo.osv import expression
@@ -21,9 +21,7 @@ INVOICE = "invoice"
 
 class Partner(models.Model):
     _inherit = "res.partner"
-    # _inherit = ['res.partner', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
-    # _order = "internal_identifier,name"
-    
+
     is_partner = fields.Boolean(string='Partner', default=False)
     is_company = fields.Boolean(string='Company', default=False)
     is_company_parent = fields.Boolean(string='Parent Company', compute="_compute_is_company_parent", store="True", default=False)
@@ -31,16 +29,12 @@ class Partner(models.Model):
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_member = fields.Boolean(string="Member", tracking=True)
 
+    
+
     partner_id = fields.Many2one("res.partner", copy=False)
     parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Account")
     location_id = fields.Many2one('res.partner', index=True, domain=[('is_location','=',True)], string="Location")
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
-    # location_ids = fields.One2many(
-    #     "res.partner",
-    #     "parent_id",
-    # string="Locations",
-    # domain=[("active", "=", True), ("is_company", "=", True)],
-    # )
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
     location_type_id = fields.Many2one(string='Type', comodel_name='pod.location.type')
@@ -51,22 +45,16 @@ class Partner(models.Model):
          ('other', 'Other'),
         ], string='Type', default='')
     
-
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
-    # child_ids = fields.One2many(domain=[("active", "=", True), ("is_company", "=", False)])
     practitioner_id = fields.Many2one('res.partner', 'Practitioner', compute='_compute_practitioner', store=True, readonly=False)
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
-    # role_type_id = fields.Many2one("pod.role",string="Role Type", tracking=True)
-    # role_ids = fields.Many2many(string="Roles", comodel_name="pod.role")
 
     role_ids = fields.Many2many( string="Roles", comodel_name="pod.role", default=lambda self: [(6, 0, [])],  # This sets an empty list as the default value
     )
 
     role_required = fields.Boolean(compute='_compute_role_required', inverse='_inverse_role_required', string="Is Role Required", store=False)
-    
-    # root_ancestor = fields.Many2one(comodel_name='res.partner', string='Root Ancestor', compute='_compute_root_ancestor', store=True, recursive=True)
-    
+        
     highest_parent_id = fields.Many2one(
         "res.partner", compute="_compute_highest_parent_id", store="True", string="Highest parent"
     )
@@ -93,33 +81,10 @@ class Partner(models.Model):
     
     relation_label = fields.Char('Relationship', translate=True, default='Attached To:', readonly=True)
     
-    internal_identifier = fields.Char(name="Identifier", help="The Unique Sequence no", readonly=True, default="New", copy=False)
- 
-    # complete_name = fields.Char(compute="_compute_complete_name", store=True)
-
-    _sql_constraints = [
-        ('barcode_uniq', 'unique (barcode)', "The ID must be unique, this one is already assigned to another partner."),
-        # ("internal_identifier_uniq", "unique (internal_identifier)", "The company internal_identifier must be unique!")
-                        ]
+    ref = fields.Char(name="Reference", readonly=True, default="New", index=True)
+#  ref = fields.Char(string='Reference', index=True)
+    _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The ID must be unique, this one is already assigned to another partner.")]
     
-
-    # @api.depends("internal_identifier", "name")
-    # def _compute_complete_name(self):
-    #     for partner in self:
-    #         if not partner.internal_identifier:
-    #             partner.complete_name = partner.name
-    #         else:
-    #             partner.complete_name = "{} - {}".format(partner.internal_identifier, partner.name)
-
-    # @api.model
-    # def name_search(self, name, args=None, operator="ilike", limit=100):
-    #     args = args or []
-    #     domain = []
-    #     if name:
-    #         domain = ["|", ("internal_identifier", operator, name), ("name", operator, name)]
-    #     partner = self.search(domain + args, limit=limit)
-    #     return partner.name_get()
-
     # company_type = fields.Selection(
     # string='Company Type', 
     # selection=[
@@ -200,7 +165,6 @@ class Partner(models.Model):
         else:
             return super()._avatar_get_placeholder_path()
         
-
     @api.onchange("invoice_parent_address")
     def _onchange_invoice_parent_address(self):
         if not any(child.type == "invoice" for child in self.parent_id.child_ids):
@@ -221,13 +185,8 @@ class Partner(models.Model):
         )
         if INVOICE in res and invoice_parent_address:
             if not self.commercial_partner_id.invoice_address_to_use_id:
-                # this case is only if record still empty
-                # even "required" managed on view
                 res[INVOICE] = self.parent_id.address_get([INVOICE])[INVOICE]
             else:
-                # normally, it shoud only use this case :
-                # invoice_parent_address set to True,
-                # invoice_address_to_use_id shoud not be empty
                 self._update_for_specific_invoice_address(res)
         return res
 
@@ -235,11 +194,6 @@ class Partner(models.Model):
     def _update_invoice_parent_address(self):
         if not self.parent_id:
             self.invoice_parent_address = False
-
-    # @api.depends('parent_id', 'parent_id.root_ancestor')
-    # def _compute_root_ancestor(self):
-    #     for rec in self:
-    #         rec.root_ancestor = rec.parent_id and rec.parent_id.root_ancestor or rec
 
     @api.depends('parent_id', 'is_company', 'active')
     def _compute_locations(self):
@@ -376,13 +330,11 @@ class Partner(models.Model):
             else:
                 record.patient_text = _("(%s Patients)" % record.patient_count)
 
-    # Role Methods
     @api.depends('is_practitioner', 'role_ids')
     def _compute_role_required(self):
         for record in self:
             record.role_required = record.is_practitioner and not record.role_ids
 
-    # Inverse method
     def _inverse_role_required(self):
         for record in self:
             if record.role_required and not record.role_ids:
@@ -403,55 +355,27 @@ class Partner(models.Model):
         """
         return []
     
-
-    # @api.depends("name", "internal_identifier")
-    # def name_get(self):
-    #     result = []
-    #     for record in self:
-    #         name = "[%s]" % record.internal_identifier
-    #         if record.name:
-    #             name = "{} {}".format(name, record.name)
-    #         result.append((record.id, name))
-    #     return result
-
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     partners = super(Partner, self).create(vals_list)
-    #     for partner in partners:
-    #         if partner.is_partner or partner.patient_ids:
-    #             partner.check_pod("create")
-    #     return partners
-
-
+    def _get_next_ref(self, vals=None):
+        return self.env["ir.sequence"].next_by_code("res.partner") or "New"
+    
     # @api.model
-    # def create(self, vals):
-    #     vals['ref'] = self.env['ir.sequence'].next_by_code('res.partner') or '/'
-    #     return super(ResPartner, self).create(vals)
-
-    # @api.model
-    # def create(self, vals):
-    #     vals['ref'] = self.env['ir.sequence'].next_by_code('res.partner') or '/'
-    #     return super(Partner, self).create(vals)
-
+    # def _get_internal_identifier(self, vals):
+    #     return self.env["ir.sequence"].next_by_code("pod.flag") or "/"
 
     @api.model_create_multi
-    def create(self, vals):
-        vals_upd = vals.copy()
-        if vals_upd.get("internal_identifier", "New") == "New":
-            vals_upd["internal_identifier"] = self._get_internal_identifier(vals_upd)
-        partners = super().create(vals_upd)
-        for partner in partners:
-            if partner.is_partner or partner.patient_ids:
-                partner.check_pod("create")
-        return partners
-    
-    @api.model
-    def _get_internal_identifier(self, vals):
-        vals['ref'] = self.env['ir.sequence'].next_by_code('res.partner') or 'New'
-        return super(Partner, self).create(vals)
-    
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("ref") and self._needs_ref(vals=vals):
+                vals["ref"] = self._get_next_ref(vals=vals)
+            if vals.get('is_partner') or vals.get('patient_ids'):
+                self.check_pod("create")
+        return super(Partner, self).create(vals_list)
 
-
+    def copy(self, default=None):
+        default = default or {}
+        if self._needs_ref():
+            default["ref"] = self._get_next_ref()
+        return super(Partner, self).copy(default=default)
 
     def _get_highest_parent(self, partner):
         while partner.parent_id:
@@ -487,45 +411,56 @@ class Partner(models.Model):
         for sub_childs in childs.location_ids:
             self.compute_locations_highest_parent_id(sub_childs)
 
-
-    # def write(self, vals):
-    #     res = super(Partner, self).write(vals)
-    #     if 'parent_id' in vals:
-    #         for record in self:
-    #             self.compute_locations_highest_parent_id(record.location_ids)
-    #             self.compute_childs_highest_parent_id(record.child_ids)
-    #     return res
-            
-
-    # def write(self, vals):
-    #     if "active" in vals and "skip_active_pop" not in self._context:
-    #         archive = vals.pop("active")
-    # super().write(vals=vals)
-    #         partners = self.env["res.partner"]
-    #         for partner in self:
-    #             partners |= partner.with_context(active_test=False).search(
-    #                 [("id", "child_of", partner.id)]
-    #             )
-    # partners.with_context(skip_active_pop=True).write({"active": archive})
-    #     return super().write(vals=vals)
-            
     def write(self, vals):
-        result = super().write(vals)
         if 'parent_id' in vals:
-            for record in self:
-                self.compute_locations_highest_parent_id(record.location_ids)
-                self.compute_childs_highest_parent_id(record.child_ids)
-                if record.is_partner or record.patient_ids:
-                    record.check_pod("write")
-        return result
+            for partner in self:
+                partner_vals = vals.copy()
+                if (
+                    not partner_vals.get("ref") 
+                    and partner._needs_ref(vals=partner_vals) 
+                    and not partner.ref
+                    ):
+                    partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
+                if partner.is_partner or partner.patient_ids:
+                    partner.check_pod("write")
+                self.compute_locations_highest_parent_id(partner.location_ids)
+                self.compute_childs_highest_parent_id(partner.child_ids)
+                super(Partner, partner).write(partner_vals)
+        return True
     
-    # def write(self, vals):
-    #     result = super().write(vals)
-    #     for record in self:
-    #         if record.is_partner or record.patient_ids:
-    #             record.check_pod("write")
-    #     return result
-    
+    def _needs_ref(self, vals=None):
+        """
+        Checks whether a sequence value should be assigned to a partner's 'ref'
+
+        :param vals: known field values of the partner object
+        :return: true if a sequence value should be assigned to the\
+                      partner's 'ref'
+        """
+        if not vals and not self:  # pragma: no cover
+            raise exceptions.UserError(
+                _("Either field values or an id must be provided.")
+            )
+        # only assign a 'ref' to commercial partners
+        fields_for_check = ["is_company", "parent_id"]
+        # Copy original vals to prevent modifying them
+        if vals:
+            vals_for_check = vals.copy()
+        else:
+            vals_for_check = {}
+        if self:
+            for field in fields_for_check:
+                if field not in vals_for_check:
+                    vals_for_check[field] = self[field]
+        return vals_for_check.get("is_company") or not vals_for_check.get("parent_id")
+
+    @api.model
+    def _commercial_fields(self):
+        """
+        Make the partner reference a field that is propagated
+        to the partner's contacts
+        """
+        return super(Partner, self)._commercial_fields() + ["ref"]
+
     def unlink(self):
         for partner in self:
             if partner.is_partner or partner.sudo().patient_ids:
