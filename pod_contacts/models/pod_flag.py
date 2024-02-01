@@ -14,7 +14,7 @@ class PodiatryFlag(models.Model):
     #     string="Practice"
     #     )
     
-    # pod_practitioner_id = fields.Many2one(
+    # practitioner_id = fields.Many2one(
     #     'res.partner',
     #     required=True,
     #     index=True, 
@@ -40,14 +40,14 @@ class PodiatryFlag(models.Model):
     closure_uid = fields.Many2one("res.users", readonly=True, string="Closure user")
 
     @api.model
-    def _get_pod_internal_identifier(self, vals):
+    def _get_internal_identifier(self, vals):
         return self.env["ir.sequence"].next_by_code("pod.flag") or "/"
 
-    @api.depends("name", "pod_internal_identifier")
+    @api.depends("name", "internal_identifier")
     def name_get(self):
         result = []
         for record in self:
-            name = "[%s]" % record.pod_internal_identifier
+            name = "[%s]" % record.internal_identifier
             if record.name:
                 name = "{} {}".format(name, record.name)
             result.append((record.id, name))

@@ -41,7 +41,7 @@ This module makes the link between the prescriptions and warehouses management a
     ],
     'demo': ['data/prescriptions_order_demo.xml'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'pod_prescriptions_stock/static/src/**/*',

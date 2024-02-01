@@ -8,7 +8,7 @@
             <field name="name">Fab Foot Clinic</field>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="pod_location_type_id" ref="clinic"/>
+            <field name="location_type_id" ref="clinic"/>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -25,7 +25,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="pod_location_type_id" ref="clinic"/>
+            <field name="location_type_id" ref="clinic"/>
             <field name="parent_id" ref="parent_account_1"/>
             <field name="type">delivery</field>
             <field name="street">1337 N San Joaquin St</field>
@@ -42,7 +42,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="pod_location_type_id" ref="clinic"/>
+            <field name="location_type_id" ref="clinic"/>
             <field name="parent_id" ref="parent_account_1"/>
             <field name="type">delivery</field>
             <field name="street">1611 Peony Dr</field>
@@ -59,7 +59,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="pod_location_type_id" ref="clinic"/>
+            <field name="location_type_id" ref="clinic"/>
             <field name="parent_id" ref="child_location_1"/>
             <field name="type">delivery</field>
             <field name="street">1839 Arbor Way</field>
@@ -76,7 +76,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="pod_location_type_id" ref="clinic"/>
+            <field name="location_type_id" ref="clinic"/>
             <field name="parent_id" ref="child_location_2"/>
             <field name="type">delivery</field>
             <field name="street">77 Santa Barbara Rd</field>
@@ -94,7 +94,7 @@
             <field name="is_practitioner" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="parent_account_1"/>
-            <field name="pod_role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">doogieHowser@example.com</field>
             <field name="phone">(870)-931-7483</field>
         </record>
@@ -104,7 +104,7 @@
             <field name="is_practitioner" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="child_location_1"/>
-            <field name="pod_role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">willieBurke@example.com</field>
             <field name="phone">(828)-316-6456</field>
         </record>
@@ -114,7 +114,7 @@
             <field name="is_practitioner" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="child_location_2"/>
-            <field name="pod_role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">bobRoss@example.com</field>
             <field name="phone">(334)-502-9687</field>
         </record>
@@ -124,7 +124,7 @@
             <field name="is_practitioner" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="grand_child_location_1"/>
-            <field name="pod_role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">ronGibson@example.com</field>
             <field name="phone">(623)-853-7347</field>
         </record>
@@ -134,7 +134,7 @@
             <field name="is_practitioner" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="grand_child_location_2"/>
-            <field name="pod_role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">michelleFord@example.com</field>
             <field name="phone">(603)-996-2584</field>
         </record>

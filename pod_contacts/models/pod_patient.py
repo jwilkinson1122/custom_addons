@@ -18,25 +18,25 @@ class PodiatryPatient(models.Model):
     
     is_patient = fields.Boolean()
 
-    pod_account_id = fields.Many2one(
+    company_account_id = fields.Many2one(
         string="Account",
         comodel_name="res.partner",
         domain=[("is_company", "=", True)],
     )
 
-    pod_location_id = fields.Many2one(
+    location_id = fields.Many2one(
         string="Location",
         comodel_name="res.partner",
         domain=[("is_location", "=", True)],
     )
 
-    pod_practitioner_id = fields.Many2one(
+    practitioner_id = fields.Many2one(
         string="Primary Practitioner",
         comodel_name="res.partner",
         domain=[("is_practitioner", "=", True)],
     )
 
-    other_pod_practitioner_ids = fields.Many2many(
+    other_practitioner_ids = fields.Many2many(
         string="Other Practitioners",
         comodel_name="res.partner",
         domain=[("is_practitioner", "=", True)],
@@ -55,7 +55,7 @@ class PodiatryPatient(models.Model):
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     
-    # patient_pod_ids = fields.One2many("pod.pod.order", inverse_name="pod_patient_id")
+    # patient_pod_ids = fields.One2many("pod.order", inverse_name="pod_patient_id")
     # patient_pod_count = fields.Integer(compute="_compute_patient_pod_count")
             
     # @api.depends("patient_pod_ids")
@@ -124,7 +124,7 @@ class PodiatryPatient(models.Model):
         return result
 
     @api.model
-    def _get_pod_internal_identifier(self, vals):
+    def _get_internal_identifier(self, vals):
         return (
             self.env["ir.sequence"].sudo().next_by_code("pod.patient")
             or "New"
@@ -148,25 +148,25 @@ class PodiatryPatient(models.Model):
             ])
             # If any practitioners are found, assign the first one to the patient
             if practitioners:
-                self.pod_practitioner_id = practitioners[0]
+                self.practitioner_id = practitioners[0]
 
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
-        """Update the domain of pod_practitioner_id based on the selected parent_id."""
+        """Update the domain of practitioner_id based on the selected parent_id."""
         self.apply_practitioner_logic()
         if self.parent_id:
             # Set the domain to include only practitioners whose parent_id matches the selected account
             return {
                 'domain': {
-                    'pod_practitioner_id': [('is_practitioner', '=', True), ('parent_id', '=', self.parent_id.id)]
+                    'practitioner_id': [('is_practitioner', '=', True), ('parent_id', '=', self.parent_id.id)]
                 }
             }
         else:
             # If no account is selected, revert to the initial domain
             return {
                 'domain': {
-                    'pod_practitioner_id': [('is_practitioner', '=', True)]
+                    'practitioner_id': [('is_practitioner', '=', True)]
                 }
             }
 
@@ -190,7 +190,7 @@ class PodiatryPatient(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Podiatrys',
-            'res_model': 'pod.pod.order',
+            'res_model': 'pod.order',
             'domain': [('pod_patient_id', '=', self.id)],
             'context': {'default_pod_patient_id': self.id},
             'view_mode': 'kanban,tree,form',

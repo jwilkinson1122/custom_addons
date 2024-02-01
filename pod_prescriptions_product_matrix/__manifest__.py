@@ -28,6 +28,6 @@ by choosing product variants quantity through a Grid Entry.
             'pod_prescriptions_product_matrix/static/src/**/*',
         ],
     },
-    'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }

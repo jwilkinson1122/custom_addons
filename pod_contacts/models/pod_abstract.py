@@ -8,7 +8,7 @@ class PodiatryAbstract(models.AbstractModel):
     _name = "pod.abstract"
     _description = "Default Entity"
 
-    pod_internal_identifier = fields.Char(
+    internal_identifier = fields.Char(
         name="Identifier",
         help="Internal identifier used to identify this record",
         readonly=True,
@@ -19,14 +19,14 @@ class PodiatryAbstract(models.AbstractModel):
     @api.model
     def create(self, vals):
         vals_upd = vals.copy()
-        if vals_upd.get("pod_internal_identifier", "New") == "New":
-            vals_upd["pod_internal_identifier"] = self._get_pod_internal_identifier(
+        if vals_upd.get("internal_identifier", "New") == "New":
+            vals_upd["internal_identifier"] = self._get_internal_identifier(
                 vals_upd
             )
             return super().create(vals_upd)
         # return super(PodiatryAbstract, self).create(vals_upd)
  
 
-    def _get_pod_internal_identifier(self, vals):
+    def _get_internal_identifier(self, vals):
         # It should be rewritten for each element
         raise UserError(_("Function is not defined"))

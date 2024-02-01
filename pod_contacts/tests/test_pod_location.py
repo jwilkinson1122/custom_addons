@@ -25,7 +25,7 @@ class TestPodiatryLocation(TransactionCase):
         account = self.partner_obj.create(account_vals)
         self.assertTrue(account.is_company)
         vals["account_id"] = account.id
-        self.assertEqual(account.pod_location_count, 0)
+        self.assertEqual(account.location_count, 0)
         location = self.partner_obj.create(vals)
         self.assertTrue(location.is_location)
-        self.assertEqual(account.pod_location_count, 1)
+        self.assertEqual(account.location_count, 1)

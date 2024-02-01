@@ -27,7 +27,7 @@ class TestPodiatryAdministrationFlag(TransactionCase):
         #     "category_id": category.id
         # })
         # practitioner_flag = self.Flag.create({
-        #     "pod_practitioner_id": practitioner.id,
+        #     "practitioner_id": practitioner.id,
         #     "description": "Description",
         #     "category_id": category.id
         # })
@@ -73,6 +73,6 @@ class TestPodiatryAdministrationFlag(TransactionCase):
         self.assertTrue(patient_flag.closure_date)
 
         # Check display_name of flags
-        # self.assertEqual(account_flag.display_name, "[{}] {}".format(account_flag.pod_internal_identifier, category.name))
-        # self.assertEqual(practitioner_flag.display_name, "[{}] {}".format(practitioner_flag.pod_internal_identifier, category.name))
-        self.assertEqual(patient_flag.display_name, "[{}] {}".format(patient_flag.pod_internal_identifier, category.name))
+        # self.assertEqual(account_flag.display_name, "[{}] {}".format(account_flag.internal_identifier, category.name))
+        # self.assertEqual(practitioner_flag.display_name, "[{}] {}".format(practitioner_flag.internal_identifier, category.name))
+        self.assertEqual(patient_flag.display_name, "[{}] {}".format(patient_flag.internal_identifier, category.name))

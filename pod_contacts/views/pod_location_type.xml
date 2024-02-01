@@ -7,7 +7,7 @@
         <field name="model">pod.location.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <form string="Location Types">
+            <form string="Types">
                 <group>
                     <field name="name"/>
                     <field name="description"/>
@@ -22,7 +22,7 @@
         <field name="model">pod.location.type</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <tree string="Location Types">
+            <tree string="Types">
                 <field name="name"/>
                 <field name="description"/>
                 <field name="active"/>
@@ -30,8 +30,8 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="pod_location_type_action">
-        <field name="name">Location Types</field>
+    <record model="ir.actions.act_window" id="location_type_action">
+        <field name="name">Types</field>
         <field name="res_model">pod.location.type</field>
         <field name="view_mode">tree,form</field>
     </record>

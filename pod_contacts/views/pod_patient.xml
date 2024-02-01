@@ -7,7 +7,7 @@
         <field name="model">pod.patient</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="pod_internal_identifier" />
+                <field name="internal_identifier" />
                 <field name="name" />
             </tree>
         </field>
@@ -19,7 +19,7 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="pod_internal_identifier" />
+                <field name="internal_identifier" />
                 <field name="vat" />
                 <field name="name" />
                 <field name="birth_date" />
@@ -51,7 +51,7 @@
                         <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}" invisible="1"/>
                         <h2>
-                            <!-- <field name="pod_internal_identifier" /> -->
+                            <!-- <field name="internal_identifier" /> -->
                             <field name="name" id="patient" options="{'line_breaks': False}" widget="text" class="text-break" default_focus="1" placeholder="e.g. Vinny Boombotz" invisible="is_company" required="type == 'contact'"/>
                             <field name="is_company" invisible="True" />
                             <field name="parent_id" invisible="True" />
@@ -59,7 +59,7 @@
                         <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                             <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_company', '=', True)]" context="{'default_is_company': True}"/>
                             <field name="relation_label" class="text-center fw-bold" nolabel="1"/>
-                            <field name="pod_practitioner_id" placeholder="Practitioner" class="fw-bold"/>
+                            <field name="practitioner_id" placeholder="Practitioner" class="fw-bold"/>
                         </div>
                     </div>
 
@@ -157,7 +157,7 @@
 
                     <notebook colspan="4">
                         <page name="pod_administration" string="Administration data">
-                            <field name="pod_internal_identifier" />
+                            <field name="internal_identifier" />
 
                             <group>
                                 <group id="pod_administration_info">
@@ -255,12 +255,12 @@
             <kanban string="Patients" class="o_res_partner_kanban">
                 <field name="id"/>
                 <field name="color"/>
-                <field name="pod_internal_identifier"/>
+                <field name="internal_identifier"/>
                 <field name="name"/>
                 <field name="title"/>
                 <field name="email"/>
                 <field name="parent_id"/>
-                <field name="pod_practitioner_id" />
+                <field name="practitioner_id" />
                 <field name="phone"/>
                 <field name="street"/>
                 <field name="street2"/>
@@ -289,17 +289,17 @@
                                         </strong>
                                         <div class="o_kanban_tags_section oe_kanban_partner_categories" />
                                         <ul>
-                                            <li t-if="record.pod_internal_identifier.raw_value">
-                                                <field name="pod_internal_identifier" />
+                                            <li t-if="record.internal_identifier.raw_value">
+                                                <field name="internal_identifier" />
                                             </li>
-                                            <li t-if="record.pod_account_id.raw_value">
-                                                Account: <field name="pod_account_id" />
+                                            <li t-if="record.company_account_id.raw_value">
+                                                Account: <field name="company_account_id" />
                                             </li>
-                                            <li t-if="record.pod_location_id.raw_value">
-                                                Location: <field name="pod_location_id" />
+                                            <li t-if="record.location_id.raw_value">
+                                                Location: <field name="location_id" />
                                             </li>
-                                            <li t-if="record.pod_practitioner_id.raw_value">
-                                                Practitioner: <field name="pod_practitioner_id" />
+                                            <li t-if="record.practitioner_id.raw_value">
+                                                Practitioner: <field name="practitioner_id" />
                                             </li>
 
                                             <li t-if="record.phone">
@@ -352,14 +352,14 @@
                                     </strong>
                                     <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                     <ul>
-                                        <li t-if="record.pod_internal_identifier.raw_value">
-                                            <field name="pod_internal_identifier" />
+                                        <li t-if="record.internal_identifier.raw_value">
+                                            <field name="internal_identifier" />
                                         </li>
                                         <li t-if="record.parent_id.raw_value">
                                             Practice: <field name="parent_id"/>
                                         </li>
-                                        <li t-elif="!record.pod_practitioner_id.raw_value">
-                                            Practitioner: <field name="pod_practitioner_id" />
+                                        <li t-elif="!record.practitioner_id.raw_value">
+                                            Practitioner: <field name="practitioner_id" />
                                         </li>
                                         <li t-if="record.city.raw_value or record.country_id.raw_value">
                                             <t t-if="record.city.raw_value">
@@ -407,14 +407,14 @@
                                     <ul>
 
 
-                                        <li t-if="record.pod_internal_identifier.raw_value">
-                                            <field name="pod_internal_identifier" />
+                                        <li t-if="record.internal_identifier.raw_value">
+                                            <field name="internal_identifier" />
                                         </li>
                                         <li t-if="record.parent_id.raw_value">
                                                                             Practice: <field name="parent_id" />
                                         </li>
-                                        <li t-if="record.pod_practitioner_id.raw_value">
-                                                                            Practitioner: <field name="pod_practitioner_id" />
+                                        <li t-if="record.practitioner_id.raw_value">
+                                                                            Practitioner: <field name="practitioner_id" />
                                         </li>
                                         <li t-if="record.city.raw_value or record.country_id.raw_value">
                                             <t t-if="record.city.raw_value">
@@ -451,7 +451,7 @@
             <search string="Patients">
                 <field name="name"/>
                 <field name="ref" operator="="/>
-                <field name="pod_internal_identifier" operator="="/>
+                <field name="internal_identifier" operator="="/>
                 <separator/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
@@ -459,14 +459,14 @@
                 <separator/>
                 <group name="group_by" string="Group By">
                     <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}"/>
-                    <filter string="Practitioner" name="pod_practitioner_id" context="{'group_by': 'pod_practitioner_id'}"/>
+                    <filter string="Practitioner" name="practitioner_id" context="{'group_by': 'practitioner_id'}"/>
                     <separator/>
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
                 </group>
                 <searchpanel>
                     <field name="parent_id" icon="fa-building-o" enable_counters="1"/>
-                    <field name="pod_practitioner_id" icon="fa-user-md" enable_counters="1"/>
+                    <field name="practitioner_id" icon="fa-user-md" enable_counters="1"/>
                 </searchpanel>
 
             </search>
