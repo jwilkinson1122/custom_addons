@@ -355,12 +355,42 @@ class Partner(models.Model):
         """
         return []
     
-    def _get_next_ref(self, vals=None):
-        return self.env["ir.sequence"].next_by_code("res.partner") or "New"
+    # def _get_next_ref(self, vals=None):
+    #     return self.env["ir.sequence"].next_by_code("res.partner") or "New"
     
-    # @api.model
-    # def _get_internal_identifier(self, vals):
-    #     return self.env["ir.sequence"].next_by_code("pod.flag") or "/"
+    # def _get_next_ref(self, vals=None):
+    #     parent_ref = vals.get("parent_id") and vals["parent_id"].ref
+    #     if parent_ref:
+    #         existing_refs = self.search_count([
+    #             ("parent_id", "=", vals["parent_id"]),
+    #             ("ref", "like", f"{parent_ref}-%")
+    #         ])
+    #         next_index = existing_refs + 1
+    #         return f"{parent_ref}-{next_index}"
+    #     return self.env["ir.sequence"].next_by_code("res.partner") or "New"
+    
+    def _get_next_ref(self, vals=None):
+        parent_id = vals.get("parent_id")
+        if parent_id:
+            parent = self.browse(parent_id)
+            parent_ref = parent.ref
+            existing_refs = self.search_count([
+                ("parent_id", "=", parent_id),
+                ("ref", "like", f"{parent_ref}-%")
+            ])
+            next_index = existing_refs + 1
+            return f"{parent_ref}-{next_index}"
+        return self.env["ir.sequence"].next_by_code("res.partner") or "New"
+
+    
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get("ref") and self._needs_ref(vals=vals):
+    #             vals["ref"] = self._get_next_ref(vals=vals)
+    #         if vals.get('is_partner') or vals.get('patient_ids'):
+    #             self.check_pod("create")
+    #     return super(Partner, self).create(vals_list)
 
     @api.model_create_multi
     def create(self, vals_list):
