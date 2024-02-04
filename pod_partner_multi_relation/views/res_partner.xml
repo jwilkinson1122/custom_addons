@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">pod_partner_multi_relation.view_partner_filter</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="model">res.partner</field>
+        <field type="xml" name="arch">
+            <field name="parent_id" position="after">
+                <field name="search_relation_partner_id" />
+                <field name="search_relation_type_id" />
+                <field name="search_relation_date" />
+                <field name="search_relation_partner_category_id" />
+            </field>
+            <filter name="type_person" position="after">
+                <filter name="customer" string="Customer" domain="[('customer', '=', 1), '|', ('parent_id', '=', False), ('is_company', '=', True)]" help="Customer"/>
+                <filter name="supplier" string="Supplier" domain="[('supplier', '=', 1), '|', ('parent_id', '=', False), ('is_company', '=', True)]" help="Supplier"/>
+                <!-- <filter name="is_company" string="Account" domain="[('is_company','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Customer Locations"/>
+                <filter name="is_location" string="Location" domain="[('is_location','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Locations"/> -->
+            </filter>
+            <!-- <filter name="type_person" position="after">
+                <filter name="is_practitioner" string="Practitioner" domain="[('is_practitioner','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Practitioners"/>
+                <filter name="is_patient" string="Patient" domain="[('is_patient','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Patients"/>
+            </filter> -->
+        </field>
+    </record>
+
+    <record id="view_partner_address_form" model="ir.ui.view">
+        <field name="name">res.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_address_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="type" position="before">
+                <field name="partner_type_id" required="1" domain="[('company_type', '=', 'person')]" class="oe_inline"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">pod_partner_multi_relation.view_partner_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="can_have_parent" invisible="1"/>
+                <field name="parent_is_required" invisible="1"/>
+                <field name="parent_type_ids" invisible="1"/>
+            </field>
+            <field name="parent_id" position="before">
+                <field name="customer" invisible="1"/>
+                <field name="supplier" invisible="1"/>
+                <!-- <field name="is_company" invisible="1"/>
+                <field name="is_location" invisible="1"/>
+                <field name="is_practitioner" invisible="1"/>
+                <field name="is_patient" invisible="1"/> -->
+                <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]"/>
+                <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="not can_have_parent or not partner_type_id"/>
+            </field>
+            <field name="parent_id" position="attributes">
+                <attribute name="invisible">not can_have_parent or not partner_type_id</attribute>
+                <attribute name="required">parent_is_required</attribute>
+                <attribute name="class">oe_inline</attribute>
+                <attribute name="placeholder"></attribute>
+                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
+                <!-- <attribute name="domain">[('is_company', '=', True), '|', ('partner_type_id', '=', False),
+                    ('partner_type_id', 'in', parent_type_ids)]
+                </attribute> -->
+            </field>
+
+            <!-- <div class="o_row" style="margin-top:10px; margin-bottom:10px">
+                <field name="parent_id" placeholder="Parent Company" class="fw-bold" domain="[('is_partner', '=', True)]" invisible="not is_location and not is_practitioner" required="is_location or is_practitioner"/>
+            </div> -->
+            <!-- <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
+            </xpath> -->
+
+            <div name="button_box" position="inside">
+                <button name="action_view_subcompanies" type="object" class="oe_stat_button" icon="fa-building" invisible="subcompanies_count == 0">
+                    <span>
+                        <field name="subcompanies_count" widget="statinfo" nolabel="1"/>
+                        <field name="subcompanies_label"/>
+                    </span>
+                </button>
+                <button name="action_view_relations" type="object" class="oe_stat_button" icon="fa-users" invisible="relation_count == 0">
+                    <field name="relation_count" widget="statinfo" string="Relations" />
+                </button>
+            </div>
+            <field name="type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='type']" position="before">
+                <field name="partner_type_id" required="1" domain="[('company_type', '=', 'person')]" string="Address type" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_show_partner_multi_relation" model="ir.actions.act_window">
+        <field name="name">Show partner's relations</field>
+        <field name="binding_model_id" ref="base.model_res_partner" />
+        <field name="res_model">res.partner.relation.all</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('this_partner_id', 'in', active_ids)]</field>
+    </record>
+</odoo>

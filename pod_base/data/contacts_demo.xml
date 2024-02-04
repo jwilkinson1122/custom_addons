@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+<!-- noupdate="1" means this data won't be overwritten by module updates -->
+    <data noupdate="1">        
+        <!-- Partner relation types -->
+        <!-- <record id="rel_type_assistant" model="res.partner.relation.type">
+            <field name="name">Is assistant of</field>
+            <field name="name_inverse">Has assistant</field>
+            <field name="contact_type_left">p</field>
+            <field name="contact_type_right">p</field>
+        </record>
+        <record id="rel_type_competitor" model="res.partner.relation.type">
+            <field name="name">Is competitor of</field>
+            <field name="name_inverse">Is competitor of</field>
+            <field name="contact_type_left">c</field>
+            <field name="contact_type_right">c</field>
+            <field name="is_symmetric" eval="True" />
+        </record>
+        <record id="rel_type_has_worked_for" model="res.partner.relation.type">
+            <field name="name">Has worked for</field>
+            <field name="name_inverse">Has former employee</field>
+            <field name="contact_type_left">p</field>
+            <field name="contact_type_right">c</field>
+        </record> -->
+        <!-- Categories -->
+        <!-- <record id="res_partner_category_pmr_0" model="res.partner.category">
+            <field name="name">Washing Companies</field>
+        </record>
+        <record id="res_partner_category_pmr_4" model="res.partner.category">
+            <field name="name">Washing Gold</field>
+            <field name="parent_id" ref="res_partner_category_pmr_0" />
+        </record>
+        <record id="res_partner_category_pmr_5" model="res.partner.category">
+            <field name="name">Washing Silver</field>
+            <field name="parent_id" ref="res_partner_category_pmr_0" />
+        </record>
+        <record id="res_partner_category_pmr_11" model="res.partner.category">
+            <field name="name">Washing Services</field>
+            <field name="parent_id" ref="res_partner_category_pmr_0" />
+        </record> -->
+        <!-- Partners -->
+        <!-- <record id="res_partner_pmr_great" model="res.partner">
+            <field name="name">Great Washing Powder Company</field>
+            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_pmr_11'), ref('res_partner_category_pmr_4')])]" />
+            <field name="is_company">1</field>
+            <field name="city">Le Bourget du Lac</field>
+            <field name="zip">73377</field>
+            <field name="phone">+33 4 49 23 44 54</field>
+            <field name="country_id" ref="base.fr" />
+            <field name="street">93, Press Avenue</field>
+            <field name="email">great@yourcompany.example.com</field>
+            <field name="website">http://www.great.com</field>
+        </record>
+        <record id="res_partner_pmr_best" model="res.partner">
+            <field name="name">Best Washing Powder Company</field>
+            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_pmr_4'), ref('res_partner_category_pmr_11')])]" />
+            <field name="is_company">1</field>
+            <field name="city">Champs sur Marne</field>
+            <field name="zip">77420</field>
+            <field name="country_id" ref="base.fr" />
+            <field name="email">best@yourcompany.example.com</field>
+            <field name="phone">+33 1 64 61 04 01</field>
+            <field name="street">12 rue Albert Einstein</field>
+            <field name="website">http://www.best.com/</field>
+        </record>
+        <record id="res_partner_pmr_super" model="res.partner">
+            <field name="name">Super Washing Powder Company</field>
+            <field name="category_id" eval="[(6,0,[ref('res_partner_category_pmr_5')])]" />
+            <field name="is_company">1</field>
+            <field name="street">3rd Floor, Room 3-C,</field>
+            <field name="street2">Carretera Panamericana, Km 1, Urb. Delgado Chalbaud</field>
+            <field name="city">Caracas</field>
+            <field name="zip">1090</field>
+            <field name="email">super@yourcompany.example.com</field>
+            <field name="phone">+58 212 681 0538</field>
+            <field name="country_id" ref="base.ve" />
+            <field name="website">super.com</field>
+        </record> -->
+        <!-- Relations -->
+        <!-- <record id="rel_1" model="res.partner.relation">
+            <field name="left_partner_id" ref="res_partner_pmr_great" />
+            <field name="right_partner_id" ref="res_partner_pmr_super" />
+            <field name="type_id" ref="rel_type_competitor" />
+        </record>
+        <record id="rel_2" model="res.partner.relation">
+            <field name="left_partner_id" ref="res_partner_pmr_best" />
+            <field name="right_partner_id" ref="res_partner_pmr_super" />
+            <field name="type_id" ref="rel_type_competitor" />
+        </record>
+        <record id="rel_3" model="res.partner.relation">
+            <field name="left_partner_id" ref="res_partner_pmr_great" />
+            <field name="right_partner_id" ref="res_partner_pmr_best" />
+            <field name="type_id" ref="rel_type_competitor" />
+        </record> -->
+
+
+        <!-- Practices -->
+        <record id="parent_account_1" model="res.partner">
+            <field name="name">Fab Foot Clinic</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="location_type_id" ref="clinic"/>
+            <field name="street">4557 De Silva St</field>
+            <field name="city">Fremont</field>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="zip">94538</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">fab.foot.clinic@example.com</field>
+            <field name="phone">(870)-931-0505</field>
+            <field name="website">http://www.fab-foot-clinic.com</field>
+        </record>
+        <!-- Child Practices -->
+        <record id="child_location_1" model="res.partner">
+            <field name="name">Fab Foot Clinic - C1</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_location" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="location_type_id" ref="clinic"/>
+            <field name="parent_id" ref="parent_account_1"/>
+            <field name="type">delivery</field>
+            <field name="street">1337 N San Joaquin St</field>
+            <field name="city">Stockton</field>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="zip">95202</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">fab.foot.clinic.c1@example.com</field>
+            <field name="phone">(828)-316-0593</field>
+        </record>
+        <record id="child_location_2" model="res.partner">
+            <field name="name">Fab Foot Clinic - C2</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_location" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="location_type_id" ref="clinic"/>
+            <field name="parent_id" ref="parent_account_1"/>
+            <field name="type">delivery</field>
+            <field name="street">1611 Peony Dr</field>
+            <field name="city">Tracy</field>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="zip">95377</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">fab.foot.clinic.c2@example.com</field>
+            <field name="phone">(334)-502-1024</field>
+        </record>
+        <record id="grand_child_location_1" model="res.partner">
+            <field name="name">Fab Foot Clinic - GC1</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_location" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="location_type_id" ref="clinic"/>
+            <field name="parent_id" ref="child_location_1"/>
+            <field name="type">delivery</field>
+            <field name="street">1839 Arbor Way</field>
+            <field name="city">Turlock</field>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="zip">95380</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">fab.foot.clinic.gc1@example.com</field>
+            <field name="phone">(623)-853-7197</field>
+        </record>
+        <record id="grand_child_location_2" model="res.partner">
+            <field name="name">Fab Foot Clinic - GC2</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_location" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="location_type_id" ref="clinic"/>
+            <field name="parent_id" ref="child_location_2"/>
+            <field name="type">delivery</field>
+            <field name="street">77 Santa Barbara Rd</field>
+            <field name="city">Pleasant Hill</field>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="zip">94523</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">fab.foot.clinic.gc2@example.com</field>
+            <field name="phone">(603)-996-3829</field>
+        </record>
+        <!-- Practitioners -->
+        <record id="practitioner_01_partner" model="res.partner">
+            <field name="name">Doogie Howser</field>
+            <field name="is_practitioner" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="parent_id" ref="parent_account_1"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="email">doogieHowser@example.com</field>
+            <field name="phone">(870)-931-7483</field>
+        </record>
+        <record id="practitioner_02_partner" model="res.partner">
+            <field name="name">Willie Burke</field>
+            <field name="is_practitioner" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="parent_id" ref="child_location_1"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="email">willieBurke@example.com</field>
+            <field name="phone">(828)-316-6456</field>
+        </record>
+        <record id="practitioner_03_partner" model="res.partner">
+            <field name="name">Bob Ross</field>
+            <field name="is_practitioner" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="parent_id" ref="child_location_2"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="email">bobRoss@example.com</field>
+            <field name="phone">(334)-502-9687</field>
+        </record>
+        <record id="practitioner_04_partner" model="res.partner">
+            <field name="name">Ron Gibson</field>
+            <field name="is_practitioner" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="parent_id" ref="grand_child_location_1"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="email">ronGibson@example.com</field>
+            <field name="phone">(623)-853-7347</field>
+        </record>
+        <record id="practitioner_05_partner" model="res.partner">
+            <field name="name">Michelle Ford</field>
+            <field name="is_practitioner" eval="True"/>
+            <field name="is_partner" eval="True"/>
+            <field name="parent_id" ref="grand_child_location_2"/>
+            <field name="role_ids" eval="[(4, ref('practitioner'))]"/>
+            <field name="email">michelleFord@example.com</field>
+            <field name="phone">(603)-996-2584</field>
+        </record>
+        <!-- Patients -->
+        <record id="patient_01_partner" model="res.partner">
+            <field name="name">Vinnie Boombotz</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="parent_id" ref="parent_account_1"/>
+            <field name="email">vinnieBoombotz@example.com</field>
+            <field name="phone">(870)-931-8585</field>
+        </record>
+        <record id="patient_01" model="pod.patient">
+            <field name="partner_id" ref="patient_01_partner"/>
+            <field name="parent_id" ref="parent_account_1"/>
+        </record>
+        <record id="patient_02_partner" model="res.partner">
+            <field name="name">Jane Doe</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="parent_id" ref="child_location_1"/>
+            <field name="email">janeDoe@example.com</field>
+            <field name="phone">(828)-316-6742</field>
+        </record>
+        <record id="patient_02" model="pod.patient">
+            <field name="partner_id" ref="patient_02_partner"/>
+            <field name="parent_id" ref="child_location_1"/>
+        </record>
+        <record id="patient_03_partner" model="res.partner">
+            <field name="name">Lucas Hood</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="parent_id" ref="grand_child_location_1"/>
+            <field name="email">lucasHood@example.com</field>
+            <field name="phone">(623)-853-3671</field>
+        </record>
+        <record id="patient_03" model="pod.patient">
+            <field name="partner_id" ref="patient_03_partner"/>
+            <field name="parent_id" ref="grand_child_location_1"/>
+        </record>
+    </data>
+
+
+
+</odoo>

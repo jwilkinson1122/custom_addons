@@ -259,9 +259,9 @@ class Partner(models.Model):
             self.sudo().patient_ids.check_access_rights(mode)
         
         checks = [
-            (self.is_pod, self._check_pod_user, "pod_prescriptions_contact.group_pod_user"),
-            (self.is_company, self._check_pod_practice, "pod_prescriptions_contact.group_pod_configurator"),
-            (self.is_pod_practitioner, self._check_pod_practitioner, "pod_prescriptions_contact.group_pod_configurator")
+            (self.is_pod, self._check_pod_user, "pod_prescriptions_contact.group_user"),
+            (self.is_company, self._check_pod_practice, "pod_prescriptions_contact.group_configurator"),
+            (self.is_pod_practitioner, self._check_pod_practitioner, "pod_prescriptions_contact.group_configurator")
         ]
         
         for condition, check_method, group in checks:
@@ -270,13 +270,13 @@ class Partner(models.Model):
                 raise AccessError(_("You are not allowed to %(mode)s Contacts (res.partner) records.", mode=mode))
 
     def _check_pod_user(self):
-        return self.env.user.has_group("pod_prescriptions_contact.group_pod_user")
+        return self.env.user.has_group("pod_prescriptions_contact.group_user")
         
     def _check_pod_practice(self):
-        return self.env.user.has_group("pod_prescriptions_contact.group_pod_configurator")
+        return self.env.user.has_group("pod_prescriptions_contact.group_configurator")
         
     def _check_pod_practitioner(self):
-        return self.env.user.has_group("pod_prescriptions_contact.group_pod_configurator")
+        return self.env.user.has_group("pod_prescriptions_contact.group_configurator")
 
     @api.model
     def default_get(self, fields_list):

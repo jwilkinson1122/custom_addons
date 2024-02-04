@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
-                <div class="app_settings_block" data-string="Podiatry" data-key="pod_prescriptions_contact" groups="pod_prescriptions_contact.group_pod_configurator">
+                <div class="app_settings_block" data-string="Podiatry" data-key="pod_prescriptions_contact" groups="pod_prescriptions_contact.group_configurator">
                     <h2>
                         <i class="fa fa-user-md" aria-hidden="true" />
  Administration</h2>

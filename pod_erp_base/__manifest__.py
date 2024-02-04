@@ -8,7 +8,7 @@
     'category': 'Base',
     'website': 'https://www.nwpodiatric.com',
     'depends': [
-        'pod_theme',
+        # 'pod_theme',
         'base', 
         'mail', 
         'sale',
@@ -26,7 +26,7 @@
         'views/pod_flag_views.xml',
         'views/pod_flag_category_views.xml',
 
-        'views/inherit_res_partner_view.xml',
+        'views/res_partner_view.xml',
 
         'views/pod_patient_custom_views.xml',
         'views/pod_patient_views.xml',
@@ -36,11 +36,11 @@
         # 'views/pod_status_views.xml',
 
         
-        'views/inherit_sale_order_views.xml',
+        'views/sale_order_views.xml',
 
-        # 'views/inherit_stock_picking_views.xml',
-        # 'views/inherit_stock_move_line_views.xml',
-        # 'views/inherit_stock_picking_views.xml',
+        # 'views/stock_picking_views.xml',
+        # 'views/stock_move_line_views.xml',
+        # 'views/stock_picking_views.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

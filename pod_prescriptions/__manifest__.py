@@ -12,7 +12,7 @@
 This module contains all the common features of Prescriptions Management and eCommerce.
     """,
     'depends': [
-        'pod_theme',
+        # 'pod_base',
         'pod_prescriptions_contact',
         'pod_prescriptions_team',
         'account',
