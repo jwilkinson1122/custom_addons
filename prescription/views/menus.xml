@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem id="prescription_management_menu" name="Prescription Management" />
+    <menuitem id="prescription_configuration_menu" name="Configuration" sequence="20" parent="prescription_management_menu" />
+    <menuitem id="prescription_report_menu" name="Pdf Reports" sequence="6" parent="prescription_management_menu" />
+    <menuitem id="menu_open_prescription_laterality_form_tree" name="Laterality" action="open_prescription_laterality_form_tree" sequence="21" parent="prescription_configuration_menu" />
+    <menuitem id="menu_prescription_device" name="Device" parent="prescription.prescription_configuration_menu" sequence="2" />
+    <menuitem id="menu_open_prescription_device_type_form_tree" name="Device Types" action="open_prescription_device_type_form_tree" sequence="6" parent="prescription.menu_prescription_device" />
+    <menuitem id="menu_option" name="Option" parent="prescription.prescription_configuration_menu" sequence="2" />
+    <menuitem name="Option Types" id="menu_action_prescription_device_options_type_view_form" action="action_prescription_device_options_type_view_form" sequence="3" parent="prescription.menu_option" />
+    <menuitem id="menu_action_prescription_device_options_view_form" name="Options" action="action_prescription_device_options_view_form" sequence="2" parent="prescription.menu_option" />
+    <menuitem id="menu_open_prescription_device_form" name="Devices" action="action_prescription_device_form" sequence="5" parent="prescription.menu_prescription_device" />
+    <menuitem id="menu_all_order" name="Order" parent="prescription.prescription_management_menu" sequence="4" />
+    <menuitem name="Generate Order" id="menu_open_prescription_order1_form_tree_all" action="open_prescription_order1_form_tree_all" sequence="5" parent="menu_all_order" />
+    <menuitem id="menu_prescription_accommodation" name="Accommodations" parent="prescription.prescription_configuration_menu" sequence="2" />
+    <menuitem name="Accommodation Types" id="menu_open_prescription_accommodation_type_form_tree" action="open_prescription_accommodation_type_form_tree" sequence="9" parent="prescription.menu_prescription_accommodation" />
+    <menuitem id="menu_open_prescription_accommodations_form" name="Accommodations" action="action_prescription_accommodations_form" sequence="8" parent="prescription.menu_prescription_accommodation" />
+</odoo>

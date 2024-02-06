@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Action of prescription laterality -->
+    <record id="open_prescription_laterality_form_tree" model="ir.actions.act_window">
+        <field name="name">Laterality</field>
+        <field name="res_model">prescription.laterality</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for prescription device type -->
+    <record id="open_prescription_device_type_form_tree" model="ir.actions.act_window">
+        <field name="name">Device Type</field>
+        <field name="res_model">prescription.device.type</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for prescription device options type -->
+    <record
+        id="action_prescription_device_options_type_view_form"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Options Type</field>
+        <field name="res_model">prescription.device.options.type</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for prescription device options -->
+    <record id="action_prescription_device_options_view_form" model="ir.actions.act_window">
+        <field name="name">Options</field>
+        <field name="res_model">prescription.device.options</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_is_categid':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_id" ref="view_prescription_device_options_list" />
+    </record>
+    <!-- Action for prescription device -->
+    <record id="action_prescription_device_form" model="ir.actions.act_window">
+        <field name="name">Device</field>
+        <field name="res_model">prescription.device</field>
+        <field
+            name="context"
+        >{'default_is_device':1,'default_rental':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_id" ref="view_prescription_device_tree" />
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <!-- Action for prescription order -->
+    <record id="open_prescription_order1_form_tree_all" model="ir.actions.act_window">
+        <field name="name">Generate Order</field>
+        <field name="res_model">prescription.order</field>
+        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="context">{'order': True}</field>
+    </record>
+    <!-- Action for prescription accommodation type -->
+    <record id="open_prescription_accommodation_type_form_tree" model="ir.actions.act_window">
+        <field name="name">Accommodation Type</field>
+        <field name="res_model">prescription.accommodation.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Action for prescription accommodation -->
+    <record id="action_prescription_accommodations_form" model="ir.actions.act_window">
+        <field name="name">Accommodations</field>
+        <field name="res_model">prescription.accommodations</field>
+        <field name="context">{'default_is_accommodation':1,'default_available_in_pos':0}
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

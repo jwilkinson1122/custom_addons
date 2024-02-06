@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- FORM VIEW  -->
+
+        <record id="prescription_order_view" model="ir.ui.view">
+            <field name="name">prescription.order.form</field>
+            <field name="model">prescription.order</field>
+            <field name="inherit_id" ref="prescription.view_prescription_order_form"/>
+            <field name="arch" type="xml">
+                <header>
+                    <button name="%(action_transientmodel_wizard)d" string="Create Sale Order" type="action" class="btn-primary" invisible="state in ('done', 'cancel')"/>
+                </header>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
