@@ -9,7 +9,7 @@
 
     'description': """
 Technical module:
-The main purpose is to override the prescription_order view to allow configuring products in the RX form.
+The main purpose is to override the prescription view to allow configuring products in the RX form.
 
 It also enables the "optional products" feature.
     """,
@@ -17,7 +17,7 @@ It also enables the "optional products" feature.
     'depends': ['prescription'],
     'data': [
         'views/product_template_views.xml',
-        'views/prescription_order_views.xml',
+        'views/prescription_views.xml',
     ],
     'demo': [
         'data/prescription_demo.xml',

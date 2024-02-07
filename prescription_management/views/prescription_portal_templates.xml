@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="prescription_order_portal_content_inherit_prescription_management" name="Order Options" inherit_id="prescription.prescription_order_portal_content">
+    <template id="prescription_portal_content_inherit_prescription_management" name="Order Options" inherit_id="prescription.prescription_portal_content">
 
         <xpath expr="//section[@id='details']//t[@t-set='display_discount']" position="after">
-            <t t-set="display_remove" t-value="prescription_order._can_be_edited_on_portal() and any(line._can_be_edited_on_portal() for line in prescription_order.order_line)"/>
+            <t t-set="display_remove" t-value="prescription._can_be_edited_on_portal() and any(line._can_be_edited_on_portal() for line in prescription.order_line)"/>
         </xpath>
 
-        <xpath expr="//section[@id='details']//table[@id='prescription_order_table']/thead/tr" position="inside">
+        <xpath expr="//section[@id='details']//table[@id='prescription_table']/thead/tr" position="inside">
             <!-- add blank Tr in thead for layout conciseness -->
             <th t-if="display_remove">
             </th>
@@ -28,10 +28,10 @@
         </xpath>
 
         <xpath expr="//section[@id='signature']" position="after">
-            <t t-if="prescription_order._can_be_edited_on_portal() and any((not option.is_present) for option in prescription_order.prescription_order_option_ids)">
+            <t t-if="prescription._can_be_edited_on_portal() and any((not option.is_present) for option in prescription.prescription_option_ids)">
                 <section>
                     <h3>Options</h3>
-                    <t t-set="display_discount" t-value="True in [option.discount > 0 for option in prescription_order.prescription_order_option_ids]"/>
+                    <t t-set="display_discount" t-value="True in [option.discount > 0 for option in prescription.prescription_option_ids]"/>
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -39,11 +39,11 @@
                                 <th t-if="display_discount" class="text-end">Disc.%
                                 </th>
                                 <th class="text-end">Unit Price</th>
-                                <th t-if="prescription_order._can_be_edited_on_portal() and report_type == 'html'"></th>
+                                <th t-if="prescription._can_be_edited_on_portal() and report_type == 'html'"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="prescription_order.prescription_order_option_ids" t-as="option">
+                            <tr t-foreach="prescription.prescription_option_ids" t-as="option">
                                 <t t-if="not option.is_present">
                                     <td>
                                         <div t-field="option.name"/>
@@ -56,15 +56,15 @@
                                     <td>
                                         <strong class="text-end">
                                             <div t-field="option.price_unit"
-                                                t-options='{"widget": "monetary", "display_currency": prescription_order.currency_id}'
+                                                t-options='{"widget": "monetary", "display_currency": prescription.currency_id}'
                                                 t-att-style="option.discount and 'text-decoration: line-through' or None"
                                                 t-att-class="option.discount and 'text-danger' or None"/>
                                             <div t-if="option.discount">
-                                                <t t-out="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": prescription_order.currency_id}'/>
+                                                <t t-out="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": prescription.currency_id}'/>
                                             </div>
                                         </strong>
                                     </td>
-                                    <td class="text-center" t-if="prescription_order._can_be_edited_on_portal() and report_type == 'html'">
+                                    <td class="text-center" t-if="prescription._can_be_edited_on_portal() and report_type == 'html'">
                                         <a t-att-data-option-id="option.id" href="#" class="mb8 js_add_optional_products d-print-none" aria-label="Add to cart" title="Add to cart">
                                             <span class="fa fa-shopping-cart"/>
                                         </a>

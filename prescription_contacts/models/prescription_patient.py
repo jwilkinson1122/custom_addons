@@ -48,7 +48,7 @@ class PrescriptionPatient(models.Model):
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     
-    # patient_prescription_ids = fields.One2many("prescription.prescription.order", inverse_name="patient_id")
+    # patient_prescription_ids = fields.One2many("prescription.prescription", inverse_name="patient_id")
     # patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
             
     # @api.depends("patient_prescription_ids")
@@ -57,13 +57,13 @@ class PrescriptionPatient(models.Model):
     #         rec.patient_prescription_count = len(rec.patient_prescription_ids.ids)
 
 
-    # def action_view_patient_prescriptions(self):
+    # def action_view_patient_prescription(self):
     #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("prescription_order_mgmt.action_prescription_prescription_orders")
+    #     result = self.env["ir.actions.act_window"]._for_xml_id("prescription_mgmt.action_prescription_prescription")
     #     result["context"] = {"default_patient_id": self.id}
     #     result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
     #     if len(self.patient_prescription_ids) == 1:
-    #         res = self.env.ref("prescription_order_mgmt.view_prescription_prescription_order_form", False)  # Ensure the XML ID is correct
+    #         res = self.env.ref("prescription_mgmt.view_prescription_prescription_form", False)  # Ensure the XML ID is correct
     #         result["views"] = [(res and res.id or False, "form")]
     #         result["res_id"] = self.patient_prescription_ids.ids[0]   
     #     return result
@@ -167,11 +167,11 @@ class PrescriptionPatient(models.Model):
             "flags": {"form": {"action_buttons": True}},
         }
         
-    def action_open_prescriptions(self):
+    def action_open_prescription(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Prescriptions',
-            'res_model': 'prescription.prescription.order',
+            'name': 'Prescription',
+            'res_model': 'prescription.prescription',
             'domain': [('patient_id', '=', self.id)],
             'context': {'default_patient_id': self.id},
             'view_mode': 'kanban,tree,form',

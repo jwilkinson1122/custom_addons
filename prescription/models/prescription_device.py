@@ -43,7 +43,7 @@ class PrescriptionDevice(models.Model):
         [("available", "Available"), ("unavailable", "Occupied")],
         default="available",
     )
-    prescription_order_line = fields.One2many(
+    prescription_line = fields.One2many(
         "order.device.line", "device_id", string="Device Reservation Line"
     )
     product_manager = fields.Many2one("res.users")

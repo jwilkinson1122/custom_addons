@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PrescriptionOrderLineProductField } from '@prescription/js/prescription_product_field';
+import { PrescriptionLineProductField } from '@prescription/js/prescription_product_field';
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
@@ -37,7 +37,7 @@ async function applyProduct(record, product) {
     });
 };
 
-patch(PrescriptionOrderLineProductField.prototype, {
+patch(PrescriptionLineProductField.prototype, {
 
     setup() {
         super.setup(...arguments);

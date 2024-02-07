@@ -1,6 +1,6 @@
 <odoo>
     <!--Form view for order report wizard -->
-    <record id="view_prescription_order_wizard" model="ir.ui.view">
+    <record id="view_prescription_wizard" model="ir.ui.view">
         <field name="name">order.report.wizard</field>
         <field name="model">order.report.wizard</field>
         <field name="arch" type="xml">
@@ -10,35 +10,23 @@
                     <field name="date_end" required="1" />
                 </group>
                 <footer>
-                    <button
-                        name="print_report"
-                        string="Print Order"
-                        icon="fa-print"
-                        type="object"
-                        class="oe_highlight"
-                    />
-                    <button
-                        string="Cancel"
-                        icon="fa-close"
-                        class="btn btn-primary"
-                        special="cancel"
-                    />
+                    <button name="print_report" string="Print Order" icon="fa-print" type="object" class="oe_highlight" />
+                    <button string="Cancel" icon="fa-close" class="btn btn-primary" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
+
     <!--Action for order report wizard -->
-    <record id="prescription_order_wizard" model="ir.actions.act_window">
+    <record id="prescription_wizard" model="ir.actions.act_window">
         <field name="name">Prescription Order Report</field>
         <field name="res_model">order.report.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-    <menuitem
-        name="Prescription Order Report"
-        action="prescription_order_wizard"
-        id="wizard_prescription_menu"
-        parent="prescription_report_menu"
-        sequence="31"
-    />
+
+    <menuitem id="wizard_prescription_menu" name="Prescription Order Report" action="prescription_wizard" parent="sale.menu_sale_report" sequence="6" />
+
+        <!-- <menuitem id="wizard_prescription_menu" name="Prescription Order Report" action="prescription_wizard" parent="sale.menu_sale_report" sequence="6" /> -->
+    <!-- <menuitem id="wizard_prescription_menu" name="Prescription Order Report" action="prescription_wizard" parent="prescription_report_menu" sequence="31" /> -->
 </odoo>

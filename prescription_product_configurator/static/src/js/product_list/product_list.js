@@ -16,9 +16,9 @@ export class ProductList extends Component {
     };
 
     /**
-     * Return the total of the product in the list, in the currency of the `prescription.order`.
+     * Return the total of the product in the list, in the currency of the `prescription`.
      *
-     * @return {String} - The sum of all items in the list, in the currency of the `prescription.order`.
+     * @return {String} - The sum of all items in the list, in the currency of the `prescription`.
      */
     getFormattedTotal() {
         return formatCurrency(

@@ -5,7 +5,7 @@ import { useEffect } from '@odoo/owl';
 import { registry } from "@web/core/registry";
 import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
 
-export class PrescriptionOrderLineProductField extends Many2OneField {
+export class PrescriptionLineProductField extends Many2OneField {
     static props = {
         ...Many2OneField.props,
         readonlyField: { type: Boolean, optional: true },
@@ -96,11 +96,11 @@ export class PrescriptionOrderLineProductField extends Many2OneField {
     _editProductConfiguration() {}
 }
 
-PrescriptionOrderLineProductField.template = "prescription.PrescriptionProductField";
+PrescriptionLineProductField.template = "prescription.PrescriptionProductField";
 
 export const prescriptionOrderLineProductField = {
     ...many2OneField,
-    component: PrescriptionOrderLineProductField,
+    component: PrescriptionLineProductField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2OneField.extractProps(...arguments);
         props.readonlyField = dynamicInfo.readonly;

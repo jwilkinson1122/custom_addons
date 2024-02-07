@@ -16,7 +16,7 @@ class Digest(models.Model):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
 
         self._calculate_company_based_kpi(
-            'prescription.report_prescription_order',
+            'prescription.report_prescription',
             'kpi_all_prescription_total_value',
             date_field='date',
             additional_domain=[('state', 'not in', ['draft', 'cancel', 'sent'])],
@@ -25,5 +25,5 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
-        res['kpi_all_prescription_total'] = 'prescription.report_all_channels_prescription_action&menu_id=%s' % self.env.ref('prescription.prescription_management_menu').id
+        res['kpi_all_prescription_total'] = 'prescription.report_all_channels_prescription_action&menu_id=%s' % self.env.ref('prescription.menu_prescription_mgmt_root').id
         return res

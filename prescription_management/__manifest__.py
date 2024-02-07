@@ -12,7 +12,7 @@
 Manage prescription quotations and orders
 ==================================
 
-This application allows you to manage your prescription goals in an effective and efficient manner by keeping track of all prescription orders and history.
+This application allows you to manage your prescription goals in an effective and efficient manner by keeping track of all prescription and history.
 
 It handles the full prescription workflow:
 
@@ -28,7 +28,7 @@ If you also installed the Warehouse Management, you can deal with the following 
 * Incoterms: International Commercial terms
 
 
-With this module you can personnalize the prescription order and invoice report with
+With this module you can personnalize the prescription and invoice report with
 categories, subtotals or page-breaks.
 
 The Dashboard for the Prescription Manager will include
@@ -50,17 +50,17 @@ The Dashboard for the Prescription Manager will include
         'report/prescription_report_templates.xml',
 
         # Define RX template views & actions before their place of use
-        'views/prescription_order_template_views.xml',
+        'views/prescription_template_views.xml',
 
         # 'views/digest_views.xml',
         'views/res_config_settings_views.xml',
-        'views/prescription_order_views.xml',
+        'views/prescription_views.xml',
         # 'views/prescription_portal_templates.xml',
 
-        'views/prescription_management_menus.xml',
+        'views/menu_prescription_mgmt_roots.xml',
     ],
     'demo': [
-        'data/prescription_order_template_demo.xml',
+        'data/prescription_template_demo.xml',
     ],
     'assets': {
         'web.assets_frontend': [

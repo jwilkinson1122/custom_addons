@@ -9,13 +9,13 @@ from odoo import api, fields, models
 
 
 class OrderReport(models.AbstractModel):
-    _name = "prescription.report_prescription_order"
+    _name = "prescription.report_prescription"
     _description = "Auxiliar to get the report"
 
     def _get_prescription_data(self, date_start, date_end):
         total_amount = 0.0
         data_prescription = []
-        prescription_obj = self.env["prescription.order"]
+        prescription_obj = self.env["prescription"]
         act_domain = [
             ("bookin_date", ">=", date_start),
             ("bookout_date", "<=", date_end),
@@ -48,7 +48,7 @@ class OrderReport(models.AbstractModel):
             data = {}
         if not docids:
             docids = data["form"].get("docids")
-        prescription_profile = self.env["prescription.order"].browse(docids)
+        prescription_profile = self.env["prescription"].browse(docids)
         date_start = data["form"].get("date_start", fields.Date.today())
         date_end = data["form"].get(
             "date_end",

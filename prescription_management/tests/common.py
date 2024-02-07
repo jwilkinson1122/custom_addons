@@ -9,6 +9,6 @@ class PrescriptionManagementCommon(PrescriptionCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.empty_order_template = cls.env['prescription.order.template'].create({
+        cls.empty_order_template = cls.env['prescription.template'].create({
             'name': "Test Draft Rx Template",
         })

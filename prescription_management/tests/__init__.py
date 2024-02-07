@@ -2,4 +2,4 @@
 
 
 from . import test_prescription_ui
-from . import test_prescription_order
+from . import test_prescription

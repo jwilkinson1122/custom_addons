@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data noupdate="1">
+    <!-- prescription-related subtypes for messaging / Chatter -->
+    <record id="mt_prescription_draft" model="mail.message.subtype">
+        <field name="name">Draft Prescription</field>
+        <field name="res_model">prescription</field>
+        <field name="default" eval="False" />
+        <field name="description">Prescription in draft state</field>
+    </record>
+    <record id="mt_prescription_notification" model="mail.message.subtype">
+        <field name="name">Prescription Notification</field>
+        <field name="res_model">prescription</field>
+        <field name="default" eval="False" />
+        <field name="description">Prescription automatic customer notifications</field>
+    </record>
+    <!-- prescription_team-related subtypes for messaging / Chatter -->
+    <record id="mt_prescription_team_prescription_draft" model="mail.message.subtype">
+        <field name="name">Draft Prescription</field>
+        <field name="sequence">10</field>
+        <field name="res_model">prescription.team</field>
+        <field name="default" eval="True" />
+        <field name="parent_id" eval="ref('prescription.mt_prescription_draft')" />
+        <field name="relation_field">team_id</field>
+    </record>
+    <record id="mt_prescription_team_prescription_notification" model="mail.message.subtype">
+        <field name="name">Prescription Notification</field>
+        <field name="sequence">20</field>
+        <field name="res_model">prescription.team</field>
+        <field name="default" eval="True" />
+        <field name="parent_id" eval="ref('prescription.mt_prescription_notification')" />
+        <field name="relation_field">team_id</field>
+    </record>
+
+
+    <!--Prescription email template -->
+    <record id="mail_template_prescription_notification" model="mail.template">
+        <field name="name">Prescription Notification</field>
+        <field name="model_id" ref="model_prescription" />
+        <field name="subject">{{object.company_id.name}} Prescription (Ref {{object.name or 'n/a' }})</field>
+        <field name="email_from">{{object.user_id.email_formatted}}</field>
+        <field name="partner_to">{{object.partner_id.id}}</field>
+        <!-- <field name="subject">{{object.company_id.name}} Prescription (Ref {{object.name or 'n/a' }})</field> -->
+        <!-- <field name="report_template" ref="report_prescription_action" /> -->
+        <!-- <field name="report_name">{{(object.name or '')}}</field> -->
+        <field name="lang">{{object.partner_id.lang}}</field>
+        <field name="auto_delete" eval="True" />
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear
+                    <t t-out="object.partner_id.name" />
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name" />
+                    </t>
+                    <br />
+                    <br />
+                    Here is the Prescription
+                    <strong>
+                        <t t-out="object.name" />
+                    </strong>
+                    from
+                    <t t-out="object.company_id.name" />
+                    .
+                    <br />
+                    <br />
+                    Do not hesitate to contact us if you have any question.
+                </p>
+            </div>
+        </field>
+    </record>
+    <!--Prescription receipt confirmation email template -->
+    <record id="mail_template_prescription_receipt_notification" model="mail.template">
+        <field name="name">Prescription Receipt Notification</field>
+        <field name="model_id" ref="model_prescription" />
+        <field name="email_from">{{object.user_id.email_formatted }}</field>
+        <field name="partner_to">{{object.partner_id.id}}</field>
+        <field name="subject">{{object.company_id.name}} Prescription (Ref {{object.name or 'n/a' }}) products received</field>
+        <!-- <field name="report_template" ref="report_prescription_action" />
+        <field name="report_name">{{(object.name or '')}}</field> -->
+        <field name="lang">{{object.partner_id.lang}}</field>
+        <field name="auto_delete" eval="True" />
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear
+                    <t t-out="object.partner_id.name" />
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name" />
+                    </t>
+                    <br />
+                    <br />
+                    The products for your Prescription
+                    <strong>
+                        <t t-out="object.name" />
+                    </strong>
+                    from
+                    <t t-out="object.company_id.name" />
+                    have been received in our warehouse.
+                    <br />
+                    <br />
+                    Do not hesitate to contact us if you have any question.
+                </p>
+            </div>
+        </field>
+    </record>
+    
+    <record id="mail_template_prescription_draft_notification" model="mail.template">
+        <field name="name">Prescription Draft Notification</field>
+        <field name="model_id" ref="model_prescription" />
+        <field name="email_from">{{object.user_id.email_formatted}}</field>
+        <field name="partner_to">{{object.partner_id.id}}</field>
+        <field name="subject">{{object.company_id.name}} Your Prescription has been succesfully created (Ref {{object.name or 'n/a' }})</field>
+        <!-- <field name="report_template" ref="report_prescription_action" />
+        <field name="report_name">{{(object.name or '')}}</field> -->
+        <field name="lang">{{object.partner_id.lang}}</field>
+        <field name="auto_delete" eval="True" />
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear
+                    <t t-out="object.partner_id.name" />
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name" />
+                    </t>
+                    <br />
+                    <br />
+                    You've succesfully submitted your prescription
+                    <strong>
+                        <t t-out="object.name" />
+                    </strong>
+                    on
+                    <t t-out="object.company_id.name" />
+                    . Our team will check it and will validate it as soon as possible.
+                    <br />
+                    <br />
+                    Do not hesitate to contact us if you have any question.
+                </p>
+            </div>
+        </field>
+    </record>
+
+</data>

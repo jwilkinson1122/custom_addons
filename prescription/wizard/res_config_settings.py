@@ -9,7 +9,7 @@ class ResConfigSettings(models.TransientModel):
     # Groups
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
 
-    module_prescription_product_matrix = fields.Boolean("Prescriptions Grid Entry")
+    module_prescription_product_matrix = fields.Boolean("Prescription Grid Entry")
     
     #=== ONCHANGE METHODS ===#
     

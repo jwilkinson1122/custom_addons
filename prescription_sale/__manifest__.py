@@ -1,30 +1,32 @@
-# -*- coding: utf-8 -*-
-
 {
-    'name' : "NWPL Prescription to Sale",
+    "name": "Prescription Management - Link with Sales",
+    "summary": "Sale Order - Prescription",
     "version": "17.0.0.0.0",
-    'category' : "Sales",
-    'license': 'LGPL-3',
-    'summary': 'This apps helps to Convert Prescription Orders to Sales Orders',
-    'description' : """Create Sales Orders from confimed Prescription Orders""",
-    'author' : "NWPL",
-    'website'  : "https://www.nwpodiatric.com",
-    'depends' : [ 
-        'base', 
-        'product',
-        'sale_management',
-        'prescription',
-        'stock'
-        ],    
-    'data' : [
-            'security/ir.model.access.csv',
-            'wizard/sale_order_wizard_view.xml',
-            'views/main_prescription_order_view.xml',
-            ],
-
-    'test' :  [ ],
-    'css'  :  [ ],
-    'demo' :  [ ],
-    'installable' : True,
-    'application' :  False,
+    "category": "Prescription",
+    "website": "https://nwpodiatric.com",
+    "author": "NWPL",
+    "license": "AGPL-3",
+    "depends": [
+        "prescription", 
+        "sale_stock"
+        ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/account_move_views.xml",
+        "views/report_prescription.xml",
+        "views/prescription_views.xml",
+        "views/sale_views.xml",
+        "views/sale_portal_template.xml",
+        "views/res_config_settings_views.xml",
+        "wizard/sale_order_prescription_wizard_views.xml",
+    ],
+    "assets": {
+        "web.assets_frontend": [
+            "/prescription_sale/static/src/js/prescription_portal_form.js",
+            "/prescription_sale/static/src/scss/prescription_sale.scss",
+        ],
+        "web.assets_tests": [
+            "/prescription_sale/static/src/tests/*.js",
+        ],
+    },
 }

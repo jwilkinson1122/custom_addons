@@ -17,7 +17,7 @@ class Partner(models.Model):
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
-    is_parent_practice = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    is_parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
@@ -268,9 +268,9 @@ class Partner(models.Model):
             self.sudo().patient_ids.check_access_rights(mode)
         
         checks = [
-            (self.is_pod, self._check_prescription_user, "prescription_contacts.group_prescription_user"),
-            (self.is_company, self._check_prescription_practice, "prescription_contacts.group_prescription_configurator"),
-            (self.is_practitioner, self._check_prescription_practitioner, "prescription_contacts.group_prescription_configurator")
+            (self.is_pod, self._check_prescription_user, "prescription_contacts.group_contacts_user"),
+            (self.is_company, self._check_prescription_practice, "prescription_contacts.group_contacts_configurator"),
+            (self.is_practitioner, self._check_prescription_practitioner, "prescription_contacts.group_contacts_configurator")
         ]
         
         for condition, check_method, group in checks:
@@ -279,13 +279,13 @@ class Partner(models.Model):
                 raise AccessError(_("You are not allowed to %(mode)s Contacts (res.partner) records.", mode=mode))
 
     def _check_prescription_user(self):
-        return self.env.user.has_group("prescription_contacts.group_prescription_user")
+        return self.env.user.has_group("prescription_contacts.group_contacts_user")
         
     def _check_prescription_practice(self):
-        return self.env.user.has_group("prescription_contacts.group_prescription_configurator")
+        return self.env.user.has_group("prescription_contacts.group_contacts_configurator")
         
     def _check_prescription_practitioner(self):
-        return self.env.user.has_group("prescription_contacts.group_prescription_configurator")
+        return self.env.user.has_group("prescription_contacts.group_contacts_configurator")
 
     @api.model
     def default_get(self, fields_list):

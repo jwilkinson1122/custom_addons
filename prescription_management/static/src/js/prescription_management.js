@@ -20,7 +20,7 @@ publicWidget.registry.PrescriptionUpdateLineButton = publicWidget.Widget.extend(
      */
     async start() {
         await this._super(...arguments);
-        this.orderDetail = this.$el.find('table#prescription_order_table').data();
+        this.orderDetail = this.$el.find('table#prescription_table').data();
     },
 
     /**
@@ -33,7 +33,7 @@ publicWidget.registry.PrescriptionUpdateLineButton = publicWidget.Widget.extend(
      * @return {Deferred}
      */
      _callUpdateLineRoute(order_id, params) {
-        return this.rpc("/my/prescriptions/" + order_id + "/update_line_dict", params);
+        return this.rpc("/my/prescription/" + order_id + "/update_line_dict", params);
     },
 
     /**
@@ -101,7 +101,7 @@ publicWidget.registry.PrescriptionUpdateLineButton = publicWidget.Widget.extend(
         $target.css('pointer-events', 'none');
 
         this.rpc(
-            "/my/prescriptions/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
+            "/my/prescription/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
             {access_token: self.orderDetail.token}
         ).then((data) => {
             this._refreshOrderUI(data);

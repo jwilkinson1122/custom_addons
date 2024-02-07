@@ -58,7 +58,7 @@
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
-        <!-- <field name="groups_id" eval="[(4, ref('prescription_contacts.group_prescription_user'))]" /> -->
+        <!-- <field name="groups_id" eval="[(4, ref('prescription_contacts.group_contacts_user'))]" /> -->
         <field name="arch" type="xml">
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_company" invisible="1" />
@@ -72,12 +72,12 @@
                 <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="after">
-                <field name="is_parent_practice" invisible="1" />
+                <field name="is_parent_account" invisible="1" />
             </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <div class="oe_title mb24">
                     <field name="is_company" invisible="1" />
-                    <field name="is_parent_practice" invisible="1" />
+                    <field name="is_parent_account" invisible="1" />
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
@@ -450,7 +450,7 @@
 
 
     <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="name">Practices</field>
+        <field name="name">Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>

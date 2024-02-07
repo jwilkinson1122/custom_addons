@@ -22,16 +22,16 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def create_invoices(self):
         ctx = self.env.context.copy()
-        if self._context.get("active_model") == "prescription.order":
+        if self._context.get("active_model") == "prescription":
 
-            PrescriptionOrder = self.env["prescription.order"]
-            prescription = PrescriptionOrder.browse(self._context.get("active_ids", []))
-            prescription.prescription_order_line.mapped("product_id").write({"is_device": True})
+            Prescription = self.env["prescription"]
+            prescription = Prescription.browse(self._context.get("active_ids", []))
+            prescription.prescription_line.mapped("product_id").write({"is_device": True})
             ctx.update(
                 {
-                    "active_ids": prescription.order_id.ids,
-                    "active_id": prescription.order_id.id,
-                    "prescription_order_id": prescription.id,
+                    "active_ids": prescription_id.ids,
+                    "active_id": prescription_id.id,
+                    "prescription_id": prescription.id,
                 }
             )
         res = super(SaleAdvancePaymentInv, self.with_context(**ctx)).create_invoices()

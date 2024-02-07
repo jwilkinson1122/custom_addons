@@ -508,16 +508,31 @@
         <field name="view_id" ref="prescription_patient_his_form" />
     </record>
 
-    <record model="ir.ui.menu" id="prescription_patient_menu">
+    <!-- <record model="ir.ui.menu" id="prescription_patient_menu">
         <field name="name">Patients</field>
         <field name="parent_id" ref="prescription_contacts.prescription_root_menu_administration" />
         <field name="action" ref="prescription_patient_window_action" />
         <field name="sequence" eval="5" />
+    </record> -->
+
+    <record model="ir.ui.menu" id="prescription_patient_menu">
+        <field name="name">Patients</field>
+        <field name="parent_id" ref="contacts.res_partner_menu_contacts" />
+        <field name="action" ref="prescription_patient_window_action" />
+        <field name="sequence" eval="5" />
     </record>
+
+
+    <!-- <record model="ir.ui.menu" id="prescription_patient_his_menu">
+        <field name="name">History</field>
+        <field name="parent_id" ref="prescription_contacts.prescription_root_menu_administration" />
+        <field name="action" ref="prescription_patient_his_window_action" />
+        <field name="sequence" eval="6" />
+    </record> -->
 
     <record model="ir.ui.menu" id="prescription_patient_his_menu">
         <field name="name">History</field>
-        <field name="parent_id" ref="prescription_contacts.prescription_root_menu_administration" />
+        <field name="parent_id" ref="contacts.res_partner_menu_contacts" />
         <field name="action" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="6" />
     </record>

@@ -13,14 +13,14 @@ QUnit.module("Fields", (hooks) => {
         target = getFixture();
         serverData = {
             models: {
-                'prescription.order': {
+                'prescription': {
                     fields: {
                         display_name: { string: "Displayed name", type: "char" },
                         order_line: {
-                            string: "prescription order lines",
+                            string: "prescription lines",
                             type: "one2many",
-                            relation: "prescription.order.line",
-                            relation_field: "prescription_order_id",
+                            relation: "prescription.line",
+                            relation_field: "prescription_id",
                         },
                     },
                     records: [
@@ -32,13 +32,13 @@ QUnit.module("Fields", (hooks) => {
                     ],
                     onchanges: {},
                 },
-                'prescription.order.line': {
+                'prescription.line': {
                     fields: {
-                        prescription_order_id: {
+                        prescription_id: {
                             string: "Prescription Order Reference",
                             type: "many2one",
-                            relation: "prescription.order",
-                            relation_field: "prescription_order_line",
+                            relation: "prescription",
+                            relation_field: "prescription_line",
                         },
                         product_template_id: {
                             string: "Product",
@@ -92,12 +92,12 @@ QUnit.module("Fields", (hooks) => {
 
         await makeView({
             type: "form",
-            resModel: "prescription.order",
+            resModel: "prescription",
             serverData,
             arch: `
                 <form>
                     <sheet>
-                        <field name="prescription_order_line">
+                        <field name="prescription_line">
                             <tree editable="bottom" >
                                 <field name="product_template_id" widget="rxl_product_many2one" />
                             </tree>

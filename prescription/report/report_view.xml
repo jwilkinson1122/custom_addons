@@ -1,17 +1,23 @@
 <odoo>
-    <!--Report for prescription order -->
-    <record id="report_prescription_management" model="ir.actions.report">
+    <!--Report for prescription -->
+    <!-- <record id="report_prescription_action" model="ir.actions.report">
          <field name="name">Prescription Order</field>
-         <field name="model">prescription.order</field>
+         <field name="model">prescription</field>
          <field name="report_type">qweb-pdf</field>
-         <field name="report_file">prescription.report_prescription_order</field>
-         <field name="report_name">prescription.report_prescription_order</field>
-
+         <field name="report_file">prescription.report_prescription</field>
+         <field name="report_name">prescription.report_prescription</field>
+    </record> -->
+    <record id="report_prescription_action" model="ir.actions.report">
+        <field name="name">Prescription Report</field>
+        <field name="model">prescription</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">prescription.report_prescription</field>
+        <field name="report_file">prescription.report_prescription</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
     </record>
-
     <!-- <record id="report_all_channels_prescription_action" model="ir.actions.act_window">
-        <field name="name">Prescriptions Analysis</field>
-        <field name="res_model">prescription.report_prescription_order</field>
+        <field name="name">Prescription Analysis</field>
+        <field name="res_model">prescription.report_prescription</field>
         <field name="view_mode">pivot</field>
     </record> -->
 </odoo>

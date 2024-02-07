@@ -17,7 +17,7 @@ by choosing product variants quantity through a Grid Entry.
         ],
     'data': [
         'views/product_template_views.xml',
-        'views/prescription_order_views.xml',
+        'views/prescription_views.xml',
         'report/prescription_report_templates.xml',
     ],
     'demo': [

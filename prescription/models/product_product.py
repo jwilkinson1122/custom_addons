@@ -32,7 +32,7 @@ class ProductProduct(models.Model):
             avail_prod_ids = []
             for device in prescription_device_obj.search([]):
                 assigned = False
-                for device_line in device.prescription_order_line:
+                for device_line in device.prescription_line:
                     if device_line.status != "cancel":
                         if (bookin_date <= device_line.book_in <= bookout_date) or (
                             bookin_date <= device_line.book_out <= bookout_date

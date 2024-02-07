@@ -16,7 +16,7 @@
         'contacts',
         ],
     'data': [
-        'security/prescription_security.xml',
+        'security/contacts_security.xml',
         'security/flag_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',

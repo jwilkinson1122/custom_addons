@@ -86,13 +86,13 @@
                         </page>
                         <page string="Order Device Reservations">
                             <separator colspan='4' string="Order Device Reservation Line" />
-                            <field name="prescription_order_line" colspan="4" nolabel='1'>
+                            <field name="prescription_line" colspan="4" nolabel='1'>
                                 <form string=" Device line">
                                     <group colspan='4' col='4'>
                                         <field name="device_id" />
                                         <field name="book_in" />
                                         <field name="book_out" />
-                                        <field name="prescription_order_id" />
+                                        <field name="prescription_id" />
                                         <field name="status" />
                                     </group>
                                 </form>
@@ -100,7 +100,7 @@
                                     <field name="device_id" />
                                     <field name="book_in" />
                                     <field name="book_out" />
-                                    <field name="prescription_order_id" />
+                                    <field name="prescription_id" />
                                     <field name="status" />
                                 </tree>
                             </field>

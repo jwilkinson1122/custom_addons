@@ -4,21 +4,30 @@
         <field name="name">Contacts</field>
     </record>  -->
 
-    <record model="ir.ui.menu" id="prescription_root_menu_administration">
-        <field name="name">Accounts</field>
+    <!-- <record model="ir.ui.menu" id="prescription_root_menu_administration">
+        <field name="name">Contacts</field>
         <field name="parent_id" ref="contacts.menu_contacts" />
-        <field name="groups_id" eval="[(6, 0, [ref('group_prescription_configurator')])]" />
+        <field name="groups_id" eval="[(6, 0, [ref('group_contacts_configurator')])]" />
         <field name="sequence" eval="1" />
     </record>
 
     <record id="prescription_root_menu_administration" model="ir.ui.menu">
         <field name="active" eval="True" />
-    </record>
+    </record> -->
 
-    <menuitem id="contacts.res_partner_menu_contacts" name="Practices" action="contacts.action_contacts" parent="prescription_root_menu_administration" sequence="2"/> 
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" sequence="2">
+        <menuitem id="prescription_accounts_menu" name="Accounts" action="contacts.action_contacts" sequence="2"/>
+        <menuitem id="prescription_locations_menu" name="Locations" action="prescription_contacts.prescription_location_action" sequence="3"/>
+        <menuitem id="prescription_practitioners_menu" name="Contacts" action="prescription_contacts.prescription_practitioner_action" sequence="4"/>
+    </menuitem>
+
+    <menuitem id="prescription_roles_menu" name="Roles" parent="contacts.res_partner_menu_config" action="prescription_contacts.prescription_role_action" sequence="0" />
+    <menuitem id="prescription_diagnosis_menu" name="Diagnosis" parent="contacts.res_partner_menu_config" action="prescription_contacts.prescription_diagnosis_action" sequence="1" />
+
+    <!-- <menuitem id="contacts.res_partner_menu_contacts" name="Accounts" action="contacts.action_contacts" parent="prescription_root_menu_administration" sequence="2"/> 
     <menuitem id="prescription_location_menu" name="Locations" action="prescription_contacts.prescription_location_action" parent="prescription_root_menu_administration" sequence="3"/> 
     <menuitem id="prescription_practitioner_menu" name="Contacts" action="prescription_contacts.prescription_practitioner_action" parent="prescription_root_menu_administration" sequence="4"/> 
     <menuitem id="prescription_role_menu" name="Roles" parent="contacts.res_partner_menu_config" action="prescription_contacts.prescription_role_action" sequence="0" />
-    <menuitem id="prescription_diagnosis_menu" name="Diagnosis" parent="contacts.res_partner_menu_config" action="prescription_contacts.prescription_diagnosis_action" sequence="1" />
+    <menuitem id="prescription_diagnosis_menu" name="Diagnosis" parent="contacts.res_partner_menu_config" action="prescription_contacts.prescription_diagnosis_action" sequence="1" /> -->
 
 </odoo>

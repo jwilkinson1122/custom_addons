@@ -26,7 +26,7 @@ class ProductConfiguratorController(Controller):
                                         `product.template` id.
         :param int quantity: The quantity of the product.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription`, to compute the price at the right rate.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
@@ -117,7 +117,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
@@ -165,7 +165,7 @@ class ProductConfiguratorController(Controller):
         :param recordset parent_combination: The combination of the parent product, as a
                                              `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription`, to compute the price at the right rate.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
         :rtype: [dict]
@@ -212,7 +212,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.

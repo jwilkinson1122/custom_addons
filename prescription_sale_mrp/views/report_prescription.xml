@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_prescription_document" inherit_id="prescription_sale.report_prescription_document">
+        <xpath expr="//div[@id='product_information']" position="after">
+            <t t-if="doc.sudo().phantom_bom_product">
+                <strong class="d-block mt32 mb-1">Kit information</strong>
+                <div class="row mb32" id="kit_information">
+                    <div t-if="doc.sudo().phantom_bom_product" class="col-auto mw-100 mb-2">
+                        <strong>Kit:</strong>
+                        <p class="m-0" t-field="doc.sudo().phantom_bom_product.display_name" />
+                    </div>
+                    <div t-if="doc.sudo().phantom_bom_product" class="col-auto mw-100 mb-2">
+                        <strong>Kit Quantity:</strong>
+                        <p class="m-0" t-field="doc.kit_qty" />
+                    </div>
+                </div>
+                <strong class="d-block mb-1">Related Kit Components Prescription</strong>
+                <t t-set="related_kit_prescription" t-value="doc.search([('prescription_kit_register', '=', doc.prescription_kit_register), ('id', '!=', doc.id)])" />
+                <table class="table table-sm">
+                    <thead>
+                        <th>
+                            <span>Prescription</span>
+                        </th>
+                        <th>
+                            <span>Product</span>
+                        </th>
+                        <th>
+                            <span>Quantity</span>
+                        </th>
+                        <th>
+                            <span>State</span>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="related_kit_prescription" t-as="kit_prescription">
+                            <td>
+                                <span t-field="kit_prescription.name" />
+                            </td>
+                            <td>
+                                <span t-if="kit_prescription.product_id" t-field="kit_prescription.product_id" />
+                            </td>
+                            <td>
+                                <t t-if="kit_prescription.product_id">
+                                    <span t-field="kit_prescription.product_uom_qty" />
+                                    <span t-field="kit_prescription.uom_id" groups="uom.group_uom" />
+                                </t>
+                            </td>
+                            <td>
+                                <span t-field="kit_prescription.state" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

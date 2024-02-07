@@ -14,9 +14,9 @@ class OrderReportWizard(models.TransientModel):
     def print_report(self):
         data = {
             "ids": self.ids,
-            "model": "prescription.order",
+            "model": "prescription",
             "form": self.read(["date_start", "date_end"])[0],
         }
-        return self.env.ref("prescription.report_prescription_management").report_action(
+        return self.env.ref("prescription.report_prescription_action").report_action(
             self, data=data
         )
