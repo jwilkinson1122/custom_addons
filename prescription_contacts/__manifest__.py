@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'NWPL Contacts',
+    'name': 'NWPL - Contact Management',
     'version': '17.0.0.0.0',
     'sequence': 1,
-    "author": "NWPL",
+    'author': 'NWPL',
     'category': 'Contacts',
     'summary': 'Centralize medical contacts',
     'website': 'https://www.nwpodiatric.com',
     'description': """Manage contacts directory""",
     'depends': [
         'base',
-        "base_setup", 
+        'base_setup', 
         'mail',
         'contacts',
         ],

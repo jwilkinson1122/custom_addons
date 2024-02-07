@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-
 {
-    'name': 'NWPL Display Python Version ',
+    'name': 'NWPL - Python Version Display',
     'version': '17.0.0.0.0',
     'summary': """Display Python Version and List Of Packages Installed.""",
     'description': """Display Python Version and List Of Packages Installed.""",
     'category': 'Base',
     'author': 'NWPL',
-    'website': "",
-    "license": "LGPL-3",
+    'website': 'https://www.nwpodiatric.com',
+    'license': "LGPL-3",
     'depends': ['base_setup'],
     'data': [
         'security/ir.model.access.csv',

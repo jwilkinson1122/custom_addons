@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': "NWPL Prescription Matrix",
-    "author": "NWPL",
-    'summary': "Add variants to Prescription Order through a grid entry.",
-    'description': """
-This module allows to fill Prescription Order rapidly
-by choosing product variants quantity through a Grid Entry.
-    """,
+    'name': 'NWPL - Product Matrix',
+    'summary': 'Add variants to Prescription Order through a grid entry.',
     'category': 'Podiatry/Prescription',
-    'version': '1.0',
+    'author': 'NWPL',
+    'website': 'https://www.nwpodiatric.com',
+    'version': '17.0.0.0.0',
     'depends': [
         'prescription', 
         'product_matrix', 
@@ -28,5 +25,6 @@ by choosing product variants quantity through a Grid Entry.
             'prescription_product_matrix/static/src/**/*',
         ],
     },
+    'auto_install': True,
     'license': 'LGPL-3',
 }
