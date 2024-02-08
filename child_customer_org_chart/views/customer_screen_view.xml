@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <!--view for parent field in contacts-->
+    <record id="customer_screen_view" model="ir.ui.view">
+        <field name="name">res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']"
+                   position="after">
+                <group>
+                    <field name="new_parent_id" attrs="{'invisible': [('new_child_ids', '!=', [])]}"/>
+                    <field name="new_child_ids" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_form_custom" model="ir.ui.view">
+    <field name="name">res.partner.form.custom</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <notebook position="inside">
+            <page string="Organization Chart">
+                <field name="new_child_ids" widget="partner_org_chart" readonly="1">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </page>
+        </notebook>
+    </field>
+</record>
+
+</odoo>

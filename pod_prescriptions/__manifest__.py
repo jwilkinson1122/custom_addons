@@ -18,6 +18,7 @@ This module contains all the common features of Prescriptions Management and eCo
         'sale',
         'sale_management',
         'sale_product_matrix',
+        'sale_product_configurator',
         'sale_purchase',
         'website_sale_comparison',
         # 'website_sale_loyalty',

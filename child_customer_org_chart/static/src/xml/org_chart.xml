@@ -1,0 +1,84 @@
+<templates>
+    <t t-name="res_org_chart_partner" owl="1">
+        <t t-if="state.data['parent']['image']">
+            <div class="d-flex flex-column"
+                 style="display:inline-block; margin-left:5px; position: relative;">
+                <h3>
+                    <div class="icon"
+                         style="grid-area: icon; align-self: left; margin-left:5px;">
+                        <img t-attf-src="data:image/jpg;base64,{{state.data['parent']['image']}}"
+                             class="rounded-circle" style="height:60px;"
+                             alt="Parent Image"/>
+                        <span class="o_media_heading m-2"
+                              t-esc="state.data['parent']['name']"/>
+                    </div>
+                </h3>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="d-flex flex-column"
+                 style="display:inline-block; margin-left:5px; position: relative;">
+                <h3>
+                    <div class="icon-org"
+                         style="grid-area: icon; align-self: left; font-size:3rem; margin-left:5px;">
+                        <i class="fa fa-user rounded-circle" style="height:40px;"/>
+                        <span style="font-size: 2rem;"
+                              class="o_media_heading m-2"
+                              t-esc="state.data['parent']['name']"/>
+                    </div>
+                </h3>
+            </div>
+        </t>
+        <div class="d-flex flex-column">
+            <t t-foreach="state.data['child']" t-as="data" t-key="data_index">
+                <a class="o_employee_redirect d-flex flex-column"
+                   style="position: relative; margin-left:60px; margin-top:5px;">
+                    <t t-if="data['image']">
+                        <div class="d-flex flex-column">
+                            <h5>
+                                <div class="icon-org row"
+                                     style="grid-area: icon; align-self: left;">
+                                    <div class="col">
+                                        <img t-attf-src="data:image/jpg;base64,{{data['image']}}"
+                                             class="rounded-circle"
+                                             style="height:40px;"
+                                             alt="Child Image"
+                                             t-on-click="() => this.redirectToCostObject(data.id)"/>
+                                    </div>
+                                    <div class="col"
+                                         style="margin-left: -5px;">
+                                        <div class="d-flex flex-column" style="width: 110px;margin-top: 10px;">
+                                                <div>
+                                                    <span class="o_media_heading m-0 fs-6"
+                                                          t-esc="data['name']"/>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h5>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex flex-column">
+                            <h5>
+                                <div class="icon-org row"
+                                     style="grid-area: icon; align-self: left; font-size:2.5rem;">
+                                    <div class="col">
+                                        <i class="fa fa-user rounded-circle"></i>
+                                    </div>
+                                    <div class="col"
+                                         style="margin-left: -78px; margin-top: -7px;">
+                                        <div class="d-flex align-items-center">
+                                            <span class="o_media_heading m-0 fs-6"
+                                                  t-esc="data['name']"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h5>
+                        </div>
+                    </t>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="ir_module_category_contacts" model="ir.module.category">
+        <field name="name">Podiatry Contacts</field>
+    </record>
+    <record id="group_contacts_user" model="res.groups">
+        <field name="name">User: Own Documents Only</field>
+        <field name="category_id" ref="base.module_category_hidden" />
+    </record>
+    <record id="group_contacts_user_all" model="res.groups">
+        <field name="name">User: All Documents</field>
+        <field name="category_id" ref="base.module_category_hidden" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user'))]" />
+    </record>
+    <record id="group_contacts_practitioner" model="res.groups">
+        <field name="name">Practitioner</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user_all'))]" />
+    </record>
+    <record id="group_contacts_director" model="res.groups">
+        <field name="name">Director/Manager</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_practitioner'))]" />
+    </record>
+    <record id="group_contacts_nurse" model="res.groups">
+        <field name="name">Nurse</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user_all'))]" />
+    </record>
+    <record id="group_contacts_auxiliary" model="res.groups">
+        <field name="name">Support</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user_all'))]" />
+    </record>
+    <record id="group_contacts_auxiliary_manager" model="res.groups">
+        <field name="name">Staff Supervisor</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_nurse'))]" />
+    </record>
+    <record id="group_contacts_technician" model="res.groups">
+        <field name="name">Technician</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user_all'))]" />
+    </record>
+    <record id="group_contacts_technician_manager" model="res.groups">
+        <field name="name">Technician Manager</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_technician'))]" />
+    </record>
+    <record id="group_contacts_pharmacy" model="res.groups">
+        <field name="name">Supplier</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user'))]" />
+    </record>
+    <record id="group_contacts_reception" model="res.groups">
+        <field name="name">Processing</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user'))]" />
+    </record>
+    <record id="group_contacts_financial" model="res.groups">
+        <field name="name">Financial</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user'))]" />
+    </record>
+    <record id="group_contacts_configurator" model="res.groups">
+        <field name="name">Configurator</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user'))]" />
+    </record>
+    <record id="group_contacts_admin" model="res.groups">
+        <field name="name">System Administrator</field>
+        <field name="category_id" ref="ir_module_category_contacts" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="implied_ids" eval="[(4, ref('group_contacts_user')),
+                      (4, ref('group_contacts_technician')),
+                      (4, ref('group_contacts_practitioner')),
+                      (4, ref('group_contacts_nurse')),
+                      (4, ref('group_contacts_auxiliary')),
+                      (4, ref('group_contacts_pharmacy')),
+                      (4, ref('group_contacts_reception')),
+                      (4, ref('group_contacts_financial')),
+                      (4, ref('group_contacts_configurator')),
+                      (4, ref('base.group_erp_manager'))]" />
+    </record>
+
+    <!-- Partner rules modification -->
+    <!-- <record id="base.res_partner_rule_private_employee" model="ir.rule">
+    </record> -->
+</odoo>

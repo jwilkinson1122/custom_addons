@@ -83,25 +83,17 @@ class PrescriptionOrderLine(models.Model):
         string="Product",
         change_default=True, ondelete='restrict', check_company=True, index='btree_not_null',
         domain="[('prescriptions_ok', '=', True)]")
+        
     product_template_id = fields.Many2one(
         string="Product Template",
         comodel_name='product.template',
         compute='_compute_product_template_id',
         readonly=False,
         search='_search_product_template_id',
-        # previously related='product_id.product_tmpl_id'
-        # not anymore since the field must be considered editable for product configurator logic
-        # without modifying the related product_id when updated.
         domain=[('prescriptions_ok', '=', True)])
+    
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
-    # product_custom_attribute_value_ids = fields.One2many(
-    #     comodel_name='product.attribute.custom.value', 
-    #     inverse_name='prescriptions_order_line_id',
-    #     string="Custom Values",
-    #     compute='_compute_custom_attribute_values',
-    #     store=True, readonly=False, precompute=True, copy=True)
-    
     product_custom_attribute_value_ids = fields.Many2many(
         comodel_name='product.attribute.custom.value',
         relation='prescriptions_order_line_rel',   
@@ -110,13 +102,38 @@ class PrescriptionOrderLine(models.Model):
         compute='_compute_custom_attribute_values',
         store=True, readonly=False, precompute=True, copy=True
     )
-    # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
-    # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
+
     product_no_variant_attribute_value_ids = fields.Many2many(
         comodel_name='product.template.attribute.value',
         string="Extra Values",
         compute='_compute_no_variant_attribute_values',
         store=True, readonly=False, precompute=True, ondelete='restrict')
+
+
+    # product_template_id = fields.Many2one(
+    #     "product.template",
+    #     string="Product Template",
+    #     related="product_id.product_tmpl_id",
+    #     domain=[("purchase_ok", "=", True)],
+    # )
+    # is_configurable_product = fields.Boolean(
+    #     "Is the product configurable?",
+    #     related="product_template_id.has_configurable_attributes",
+    # )
+    # product_template_attribute_value_ids = fields.Many2many(
+    #     related="product_id.product_template_attribute_value_ids", readonly=True
+    # )
+    # product_no_variant_attribute_value_ids = fields.Many2many(
+    #     "product.template.attribute.value",
+    #     string="Product attribute values that do not create variants",
+    #     ondelete="restrict",
+    # )
+    # product_custom_attribute_value_ids = fields.One2many(
+    #     "product.attribute.custom.value",
+    #     "purchase_order_line_id",
+    #     string="Custom Values",
+    #     copy=True,
+    # )
 
     name = fields.Text(
         string="Description",
