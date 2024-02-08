@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <record id="product_attribute_arch_height" model="product.attribute">
+        <field name="name">Arch Height</field>
+        <field name="display_type">select</field>
+    </record>
+    <record id="product_attribute_laterality" model="product.attribute">
+        <field name="name">Laterality</field>
+    </record>
+</odoo>

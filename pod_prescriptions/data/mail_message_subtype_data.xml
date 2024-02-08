@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Prescription-related subtypes for messaging / Chatter -->
+        <record id="mt_order_sent" model="mail.message.subtype">
+            <field name="name">Draft Rx sent</field>
+            <field name="res_model">prescriptions.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Draft Rx sent</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Prescriptions Order Confirmed</field>
+            <field name="res_model">prescriptions.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Draft Rx confirmed</field>
+        </record>
+
+        <!-- Prescriptionsteam-related subtypes for messaging / Chatter -->
+        <record id="mt_prescriptions_team_order_sent" model="mail.message.subtype">
+            <field name="name">Draft Rx sent</field>
+            <field name="sequence">20</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="pod_prescriptions.mt_order_sent"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_prescriptions_team_order_confirmed" model="mail.message.subtype">
+            <field name="name">Prescriptions Order Confirmed</field>
+            <field name="sequence">21</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="pod_prescriptions.mt_order_confirmed"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_prescriptions_team_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="sequence">22</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" ref="account.mt_invoice_created"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_prescriptions_team_invoice_confirmed" model="mail.message.subtype">
+            <field name="name">Invoice Confirmed</field>
+            <field name="sequence">23</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" ref="account.mt_invoice_validated"/>
+            <field name="relation_field">team_id</field>
+        </record>
+    </data>
+</odoo>
