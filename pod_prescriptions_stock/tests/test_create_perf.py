@@ -42,7 +42,7 @@ class TestPERF(common.TransactionCase):
             'name': 'Partner %s' % i,
         } for i in range(cls.ENTITIES)])
 
-        cls.prescriptionsmans = cls.env.ref('base.user_admin') | cls.env.ref('base.user_demo')
+        cls.personnels = cls.env.ref('base.user_admin') | cls.env.ref('base.user_demo')
 
         cls.env.flush_all()
 
@@ -53,7 +53,7 @@ class TestPERF(common.TransactionCase):
         with self.assertQueryCount(admin=33):
             self.env['prescriptions.order'].create({
                 'partner_id': self.partners[0].id,
-                'user_id': self.prescriptionsmans[0].id,
+                'user_id': self.personnels[0].id,
             })
 
     @users('admin')
@@ -68,7 +68,7 @@ class TestPERF(common.TransactionCase):
         with self.assertQueryCount(admin=37):
             self.env['prescriptions.order'].create([{
                 'partner_id': self.partners[0].id,
-                'user_id': self.prescriptionsmans[0].id,
+                'user_id': self.personnels[0].id,
             } for i in range(2)])
 
     @users('admin')
@@ -80,7 +80,7 @@ class TestPERF(common.TransactionCase):
         with self.assertQueryCount(admin=40):
             self.env['prescriptions.order'].create([{
                 'partner_id': self.partners[0].id,
-                'user_id': self.prescriptionsmans[0].id,
+                'user_id': self.personnels[0].id,
                 "order_line": [
                     (0, 0, {"display_type": "line_note", "name": "NOTE"}),
                     (0, 0, {"display_type": "line_section", "name": "SECTION"})
@@ -99,7 +99,7 @@ class TestPERF(common.TransactionCase):
         with self.assertQueryCount(admin=49):  # com 46
             self.env['prescriptions.order'].create([{
                 'partner_id': self.partners[0].id,
-                'user_id': self.prescriptionsmans[0].id,
+                'user_id': self.personnels[0].id,
                 "order_line": [
                     (0, 0, {"display_type": "line_note", "name": "NOTE"}),
                     (0, 0, {"display_type": "line_section", "name": "SECTION"}),
@@ -117,7 +117,7 @@ class TestPERF(common.TransactionCase):
         with self.assertQueryCount(admin=70):  # 69 locally, 70 in nightly runbot
             self.env['prescriptions.order'].create([{
                 'partner_id': self.partners[0].id,
-                'user_id': self.prescriptionsmans[0].id,
+                'user_id': self.personnels[0].id,
                 "order_line": [
                     (0, 0, {"display_type": "line_note", "name": "NOTE"}),
                     (0, 0, {"display_type": "line_section", "name": "SECTION"}),
@@ -148,7 +148,7 @@ class TestPERF(common.TransactionCase):
 
         vals_list = [{
             "partner_id": self.partners[i].id,
-            "user_id": self.prescriptionsmans[i % 2].id,
+            "user_id": self.personnels[i % 2].id,
             "order_line": [
                 (0, 0, {"display_type": "line_note", "name": "NOTE"})
             ] + [
@@ -176,7 +176,7 @@ class TestPERF(common.TransactionCase):
 
         vals_list = [{
             "partner_id": self.partners[i].id,
-            "user_id": self.prescriptionsmans[i % 2].id,
+            "user_id": self.personnels[i % 2].id,
             "order_line": [
                 (0, 0, {"display_type": "line_note", "name": "NOTE"})
             ] + [

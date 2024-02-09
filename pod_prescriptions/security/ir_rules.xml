@@ -45,73 +45,73 @@
         <field name="name">Personal Orders</field>
         <field ref="model_prescriptions_order" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
     <record id="prescriptions_order_see_all" model="ir.rule">
         <field name="name">All Orders</field>
         <field ref="model_prescriptions_order" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <record id="prescriptions_order_report_personal_rule" model="ir.rule">
         <field name="name">Personal Orders Analysis</field>
         <field ref="model_prescriptions_report" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="prescriptions_order_report_see_all" model="ir.rule">
         <field name="name">All Orders Analysis</field>
         <field ref="model_prescriptions_report" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <record id="prescriptions_order_line_personal_rule" model="ir.rule">
         <field name="name">Personal Order Lines</field>
         <field ref="model_prescriptions_order_line" name="model_id"/>
-        <field name="domain_force">['|',('prescriptionsman_id','=',user.id),('prescriptionsman_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="domain_force">['|',('personnel_id','=',user.id),('personnel_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="prescriptions_order_line_see_all" model="ir.rule">
         <field name="name">All Orders Lines</field>
         <field ref="model_prescriptions_order_line" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <record id="account_invoice_report_rule_see_personal" model="ir.rule">
         <field name="name">Personal Invoices Analysis</field>
         <field name="model_id" ref="model_account_invoice_report"/>
         <field name="domain_force">['|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="account_invoice_report_rule_see_all" model="ir.rule">
         <field name="name">All Invoices Analysis</field>
         <field name="model_id" ref="model_account_invoice_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <!-- Payment transactions and tokens access rules -->
 
-    <record id="payment_transaction_prescriptionsman_rule" model="ir.rule">
+    <record id="payment_transaction_personnel_rule" model="ir.rule">
         <field name="name">Access every payment transaction</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
         <!-- Reset the domain defined by payment.transaction_user_rule -->
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
-    <record id="payment_token_prescriptionsman_rule" model="ir.rule">
+    <record id="payment_token_personnel_rule" model="ir.rule">
         <field name="name">Access every payment token</field>
         <field name="model_id" ref="payment.model_payment_token"/>
         <!-- Reset the domain defined by payment.token_user_rule -->
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <!-- Multi - Prescriptionsmen invoice and account move assignation rules -->
@@ -119,28 +119,28 @@
         <field name="name">Personal Invoices</field>
         <field name="model_id" ref="model_account_move"/>
         <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="account_invoice_rule_see_all" model="ir.rule">
         <field name="name">All Invoices</field>
         <field name="model_id" ref="model_account_move"/>
         <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <record id="account_invoice_line_rule_see_personal" model="ir.rule">
         <field name="name">Personal Invoice Lines</field>
         <field name="model_id" ref="model_account_move_line"/>
         <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="account_invoice_line_rule_see_all" model="ir.rule">
         <field name="name">All Invoice Lines</field>
         <field name="model_id" ref="model_account_move_line"/>
         <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <!-- Wizard access rules -->
@@ -148,14 +148,14 @@
         <field name="name">Personal Invoice Send and Print</field>
         <field name="model_id" ref="account.model_account_move_send"/>
         <field name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id', '=', user.id), ('move_ids.invoice_user_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
     </record>
 
     <record id="account_invoice_send_rule_see_all" model="ir.rule">
         <field name="name">All Invoice Send and Print</field>
         <field name="model_id" ref="account.model_account_move_send"/>
         <field name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
-        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
     </record>
 
     <record id="prescriptions_payment_provider_onboarding_wizard_rule" model="ir.rule">

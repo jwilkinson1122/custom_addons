@@ -17,12 +17,12 @@ class TestAccessRights(BaseUsersCommon, PrescriptionCommon):
         super().setUpClass()
 
         cls.prescriptions_user2 = cls.env['res.users'].create({
-            'name': 'prescriptionsman_2',
-            'login': 'prescriptionsman_2',
-            'email': 'default_user_prescriptionsman_2@example.com',
+            'name': 'personnel_2',
+            'login': 'personnel_2',
+            'email': 'default_user_personnel_2@example.com',
             'signature': '--\nMark',
             'notification_type': 'email',
-            'groups_id': [(6, 0, cls.group_prescriptions_prescriptionsman.ids)],
+            'groups_id': [(6, 0, cls.group_prescriptions_personnel.ids)],
         })
 
         # Create the SO with a specific prescriptionsperson

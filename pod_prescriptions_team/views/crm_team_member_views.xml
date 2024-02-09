@@ -154,7 +154,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new prescriptionsman
+                Create a new personnel
             </p><p>
                 Link prescriptionspersons to prescriptions teams.
             </p>

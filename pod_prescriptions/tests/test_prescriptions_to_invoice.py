@@ -863,7 +863,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 
-        so_1 = self.env['prescriptions.order'].with_user(self.company_data['default_user_prescriptionsman']).create({
+        so_1 = self.env['prescriptions.order'].with_user(self.company_data['default_user_personnel']).create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'company_id': self.company_data['company'].id,
         })
@@ -934,7 +934,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'name': 'Prescriptionsperson',
             'login': 'prescriptionsperson',
             'email': 'test@test.com',
-            'groups_id': [(6, 0, [self.env.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman').id])]
+            'groups_id': [(6, 0, [self.env.ref('pod_prescriptions_team.group_prescriptions_personnel').id])]
         })
 
         # create a SO and generate invoice from it

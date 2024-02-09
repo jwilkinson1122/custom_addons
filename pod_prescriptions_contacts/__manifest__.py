@@ -14,6 +14,7 @@
         'base_setup', 
         'mail',
         'contacts',
+        'pod_custom_theme',
         ],
     'data': [
         'security/contacts_security.xml',

@@ -58,13 +58,13 @@ class TestPrescriptionCommonBase(TransactionCase):
             }),
 
             # Users
-            'default_user_prescriptionsman': Users.create({
-                'name': 'default_user_prescriptionsman',
-                'login': 'default_user_prescriptionsman.comp%s' % company.id,
-                'email': 'default_user_prescriptionsman@example.com',
+            'default_user_personnel': Users.create({
+                'name': 'default_user_personnel',
+                'login': 'default_user_personnel.comp%s' % company.id,
+                'email': 'default_user_personnel@example.com',
                 'signature': '--\nMark',
                 'notification_type': 'email',
-                'groups_id': [(6, 0, cls.env.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman').ids)],
+                'groups_id': [(6, 0, cls.env.ref('pod_prescriptions_team.group_prescriptions_personnel').ids)],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),

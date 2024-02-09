@@ -12,7 +12,7 @@ class Digest(models.Model):
     kpi_all_prescriptions_total_value = fields.Monetary(compute='_compute_kpi_prescriptions_total_value')
 
     def _compute_kpi_prescriptions_total_value(self):
-        if not self.env.user.has_group('pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads'):
+        if not self.env.user.has_group('pod_prescriptions_team.group_prescriptions_personnel_all_leads'):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
 
         self._calculate_company_based_kpi(

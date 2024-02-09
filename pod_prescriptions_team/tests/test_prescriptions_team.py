@@ -23,7 +23,7 @@ class TestDefaultTeam(TestPrescriptionsCommon):
         # admin------------------M-------------- --------- ---------
         # user_prescriptions_manager-----R-------------- --------- ---------R
         # user_prescriptions_leads-------M-------------- ---------M---------
-        # user_prescriptions_prescriptionsman----/-------------- --------- ---------
+        # user_prescriptions_personnel----/-------------- --------- ---------
 
         # Prescriptions teams organization
         # ------------------------------------------------------------
@@ -166,13 +166,13 @@ class TestMultiCompany(TestPrescriptionsMC):
 
         # cannot add someone from another company
         with self.assertRaises(exceptions.UserError):
-            team_c2.write({'member_ids': [(4, self.user_prescriptions_prescriptionsman.id)]})
+            team_c2.write({'member_ids': [(4, self.user_prescriptions_personnel.id)]})
 
         # reset members, change company
         team_c2.write({'member_ids': [(5, 0)], 'company_id': self.company_main.id})
         self.assertEqual(team_c2.member_ids, self.env['res.users'])
-        team_c2.write({'member_ids': [(4, self.user_prescriptions_prescriptionsman.id)]})
-        self.assertEqual(team_c2.member_ids, self.user_prescriptions_prescriptionsman)
+        team_c2.write({'member_ids': [(4, self.user_prescriptions_personnel.id)]})
+        self.assertEqual(team_c2.member_ids, self.user_prescriptions_personnel)
 
         # cannot change company as it breaks memberships mc check
         with self.assertRaises(exceptions.UserError):
@@ -192,13 +192,13 @@ class TestMultiCompany(TestPrescriptionsMC):
 
         # cannot add someone from another company
         with self.assertRaises(exceptions.UserError):
-            team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_prescriptionsman.id})]})
+            team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_personnel.id})]})
 
         # reset members, change company
         team_c2.write({'member_ids': [(5, 0)], 'company_id': self.company_main.id})
         self.assertEqual(team_c2.member_ids, self.env['res.users'])
-        team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_prescriptionsman.id})]})
-        self.assertEqual(team_c2.member_ids, self.user_prescriptions_prescriptionsman)
+        team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_personnel.id})]})
+        self.assertEqual(team_c2.member_ids, self.user_prescriptions_personnel)
 
         # cannot change company as it breaks memberships mc check
         with self.assertRaises(exceptions.UserError):
@@ -208,7 +208,7 @@ class TestMultiCompany(TestPrescriptionsMC):
 @tagged('post_install', '-at_install')
 class TestAccessRights(PrescriptionsTeamCommon):
 
-    @users('prescriptionsmanager')
+    @users('personnelager')
     def test_access_prescriptions_manager(self):
         """ Test prescriptions manager's access rights """
         # Manager can create a Prescriptions Team

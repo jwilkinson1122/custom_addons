@@ -4,7 +4,7 @@
 {
     'name': 'NWPL Prescriptions Management',
     "author": "NWPL",
-    'version': '1.0',
+    'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'sequence': 5,
     'summary': 'From quotations to invoices',

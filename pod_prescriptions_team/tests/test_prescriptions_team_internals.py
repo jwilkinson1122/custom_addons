@@ -17,7 +17,7 @@ class TestCornerCases(TransactionCase):
             name='Laetitia Prescriptions Leads', email='crm_leads@test.example.com',
             company_id=self.env.user.company_id.id,
             notification_type='inbox',
-            groups='pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads,base.group_partner_manager',
+            groups='pod_prescriptions_team.group_prescriptions_personnel_all_leads,base.group_partner_manager',
         )
         self.prescriptions_team_1 = self.env['crm.team'].create({
             'name': 'Test Prescriptions Team',

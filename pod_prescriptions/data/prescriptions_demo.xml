@@ -7,7 +7,7 @@
     </record>
 
     <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('pod_prescriptions_team.group_prescriptions_prescriptionsman'))]" name="groups_id"/>
+        <field eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]" name="groups_id"/>
     </record>
 
     <record model="crm.team" id="pod_prescriptions_team.team_prescriptions_department">

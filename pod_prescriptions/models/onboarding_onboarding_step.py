@@ -82,7 +82,7 @@ class OnboardingStep(models.Model):
             prescriptions_quotation_onboarding.action_close()
 
         view_id = self.env.ref('pod_prescriptions.view_order_form').id
-        action = self.env['ir.actions.actions']._for_xml_id('pod_prescriptions.action_orders')
+        action = self.env['ir.actions.actions']._for_xml_id('pod_prescriptions.action_prescriptions')
         action.update({
             'view_mode': 'form',
             'views': [[view_id, 'form']],

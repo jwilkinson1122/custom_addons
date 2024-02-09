@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                 <a t-if="record.invoiced_amount" href="#" title="Revenues" role="button"
-                    groups="pod_prescriptions_team.group_prescriptions_prescriptionsman" data-type="object" data-name="action_redirect_to_invoiced"
+                    groups="pod_prescriptions_team.group_prescriptions_personnel" data-type="object" data-name="action_redirect_to_invoiced"
                     class="oe_kanban_action oe_kanban_action_a btn-outline-primary rounded-pill me-1 order-1">
                     <span class="badge">
                         <field name="currency_id" invisible="True"/>
@@ -16,7 +16,7 @@
                     </span>
                 </a>
                 <a t-if="record.quotation_count" href="#" title="Prescriptions" role="button"
-                    groups="pod_prescriptions_team.group_prescriptions_prescriptionsman" data-type="object" data-name="action_redirect_to_quotations"
+                    groups="pod_prescriptions_team.group_prescriptions_personnel" data-type="object" data-name="action_redirect_to_quotations"
                     class="oe_kanban_action oe_kanban_action_a btn-outline-primary rounded-pill me-1 order-2">
                     <span class="badge">
                         <i class="fa fa-fw fa-money me-1" aria-label="Prescriptions" role="img"/>
@@ -34,11 +34,11 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="action_redirect_to_invoiced"
-                    type="object" class="oe_stat_button order-1" icon="fa-usd" groups="pod_prescriptions_team.group_prescriptions_prescriptionsman">
+                    type="object" class="oe_stat_button order-1" icon="fa-usd" groups="pod_prescriptions_team.group_prescriptions_personnel">
                     <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
                 </button>
                 <button name="action_redirect_to_quotations"
-                    type="object" class="oe_stat_button order-2" icon="fa-money" groups="pod_prescriptions_team.group_prescriptions_prescriptionsman">
+                    type="object" class="oe_stat_button order-2" icon="fa-money" groups="pod_prescriptions_team.group_prescriptions_personnel">
                     <field name="quotation_count" widget="statinfo" string="Prescriptions"/>
                 </button>
             </xpath>

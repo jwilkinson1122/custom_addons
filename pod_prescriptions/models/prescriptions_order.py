@@ -188,7 +188,7 @@ class PrescriptionOrder(models.Model):
         store=True, readonly=False, precompute=True, index=True,
         tracking=2,
         domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
-            self.env.ref("pod_prescriptions_team.group_prescriptions_prescriptionsman").id
+            self.env.ref("pod_prescriptions_team.group_prescriptions_personnel").id
         ))
     team_id = fields.Many2one(
         comodel_name='crm.team',
@@ -422,13 +422,13 @@ class PrescriptionOrder(models.Model):
     def _compute_user_id(self):
         for order in self:
             if order.partner_id and not (order._origin.id and order.user_id):
-                # Recompute the prescriptionsman on partner change
+                # Recompute the personnel on partner change
                 #   * if partner is set (is required anyway, so it will be set sooner or later)
-                #   * if the order is not saved or has no prescriptionsman already
+                #   * if the order is not saved or has no personnel already
                 order.user_id = (
                     order.partner_id.user_id
                     or order.partner_id.commercial_partner_id.user_id
-                    or (self.user_has_groups('pod_prescriptions_team.group_prescriptions_prescriptionsman') and self.env.user)
+                    or (self.user_has_groups('pod_prescriptions_team.group_prescriptions_personnel') and self.env.user)
                 )
 
     @api.depends('partner_id', 'user_id')

@@ -10,3 +10,4 @@ from . import prescriptions_flag_category
 from . import prescriptions_practice_type
 from . import res_partner
 from . import res_users
+from . import ir_actions

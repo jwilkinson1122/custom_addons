@@ -642,7 +642,7 @@ days
 
     <!-- ACTIONS (WINDOW) -->
 
-    <record id="action_orders" model="ir.actions.act_window">
+    <record id="action_prescriptions" model="ir.actions.act_window">
         <field name="name">Prescriptions Orders</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
@@ -664,42 +664,42 @@ days
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="pod_prescriptions.view_order_tree"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="prescriptions_order_action_view_order_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="pod_prescriptions.view_prescriptions_order_kanban"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="prescriptions_order_action_view_order_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="pod_prescriptions.view_order_form"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="prescriptions_order_action_view_order_calendar" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="pod_prescriptions.view_prescriptions_order_calendar"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="prescriptions_order_action_view_order_pivot" model="ir.actions.act_window.view">
         <field name="sequence" eval="5"/>
         <field name="view_mode">pivot</field>
         <field name="view_id" ref="pod_prescriptions.view_prescriptions_order_pivot"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="prescriptions_order_action_view_order_graph" model="ir.actions.act_window.view">
         <field name="sequence" eval="6"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="pod_prescriptions.view_prescriptions_order_graph"/>
-        <field name="act_window_id" ref="action_orders"/>
+        <field name="act_window_id" ref="action_prescriptions"/>
     </record>
 
     <record id="action_quotations_with_onboarding" model="ir.actions.act_window">
@@ -779,7 +779,7 @@ days
         <field name="act_window_id" ref="action_quotations"/>
     </record>
 
-    <record id="action_orders_to_invoice" model="ir.actions.act_window">
+    <record id="action_prescriptions_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders to Invoice</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
@@ -797,7 +797,7 @@ days
         </field>
     </record>
 
-    <record id="action_orders_upselling" model="ir.actions.act_window">
+    <record id="action_prescriptions_upselling" model="ir.actions.act_window">
         <field name="name">Orders to Upsell</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>

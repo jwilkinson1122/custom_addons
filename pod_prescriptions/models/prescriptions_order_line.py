@@ -52,7 +52,7 @@ class PrescriptionOrderLine(models.Model):
         related='order_id.partner_id',
         string="Customer",
         store=True, index=True, precompute=True)
-    prescriptionsman_id = fields.Many2one(
+    personnel_id = fields.Many2one(
         related='order_id.user_id',
         string="Prescriptionsperson",
         store=True, precompute=True)

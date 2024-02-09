@@ -404,6 +404,42 @@
         </field>
     </record>
 
+    
+<!-- 
+    <record id="res_partner_tree_view" model="ir.ui.view">
+        <field name="name">res.partner.tree.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+        
+        </field>
+    </record> -->
+
+    <!-- <record id="view_partner_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field eval="8" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Contacts" sample="1" multi_edit="1">
+                <field name="display_name" string="Name"/>
+                <field name="function" column_invisible="True"/>
+                <field name="phone" class="o_force_ltr" optional="show"/>
+                <field name="mobile" optional="hide"/>
+                <field name="email" optional="show"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                <field name="city" optional="show"/>
+                <field name="state_id" optional="hide" readonly="1"/>
+                <field name="country_id" optional="show" readonly="1"/>
+                <field name="vat" optional="hide" readonly="1"/>
+                <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                <field name="is_company" column_invisible="True"/>
+                <field name="parent_id" readonly="1" column_invisible="True"/>
+                <field name="active" column_invisible="True"/>
+            </tree>
+        </field>
+    </record> -->
+
 
     <record id="res_partner_search_view" model="ir.ui.view">
         <field name="name">res.partner.search.view</field>

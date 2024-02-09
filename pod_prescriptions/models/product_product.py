@@ -32,7 +32,7 @@ class ProductProduct(models.Model):
     def _compute_prescriptions_count(self):
         r = {}
         self.prescriptions_count = 0
-        if not self.user_has_groups('pod_prescriptions_team.group_prescriptions_prescriptionsman'):
+        if not self.user_has_groups('pod_prescriptions_team.group_prescriptions_personnel'):
             return r
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
                                                                       time.min))

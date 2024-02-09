@@ -127,7 +127,7 @@
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="domain">[('state', '!=', 'cancel')]</field>
         <field name="context">{'search_default_Prescriptions':1, 'group_by_no_leaf':1,'group_by':[], 'search_default_filter_order_date': 1}</field>
-        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <record id="action_order_report_prescriptionsperson" model="ir.actions.act_window">
@@ -137,7 +137,7 @@
         <field name="view_id" ref="prescriptions_report_graph_bar"/>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="context">{'search_default_User': 1, 'group_by': 'user_id', 'search_default_filter_order_date': 1}</field>
-        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <record id="action_order_report_products" model="ir.actions.act_window">
@@ -147,7 +147,7 @@
         <field name="view_id" ref="prescriptions_report_graph_pie"/>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="context">{'search_default_Prescriptions': 1, 'search_default_Product': 1, 'group_by_no_leaf':1, 'group_by': 'product_id', 'search_default_filter_order_date': 1}</field>
-        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <record id="action_order_report_customers" model="ir.actions.act_window">
@@ -157,7 +157,7 @@
         <field name="view_id" ref="prescriptions_report_graph_bar"/>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="context">{'search_default_Customer': 1, 'group_by': 'partner_id', 'search_default_filter_order_date': 1}</field>
-        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <record id="report_all_channels_prescriptions_action" model="ir.actions.act_window">
@@ -172,7 +172,7 @@
         <field name="view_mode">graph</field>
         <field name="domain">[('state','=','draft'),('team_id', '=', active_id)]</field>
         <field name="context">{'search_default_order_month':1}</field>
-        <field name="help">This report performs analysis on your quotations. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your quotations. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <record id="action_order_report_so_prescriptions_team" model="ir.actions.act_window">
@@ -184,6 +184,6 @@
             'search_default_Prescriptions': 1,
             'search_default_filter_date': 1,
             'search_default_team_id': [active_id]}</field>
-        <field name="help">This report performs analysis on your prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (prescriptionsman, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        <field name="help">This report performs analysis on your prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 </odoo>

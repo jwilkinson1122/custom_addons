@@ -14,23 +14,23 @@ class PrescriptionsTeamCommon(TransactionCase):
 
         cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
 
-        cls.group_prescriptions_prescriptionsman = cls.env.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman')
+        cls.group_prescriptions_personnel = cls.env.ref('pod_prescriptions_team.group_prescriptions_personnel')
         cls.group_prescriptions_manager = cls.env.ref('pod_prescriptions_team.group_prescriptions_manager')
 
         cls.prescriptions_user = cls.env['res.users'].create({
             'name': 'Test Prescriptionsman',
-            'login': 'prescriptionsman',
-            'password': 'prescriptionsman',
-            'email': 'default_user_prescriptionsman@example.com',
+            'login': 'personnel',
+            'password': 'personnel',
+            'email': 'default_user_personnel@example.com',
             'signature': '--\nMark',
             'notification_type': 'email',
-            'groups_id': [(6, 0, cls.group_prescriptions_prescriptionsman.ids)],
+            'groups_id': [(6, 0, cls.group_prescriptions_personnel.ids)],
         })
         cls.prescriptions_manager = cls.env['res.users'].create({
             'name': 'Test Prescriptions Manager',
-            'login': 'prescriptionsmanager',
-            'password': 'prescriptionsmanager',
-            'email': 'default_user_prescriptionsmanager@example.com',
+            'login': 'personnelager',
+            'password': 'personnelager',
+            'email': 'default_user_personnelager@example.com',
             'signature': '--\nDamien',
             'notification_type': 'email',
             'groups_id': [(6, 0, cls.group_prescriptions_manager.ids)],
@@ -58,7 +58,7 @@ class TestPrescriptionsCommon(TransactionCase):
         # admin------------------M-----------
         # user_prescriptions_manager-----R-----------
         # user_prescriptions_leads-------M-----------
-        # user_prescriptions_prescriptionsman----/-----------
+        # user_prescriptions_personnel----/-----------
 
         # Prescriptions teams organization
         # ------------------------------------------------------------
@@ -80,14 +80,14 @@ class TestPrescriptionsCommon(TransactionCase):
             name='Laetitia Prescriptions Leads', email='crm_leads@test.example.com',
             company_id=cls.company_main.id,
             notification_type='inbox',
-            groups='pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads,base.group_partner_manager',
+            groups='pod_prescriptions_team.group_prescriptions_personnel_all_leads,base.group_partner_manager',
         )
-        cls.user_prescriptions_prescriptionsman = mail_new_test_user(
-            cls.env, login='user_prescriptions_prescriptionsman',
-            name='Orteil Prescriptions Own', email='crm_prescriptionsman@test.example.com',
+        cls.user_prescriptions_personnel = mail_new_test_user(
+            cls.env, login='user_prescriptions_personnel',
+            name='Orteil Prescriptions Own', email='crm_personnel@test.example.com',
             company_id=cls.company_main.id,
             notification_type='inbox',
-            groups='pod_prescriptions_team.group_prescriptions_prescriptionsman',
+            groups='pod_prescriptions_team.group_prescriptions_personnel',
         )
 
         cls.env['crm.team'].search([]).write({'sequence': 9999})

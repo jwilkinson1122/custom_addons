@@ -130,7 +130,7 @@ class AccountMove(models.Model):
     def action_view_source_prescriptions_orders(self):
         self.ensure_one()
         source_orders = self.line_ids.prescriptions_line_ids.order_id
-        result = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.action_orders')
+        result = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.action_prescriptions')
         if len(source_orders) > 1:
             result['domain'] = [('id', 'in', source_orders.ids)]
         elif len(source_orders) == 1:

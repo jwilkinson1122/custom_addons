@@ -23,7 +23,7 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
 
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_multi_locations')
-        cls.env.user.groups_id |= cls.env.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman')
+        cls.env.user.groups_id |= cls.env.ref('pod_prescriptions_team.group_prescriptions_personnel')
 
         cls.env.user.with_company(cls.company_data['company']).property_warehouse_id = cls.warehouse_A.id
         cls.env.user.with_company(cls.company_data_2['company']).property_warehouse_id = cls.warehouse_B.id

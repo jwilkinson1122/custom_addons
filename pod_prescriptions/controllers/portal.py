@@ -141,7 +141,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 # store the date as a string in the session to allow serialization
                 request.session['view_quote_%s' % order_sudo.id] = today
                 # The "Draft Rx viewed by customer" log note is an information
-                # dedicated to the prescriptionsman and shouldn't be translated in the customer/website lgg
+                # dedicated to the personnel and shouldn't be translated in the customer/website lgg
                 context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
                 msg = _('Draft Rx viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 del context

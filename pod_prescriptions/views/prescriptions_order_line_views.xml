@@ -9,7 +9,7 @@
                 <field name="order_id"/>
                 <field name="order_partner_id"/>
                 <field name="name"/>
-                <field name="prescriptionsman_id"/>
+                <field name="personnel_id"/>
                 <field name="product_uom_qty" string="Qty"/>
                 <field name="qty_delivered"/>
                 <field name="qty_invoiced"/>
@@ -97,16 +97,16 @@
                 <separator/>
                 <filter string="My Prescriptions Order Lines"
                     name="my_prescriptions_order_lines"
-                    domain="[('prescriptionsman_id','=',uid)]"
+                    domain="[('personnel_id','=',uid)]"
                     help="Prescriptions Order Lines related to a Prescriptions Order of mine"/>
                 <field name="order_id"/>
                 <field name="order_partner_id" operator="child_of"/>
                 <field name="product_id"/>
-                <field name="prescriptionsman_id"/>
+                <field name="personnel_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                     <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}"/>
-                    <filter string="Prescriptionsperson" name="prescriptionsperson" domain="[]" context="{'group_by':'prescriptionsman_id'}"/>
+                    <filter string="Prescriptionsperson" name="prescriptionsperson" domain="[]" context="{'group_by':'personnel_id'}"/>
                 </group>
             </search>
         </field>

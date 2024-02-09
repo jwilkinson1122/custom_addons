@@ -1501,7 +1501,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'groups_id': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('stock.group_stock_manager'),
-                self.ref('pod_prescriptions_team.group_prescriptions_prescriptionsman')])]
+                self.ref('pod_prescriptions_team.group_prescriptions_personnel')])]
         })
         pick.with_user(inventory_admin_user).move_ids.write(
             {'quantity': 1, 'picked': True})

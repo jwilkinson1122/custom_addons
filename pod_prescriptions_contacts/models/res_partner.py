@@ -53,17 +53,6 @@ class Partner(models.Model):
         for partner in self - partners_with_internal_user - partners_without_image:
             partner[avatar_field] = partner[image_field]
     
-    # def _avatar_get_placeholder_path(self):
-    #         if self.is_company:
-    #             return "base/static/img/company_image.png"
-    #         if self.is_location:  
-    #             return "base/static/img/company_image.png"
-    #         if self.type == 'delivery':
-    #             return "base/static/img/truck.png"
-    #         if self.type == 'invoice':
-    #             return "base/static/img/money.png"
-    #         return super()._avatar_get_placeholder_path()
-        
     def _avatar_get_placeholder_path(self):
         if self.type == 'delivery':
             return "base/static/img/truck.png"
@@ -78,7 +67,6 @@ class Partner(models.Model):
     @api.depends('parent_id', 'is_company', 'active')
     def _compute_locations(self):
         for record in self:
-            # Check if the record has a proper ID
             if not isinstance(record.id, models.NewId):
                 all_locations = self.env['res.partner'].search([
                     ('id', 'child_of', record.id), 
@@ -103,7 +91,6 @@ class Partner(models.Model):
     @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
     def _compute_practitioners(self):
         for record in self:
-            # Check if the record has a proper ID
             if not isinstance(record.id, models.NewId):
                 all_practitioners = self.env['res.partner'].search([
                     ('id', 'child_of', record.id), 
@@ -143,8 +130,6 @@ class Partner(models.Model):
                 record.location_count = 0
                 record.practitioner_count = 0
     
-   
-
     @api.depends('child_ids', 'child_ids.patient_ids')
     def _compute_patient_counts(self):
         for record in self:
@@ -238,11 +223,54 @@ class Partner(models.Model):
                 partner.check_prescription("write")
         return result
 
+    # def write(self, vals):
+    #     partners_by_type = {}
+    #     if vals.get('partner_type_id'):
+    #         partner_type = self.env['res.partner.type'].browse(
+    #             vals['partner_type_id'])
+    #         partners_by_type[partner_type] = self
+    #     else:
+    #         for partner in self:
+    #             partners_by_type.setdefault(
+    #                 partner.partner_type_id, self.browse())
+    #             partners_by_type[partner.partner_type_id] |= partner
+    #     for partner_type in partners_by_type:
+    #         if list(vals.keys()) != ['is_company']:  # To avoid infinite loop
+    #             vals.update(self._get_inherit_values(
+    #                 partner_type, not_null=True))
+    #         super(Partner, partners_by_type[partner_type]).write(vals)
+    #     self._update_children(vals)
+    #     return True
+
     def unlink(self):
         for partner in self:
             if partner.is_partner or partner.sudo().patient_ids:
                 partner.check_prescription("unlink")
         return super().unlink()
+    
+    
+    def _commercial_sync_to_children(self, visited=None):
+        """ Handle sync of commercial fields to descendants """
+        if visited is None:
+            visited = set()
+        # Check if the current partner has already been visited to prevent recursion
+        if self.id in visited:
+            return
+
+        visited.add(self.id)
+        commercial_partner = self.commercial_partner_id
+        sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+        sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+
+        # Iterate over child partners and recursively synchronize commercial fields
+        for child in sync_children:
+            child._commercial_sync_to_children(visited=visited)
+
+        # Update commercial fields for child partners
+        res = sync_children.write(sync_vals)
+        sync_children._compute_commercial_partner()
+        return res
+
     
     @api.model
     def default_prescriptions_fields(self):

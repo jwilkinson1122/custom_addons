@@ -37,7 +37,7 @@
         <field name="search_view_id" ref="prescriptions_order_view_search_inherit_quotation"/>
     </record>
 
-    <record id="action_orders_prescriptions_teams" model="ir.actions.act_window">
+    <record id="action_prescriptions_prescriptions_teams" model="ir.actions.act_window">
         <field name="name">Prescriptions Orders</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
@@ -57,7 +57,7 @@
         </field>
     </record>
 
-    <record id="action_orders_to_invoice_prescriptions_teams" model="ir.actions.act_window">
+    <record id="action_prescriptions_to_invoice_prescriptions_teams" model="ir.actions.act_window">
         <field name="name">Prescriptions Orders</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
@@ -112,7 +112,7 @@
                 </div>
                 <div class="row" name="orders_to_invoice" t-if="record.prescriptions_to_invoice_count.raw_value">
                     <div class="col-8">
-                        <a name="%(action_orders_to_invoice_prescriptions_teams)d" type="action">
+                        <a name="%(action_prescriptions_to_invoice_prescriptions_teams)d" type="action">
                             <field name="prescriptions_to_invoice_count" class="me-1"/>
                             <t t-if="record.prescriptions_to_invoice_count.raw_value == 1">Order to Invoice</t>
                             <t t-else="">Orders to Invoice</t>
@@ -131,7 +131,7 @@
 
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                 <div>
-                    <a name="%(action_orders_prescriptions_teams)d" type="action">Prescriptions Orders</a>
+                    <a name="%(action_prescriptions_prescriptions_teams)d" type="action">Prescriptions Orders</a>
                 </div>
                 <div groups="account.group_account_invoice">
                     <a name="%(action_invoice_prescriptions_teams)d" type="action">Invoices</a>

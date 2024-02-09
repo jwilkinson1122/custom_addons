@@ -5,7 +5,7 @@
 {
     'name': 'NWPL Prescriptions Base',
     "author": "NWPL",
-    'version': '1.2',
+    'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'summary': 'Prescriptions internal machinery',
     'description': """
@@ -25,6 +25,7 @@ This module contains all the common features of Prescriptions Management and eCo
         'website_sale_product_configurator',
         'website_sale_stock',
         # 'website_sale_wishlist',
+        'pod_prescriptions_contacts',
         'pod_prescriptions_team',
         'account_payment',  # -> account, payment, portal
         'utm',

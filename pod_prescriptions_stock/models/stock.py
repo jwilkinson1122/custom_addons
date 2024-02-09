@@ -190,7 +190,7 @@ class StockLot(models.Model):
 
     def action_view_so(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("pod_prescriptions.action_orders")
+        action = self.env["ir.actions.actions"]._for_xml_id("pod_prescriptions.action_prescriptions")
         action['domain'] = [('id', 'in', self.mapped('prescriptions_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

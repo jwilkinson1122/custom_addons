@@ -16,7 +16,7 @@
 
             <group name="kpi_prescriptions" position="attributes">
                 <attribute name="string">Prescriptions</attribute>
-                <attribute name="groups">pod_prescriptions_team.group_prescriptions_prescriptionsman_all_leads</attribute>
+                <attribute name="groups">pod_prescriptions_team.group_prescriptions_personnel_all_leads</attribute>
             </group>
             <group name="kpi_prescriptions" position="inside">
                 <field name="kpi_all_prescriptions_total"/>

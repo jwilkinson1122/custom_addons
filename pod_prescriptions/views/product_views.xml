@@ -60,7 +60,7 @@
                     type="object"
                     icon="fa-signal"
                     help="Sold in the last 365 days"
-                    groups="pod_prescriptions_team.group_prescriptions_prescriptionsman"
+                    groups="pod_prescriptions_team.group_prescriptions_personnel"
                     invisible="not prescriptions_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
@@ -72,7 +72,7 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <t groups="pod_prescriptions_team.group_prescriptions_prescriptionsman">
+                <t groups="pod_prescriptions_team.group_prescriptions_personnel">
                     <group string="Warning when Selling this Product" groups="pod_prescriptions.group_warning_prescription">
                         <field name="prescriptions_line_warn" nolabel="1" colspan="2"/>
                         <field name="prescriptions_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
@@ -101,7 +101,7 @@
                     name="action_view_prescriptions"
                     type="object" icon="fa-signal"
                     help="Sold in the last 365 days"
-                    groups="pod_prescriptions_team.group_prescriptions_prescriptionsman"
+                    groups="pod_prescriptions_team.group_prescriptions_personnel"
                     invisible="not prescriptions_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
@@ -113,7 +113,7 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <t groups="pod_prescriptions_team.group_prescriptions_prescriptionsman">
+                <t groups="pod_prescriptions_team.group_prescriptions_personnel">
                     <group string="Warning when Selling this Product" groups="pod_prescriptions.group_warning_prescription">
                         <field name="prescriptions_line_warn" string="Warning"/>
                         <field name="prescriptions_line_warn_msg" string="Message" placeholder="Type a message..."
