@@ -36,10 +36,11 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_contacts/static/src/css/custom.css',
+            'pod_prescriptions_contacts/static/css/custom.css',
             'pod_prescriptions_contacts/static/scss/custom_form.scss',
-            # 'pod_prescriptions_contacts/static/src/css/custom.css',
             # 'pod_prescriptions_contacts/static/src/js/partner_hierarchy.js',
+            # 'pod_prescriptions_contacts/static/js/org_chart.js',
+            # 'pod_prescriptions_contacts/static/xml/org_chart.xml',
         ],
     },
     'demo': [

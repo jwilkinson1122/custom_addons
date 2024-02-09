@@ -1,0 +1,7 @@
+==================
+Configure Product
+==================
+
+This module system will display Configure Product wizard after Adding a product
+to the sale order and prescription order form.
+ 

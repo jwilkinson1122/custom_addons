@@ -33,6 +33,10 @@ class Partner(models.Model):
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
+    
+    # new_parent_id = fields.Many2one('res.partner', 'Parent', help='select a parent for the child', domain="[('new_parent_id', '=', False), ('type','=','contact')]")
+    # new_child_ids = fields.One2many('res.partner', 'new_parent_id', string='Child Customers')
+    
     practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="prescriptions.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
@@ -63,7 +67,6 @@ class Partner(models.Model):
         else:
             return super()._avatar_get_placeholder_path()
 
-    
     @api.depends('parent_id', 'is_company', 'active')
     def _compute_locations(self):
         for record in self:
@@ -159,18 +162,6 @@ class Partner(models.Model):
             else:
                 record.patient_records = self.env['prescriptions.patient']
 
-    # def action_show_patients(self):
-    #         self.ensure_one()
-    #         action = {
-    #             'name': _('Patients'),
-    #             'type': 'ir.actions.act_window',
-    #             'res_model': 'prescriptions.patient',  
-    #             'view_mode': 'tree,form',
-    #             'domain': [('partner_id', '=', self.id)],
-    #             'context': {'default_partner_id': self.id},
-    #         }
-    #         return action
-        
     @api.depends('patient_count')
     def _compute_patient_text(self):
         for record in self:
@@ -181,13 +172,11 @@ class Partner(models.Model):
             else:
                 record.patient_text = _("(%s Patients)" % record.patient_count)
 
-    # Role Methods
     @api.depends('is_practitioner', 'practitioner_role_ids')
     def _compute_is_role_required(self):
         for record in self:
             record.is_role_required = record.is_practitioner and not record.practitioner_role_ids
 
-    # Inverse method
     def _inverse_is_role_required(self):
         for record in self:
             if record.is_role_required and not record.practitioner_role_ids:
@@ -208,6 +197,35 @@ class Partner(models.Model):
         """
         return []
 
+    # @api.model
+    # def fetch_data(self, partner_id):
+    #     parent = self.browse(partner_id)
+    #     children = parent.new_child_ids
+    #     child = []
+    #     data_parent = {'parent': {
+    #         'name': parent.name,
+    #         'image': parent.image_1920},
+    #         'child': child}
+    #     for rec in children:
+    #         data_child = {'name': rec.name,
+    #                       'id': rec.id,
+    #                       'image': rec.image_1920}
+    #         child.append(data_child)
+    #     return data_parent
+
+    # def get_formview_action(self, access_uid=None):
+    #     print('mmm3',self)
+    #     res = super().get_formview_action(access_uid=access_uid)
+    #     res.update({
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Partner',
+    #         'view_mode': 'form',
+    #         'res_model': 'res.partner',
+    #         'res_id': self.id,
+    #     })
+    #     return res
+
+
     @api.model_create_multi
     def create(self, vals_list):
         partners = super().create(vals_list)
@@ -223,31 +241,11 @@ class Partner(models.Model):
                 partner.check_prescription("write")
         return result
 
-    # def write(self, vals):
-    #     partners_by_type = {}
-    #     if vals.get('partner_type_id'):
-    #         partner_type = self.env['res.partner.type'].browse(
-    #             vals['partner_type_id'])
-    #         partners_by_type[partner_type] = self
-    #     else:
-    #         for partner in self:
-    #             partners_by_type.setdefault(
-    #                 partner.partner_type_id, self.browse())
-    #             partners_by_type[partner.partner_type_id] |= partner
-    #     for partner_type in partners_by_type:
-    #         if list(vals.keys()) != ['is_company']:  # To avoid infinite loop
-    #             vals.update(self._get_inherit_values(
-    #                 partner_type, not_null=True))
-    #         super(Partner, partners_by_type[partner_type]).write(vals)
-    #     self._update_children(vals)
-    #     return True
-
     def unlink(self):
         for partner in self:
             if partner.is_partner or partner.sudo().patient_ids:
                 partner.check_prescription("unlink")
         return super().unlink()
-    
     
     def _commercial_sync_to_children(self, visited=None):
         """ Handle sync of commercial fields to descendants """
@@ -271,7 +269,6 @@ class Partner(models.Model):
         sync_children._compute_commercial_partner()
         return res
 
-    
     @api.model
     def default_prescriptions_fields(self):
         fields = ["is_partner", "is_company", "is_location", "is_practitioner"]

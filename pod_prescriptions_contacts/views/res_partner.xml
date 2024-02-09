@@ -95,6 +95,13 @@
                 <attribute name="invisible">True</attribute>
             </xpath>
 
+            <!-- <xpath expr="//field[@name='vat']" position="after">
+                <group>
+                    <field name="new_parent_id" invisible="new_child_ids != []"/>
+                    <field name="new_child_ids" invisible="1"/>
+                </group>
+            </xpath> -->
+
 
             <xpath expr="//group" position="replace">
                 <!-- <attribute name="invisible">True</attribute> -->
@@ -387,6 +394,13 @@
                     </div>
                     <field name="patient_records" mode="kanban" />
                 </page>
+                <!-- <page string="Organization Chart">
+                    <field name="new_child_ids" widget="partner_org_chart" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </page> -->
             </xpath>
 
             <!-- Page for partner info -->
@@ -404,8 +418,8 @@
         </field>
     </record>
 
-    
-<!-- 
+
+    <!-- 
     <record id="res_partner_tree_view" model="ir.ui.view">
         <field name="name">res.partner.tree.view</field>
         <field name="model">res.partner</field>
