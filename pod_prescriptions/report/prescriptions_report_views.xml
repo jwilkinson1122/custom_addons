@@ -98,7 +98,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="Prescriptionsperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Prescriptionspersonnel" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Prescriptions Team" name="prescriptions_channel" context="{'group_by':'team_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
@@ -130,8 +130,8 @@
         <field name="help">This report performs analysis on your quotations and prescriptions orders. Analysis check your prescriptions revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescriptions not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
-    <record id="action_order_report_prescriptionsperson" model="ir.actions.act_window">
-        <field name="name">Prescriptions Analysis By Prescriptionspersons</field>
+    <record id="action_order_report_prescriptionspersonnel" model="ir.actions.act_window">
+        <field name="name">Prescriptions Analysis By Prescriptionspersonnels</field>
         <field name="res_model">prescriptions.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="prescriptions_report_graph_bar"/>

@@ -25,7 +25,7 @@ class TestAccessRights(BaseUsersCommon, PrescriptionCommon):
             'groups_id': [(6, 0, cls.group_prescriptions_personnel.ids)],
         })
 
-        # Create the SO with a specific prescriptionsperson
+        # Create the SO with a specific prescriptionspersonnel
         cls.prescriptions_order.user_id = cls.prescriptions_user
 
     def test_access_prescriptions_manager(self):
@@ -33,26 +33,26 @@ class TestAccessRights(BaseUsersCommon, PrescriptionCommon):
         PrescriptionOrder = self.env['prescriptions.order'].with_user(self.prescriptions_manager)
         so_as_prescriptions_manager = PrescriptionOrder.browse(self.prescriptions_order.id)
 
-        # Manager can see the SO which is assigned to another prescriptionsperson
+        # Manager can see the SO which is assigned to another prescriptionspersonnel
         so_as_prescriptions_manager.read()
-        # Manager can change a prescriptionsperson of the SO
+        # Manager can change a prescriptionspersonnel of the SO
         so_as_prescriptions_manager.write({'user_id': self.prescriptions_user2.id})
 
-        # Manager can create the SO for other prescriptionsperson
+        # Manager can create the SO for other prescriptionspersonnel
         prescriptions_order = PrescriptionOrder.create({
             'partner_id': self.partner.id,
             'user_id': self.prescriptions_user.id
         })
         self.assertIn(
             prescriptions_order.id, PrescriptionOrder.search([]).ids,
-            'Prescriptions manager should be able to create the SO of other prescriptionsperson')
+            'Prescriptions manager should be able to create the SO of other prescriptionspersonnel')
         # Manager can confirm the SO
         prescriptions_order.action_confirm()
         # Manager can not delete confirmed SO
         with self.assertRaises(UserError), mute_logger('odoo.models.unlink'):
             prescriptions_order.unlink()
 
-        # Manager can delete the SO of other prescriptionsperson if SO is in 'draft' or 'cancel' state
+        # Manager can delete the SO of other prescriptionspersonnel if SO is in 'draft' or 'cancel' state
         so_as_prescriptions_manager.unlink()
         self.assertNotIn(
             so_as_prescriptions_manager.id, PrescriptionOrder.search([]).ids,
@@ -60,36 +60,36 @@ class TestAccessRights(BaseUsersCommon, PrescriptionCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_prescriptions_person(self):
-        """ Test Prescriptionsperson's access rights """
+        """ Test Prescriptionspersonnel's access rights """
         PrescriptionOrder = self.env['prescriptions.order'].with_user(self.prescriptions_user2)
-        so_as_prescriptionsperson = PrescriptionOrder.browse(self.prescriptions_order.id)
+        so_as_prescriptionspersonnel = PrescriptionOrder.browse(self.prescriptions_order.id)
 
-        # Prescriptionsperson can see only their own prescriptions order
+        # Prescriptionspersonnel can see only their own prescriptions order
         with self.assertRaises(AccessError):
-            so_as_prescriptionsperson.read()
+            so_as_prescriptionspersonnel.read()
 
         # Now assign the SO to themselves
         # (using self.prescriptions_order to do the change as superuser)
         self.prescriptions_order.write({'user_id': self.prescriptions_user2.id})
 
-        # The prescriptionsperson is now able to read it
-        so_as_prescriptionsperson.read()
-        # Prescriptionsperson can change a Prescriptions Team of SO
-        so_as_prescriptionsperson.write({'team_id': self.prescriptions_team.id})
+        # The prescriptionspersonnel is now able to read it
+        so_as_prescriptionspersonnel.read()
+        # Prescriptionspersonnel can change a Prescriptions Team of SO
+        so_as_prescriptionspersonnel.write({'team_id': self.prescriptions_team.id})
 
-        # Prescriptionsperson can't create a SO for other prescriptionsperson
+        # Prescriptionspersonnel can't create a SO for other prescriptionspersonnel
         with self.assertRaises(AccessError):
             self.env['prescriptions.order'].with_user(self.prescriptions_user2).create({
                 'partner_id': self.partner.id,
                 'user_id': self.prescriptions_user.id
             })
 
-        # Prescriptionsperson can't delete Prescription Orders
+        # Prescriptionspersonnel can't delete Prescription Orders
         with self.assertRaises(AccessError):
-            so_as_prescriptionsperson.unlink()
+            so_as_prescriptionspersonnel.unlink()
 
-        # Prescriptionsperson can confirm the SO
-        so_as_prescriptionsperson.action_confirm()
+        # Prescriptionspersonnel can confirm the SO
+        so_as_prescriptionspersonnel.action_confirm()
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_portal_user(self):

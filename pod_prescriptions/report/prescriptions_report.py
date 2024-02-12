@@ -23,7 +23,7 @@ class PrescriptionReport(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', readonly=True)
     pricelist_id = fields.Many2one(comodel_name='product.pricelist', readonly=True)
     team_id = fields.Many2one(comodel_name='crm.team', string="Prescriptions Team", readonly=True)
-    user_id = fields.Many2one(comodel_name='res.users', string="Prescriptionsperson", readonly=True)
+    user_id = fields.Many2one(comodel_name='res.users', string="Prescriptionspersonnel", readonly=True)
     state = fields.Selection(selection=SALE_ORDER_STATE, string="Status", readonly=True)
     analytic_account_id = fields.Many2one(
         comodel_name='account.analytic.account', string="Analytic Account", readonly=True)

@@ -41,7 +41,7 @@ class CrmTeam(models.Model):
         Think notably: team not in responsible teams, team company not matching
         responsible or lead company, asked domain not matching, ...
 
-        :param user_id: prescriptionsperson to target, fallback on env.uid;
+        :param user_id: prescriptionspersonnel to target, fallback on env.uid;
         :domain: optional domain to filter teams (like use_lead = True);
         """
         if not user_id:
@@ -108,7 +108,7 @@ class CrmTeam(models.Model):
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
         help='If True, users may belong to several prescriptions teams. Otherwise membership is limited to a single prescriptions team.')
     member_ids = fields.Many2many(
-        'res.users', string='Prescriptionspersons',
+        'res.users', string='Prescriptionspersonnels',
         domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
         compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
         help="Users assigned to this team.")
@@ -186,7 +186,7 @@ class CrmTeam(models.Model):
                                    team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
                                   )
             if member_warning:
-                team.member_warning = member_warning + " " + _("To add a Prescriptionsperson into multiple Teams, activate the Multi-Team option in settings.")
+                team.member_warning = member_warning + " " + _("To add a Prescriptionspersonnel into multiple Teams, activate the Multi-Team option in settings.")
 
     def _search_member_ids(self, operator, value):
         return [('crm_team_member_ids.user_id', operator, value)]

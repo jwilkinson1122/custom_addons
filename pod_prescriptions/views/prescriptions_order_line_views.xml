@@ -106,7 +106,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                     <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}"/>
-                    <filter string="Prescriptionsperson" name="prescriptionsperson" domain="[]" context="{'group_by':'personnel_id'}"/>
+                    <filter string="Prescriptionspersonnel" name="prescriptionspersonnel" domain="[]" context="{'group_by':'personnel_id'}"/>
                 </group>
             </search>
         </field>

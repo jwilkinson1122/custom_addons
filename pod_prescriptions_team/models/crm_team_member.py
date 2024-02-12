@@ -17,7 +17,7 @@ class CrmTeamMember(models.Model):
         default=False,  # TDE: temporary fix to activate depending computed fields
         check_company=True, index=True, ondelete="cascade", required=True)
     user_id = fields.Many2one(
-        'res.users', string='Prescriptionsperson',  # TDE FIXME check responsible field
+        'res.users', string='Prescriptionspersonnel',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,
         domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]")
     user_in_teams_ids = fields.Many2many(

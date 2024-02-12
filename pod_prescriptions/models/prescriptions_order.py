@@ -1,9 +1,8 @@
-
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import _, api, fields, models, SUPERUSER_ID, exceptions
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
@@ -19,12 +18,21 @@ INVOICE_STATUS = [
     ('no', 'Nothing to Invoice')
 ]
 
-SALE_ORDER_STATE = [
-    ('draft', "Draft Rx"),
-    ('sent', "Draft Rx Sent"),
-    ('prescriptions', "Prescriptions Order"),
+PRESCRIPTION_ORDER_STATE = [
+    ('draft', "Draft"),
+    ('done', "Confirmed"),
     ('cancel', "Cancelled"),
+    ("hold", "On Hold"),
 ]
+
+    # state = fields.Selection(
+    #     [
+    #         ("draft", "Draft"),
+    #         ("done", "Confirmed"),
+    #         ("cancel", "Canceled"),
+    #         ("hold", "On Hold"),
+    #     ], default="draft",
+
 
 
 class PrescriptionOrder(models.Model):
@@ -33,10 +41,11 @@ class PrescriptionOrder(models.Model):
     _description = "Prescriptions Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
+    # _rec_name = "name"
 
     _sql_constraints = [
         ('date_order_conditional_required',
-         "CHECK((state = 'prescriptions' AND date_order IS NOT NULL) OR state != 'prescriptions')",
+         "CHECK((state = 'done' AND date_order IS NOT NULL) OR state != 'done')",
          "A confirmed prescriptions order requires a confirmation date."),
     ]
 
@@ -44,259 +53,448 @@ class PrescriptionOrder(models.Model):
     def _rec_names_search(self):
         if self._context.get('prescriptions_show_partner_name'):
             return ['name', 'partner_id.name']
-        return ['name']
-
+        return ['name'] 
+    
     #=== FIELDS ===#
 
-    name = fields.Char(
-        string="Order Reference",
-        required=True, copy=False, readonly=False,
-        index='trigram',
-        default=lambda self: _('New'))
+    name = fields.Char( 
+        string="Order Reference", 
+        required=True, 
+        copy=False, 
+        readonly=False, 
+        index='trigram', 
+        default=lambda self: _('New')
+        )
+    
+    company_id = fields.Many2one( 
+        comodel_name='res.company', 
+        required=True, 
+        index=True, 
+        default=lambda self: self.env.company
+        )
+    
+    partner_id = fields.Many2one( 
+        comodel_name='res.partner', 
+        string="Account", 
+        required=True, 
+        change_default=True, 
+        index=True, 
+        tracking=1, 
+        domain=[('is_company','=',True)]
+        )
+    
+    location_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_location','=',True)], 
+        string="Location"
+        )
+    
+    practitioner_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_practitioner','=',True)], 
+        string="Practitioner"
+        )
+    
 
-    company_id = fields.Many2one(
-        comodel_name='res.company',
-        required=True, index=True,
-        default=lambda self: self.env.company)
-    partner_id = fields.Many2one(
-        comodel_name='res.partner',
-        string="Customer",
-        required=True, change_default=True, index=True,
-        tracking=1,
-        domain="[('company_id', 'in', (False, company_id))]")
-    state = fields.Selection(
-        selection=SALE_ORDER_STATE,
-        string="Status",
-        readonly=True, copy=False, index=True,
-        tracking=3,
-        default='draft')
+    patient_id = fields.Many2one(
+        "prescriptions.patient", 
+        string="Patient", 
+        required=True, 
+        index=True 
+    )
+
+    
+    # state = fields.Selection( selection=PRESCRIPTION_ORDER_STATE, string="Status", readonly=True, copy=False, index=True, tracking=3, default='draft')
+    
     locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
-
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
-    create_date = fields.Datetime(  # Override of default create_date field from ORM
-        string="Creation Date", index=True, readonly=True)
-    commitment_date = fields.Datetime(
-        string="Delivery Date", copy=False,
-        help="This is the delivery date promised to the customer. "
+    create_date = fields.Datetime(string="Creation Date", index=True, readonly=True)
+    commitment_date = fields.Datetime( string="Delivery Date", copy=False, help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
-    date_order = fields.Datetime(
-        string="Order Date",
-        required=True, copy=False,
-        help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
-        default=fields.Datetime.now)
-    origin = fields.Char(
-        string="Source Document",
-        help="Reference of the document that generated this prescriptions order request")
-    reference = fields.Char(
-        string="Payment Ref.",
-        help="The payment communication of this prescriptions order.",
-        copy=False)
+    date_order = fields.Datetime( string="Order Date", required=True, copy=False, help="Creation date of draft/done orders,\nConfirmation date of confirmed orders.", default=fields.Datetime.now)
+    origin = fields.Char( string="Source Document", help="Reference of the document that generated this prescriptions order request")
+    reference = fields.Char( string="Payment Ref.", help="The payment communication of this prescriptions order.", copy=False)
 
-    require_signature = fields.Boolean(
-        string="Online signature",
-        compute='_compute_require_signature',
-        store=True, readonly=False, precompute=True,
-        help="Request a online signature from the customer to confirm the order.")
-    require_payment = fields.Boolean(
-        string="Online payment",
-        compute='_compute_require_payment',
-        store=True, readonly=False, precompute=True,
-        help="Request a online payment from the customer to confirm the order.")
-    prepayment_percent = fields.Float(
-        string="Prepayment percentage",
-        compute='_compute_prepayment_percent',
-        store=True, readonly=False, precompute=True,
-        help="The percentage of the amount needed that must be paid by the customer to confirm the order.")
+    require_signature = fields.Boolean( string="Online signature", compute='_compute_require_signature', store=True, readonly=False, precompute=True, help="Request a online signature from the customer to confirm the order.")
+    require_payment = fields.Boolean( string="Online payment", compute='_compute_require_payment', store=True, readonly=False, precompute=True, help="Request a online payment from the customer to confirm the order.")
+    prepayment_percent = fields.Float( string="Prepayment percentage", compute='_compute_prepayment_percent', store=True, readonly=False, precompute=True, help="The percentage of the amount needed that must be paid by the customer to confirm the order.")
 
-    signature = fields.Image(
-        string="Signature",
-        copy=False, attachment=True, max_width=1024, max_height=1024)
-    signed_by = fields.Char(
-        string="Signed By", copy=False)
-    signed_on = fields.Datetime(
-        string="Signed On", copy=False)
+    signature = fields.Image( string="Signature", copy=False, attachment=True, max_width=1024, max_height=1024)
+    signed_by = fields.Char( string="Signed By", copy=False)
+    signed_on = fields.Datetime( string="Signed On", copy=False)
 
-    validity_date = fields.Date(
-        string="Expiration",
-        compute='_compute_validity_date',
-        store=True, readonly=False, copy=False, precompute=True)
+    validity_date = fields.Date( 
+        string="Expiration", 
+        compute='_compute_validity_date', 
+        store=True, 
+        readonly=False, 
+        copy=False, 
+        precompute=True
+        )
+    
     journal_id = fields.Many2one(
-        'account.journal', string="Invoicing Journal",
-        compute="_compute_journal_id", store=True, readonly=False, precompute=True,
-        domain=[('type', '=', 'prescriptions')], check_company=True,
+        'account.journal', 
+        string="Invoicing Journal", 
+        compute="_compute_journal_id", 
+        store=True, 
+        readonly=False, 
+        precompute=True, 
+        domain=[('type', '=', 'done')], 
+        check_company=True, 
         help="If set, the SO will invoice in this journal; "
              "otherwise the prescriptions journal with the lowest sequence is used.")
 
     # Partner-based computes
-    note = fields.Html(
-        string="Terms and conditions",
-        compute='_compute_note',
-        store=True, readonly=False, precompute=True)
+    active = fields.Boolean(default=True)
+    color = fields.Integer()
+    date = fields.Date()
+    time = fields.Datetime()
 
-    partner_invoice_id = fields.Many2one(
-        comodel_name='res.partner',
-        string="Invoice Address",
-        compute='_compute_partner_invoice_id',
-        store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    partner_shipping_id = fields.Many2one(
-        comodel_name='res.partner',
-        string="Delivery Address",
-        compute='_compute_partner_shipping_id',
-        store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    note = fields.Html( 
+        string="Notes", 
+        compute='_compute_note', 
+        store=True, 
+        readonly=False, 
+        precompute=True
+        )
+    
+    internal_notes = fields.Text('Internal Notes')
 
-    fiscal_position_id = fields.Many2one(
-        comodel_name='account.fiscal.position',
-        string="Fiscal Position",
-        compute='_compute_fiscal_position_id',
-        store=True, readonly=False, precompute=True, check_company=True,
+    partner_invoice_id = fields.Many2one( 
+        comodel_name='res.partner', 
+        string="Invoice Address", 
+        compute='_compute_partner_invoice_id', 
+        store=True, readonly=False, 
+        required=True, 
+        precompute=True, 
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        )
+    
+    partner_shipping_id = fields.Many2one( 
+        comodel_name='res.partner', 
+        string="Delivery Address", 
+        compute='_compute_partner_shipping_id', 
+        store=True, 
+        readonly=False, 
+        required=True, 
+        precompute=True, 
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        )
+
+    fiscal_position_id = fields.Many2one( 
+        comodel_name='account.fiscal.position', 
+        string="Fiscal Position", 
+        compute='_compute_fiscal_position_id', 
+        store=True, 
+        readonly=False, 
+        precompute=True, 
+        check_company=True, 
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or prescriptions orders/invoices."
-            "The default value comes from the customer.",
-        domain="[('company_id', '=', company_id)]")
-    payment_term_id = fields.Many2one(
-        comodel_name='account.payment.term',
-        string="Payment Terms",
-        compute='_compute_payment_term_id',
-        store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
+            "The default value comes from the customer.", 
+            domain="[('company_id', '=', company_id)]"
+            )
+    
+    payment_term_id = fields.Many2one( 
+        comodel_name='account.payment.term', 
+        string="Payment Terms", 
+        compute='_compute_payment_term_id', 
+        store=True, 
+        readonly=False, 
+        precompute=True, 
+        check_company=True, 
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist',
-        string="Pricelist",
-        compute='_compute_pricelist_id',
-        store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-        tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    
+    pricelist_id = fields.Many2one( 
+        comodel_name='product.pricelist', 
+        string="Pricelist", 
+        compute='_compute_pricelist_id', 
+        store=True, readonly=False, 
+        precompute=True, 
+        check_company=True, 
+        tracking=1, 
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", 
         help="If you change the pricelist, only newly added lines will be affected.")
-    currency_id = fields.Many2one(
-        comodel_name='res.currency',
-        compute='_compute_currency_id',
-        store=True,
-        precompute=True,
+    
+    currency_id = fields.Many2one( 
+        comodel_name='res.currency', 
+        compute='_compute_currency_id', 
+        store=True, 
+        precompute=True, 
         ondelete='restrict'
     )
-    currency_rate = fields.Float(
-        string="Currency Rate",
-        compute='_compute_currency_rate',
-        digits=(12, 6),
-        store=True, precompute=True)
-    user_id = fields.Many2one(
-        comodel_name='res.users',
-        string="Prescriptionsperson",
-        compute='_compute_user_id',
-        store=True, readonly=False, precompute=True, index=True,
-        tracking=2,
-        domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
-            self.env.ref("pod_prescriptions_team.group_prescriptions_personnel").id
-        ))
-    team_id = fields.Many2one(
-        comodel_name='crm.team',
-        string="Prescriptions Team",
-        compute='_compute_team_id',
-        store=True, readonly=False, precompute=True, ondelete="set null",
-        change_default=True, check_company=True,  # Unrequired company
-        tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
-    # Lines and line based computes
-    order_line = fields.One2many(
-        comodel_name='prescriptions.order.line',
-        inverse_name='order_id',
-        string="Order Lines",
-        copy=True, auto_join=True)
+    currency_rate = fields.Float( 
+        string="Currency Rate", 
+        compute='_compute_currency_rate', 
+        digits=(12, 6), 
+        store=True, 
+        precompute=True
+        )
     
-    order_count = fields.Integer(
-        string='Sale Order Count', 
-        compute='_get_sale_order', 
-    )
+    user_id = fields.Many2one( 
+        comodel_name='res.users', 
+        string="Prescription Personnel", 
+        compute='_compute_user_id', 
+        store=True, 
+        readonly=False, 
+        precompute=True, 
+        index=True, 
+        tracking=2, 
+        domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(self.env.ref("pod_prescriptions_team.group_prescriptions_personnel").id)
+        )
+    
+    team_id = fields.Many2one( comodel_name='crm.team', string="Prescriptions Team", compute='_compute_team_id', store=True, readonly=False, precompute=True, ondelete="set null", change_default=True, check_company=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    order_line = fields.One2many( comodel_name='prescriptions.order.line', inverse_name='order_id', string="Order Lines", copy=True, auto_join=True)
+    order_count = fields.Integer( string='Sale Order Count', compute='_get_sale_order')
+    prescription_order_history_ids = fields.One2many('prescriptions.order.history.line', 'order_id')
+    helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket', string='Helpdesk Tickets')
+    helpdesk_tickets_count = fields.Integer( string='Tickets Count', compute='_get_helpdesk_tickets_count')
+    test_file = fields.Binary(string='Test')
+    rush_order = fields.Boolean('3-day rush')
+    make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
+    qty = fields.Integer('pairs to make')
+    ship_to_patient = fields.Boolean('Ship to patient')
+    description = fields.Text(string='Description')
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 
+        'prescription_ir_attachments_rel',
+        'manager_id', 
+        'attachment_id', string="Attachments"
+        )
+    prior_rx = fields.Boolean('Use Prior Rx#')
+    product_id = fields.Many2one('product.product', 'Name')
+    prescription_count = fields.Integer( string='Prescription Count', compute='_compute_prescription_count')
 
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
     amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
-
+    inv_state = fields.Selection([('invoiced', 'To Invoiced'), ('tobe', 'To Be Invoiced')], 'Invoice Status')
+    no_invoice = fields.Boolean('Invoice exempt')
+    inv_id = fields.Many2one('account.invoice', 'Invoice')
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
-    invoice_ids = fields.Many2many(
-        comodel_name='account.move',
-        string="Invoices",
-        compute='_get_invoiced',
-        search='_search_invoice_ids',
-        copy=False)
-    invoice_status = fields.Selection(
-        selection=INVOICE_STATUS,
-        string="Invoice Status",
-        compute='_compute_invoice_status',
-        store=True)
-
-    # Payment fields
-    transaction_ids = fields.Many2many(
-        comodel_name='payment.transaction',
-        relation='prescriptions_order_transaction_rel', column1='prescriptions_order_id', column2='transaction_id',
-        string="Transactions",
-        copy=False, readonly=True)
-    authorized_transaction_ids = fields.Many2many(
-        comodel_name='payment.transaction',
-        string="Authorized Transactions",
-        compute='_compute_authorized_transaction_ids',
-        copy=False,
-        compute_sudo=True)
+    invoice_ids = fields.Many2many( comodel_name='account.move', string="Invoices", compute='_get_invoiced', search='_search_invoice_ids', copy=False)
+    invoice_status = fields.Selection( selection=INVOICE_STATUS, string="Invoice Status", compute='_compute_invoice_status', store=True)
+    transaction_ids = fields.Many2many( comodel_name='payment.transaction', relation='prescriptions_order_transaction_rel', column1='prescriptions_order_id', column2='transaction_id', string="Transactions", copy=False, readonly=True)
+    authorized_transaction_ids = fields.Many2many( comodel_name='payment.transaction', string="Authorized Transactions", compute='_compute_authorized_transaction_ids', copy=False, compute_sudo=True)
     amount_paid = fields.Float(compute='_compute_amount_paid', compute_sudo=True)
-
-    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-
-    # Followup ?
-    analytic_account_id = fields.Many2one(
-        comodel_name='account.analytic.account',
-        string="Analytic Account",
-        copy=False, check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    tag_ids = fields.Many2many(
-        comodel_name='crm.tag',
-        relation='prescriptions_order_tag_rel', column1='order_id', column2='tag_id',
-        string="Tags")
-
-    # Remaining non stored computed fields (hide/make fields readonly, ...)
-    amount_undiscounted = fields.Float(
-        string="Amount Before Discount",
-        compute='_compute_amount_undiscounted', digits=0)
+    analytic_account_id = fields.Many2one( comodel_name='account.analytic.account', string="Analytic Account", copy=False, check_company=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    tag_ids = fields.Many2many( comodel_name='crm.tag', relation='prescriptions_order_tag_rel', column1='order_id', column2='tag_id', string="Tags")
+    amount_undiscounted = fields.Float( string="Amount Before Discount", compute='_compute_amount_undiscounted', digits=0)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
-    expected_date = fields.Datetime(
-        string="Expected Date",
-        compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
-        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
+    expected_date = fields.Datetime( string="Expected Date", compute='_compute_expected_date', store=False, help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
-    partner_credit_warning = fields.Text(
-        compute='_compute_partner_credit_warning')
-    tax_calculation_rounding_method = fields.Selection(
-        related='company_id.tax_calculation_rounding_method',
-        depends=['company_id'])
-    tax_country_id = fields.Many2one(
-        comodel_name='res.country',
-        compute='_compute_tax_country_id',
-        # Avoid access error on fiscal position when reading a prescriptions order with company != user.company_ids
-        compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
+    partner_credit_warning = fields.Text( compute='_compute_partner_credit_warning')
+    tax_calculation_rounding_method = fields.Selection( related='company_id.tax_calculation_rounding_method', depends=['company_id'])
+    tax_country_id = fields.Many2one( comodel_name='res.country', compute='_compute_tax_country_id', compute_sudo=True) 
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
 
+    # Forefoot Values
+    ff_varus_lt = fields.Many2one(comodel_name='forefoot.value', string='FF Varus LT', ondelete='restrict', copy=True)
+    ff_varus_rt = fields.Many2one(comodel_name='forefoot.value', string='FF Varus RT', ondelete='restrict', copy=True)
+    ff_valgus_lt = fields.Many2one(comodel_name='forefoot.value', string='FF Valgus LT', ondelete='restrict', copy=True)
+    ff_valgus_rt = fields.Many2one(comodel_name='forefoot.value', string='FF Valgus RT', ondelete='restrict', copy=True)
+    # Forefoot Corrections
+    ff_varus_intrinsic_lt = fields.Many2one(comodel_name='forefoot.correction', string='FF Varus Intrinsic LT', ondelete='restrict', copy=True)
+    ff_varus_intrinsic_rt = fields.Many2one(comodel_name='forefoot.correction', string='FF Varus Intrinsic RT', ondelete='restrict', copy=True)
+    ff_varus_extrinsic_lt = fields.Many2one(comodel_name='forefoot.correction', string='FF Varus Extrinsic LT', ondelete='restrict', copy=True)
+    ff_varus_extrinsic_rt = fields.Many2one(comodel_name='forefoot.correction', string='FF Varus Extrinsic RT', ondelete='restrict', copy=True)
+    ff_valgus_intrinsic_lt = fields.Many2one(comodel_name='forefoot.correction', string='FF Valgus Intrinsic LT', ondelete='restrict', copy=True)
+    ff_valgus_intrinsic_rt = fields.Many2one(comodel_name='forefoot.correction', string='FF Valgus Intrinsic RT', ondelete='restrict', copy=True)
+    ff_valgus_extrinsic_lt = fields.Many2one(comodel_name='forefoot.correction', string='FF Valgus Extrinsic LT', ondelete='restrict', copy=True)
+    ff_valgus_extrinsic_rt = fields.Many2one(comodel_name='forefoot.correction', string='FF Valgus Extrinsic RT', ondelete='restrict', copy=True)
+
+    # Rearfoot Corrections
+    rf_varus_lt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Varus LT', ondelete='restrict', copy=True)
+    rf_varus_rt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Varus RT', ondelete='restrict', copy=True)
+    rf_valgus_lt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Valgus LT', ondelete='restrict', copy=True)
+    rf_valgus_rt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Valgus RT', ondelete='restrict', copy=True)
+    rf_neutral_lt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Neutral LT', ondelete='restrict', copy=True)
+    rf_neutral_rt = fields.Many2one(comodel_name='rearfoot.correction', string='RF Neutral RT', ondelete='restrict', copy=True)
+ 
+    # Orthotic Measures
+    ff_length_lt = fields.Many2one(comodel_name='orthotic.measure', string='FF Length LT', ondelete='restrict', copy=True)
+    ff_length_rt = fields.Many2one(comodel_name='orthotic.measure', string='FF Length RT', ondelete='restrict', copy=True)
+    heel_depth_lt = fields.Many2one(comodel_name='orthotic.measure', string='Heel Depth LT', ondelete='restrict', copy=True)
+    heel_depth_rt = fields.Many2one(comodel_name='orthotic.measure', string='Heel Depth RT', ondelete='restrict', copy=True)
+    orthotic_length_lt = fields.Many2one(comodel_name='orthotic.measure', string='Orthotic Length LT', ondelete='restrict', copy=True)
+    orthotic_length_rt = fields.Many2one(comodel_name='orthotic.measure', string='Orthotic Length RT', ondelete='restrict', copy=True)
+    cap_size_lt = fields.Many2one(comodel_name='orthotic.measure', string='Cap Size LT', ondelete='restrict', copy=True)
+    cap_size_rt = fields.Many2one(comodel_name='orthotic.measure', string='Cap Size RT', ondelete='restrict', copy=True)
+
     # Remaining ux fields (not computed, not stored)
 
-    show_update_fpos = fields.Boolean(
-        string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
-    has_active_pricelist = fields.Boolean(
-        compute='_compute_has_active_pricelist')
-    show_update_pricelist = fields.Boolean(
-        string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
+    show_update_fpos = fields.Boolean( string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
+    has_active_pricelist = fields.Boolean( compute='_compute_has_active_pricelist')
+    show_update_pricelist = fields.Boolean( string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
     def init(self):
         create_index(self._cr, 'prescriptions_order_date_order_id_idx', 'prescriptions_order', ["date_order desc", "id desc"])
 
-    #=== COMPUTE METHODS ===#
+    @api.model
+    def _default_stage(self):
+        Stage = self.env["prescriptions.order.stage"]
+        return Stage.search([("state", "=", "draft")], limit=1)
+
+    @api.model
+    def _group_expand_stage_id(self, stages, domain, order):
+        return stages.search([], order=order)
+
+    stage_id = fields.Many2one(
+        "prescriptions.order.stage", 
+        default=_default_stage, 
+        copy=False, 
+        group_expand="_group_expand_stage_id"
+        )
+
+    state = fields.Selection(related="stage_id.state")
+
+    kanban_state = fields.Selection(
+        [("normal", "In Progress"),
+         ("blocked", "Blocked"),
+         ("done", "Ready for next stage")],
+        "Kanban State", default="normal")
+
+    priority = fields.Selection(
+        [("0", "High"),
+         ("1", "Very High"),
+         ("2", "Critical")], default="0")
+
+    request_date = fields.Date( 
+        default=lambda s: fields.Date.today(), 
+        compute="_compute_request_date_onchange", 
+        store=True, 
+        readonly=False
+        )
+    
+    @api.depends('patient_id')
+    def _compute_request_date_onchange(self):
+        today_date = fields.Date.today()
+        if self.request_date != today_date:
+            self.request_date = today_date
+            return {"warning": {"title": "Changed Request Date", "message": "Request date changed to today!"}}
+
+    @api.model
+    def _get_bookin_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        checkin_date = fields.Datetime.context_timestamp(self, fields.Datetime.now())
+        return fields.Datetime.to_string(checkin_date)
+    
+    @api.model
+    def _get_bookout_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        checkout_date = fields.Datetime.context_timestamp(self, fields.Datetime.now() + timedelta(days=1))
+        return fields.Datetime.to_string(checkout_date)
+    
+    @api.model
+    def _get_hold_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        hold_date = fields.Datetime.context_timestamp(self, fields.Datetime.now() + timedelta(days=1))
+        return fields.Datetime.to_string(hold_date)
+    
+    @api.model
+    def _get_cancel_date(self):
+        self._context.get("tz") or self.env.user.partner_id.tz or "UTC"
+        cancel_date = fields.Datetime.context_timestamp(self, fields.Datetime.now() + timedelta(days=1))
+        return fields.Datetime.to_string(cancel_date)
+
+    bookin_date = fields.Datetime(
+        "Book In", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookin_date
+    )
+    
+    bookout_date = fields.Datetime(
+        "Book Out", required=True, readonly=True, states={"draft": [("readonly", False)], "done": [("readonly", True)]}, default=_get_bookout_date
+        )
+
+    hold_date = fields.Datetime(
+        "Hold", readonly=True, default=_get_hold_date
+        )
+    
+    cancel_date = fields.Datetime(
+        "Cancel", readonly=True, default=_get_cancel_date
+        )
+
+    @api.onchange('partner_id')
+    def prescription_order_domain(self):
+        self.write({'prescription_order_history_ids': [(5,)]})
+        new_lines = []
+        lines = self.env['prescriptions.order.line'].search(
+            [('order_id.partner_id', '=', self.partner_id.id), ('order_id.state', 'in', ('draft', 'done'))])
+        for rec in lines:
+            new_lines.append((0, 0, {
+                'name': rec.order_id.name,
+                'product_id': rec.product_id,
+                'product_uom_qty': rec.product_uom_qty,
+                'price_unit': rec.price_unit,
+            }))
+        self.write({'prescription_order_history_ids': new_lines})
+
+    @api.depends('helpdesk_tickets_ids')
+    def _get_helpdesk_tickets_count(self):
+        for rec in self:
+            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+
+    def helpdesk_ticket(self):
+        action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
+        tickets = self.prescription_order_lines.mapped('helpdesk_description_id')
+        if len(tickets) > 1:
+            action['domain'] = [('id', 'in', tickets.ids)]
+        elif tickets:
+            action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
+            action['res_id'] = tickets.id
+        return action #=== COMPUTE METHODS ===#
+
+    def _compute_prescription_count_DISABLED(self):
+        "Naive version, not performance optimal"
+        for prescription in self:
+            domain = [("practitioner_id", "=", prescription.practitioner_id.id), ("state", "not in", ["done", "cancel"])]
+            prescription.prescription_count = self.search_count(domain)
+
+    def _compute_prescription_count(self):
+        "Performance optimized, to run a single database query"
+        practitioners = self.mapped("practitioner_id")
+        domain = [
+            ("practitioner_id", "in", practitioners.ids),
+            ("state", "not in", ["done", "cancel"]),
+        ]
+        raw = self.read_group(domain, ["id:count"], ["practitioner_id"])
+        data = {x["practitioner_id"][0]: x["practitioner_id_count"]
+                for x in raw}
+        for prescription in self:
+            prescription.prescription_count = data.get(
+                prescription.practitioner_id.id, 0)
+
+    num_prescription_items = fields.Integer( compute="_compute_num_prescription_items", store=True)
+
+    @api.depends("order_line")
+    def _compute_num_prescription_items(self):
+        for prescription in self:
+            prescription.num_prescription_items = len(prescription.order_line)
+
+    @api.onchange('partner_id')
+    def onchange_set_domain_practitioner_id(self):
+        if self.partner_id:
+            # Assuming partner_id has a direct reference to the practitioner
+            self.practitioner_id = self.partner_id.practitioner_id
+
+    @api.onchange('practitioner_id')
+    def onchange_set_domain_patient_id(self):
+        return {
+            'domain': {
+                'patient_id': [('practitioner_id', '=', self.practitioner_id.id)]
+            }
+        }
 
     @api.depends('partner_id')
     @api.depends_context('prescriptions_show_partner_name')
@@ -408,28 +606,20 @@ class PrescriptionOrder(models.Model):
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(
-                from_currency=order.company_id.currency_id,
-                to_currency=order.currency_id,
-                company=order.company_id,
-                date=order.date_order.date(),
+            order.currency_rate = self.env['res.currency']._get_conversion_rate( from_currency=order.company_id.currency_id, to_currency=order.currency_id, company=order.company_id, date=order.date_order.date(),
             )
 
     @api.depends('company_id')
     def _compute_has_active_pricelist(self):
         for order in self:
             order.has_active_pricelist = bool(self.env['product.pricelist'].search(
-                [('company_id', 'in', (False, order.company_id.id)), ('active', '=', True)],
-                limit=1,
+                [('company_id', 'in', (False, order.company_id.id)), ('active', '=', True)], limit=1,
             ))
 
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
             if order.partner_id and not (order._origin.id and order.user_id):
-                # Recompute the personnel on partner change
-                #   * if partner is set (is required anyway, so it will be set sooner or later)
-                #   * if the order is not saved or has no personnel already
                 order.user_id = (
                     order.partner_id.user_id
                     or order.partner_id.commercial_partner_id.user_id
@@ -445,11 +635,8 @@ class PrescriptionOrder(models.Model):
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
             if key not in cached_teams:
-                cached_teams[key] = self.env['crm.team'].with_context(
-                    default_team_id=default_team_id,
-                )._get_default_team_id(
-                    user_id=user_id,
-                    domain=self.env['crm.team']._check_company_domain(company_id),
+                cached_teams[key] = self.env['crm.team'].with_context( default_team_id=default_team_id,
+                )._get_default_team_id( user_id=user_id, domain=self.env['crm.team']._check_company_domain(company_id),
                 )
             order.team_id = cached_teams[key]
 
@@ -477,10 +664,6 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
-        # The invoice_ids are obtained thanks to the invoice lines of the SO
-        # lines, and we also search for possible refunds created directly from
-        # existing invoices. This is necessary since such a refund is not
-        # directly linked to the SO.
         for order in self:
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
@@ -502,17 +685,6 @@ class PrescriptionOrder(models.Model):
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
         elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
-            #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
-            # because it returns orders with uninvoiced lines, which is not
-            # same "Invoices is not set" (some lines may have invoices and some
-            # doesn't)
-            #
-            # A solution is making inverted search first ("orders with invoiced
-            # lines") and then invert results ("get all other orders")
-            #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
             order_ids = self._search([
                 ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
             ])
@@ -524,15 +696,7 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):
-        """
-        Compute the invoice status of a SO. Possible statuses:
-        - no: if the SO is not in status 'prescriptions' or 'done', we consider that there is nothing to
-          invoice. This is also the default value if the conditions of no other status is met.
-        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
-        - invoiced: if all SO lines are invoiced, the SO is invoiced.
-        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
-        """
-        confirmed_orders = self.filtered(lambda so: so.state == 'prescriptions')
+        confirmed_orders = self.filtered(lambda so: so.state == 'done')
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
@@ -546,7 +710,7 @@ class PrescriptionOrder(models.Model):
                 ['order_id', 'invoice_status'])]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if order.state != 'prescriptions':
+            if order.state != 'done':
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
                 order.invoice_status = 'to invoice'
@@ -602,7 +766,7 @@ class PrescriptionOrder(models.Model):
     def _compute_is_expired(self):
         today = fields.Date.today()
         for order in self:
-            order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
+            order.is_expired = order.state == 'done' and order.validity_date and order.validity_date< today
 
     @api.depends('company_id', 'fiscal_position_id')
     def _compute_tax_country_id(self):
@@ -615,7 +779,6 @@ class PrescriptionOrder(models.Model):
     @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
     def _compute_amount_to_invoice(self):
         for order in self:
-            # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
             if order.invoice_status == 'invoiced':
                 order.amount_to_invoice = 0.0
                 return
@@ -641,12 +804,11 @@ class PrescriptionOrder(models.Model):
         for order in self:
             order.with_company(order.company_id)
             order.partner_credit_warning = ''
-            show_warning = order.state in ('draft', 'sent') and \
+            show_warning = order.state in ('draft', 'done') and \
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
-                    current_amount=(order.amount_total / order.currency_rate),
+                    order, current_amount=(order.amount_total / order.currency_rate),
                 )
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
@@ -661,7 +823,7 @@ class PrescriptionOrder(models.Model):
     @api.depends('state')
     def _compute_type_name(self):
         for record in self:
-            if record.state in ('draft', 'sent', 'cancel'):
+            if record.state in ('draft', 'done', 'cancel'):
                 record.type_name = _("Draft Rx")
             else:
                 record.type_name = _("Prescriptions Order")
@@ -670,9 +832,7 @@ class PrescriptionOrder(models.Model):
     def _compute_access_url(self):
         super()._compute_access_url()
         for order in self:
-            order.access_url = f'/my/orders/{order.id}'
-
-    #=== CONSTRAINT METHODS ===#
+            order.access_url = f'/my/orders/{order.id}' #=== CONSTRAINT METHODS ===#
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -681,19 +841,14 @@ class PrescriptionOrder(models.Model):
             if companies and companies != order.company_id:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
                 raise ValidationError(_(
-                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
-                    quote_company=order.company_id.display_name,
-                    bad_products=', '.join(bad_products.mapped('display_name')),
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).", product_company=', '.join(companies.mapped('display_name')), quote_company=order.company_id.display_name, bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
 
     @api.constrains('prepayment_percent')
     def _check_prepayment_percent(self):
         for order in self:
             if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
-                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
-
-    #=== ONCHANGE METHODS ===#
+                raise ValidationError(_("Prepayment percentage must be a valid percentage.")) #=== ONCHANGE METHODS ===#
 
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
@@ -732,18 +887,12 @@ class PrescriptionOrder(models.Model):
     def _onchange_partner_id_warning(self):
         if not self.partner_id:
             return
-
         partner = self.partner_id
-
-        # If partner has no warning, check its company
         if partner.prescriptions_warn == 'no-message' and partner.parent_id:
             partner = partner.parent_id
-
         if partner.prescriptions_warn and partner.prescriptions_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
             if partner.prescriptions_warn != 'block' and partner.parent_id and partner.parent_id.prescriptions_warn == 'block':
                 partner = partner.parent_id
-
             if partner.prescriptions_warn == 'block':
                 self.partner_id = False
 
@@ -769,39 +918,33 @@ class PrescriptionOrder(models.Model):
     @api.depends()
     def _get_sale_order(self):
         for rec in self:
-            order_ids = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+            order_ids = self.env['sale.order'].search([('prescription_order_id', '=', self.id)])
             if order_ids:
                 rec.order_count = len(order_ids.ids)
             else:
                 rec.order_count = 0
 
     def action_view_sale_order(self):
-        orders = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+        orders = self.env['sale.order'].search([('prescription_order_id', '=', self.id)])
         action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
         action['domain'] = [('id', 'in', orders.ids)]
         return action
 
-    # def action_confirm(self):
-    #     self.write({
-    #         'state': 'ongoing'
-    #     })
+    def action_draft(self):
+        self.state = 'draft'
 
-    # def action_close(self):
-    #     self.write({
-    #         'state': 'done'
-    #     })
+    def action_done(self):
+        self.state = 'done'
 
-    # def action_cancel(self):
-    #     self.write({
-    #         'state': 'cancel'
-    #     })
+    def action_cancel(self):
+        self.state = 'cancel'
 
-    # def action_draft(self):
-    #     self.write({
-    #         'state': 'draft'
-    #     })
+    def action_hold(self):
+        self.state = 'hold'
 
-    #=== CRUD METHODS ===#
+    def confirm_draft(self):
+        for rec in self:
+            rec.state = 'draft' #=== CRUD METHODS ===#
 
         # @api.model
     # def create(self, vals):
@@ -811,6 +954,15 @@ class PrescriptionOrder(models.Model):
     #         vals['name'] = self.env['ir.sequence'].next_by_code('prescription')
     #     return super(PrescriptionOrder, self).create(vals_list)
 
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('name', _('New')) == _('New'):
+    #         vals['name'] = self.env['ir.sequence'].next_by_code('prescriptions.order') or _('New')
+    #     res = super(PrescriptionOrder, self).create(vals)
+    #     if res.stage_id.state in ("done", "cancel"):
+    #         raise exceptions.UserError("State not allowed for new prescriptions.")
+    #     return res
+    
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -822,58 +974,93 @@ class PrescriptionOrder(models.Model):
                 ) if 'date_order' in vals else None
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'prescriptions.order', sequence_date=seq_date) or _("New")
-
+            if vals.stage_id.state in ("done", "cancel"):
+                raise exceptions.UserError("State not allowed for new prescriptions.")
         return super().create(vals_list)
     
     # def _compute_is_expired(self):
     #     today = fields.Date.today()
     #     for order in self:
-    #         order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
+    #         order.is_expired = order.state == 'done' and order.validity_date and order.validity_date < today
 
 
-    def action_create_prescription_to_so(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.action_prescription_to_so')
-        action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-        line_list = []
-        for rec in self:
-            if rec.validity_date <= fields.Date.today() and rec.validity_date >= fields.Date.today():
-                FiscalPosition = self.env['account.fiscal.position']
-                fpos = FiscalPosition._get_fiscal_position(rec.partner_id)
-                for line in rec.order_line:
-                    # Compute taxes
-                    if fpos:
-                        taxes_ids = fpos.map_tax(line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id)).ids
-                    else:
-                        taxes_ids = line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id).ids
+    def create_sale_order(self):
+        sale_order = self.env['sale.order'].search([('prescription_order_id', '=', self.id)], limit=1)
+        if sale_order:
+            return self._prepare_action(_('Prescription order'), 'sale.order', sale_order.id)
+        vals = {
+            'prescription_order_id': self.id,
+            'partner_id': self.practice_id.id,
+            'practitioner_id': self.practitioner_id.id,
+            'patient_id': self.patient_id.id,
+            'invoice_status': 'to invoice',
+        }
+        new_sale_order = self.env['sale.order'].create(vals)
+        for line in self.prescription_order_lines:
+            line_vals = {
+                'order_id': new_sale_order.id,
+                'product_id': line.product_id.id,
+                'name': line.product_id.name,
+                'product_uom': line.product_id.uom_id.id,
+                'product_uom_qty': line.quantity,
+                'price_unit': line.product_id.lst_price,  
+            }
+            self.env['sale.order.line'].create(line_vals)
+        return self._prepare_action(_('Prescription Order'), 'sale.order', new_sale_order.id)
 
-                    # Compute quantity and price_unit
-                    if line.product_uom != line.product_id.uom_po_id:
-                        product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_po_id)
-                        price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_po_id)
-                    else:
-                        product_qty = line.product_uom_qty
-                        price_unit = line.price_unit
-
-                    order_line_values = line._prepare_sale_order_line(
-                        name=line.name, product_qty=product_qty, price_unit=price_unit,
-                        taxes_ids=taxes_ids)
-                    
-                    line_list.append((0, 0, order_line_values))
-
-                vals = {
-                    'partner_id': rec.partner_id.id,
-                    'order_line': line_list,
-                    'fiscal_position_id': fpos.id,
-                    'payment_term_id': rec.partner_id.property_supplier_payment_term_id.id or False,
-                    'company_id': rec.company_id.id,
-                    'pricelist_id': rec.pricelist_id.id,
-                    'note': rec.note,
-                    'origin': rec.name,
-                    'prescription_so_id': rec.id
-                }
-                new_sale_order = self.env['sale.order'].create(vals)
-                action['res_id'] = new_sale_order.id
+    def _prepare_action(self, name, res_model, res_id=None, context=None):
+        action = {
+            'name': name,
+            'view_type': 'form',
+            'res_model': res_model,
+            'view_id': False,
+            'view_mode': 'form',
+            'type': 'ir.actions.act_window',
+        }
+        if res_id:
+            action['res_id'] = res_id
+        if context:
+            action['context'] = context
         return action
+
+
+    # def action_create_prescription_to_so(self):
+    #     action = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.action_prescription_to_so')
+    #     action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+    #     line_list = []
+    #     for rec in self:
+    #         if rec.validity_date <= fields.Date.today() and rec.validity_date >= fields.Date.today():
+    #             FiscalPosition = self.env['account.fiscal.position']
+    #             fpos = FiscalPosition._get_fiscal_position(rec.partner_id)
+    #             for line in rec.order_line:
+    #                 if fpos:
+    #                     taxes_ids = fpos.map_tax(line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id)).ids
+    #                 else:
+    #                     taxes_ids = line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id).ids
+    #                 if line.product_uom != line.product_id.uom_po_id:
+    #                     product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_po_id)
+    #                     price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_po_id)
+    #                 else:
+    #                     product_qty = line.product_uom_qty
+    #                     price_unit = line.price_unit
+
+    #                 order_line_values = line._prepare_sale_order_line( name=line.name, product_qty=product_qty, price_unit=price_unit, taxes_ids=taxes_ids)
+    #                 line_list.append((0, 0, order_line_values))
+
+    #             vals = {
+    #                 'partner_id': rec.partner_id.id,
+    #                 'order_line': line_list,
+    #                 'fiscal_position_id': fpos.id,
+    #                 'payment_term_id': rec.partner_id.property_supplier_payment_term_id.id or False,
+    #                 'company_id': rec.company_id.id,
+    #                 'pricelist_id': rec.pricelist_id.id,
+    #                 'note': rec.note,
+    #                 'origin': rec.name,
+    #                 'prescription_order_id': rec.id
+    #             }
+    #             new_sale_order = self.env['sale.order'].create(vals)
+    #             action['res_id'] = new_sale_order.id
+    #     return action
 
 
     def copy_data(self, default=None):
@@ -884,16 +1071,61 @@ class PrescriptionOrder(models.Model):
                 Command.create(line.copy_data()[0])
                 for line in self.order_line.filtered(lambda l: not l.is_downpayment)
             ]
-        return super().copy_data(default)
+        return super().copy_data(default) @api.ondelete(at_uninstall=False)
+    
 
-    @api.ondelete(at_uninstall=False)
+    def write(self, vals):
+        if "stage_id" in vals and "kanban_state" not in vals:
+            vals["kanban_state"] = "normal"
+        old_state = self.stage_id.state
+        super().write(vals)
+        new_state = self.stage_id.state
+        if not self.env.context.get("_prescription_write"):
+            if new_state != old_state and new_state == "draft": self.with_context(_prescription_write=True).write(
+                    {"bookin_date": fields.Date.today()})
+            if new_state != old_state and new_state == "done": self.with_context(_prescription_write=True).write(
+                    {"bookout_date": fields.Date.today()})
+            if new_state != old_state and new_state == "cancel": self.with_context(_prescription_write=True).write(
+                    {"cancel_date": fields.Date.today()})
+            if new_state != old_state and new_state == "hold": self.with_context(_prescription_write=True).write(
+                    {"hold_date": fields.Date.today()})
+        return True
+    
+    def button_done(self):
+        Stage = self.env["pod_prescriptions.prescriptions.order.stage"]
+        done_stage = Stage.search([("state", "=", "done")], limit=1)
+        for prescription in self:
+            prescription.stage_id = done_stage
+        return True
+    
+    def button_cancel(self):
+        Stage = self.env["pod_prescriptions.prescriptions.order.stage"]
+        cancel_stage = Stage.search([("state", "=", "cancel")], limit=1)
+        for prescription in self:
+            prescription.stage_id = cancel_stage
+        return True
+
+    def button_hold(self):
+        Stage = self.env["pod_prescriptions.prescriptions.order.stage"]
+        hold_stage = Stage.search([("state", "=", "hold")], limit=1)
+        for prescription in self:
+            prescription.stage_id = hold_stage
+        return True
+    
+    # def unlink(self):
+    #     if self.state == 'done':
+    #         raise ValidationError(_("You Cannot Delete %s as it is in Done State" % self.name))
+    #     return super(PrescriptionOrder, self).unlink()
+
+
     def _unlink_except_draft_or_cancel(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_(
-                    "You can not delete a sent quotation or a confirmed prescriptions order."
-                    " You must first cancel it."))
-
+                    "You can not delete a done quotation or a confirmed prescriptions order."
+                    " You must first cancel it.")) 
+            
+            
     #=== ACTION METHODS ===#
 
     def action_open_discount_wizard(self):
@@ -907,7 +1139,7 @@ class PrescriptionOrder(models.Model):
         }
 
     def action_draft(self):
-        orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
+        orders = self.filtered(lambda s: s.state in ['cancel', 'done'])
         return orders.write({
             'state': 'draft',
             'signature': False,
@@ -928,7 +1160,7 @@ class PrescriptionOrder(models.Model):
             'default_res_ids': self.ids,
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
+            'mark_so_as_done': True,
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
@@ -945,25 +1177,13 @@ class PrescriptionOrder(models.Model):
         }
 
     def _find_mail_template(self):
-        """ Get the appropriate mail template for the current prescriptions order based on its state.
-
-        If the SO is confirmed, we return the mail template for the prescriptions confirmation.
-        Otherwise, we return the quotation email template.
-
-        :return: The correct mail template based on the current status
-        :rtype: record of `mail.template` or `None` if not found
-        """
         self.ensure_one()
-        if self.env.context.get('proforma') or self.state != 'prescriptions':
+        if self.env.context.get('proforma') or self.state != 'done':
             return self.env.ref('pod_prescriptions.email_template_edi_prescription', raise_if_not_found=False)
         else:
             return self._get_confirmation_template()
 
     def _get_confirmation_template(self):
-        """ Get the mail template sent on SO confirmation (or for confirmed SO's).
-
-        :return: `mail.template` record or None if default template wasn't found
-        """
         self.ensure_one()
         default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
             'pod_prescriptions.default_confirmation_template'
@@ -975,28 +1195,51 @@ class PrescriptionOrder(models.Model):
         else:
             return self.env.ref('pod_prescriptions.mail_template_prescriptions_confirmation', raise_if_not_found=False)
 
-    def action_quotation_sent(self):
-        """ Mark the given draft quotation(s) as sent.
-
-        :raise: UserError if any given SO is not in draft state.
-        """
+    def action_quotation_done(self):
         if any(order.state != 'draft' for order in self):
-            raise UserError(_("Only draft orders can be marked as sent directly."))
+            raise UserError(_("Only draft orders can be marked as done directly."))
 
-        for order in self:
-            order.message_subscribe(partner_ids=order.partner_id.ids)
+        for order in self: order.message_subscribe(partner_ids=order.partner_id.ids)
 
-        self.write({'state': 'sent'})
+        self.write({'state': 'done'})
+
+
+    # Overwrite Confirm Button
+    def action_confirm(self):
+        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+            raise UserError(_(
+                'It is not allowed to confirm an prescription in the following states: %s'
+            ) % (', '.join(self._get_forbidden_state_confirm())))
+
+        for prescription in self.filtered(lambda prescription: prescription.partner_id not in prescription.message_partner_ids):
+            prescription.message_subscribe([prescription.partner_id.id])
+        self.write({'state': 'done', 'bookin_date': fields.Datetime.now()})
+        self._action_confirm()
+        if self.env.user.has_group('sale.group_auto_done_setting'):
+            self.action_done()
+        helpdesk_ticket_dict = {}
+        helpdesk_ticket_list = []
+        for line in self.prescription_order_lines:
+            if line:
+                if line.product_id.is_helpdesk:
+                    helpdesk_ticket_dict = {
+                                            'name' : line.product_id.name,
+                                            'team_id' : line.product_id.helpdesk_team.id,
+                                            'user_id' : line.product_id.helpdesk_assigned_to.id,
+                                            'partner_id' : self.partner_id.id,
+                                            'partner_name' : self.partner_id.name,
+                                            'partner_email' : self.partner_id.email,
+                                            'description' : line.name  
+                                           }
+                    helpdesk_ticket_id = self.env['helpdesk.ticket'].create(helpdesk_ticket_dict)
+                    if helpdesk_ticket_id:
+                        line.helpdesk_description_id = helpdesk_ticket_id.id
+                        helpdesk_ticket_list.append(helpdesk_ticket_id.id)
+                        self.helpdesk_tickets_ids = helpdesk_ticket_list
+        return True
+    
 
     def action_confirm(self):
-        """ Confirm the given quotation(s) and set their confirmation date.
-
-        If the corresponding setting is enabled, also locks the Prescription Order.
-
-        :return: True
-        :rtype: bool
-        :raise: UserError if trying to confirm cancelled SO's
-        """
         if not all(order._can_be_confirmed() for order in self):
             raise UserError(_(
                 "The following orders are not in a state requiring confirmation: %s",
@@ -1004,53 +1247,37 @@ class PrescriptionOrder(models.Model):
             ))
 
         self.order_line._validate_analytic_distribution()
-
         for order in self:
             order.validate_taxes_on_prescriptions_order()
             if order.partner_id in order.message_partner_ids:
                 continue
             order.message_subscribe([order.partner_id.id])
-
         self.write(self._prepare_confirmation_values())
-
-        # Context key 'default_name' is sometimes propagated up to here.
-        # We don't need it and it creates issues in the creation of linked records.
         context = self._context.copy()
         context.pop('default_name', None)
-
         self.with_context(context)._action_confirm()
         if self.env.user.has_group('pod_prescriptions.group_auto_done_setting'):
             self.action_lock()
 
         return True
-
+    
     def _can_be_confirmed(self):
         self.ensure_one()
-        return self.state in {'draft', 'sent'}
-
+        return self.state in {'draft', 'done'}
+    
     def _prepare_confirmation_values(self):
-        """ Prepare the prescriptions order confirmation values.
-
-        Note: self can contain multiple records.
-
-        :return: Prescriptions Order confirmation values
-        :rtype: dict
-        """
         return {
-            'state': 'prescriptions',
+            'state': 'done',
             'date_order': fields.Datetime.now()
         }
+    
 
     def _action_confirm(self):
-        """ Implementation of additional mechanism of Prescriptions Order confirmation.
-            This method should be extended when the confirmation should generated
-            other documents. In this method, the SO are in 'prescriptions' state (not yet 'done').
-        """
-        # create an analytic account if at least an expense product
         for order in self:
             if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy')):
                 if not order.analytic_account_id:
                     order._create_analytic_account()
+
 
     def _send_order_confirmation_mail(self):
         """ Send a mail to the SO customer to inform them that their order has been confirmed.
@@ -1086,13 +1313,9 @@ class PrescriptionOrder(models.Model):
             return
 
         if self.env.su:
-            # sending mail in sudo was meant for it being sent from superuser
-            self = self.with_user(SUPERUSER_ID)
-
-        self.with_context(force_send=True).message_post_with_source(
-            mail_template,
-            email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-            subtype_xmlid='mail.mt_comment',
+            # sending mail in sudo was meant for it being done from superuser
+            self = self.with_user(SUPERUSER_ID) self.with_context(force_send=True).message_post_with_source(
+            mail_template, email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature', subtype_xmlid='mail.mt_comment',
         )
 
     def action_lock(self):
@@ -1172,8 +1395,7 @@ class PrescriptionOrder(models.Model):
 
         self._recompute_taxes()
 
-        if self.partner_id:
-            self.message_post(body=_("Product taxes have been recomputed according to fiscal position %s.",
+        if self.partner_id: self.message_post(body=_("Product taxes have been recomputed according to fiscal position %s.",
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "")
             )
 
@@ -1191,8 +1413,7 @@ class PrescriptionOrder(models.Model):
             message = _("Product prices have been recomputed according to pricelist %s.",
                 self.pricelist_id._get_html_link())
         else:
-            message = _("Product prices have been recomputed.")
-        self.message_post(body=message)
+            message = _("Product prices have been recomputed.") self.message_post(body=message)
 
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
@@ -1366,15 +1587,13 @@ class PrescriptionOrder(models.Model):
                     # Create a dedicated section for the down payments
                     # (put at the end of the invoiceable_lines)
                     invoice_line_vals.append(
-                        Command.create(
-                            order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+                        Command.create( order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
                         ),
                     )
                     down_payment_section_added = True
                     invoice_item_sequence += 1
                 invoice_line_vals.append(
-                    Command.create(
-                        line._prepare_invoice_line(sequence=invoice_item_sequence)
+                    Command.create( line._prepare_invoice_line(sequence=invoice_item_sequence)
                     ),
                 )
                 invoice_item_sequence += 1
@@ -1390,8 +1609,7 @@ class PrescriptionOrder(models.Model):
             new_invoice_vals_list = []
             invoice_grouping_keys = self._get_invoice_grouping_keys()
             invoice_vals_list = sorted(
-                invoice_vals_list,
-                key=lambda x: [
+                invoice_vals_list, key=lambda x: [
                     x.get(grouping_key) for grouping_key in invoice_grouping_keys
                 ]
             )
@@ -1444,7 +1662,7 @@ class PrescriptionOrder(models.Model):
                     line[2]['sequence'] = PrescriptionOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a prescriptionsperson must be able to generate an invoice from a
+        # Manage the creation of invoices in sudo because a prescriptionspersonnel must be able to generate an invoice from a
         # prescriptions order without "billing" access rights. However, he should not be able to create an invoice from scratch.
         moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
 
@@ -1507,9 +1725,7 @@ class PrescriptionOrder(models.Model):
                         move.line_ids = line_commands
 
             move.message_post_with_source(
-                'mail.message_origin_link',
-                render_values={'self': move, 'origin': move.line_ids.prescriptions_line_ids.order_id},
-                subtype_xmlid='mail.mt_note',
+                'mail.message_origin_link', render_values={'self': move, 'origin': move.line_ids.prescriptions_line_ids.order_id}, subtype_xmlid='mail.mt_note',
             )
         return moves
 
@@ -1528,10 +1744,10 @@ class PrescriptionOrder(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
-        if self.env.context.get('mark_so_as_sent'):
-            self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
+        if self.env.context.get('mark_so_as_done'):
+            self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'done'})
         so_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
-        if self.env.context.get('mark_so_as_sent') and 'mail_notify_author' not in kwargs:
+        if self.env.context.get('mark_so_as_done') and 'mail_notify_author' not in kwargs:
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(PrescriptionOrder, self.with_context(**so_ctx)).message_post(**kwargs)
 
@@ -1567,7 +1783,7 @@ class PrescriptionOrder(models.Model):
                     access_opt['title'] = _("Accept & Sign Draft Rx")
             elif self._has_to_be_paid() and not is_tx_pending:
                 access_opt['title'] = _("Accept & Pay Draft Rx")
-            elif self.state in ('draft', 'sent'):
+            elif self.state in ('draft', 'done'):
                 access_opt['title'] = _("View Draft Rx")
 
         # enable followers that have access through portal
@@ -1575,7 +1791,7 @@ class PrescriptionOrder(models.Model):
         follower_group[2]['active'] = True
         follower_group[2]['has_button_access'] = True
         access_opt = follower_group[2].setdefault('button_access', {})
-        if self.state in ('draft', 'sent'):
+        if self.state in ('draft', 'done'):
             access_opt['title'] = _("View Draft Rx")
         else:
             access_opt['title'] = _("View Order")
@@ -1583,11 +1799,9 @@ class PrescriptionOrder(models.Model):
 
         return groups
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False, force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals, model_description=model_description,
-            force_email_company=force_email_company, force_email_lang=force_email_lang
+            message, msg_vals, model_description=model_description, force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         lang_code = render_context.get('lang')
         subtitles = [
@@ -1600,7 +1814,7 @@ class PrescriptionOrder(models.Model):
                 format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
             )
 
-        if self.validity_date and self.state in ['draft', 'sent']:
+        if self.validity_date and self.state in ['draft', 'done']:
             formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
             subtitles.append(_("Expires on %(date)s", date=formatted_date))
 
@@ -1614,10 +1828,10 @@ class PrescriptionOrder(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'prescriptions':
+        if 'state' in init_values and self.state == 'done':
             return self.env.ref('pod_prescriptions.mt_order_confirmed')
-        elif 'state' in init_values and self.state == 'sent':
-            return self.env.ref('pod_prescriptions.mt_order_sent')
+        elif 'state' in init_values and self.state == 'done':
+            return self.env.ref('pod_prescriptions.mt_order_done')
         return super()._track_subtype(init_values)
 
     # PAYMENT #
@@ -1630,7 +1844,7 @@ class PrescriptionOrder(models.Model):
         invoice the full SO when it's paid.
         """
         for line in self.order_line:
-            if line.state == 'prescriptions':
+            if line.state == 'done':
                 # No need to set 0 as it is already the standard logic in the compute method.
                 line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
 
@@ -1682,7 +1896,7 @@ class PrescriptionOrder(models.Model):
         # - we have still not paid enough for confirmation.
         prepayment_amount = self._get_prepayment_required_amount()
         if (
-            self.state in ('draft', 'sent')
+            self.state in ('draft', 'done')
             and self.require_payment
             and self.currency_id.compare_amounts(prepayment_amount, self.amount_paid) > 0
         ):
@@ -1702,7 +1916,7 @@ class PrescriptionOrder(models.Model):
 
     def _has_to_be_signed(self):
         """A prescriptions order has to be signed when:
-        - its state is 'draft' or `sent`
+        - its state is 'draft' or `done`
         - it's not expired;
         - it requires a signature;
         - it's not already signed.
@@ -1714,7 +1928,7 @@ class PrescriptionOrder(models.Model):
         """
         self.ensure_one()
         return (
-            self.state in ['draft', 'sent']
+            self.state in ['draft', 'done']
             and not self.is_expired
             and self.require_signature
             and not self.signature
@@ -1722,7 +1936,7 @@ class PrescriptionOrder(models.Model):
 
     def _has_to_be_paid(self):
         """A prescriptions order has to be paid when:
-        - its state is 'draft' or `sent`;
+        - its state is 'draft' or `done`;
         - it's not expired;
         - it requires a payment;
         - the last transaction's state isn't `done`;
@@ -1736,7 +1950,7 @@ class PrescriptionOrder(models.Model):
         self.ensure_one()
         transaction = self.get_portal_last_transaction()
         return (
-            self.state in ['draft', 'sent']
+            self.state in ['draft', 'done']
             and not self.is_expired
             and self.require_payment
             and transaction.state != 'done'
@@ -1759,14 +1973,11 @@ class PrescriptionOrder(models.Model):
 
     def _get_report_base_filename(self):
         self.ensure_one()
-        return f'{self.type_name} {self.name}'
-
-    #=== CORE METHODS OVERRIDES ===#
+        return f'{self.type_name} {self.name}' #=== CORE METHODS OVERRIDES ===#
 
     @api.model
     def get_empty_list_help(self, help_msg):
-        self = self.with_context(
-            empty_list_help_document_name=_("prescriptions order"),
+        self = self.with_context( empty_list_help_document_name=_("prescriptions order"),
         )
         return super().get_empty_list_help(help_msg)
 
@@ -1781,9 +1992,7 @@ class PrescriptionOrder(models.Model):
         super()._compute_field_value(field)
 
         upselling_orders = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
-        upselling_orders._create_upsell_activity()
-
-    #=== BUSINESS METHODS ===#
+        upselling_orders._create_upsell_activity() #=== BUSINESS METHODS ===#
 
     def _create_upsell_activity(self):
         if not self:
@@ -1794,9 +2003,7 @@ class PrescriptionOrder(models.Model):
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
             order.activity_schedule(
-                'pod_prescriptions.mail_act_prescriptions_upsell',
-                user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+                'pod_prescriptions.mail_act_prescriptions_upsell', user_id=order.user_id.id or order.partner_id.user_id.id, note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_analytic_account_data(self, prefix=None):
         """ Prepare SO analytic account creation values.
@@ -1903,11 +2110,7 @@ class PrescriptionOrder(models.Model):
         return generated_invoices
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        pricelist = self.pricelist_id._get_products_price(
-            quantity=1.0,
-            products=products,
-            currency=self.currency_id,
-            date=self.date_order,
+        pricelist = self.pricelist_id._get_products_price( quantity=1.0, products=products, currency=self.currency_id, date=self.date_order,
             **kwargs,
         )
         return {product_id: {'price': price} for product_id, price in pricelist.items()}
@@ -1933,7 +2136,7 @@ class PrescriptionOrder(models.Model):
         return documents.filtered(
             lambda document:
                 document.attached_on == 'quotation'
-                or (self.state == 'prescriptions' and document.attached_on == 'prescriptions_order')
+                or (self.state == 'done' and document.attached_on == 'prescriptions_order')
         )
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
@@ -1948,12 +2151,8 @@ class PrescriptionOrder(models.Model):
         if sol:
             if quantity != 0:
                 sol.product_uom_qty = quantity
-            elif self.state in ['draft', 'sent']:
-                price_unit = self.pricelist_id._get_product_price(
-                    product=sol.product_id,
-                    quantity=1.0,
-                    currency=self.currency_id,
-                    date=self.date_order,
+            elif self.state in ['draft', 'done']:
+                price_unit = self.pricelist_id._get_product_price( product=sol.product_id, quantity=1.0, currency=self.currency_id, date=self.date_order,
                     **kwargs,
                 )
                 sol.unlink()
@@ -1967,9 +2166,7 @@ class PrescriptionOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit
-
-    #=== HOOKS ===#
+        return sol.price_unit #=== HOOKS ===#
 
     def add_option_to_order_with_taxcloud(self):
         self.ensure_one()
@@ -1977,9 +2174,7 @@ class PrescriptionOrder(models.Model):
     def validate_taxes_on_prescriptions_order(self):
         # Override for correct taxcloud computation
         # when using coupon and delivery
-        return True
-
-    #=== TOOLING ===#
+        return True #=== TOOLING ===#
 
     def _is_readonly(self):
         """ Return Whether the prescriptions order is read-only or not based on the state or the lock status.
@@ -2004,3 +2199,56 @@ class PrescriptionOrder(models.Model):
         """
         self.ensure_one()
         return self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0
+
+
+
+FIELDS_PROPERTIES = {
+    'forefoot.value': ['ff_varus', 'ff_valgus'],
+    'forefoot.correction': ['ff_varus_intrinsic', 'ff_varus_extrinsic', 'ff_valgus_intrinsic', 'ff_valgus_extrinsic'],
+    'rearfoot.correction': ['rf_varus', 'rf_valgus', 'rf_neutral'],
+    'orthotic.measure': ['ff_length', 'heel_depth', 'orthotic_length', 'cap_size']
+}
+
+SIDE_SUFFIXES = ['lt', 'rt']
+
+
+def add_dynamic_fields_to_class(cls):
+    for model, field_names in FIELDS_PROPERTIES.items():
+        for field_name in field_names:
+            for side in SIDE_SUFFIXES:
+                field_identifier = f"{field_name}_{side}"
+                # Dynamically set the field on the class
+                setattr(
+                    cls,
+                    field_identifier,
+                    fields.Many2one( comodel_name=model, string=field_identifier.replace("_", " ").title(),
+                        # relation=f"rx_{field_identifier}", ondelete='restrict', copy=True
+                    )
+                )
+
+# Add the dynamic fields to the Prescription class
+add_dynamic_fields_to_class(PrescriptionOrder)
+   
+
+
+
+class PrescriptionOrderHistoryLine(models.Model):
+    _name = 'prescriptions.order.history.line'
+    _description = 'Prescription Order History Line'
+
+    prescription_id = fields.Many2one('prescriptions.order', string='Prescription')
+    name = fields.Char('Prescription')
+    product_id = fields.Many2one('product.product')
+    product_uom_qty = fields.Integer('Quantity')
+    price_unit = fields.Integer('Unit price')
+    company_id = fields.Many2one('res.company',default=lambda self: self.env.company)
+
+    def action_add(self):
+        vals = {
+            'prescription_id': self.prescription_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_uom_qty,
+            'price_unit': self.price_unit,
+            'company_id':self.company_id,
+        }
+        self.env['prescriptions.order.line'].sudo().create(vals)

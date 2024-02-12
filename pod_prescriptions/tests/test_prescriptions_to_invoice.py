@@ -925,14 +925,14 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
 
-    def test_prescriptionsperson_in_invoice_followers(self):
+    def test_prescriptionspersonnel_in_invoice_followers(self):
         """
-        Test if the prescriptionsperson is in the followers list of invoice created from SO
+        Test if the prescriptionspersonnel is in the followers list of invoice created from SO
         """
-        # create a prescriptionsperson
-        prescriptionsperson = self.env['res.users'].create({
-            'name': 'Prescriptionsperson',
-            'login': 'prescriptionsperson',
+        # create a prescriptionspersonnel
+        prescriptionspersonnel = self.env['res.users'].create({
+            'name': 'Prescriptionspersonnel',
+            'login': 'prescriptionspersonnel',
             'email': 'test@test.com',
             'groups_id': [(6, 0, [self.env.ref('pod_prescriptions_team.group_prescriptions_personnel').id])]
         })
@@ -940,7 +940,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         # create a SO and generate invoice from it
         prescriptions_order = self.env['prescriptions.order'].create({
             'partner_id': self.partner_a.id,
-            'user_id': prescriptionsperson.id,
+            'user_id': prescriptionspersonnel.id,
             'order_line': [(0, 0, {
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 1,
@@ -949,8 +949,8 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         prescriptions_order.action_confirm()
         invoice = prescriptions_order._create_invoices(final=True)
 
-        # check if the prescriptionsperson is in the followers list of invoice created from SO
-        self.assertIn(prescriptionsperson.partner_id, invoice.message_partner_ids, 'Prescriptionsperson not in the followers list of '
+        # check if the prescriptionspersonnel is in the followers list of invoice created from SO
+        self.assertIn(prescriptionspersonnel.partner_id, invoice.message_partner_ids, 'Prescriptionspersonnel not in the followers list of '
                                                                            'invoice created from SO')
     def test_amount_to_invoice_multiple_so(self):
         """ Testing creating two SOs with the same customer and invoicing them together. We have to ensure
