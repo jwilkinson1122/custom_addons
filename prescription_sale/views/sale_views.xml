@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <button name="action_draft" position="after">
+                <button
+                    name="action_create_prescription"
+                    type="object"
+                    string="Create Prescription"
+                    states="sale,done"
+                    groups="prescription.prescription_group_user_own"
+                />
+            </button>
+            <div name="button_box">
+                <button
+                    name="action_view_prescription"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-reply"
+                    attrs="{'invisible': [('prescription_count', '=', 0)]}"
+                    groups="prescription.prescription_group_user_own"
+                >
+                    <field name="prescription_count" widget="statinfo" string="Prescription" />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

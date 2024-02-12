@@ -1,0 +1,128 @@
+<odoo noupdate="0">
+    
+    <record id="product_template_superglass_flex" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Superglass Flex</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_superglass" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">20.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_superglass')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10045</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_custom/sg_everyday.jpg" />
+    </record>
+
+    <record id="product_template_superglass_everyday" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Superglass Everyday</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_superglass" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">20.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_superglass')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10050</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_custom/sg_everyday.jpg" />
+    </record>
+
+    <record id="product_template_superglass_proformance" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Superglass Proformance</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_superglass" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">20.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_superglass')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10055</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_custom/sg_proformance.jpg" />
+    </record>
+
+    <!-- <record id="product_template_polypropylene_semi_flexible" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Polypropylene Semi-Flexible</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_polypropylene" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">20.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_polypropylene')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10055</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_custom/sg_proformance.jpg" />
+    </record> -->
+
+    <record id="product_template_arch_height_standard" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Arch Height - Standard</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_arch_height" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">10.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_arch_height')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10060</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_options/arch_height.png" />
+    </record>
+    <record id="product_template_arch_height_sulcus" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Arch Height - Sulcus</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_arch_height" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">10.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_arch_height')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10065</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_options/arch_height.png" />
+    </record>
+    <record id="product_template_arch_height_full" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Arch Height - Full</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_arch_height" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">10.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_arch_height')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10070</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_options/arch_height.png" />
+    </record>
+    <record id="product_template_arch_height_complete" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Arch Height - Complete</field>
+        <field name="detailed_type">product</field>
+        <field name="categ_id" ref="product_category_arch_height" />
+        <field name="service_type">manual</field>
+        <field name="purchase_method">receive</field>
+        <field name="invoice_policy">order</field>
+        <field name="available_in_pos" eval="True" />
+        <field name="list_price">10.0</field>
+        <field name="public_categ_ids" eval="[(6, 0, [ref('product_public_category_arch_height')])]" />
+        <field name="has_configurable_attributes" eval="True" />
+        <field name="is_published" eval="True" />
+        <field name="website_sequence">10070</field>
+        <field name="image_1920" type="base64" file="prescription/static/src/binary/product_options/arch_height.png" />
+    </record>
+
+</odoo>

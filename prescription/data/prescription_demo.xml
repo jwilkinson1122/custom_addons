@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <!-- We want to activate pay and sign by default for easier demoing. -->
+    <record id="base.main_company" model="res.company">
+        <field name="portal_confirmation_pay" eval="True"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field eval="[(4, ref('prescription_team.group_prescription_personnel'))]" name="groups_id"/>
+    </record>
+
+    <record model="crm.team" id="prescription_team.team_prescription_department">
+        <field name="invoiced_target">250000</field>
+    </record>
+
+    <record model="crm.team" id="prescription_team.crm_team_1">
+        <field name="invoiced_target">40000</field>
+    </record>
+
+    <record id="utm_source_prescription_0" model="utm.source">
+        <field name="name">Prescription Promotion 1</field>
+    </record>
+
+    <record id="prescription_1" model="prescription">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+
+    <record id="prescription_line_1" model="prescription.line">
+        <field name="order_id" ref="prescription_1"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="prescription_line_2" model="prescription.line">
+        <field name="order_id" ref="prescription_1"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="product_uom_qty">5</field>
+        <field name="price_unit">145.00</field>
+    </record>
+
+    <record id="prescription_line_3" model="prescription.line">
+        <field name="order_id" ref="prescription_1"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">65.00</field>
+    </record>
+
+    <record id="prescription_2" model="prescription">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_13"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_13"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor7'))]"/>
+    </record>
+
+    <record id="prescription_line_4" model="prescription.line">
+        <field name="order_id" ref="prescription_2"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="product_uom_qty">24</field>
+        <field name="price_unit">75.00</field>
+    </record>
+
+    <record id="prescription_line_5" model="prescription.line">
+        <field name="order_id" ref="prescription_2"/>
+        <field name="product_id" ref="product.product_product_2"/>
+        <field name="product_uom_qty">30</field>
+        <field name="price_unit">38.25</field>
+    </record>
+
+    <record id="prescription_3" model="prescription">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_invoice_id" ref="base.res_partner_4"/>
+        <field name="partner_shipping_id" ref="base.res_partner_4"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor1')), (4, ref('prescription_team.categ_oppor2'))]"/>
+    </record>
+
+    <record id="prescription_line_6" model="prescription.line">
+        <field name="order_id" ref="prescription_3"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="product_uom_qty">10</field>
+        <field name="price_unit">30.75</field>
+    </record>
+
+    <record id="prescription_line_7" model="prescription.line">
+        <field name="order_id" ref="prescription_3"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+    </record>
+
+    <record id="prescription_4" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+    </record>
+
+    <record id="prescription_line_8" model="prescription.line">
+        <field name="order_id" ref="prescription_4"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="product_uom_qty">16</field>
+        <field name="price_unit">75.00</field>
+    </record>
+
+    <record id="prescription_line_9" model="prescription.line">
+        <field name="order_id" ref="prescription_4"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="product_uom_qty">10</field>
+        <field name="price_unit">45.00</field>
+    </record>
+
+    <record id="prescription_line_10" model="prescription.line">
+        <field name="order_id" ref="prescription_4"/>
+        <field name="product_id" ref="product.consu_delivery_02"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">150.00</field>
+    </record>
+
+    <record id="prescription_line_11" model="prescription.line">
+        <field name="order_id" ref="prescription_4"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+        <field name="product_uom_qty">2</field>
+    </record>
+
+    <record id="prescription_5" model="prescription">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+
+    <record id="prescription_line_12" model="prescription.line">
+        <field name="order_id" ref="prescription_5"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="price_unit">405.00</field>
+    </record>
+
+    <record id="prescription_6" model="prescription">
+        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="partner_invoice_id" ref="base.res_partner_18"/>
+        <field name="partner_shipping_id" ref="base.res_partner_18"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor6'))]"/>
+    </record>
+
+    <record id="prescription_line_15" model="prescription.line">
+        <field name="order_id" ref="prescription_6"/>
+        <field name="product_id" ref="product.product_product_4"/>
+        <field name="price_unit">750.00</field>
+    </record>
+
+    <record id="prescription_7" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_11"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_11"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor4'))]"/>
+    </record>
+
+    <record id="prescription_line_16" model="prescription.line">
+        <field name="order_id" ref="prescription_7"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">5</field>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="prescription_line_17" model="prescription.line">
+        <field name="order_id" ref="prescription_7"/>
+        <field name="product_id" ref="product.consu_delivery_01"/>
+        <field name="price_unit">173.00</field>
+    </record>
+
+    <record id="prescription_line_18" model="prescription.line">
+        <field name="order_id" ref="prescription_7"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="price_unit">40.00</field>
+    </record>
+
+    <record id="prescription_line_19" model="prescription.line">
+        <field name="order_id" ref="prescription_7"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+        <field name="price_unit">18.00</field>
+    </record>
+
+    <record id="prescription_8" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+    </record>
+
+    <record id="prescription_line_20" model="prescription.line">
+        <field name="order_id" ref="prescription_8"/>
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">110.50</field>
+    </record>
+
+    <record id="prescription_line_21" model="prescription.line">
+        <field name="order_id" ref="prescription_8"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <!-- additional demo data for pretty graphs in prescription dashboard -->
+
+    <record id="prescription_9" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_22" model="prescription.line">
+        <field name="order_id" ref="prescription_9"/>
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">97.50</field>
+    </record>
+
+    <record id="prescription_line_23" model="prescription.line">
+        <field name="order_id" ref="prescription_9"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_10" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor3'))]"/>
+    </record>
+
+    <record id="prescription_line_24" model="prescription.line">
+        <field name="order_id" ref="prescription_10"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">255.00</field>
+    </record>
+
+    <record id="prescription_line_25" model="prescription.line">
+        <field name="order_id" ref="prescription_10"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+
+    <record id="prescription_11" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_26" model="prescription.line">
+        <field name="order_id" ref="prescription_11"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">245.00</field>
+    </record>
+
+    <record id="prescription_line_27" model="prescription.line">
+        <field name="order_id" ref="prescription_11"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_12" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor1'))]"/>
+    </record>
+
+    <record id="prescription_line_28" model="prescription.line">
+        <field name="order_id" ref="prescription_12"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="price_unit">315.00</field>
+    </record>
+
+    <record id="prescription_line_29" model="prescription.line">
+        <field name="order_id" ref="prescription_12"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_13" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.crm_team_1"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_30" model="prescription.line">
+        <field name="order_id" ref="prescription_13"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="prescription_line_31" model="prescription.line">
+        <field name="order_id" ref="prescription_13"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_14" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_32" model="prescription.line">
+        <field name="order_id" ref="prescription_14"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">4</field>
+        <field name="price_unit">275.00</field>
+    </record>
+
+    <record id="prescription_line_33" model="prescription.line">
+        <field name="order_id" ref="prescription_14"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">4</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_15" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_34" model="prescription.line">
+        <field name="order_id" ref="prescription_15"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">4</field>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="prescription_line_35" model="prescription.line">
+        <field name="order_id" ref="prescription_15"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_16" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_36" model="prescription.line">
+        <field name="order_id" ref="prescription_16"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">275.00</field>
+    </record>
+
+    <record id="prescription_line_37" model="prescription.line">
+        <field name="order_id" ref="prescription_16"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_17" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_38" model="prescription.line">
+        <field name="order_id" ref="prescription_17"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">355.00</field>
+    </record>
+
+    <record id="prescription_line_39" model="prescription.line">
+        <field name="order_id" ref="prescription_17"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="prescription_18" model="prescription">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+        <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+        <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="prescription_line_40" model="prescription.line">
+        <field name="order_id" ref="prescription_18"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="prescription_line_41" model="prescription.line">
+        <field name="order_id" ref="prescription_18"/>
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">120.50</field>
+    </record>
+
+    <record id="portal_prescription_1" model="prescription">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="partner_invoice_id" ref="base.partner_demo_portal"/>
+        <field name="partner_shipping_id" ref="base.partner_demo_portal"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="state">sent</field>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
+        <field name="tag_ids" eval="[(4, ref('prescription_team.categ_oppor4'))]"/>
+    </record>
+
+    <record id="portal_prescription_line_1" model="prescription.line">
+        <field name="order_id" ref="portal_prescription_1"/>
+        <field name="product_id" ref="product.product_product_25"/>
+        <field name="product_uom_qty">3</field>
+        <field name="price_unit">295.00</field>
+    </record>
+
+    <record id="portal_prescription_line_2" model="prescription.line">
+        <field name="order_id" ref="portal_prescription_1"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="product_uom_qty">5</field>
+        <field name="price_unit">145.00</field>
+    </record>
+
+    <record id="portal_prescription_line_3" model="prescription.line">
+        <field name="order_id" ref="portal_prescription_1"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">65.00</field>
+    </record>
+
+    <record id="portal_prescription_2" model="prescription">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="partner_invoice_id" ref="base.partner_demo_portal"/>
+        <field name="partner_shipping_id" ref="base.partner_demo_portal"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="prescription_team.team_prescription_department"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
+    </record>
+
+    <record id="portal_prescription_line_4" model="prescription.line">
+        <field name="order_id" ref="portal_prescription_2"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="product_uom_qty">24</field>
+        <field name="price_unit">75.00</field>
+    </record>
+
+    <record id="portal_prescription_line_5" model="prescription.line">
+        <field name="order_id" ref="portal_prescription_2"/>
+        <field name="product_id" ref="product.product_product_2"/>
+        <field name="product_uom_qty">30</field>
+        <field name="price_unit">38.25</field>
+    </record>
+
+    <!-- Confirm some Prescription Orders-->
+    <function model="prescription" name="action_confirm" eval="[[
+        ref('prescription_4'),
+        ref('prescription_6'),
+        ref('prescription_7'),
+        ref('prescription_8'),
+        ref('prescription_9'),
+        ref('prescription_10'),
+        ref('prescription_11'),
+        ref('prescription_12'),
+        ref('prescription_13'),
+        ref('prescription_14'),
+        ref('prescription_15'),
+        ref('prescription_16'),
+        ref('prescription_17'),
+        ref('prescription_18'),
+        ref('portal_prescription_2'),
+    ]]"/>
+
+    <!-- Setting date_order in the past for beautiful spread -->
+    <record id="prescription_9" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(days=7)"/>
+    </record>
+
+    <record id="prescription_11" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(days=21)"/>
+    </record>
+
+    <record id="prescription_15" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(days=14)"/>
+    </record>
+
+    <record id="prescription_17" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(days=28)"/>
+    </record>
+
+    <record id="prescription_18" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(days=35)"/>
+    </record>
+
+    <record id="portal_prescription_2" model="prescription">
+        <field name="date_order" eval="datetime.now() - relativedelta(months=1)"/>
+    </record>
+
+    <!-- Mail messages in SO's chatter -->
+    <record id="message_prescription_1" model="mail.message">
+        <field name="model">prescription</field>
+        <field name="res_id" ref="prescription_2"/>
+        <field name="body">Hi,
+I have a question regarding services pricing: I heard of a possible discount for quantities exceeding 25 hours.
+Could you confirm, please?</field>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+
+    <record id="message_prescription_2" model="mail.message">
+        <field name="model">prescription</field>
+        <field name="res_id" ref="prescription_2"/>
+        <field name="parent_id" ref="message_prescription_1"/>
+        <field name="body">Hello,
+Unfortunately that was a temporary discount that is not available anymore.
+Do you still plan to confirm the order based on the quoted prices?
+Thanks!</field>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_root"/>
+    </record>
+
+    <record id="message_prescription_3" model="mail.message">
+        <field name="model">prescription</field>
+        <field name="res_id" ref="prescription_2"/>
+        <field name="parent_id" ref="message_prescription_2"/>
+        <field name="body">
+Alright, thanks for the clarification. I will confirm the order as soon as I get my manager's approval.
+        </field>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+
+    <!-- Activities of prescription order -->
+    <record id="prescription_activity_2" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_3"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Answer questions</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="prescription_activity_3" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_4"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="prescription.mail_act_prescription_upsell"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="prescription_activity_4" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_5"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+    <record id="prescription_activity_6" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_7"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Check delivery requirements</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="prescription_activity_7" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_10"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Confirm Delivery</field>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+    <record id="prescription_activity_8" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_12"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+    <record id="prescription_activity_9" model="mail.activity">
+        <field name="res_id" ref="prescription.prescription_16"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="prescription.mail_act_prescription_upsell"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+    <record id="prescription_activity_10" model="mail.activity">
+        <field name="res_id" ref="prescription.portal_prescription_1"/>
+        <field name="res_model_id" ref="prescription.model_prescription"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Get quote confirmation</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+</odoo>

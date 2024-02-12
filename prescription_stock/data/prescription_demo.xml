@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="prescription.prescription_1" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription.prescription_2" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription.prescription_3" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription.prescription_5" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription.prescription_6" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription.prescription_8" model="prescription">
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <!-- Create some new prescription orders to have more data for the forecast report -->
+        <record id="prescription_19" model="prescription">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="team_id" ref="prescription_team.team_prescription_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription_line_42" model="prescription.line">
+            <field name="order_id" ref="prescription_19"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">295.00</field>
+        </record>
+
+        <record id="prescription_line_43" model="prescription.line">
+            <field name="order_id" ref="prescription_19"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_10').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_10"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">140.00</field>
+        </record>
+
+        <record id="prescription_20" model="prescription">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="team_id" ref="prescription_team.team_prescription_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription_line_44" model="prescription.line">
+            <field name="order_id" ref="prescription_20"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">295.00</field>
+        </record>
+
+        <record id="prescription_21" model="prescription">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="team_id" ref="prescription_team.team_prescription_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription_line_45" model="prescription.line">
+            <field name="order_id" ref="prescription_21"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">295.00</field>
+        </record>
+
+        <record id="prescription_line_46" model="prescription.line">
+            <field name="order_id" ref="prescription_21"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_10').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_10"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">140.00</field>
+        </record>
+
+        <record id="prescription_22" model="prescription">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="team_id" ref="prescription_team.team_prescription_department"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="prescription.utm_source_prescription_0"/>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+        </record>
+
+        <record id="prescription_line_47" model="prescription.line">
+            <field name="order_id" ref="prescription_22"/>
+            <field name="name" model="prescription.line" eval="obj().env.ref('product.product_product_5').get_product_multiline_description_prescription()"/>
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">199.00</field>
+        </record>
+
+
+        <function model="prescription" name="action_confirm" eval="[[
+            ref('prescription_19'),
+            ref('prescription_20'),
+            ref('prescription_21'),
+            ref('prescription_22'),
+        ]]"/>
+
+        <!-- Change date of those prescription orders' delivery -->
+        <function model="stock.picking" name="write">
+            <value model="stock.picking" search="[('prescription_id', '=', obj().env.ref('prescription_stock.prescription_19').id)]"/>
+            <value eval="{'scheduled_date': (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')}"/>
+        </function>
+        <function model="stock.picking" name="write">
+            <value model="stock.picking" search="[('prescription_id', '=', obj().env.ref('prescription_stock.prescription_20').id)]"/>
+            <value eval="{'scheduled_date': (datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')}"/>
+        </function>
+        <function model="stock.picking" name="write">
+            <value model="stock.picking" search="[('prescription_id', '=', obj().env.ref('prescription_stock.prescription_21').id)]"/>
+            <value eval="{'scheduled_date': (datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')}"/>
+        </function>
+
+
+        <!-- Inventory for new Customizable Desks -->
+        <record id="stock_inventory_7e" model="stock.quant">
+            <field name="product_id" ref="prescription.product_product_4e"/>
+            <field name="inventory_quantity">65.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_inventory_7f" model="stock.quant">
+            <field name="product_id" ref="prescription.product_product_4f"/>
+            <field name="inventory_quantity">70.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <function model="stock.quant" name="action_apply_inventory">
+            <function eval="[[('id', 'in', (ref('stock_inventory_7e'),
+                                            ref('stock_inventory_7f'),
+                                            ))]]" model="stock.quant" name="search"/>
+        </function>
+    </data>
+</odoo>

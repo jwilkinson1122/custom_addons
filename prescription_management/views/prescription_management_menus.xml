@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <record id="prescription.prescription_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record> -->
+
+    <menuitem id="prescription_template_menu" name="Draft RX Templates" action="prescription_template_action" parent="prescription.menu_prescription_config" groups="prescription_management.group_prescription_template" sequence="1"/>
+
+</odoo>
