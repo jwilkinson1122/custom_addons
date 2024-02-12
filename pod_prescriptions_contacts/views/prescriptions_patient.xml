@@ -63,7 +63,7 @@
                         </div>
                     </div>
 
-                    <!-- <group name="contact">
+                    <group name="contact">
                         <group>
                             <span class="o_form_label o_td_label" name="address_name">
                                 <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/>
@@ -96,12 +96,12 @@
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder='e.g. "Patient"...'/>
                         </div>
-                    </group> -->
+                    </group>
 
                     <!-- <button type="object" invisible="state != 'uninstalled' or module_type == 'official'">Activate</button> -->
 
 
-                    <group name="contact">
+                    <!-- <group name="contact">
                         <group>
                             <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/>
                             <span class="o_form_label o_td_label" name="address_name">
@@ -140,18 +140,7 @@
                                 <field name="lang" invisible="active_lang_count &lt;= 1"/>
                                 <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder='e.g. "Patient"...'/>
                             </div>
-                            <!-- <field name="function" placeholder="e.g. Sales Director" invisible="1"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
-                            <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" context="{'gravatar_image': True}"/>
-                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.example.com" invisible="1"/>
-                            <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
-                            <field name="active_lang_count" invisible="1"/>
-                            <field name="lang" invisible="active_lang_count &lt;= 1"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder='e.g. "Patient"...'/> -->
-                        </group>
-                    </group>
+                    </group> -->
 
 
 

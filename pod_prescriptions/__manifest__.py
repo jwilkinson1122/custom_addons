@@ -59,7 +59,7 @@ This module contains all the common features of Prescriptions Management and eCo
         'data/product_product.xml',
         'data/product_image.xml',
         # 'data/knowledge_article.xml',
-
+        'wizard/sale_order_wizard_view.xml',
         'wizard/account_accrued_orders_wizard_views.xml',
         'wizard/mass_cancel_orders_views.xml',
         'wizard/payment_link_wizard_views.xml',

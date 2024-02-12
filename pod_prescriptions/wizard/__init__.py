@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+from . import sale_order_wizard
 from . import account_payment_register
 from . import mass_cancel_orders
 from . import payment_link_wizard

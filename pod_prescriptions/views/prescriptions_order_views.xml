@@ -203,17 +203,17 @@
                 <header>
                     <field name="locked" invisible="1"/>
                     <field name="authorized_transaction_ids" invisible="1"/>
-                    <button name="payment_action_capture" type="object" data-hotkey="shift+g" string="Capture Transaction" class="oe_highlight" invisible="not authorized_transaction_ids"/>
+                    <!-- <button name="payment_action_capture" type="object" data-hotkey="shift+g" string="Capture Transaction" class="oe_highlight" invisible="not authorized_transaction_ids"/>
                     <button name="payment_action_void" type="object" string="Void Transaction" data-hotkey="shift+v" confirm="Are you sure you want to void the authorized transaction? This action can't be undone." invisible="not authorized_transaction_ids"/>
                     <button id="create_invoice" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" class="btn-primary" data-hotkey="c" invisible="invoice_status != 'to invoice'"/>
-                    <button id="create_invoice_percentage" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="c" invisible="invoice_status != 'no' or state != 'prescriptions'"/>
-                    <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g" invisible="state != 'draft'" class="btn-primary" context="{'validate_analytic': True}"/>
-                    <!-- <button name="action_quotation_send" id="send_proforma_primary" type="object" string="Send PRO-FORMA Invoice" class="btn-primary" groups="pod_prescriptions.group_proforma_prescriptions" invisible="state != 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/> -->
+                    <button id="create_invoice_percentage" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="c" invisible="invoice_status != 'no' or state != 'prescriptions'"/> -->
+                    <!-- <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g" invisible="state != 'draft'" class="btn-primary" context="{'validate_analytic': True}"/> -->
                     <button name="action_confirm" id="action_confirm" data-hotkey="q" string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'sent'"/>
                     <button name="action_confirm" data-hotkey="q" string="Confirm" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
-                    <!-- <button name="action_quotation_send" id="send_proforma" type="object" string="Send PRO-FORMA Invoice" groups="pod_prescriptions.group_proforma_prescriptions" invisible="state == 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/> -->
-                    <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'prescriptions')" data-hotkey="g" context="{'validate_analytic': True}"/>
-
+                    <!-- <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'prescriptions')" data-hotkey="g" context="{'validate_analytic': True}"/> -->
+                    <!-- <button id="create_invoice" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" class="btn-primary" data-hotkey="c" invisible="invoice_status != 'to invoice'"/> -->
+                    <!-- <button id="create_sale_order" name="%(pod_prescriptions.action_transientmodel_wizard)d" string="Create Sale Order" type="action" class="btn-primary" invisible="state in ('done', 'cancel')"/> -->
+                    <button id="create_sale_order" name="%(pod_prescriptions.action_transientmodel_wizard)d" string="Create Sale Order" type="action" class="btn-primary" invisible="state == 'draft'"/>
                     <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
                     <button name="action_unlock" type="object" string="Unlock" invisible="not locked" groups="pod_prescriptions_team.group_prescriptions_manager"/>
                     <button name="action_preview_prescriptions_order" string="Preview" type="object" class="btn-secondary"/>
