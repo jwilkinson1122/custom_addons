@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <template id="report_prescription_document">
+            <t t-call="web.external_layout">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <br/>
+                    <h2 class="mt16">
+                        <span t-field="doc.name"/>
+                    </h2>
+                    <br/>
+                    <table class="table table-bordered table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <td><span t-field="doc.partner_id"/></td>
+                                <th>Sale Representative</th>
+                                <td><span t-field="doc.user_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Order Date</th>
+                                <td><span t-field="doc.date_order"/></td>
+                                <th>Company</th>
+                                <td><span t-field="doc.company_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Validity Start Date</th>
+                                <td><span t-field="doc.validity_start_date"/></td>
+                                <th>Pricelist</th>
+                                <td><span t-field="doc.pricelist_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Validity End Date</th>
+                                <td><span t-field="doc.validity_end_date"/></td>
+                                <th>Currency</th>
+                                <td><span t-field="doc.currency_id"/></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br/>
+                    <center>
+                        <h4>
+                            Order Lines
+                        </h4>
+                    </center>
+                    <table class="table table-bordered table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th name="th_product">Product</th>
+                                <th name="th_description" class="text-left">Description</th>
+                                <th name="th_quantity" class="text-end">Quantity</th>
+                                <th name="th_unit_price" class="text-end">Unit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody class="prescription_tbody">
+                            <t t-foreach="doc.order_line" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-field="line.product_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.product_uom_qty"/> <span t-field="line.product_uom"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <th colspan="3" class="text-end">Total</th>
+                                <td class="text-end">
+                                    <t t-set="price_unit_total" t-value="0.0"/>
+                                    <t t-foreach="doc.order_line" t-as="line">
+                                        <t t-set="price_unit_total" t-value="price_unit_total + line.price_unit"/>
+                                    </t>
+                                    <span t-esc="price_unit_total"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_prescription_pro_forma">
+            <t t-call="web.html_container">
+                <t t-set="is_pro_forma" t-value="True"/>
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="prescription.report_prescription_document" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_prescription" model="ir.actions.report">
+            <field name="name">Blanket Report</field>
+            <field name="model">prescription</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">prescription.report_prescription_pro_forma</field>
+            <field name="report_file">prescription.report_prescription_pro_forma</field>
+            <field name="binding_model_id" ref="model_prescription"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

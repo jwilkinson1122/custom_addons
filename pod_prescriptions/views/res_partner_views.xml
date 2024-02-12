@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="act_res_partner_2_prescriptions_order" model="ir.actions.act_window">
-        <field name="name">Prescriptions and Prescriptions</field>
+        <field name="name">Prescriptions</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{'default_partner_id': active_id}</field>

@@ -38,6 +38,7 @@ class PrescriptionOrderLine(models.Model):
         comodel_name='prescriptions.order',
         string="Order Reference",
         required=True, ondelete='cascade', index=True, copy=False)
+    
     sequence = fields.Integer(string="Sequence", default=10)
 
     # Order-related fields
@@ -1159,6 +1160,17 @@ class PrescriptionOrderLine(models.Model):
         if self.display_type:
             res['account_id'] = False
         return res
+
+    def _prepare_sale_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+        self.ensure_one()
+        return {
+            'name': name,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_id.uom_po_id.id,
+            'product_uom_qty': product_qty,
+            'price_unit': price_unit,
+            'prescriptions_line_ids': [Command.link(self.id)],
+        }
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule

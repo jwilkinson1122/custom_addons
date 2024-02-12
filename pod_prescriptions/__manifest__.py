@@ -70,7 +70,7 @@ This module contains all the common features of Prescriptions Management and eCo
 
         # Define prescriptions order views before their references
         'views/prescriptions_order_views.xml',
-
+        'views/sale_order_view.xml',
         'views/account_views.xml',
         'views/crm_team_views.xml',
         'views/mail_activity_views.xml',

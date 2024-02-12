@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Multi Company Recoed Rule -->
+        <record id="prescription_comp_rule" model="ir.rule">
+            <field name="name">Prescription multi-company</field>
+            <field name="model_id" ref="model_prescription"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="prescription_line_details_comp_rule" model="ir.rule">
+            <field name="name">Prescription Line multi-company</field>
+            <field name="model_id" ref="model_prescription_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- Sales User Recoed Rule -->
+        <record id="prescription_sales_user_rule" model="ir.rule">
+            <field name="name">Prescription Sales User</field>
+            <field name="model_id" ref="model_prescription"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        </record>
+        <record id="prescription_line_sales_user_rule" model="ir.rule">
+            <field name="name">Prescription Line Sales User</field>
+            <field name="model_id" ref="model_prescription_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        </record>
+        
+        
+        <!-- Sales User Recoed Rule -->
+        <record id="prescription_sales_manager_rule" model="ir.rule">
+            <field name="name">Prescription Sales Manager</field>
+            <field name="model_id" ref="model_prescription"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        </record>
+        <record id="prescription_line_sales_manager_rule" model="ir.rule">
+            <field name="name">Prescription Line Sales Manager</field>
+            <field name="model_id" ref="model_prescription_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        </record>
+    </data>
+</odoo>

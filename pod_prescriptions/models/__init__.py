@@ -16,4 +16,5 @@ from . import res_company
 from . import res_partner
 from . import prescriptions_order
 from . import prescriptions_order_line
+from . import sale_order
 from . import utm_campaign

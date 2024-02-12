@@ -6,21 +6,18 @@
             <field name="model">prescriptions.order</field>
             <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_invoice']" position="before">
-                    <button type="object"
-                        name="action_view_delivery"
-                        class="oe_stat_button"
-                        icon="fa-truck"
-                        invisible="delivery_count == 0" groups="stock.group_stock_user">
+                <!-- <xpath expr="//button[@name='action_view_invoice']" position="before">
+                    <button type="object" name="action_view_delivery" class="oe_stat_button" icon="fa-truck" invisible="delivery_count == 0" groups="stock.group_stock_user">
                         <field name="delivery_count" widget="statinfo" string="Delivery"/>
                     </button>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//group[@name='prescriptions_shipping']" position="attributes">
-                    <attribute name="groups"></attribute><!-- Remove the res.group on the group and set it on the field directly-->
+                    <attribute name="groups"></attribute>                    <!-- Remove the res.group on the group and set it on the field directly-->
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
-                    <field name="warehouse_id" invisible="1" readonly="state == 'prescriptions'"/>  <!-- needed for js logic -->
+                    <field name="warehouse_id" invisible="1" readonly="state == 'prescriptions'"/>
+                    <!-- needed for js logic -->
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'prescriptions'"/>
                     <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
                     <field name="incoterm_location"/>
@@ -32,7 +29,8 @@
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
                         <field name="commitment_date"/>
-                        <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
+                        <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline" widget="date"/>
+                        </span>
                     </div>
                     <field name="effective_date" invisible="not effective_date"/>
                 </xpath>
@@ -49,7 +47,7 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_distribution']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
-           </field>
+            </field>
         </record>
 
         <record id="prescriptions_order_tree" model="ir.ui.view">
@@ -58,10 +56,7 @@
             <field name="inherit_id" ref="pod_prescriptions.prescriptions_order_tree"/>
             <field name="arch" type="xml">
                 <field name="tag_ids" position="after">
-                    <field name="warehouse_id"
-                           options="{'no_create': True}"
-                           groups="stock.group_stock_multi_warehouses"
-                           optional="hide" readonly="state == 'prescriptions'"/>
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" readonly="state == 'prescriptions'"/>
                 </field>
             </field>
         </record>
@@ -73,10 +68,7 @@
             <field name="arch" type="xml">
                 <field name="invoice_status" position="before">
                     <field name="effective_date" column_invisible="True"/>
-                    <field name="delivery_status" optional="hide" widget="badge"
-                        decoration-success="commitment_date and (commitment_date &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or delivery_status=='full' and effective_date &lt;= commitment_date)"
-                        decoration-danger="commitment_date and (commitment_date &lt; effective_date or commitment_date &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full' and effective_date &lt;= commitment_date)"
-                        decoration-warning="commitment_date and commitment_date &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and commitment_date &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full'"/>
+                    <field name="delivery_status" optional="hide" widget="badge" decoration-success="commitment_date and (commitment_date &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or delivery_status=='full' and effective_date &lt;= commitment_date)" decoration-danger="commitment_date and (commitment_date &lt; effective_date or commitment_date &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full' and effective_date &lt;= commitment_date)" decoration-warning="commitment_date and commitment_date &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and commitment_date &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full'"/>
                 </field>
             </field>
         </record>
@@ -128,5 +120,5 @@
             </field>
         </record>
 
-        </data>
+    </data>
 </odoo>

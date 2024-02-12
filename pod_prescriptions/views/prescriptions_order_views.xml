@@ -203,17 +203,17 @@
                 <header>
                     <field name="locked" invisible="1"/>
                     <field name="authorized_transaction_ids" invisible="1"/>
-                    <button name="payment_action_capture" type="object" data-hotkey="shift+g" string="Capture Transaction" class="oe_highlight" invisible="not authorized_transaction_ids"/>
+                    <!-- <button name="payment_action_capture" type="object" data-hotkey="shift+g" string="Capture Transaction" class="oe_highlight" invisible="not authorized_transaction_ids"/>
                     <button name="payment_action_void" type="object" string="Void Transaction" data-hotkey="shift+v" confirm="Are you sure you want to void the authorized transaction? This action can't be undone." invisible="not authorized_transaction_ids"/>
                     <button id="create_invoice" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" class="btn-primary" data-hotkey="c" invisible="invoice_status != 'to invoice'"/>
                     <button id="create_invoice_percentage" name="%(pod_prescriptions.action_view_prescriptions_advance_payment_inv)d" string="Create Invoice" type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="c" invisible="invoice_status != 'no' or state != 'prescriptions'"/>
-                    <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g" invisible="state != 'draft'" class="btn-primary" context="{'validate_analytic': True}"/>
+                    <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g" invisible="state != 'draft'" class="btn-primary" context="{'validate_analytic': True}"/> -->
                     <!-- <button name="action_quotation_send" id="send_proforma_primary" type="object" string="Send PRO-FORMA Invoice" class="btn-primary" groups="pod_prescriptions.group_proforma_prescriptions" invisible="state != 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/> -->
                     <button name="action_confirm" id="action_confirm" data-hotkey="q" string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}" invisible="state != 'sent'"/>
                     <button name="action_confirm" data-hotkey="q" string="Confirm" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
                     <!-- <button name="action_quotation_send" id="send_proforma" type="object" string="Send PRO-FORMA Invoice" groups="pod_prescriptions.group_proforma_prescriptions" invisible="state == 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/> -->
-                    <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'prescriptions')" data-hotkey="g" context="{'validate_analytic': True}"/>
-
+                    <!-- <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'prescriptions')" data-hotkey="g" context="{'validate_analytic': True}"/> -->
+                    <button name="action_create_prescription_to_so" type="object" string="Create Sales Order" class="btn-primary" invisible="state == 'draft'"/>
                     <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
                     <button name="action_unlock" type="object" string="Unlock" invisible="not locked" groups="pod_prescriptions_team.group_prescriptions_manager"/>
                     <button name="action_preview_prescriptions_order" string="Preview" type="object" class="btn-secondary"/>
@@ -229,8 +229,11 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="invoice_count == 0">
+                        <!-- <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="invoice_count == 0">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button> -->
+                        <button name="action_view_sale_order" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="order_count == 0">
+                            <field name="order_count" widget="statinfo" string="Sale Orders"/>
                         </button>
                     </div>
                     <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0" invisible="not locked">
@@ -314,8 +317,7 @@
                                             <t groups="product.group_discount_per_so_line">
                                                 <label for="discount"/>
                                                 <div name="discount">
-                                                    <field name="discount" class="oe_inline"/>
-%
+                                                    <field name="discount" class="oe_inline"/>%
                                                 </div>
                                             </t>
                                             <field name="sequence" invisible="1"/>
@@ -323,8 +325,7 @@
                                         <group invisible="display_type">
                                             <label for="customer_lead"/>
                                             <div name="lead">
-                                                <field name="customer_lead" class="oe_inline"/>
-days
+                                                <field name="customer_lead" class="oe_inline"/>days
                                             </div>
                                             <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id', 'business_domain': 'prescriptions_order'}"/>
                                         </group>
@@ -482,8 +483,7 @@ days
                                                                 <div class="row">
                                                                     <div class="col-12 text-muted">
                                                                     Discount:
-                                                                        <t t-out="record.discount.value"/>
-%
+                                                                        <t t-out="record.discount.value"/>%
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -528,7 +528,7 @@ days
                                     <field name="client_order_ref"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
-                                <group name="prescriptions_info" string="Invoicing">
+                                <!-- <group name="prescriptions_info" string="Invoicing">
                                     <field name="show_update_fpos" invisible="1"/>
                                     <label for="fiscal_position_id"/>
                                     <div class="o_row">
@@ -539,9 +539,8 @@ days
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" readonly="invoice_count != 0 and state == 'prescriptions'" groups="analytic.group_analytic_accounting" force_save="1"/>
                                     <field name="journal_id" groups="base.group_no_one" readonly="invoice_count != 0 and state == 'prescriptions'"/>
                                     <field name="invoice_status" invisible="state != 'prescriptions'" groups="base.group_no_one"/>
-                                    <!-- test_event_configurator -->
                                     <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
-                                </group>
+                                </group> -->
                                 <group name="prescriptions_shipping" string="Shipping">
                                     <label for="commitment_date" string="Delivery Date"/>
                                     <div name="commitment_date_div" class="o_row">
@@ -642,19 +641,38 @@ days
 
     <!-- ACTIONS (WINDOW) -->
 
+    <!-- Sale Order Action -->
+    <record model="ir.actions.act_window" id="action_prescription_to_so">
+        <field name="name">Create Sales Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('prescription_so_id','=',active_id)]</field>
+    </record>
+
+    <!-- <record id="action_custom_prescriptions" model="ir.actions.act_window">
+            <field name="name">Blanket Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">prescription</field>
+            <field name="view_mode">tree,form</field>
+        </record> -->
+
     <record id="action_prescriptions" model="ir.actions.act_window">
         <field name="name">Prescriptions Orders</field>
         <field name="res_model">prescriptions.order</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="prescriptions_order_view_search_inherit_prescription"/>
         <field name="context">{}</field>
-        <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <!-- <field name="domain">[('state','not in','sent')]</field> -->
+        <!-- <field name="domain">[('state', 'not in', ('sent'))]</field> -->
+
+        <!-- <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field> -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new quotation, the first step of a new prescriptions!
+                Create a new draft prescription, the first step of a new prescriptions!
             </p>
             <p>
-                Once the quotation is confirmed, it becomes a prescriptions order.<br/>
+                Once the prescription is confirmed, it becomes a sales order.<br/>
  You will be able to create an invoice and collect the payment.
             </p>
         </field>
@@ -838,4 +856,5 @@ days
         <field name="state">code</field>
         <field name="code">action = records.action_share()</field>
     </record>
+
 </odoo>
