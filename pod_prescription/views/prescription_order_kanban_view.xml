@@ -1,0 +1,102 @@
+<odoo>
+
+    <record id="prescription_order_kanban" model="ir.ui.view">
+        <field name="model">prescriptions.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" quick_create="true">
+                <field name="color" />
+                <!-- <field name="prescription_order_ids" /> -->
+                <field name="num_prescription_items" />
+                <field name="state" />
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}' sum_field="prescription_count" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click {{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}}">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" title="Dropdown menu" href="#">
+                                    <span class="fa fa-ellipsis-v" />
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <a t-if="widget.editable and record.state != 'done'" role="menuitem" class="dropdown-item" name="button_done" type="object">Set as Confirmed</a>
+                                    <a t-if="widget.editable and record.state != 'hold'" role="menuitem" class="dropdown-item" name="button_hold" type="object">Place on hold</a>
+                                    <div role="separator" class="dropdown-divider" />
+                                    <ul class="oe_kanban_colorpicker" data-field="color" />
+                                </div>
+                            </div>
+
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <t t-set="red_or_black" t-value="record.num_prescription_items == 0 ? '' : 'oe_kanban_text_red'" />
+                                    <strong t-att-class="red_or_black">
+                                        <field name="name" />
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div t-att-class="record.priority.raw_value &lt; '2' ? 'oe_kanban_text_black' : 'oe_kanban_text_red'">
+                                        <!-- <field name="request_date"/> -->
+                                        <strong>
+                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date" />
+                                            <field name="request_date" />
+                                        </strong>
+                                    </div>
+                                    <div t-if="record.num_prescription_items.raw_value == 0">No items!</div>
+                                    <div t-elif="record.num_prescription_items.raw_value == 1">One item</div>
+                                    <div t-else="">
+                                        <field name="num_prescription_items"/>
+items
+                                    </div>
+                                    <div>
+                                        <span class="oe_read_only">Account:</span>
+                                        <field name="partner_id" class="oe_inline fw-bold" />
+                                    </div>
+                                    <div>
+                                        <span class="oe_read_only">Location:</span>
+                                        <field name="location_id" class="oe_inline fw-bold" />
+                                    </div>
+                                    <div>
+                                        <span class="oe_read_only">Practitioner:</span>
+                                        <field name="practitioner_id" class="oe_inline fw-bold" />
+                                    </div>
+                                    <div>
+                                        <span class="oe_read_only">Patient:</span>
+                                        <field name="patient_id" class="oe_inline fw-bold" />
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <!-- Left side footer... -->
+                                        <field name="priority" widget="priority"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="float-right" style="font-size:16px;">
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'done': 'success', 'canceled': 'danger'}}" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="oe_clear"/>
+                            </div>                            
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+
+    <record id="res_partner_kanban_inherit" model="ir.ui.view">
+        <field name="name">Contact Kanban modification</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="before">
+                <span>Name: </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
