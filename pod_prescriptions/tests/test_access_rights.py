@@ -60,7 +60,7 @@ class TestAccessRights(BaseUsersCommon, PrescriptionCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_prescriptions_person(self):
-        """ Test Prescriptionsperson's access rights """
+        """ Test Prescriptions Person's access rights """
         PrescriptionOrder = self.env['prescriptions.order'].with_user(self.prescriptions_user2)
         so_as_prescriptionsperson = PrescriptionOrder.browse(self.prescriptions_order.id)
 

@@ -63,11 +63,11 @@
 
 
     <!-- sale_menu_root - sale_order_menu -->
-    <menuitem id="menu_prescription_order" name="Prescription Orders" parent="sale.sale_order_menu" action="action_prescriptions" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="15" />
+    <menuitem id="menu_prescription_order" name="Prescriptions" parent="sale.sale_order_menu" action="action_prescriptions" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="15" />
 
     <menuitem id="prescriptions_team_config" name="Prescriptions Team" parent="sale.menu_sale_config" action="pod_prescriptions_team.crm_team_action_config" sequence="15"/>
 
-    <menuitem id="menu_prescriptions_config" name="Prescription Orders" parent="sale.menu_sale_config" sequence="18">
+    <menuitem id="menu_prescriptions_config" name="Prescriptions" parent="sale.menu_sale_config" sequence="18">
 
         <menuitem id="menu_prescription_tag_config" name="Prescription Tags" action="pod_prescriptions_team.prescriptions_team_crm_tag_action" sequence="1"/>
 

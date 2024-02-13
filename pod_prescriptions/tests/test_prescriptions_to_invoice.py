@@ -931,7 +931,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         """
         # create a prescriptionsperson
         prescriptionsperson = self.env['res.users'].create({
-            'name': 'Prescriptionsperson',
+            'name': 'Prescriptions Person',
             'login': 'prescriptionsperson',
             'email': 'test@test.com',
             'groups_id': [(6, 0, [self.env.ref('pod_prescriptions_team.group_prescriptions_personnel').id])]
@@ -950,7 +950,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         invoice = prescriptions_order._create_invoices(final=True)
 
         # check if the prescriptionsperson is in the followers list of invoice created from SO
-        self.assertIn(prescriptionsperson.partner_id, invoice.message_partner_ids, 'Prescriptionsperson not in the followers list of '
+        self.assertIn(prescriptionsperson.partner_id, invoice.message_partner_ids, 'Prescriptions Person not in the followers list of '
                                                                            'invoice created from SO')
     def test_amount_to_invoice_multiple_so(self):
         """ Testing creating two SOs with the same customer and invoicing them together. We have to ensure

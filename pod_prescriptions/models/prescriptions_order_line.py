@@ -55,7 +55,7 @@ class PrescriptionOrderLine(models.Model):
         store=True, index=True, precompute=True)
     personnel_id = fields.Many2one(
         related='order_id.user_id',
-        string="Prescriptionsperson",
+        string="Prescriptions Person",
         store=True, precompute=True)
     state = fields.Selection(
         related='order_id.state',

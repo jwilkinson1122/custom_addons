@@ -14,7 +14,7 @@
         'views/login_as.xml',
         'views/templates.xml',
         'security/ir.model.access.csv',
-        'view/action.xml'
+        'views/action.xml'
     ],
     'assets': {
         'web.assets_backend': [

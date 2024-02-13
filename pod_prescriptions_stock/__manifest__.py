@@ -2,7 +2,7 @@
 
 
 {
-    'name': 'NWPL - Prescriptions and Warehouse Management',
+    'name': 'NWPL - Prescription and Warehouse Management',
     "author": "NWPL",
     'version': '17.0.0.0.0',
     'website': 'https://www.nwpodiatric.com',

@@ -21,7 +21,7 @@ INVOICE_STATUS = [
 
 SALE_ORDER_STATE = [
     ('draft', "Draft Rx"),
-    ('sent', "Draft Rx Sent"),
+    ('sent', "Draft Rx Confirmed"),
     ('prescriptions', "Prescriptions Order"),
     ('cancel', "Cancelled"),
 ]

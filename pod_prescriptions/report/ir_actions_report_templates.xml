@@ -60,7 +60,7 @@
                     <span class="m-0" t-field="doc.validity_date">2023-12-31</span>
                 </div>
                 <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Prescriptionsperson:</strong><br/>
+                    <strong>Prescriptions Person:</strong><br/>
                     <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
                 </div>
             </div>
