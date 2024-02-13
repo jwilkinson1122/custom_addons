@@ -1,18 +1,18 @@
 {
-    "name": "NWPL Theme",
-    "summary": "Contrasted style on fields to improve the UI.",
-    "version": "17.0.0.0.0",
-    "author": "NWPL",
-    "website": "https://nwpodiatric.com",
-    "license": "AGPL-3",
-    "depends": [
-        "web",
+    'name': 'NWPL - Custom Theme',
+    'summary': 'Contrasted style on fields to improve the UI.',
+    'version': '17.0.0.0.0',
+    'author': 'NWPL',
+    'website': 'https://nwpodiatric.com',
+    'license': 'LGPL-3',
+    'depends': [
+        'web',
     ],
-    "assets": {
-        "web.assets_backend": [
-            "/pod_custom_theme/static/src/scss/pod_theme.scss",
+    'assets': {
+        'web.assets_backend': [
+            '/pod_custom_theme/static/src/scss/pod_custom_theme.scss',
         ],
     },
-    "installable": True,
-    "application": True,
+    'installable': True,
+    'application': True,
 }

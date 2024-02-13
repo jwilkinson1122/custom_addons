@@ -2,24 +2,13 @@
 
 
 {
-    'name': 'NWPL Prescriptions and Warehouse Management',
+    'name': 'NWPL - Prescriptions and Warehouse Management',
     "author": "NWPL",
     'version': '17.0.0.0.0',
+    'website': 'https://www.nwpodiatric.com',
     'category': 'Hidden',
-    'summary': 'Draft Rx, Prescriptions Orders, Delivery & Invoicing Control',
-    'description': """
-Manage prescriptions quotations and orders
-==================================
-
-This module makes the link between the prescriptions and warehouses management applications.
-
-Preferences
------------
-* Shipping: Choice of delivery at once or partial delivery
-* Invoicing: choose how invoices will be paid
-* Incoterms: International Commercial terms
-
-""",
+    'summary': 'Link prescriptions and warehouses management applications',
+    'description': """Link prescriptions and warehouses management applications.""",
     'depends': [
         'pod_prescriptions', 
         'stock_account'

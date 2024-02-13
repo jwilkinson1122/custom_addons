@@ -3,14 +3,13 @@
 
 
 {
-    'name': 'NWPL Prescriptions Base',
+    'name': 'NWPL - Prescriptions Base',
     "author": "NWPL",
     'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'summary': 'Prescriptions internal machinery',
-    'description': """
-This module contains all the common features of Prescriptions Management and eCommerce.
-    """,
+    'description': """This module contains all the features of Prescriptions Management.""",
+    'website': 'https://www.nwpodiatric.com',
     'depends': [
         'knowledge',
         'pos_sale',
@@ -94,7 +93,6 @@ This module contains all the common features of Prescriptions Management and eCo
         'demo/website_page_views.xml',
         'demo/website_theme_apply.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'pod_prescriptions/static/src/scss/prescriptions_onboarding.scss',
@@ -120,6 +118,7 @@ This module contains all the common features of Prescriptions Management and eCo
             'pod_prescriptions/static/src/scss/prescriptions_report.scss',
         ],
     },
+    'installable': True,
     'post_init_hook': '_synchronize_cron',
     'license': 'LGPL-3',
 }

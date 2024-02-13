@@ -2,15 +2,12 @@
 
 
 {
-    'name': 'NWPL Prescription Teams',
+    'name': 'NWPL - Prescription Teams',
     "author": "NWPL",
     'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'summary': 'Prescriptions Teams',
-    'description': """
-Using this application you can manage Prescriptions Teams with CRM and/or Prescriptions
-=======================================================================
- """,
+    'description': """Manage Prescriptions Teams with CRM and Prescriptions.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': ['base', 'mail'],
     'data': [

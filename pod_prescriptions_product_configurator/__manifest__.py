@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': "NWPL Prescription Product Configurator",
+    'name': "NWPL - Prescription Product Configurator",
     "author": "NWPL",
     'version': '17.0.0.0.0',
+    'website': 'https://www.nwpodiatric.com',
     'category': 'Hidden',
     'summary': "Configure your products",
-
-    'description': """
-Technical module:
-The main purpose is to override the prescriptions_order view to allow configuring products in the SO form.
-
-It also enables the "optional products" feature.
-    """,
-
+    'description': """Configure products in the Rx form.""",
     'depends': ['pod_prescriptions'],
     'data': [
         'views/product_template_views.xml',

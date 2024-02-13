@@ -2,40 +2,13 @@
 
 
 {
-    'name': 'NWPL Prescriptions Management',
+    'name': 'NWPL - Prescriptions Management',
     "author": "NWPL",
     'version': '17.0.0.0.0',
     'category': 'Podiatry/Prescriptions',
     'sequence': 5,
     'summary': 'From quotations to invoices',
-    'description': """
-Manage prescriptions quotations and orders
-==================================
-
-This application allows you to manage your prescriptions goals in an effective and efficient manner by keeping track of all prescriptions orders and history.
-
-It handles the full prescriptions workflow:
-
-* **Draft Rx** -> **Prescriptions order** -> **Invoice**
-
-Preferences (only with Warehouse Management installed)
-------------------------------------------------------
-
-If you also installed the Warehouse Management, you can deal with the following preferences:
-
-* Shipping: Choice of delivery at once or partial delivery
-* Invoicing: choose how invoices will be paid
-* Incoterms: International Commercial terms
-
-
-With this module you can personnalize the prescriptions order and invoice report with
-categories, subtotals or page-breaks.
-
-The Dashboard for the Prescriptions Manager will include
-------------------------------------------------
-* My Prescriptions
-* Monthly Turnover (Graph)
-    """,
+    'description': """Manage prescriptions orders.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': [
         'pod_prescriptions', 
