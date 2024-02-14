@@ -118,6 +118,7 @@
             'pod_prescription/static/src/scss/prescription_report.scss',
         ],
     },
+    'images': ['static/description/icon.png'],
     'installable': True,
     'post_init_hook': '_synchronize_cron',
     'license': 'LGPL-3',

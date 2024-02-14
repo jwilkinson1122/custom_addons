@@ -29,6 +29,7 @@
     'assets': {
         'web.assets_frontend': ['pod_customer_statement/static/src/js/portal.js']
     },
+    'images': ['static/description/icon.png'],
     "license": "LGPL-3",
     "installable": True,
     "auto_install": False,

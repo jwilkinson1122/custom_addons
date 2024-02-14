@@ -27,6 +27,7 @@
             'pod_login_as_user/static/src/login_as/*.xml',
         ],
     },
+    'images': ['static/description/icon.png'],
     'auto_install': True,
     'installable': True,
     'application': False,

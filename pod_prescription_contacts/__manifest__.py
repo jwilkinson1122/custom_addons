@@ -3,6 +3,7 @@
 {
     'name': 'NWPL - Contact Management',
     'version': '17.0.0.0.0',
+    'license': 'LGPL-3',
     'sequence': 1,
     'author': 'NWPL',
     'category': 'Contacts',
@@ -46,11 +47,13 @@
         'data/mail_demo.xml',
         'data/contacts_demo.xml',
     ],
-    'application': True,
-    'license': 'LGPL-3',
     'assets': {
         'web.assets_tests': [
             'pod_prescription_contacts/static/tests/tours/**/*',
         ],
-    }
+    },
+
+    'images': ['static/description/icon.png'],
+    'application': True,
+    'installable': True,
 }

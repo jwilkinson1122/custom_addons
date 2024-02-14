@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<record id="customer_filter_statement_mail_template" model="mail.template">
-		<field name="name">Customer Statement By Date: Send by email</field>
+		    <field name="name">Customer Statement By Date: Send by email</field>
         <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Customer Account Statement from {{object.company_id.name}} - {{object.name}}</field>
         <field name="email_from">{{object.company_id.partner_id.email_formatted}}</field>
         <field name="partner_to">{{object.id}}</field>
-        <field name="subject">Customer Account Statement from {{object.company_id.name}} - {{object.name}}</field>
         <field name="auto_delete" eval="False"/>
         <field name="lang">{{ object.lang }}</field>
-        <field name="report_template" ref="pod_customer_statement.action_report_customer_filtered_statement"/>
-        <field name="report_name">Customer Account Statement By Date</field>
+        <field name="report_template_ids" eval="[(4, ref('pod_customer_statement.action_report_customer_filtered_statement'))]"/>
         <field name="body_html" type="html">
         	<div style="margin: 0px; padding: 0px;">
         		<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
@@ -81,16 +80,17 @@
         	</div>
         </field>
 	</record>
+
 	<record id="customer_statement_mail_template" model="mail.template">
-		<field name="name">Customer Statement: Send by email</field>
+		    <field name="name">Customer Statement: Send by email</field>
         <field name="model_id" ref="base.model_res_partner"/>
         <field name="email_from">{{object.company_id.partner_id.email_formatted}}</field>
         <field name="partner_to">{{object.id}}</field>
         <field name="subject">Customer Account Statement from {{object.company_id.name}} - {{object.name}}</field>
         <field name="auto_delete" eval="False"/>
         <field name="lang">{{ object.lang }}</field>
-        <field name="report_template" ref="pod_customer_statement.action_report_customer_statement"/>
-        <field name="report_name">Customer Account Statement</field>
+        <field name="report_template_ids" eval="[(4, ref('pod_customer_statement.action_report_customer_statement'))]"/>
+        <!-- <field name="report_name">Customer Account Statement</field> -->
         <field name="body_html" type="html">
         	<div style="margin: 0px; padding: 0px;">
         		<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
@@ -164,16 +164,16 @@
         	</div>
         </field>
 	</record>
+
 	<record id="customer_due_statement_mail_template" model="mail.template">
-		<field name="name">Customer Overdue Statement: Send by email</field>
+		    <field name="name">Customer Overdue Statement: Send by email</field>
         <field name="model_id" ref="base.model_res_partner"/>
         <field name="email_from">{{object.company_id.partner_id.email_formatted}}</field>
         <field name="partner_to">{{object.id}}</field>
         <field name="subject">Customer Account Overdue Statement from {{object.company_id.name}} - {{object.name}}</field>
         <field name="auto_delete" eval="False"/>
         <field name="lang">{{ object.lang }}</field>
-        <field name="report_template" ref="pod_customer_statement.action_report_customer_due_statement"/>
-        <field name="report_name">Customer Account Overdue Statement</field>
+        <field name="report_template_ids" eval="[(4, ref('pod_customer_statement.action_report_customer_due_statement'))]"/>
         <field name="body_html" type="html">
         	<div style="margin: 0px; padding: 0px;">
         		<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">

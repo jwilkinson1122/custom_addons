@@ -41,5 +41,6 @@
             'pod_prescription_stock/static/src/**/*',
         ],
     },
+    'images': ['static/description/icon.png'],
     'license': 'LGPL-3',
 }

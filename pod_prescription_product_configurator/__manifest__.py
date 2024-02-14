@@ -21,6 +21,7 @@
             'pod_prescription_product_configurator/static/src/**/*',
         ],
     },
+    'images': ['static/description/icon.png'],
     'auto_install': True,
     'license': 'LGPL-3',
 }

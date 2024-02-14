@@ -30,5 +30,6 @@
             'pod_prescription_team/static/**/*',
         ],
     },
+    'images': ['static/description/icon.png'],
     'license': 'LGPL-3',
 }

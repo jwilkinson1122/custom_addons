@@ -13,6 +13,7 @@
             '/pod_custom_theme/static/src/scss/pod_custom_theme.scss',
         ],
     },
+    'images': ['static/description/icon.png'],
     'installable': True,
     'application': True,
 }
