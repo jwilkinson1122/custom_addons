@@ -213,7 +213,8 @@
                     <button name="action_confirm" data-hotkey="q" string="Confirm" type="object" context="{'validate_analytic': True}" invisible="state != 'draft'"/>
                     <!-- <button name="action_quotation_send" id="send_proforma" type="object" string="Send PRO-FORMA Invoice" groups="pod_prescription.group_proforma_prescription" invisible="state == 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/> -->
                     <!-- <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'prescription')" data-hotkey="g" context="{'validate_analytic': True}"/> -->
-                    <button name="action_create_prescription_to_so" type="object" string="Create Sales Order" class="btn-primary" invisible="state == 'draft'"/>
+                    <button name="create_sale_order" type="object" string="Create Sales Order" class="btn-primary" invisible="state == 'draft'"/>
+
                     <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
                     <button name="action_unlock" type="object" string="Unlock" invisible="not locked" groups="pod_prescription_team.group_prescription_manager"/>
                     <button name="action_preview_prescription_order" string="Preview" type="object" class="btn-secondary"/>
@@ -246,11 +247,31 @@
                         </h1>
                     </div>
                     <group name="prescription_header">
-                        <group name="partner_details">
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" placeholder="Type to find a customer..." readonly="state in ['cancel', 'prescription']"/>
+                        <!-- <group name="account_details">
+                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
                             <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
                         </group>
+                        <group name="partner_details">
+                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="patient_id" class="fw-bold" placeholder="Patient Name"/>
+                        </group> -->
+                        <group name="account_details">
+                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
+                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
+                        </group>
+
+                        <group name="partner_details">
+                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <!-- <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('partner_id', '=', parent.partner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('partner_id', '=', parent.partner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('partner_id', '=', parent.partner_id)]"/> -->
+                        </group>
+
                         <group name="order_details">
                             <field name="validity_date" invisible="state == 'prescription'" readonly="state in ['cancel', 'prescription']"/>
                             <div class="o_td_label" groups="base.group_no_one" invisible="state in ['prescription', 'cancel']">
@@ -317,7 +338,8 @@
                                             <t groups="product.group_discount_per_so_line">
                                                 <label for="discount"/>
                                                 <div name="discount">
-                                                    <field name="discount" class="oe_inline"/>%
+                                                    <field name="discount" class="oe_inline"/>
+%
                                                 </div>
                                             </t>
                                             <field name="sequence" invisible="1"/>
@@ -325,7 +347,8 @@
                                         <group invisible="display_type">
                                             <label for="customer_lead"/>
                                             <div name="lead">
-                                                <field name="customer_lead" class="oe_inline"/>days
+                                                <field name="customer_lead" class="oe_inline"/>
+days
                                             </div>
                                             <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id', 'business_domain': 'prescription_order'}"/>
                                         </group>
@@ -483,7 +506,8 @@
                                                                 <div class="row">
                                                                     <div class="col-12 text-muted">
                                                                     Discount:
-                                                                        <t t-out="record.discount.value"/>%
+                                                                        <t t-out="record.discount.value"/>
+%
                                                                     </div>
                                                                 </div>
                                                             </t>

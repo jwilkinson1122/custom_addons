@@ -58,12 +58,41 @@ class PrescriptionOrder(models.Model):
         comodel_name='res.company',
         required=True, index=True,
         default=lambda self: self.env.company)
+    
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        string="Customer",
+        string="Account",
         required=True, change_default=True, index=True,
         tracking=1,
-        domain="[('company_id', 'in', (False, company_id))]")
+        domain=[('is_company','=',True)], 
+        # domain="[('company_id', 'in', (False, company_id))]"
+        )
+    
+    location_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_location','=',True)], 
+        string="Location"
+        )
+    
+    practitioner_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_practitioner','=',True)], 
+        string="Practitioner"
+        )
+    
+
+    patient_id = fields.Many2one(
+        "prescription.patient", 
+        string="Patient",
+        required=True, 
+        index=True, 
+        # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
+    )
+
     state = fields.Selection(
         selection=SALE_ORDER_STATE,
         string="Status",
@@ -763,44 +792,6 @@ class PrescriptionOrder(models.Model):
         if not self.prepayment_percent:
             self.require_payment = False
 
-
-
-
-    @api.depends()
-    def _get_sale_order(self):
-        for rec in self:
-            order_ids = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
-            if order_ids:
-                rec.order_count = len(order_ids.ids)
-            else:
-                rec.order_count = 0
-
-    def action_view_sale_order(self):
-        orders = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
-        action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
-        action['domain'] = [('id', 'in', orders.ids)]
-        return action
-
-    # def action_confirm(self):
-    #     self.write({
-    #         'state': 'ongoing'
-    #     })
-
-    # def action_close(self):
-    #     self.write({
-    #         'state': 'done'
-    #     })
-
-    # def action_cancel(self):
-    #     self.write({
-    #         'state': 'cancel'
-    #     })
-
-    # def action_draft(self):
-    #     self.write({
-    #         'state': 'draft'
-    #     })
-
     #=== CRUD METHODS ===#
 
         # @api.model
@@ -831,60 +822,144 @@ class PrescriptionOrder(models.Model):
     #         order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
 
-    def action_create_prescription_to_so(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('pod_prescription.action_prescription_to_so')
-        action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-        line_list = []
+    @api.depends()
+    def _get_sale_order(self):
         for rec in self:
-            if rec.validity_date <= fields.Date.today() and rec.validity_date >= fields.Date.today():
-                FiscalPosition = self.env['account.fiscal.position']
-                fpos = FiscalPosition._get_fiscal_position(rec.partner_id)
-                for line in rec.order_line:
-                    # Compute taxes
-                    if fpos:
-                        taxes_ids = fpos.map_tax(line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id)).ids
-                    else:
-                        taxes_ids = line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id).ids
+            order_ids = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+            if order_ids:
+                rec.order_count = len(order_ids.ids)
+            else:
+                rec.order_count = 0
 
-                    # Compute quantity and price_unit
-                    if line.product_uom != line.product_id.uom_po_id:
-                        product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_po_id)
-                        price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_po_id)
-                    else:
-                        product_qty = line.product_uom_qty
-                        price_unit = line.price_unit
+    def action_view_sale_order(self):
+        orders = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
+        action['domain'] = [('id', 'in', orders.ids)]
+        return action
 
-                    order_line_values = line._prepare_sale_order_line(
-                        name=line.name, product_qty=product_qty, price_unit=price_unit,
-                        taxes_ids=taxes_ids)
+    # def action_create_prescription_to_so(self):
+    #     action = self.env['ir.actions.act_window']._for_xml_id('pod_prescription.action_prescription_to_so')
+    #     action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+    #     line_list = []
+    #     for rec in self:
+    #         if rec.validity_date <= fields.Date.today() and rec.validity_date >= fields.Date.today():
+    #             FiscalPosition = self.env['account.fiscal.position']
+    #             fpos = FiscalPosition._get_fiscal_position(rec.partner_id)
+    #             for line in rec.order_line:
+    #                 if fpos:
+    #                     taxes_ids = fpos.map_tax(line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id)).ids
+    #                 else:
+    #                     taxes_ids = line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id).ids
+    #                 if line.product_uom != line.product_id.uom_po_id:
+    #                     product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_po_id)
+    #                     price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_po_id)
+    #                 else:
+    #                     product_qty = line.product_uom_qty
+    #                     price_unit = line.price_unit
+    #                 order_line_values = line._prepare_sale_order_line(
+    #                     name=line.name, product_qty=product_qty, price_unit=price_unit,
+    #                     taxes_ids=taxes_ids)
                     
-                    line_list.append((0, 0, order_line_values))
+    #                 line_list.append((0, 0, order_line_values))
 
-                vals = {
-                    'partner_id': rec.partner_id.id,
-                    'order_line': line_list,
-                    'fiscal_position_id': fpos.id,
-                    'payment_term_id': rec.partner_id.property_supplier_payment_term_id.id or False,
-                    'company_id': rec.company_id.id,
-                    'pricelist_id': rec.pricelist_id.id,
-                    'note': rec.note,
-                    'origin': rec.name,
-                    'prescription_so_id': rec.id
-                }
-                new_sale_order = self.env['sale.order'].create(vals)
-                action['res_id'] = new_sale_order.id
+    #             vals = {
+    #                 'partner_id': rec.partner_id.id,
+    #                 'order_line': line_list,
+    #                 'fiscal_position_id': fpos.id,
+    #                 'payment_term_id': rec.partner_id.property_supplier_payment_term_id.id or False,
+    #                 'company_id': rec.company_id.id,
+    #                 'pricelist_id': rec.pricelist_id.id,
+    #                 'note': rec.note,
+    #                 'origin': rec.name,
+    #                 'prescription_so_id': rec.id
+    #             }
+    #             new_sale_order = self.env['sale.order'].create(vals)
+    #             action['res_id'] = new_sale_order.id
+    #     return action
+
+    # def copy_data(self, default=None):
+    #     if default is None:
+    #         default = {}
+    #     if 'order_line' not in default:
+    #         default['order_line'] = [
+    #             Command.create(line.copy_data()[0])
+    #             for line in self.order_line.filtered(lambda l: not l.is_downpayment)
+    #         ]
+    #     return super().copy_data(default)
+
+
+
+    def create_sale_order(self):
+        active_id = self._context.get('active_id')
+        prescription_obj = self.env['prescription.order']
+        sale_order_obj  = self.env['sale.order']
+        sale_order_line_obj = self.env['sale.order.line']
+        
+        priscription_record = prescription_obj.browse(active_id)
+        if priscription_record.is_shipped == True:
+            raise UserError(_('All ready shipped.'))
+        
+        res = sale_order_obj.create({'partner_id':priscription_record.patient_id.patient_id.id ,
+                                             })
+        if priscription_record.prescription_line_ids:
+            for p_line in priscription_record.prescription_line_ids:
+                 
+                res1 = sale_order_line_obj.create({'product_id':p_line.medicament_id.product_id.id ,
+                                                 'product_uom': p_line.medicament_id.product_id.uom_id.id,
+                                                 'name': p_line.medicament_id.product_id.name,
+                                                 'product_uom_qty':1,
+                                                 'price_unit':p_line.medicament_id.product_id.lst_price, 
+                                                 'order_id': res.id})
+        else:
+            raise UserError(_('There is no shipment line.'))
+        priscription_record.write({'is_shipped': True})
+        res.action_confirm()
+        result = res.action_view_delivery()
+        return result
+
+
+
+    def create_sale_order(self):
+        sale_order = self.env['sale.order'].search([('prescription_so_id', '=', self.id)], limit=1)
+        if sale_order:
+            return self._prepare_action(_('Prescription order'), 'sale.order', sale_order.id)
+        vals = {
+            'prescription_so_id': self.id,
+            'partner_id': self.partner_id.id,
+            'location_id': self.location_id.id,
+            'practitioner_id': self.practitioner_id.id,
+            'patient_id': self.patient_id.id,
+            'invoice_status': 'to invoice', 
+        }
+        new_sale_order = self.env['sale.order'].create(vals)
+        for line in self.order_line:
+            line_vals = {
+                'order_id': new_sale_order.id,
+                'product_id': line.product_id.id,
+                'name': line.product_id.name,
+                'product_uom': line.product_id.uom_id.id,
+                'product_uom_qty': line.product_uom_qty,
+                'price_unit': line.product_id.lst_price,  
+            }
+            self.env['sale.order.line'].create(line_vals)
+        return self._prepare_action(_('Prescription Order'), 'sale.order', new_sale_order.id)
+
+    def _prepare_action(self, name, res_model, res_id=None, context=None):
+        action = {
+            'name': name,
+            'view_type': 'form',
+            'res_model': res_model,
+            'view_id': False,
+            'view_mode': 'form',
+            'type': 'ir.actions.act_window',
+        }
+        if res_id:
+            action['res_id'] = res_id
+        if context:
+            action['context'] = context
         return action
 
 
-    def copy_data(self, default=None):
-        if default is None:
-            default = {}
-        if 'order_line' not in default:
-            default['order_line'] = [
-                Command.create(line.copy_data()[0])
-                for line in self.order_line.filtered(lambda l: not l.is_downpayment)
-            ]
-        return super().copy_data(default)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):

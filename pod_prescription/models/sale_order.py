@@ -5,10 +5,44 @@ from odoo import models, fields, api, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    prescription_so_id = fields.Many2one(
-        'prescription.order',
-        string="Prescription"
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Account",
+        required=True, change_default=True, index=True,
+        tracking=1,
+        domain=[('is_company','=',True)], 
+        # domain="[('company_id', 'in', (False, company_id))]"
+        )
+    
+    location_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_location','=',True)], 
+        string="Location"
+        )
+    
+    practitioner_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        index=True, 
+        domain=[('is_practitioner','=',True)], 
+        string="Practitioner"
+        )
+    
+
+    patient_id = fields.Many2one(
+        "prescription.patient", 
+        string="Patient",
+        required=True, 
+        index=True, 
+        # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
+
+    prescription_so_id = fields.Many2one('prescription.order', string="Prescription", readonly=False) 
+
+    # prescription_so_lines = fields.One2many('prescription.order.line', 'order_id', readonly=False)
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

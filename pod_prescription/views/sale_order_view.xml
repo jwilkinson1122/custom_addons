@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
-       <record id="view_order_form_inherit_prescription" model="ir.ui.view">
+
+        <record id="view_order_form_inherit_prescription" model="ir.ui.view">
             <field name="name">sale.order.form.inherit.prescription</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-               <xpath expr="//field[@name='payment_term_id']" position="after">
+                <!-- <xpath expr="//field[@name='payment_term_id']" position="after">
                     <field name='prescription_so_id'/>
-               </xpath>
+                </xpath> -->
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field string="Prescription" name="prescription_so_id"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="string">Account</attribute>
+                    <attribute name="domain">[('is_company', '=', True)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'sale']"/>
+                    <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'sale']"/>
+                    <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" readonly="state in ['cancel', 'sale']"/>
+
+                    <!-- <field string="Location" name="location_id" domain="[('is_location', '=', True), ('partner_id', '=', partner_id)]"/>
+                    <field string="Practitioner" name="practitioner_id" domain="[('is_practitioner', '=', True), ('partner_id', '=', partner_id)]"/>
+                    <field string="Patient" name="patient_id" domain="[('partner_id', '=', partner_id)]"/> -->
+                    <!-- <field string="Location" name="location_id" domain="[('is_location', '=', True), ('partner_id', '=', parent.partner_id)]"/>
+                    <field string="Practitioner" name="practitioner_id" domain="[('is_practitioner', '=', True), ('partner_id', '=', parent.partner_id)]"/>
+                    <field string="Patient" name="patient_id" domain="[('partner_id', '=', parent.partner_id)]"/> -->
+                </xpath>
+
+
+
+    
             </field>
         </record>
+
 
     </data>
 </odoo>
