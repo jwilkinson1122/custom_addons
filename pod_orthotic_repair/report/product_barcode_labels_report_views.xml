@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_template_product_barcode_labels">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="mro">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <table class="table table-borderless table-sm"
+                               style="width: 100%; font-size: 14px; margin-top: 0px;">
+                            <t t-set="ap_tag" t-value="str('&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;')"/>
+                            <t t-set="product_count" t-value="0"/>
+                            <tr>
+                                <td>
+                                    <t t-foreach="mro.material_of_repair_ids" t-as="quotation">
+                                        <t t-set="product_count" t-value="product_count + 1"/>
+                                        <div style="display: inline-block; text-align: center; width: 25rem; margin-bottom: 70px;">
+                                            <t t-if="quotation.product_id.barcode">
+                                                <div t-field="quotation.product_id.barcode"
+                                                     t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 150, 'img_style': 'width: 100%; height: 20%;'}"/>
+                                                <span t-field="quotation.product_id.barcode"/>
+                                                <br/>
+                                                <span t-field="quotation.product_id.name"/>
+                                                <span t-field="quotation.product_qty"/>
+                                            </t>
+                                        </div>
+                                        <t t-if="product_count % 2 == 0">
+                                            <t t-raw="ap_tag"/>
+                                        </t>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="action_product_barcode_labels_report" model="ir.actions.report">
+        <field name="name">Product Barcode Labels</field>
+        <field name="model">orthotic.repair.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pod_orthotic_repair.report_template_product_barcode_labels</field>
+        <field name="report_file">pod_orthotic_repair.report_template_product_barcode_labels</field>
+        <field name="binding_model_id" ref="model_orthotic_repair_order"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

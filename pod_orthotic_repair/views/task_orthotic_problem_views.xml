@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="task_orthotic_problem_form_view" model="ir.ui.view">
+            <field name="name">task.orthotic.problem.form.view</field>
+            <field name="model">task.orthotic.problem</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="description"/>
+                            <h1>
+                                <field name="description" placeholder="e.g. Problem"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="remarks"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="task_orthotic_problem_tree_view" model="ir.ui.view">
+            <field name="name">task.orthotic.problem.tree.view</field>
+            <field name="model">task.orthotic.problem</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="is_check"/>
+                    <field name="description"/>
+                    <field name="remarks"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_task_orthotic_problem" model="ir.actions.act_window">
+            <field name="name">Orthotic Problem</field>
+            <field name="res_model">task.orthotic.problem</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

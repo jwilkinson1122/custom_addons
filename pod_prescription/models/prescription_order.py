@@ -1,9 +1,11 @@
 
 from collections import defaultdict
 from datetime import timedelta
+import time
+import json
 from itertools import groupby
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, exceptions, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
@@ -121,7 +123,6 @@ class PrescriptionOrder(models.Model):
         string="Payment Ref.",
         help="The payment communication of this prescription order.",
         copy=False)
-
     require_signature = fields.Boolean(
         string="Online signature",
         compute='_compute_require_signature',
@@ -229,6 +230,14 @@ class PrescriptionOrder(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     # Lines and line based computes
+
+    # order_ids = fields.One2many(
+    #     "prescription.order",
+    #     "patient_id",
+    #     string="Patients Prescriptions",
+    #     domain=[("active", "=", True)],
+    # )
+
     order_line = fields.One2many(
         comodel_name='prescription.order.line',
         inverse_name='order_id',
@@ -240,12 +249,23 @@ class PrescriptionOrder(models.Model):
         compute='_get_sale_order', 
     )
 
+    test_file = fields.Binary(string='Test')
+    rush_order = fields.Boolean('3-day rush')
+    make_from_prior_rx = fields.Boolean('Make From Prior Rx#:')
+    ship_to_patient = fields.Boolean('Ship to patient')
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 
+        'prescription_ir_attachments_rel',
+        'manager_id', 
+        'attachment_id', string="Attachments"
+        )
+
+
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
     amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
-
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
         comodel_name='account.move',
@@ -258,8 +278,6 @@ class PrescriptionOrder(models.Model):
         string="Invoice Status",
         compute='_compute_invoice_status',
         store=True)
-
-    # Payment fields
     transaction_ids = fields.Many2many(
         comodel_name='payment.transaction',
         relation='prescription_order_transaction_rel', column1='prescription_order_id', column2='transaction_id',
@@ -272,24 +290,18 @@ class PrescriptionOrder(models.Model):
         copy=False,
         compute_sudo=True)
     amount_paid = fields.Float(compute='_compute_amount_paid', compute_sudo=True)
-
-    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-
-    # Followup ?
     analytic_account_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string="Analytic Account",
-        copy=False, check_company=True,  # Unrequired company
+        copy=False, check_company=True,  
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tag_ids = fields.Many2many(
         comodel_name='crm.tag',
         relation='prescription_order_tag_rel', column1='order_id', column2='tag_id',
         string="Tags")
-
-    # Remaining non stored computed fields (hide/make fields readonly, ...)
     amount_undiscounted = fields.Float(
         string="Amount Before Discount",
         compute='_compute_amount_undiscounted', digits=0)
@@ -298,7 +310,13 @@ class PrescriptionOrder(models.Model):
         string="Expected Date",
         compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
+    
+    
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
+    # is_invoiced = fields.Boolean(copy=False, default=False)
+    # is_shipped = fields.Boolean(copy=False, default=False)
+    # is_confirmed = fields.Boolean(copy=False, default=False)
+
     partner_credit_warning = fields.Text(
         compute='_compute_partner_credit_warning')
     tax_calculation_rounding_method = fields.Selection(
@@ -307,14 +325,10 @@ class PrescriptionOrder(models.Model):
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
-        # Avoid access error on fiscal position when reading a prescription order with company != user.company_ids
-        compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
+        compute_sudo=True) 
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
-
-    # Remaining ux fields (not computed, not stored)
-
     show_update_fpos = fields.Boolean(
         string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
     has_active_pricelist = fields.Boolean(
@@ -397,9 +411,6 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('partner_shipping_id', 'partner_id', 'company_id')
     def _compute_fiscal_position_id(self):
-        """
-        Trigger the change of fiscal position when the shipping address is modified.
-        """
         cache = {}
         for order in self:
             if not order.partner_id:
@@ -456,9 +467,6 @@ class PrescriptionOrder(models.Model):
     def _compute_user_id(self):
         for order in self:
             if order.partner_id and not (order._origin.id and order.user_id):
-                # Recompute the personnel on partner change
-                #   * if partner is set (is required anyway, so it will be set sooner or later)
-                #   * if the order is not saved or has no personnel already
                 order.user_id = (
                     order.partner_id.user_id
                     or order.partner_id.commercial_partner_id.user_id
@@ -506,10 +514,6 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
-        # The invoice_ids are obtained thanks to the invoice lines of the SO
-        # lines, and we also search for possible refunds created directly from
-        # existing invoices. This is necessary since such a refund is not
-        # directly linked to the SO.
         for order in self:
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
@@ -531,17 +535,6 @@ class PrescriptionOrder(models.Model):
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
         elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
-            #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
-            # because it returns orders with uninvoiced lines, which is not
-            # same "Invoices is not set" (some lines may have invoices and some
-            # doesn't)
-            #
-            # A solution is making inverted search first ("orders with invoiced
-            # lines") and then invert results ("get all other orders")
-            #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
             order_ids = self._search([
                 ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
             ])
@@ -553,14 +546,6 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):
-        """
-        Compute the invoice status of a SO. Possible statuses:
-        - no: if the SO is not in status 'prescription' or 'done', we consider that there is nothing to
-          invoice. This is also the default value if the conditions of no other status is met.
-        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
-        - invoiced: if all SO lines are invoiced, the SO is invoiced.
-        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
-        """
         confirmed_orders = self.filtered(lambda so: so.state == 'prescription')
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
@@ -586,10 +571,6 @@ class PrescriptionOrder(models.Model):
             else:
                 order.invoice_status = 'no'
 
-
-
-
-
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
         for trans in self:
@@ -612,10 +593,7 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('order_line.customer_lead', 'date_order', 'state')
     def _compute_expected_date(self):
-        """ For service and consumable, we only take the min dates. This method is extended in pod_prescription_stock to
-            take the picking_policy of SO into account.
-        """
-        self.mapped("order_line")  # Prefetch indication
+        self.mapped("order_line") 
         for order in self:
             if order.state == 'cancel':
                 order.expected_date = False
@@ -702,7 +680,6 @@ class PrescriptionOrder(models.Model):
             order.access_url = f'/my/orders/{order.id}'
 
     #=== CONSTRAINT METHODS ===#
-
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -794,14 +771,6 @@ class PrescriptionOrder(models.Model):
 
     #=== CRUD METHODS ===#
 
-        # @api.model
-    # def create(self, vals):
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         vals['name'] = self.env['ir.sequence'].next_by_code('prescription')
-    #     return super(PrescriptionOrder, self).create(vals_list)
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -816,108 +785,7 @@ class PrescriptionOrder(models.Model):
 
         return super().create(vals_list)
     
-    # def _compute_is_expired(self):
-    #     today = fields.Date.today()
-    #     for order in self:
-    #         order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
-
-
-    @api.depends()
-    def _get_sale_order(self):
-        for rec in self:
-            order_ids = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
-            if order_ids:
-                rec.order_count = len(order_ids.ids)
-            else:
-                rec.order_count = 0
-
-    def action_view_sale_order(self):
-        orders = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
-        action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
-        action['domain'] = [('id', 'in', orders.ids)]
-        return action
-
-    # def action_create_prescription_to_so(self):
-    #     action = self.env['ir.actions.act_window']._for_xml_id('pod_prescription.action_prescription_to_so')
-    #     action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-    #     line_list = []
-    #     for rec in self:
-    #         if rec.validity_date <= fields.Date.today() and rec.validity_date >= fields.Date.today():
-    #             FiscalPosition = self.env['account.fiscal.position']
-    #             fpos = FiscalPosition._get_fiscal_position(rec.partner_id)
-    #             for line in rec.order_line:
-    #                 if fpos:
-    #                     taxes_ids = fpos.map_tax(line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id)).ids
-    #                 else:
-    #                     taxes_ids = line.product_id.taxes_id.filtered(lambda tax: tax.company_id == rec.company_id).ids
-    #                 if line.product_uom != line.product_id.uom_po_id:
-    #                     product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_po_id)
-    #                     price_unit = line.product_uom._compute_price(line.price_unit, line.product_id.uom_po_id)
-    #                 else:
-    #                     product_qty = line.product_uom_qty
-    #                     price_unit = line.price_unit
-    #                 order_line_values = line._prepare_sale_order_line(
-    #                     name=line.name, product_qty=product_qty, price_unit=price_unit,
-    #                     taxes_ids=taxes_ids)
-                    
-    #                 line_list.append((0, 0, order_line_values))
-
-    #             vals = {
-    #                 'partner_id': rec.partner_id.id,
-    #                 'order_line': line_list,
-    #                 'fiscal_position_id': fpos.id,
-    #                 'payment_term_id': rec.partner_id.property_supplier_payment_term_id.id or False,
-    #                 'company_id': rec.company_id.id,
-    #                 'pricelist_id': rec.pricelist_id.id,
-    #                 'note': rec.note,
-    #                 'origin': rec.name,
-    #                 'prescription_so_id': rec.id
-    #             }
-    #             new_sale_order = self.env['sale.order'].create(vals)
-    #             action['res_id'] = new_sale_order.id
-    #     return action
-
-    # def copy_data(self, default=None):
-    #     if default is None:
-    #         default = {}
-    #     if 'order_line' not in default:
-    #         default['order_line'] = [
-    #             Command.create(line.copy_data()[0])
-    #             for line in self.order_line.filtered(lambda l: not l.is_downpayment)
-    #         ]
-    #     return super().copy_data(default)
-
-
-
-    def create_sale_order(self):
-        active_id = self._context.get('active_id')
-        prescription_obj = self.env['prescription.order']
-        sale_order_obj  = self.env['sale.order']
-        sale_order_line_obj = self.env['sale.order.line']
-        
-        priscription_record = prescription_obj.browse(active_id)
-        if priscription_record.is_shipped == True:
-            raise UserError(_('All ready shipped.'))
-        
-        res = sale_order_obj.create({'partner_id':priscription_record.patient_id.patient_id.id ,
-                                             })
-        if priscription_record.prescription_line_ids:
-            for p_line in priscription_record.prescription_line_ids:
-                 
-                res1 = sale_order_line_obj.create({'product_id':p_line.medicament_id.product_id.id ,
-                                                 'product_uom': p_line.medicament_id.product_id.uom_id.id,
-                                                 'name': p_line.medicament_id.product_id.name,
-                                                 'product_uom_qty':1,
-                                                 'price_unit':p_line.medicament_id.product_id.lst_price, 
-                                                 'order_id': res.id})
-        else:
-            raise UserError(_('There is no shipment line.'))
-        priscription_record.write({'is_shipped': True})
-        res.action_confirm()
-        result = res.action_view_delivery()
-        return result
-
-
+    #=== METHODS ===#
 
     def create_sale_order(self):
         sale_order = self.env['sale.order'].search([('prescription_so_id', '=', self.id)], limit=1)
@@ -959,7 +827,20 @@ class PrescriptionOrder(models.Model):
             action['context'] = context
         return action
 
+    @api.depends()
+    def _get_sale_order(self):
+        for rec in self:
+            order_ids = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+            if order_ids:
+                rec.order_count = len(order_ids.ids)
+            else:
+                rec.order_count = 0
 
+    def action_view_sale_order(self):
+        orders = self.env['sale.order'].search([('prescription_so_id', '=', self.id)])
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
+        action['domain'] = [('id', 'in', orders.ids)]
+        return action
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
@@ -968,8 +849,6 @@ class PrescriptionOrder(models.Model):
                 raise UserError(_(
                     "You can not delete a sent quotation or a confirmed prescription order."
                     " You must first cancel it."))
-
-    #=== ACTION METHODS ===#
 
     def action_open_discount_wizard(self):
         self.ensure_one()
@@ -1182,14 +1061,14 @@ class PrescriptionOrder(models.Model):
         self.locked = False
 
     def action_cancel(self):
-        """ Cancel SO after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
+        """ Cancel RX after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
 
         For post-cancel operations, please only override :meth:`_action_cancel`.
 
         note: self.ensure_one() if the wizard is shown.
         """
         if any(order.locked for order in self):
-            raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
+            raise UserError(_("You cannot cancel a locked prescription. Please unlock it first."))
         cancel_warning = self._show_cancel_wizard()
         if cancel_warning:
             self.ensure_one()

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+        <!-- Only Technician their own records-->
+        <record id="pod_orthotic_repair_technician_only_see_own_records" model="ir.rule">
+            <field name="name">MR Technician: own task only</field>
+            <field name="model_id" ref="pod_orthotic_repair.model_orthotic_repair_order"/>
+            <field name="domain_force">[('technician_id','=',user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4,ref('pod_orthotic_repair.service_technician'))]"/>
+        </record>
+        <!-- Only Supervisor their own records-->
+        <record id="pod_orthotic_repair_supervisor_only_see_own_records" model="ir.rule">
+            <field name="name">MR Supervisor: own task only</field>
+            <field name="model_id" ref="pod_orthotic_repair.model_orthotic_repair_order"/>
+            <field name="domain_force">[('supervisor_id','=',user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4,ref('pod_orthotic_repair.service_supervisor'))]"/>
+        </record>
+        <!--Only Manager their own records-->
+        <record id="pod_orthotic_repair_manager_only_see_own_records" model="ir.rule">
+            <field name="name">MR Manager: see all records</field>
+            <field name="model_id" ref="pod_orthotic_repair.model_orthotic_repair_order"/>
+            <field name="domain_force">[(1,'=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4,ref('pod_orthotic_repair.service_manager'))]"/>
+        </record>
+        <!-- Only Receptionist their own records-->
+        <record id="pod_orthotic_repair_receptionist_only_see_own_records" model="ir.rule">
+            <field name="name">MR Receptionist: see all records</field>
+            <field name="model_id" ref="pod_orthotic_repair.model_orthotic_repair_order"/>
+            <field name="domain_force">[(1,'=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4,ref('pod_orthotic_repair.service_receptionist'))]"/>
+        </record>
+
+    </data>
+</odoo>

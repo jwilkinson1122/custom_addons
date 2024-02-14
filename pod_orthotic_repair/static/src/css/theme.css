@@ -1,0 +1,32 @@
+.form-required-repair-order {
+    color: red;
+}
+.repair-request-order{
+    font-size: 25px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.repair-order-request{
+    font-size: 25px;
+    text-align: center;
+    margin: 0px;
+}
+.repair-request-button{
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+.repair-order-success {
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+.request-table-header{
+    background-color: #F8F8F8;
+}
+.repair-detail-card{
+    border: none;
+}
+.request-status{
+    margin-left: 50.5rem;
+}

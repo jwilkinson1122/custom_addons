@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="diagnosed_problem_form_view" model="ir.ui.view">
+            <field name="name">diagnosed.problem.form.view</field>
+            <field name="model">diagnosed.problem</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="problem_name"/>
+                            <h1>
+                                <field name="problem_name" placeholder="e.g. Problem"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="diagnosed_problem_tree_view" model="ir.ui.view">
+            <field name="name">diagnosed.problem.tree.view</field>
+            <field name="model">diagnosed.problem</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="is_check"/>
+                    <field name="problem_name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_diagnosed_problem" model="ir.actions.act_window">
+            <field name="name">Diagnosed Problem</field>
+            <field name="res_model">diagnosed.problem</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

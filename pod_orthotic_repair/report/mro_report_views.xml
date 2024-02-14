@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="orthotic_repair_order_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="mro">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <table class="table table-sm o_main_table" style="width: 100%; font-size: 11px;">
+                            <tr>
+                                <td colspan="2"
+                                    style="background-color: #F8F8F8; text-align: center; font-size: 13px; border: 0px;">
+                                    <strong>Orthotic Repair Order</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>
+                                        <strong>Sequence Number:</strong>
+                                        <span t-field="mro.sequence_number"/>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <strong>Service Duration:</strong>
+                                        <span t-field="mro.receiving_date"/>&#160;&#160;-&#160;
+                                        <span t-field="mro.delivery_date"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>
+                                        <strong>Customer Details</strong>
+                                        <br/>
+                                        Customer:
+                                        <span t-field="mro.customer_id"/>
+                                        <br/>
+                                        Phone:
+                                        <span t-field="mro.phone"/>
+                                        <br/>
+                                        Email:
+                                        <span t-field="mro.email"/>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <strong>Address:</strong>
+                                        <span t-field="mro.street"/>
+                                        <br/>
+                                        <span t-field="mro.street2"/>
+                                        <br/>
+                                        <span t-field="mro.city"/>
+                                        <span t-field="mro.zip"/>
+                                        <span t-field="mro.state_id"/>
+                                        <br/>
+                                        <span t-field="mro.country_id"/>
+                                    </span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>
+                                        <strong>Orthotic Details</strong>
+                                        <br/>
+                                        Orthotic Problem:
+                                        <span t-field="mro.orthotic_problem"/>
+                                        <br/>
+                                        Orthotic:
+                                        <span t-field="mro.orthotic_product_id"/>&#160;&#160;-&#160;
+                                        <span t-field="mro.model"/>
+                                        <br/>
+                                        Orthotic Brand:
+                                        <span t-field="mro.orthotic_brand"/>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        MFG Year:
+                                        <span t-field="mro.mfg_year"/>
+                                        <br/>
+                                        Serial Number:
+                                        <span t-field="mro.serial_number"/>
+                                        <t t-if="mro.is_previous_service_history == True">
+                                            <p>
+                                                If Previous Service History: Yes
+                                            </p>
+                                        </t>
+                                        <t t-else="">
+                                            <p>
+                                                If Previous Service History: No
+                                            </p>
+                                        </t>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr style="margin-bottom: 0px;">
+                                <td>
+                                    <span>
+                                        <strong>Company Details</strong>
+                                        <br/>
+                                        Company:
+                                        <span t-field="mro.company_id"/>
+                                        <br/>
+                                        Responsible:
+                                        <span t-field="mro.responsible_id"/>
+                                        <br/>
+                                        Supervisor:
+                                        <span t-field="mro.supervisor_id"/>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <strong>Team Details</strong>
+                                        <br/>
+                                        Project:
+                                        <span t-field="mro.team_project_id"/>
+                                        <br/>
+                                        Team:
+                                        <span t-field="mro.team_id"/>
+                                        <br/>
+                                        Technician:
+                                        <span t-field="mro.technician_id"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table table-sm o_main_table" style="width: 100%; font-size: 11px; margin-top: -15px;">
+                            <tr>
+                                <td colspan="100%" style="background-color: #F8F8F8; text-align: center; font-size: 13px; border: 0px;">
+                                    <strong>Problem Descriptions</strong>
+                                </td>
+                            </tr>
+                            <tr style="margin-bottom: 0px;">
+                                <td>
+                                    <span>
+                                        <span t-field="mro.problem_description"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                        <t t-if="mro.is_previous_service_history == True">
+                            <table class="table table-sm o_main_table" style="width: 100%; font-size: 11px; margin-top: 0px;">
+                                <tr>
+                                    <td colspan="4"
+                                        style="background-color: #F8F8F8; text-align: center; font-size: 13px; border: 0px;">
+                                        <strong>Previous Service History</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Service Type</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Date of Service</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Technician</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Descriptions</strong>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="mro.previous_service_history_ids" t-as="previous">
+                                    <td>
+                                        <span t-field="previous.orthotic_repair_service_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="previous.date_of_service"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="previous.technician_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="previous.previous_service_description"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <table class="table table-sm o_main_table"
+                               style="width: 100%; font-size: 11px; margin-top: 0px;">
+                            <tr>
+                                <td colspan="6"
+                                    style="background-color: #F8F8F8; text-align: center; font-size: 13px; border: 0px;">
+                                    <strong>Repair Order Estimations</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="border-top: aliceblue;">
+                                    <strong>➤&#160;Required Parts</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Part Name</strong>
+                                </td>
+                                <td>
+                                    <strong>Serial Number</strong>
+                                </td>
+                                <td>
+                                    <strong>Quantity</strong>
+                                </td>
+                                <td>
+                                    <strong>Unit</strong>
+                                </td>
+                                <td>
+                                    <strong>Remarks</strong>
+                                </td>
+                                <td>
+                                    <strong>Price</strong>
+                                </td>
+                            </tr>
+                            <tr t-foreach="mro.material_of_repair_ids" t-as="quotation">
+                                <td>
+                                    <span t-field="quotation.product_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="quotation.serial_number"/>
+                                </td>
+                                <td>
+                                    <span t-field="quotation.product_qty"/>
+                                </td>
+                                <td>
+                                    <span t-field="quotation.uom_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="quotation.remarks"/>
+                                </td>
+                                <td>
+                                    <span t-field="quotation.price"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <strong>➤&#160;Orthotic Repair Services</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <strong>Service</strong>
+                                </td>
+                                <td colspan="2">
+                                    <strong>Description</strong>
+                                </td>
+                                <td colspan="2">
+                                    <strong>Service Charge</strong>
+                                </td>
+                            </tr>
+                            <tr t-foreach="mro.orthotic_repair_service_ids" t-as="service">
+                                <td colspan="2">
+                                    <span t-field="service.product_id"/>
+                                </td>
+                                <td colspan="2">
+                                    <span t-field="service.description"/>
+                                </td>
+                                <td colspan="2">
+                                    <span t-field="service.service_charge"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <span>
+                                        <strong>Sale Order Details</strong>
+                                        <br/>
+                                        Sale Order:
+                                        <span t-field="mro.sale_order_id"/>&#160;&#160;-&#160;
+                                        <span t-field="mro.state"/>
+                                        <br/>
+                                        Total Amounts:
+                                        <span t-field="mro.order_amount"/>
+                                    </span>
+                                </td>
+                                <td colspan="1">
+                                    <span>
+                                        <strong>Total Estimations</strong>
+                                        <br/>
+                                        Part Price:
+                                        <span t-field="mro.total_part_price"/>
+                                        <br/>
+                                        Service Charge:
+                                        <span t-field="mro.total_service_charge"/>
+                                        <br/>
+                                        Total:
+                                        <span t-field="mro.total"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table table-bordered table-sm" style="width: 100%; margin-top: 0px;">
+                            <tr>
+                                <td style="text-align: center; font-size: 12px; background-color: #F8F8F8; border: 0px;" colspan="100%">
+                                    <strong>Inspection Images</strong>
+                                </td>
+                            </tr>
+                            <t t-set="ap_tag" t-value="str('&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;')"/>
+                            <t t-set="img_count" t-value="0"/>
+                            <tr>
+                                <td>
+                                    <t t-foreach="mro.inspection_image_ids" t-as="img">
+                                        <t t-set="img_count" t-value="img_count + 1"/>
+                                        <div style="display: inline-block;text-align:center;">
+                                            <t t-if="img.avatar">
+                                                <img t-att-src="image_data_uri(img.avatar)"
+                                                     style="width: 270px; height: 240px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px;"/>
+                                            </t>
+                                            <h6>
+                                                <span t-field="img.name"/>
+                                            </h6>
+                                        </div>
+                                        <t t-if="img_count % 3 == 0">
+                                            <t t-raw="ap_tag"/>
+                                        </t>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="report_action_orthotic_repair_order_report" model="ir.actions.report">
+        <field name="name">Orthotic Repair Order</field>
+        <field name="model">orthotic.repair.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pod_orthotic_repair.orthotic_repair_order_report_template</field>
+        <field name="report_file">pod_orthotic_repair.orthotic_repair_order_report_template</field>
+        <field name="binding_model_id" ref="model_orthotic_repair_order"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

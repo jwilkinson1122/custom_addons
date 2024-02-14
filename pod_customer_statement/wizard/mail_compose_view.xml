@@ -9,7 +9,7 @@
             	<field name="is_customer_statement" invisible="1"/>
             </field>
             <xpath expr="//button[@name='action_send_mail']" position="after">
-                <button string="Send By Whatsapp" name="action_send_customer_wp" type="object" class="btn-primary o_mail_send" attrs="{'invisible':[('is_customer_statement','=',False)]}"  />
+                <button string="Send By Whatsapp" name="action_send_customer_wp" type="object" class="btn-primary o_mail_send" invisible="not is_customer_statement" />
             </xpath>
         </field>
     </record>

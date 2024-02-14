@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="main_menu_orthotic_repair" name="Orthotic Repair"
+                  web_icon="pod_orthotic_repair,static/description/icon.png"/>
+        <menuitem id="menu_orthotic_repair_dashboard"
+                  groups="pod_orthotic_repair.service_manager"
+                  name="Dashboard"
+                  parent="main_menu_orthotic_repair"
+                  action="action_orthotic_repair_dashboard"
+                  sequence="0"/>
+        <menuitem id="menu_orthotic_repair_order"
+                  name="Repair Orders"
+                  parent="main_menu_orthotic_repair"
+                  action="action_orthotic_repair_order"
+                  sequence="1"/>
+
+        <menuitem id="menu_orthotic" name="Orthotics" parent="main_menu_orthotic_repair" sequence="2"
+                  groups="pod_orthotic_repair.service_manager,pod_orthotic_repair.service_supervisor,pod_orthotic_repair.service_technician"/>
+        <menuitem id="sub_menu_orthotic"
+                  name="Orthotics"
+                  parent="menu_orthotic"
+                  action="action_orthotic"
+                  sequence="1"/>
+        <menuitem id="menu_orthotic_spare_part"
+                  name="Spare Parts"
+                  parent="menu_orthotic"
+                  action="action_orthotic_part"
+                  sequence="2"/>
+
+        <menuitem id="menu_customer"
+                  groups="pod_orthotic_repair.service_manager,pod_orthotic_repair.service_receptionist"
+                  name="Customers"
+                  parent="main_menu_orthotic_repair"
+                  action="contacts.action_contacts"
+                  sequence="3"/>
+        <menuitem id="menu_repair_teams"
+                  name="Teams"
+                  parent="main_menu_orthotic_repair"
+                  action="action_repair_team"
+                  sequence="4"/>
+
+        <menuitem id="menu_configuration" name="Configurations" parent="main_menu_orthotic_repair" sequence="6"
+                  groups="pod_orthotic_repair.service_manager,pod_orthotic_repair.service_supervisor,pod_orthotic_repair.service_technician"/>
+        <menuitem id="menu_orthotic_repair_service"
+                  name="Services"
+                  parent="menu_configuration"
+                  action="action_orthotic_repair_service"
+                  sequence="1"/>
+        <menuitem id="menu_analysis_template"
+                  name="Analysis Templates"
+                  parent="menu_configuration"
+                  action="action_analysis_template"
+                  sequence="2"/>
+    </data>
+</odoo>

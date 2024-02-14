@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="orthotic_repair_service_form_view" model="ir.ui.view">
+            <field name="name">orthotic.repair.service.form.view</field>
+            <field name="model">orthotic.repair.service</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Service Details">
+                            <group>
+                                <field name="product_id"/>
+                                <field name="description"/>
+                            </group>
+                            <group>
+                                <field name="service_charge"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="orthotic_repair_service_tree_view" model="ir.ui.view">
+            <field name="name">orthotic.repair.service.tree.view</field>
+            <field name="model">orthotic.repair.service</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="product_id"/>
+                    <field name="description"/>
+                    <field name="service_charge"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/>
+                </tree>
+            </field>
+        </record>
+        <record id="orthotic_repair_service_search_view" model="ir.ui.view">
+            <field name="name">orthotic.repair.service.search.view</field>
+            <field name="model">orthotic.repair.service</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="product_id"/>
+                    <group string="Group By">
+                        <filter name="product_id" string="Services"
+                                context="{'group_by': 'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_orthotic_repair_services" model="ir.actions.act_window">
+            <field name="name">Orthotic Repair Service</field>
+            <field name="res_model">orthotic.repair.service</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+    </data>
+</odoo>

@@ -15,32 +15,32 @@
                             <field name="cust_create_log_history" />
                             <field name="customer_statement_auto_send" />
                             <field name="filter_only_unpaid_and_send_that" />
-                            <field name="customer_statement_action" attrs="{'invisible':[('customer_statement_auto_send','=',False)],'required':[('customer_statement_auto_send','=',True)]}" />
-                            <field name="cus_daily_statement_template_id" attrs="{'required':[('customer_statement_action','=','daily')],'invisible':[('customer_statement_action','!=','daily')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_week_day" attrs="{'required':[('customer_statement_action','=','weekly')],'invisible':[('customer_statement_action','!=','weekly')]}"/>
-                            <field name="cust_weekly_statement_template_id" attrs="{'required':[('customer_statement_action','=','weekly')],'invisible':[('customer_statement_action','!=','weekly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_monthly_end" attrs="{'invisible':[('customer_statement_action','!=','monthly')]}"/>
-                            <field name="cust_monthly_date" attrs="{'required':[('customer_statement_action','=','monthly')],'invisible':['|',('customer_statement_action','!=','monthly'),('cust_monthly_end','=',True)]}"/>
-                            <field name="cust_monthly_template_id" attrs="{'required':[('customer_statement_action','=','monthly')],'invisible':[('customer_statement_action','!=','monthly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_yearly_date" attrs="{'required':[('customer_statement_action','=','yearly')],'invisible':[('customer_statement_action','!=','yearly')]}"/>
-                            <field name="cust_yearly_month" attrs="{'required':[('customer_statement_action','=','yearly')],'invisible':[('customer_statement_action','!=','yearly')]}"/>
-                            <field name="cust_yearly_template_id" attrs="{'required':[('customer_statement_action','=','yearly')],'invisible':[('customer_statement_action','!=','yearly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="customer_statement_action" invisible="not customer_statement_auto_send" required="customer_statement_auto_send"/>
+                            <field name="cus_daily_statement_template_id" invisible="customer_statement_action != 'daily'" required="customer_statement_action == 'daily'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_week_day" invisible="customer_statement_action != 'weekly'" required="customer_statement_action == 'weekly'"/>
+                            <field name="cust_weekly_statement_template_id" invisible="customer_statement_action != 'weekly'" required="customer_statement_action == 'weekly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_monthly_end" invisible="customer_statement_action != 'monthly'"/>
+                            <field name="cust_monthly_date" invisible="customer_statement_action != 'monthly' or cust_monthly_end" required="customer_statement_action == 'monthly'"/>
+                            <field name="cust_monthly_template_id" invisible="customer_statement_action != 'monthly'" required="customer_statement_action == 'monthly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_yearly_date" invisible="customer_statement_action != 'yearly'" required="customer_statement_action == 'yearly'"/>
+                            <field name="cust_yearly_month" invisible="customer_statement_action != 'yearly'" required="customer_statement_action == 'yearly'"/>
+                            <field name="cust_yearly_template_id" invisible="customer_statement_action != 'yearly'" required="customer_statement_action == 'yearly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="partner_ids" required="True" widget="many2many_tags" domain="[('customer_rank','>=',1)]"/>
 
                             <field name="cust_due_create_log_history" />
                             <field name="customer_due_statement_auto_send" />
-                            <field name="customer_due_statement_action" attrs="{'invisible':[('customer_due_statement_auto_send','=',False)],'required':[('customer_due_statement_auto_send','=',True)]}" />
-                            <field name="cus_due_daily_statement_template_id" attrs="{'required':[('customer_due_statement_action','=','daily')],'invisible':[('customer_due_statement_action','!=','daily')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_due_week_day" attrs="{'required':[('customer_due_statement_action','=','weekly')],'invisible':[('customer_due_statement_action','!=','weekly')]}"/>
-                            <field name="cust_due_weekly_statement_template_id" attrs="{'required':[('customer_due_statement_action','=','weekly')],'invisible':[('customer_due_statement_action','!=','weekly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_due_monthly_end" attrs="{'invisible':[('customer_due_statement_action','!=','monthly')]}"/>
-                            <field name="cust_due_monthly_date" attrs="{'required':[('customer_due_statement_action','=','monthly')],'invisible':['|',('customer_due_statement_action','!=','monthly'),('cust_due_monthly_end','=',True)]}"/>
-                            <field name="cust_due_monthly_template_id" attrs="{'required':[('customer_due_statement_action','=','monthly')],'invisible':[('customer_due_statement_action','!=','monthly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
-                            <field name="cust_due_yearly_date" attrs="{'required':[('customer_due_statement_action','=','yearly')],'invisible':[('customer_due_statement_action','!=','yearly')]}"/>
-                            <field name="cust_due_yearly_month" attrs="{'required':[('customer_due_statement_action','=','yearly')],'invisible':[('customer_due_statement_action','!=','yearly')]}"/>
-                            <field name="cust_due_yearly_template_id" attrs="{'required':[('customer_due_statement_action','=','yearly')],'invisible':[('customer_due_statement_action','!=','yearly')]}" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="customer_due_statement_action" invisible="not customer_due_statement_auto_send" required="customer_due_statement_auto_send"/>
+                            <field name="cus_due_daily_statement_template_id" invisible="customer_due_statement_action != 'daily'" required="customer_due_statement_action == 'daily'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_due_week_day" invisible="customer_due_statement_action != 'weekly'" required="customer_due_statement_action == 'weekly'"/>
+                            <field name="cust_due_weekly_statement_template_id" invisible="customer_due_statement_action != 'weekly'" required="customer_due_statement_action == 'weekly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_due_monthly_end" invisible="customer_due_statement_action != 'monthly'"/>
+                            <field name="cust_due_monthly_date" invisible="customer_due_statement_action != 'monthly' or cust_due_monthly_end" required="customer_due_statement_action == 'monthly'"/>
+                            <field name="cust_due_monthly_template_id" invisible="customer_due_statement_action != 'monthly'" required="customer_due_statement_action == 'monthly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
+                            <field name="cust_due_yearly_date" invisible="customer_due_statement_action != 'yearly'" required="customer_due_statement_action == 'yearly'" />
+                            <field name="cust_due_yearly_month" invisible="customer_due_statement_action != 'yearly'" required="customer_due_statement_action == 'yearly'"/>
+                            <field name="cust_due_yearly_template_id" invisible="customer_due_statement_action != 'yearly'" required="customer_due_statement_action == 'yearly'" domain="[('model','=','res.partner')]" options="{'no_create': True}"/>
                         </group>
                     </group>
                 </sheet>

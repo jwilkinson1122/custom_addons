@@ -10,11 +10,25 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new quotation, the first step of a new prescription!
-            </p><p>
-            Once the quotation is confirmed by the customer, it becomes a prescription order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+            <p>
+            Once the quotation is confirmed by the customer, it becomes a prescription order.<br/>
+ You will be able to create an invoice and collect the payment.
             </p>
         </field>
     </record>
+
+
+    <!-- <record id="res_partner_kanban_inherit" model="ir.ui.view">
+        <field name="name">Contact Kanban modification</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-box']//field[@name='display_name']" position="before">
+                <span>Name: </span>
+            </xpath>
+        </field>
+    </record> -->
 
     <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
         <field name="name">res.partner.kanban.prescription_order.inherit</field>
@@ -26,9 +40,7 @@
                 <field name="prescription_order_count" groups="pod_prescription_team.group_prescription_personnel"/>
             </field>
             <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
-                <a t-if="record.prescription_order_count.value>0" data-type="object" data-name="action_view_prescription_order"
-                   groups="pod_prescription_team.group_prescription_personnel"
-                   href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                <a t-if="record.prescription_order_count.value>0" data-type="object" data-name="action_view_prescription_order" groups="pod_prescription_team.group_prescription_personnel" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
                     <span class="badge rounded-pill">
                         <i class="fa-file-o" role="img" aria-label="Prescription orders" title="Prescription orders"/>
                         <!-- <i class="fa fa-fw fa-usd" role="img" aria-label="Prescription orders" title="Prescription orders"/> -->
@@ -46,9 +58,7 @@
         <field name="priority" eval="3"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button class="oe_stat_button" type="object" name="action_view_prescription_order"
-                    groups="pod_prescription_team.group_prescription_personnel"
-                    icon="fa-file-o">
+                <button class="oe_stat_button" type="object" name="action_view_prescription_order" groups="pod_prescription_team.group_prescription_personnel" icon="fa-file-o">
                     <field string="Prescription" name="prescription_order_count" widget="statinfo"/>
                 </button>
             </div>
@@ -57,9 +67,7 @@
                     <group groups="pod_prescription.group_warning_prescription" col="2">
                         <separator string="Warning on the Prescription Order" colspan="2"/>
                         <field name="prescription_warn" nolabel="1" colspan="2" required="1"/>
-                        <field name="prescription_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
-                                invisible="prescription_warn in (False, 'no-message')"
-                                required="prescription_warn and prescription_warn != 'no-message'"/>
+                        <field name="prescription_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2" invisible="prescription_warn in (False, 'no-message')" required="prescription_warn and prescription_warn != 'no-message'"/>
                     </group>
                 </group>
             </xpath>

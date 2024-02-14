@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Create New Record-->
+    <template id="repair_request_order_page" name="Repair Request Order">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container">
+                        <t t-if="error">
+                            <div class="alert alert-danger">
+                                <strong>
+                                    <span t-esc="error"/>
+                                </strong>
+                            </div>
+                        </t>
+                        <h2 class="repair-request-order">Repair Request Order</h2>
+                        <form role="form" action="/create/repair-order" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <h5 class="mb0">Orthotic Details</h5>
+                            <div class="form-outline mb-0.5">
+                                <label for="orthotic_problem" class="control-label">Orthotic Problem
+                                    <span class="form-required-repair-order">*</span>
+                                </label>
+                                <input type="text" name="orthotic_problem" t-att-value="orthotic_problem"
+                                       id="orthotic_problem" class="form-control" required="required"/>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label for="orthotic_product_id" class="control-label">Orthotic
+                                            <span class="form-required-repair-order">*</span>
+                                        </label>
+                                        <select name="orthotic_product_id" id="orthotic_product_id"
+                                                class="form-control link-style">
+                                            <t t-foreach="orthotic_product" t-as="orthotic">
+                                                <option t-att-value="orthotic.id" t-esc="orthotic.name"
+                                                        required="required"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label for="orthotic_brand" class="control-label">Brand</label>
+                                        <input type="text" name="orthotic_brand" t-att-value="orthotic_brand"
+                                               id="orthotic_brand" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="row mb-0.5">
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="model" class="control-label">Model</label>
+                                                <input type="text" name="model" t-att-value="model" id="model"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="mfg_year" class="control-label">Manufacturing Year</label>
+                                                <input type="text" name="mfg_year" t-att-value="mfg_year" id="mfg_year"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label for="serial_number" class="control-label">Serial Number
+                                            <span class="form-required-repair-order">*</span>
+                                        </label>
+                                        <input type="text" name="serial_number" t-att-value="serial_number"
+                                               id="serial_number" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <label class="control-label" for="name">Problem Descriptions</label>
+                                    <textarea class="form-control" cols="60" name="problem_description" rows="4">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label for="document" class="form-label">File Attachment</label>
+                                        <input type="file" class="form-control form-control-lg"
+                                               accept=".png, .pdf, .jpeg" name="document"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="is_previous_service_history" id="is_previous_service_history"/>
+                                            Previous Service History
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <h5 class="mb-0">Service Location</h5>
+                                    <div class="form-outline">
+                                        <label for="street" class="control-label">Street</label>
+                                        <input type="text" name="street" t-att-value="street" id="street"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h5 class="mb-0">Customer Details</h5>
+                                    <div class="form-outline">
+                                        <label class="control-label">Request By</label>
+                                        <input type="text" class="form-control"
+                                               t-att-value="request.env.user.partner_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label for="street2" class="control-label">Street2</label>
+                                        <input type="text" name="street2" t-att-value="street2" id="street2"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label class="control-label">Phone</label>
+                                        <input type="text" class="form-control"
+                                               t-att-value="request.env.user.partner_id.phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="row mb-0.5">
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="city" class="control-label">City</label>
+                                                <input type="text" name="city" t-att-value="city" id="city"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="zip" class="control-label">Zip</label>
+                                                <input type="number" name="zip" t-att-value="zip" id="zip"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label class="control-label">Email</label>
+                                        <input type="email" class="form-control"
+                                               t-att-value="request.env.user.partner_id.email"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0.5">
+                                <div class="col">
+                                    <div class="row mb-4">
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="country_id" class="control-label">Country</label>
+                                                <select name="country_id" id="country_id"
+                                                        class="form-control link-style">
+                                                    <t t-foreach="customer_country" t-as="country">
+                                                        <option t-att-value="country.id" t-esc="country.name"/>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <label for="state_id" class="control-label">State</label>
+                                                <select name="state_id" id="state_id" class="form-control link-style">
+                                                    <t t-foreach="customer_state" t-as="state">
+                                                        <option t-att-value="state.id" t-esc="state.name"/>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                            <br/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="repair_order_created" name="Repair Request Created">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <div class="col-lg-7 col-xl-6 mr-lg-auto">
+                                <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/>
+                                <br/>
+                                <h1 class="text-center">Thank You!</h1>
+                                <div class="pb16 pt16 s_hr" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                </div>
+                                <h5 class="repair-order-success">
+                                    <span class="fa fa-check-circle"/>
+                                    <span>
+                                        Your orthotic repair request
+                                        <br/>
+                                        <a t-attf-href="/order/request-information/#{order_details.id}/">
+                                            <strong>
+                                                <t t-esc="order_details.sequence_number"/>
+                                            </strong>
+                                        </a>
+                                        <br/>
+                                        has been successfully submitted.
+                                    </span>
+                                </h5>
+                            </div>
+                            <div class="col-lg-4">
+                                <ul class="list-unstyled mb-0 pl-2">
+                                    <li>
+                                        <t t-esc="order_details.company_id.name"/>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-phone fa-fw mr-2"/>
+                                        <span class="o_force_ltr">
+                                            <t t-esc="order_details.company_id.phone"/>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-1x fa-fw fa-envelope mr-2"/>
+                                        <span>
+                                            <t t-esc="order_details.company_id.email"/>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!--Inherit Template-->
+    <template id="portal_repair_order_request" inherit_id="portal.portal_my_home" name="My Portal" priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/pod_orthotic_repair/static/src/img/tasks.svg'"/>
+                <t t-set="title">Repair Order Requests</t>
+                <t t-set="url" t-value="'/order/repair-request-details'"/>
+                <t t-set="text">Follow, view repair order requests</t>
+                <t t-set="placeholder_count" t-value="'count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--Repair Order Page-->
+    <template id="repair_order_page" name="Repair Orders">
+        <t t-call="portal.portal_layout">
+            <t t-if="order_request" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Sequence Number #</th>
+                        <th class="text-center">Orthotic</th>
+                        <th class="text-center">Serial Number</th>
+                        <th class="text-center">Receiving Date</th>
+                        <th class="text-center">Delivery Date</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="order_request" t-as="req">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/order/request-information/#{req.id}/">
+                                <span t-field="req.sequence_number"/>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <t t-esc="req.orthotic_product_id.name"/>
+                        </td>
+                        <td class="text-center">
+                            <t t-esc="req.serial_number"/>
+                        </td>
+                        <td class="text-center">
+                            <t t-esc="req.receiving_date"/>
+                        </td>
+                        <td class="text-center">
+                            <t t-esc="req.delivery_date"/>
+                        </td>
+                        <td class="text-center">
+                            <t t-if="req.stages == 'draft'">
+                                <span class="badge rounded-pill text-bg-info">
+                                    New
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'quotation'">
+                                <span class="badge rounded-pill text-bg-info">
+                                    Quotation
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'in_progress'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    In Progress
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'inspection_mode'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    Inspection Mode
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'assign_to_technician'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    Assign to Technician
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'quotation_sent'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    Quotation Sent
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'cancel'">
+                                <span class="badge rounded-pill text-bg-danger">
+                                    Cancel
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'reject'">
+                                <span class="badge rounded-pill text-bg-danger">
+                                    Reject
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'review'">
+                                <span class="badge rounded-pill text-bg-danger">
+                                    Review
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'complete'">
+                                <span class="badge rounded-pill text-bg-success">
+                                    Complete
+                                </span>
+                            </t>
+                            <t t-if="req.stages == 'approve'">
+                                <span class="badge rounded-pill text-bg-success">
+                                    Quotation Approved
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="alert alert-info">
+                    <strong>
+                        <p>There are currently no requests for your account.</p>
+                    </strong>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--Repair Order Information-->
+    <template id="request_information_page" name="Repair Information Page">
+        <t t-call="website.layout">
+            <div class="container py-4">
+                <h2 class="repair-order-request">
+                    Repair Order Information
+                </h2>
+                <div class="repair-detail-card">
+                    <div class="card-body">
+                        <h5 class="mt20 mb20">
+                            <strong>
+                                <span t-field="orthotic_repair_id.sequence_number"/>
+                            </strong>
+                            <span class="request-status">
+                                <t t-if="orthotic_repair_id.stages == 'draft'">
+                                    <span class="badge rounded-pill text-bg-info">
+                                        New
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'quotation'">
+                                    <span class="badge rounded-pill text-bg-info">
+                                        Quotation
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'in_progress'">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        In Progress
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'inspection_mode'">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        Inspection Mode
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'assign_to_technician'">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        Assign to Technician
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'quotation_sent'">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        Quotation Sent
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'cancel'">
+                                    <span class="badge rounded-pill text-bg-danger">
+                                        Cancel
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'reject'">
+                                    <span class="badge rounded-pill text-bg-danger">
+                                        Reject
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'review'">
+                                    <span class="badge rounded-pill text-bg-danger">
+                                        Review
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'complete'">
+                                    <span class="badge rounded-pill text-bg-success">
+                                        Complete
+                                    </span>
+                                </t>
+                                <t t-if="orthotic_repair_id.stages == 'approve'">
+                                    <span class="badge rounded-pill text-bg-success">
+                                        Quotation Approved
+                                    </span>
+                                </t>
+                            </span>
+                            <hr class="mt-1"/>
+                        </h5>
+                        <h6 class="mt0 mb0">
+                            <strong>
+                                Orthotic Details
+                            </strong>
+                        </h6>
+                        <div class="row">
+                            <div class="col">
+                                Orthotic Problem:
+                                <span t-field="orthotic_repair_id.orthotic_problem"/>
+                                <br/>
+                                Orthotic:
+                                <span t-field="orthotic_repair_id.orthotic_product_id.name"/>
+                                <br/>
+                                Brand:
+                                <span t-field="orthotic_repair_id.orthotic_brand"/>
+                            </div>
+                            <div class="col">
+                                Model:
+                                <span t-field="orthotic_repair_id.model"/>&#160;&#160;
+                                <span t-field="orthotic_repair_id.mfg_year"/>
+                                <br/>
+                                Serial Number:
+                                <span t-field="orthotic_repair_id.serial_number"/>
+                                <br/>
+                                Previous Service History:
+                                <t t-if="orthotic_repair_id.is_previous_service_history">Yes</t>
+                                <t t-else="">No</t>
+                            </div>
+                        </div>
+                        <hr class="mt-0"/>
+                        <div class="row">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 class="mt0 mb0">
+                                            <strong>
+                                                Customer Details
+                                            </strong>
+                                        </h6>
+                                    </div>
+                                    <div class="col-9">
+                                        Customer:
+                                        <span t-field="orthotic_repair_id.customer_id.name"/>
+                                        <br/>
+                                        Phone:
+                                        <span t-field="orthotic_repair_id.phone"/>
+                                        <br/>
+                                        Email:
+                                        <span t-field="orthotic_repair_id.email"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 class="mt0 mb0">
+                                            <strong>
+                                                Service Location
+                                            </strong>
+                                        </h6>
+                                    </div>
+                                    <div class="col-9">
+                                        Address:
+                                        <span t-field="orthotic_repair_id.street"/>
+                                        <br/>
+                                        <span t-field="orthotic_repair_id.street2"/>
+                                        <br/>
+                                        <span t-field="orthotic_repair_id.city"/>
+                                        <span t-field="orthotic_repair_id.state_id.name"/>
+                                        <span t-field="orthotic_repair_id.zip"/>
+                                        <br/>
+                                        <span t-field="orthotic_repair_id.country_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mt-0"/>
+                        <h6 class="mt0 mb0">
+                            <strong>
+                                General Information
+                            </strong>
+                        </h6>
+                        <div class="row">
+                            <div class="col">
+                                Company:
+                                <span t-field="orthotic_repair_id.company_id.name"/>
+                                <br/>
+                                Phone:
+                                <span t-field="orthotic_repair_id.company_phone"/>
+                                <br/>
+                                Email:
+                                <span t-field="orthotic_repair_id.company_email"/>
+                            </div>
+                            <div class="col">
+                                Receiving Date:
+                                <span t-field="orthotic_repair_id.receiving_date"/>
+                                <br/>
+                                Delivery Date:
+                                <span t-field="orthotic_repair_id.delivery_date"/>
+                                <br/>
+                                File Attachment:
+                                <span t-field="orthotic_repair_id.file_name"/>
+                            </div>
+                        </div>
+                        <hr class="mt-0"/>
+                        <h6 class="mt0 mb0">
+                            <strong>
+                                Problem Descriptions
+                            </strong>
+                        </h6>
+                        <div class="row">
+                            <div class="col">
+                                <span t-field="orthotic_repair_id.problem_description"/>
+                            </div>
+                        </div>
+                        <hr class="mt-0"/>
+                        <!--Communication-->
+<!--                        <div id="repair_order_page" class="col-12 col-lg">-->
+<!--                            <div id="repair_order_communication" class="mt-4">-->
+<!--                                <h6 class="mt0 mb0">-->
+<!--                                    <strong>-->
+<!--                                        Message and communication history-->
+<!--                                    </strong>-->
+<!--                                </h6>-->
+<!--                                <t t-call="portal.message_thread">-->
+<!--                                    <t t-set="object" t-value="orthotic_repair_id"/>-->
+<!--                                </t>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

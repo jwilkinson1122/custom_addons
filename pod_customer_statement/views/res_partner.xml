@@ -26,11 +26,11 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="customer_statement_config" widget='many2many_tags' attrs="{'invisible':[('customer_rank','=',0)]}"/>
+                <field name="customer_statement_config" widget='many2many_tags' invisible="customer_rank == 0"/>
             </xpath>
-            
+
             <xpath expr="//page[last()]" position="after">
-                <page string="Customer Statement" attrs="{'invisible':[('customer_rank','=',0)]}">
+                <page string="Customer Statement" invisible="customer_rank == 0">
                     <field name="supplier_rank" invisible="1" />
                     <field name="customer_rank" invisible="1" />
                     <field name="customer_compute_boolean" invisible="1" />
@@ -39,11 +39,11 @@
                     <field name="cust_due_statement_report_url" invisible="1"/>
                     <group string="Customer Statement Filters">
                         <div class="o_row no-gutters d-flex">
-                            <div class="o_row" attrs="{'invisible':[('date_filter','!=','custom')]}">
-                                <field name="start_date"  attrs="{'required':[('date_filter','=','custom')]}"/>
+                            <div class="o_row" invisible="date_filter != 'custom'">
+                                <field name="start_date" required="date_filter == 'custom'"/>
                                 To
-                                <field name="end_date" attrs="{'required':[('date_filter','=','custom')]}"/>
-                                
+                                <field name="end_date" required="date_filter == 'custom'"/>
+
                             </div>
                             <div class="o_row">
                                 <field name="date_filter" />
@@ -56,7 +56,7 @@
                     </group>
                     <button name="action_send_filter_customer_whatsapp" type="object" icon="fa-whatsapp" style="float:right;margin: 10px;" string="Send By Whatsapp" class="oe_highlight" />
 
-                    <!-- <button name="action_send_filter_customer_whatsapp" type="object" icon="fa-whatsapp" style="float:right;margin: 10px;" string="Send By Whatsapp" class="oe_highlight"  /> -->
+                    <!-- <button name="action_send_filter_customer_whatsapp" type="object" icon="fa-whatsapp" style="float:right;margin: 10px;" string="Send By Whatsapp" class="oe_highlight" /> -->
                     <button name="action_send_filter_customer_statement" icon="fa-envelope" title="Send Filter Customer Statement" string="Send Filter Customer Statement" type="object" class="oe_highlight" style="float:right;margin: 10px;" />
                     <button name="action_print_filter_customer_statement" icon="fa-print" title="Print Filter Customer Statement" string="Print Filter Customer Statement" type="object" class="oe_highlight" style="float:right;margin: 10px;" />
                     <button name="action_print_filter_customer_statement_xls" icon="fa-file-excel-o" title="Print Filter Customer Statement " string="Print Filter Customer Statement" type="object" class="oe_highlight" style="float:right;margin: 10px;" />
@@ -91,7 +91,7 @@
                         </field>
                     </group>
                     <hr style="background: #7c7bad;" />
-                    <button name="action_send_customer_whatsapp" type="object" style="float: right; margin: 10px;" icon="fa-whatsapp" string="Send By Whatsapp" class="oe_highlight"  />
+                    <button name="action_send_customer_whatsapp" type="object" style="float: right; margin: 10px;" icon="fa-whatsapp" string="Send By Whatsapp" class="oe_highlight" />
                     <button name="action_send_customer_statement" icon="fa-envelope" title="Send Customer Statement" string="Send Customer Statement" type="object" class="oe_highlight" style="float: right; margin: 10px;" />
                     <button name="action_print_customer_statement" icon="fa-print" title="Print Customer Statement" string="Print Customer Statement" type="object" class="oe_highlight" style="float: right; margin: 10px;" />
                     <button name="action_print_customer_statement_xls" icon="fa-file-excel-o" title="Send Customer Statement" string="Print Customer Statement " type="object" class="oe_highlight" style="float: right; margin: 10px;" />
@@ -157,7 +157,7 @@
                         </tr>
                     </table>
                     <hr style="background: #7c7bad;" />
-                    <button name="action_send_due_customer_whatsapp" type="object" icon="fa-whatsapp" string="Send By Whatsapp" class="oe_highlight"  style="float: right; margin: 10px;" />
+                    <button name="action_send_due_customer_whatsapp" type="object" icon="fa-whatsapp" string="Send By Whatsapp" class="oe_highlight" style="float: right; margin: 10px;" />
                     &amp;nbsp;
                     <button name="action_send_customer_due_statement" icon="fa-envelope" title="Send Overdue Customer Statement" string="Send Overdue Customer Statement" type="object" class="oe_highlight" style="float: right; margin: 10px;" />
                     &amp;nbsp;
@@ -206,7 +206,7 @@
                 </group>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button type="object" class="oe_stat_button" icon="fa-envelope" name="action_view_customer_history" attrs="{'invisible':[('customer_rank','=',0)]}">
+                <button type="object" class="oe_stat_button" icon="fa-envelope" name="action_view_customer_history" invisible="customer_rank == 0">
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_text">Log History</span>
                     </div>
