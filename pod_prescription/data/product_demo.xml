@@ -117,7 +117,7 @@
     <!-- Expensable products -->
     <record id="product.expense_product" model="product.product">
         <field name="invoice_policy">order</field>
-        <field name="expense_policy">prescriptions_price</field>
+        <field name="expense_policy">prescription_price</field>
     </record>
 
     <record id="product.expense_hotel" model="product.product">
@@ -156,7 +156,7 @@
     -->
     <function model="ir.model.data" name="_update_xmlids">
         <value model="base" eval="[{
-            'xml_id': 'pod_prescriptions.product_4_attribute_1_value_3',
+            'xml_id': 'pod_prescription.product_4_attribute_1_value_3',
             'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[2],
             'noupdate': True,
         }]"/>
@@ -164,12 +164,12 @@
 
     <function model="ir.model.data" name="_update_xmlids">
         <value model="base" eval="[{
-            'xml_id': 'pod_prescriptions.product_product_4e',
-            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('pod_prescriptions.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_1')),
+            'xml_id': 'pod_prescription.product_product_4e',
+            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('pod_prescription.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_1')),
             'noupdate': True,
         }, {
-            'xml_id': 'pod_prescriptions.product_product_4f',
-            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('pod_prescriptions.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_2')),
+            'xml_id': 'pod_prescription.product_product_4f',
+            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('pod_prescription.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_2')),
             'noupdate': True,
         },]"/>
     </function>
@@ -194,7 +194,7 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="company_id" eval="[]"/>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/img/advance_product_0-image.jpg"/>
+        <field name="image_1920" type="base64" file="pod_prescription/static/img/advance_product_0-image.jpg"/>
         <field name="taxes_id" eval="[]"/>
         <field name="supplier_taxes_id" eval="[]"/>
     </record>

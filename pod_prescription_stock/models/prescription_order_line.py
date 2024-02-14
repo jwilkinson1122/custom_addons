@@ -10,11 +10,11 @@ from odoo.exceptions import UserError
 
 
 class PrescriptionOrderLine(models.Model):
-    _inherit = 'prescriptions.order.line'
+    _inherit = 'prescription.order.line'
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
-    route_id = fields.Many2one('stock.route', string='Route', domain=[('prescriptions_selectable', '=', True)], ondelete='restrict', check_company=True)
-    move_ids = fields.One2many('stock.move', 'prescriptions_line_id', string='Stock Moves')
+    route_id = fields.Many2one('stock.route', string='Route', domain=[('prescription_selectable', '=', True)], ondelete='restrict', check_company=True)
+    move_ids = fields.One2many('stock.move', 'prescription_line_id', string='Stock Moves')
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
@@ -33,8 +33,8 @@ class PrescriptionOrderLine(models.Model):
         """Compute the visibility of the inventory widget."""
         for line in self:
             line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
-            if line.state in ('draft', 'sent', 'prescriptions') and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
-                if line.state == 'prescriptions' and not line.move_ids:
+            if line.state in ('draft', 'sent', 'prescription') and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
+                if line.state == 'prescription' and not line.move_ids:
                     line.display_qty_widget = False
                 else:
                     line.display_qty_widget = True
@@ -52,9 +52,9 @@ class PrescriptionOrderLine(models.Model):
          2. The quotation hasn't commitment_date, we compute the estimated delivery
             date based on lead time"""
         treated = self.browse()
-        # If the state is already in prescriptions the picking is created and a simple forecasted quantity isn't enough
+        # If the state is already in prescription the picking is created and a simple forecasted quantity isn't enough
         # Then used the forecasted data of the related stock.move
-        for line in self.filtered(lambda l: l.state == 'prescriptions'):
+        for line in self.filtered(lambda l: l.state == 'prescription'):
             if not line.display_qty_widget:
                 continue
             moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
@@ -69,7 +69,7 @@ class PrescriptionOrderLine(models.Model):
             treated |= line
 
         qty_processed_per_product = defaultdict(lambda: 0)
-        grouped_lines = defaultdict(lambda: self.env['prescriptions.order.line'])
+        grouped_lines = defaultdict(lambda: self.env['prescription.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
@@ -169,13 +169,13 @@ class PrescriptionOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(PrescriptionOrderLine, self).create(vals_list)
-        lines.filtered(lambda line: line.state == 'prescriptions')._action_launch_stock_rule()
+        lines.filtered(lambda line: line.state == 'prescription')._action_launch_stock_rule()
         return lines
 
     def write(self, values):
-        lines = self.env['prescriptions.order.line']
+        lines = self.env['prescription.order.line']
         if 'product_uom_qty' in values:
-            lines = self.filtered(lambda r: r.state == 'prescriptions' and not r.is_expense)
+            lines = self.filtered(lambda r: r.state == 'prescription' and not r.is_expense)
 
         if 'product_packaging_id' in values:
             self.move_ids.filtered(
@@ -203,13 +203,13 @@ class PrescriptionOrderLine(models.Model):
 
     def _inverse_customer_lead(self):
         for line in self:
-            if line.state == 'prescriptions' and not line.order_id.commitment_date:
+            if line.state == 'prescription' and not line.order_id.commitment_date:
                 # Propagate deadline on related stock move
                 line.move_ids.date_deadline = line.order_id.date_order + timedelta(days=line.customer_lead or 0.0)
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
-        coming from a prescriptions order line. This method could be override in order to add other custom key that could
+        coming from a prescription order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
         values = super(PrescriptionOrderLine, self)._prepare_procurement_values(group_id)
@@ -219,13 +219,13 @@ class PrescriptionOrderLine(models.Model):
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
-            'prescriptions_line_id': self.id,
+            'prescription_line_id': self.id,
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_prescriptions_order_line_multiline_description_variants(),
+            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_prescription_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
@@ -268,7 +268,7 @@ class PrescriptionOrderLine(models.Model):
         return {
             'name': self.order_id.name,
             'move_type': self.order_id.picking_policy,
-            'prescriptions_id': self.order_id.id,
+            'prescription_id': self.order_id.id,
             'partner_id': self.order_id.partner_shipping_id.id,
         }
 
@@ -281,8 +281,8 @@ class PrescriptionOrderLine(models.Model):
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
         Launch procurement group run method with required/custom fields generated by a
-        prescriptions order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
-        depending on the prescriptions order line product rule.
+        prescription order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
+        depending on the prescription order line product rule.
         """
         if self._context.get("skip_procurement"):
             return True
@@ -290,7 +290,7 @@ class PrescriptionOrderLine(models.Model):
         procurements = []
         for line in self:
             line = line.with_company(line.company_id)
-            if line.state != 'prescriptions' or line.order_id.locked or not line.product_id.type in ('consu', 'product'):
+            if line.state != 'prescription' or line.order_id.locked or not line.product_id.type in ('consu', 'product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:
@@ -345,7 +345,7 @@ class PrescriptionOrderLine(models.Model):
         return extra_context
 
     def _get_product_catalog_lines_data(self, **kwargs):
-        """ Override of `prescriptions` to add the delivered quantity.
+        """ Override of `prescription` to add the delivered quantity.
 
         :rtype: dict
         :return: A dict with the following structure:

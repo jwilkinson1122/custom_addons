@@ -92,7 +92,7 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
 
         This test could not be put into product module because there was no
         model which had product_id as required and without cascade on delete.
-        Here we have the prescriptions order line in this situation.
+        Here we have the prescription order line in this situation.
 
         This is a necessary condition for `_create_variant_ids` to archive
         instead of delete the variants.
@@ -112,14 +112,14 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
             # Create a dummy SO to prevent the variant from being deleted by
             # _create_variant_ids() because the variant is a related field that
             # is required on the SO line
-            so = self.env['prescriptions.order'].create({'partner_id': 1})
-            self.env['prescriptions.order.line'].create({
+            so = self.env['prescription.order'].create({'partner_id': 1})
+            self.env['prescription.order.line'].create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant.id
             })
             # additional variant to test correct ignoring when mismatch values
-            self.env['prescriptions.order.line'].create({
+            self.env['prescription.order.line'].create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant2.id
@@ -155,7 +155,7 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
             self.computer_ssd_attribute_lines.write({'active': False})
 
             variant4 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
-            self.env['prescriptions.order.line'].create({
+            self.env['prescription.order.line'].create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant4.id
@@ -172,7 +172,7 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
             computer_hdd_2 = self._get_product_template_attribute_value(self.hdd_2)
 
             variant5 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
-            self.env['prescriptions.order.line'].create({
+            self.env['prescription.order.line'].create({
                 'order_id': so.id,
                 'name': "test",
                 'product_id': variant5.id

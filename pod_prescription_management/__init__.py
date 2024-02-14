@@ -7,14 +7,14 @@ from odoo.tools import column_exists, create_column
 
 
 def pre_init_hook(env):
-    """Do not compute the prescriptions_order_template_id field on existing SOs."""
-    if not column_exists(env.cr, "prescriptions_order", "prescriptions_order_template_id"):
-        create_column(env.cr, "prescriptions_order", "prescriptions_order_template_id", "int4")
+    """Do not compute the prescription_order_template_id field on existing SOs."""
+    if not column_exists(env.cr, "prescription_order", "prescription_order_template_id"):
+        create_column(env.cr, "prescription_order", "prescription_order_template_id", "int4")
 
 def uninstall_hook(env):
     res_ids = env['ir.model.data'].search([
         ('model', '=', 'ir.ui.menu'),
-        ('module', '=', 'prescriptions')
+        ('module', '=', 'prescription')
     ]).mapped('res_id')
     env['ir.ui.menu'].browse(res_ids).update({'active': False})
 
@@ -22,6 +22,6 @@ def uninstall_hook(env):
 def post_init_hook(env):
     res_ids = env['ir.model.data'].search([
         ('model', '=', 'ir.ui.menu'),
-        ('module', '=', 'prescriptions'),
+        ('module', '=', 'prescription'),
     ]).mapped('res_id')
     env['ir.ui.menu'].browse(res_ids).update({'active': True})

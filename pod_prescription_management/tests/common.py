@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 class PrescriptionManagementCommon(PrescriptionCommon):
 
@@ -9,6 +9,6 @@ class PrescriptionManagementCommon(PrescriptionCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.empty_order_template = cls.env['prescriptions.order.template'].create({
+        cls.empty_order_template = cls.env['prescription.order.template'].create({
             'name': "Test Draft Rx Template",
         })

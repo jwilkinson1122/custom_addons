@@ -2,7 +2,7 @@
 
 
 from odoo.tests import HttpCase, tagged, Form
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -17,7 +17,7 @@ class TestControllersAccessRights(HttpCase, TestPrescriptionCommon):
     def test_SO_and_DO_portal_acess(self):
         """ Ensure that it is possible to open both SO and DO, either using the access token
         or being connected as portal user"""
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.portal_user.partner_id
         with so_form.order_line.new() as line:
             line.product_id = self.product_a

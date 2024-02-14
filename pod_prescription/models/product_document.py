@@ -9,11 +9,11 @@ class ProductDocument(models.Model):
     attached_on = fields.Selection(
         selection=[
             ('quotation', "Draft Rx"),
-            ('prescriptions_order', "Confirmed order"),
+            ('prescription_order', "Confirmed order"),
         ],
         string="Visible at",
-        help="Allows you to share the document with your customers within a prescriptions.\n"
-            "Leave it empty if you don't want to share this document with prescriptions customer.\n"
+        help="Allows you to share the document with your customers within a prescription.\n"
+            "Leave it empty if you don't want to share this document with prescription customer.\n"
             "Draft Rx: the document will be sent to and accessible by customers at any time.\n"
                 "e.g. this option can be useful to share Product description files.\n"
             "Confirmed order: the document will be sent to and accessible by customers.\n"

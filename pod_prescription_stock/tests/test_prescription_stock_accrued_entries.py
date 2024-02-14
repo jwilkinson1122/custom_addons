@@ -20,7 +20,7 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
             'uom_po_id': uom_unit.id,
             'invoice_policy': 'delivery',
         })
-        cls.prescriptions_order = cls.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        cls.prescription_order = cls.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
@@ -33,13 +33,13 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
                 })
             ]
         })
-        cls.prescriptions_order.action_confirm()
+        cls.prescription_order.action_confirm()
         cls.account_expense = cls.company_data['default_account_expense']
         cls.account_revenue = cls.company_data['default_account_revenue']
 
-    def test_prescriptions_stock_accruals(self):
+    def test_prescription_stock_accruals(self):
         # deliver 2 on 2020-01-02
-        pick = self.prescriptions_order.picking_ids
+        pick = self.prescription_order.picking_ids
         pick.move_ids.write({'quantity': 2, 'picked': True})
         pick.button_validate()
         wiz_act = pick.button_validate()
@@ -54,8 +54,8 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
         wizard = self.env['account.accrued.orders.wizard'].with_context({
-            'active_model': 'prescriptions.order',
-            'active_ids': self.prescriptions_order.ids,
+            'active_model': 'prescription.order',
+            'active_ids': self.prescription_order.ids,
         }).create({
             'account_id': self.account_expense.id,
             'date': '2020-01-01',
@@ -86,9 +86,9 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
             {'account_id': wizard.account_id.id, 'debit': 150, 'credit': 0},
         ])
 
-    def test_prescriptions_stock_invoiced_accrued_entries(self):
+    def test_prescription_stock_invoiced_accrued_entries(self):
         # deliver 2 on 2020-01-02
-        pick = self.prescriptions_order.picking_ids
+        pick = self.prescription_order.picking_ids
         pick.move_ids.write({'quantity': 2, 'picked': True})
         pick.button_validate()
         wiz_act = pick.button_validate()
@@ -97,7 +97,7 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-02')})
 
         # invoice on 2020-01-04
-        inv = self.prescriptions_order._create_invoices()
+        inv = self.prescription_order._create_invoices()
         inv.invoice_date = fields.Date.to_date('2020-01-04')
         inv.action_post()
 
@@ -108,13 +108,13 @@ class TestAccruedStockPrescriptionOrders(AccountTestInvoicingCommon):
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
         # invoice on 2020-01-08
-        inv = self.prescriptions_order._create_invoices()
+        inv = self.prescription_order._create_invoices()
         inv.invoice_date = fields.Date.to_date('2020-01-08')
         inv.action_post()
 
         wizard = self.env['account.accrued.orders.wizard'].with_context({
-            'active_model': 'prescriptions.order',
-            'active_ids': self.prescriptions_order.ids,
+            'active_model': 'prescription.order',
+            'active_ids': self.prescription_order.ids,
         }).create({
             'account_id': self.company_data['default_account_expense'].id,
             'date': '2020-01-02',

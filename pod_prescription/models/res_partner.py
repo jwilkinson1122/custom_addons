@@ -8,46 +8,46 @@ from odoo.osv import expression
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    prescriptions_order_count = fields.Integer(compute='_compute_prescriptions_order_count', string='Prescription Order Count')
-    prescriptions_order_ids = fields.One2many('prescriptions.order', 'partner_id', 'Prescriptions Order')
-    prescriptions_warn = fields.Selection(WARNING_MESSAGE, 'Prescriptions Warnings', default='no-message', help=WARNING_HELP)
-    prescriptions_warn_msg = fields.Text('Message for Prescriptions Order')
+    prescription_order_count = fields.Integer(compute='_compute_prescription_order_count', string='Prescription Order Count')
+    prescription_order_ids = fields.One2many('prescription.order', 'partner_id', 'Prescription Order')
+    prescription_warn = fields.Selection(WARNING_MESSAGE, 'Prescription Warnings', default='no-message', help=WARNING_HELP)
+    prescription_warn_msg = fields.Text('Message for Prescription Order')
 
     @api.model
-    def _get_prescriptions_order_domain_count(self):
+    def _get_prescription_order_domain_count(self):
         return []
 
-    def _compute_prescriptions_order_count(self):
+    def _compute_prescription_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)],
             ['parent_id'],
         )
-        prescriptions_order_groups = self.env['prescriptions.order']._read_group(
-            domain=expression.AND([self._get_prescriptions_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
+        prescription_order_groups = self.env['prescription.order']._read_group(
+            domain=expression.AND([self._get_prescription_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
             groupby=['partner_id'], aggregates=['__count']
         )
         self_ids = set(self._ids)
 
-        self.prescriptions_order_count = 0
-        for partner, count in prescriptions_order_groups:
+        self.prescription_order_count = 0
+        for partner, count in prescription_order_groups:
             while partner:
                 if partner.id in self_ids:
-                    partner.prescriptions_order_count += count
+                    partner.prescription_order_count += count
                 partner = partner.parent_id
 
     def _has_order(self, partner_domain):
         self.ensure_one()
-        prescriptions_order = self.env['prescriptions.order'].sudo().search(
+        prescription_order = self.env['prescription.order'].sudo().search(
             expression.AND([
                 partner_domain,
                 [
-                    ('state', 'in', ('sent', 'prescriptions')),
+                    ('state', 'in', ('sent', 'prescription')),
                 ]
             ]),
             limit=1,
         )
-        return bool(prescriptions_order)
+        return bool(prescription_order)
 
     def _can_edit_name(self):
         """ Can't edit `name` if there is (non draft) issued SO. """
@@ -64,8 +64,8 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
-    def action_view_prescriptions_order(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.act_res_partner_2_prescriptions_order')
+    def action_view_prescription_order(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('pod_prescription.act_res_partner_2_prescription_order')
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action["domain"] = [("partner_id", "in", all_child.ids)]
         return action
@@ -73,15 +73,15 @@ class ResPartner(models.Model):
     def _compute_credit_to_invoice(self):
         # EXTENDS 'account'
         super()._compute_credit_to_invoice()
-        domain = [('partner_id', 'in', self.ids), ('state', '=', 'prescriptions')]
-        group = self.env['prescriptions.order']._read_group(domain, ['partner_id'], ['amount_to_invoice:sum'])
+        domain = [('partner_id', 'in', self.ids), ('state', '=', 'prescription')]
+        group = self.env['prescription.order']._read_group(domain, ['partner_id'], ['amount_to_invoice:sum'])
         for partner, amount_to_invoice_sum in group:
             partner.credit_to_invoice += amount_to_invoice_sum
 
 
     def unlink(self):
         # Unlink draft/cancelled SO so that the partner can be removed from database
-        self.env['prescriptions.order'].sudo().search([
+        self.env['prescription.order'].sudo().search([
             ('state', 'in', ['draft', 'cancel']),
             '|', '|',
             ('partner_id', 'in', self.ids),

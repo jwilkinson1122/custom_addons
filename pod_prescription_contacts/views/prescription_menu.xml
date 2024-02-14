@@ -8,22 +8,22 @@
     <menuitem id="contacts.res_partner_menu_contacts" name="Administration" parent="contacts.menu_contacts" sequence="2"/>
     
     <!-- Define custom submenus -->
-    <menuitem id="prescriptions_contacts_menu_all" name="All Contacts" action="contacts.action_contacts" parent="contacts.res_partner_menu_contacts" sequence="2"/>
+    <menuitem id="prescription_contacts_menu_all" name="All Contacts" action="contacts.action_contacts" parent="contacts.res_partner_menu_contacts" sequence="2"/>
 
-    <menuitem id="prescriptions_accounts_menu" name="Accounts" parent="contacts.res_partner_menu_contacts" sequence="3" action="pod_prescriptions_contacts.prescriptions_account_action"/>
+    <menuitem id="prescription_accounts_menu" name="Accounts" parent="contacts.res_partner_menu_contacts" sequence="3" action="pod_prescription_contacts.prescription_account_action"/>
     
-    <menuitem id="prescriptions_locations_menu" name="Locations" parent="contacts.res_partner_menu_contacts" sequence="4" action="pod_prescriptions_contacts.prescriptions_location_action"/>
+    <menuitem id="prescription_locations_menu" name="Locations" parent="contacts.res_partner_menu_contacts" sequence="4" action="pod_prescription_contacts.prescription_location_action"/>
     
-    <menuitem id="prescriptions_practitioners_menu" name="Practitioners" parent="contacts.res_partner_menu_contacts" sequence="5" action="pod_prescriptions_contacts.prescriptions_practitioner_action"/>
+    <menuitem id="prescription_practitioners_menu" name="Practitioners" parent="contacts.res_partner_menu_contacts" sequence="5" action="pod_prescription_contacts.prescription_practitioner_action"/>
     
-    <menuitem id="prescriptions_patient_menu" name="Patients" parent="contacts.res_partner_menu_contacts" sequence="6" action="pod_prescriptions_contacts.prescriptions_patient_window_action"/>
+    <menuitem id="prescription_patient_menu" name="Patients" parent="contacts.res_partner_menu_contacts" sequence="6" action="pod_prescription_contacts.prescription_patient_window_action"/>
     
-    <menuitem id="prescriptions_patient_his_menu" name="History" parent="contacts.res_partner_menu_contacts" sequence="7" action="pod_prescriptions_contacts.prescriptions_patient_his_window_action"/>
+    <menuitem id="prescription_patient_his_menu" name="History" parent="contacts.res_partner_menu_contacts" sequence="7" action="pod_prescription_contacts.prescription_patient_his_window_action"/>
 
     <!-- Define custom submenus under res_partner_menu_config -->
-    <menuitem id="prescriptions_roles_menu" name="Roles" parent="contacts.res_partner_menu_config" sequence="0" action="pod_prescriptions_contacts.prescriptions_role_action" />
+    <menuitem id="prescription_roles_menu" name="Roles" parent="contacts.res_partner_menu_config" sequence="0" action="pod_prescription_contacts.prescription_role_action" />
 
-    <menuitem id="prescriptions_diagnosis_menu" name="Diagnosis" parent="contacts.res_partner_menu_config" sequence="1" action="pod_prescriptions_contacts.prescriptions_diagnosis_action" />
+    <menuitem id="prescription_diagnosis_menu" name="Diagnosis" parent="contacts.res_partner_menu_config" sequence="1" action="pod_prescription_contacts.prescription_diagnosis_action" />
 
 
 </odoo>

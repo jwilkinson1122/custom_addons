@@ -10,11 +10,11 @@ class AccountMove(models.Model):
     _inherit = ['account.move', 'utm.mixin']
 
     @api.model
-    def _get_invoice_default_prescriptions_team(self):
+    def _get_invoice_default_prescription_team(self):
         return self.env['crm.team']._get_default_team_id()
 
     team_id = fields.Many2one(
-        'crm.team', string='Prescriptions Team', default=_get_invoice_default_prescriptions_team,
+        'crm.team', string='Prescription Team', default=_get_invoice_default_prescription_team,
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -23,10 +23,10 @@ class AccountMove(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    prescriptions_order_count = fields.Integer(compute="_compute_origin_so_count", string='Prescription Order Count')
+    prescription_order_count = fields.Integer(compute="_compute_origin_so_count", string='Prescription Order Count')
 
     def unlink(self):
-        downpayment_lines = self.mapped('line_ids.prescriptions_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
+        downpayment_lines = self.mapped('line_ids.prescription_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
@@ -35,16 +35,16 @@ class AccountMove(models.Model):
     @api.depends('invoice_user_id')
     def _compute_team_id(self):
         for move in self:
-            if not move.invoice_user_id.prescriptions_team_id or not move.is_prescriptions_document(include_receipts=True):
+            if not move.invoice_user_id.prescription_team_id or not move.is_prescription_document(include_receipts=True):
                 continue
             move.team_id = self.env['crm.team']._get_default_team_id(
                 user_id=move.invoice_user_id.id,
                 domain=[('company_id', '=', move.company_id.id)])
 
-    @api.depends('line_ids.prescriptions_line_ids')
+    @api.depends('line_ids.prescription_line_ids')
     def _compute_origin_so_count(self):
         for move in self:
-            move.prescriptions_order_count = len(move.line_ids.prescriptions_line_ids.order_id)
+            move.prescription_order_count = len(move.line_ids.prescription_line_ids.order_id)
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
@@ -63,22 +63,22 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).action_post()
         down_payment_lines = self.line_ids.filtered('is_downpayment')
         for line in down_payment_lines:
-            if any(order.locked for order in line.prescriptions_line_ids.order_id):
+            if any(order.locked for order in line.prescription_line_ids.order_id):
                 # We cannot change lines content on locked SO, changes on invoices are not
                 # forwarded to the SO if the SO is locked.
                 continue
 
-            if not line.prescriptions_line_ids.display_type:
-                line.prescriptions_line_ids._compute_name()
+            if not line.prescription_line_ids.display_type:
+                line.prescription_line_ids._compute_name()
 
-            line.prescriptions_line_ids.tax_id = line.tax_ids
-            line.prescriptions_line_ids.price_unit = line.price_unit
+            line.prescription_line_ids.tax_id = line.tax_ids
+            line.prescription_line_ids.price_unit = line.price_unit
         return res
 
     def button_draft(self):
         res = super().button_draft()
 
-        self.line_ids.filtered('is_downpayment').prescriptions_line_ids.filtered(
+        self.line_ids.filtered('is_downpayment').prescription_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -86,7 +86,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered('is_downpayment').prescriptions_line_ids.filtered(
+        self.line_ids.filtered('is_downpayment').prescription_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -94,7 +94,7 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         # OVERRIDE
         # Auto-reconcile the invoice with payments coming from transactions.
-        # It's useful when you have a "paid" prescriptions order (using a payment transaction) and you invoice it later.
+        # It's useful when you have a "paid" prescription order (using a payment transaction) and you invoice it later.
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
@@ -110,8 +110,8 @@ class AccountMove(models.Model):
         todo = set()
         for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
-                for prescriptions_line in line.prescriptions_line_ids:
-                    todo.add((prescriptions_line.order_id, invoice.name))
+                for prescription_line in line.prescription_line_ids:
+                    todo.add((prescription_line.order_id, invoice.name))
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid", name))
         return res
@@ -121,20 +121,20 @@ class AccountMove(models.Model):
         # Make sure the send invoice CRON is called when an invoice becomes ready to be sent by mail.
         res = super()._action_invoice_ready_to_be_sent()
 
-        send_invoice_cron = self.env.ref('pod_prescriptions.send_invoice_cron', raise_if_not_found=False)
+        send_invoice_cron = self.env.ref('pod_prescription.send_invoice_cron', raise_if_not_found=False)
         if send_invoice_cron:
             send_invoice_cron._trigger()
 
         return res
 
-    def action_view_source_prescriptions_orders(self):
+    def action_view_source_prescription_orders(self):
         self.ensure_one()
-        source_orders = self.line_ids.prescriptions_line_ids.order_id
-        result = self.env['ir.actions.act_window']._for_xml_id('pod_prescriptions.action_prescriptions')
+        source_orders = self.line_ids.prescription_line_ids.order_id
+        result = self.env['ir.actions.act_window']._for_xml_id('pod_prescription.action_prescription')
         if len(source_orders) > 1:
             result['domain'] = [('id', 'in', source_orders.ids)]
         elif len(source_orders) == 1:
-            result['views'] = [(self.env.ref('pod_prescriptions.view_order_form', False).id, 'form')]
+            result['views'] = [(self.env.ref('pod_prescription.view_order_form', False).id, 'form')]
             result['res_id'] = source_orders.id
         else:
             result = {'type': 'ir.actions.act_window_close'}
@@ -143,13 +143,13 @@ class AccountMove(models.Model):
     def _is_downpayment(self):
         # OVERRIDE
         self.ensure_one()
-        return self.line_ids.prescriptions_line_ids and all(prescriptions_line.is_downpayment for prescriptions_line in self.line_ids.prescriptions_line_ids) or False
+        return self.line_ids.prescription_line_ids and all(prescription_line.is_downpayment for prescription_line in self.line_ids.prescription_line_ids) or False
 
-    @api.depends('line_ids.prescriptions_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
+    @api.depends('line_ids.prescription_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
     def _compute_partner_credit(self):
         super()._compute_partner_credit()
         for move in self.filtered(lambda m: m.is_invoice(include_receipts=True)):
-            prescriptions_orders = move.line_ids.prescriptions_line_ids.order_id
+            prescription_orders = move.line_ids.prescription_line_ids.order_id
             amount_total_currency = move.currency_id._convert(
                 move.tax_totals['amount_total'],
                 move.company_currency_id,
@@ -157,11 +157,11 @@ class AccountMove(models.Model):
                 move.date
             )
             amount_to_invoice_currency = sum(
-                prescriptions_order.currency_id._convert(
-                    prescriptions_order.amount_to_invoice,
+                prescription_order.currency_id._convert(
+                    prescription_order.amount_to_invoice,
                     move.company_currency_id,
                     move.company_id,
                     move.date
-                ) for prescriptions_order in prescriptions_orders
+                ) for prescription_order in prescription_orders
             )
             move.partner_credit += max(amount_total_currency - amount_to_invoice_currency, 0.0)

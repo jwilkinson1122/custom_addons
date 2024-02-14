@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 from odoo.tests import tagged
 
 
@@ -23,7 +23,7 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
 
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_multi_locations')
-        cls.env.user.groups_id |= cls.env.ref('pod_prescriptions_team.group_prescriptions_personnel')
+        cls.env.user.groups_id |= cls.env.ref('pod_prescription_team.group_prescription_personnel')
 
         cls.env.user.with_company(cls.company_data['company']).property_warehouse_id = cls.warehouse_A.id
         cls.env.user.with_company(cls.company_data_2['company']).property_warehouse_id = cls.warehouse_B.id
@@ -33,7 +33,7 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
         partner = self.partner_a
         product = self.test_product_order
 
-        prescriptions_order_vals = {
+        prescription_order_vals = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
@@ -47,13 +47,13 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        prescriptions_order = self.env['prescriptions.order']
+        prescription_order = self.env['prescription.order']
 
-        so_no_user = prescriptions_order.create(prescriptions_order_vals)
+        so_no_user = prescription_order.create(prescription_order_vals)
         self.assertFalse(so_no_user.user_id.property_warehouse_id)
         self.assertEqual(so_no_user.warehouse_id.id, self.warehouse_A.id)
 
-        prescriptions_order_vals2 = {
+        prescription_order_vals2 = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
@@ -66,10 +66,10 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        so_company_A = prescriptions_order.with_company(self.env.company).create(prescriptions_order_vals2)
+        so_company_A = prescription_order.with_company(self.env.company).create(prescription_order_vals2)
         self.assertEqual(so_company_A.warehouse_id.id, self.warehouse_A.id)
 
-        prescriptions_order_vals3 = {
+        prescription_order_vals3 = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
@@ -82,5 +82,5 @@ class TestPrescriptionStockMultiCompany(TestPrescriptionCommon, ValuationReconci
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        so_company_B = prescriptions_order.with_company(self.company_data_2['company']).create(prescriptions_order_vals3)
+        so_company_B = prescription_order.with_company(self.company_data_2['company']).create(prescription_order_vals3)
         self.assertEqual(so_company_B.warehouse_id.id, self.warehouse_B.id)

@@ -7,11 +7,11 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
-                <div class="app_settings_block" data-string="Prescriptions" data-key="pod_prescriptions_contacts" groups="pod_prescriptions_contacts.group_contacts_configurator">
+                <div class="app_settings_block" data-string="Prescription" data-key="pod_prescription_contacts" groups="pod_prescription_contacts.group_contacts_configurator">
                     <h2>
                         <i class="fa fa-user-md" aria-hidden="true" />
  Administration</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_administration" />
+                    <div class="row mt16 o_settings_container" id="prescription_administration" />
                     <!-- <h2>
                         <i class="fa fa-stethoscope" aria-hidden="true" />
  Clinical</h2>
@@ -19,37 +19,37 @@
                     <h2>
                         <i class="fa fa-sitemap" aria-hidden="true" />
  Workflow</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_workflow" />
+                    <div class="row mt16 o_settings_container" id="prescription_workflow" />
                     <!-- <h2>
                         <i class="fa fa-usd" aria-hidden="true" />
  Financial</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_financial" /> -->
+                    <div class="row mt16 o_settings_container" id="prescription_financial" /> -->
 
                     <!-- <h2><i class="fa fa-heartbeat" aria-hidden="true" />Diagnostics</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_diagnostics" /> -->
+                    <div class="row mt16 o_settings_container" id="prescription_diagnostics" /> -->
 
                     <h2>
                         <i class="fa fa-prescription" aria-hidden="true" />
  Product</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_device" />
+                    <div class="row mt16 o_settings_container" id="prescription_device" />
                     <h2>
                         <i class="fa fa-book" aria-hidden="true" />
  Terminologies</h2>
-                    <div class="row mt16 o_settings_container" id="prescriptions_terminology" />
+                    <div class="row mt16 o_settings_container" id="prescription_terminology" />
                 </div>
             </xpath>
         </field>
     </record>
-    <record id="action_prescriptions_config" model="ir.actions.act_window">
+    <record id="action_prescription_config" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
-        <field name="context">{'module' : 'pod_prescriptions_contacts'}</field>
+        <field name="context">{'module' : 'pod_prescription_contacts'}</field>
     </record>
 
-    <menuitem id="prescriptions_root_settings" name="Settings" parent="contacts.menu_contacts" action="action_prescriptions_config" sequence="100" groups="base.group_system"/>
+    <menuitem id="prescription_root_settings" name="Settings" parent="contacts.menu_contacts" action="action_prescription_config" sequence="100" groups="base.group_system"/>
 
-    <!-- <menuitem id="menu_prescriptions_config" name="Settings" parent="prescriptions_root_settings" sequence="0" action="action_prescriptions_config" groups="base.group_system" /> -->
+    <!-- <menuitem id="menu_prescription_config" name="Settings" parent="prescription_root_settings" sequence="0" action="action_prescription_config" groups="base.group_system" /> -->
 </odoo>

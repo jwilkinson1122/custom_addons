@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class PrescriptionOrderLine(models.Model):
-    _inherit = 'prescriptions.order.line'
+    _inherit = 'prescription.order.line'
 
     is_configurable_product = fields.Boolean(
         string="Is the product configurable?",

@@ -148,7 +148,7 @@
             <field name="phone">(870)-931-8585</field>
         </record>
 
-        <record id="patient_01" model="prescriptions.patient">
+        <record id="patient_01" model="prescription.patient">
             <field name="partner_id" ref="patient_01_partner"/>
             <field name="parent_id" ref="parent_account_1"/>
         </record>
@@ -161,7 +161,7 @@
             <field name="phone">(828)-316-6742</field>
         </record>
 
-        <record id="patient_02" model="prescriptions.patient">
+        <record id="patient_02" model="prescription.patient">
             <field name="partner_id" ref="patient_02_partner"/>
             <field name="parent_id" ref="child_location_1"/>
         </record>
@@ -174,7 +174,7 @@
             <field name="phone">(623)-853-3671</field>
         </record>
 
-        <record id="patient_03" model="prescriptions.patient">
+        <record id="patient_03" model="prescription.patient">
             <field name="partner_id" ref="patient_03_partner"/>
             <field name="parent_id" ref="grand_child_location_1"/>
         </record>

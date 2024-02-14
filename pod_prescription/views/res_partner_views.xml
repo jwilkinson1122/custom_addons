@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="act_res_partner_2_prescriptions_order" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
-        <field name="res_model">prescriptions.order</field>
+    <record id="act_res_partner_2_prescription_order" model="ir.actions.act_window">
+        <field name="name">Prescription</field>
+        <field name="res_model">prescription.order</field>
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{'default_partner_id': active_id}</field>
-        <field name="groups_id" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel'))]"/>
+        <field name="groups_id" eval="[(4, ref('pod_prescription_team.group_prescription_personnel'))]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new prescriptions!
+            Create a new quotation, the first step of a new prescription!
             </p><p>
-            Once the quotation is confirmed by the customer, it becomes a prescriptions order.<br/> You will be able to create an invoice and collect the payment.
+            Once the quotation is confirmed by the customer, it becomes a prescription order.<br/> You will be able to create an invoice and collect the payment.
             </p>
         </field>
     </record>
@@ -23,16 +23,16 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <field name="mobile" position="after">
-                <field name="prescriptions_order_count" groups="pod_prescriptions_team.group_prescriptions_personnel"/>
+                <field name="prescription_order_count" groups="pod_prescription_team.group_prescription_personnel"/>
             </field>
             <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
-                <a t-if="record.prescriptions_order_count.value>0" data-type="object" data-name="action_view_prescriptions_order"
-                   groups="pod_prescriptions_team.group_prescriptions_personnel"
+                <a t-if="record.prescription_order_count.value>0" data-type="object" data-name="action_view_prescription_order"
+                   groups="pod_prescription_team.group_prescription_personnel"
                    href="#" class="oe_kanban_action oe_kanban_action_a me-1">
                     <span class="badge rounded-pill">
-                        <i class="fa-file-o" role="img" aria-label="Prescription orders" title="Prescriptions orders"/>
-                        <!-- <i class="fa fa-fw fa-usd" role="img" aria-label="Prescription orders" title="Prescriptions orders"/> -->
-                        <t t-out="record.prescriptions_order_count.value"/>
+                        <i class="fa-file-o" role="img" aria-label="Prescription orders" title="Prescription orders"/>
+                        <!-- <i class="fa fa-fw fa-usd" role="img" aria-label="Prescription orders" title="Prescription orders"/> -->
+                        <t t-out="record.prescription_order_count.value"/>
                     </span>
                 </a>
             </xpath>
@@ -46,20 +46,20 @@
         <field name="priority" eval="3"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button class="oe_stat_button" type="object" name="action_view_prescriptions_order"
-                    groups="pod_prescriptions_team.group_prescriptions_personnel"
+                <button class="oe_stat_button" type="object" name="action_view_prescription_order"
+                    groups="pod_prescription_team.group_prescription_personnel"
                     icon="fa-file-o">
-                    <field string="Prescriptions" name="prescriptions_order_count" widget="statinfo"/>
+                    <field string="Prescription" name="prescription_order_count" widget="statinfo"/>
                 </button>
             </div>
             <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="after">
-                <group groups="pod_prescriptions_team.group_prescriptions_personnel">
-                    <group groups="pod_prescriptions.group_warning_prescription" col="2">
-                        <separator string="Warning on the Prescriptions Order" colspan="2"/>
-                        <field name="prescriptions_warn" nolabel="1" colspan="2" required="1"/>
-                        <field name="prescriptions_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
-                                invisible="prescriptions_warn in (False, 'no-message')"
-                                required="prescriptions_warn and prescriptions_warn != 'no-message'"/>
+                <group groups="pod_prescription_team.group_prescription_personnel">
+                    <group groups="pod_prescription.group_warning_prescription" col="2">
+                        <separator string="Warning on the Prescription Order" colspan="2"/>
+                        <field name="prescription_warn" nolabel="1" colspan="2" required="1"/>
+                        <field name="prescription_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
+                                invisible="prescription_warn in (False, 'no-message')"
+                                required="prescription_warn and prescription_warn != 'no-message'"/>
                     </group>
                 </group>
             </xpath>
@@ -72,7 +72,7 @@
         <field name="inherit_id" ref="payment.view_partners_form_payment_defaultcreditcard"/>
         <field name="arch" type="xml">
             <button name="%(payment.action_payment_token)d" position="attributes">
-                <attribute name="groups">pod_prescriptions_team.group_prescriptions_personnel</attribute>
+                <attribute name="groups">pod_prescription_team.group_prescription_personnel</attribute>
             </button>
         </field>
     </record>
@@ -83,13 +83,13 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <group name="fiscal_information" position="attributes">
-                <attribute name="groups">account.group_account_invoice, pod_prescriptions_team.group_prescriptions_personnel</attribute>
+                <attribute name="groups">account.group_account_invoice, pod_prescription_team.group_prescription_personnel</attribute>
             </group>
             <field name="property_payment_term_id" position="attributes">
-                <attribute name="groups">account.group_account_invoice, pod_prescriptions_team.group_prescriptions_personnel</attribute>
+                <attribute name="groups">account.group_account_invoice, pod_prescription_team.group_prescription_personnel</attribute>
             </field>
             <field name="property_supplier_payment_term_id" position="attributes">
-                <attribute name="groups">account.group_account_invoice, pod_prescriptions_team.group_prescriptions_personnel</attribute>
+                <attribute name="groups">account.group_account_invoice, pod_prescription_team.group_prescription_personnel</attribute>
             </field>
         </field>
     </record>

@@ -3,7 +3,7 @@
     'summary': 'Contrasted style on fields to improve the UI.',
     'version': '17.0.0.0.0',
     'author': 'NWPL',
-    'website': 'https://nwpodiatric.com',
+    'website': 'https://www.nwpodiatric.com',
     'license': 'LGPL-3',
     'depends': [
         'web',

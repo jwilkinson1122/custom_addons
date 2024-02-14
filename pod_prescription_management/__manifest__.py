@@ -2,42 +2,42 @@
 
 
 {
-    'name': 'NWPL - Prescriptions Management',
+    'name': 'NWPL - Prescription Management',
     "author": "NWPL",
     'version': '17.0.0.0.0',
-    'category': 'Podiatry/Prescriptions',
+    'category': 'Podiatry/Prescription',
     'sequence': 5,
     'summary': 'From quotations to invoices',
-    'description': """Manage prescriptions orders.""",
+    'description': """Manage prescription orders.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': [
-        'pod_prescriptions', 
+        'pod_prescription', 
         'digest'
         ],
     'data': [
         # 'data/digest_data.xml',
 
         'security/ir.model.access.csv',
-        'security/prescriptions_management_security.xml',
+        'security/prescription_management_security.xml',
 
-        'report/prescriptions_report_templates.xml',
+        'report/prescription_report_templates.xml',
 
         # Define SO template views & actions before their place of use
-        'views/prescriptions_order_template_views.xml',
+        'views/prescription_order_template_views.xml',
 
         # 'views/digest_views.xml',
         'views/res_config_settings_views.xml',
-        'views/prescriptions_order_views.xml',
-        'views/prescriptions_portal_templates.xml',
+        'views/prescription_order_views.xml',
+        'views/prescription_portal_templates.xml',
 
-        'views/prescriptions_management_menus.xml',
+        'views/prescription_management_menus.xml',
     ],
     'demo': [
-        'data/prescriptions_order_template_demo.xml',
+        'data/prescription_order_template_demo.xml',
     ],
     'assets': {
         'web.assets_frontend': [
-            'pod_prescriptions_management/static/src/js/**/*',
+            'pod_prescription_management/static/src/js/**/*',
         ],
     },
     'application': True,

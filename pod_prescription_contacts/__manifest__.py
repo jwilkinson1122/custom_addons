@@ -21,25 +21,25 @@
         'security/flag_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
-        'data/prescriptions_practice_type.xml',
-        'data/prescriptions_role.xml',
-        'views/prescriptions_role.xml',
-        'views/prescriptions_diagnosis.xml',
+        'data/prescription_practice_type.xml',
+        'data/prescription_role.xml',
+        'views/prescription_role.xml',
+        'views/prescription_diagnosis.xml',
         'views/res_partner.xml',
-        # 'views/prescriptions_menu.xml',
-        'views/prescriptions_practice_type.xml',
-        'views/prescriptions_patient.xml',
-        'views/prescriptions_flag_views.xml',
-        'views/prescriptions_flag_category_views.xml',
+        # 'views/prescription_menu.xml',
+        'views/prescription_practice_type.xml',
+        'views/prescription_patient.xml',
+        'views/prescription_flag_views.xml',
+        'views/prescription_flag_category_views.xml',
         'views/res_config_settings_views.xml',
-        'views/prescriptions_menu.xml',
+        'views/prescription_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_contacts/static/src/css/custom.css',
-            'pod_prescriptions_contacts/static/scss/custom_form.scss',
-            # 'pod_prescriptions_contacts/static/src/css/custom.css',
-            # 'pod_prescriptions_contacts/static/src/js/partner_hierarchy.js',
+            'pod_prescription_contacts/static/src/css/custom.css',
+            'pod_prescription_contacts/static/scss/custom_form.scss',
+            # 'pod_prescription_contacts/static/src/css/custom.css',
+            # 'pod_prescription_contacts/static/src/js/partner_hierarchy.js',
         ],
     },
     'demo': [
@@ -50,7 +50,7 @@
     'license': 'LGPL-3',
     'assets': {
         'web.assets_tests': [
-            'pod_prescriptions_contacts/static/tests/tours/**/*',
+            'pod_prescription_contacts/static/tests/tours/**/*',
         ],
     }
 }

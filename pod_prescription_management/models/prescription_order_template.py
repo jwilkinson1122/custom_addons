@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class PrescriptionOrderTemplate(models.Model):
-    _name = "prescriptions.order.template"
+    _name = "prescription.order.template"
     _description = "Draft Rx Template"
 
     active = fields.Boolean(
@@ -20,7 +20,7 @@ class PrescriptionOrderTemplate(models.Model):
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
         string="Confirmation Mail",
-        domain=[('model', '=', 'prescriptions.order')],
+        domain=[('model', '=', 'prescription.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     number_of_days = fields.Integer(
         string="Draft Rx Duration",
@@ -42,19 +42,19 @@ class PrescriptionOrderTemplate(models.Model):
         store=True, readonly=False,
         help="The percentage of the amount needed to be paid to confirm quotations.")
 
-    prescriptions_order_template_line_ids = fields.One2many(
-        comodel_name='prescriptions.order.template.line', inverse_name='prescriptions_order_template_id',
+    prescription_order_template_line_ids = fields.One2many(
+        comodel_name='prescription.order.template.line', inverse_name='prescription_order_template_id',
         string="Lines",
         copy=True)
-    prescriptions_order_template_option_ids = fields.One2many(
-        comodel_name='prescriptions.order.template.option', inverse_name='prescriptions_order_template_id',
+    prescription_order_template_option_ids = fields.One2many(
+        comodel_name='prescription.order.template.option', inverse_name='prescription_order_template_id',
         string="Optional Products",
         copy=True)
     journal_id = fields.Many2one(
         'account.journal', string="Invoicing Journal",
-        domain=[('type', '=', 'prescriptions')], company_dependent=True, check_company=True,
+        domain=[('type', '=', 'prescription')], company_dependent=True, check_company=True,
         help="If set, SO with this template will invoice in this journal; "
-             "otherwise the prescriptions journal with the lowest sequence is used.")
+             "otherwise the prescription journal with the lowest sequence is used.")
 
     #=== COMPUTE METHODS ===#
 
@@ -85,10 +85,10 @@ class PrescriptionOrderTemplate(models.Model):
 
     #=== CONSTRAINT METHODS ===#
 
-    @api.constrains('company_id', 'prescriptions_order_template_line_ids', 'prescriptions_order_template_option_ids')
+    @api.constrains('company_id', 'prescription_order_template_line_ids', 'prescription_order_template_option_ids')
     def _check_company_id(self):
         for template in self:
-            companies = template.mapped('prescriptions_order_template_line_ids.product_id.company_id') | template.mapped('prescriptions_order_template_option_ids.product_id.company_id')
+            companies = template.mapped('prescription_order_template_line_ids.product_id.company_id') | template.mapped('prescription_order_template_option_ids.product_id.company_id')
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:
@@ -114,8 +114,8 @@ class PrescriptionOrderTemplate(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
-            companies = self.env['res.company'].sudo().search([('prescriptions_order_template_id', 'in', self.ids)])
-            companies.prescriptions_order_template_id = None
+            companies = self.env['res.company'].sudo().search([('prescription_order_template_id', 'in', self.ids)])
+            companies.prescription_order_template_id = None
         result = super().write(vals)
         self._update_product_translations()
         return result
@@ -123,9 +123,9 @@ class PrescriptionOrderTemplate(models.Model):
     def _update_product_translations(self):
         languages = self.env['res.lang'].search([('active', '=', 'true')])
         for lang in languages:
-            for line in self.prescriptions_order_template_line_ids:
+            for line in self.prescription_order_template_line_ids:
                 if line.name == line.product_id.get_product_multiline_description_prescription():
                     line.with_context(lang=lang.code).name = line.product_id.with_context(lang=lang.code).get_product_multiline_description_prescription()
-            for option in self.prescriptions_order_template_option_ids:
+            for option in self.prescription_order_template_option_ids:
                 if option.name == option.product_id.get_product_multiline_description_prescription():
                     option.with_context(lang=lang.code).name = option.product_id.with_context(lang=lang.code).get_product_multiline_description_prescription()

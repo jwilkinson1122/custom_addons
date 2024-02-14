@@ -10,13 +10,13 @@
                 <field name="team_id"/>
             </field>
             <xpath expr="//group/filter[@name='status']" position="after">
-                <filter string="Prescriptions Team" name="prescriptions_channel" domain="[]" context="{'group_by':'team_id'}"/>
+                <filter string="Prescription Team" name="prescription_channel" domain="[]" context="{'group_by':'team_id'}"/>
             </xpath>
         </field>
     </record>
 
     <record id="account_invoice_view_tree" model="ir.ui.view">
-        <field name="name">account.move.tree.inherit.prescriptions</field>
+        <field name="name">account.move.tree.inherit.prescription</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
@@ -32,7 +32,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
-                <field name="team_id" context="{'kanban_view_ref': 'pod_prescriptions_team.crm_team_view_kanban'}"/>
+                <field name="team_id" context="{'kanban_view_ref': 'pod_prescription_team.crm_team_view_kanban'}"/>
             </xpath>
             <xpath expr="//group[@id='other_tab_group']" position="inside">
                 <group string="Marketing"
@@ -46,17 +46,17 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button"
-                        name="action_view_source_prescriptions_orders"
+                        name="action_view_source_prescription_orders"
                         type="object"
                         icon="fa-pencil-square-o"
-                        invisible="prescriptions_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
-                    <field string="Prescription Orders" name="prescriptions_order_count" widget="statinfo"/>
+                        invisible="prescription_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
+                    <field string="Prescription Orders" name="prescription_order_count" widget="statinfo"/>
                 </button>
             </xpath>
         </field>
     </record>
 
-    <record id="action_invoice_prescriptions_teams" model="ir.actions.act_window">
+    <record id="action_invoice_prescription_teams" model="ir.actions.act_window">
         <field name="name">Invoices</field>
         <field name="res_model">account.move</field>
         <field name="view_mode">tree,form,kanban</field>
@@ -69,7 +69,7 @@
                 'default_team_id': active_id,
                 'default_move_type':'out_invoice',
                 'move_type':'out_invoice',
-                'journal_type': 'prescriptions',
+                'journal_type': 'prescription',
             }
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
@@ -82,17 +82,17 @@
         </field>
     </record>
 
-    <record id="action_invoice_prescriptions_teams_view_tree" model="ir.actions.act_window.view">
+    <record id="action_invoice_prescription_teams_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
         <field name="view_mode">tree</field>
-        <field name="act_window_id" ref="pod_prescriptions.action_invoice_prescriptions_teams"/>
+        <field name="act_window_id" ref="pod_prescription.action_invoice_prescription_teams"/>
     </record>
 
-    <record id="action_invoice_prescriptions_teams_view_form" model="ir.actions.act_window.view">
+    <record id="action_invoice_prescription_teams_view_form" model="ir.actions.act_window.view">
         <field name="sequence">2</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="account.view_move_form"/>
-        <field name="act_window_id" ref="pod_prescriptions.action_invoice_prescriptions_teams"/>
+        <field name="act_window_id" ref="pod_prescription.action_invoice_prescription_teams"/>
     </record>
 
 </odoo>

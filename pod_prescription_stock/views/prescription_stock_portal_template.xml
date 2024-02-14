@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="prescriptions_order_portal_content_inherit_prescriptions_stock"
+    <template id="prescription_order_portal_content_inherit_prescription_stock"
         name="Orders Shipping Followup"
-        inherit_id="pod_prescriptions.prescriptions_order_portal_content">
-        <tbody id="prescriptions_info_table" position="inside">
-            <tr t-if="prescriptions_order.incoterm">
+        inherit_id="pod_prescription.prescription_order_portal_content">
+        <tbody id="prescription_info_table" position="inside">
+            <tr t-if="prescription_order.incoterm">
                 <th class="text-end pb-0">Incoterm:</th>
                 <td class="w-100 pb-0 text-wrap">
-                    <p t-if="prescriptions_order.incoterm_location">
-                        <span t-field="prescriptions_order.incoterm.code"/> <br/>
-                        <span t-field="prescriptions_order.incoterm_location"/>
+                    <p t-if="prescription_order.incoterm_location">
+                        <span t-field="prescription_order.incoterm.code"/> <br/>
+                        <span t-field="prescription_order.incoterm_location"/>
                     </p>
-                    <p t-else="" t-field="prescriptions_order.incoterm.code" class="m-0"/>
+                    <p t-else="" t-field="prescription_order.incoterm.code" class="m-0"/>
                 </td>
             </tr>
         </tbody>
 
-        <div id="prescriptions_invoices" position="after">
-            <t t-set="delivery_orders" t-value="prescriptions_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('date', reverse=True)[:3]"/>
+        <div id="prescription_invoices" position="after">
+            <t t-set="delivery_orders" t-value="prescription_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('date', reverse=True)[:3]"/>
             <div t-if="delivery_orders" class="col-12 col-lg-7 mb-4">
                 <h5 class="mb-1">Delivery Orders</h5>
                 <hr class="my-0"/>
@@ -64,7 +64,7 @@
                     </t>
                 </div>
             </div>
-            <t t-set="returns" t-value="prescriptions_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'incoming')"/>
+            <t t-set="returns" t-value="prescription_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'incoming')"/>
             <t t-if="returns">
                 <div class="mt-4">
                     <strong>Returns</strong>

@@ -1,14 +1,14 @@
 from odoo.tests.common import TransactionCase
 
 
-class TestPrescriptionsAdministrationFlag(TransactionCase):
+class TestPrescriptionAdministrationFlag(TransactionCase):
 
     def setUp(self):
-        super(TestPrescriptionsAdministrationFlag, self).setUp()
-        self.Flag = self.env["prescriptions.flag"]
+        super(TestPrescriptionAdministrationFlag, self).setUp()
+        self.Flag = self.env["prescription.flag"]
         self.Partner = self.env["res.partner"]
-        self.Patient = self.env["prescriptions.patient"]
-        self.FlagCategory = self.env["prescriptions.flag.category"]
+        self.Patient = self.env["prescription.patient"]
+        self.FlagCategory = self.env["prescription.flag.category"]
 
     def test_service(self):
         category = self.FlagCategory.create({"name": "Category"})
@@ -37,7 +37,7 @@ class TestPrescriptionsAdministrationFlag(TransactionCase):
             "category_id": category.id
         })
 
-        # Check prescriptions_flag_count after creating flags
+        # Check prescription_flag_count after creating flags
         # self.assertEqual(practice.practice_flag_count, 1)
         # self.assertEqual(practitioner.practitioner_flag_count, 1)
         self.assertEqual(patient.patient_flag_count, 1)

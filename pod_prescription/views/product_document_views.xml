@@ -2,12 +2,12 @@
 <odoo>
 
     <record id="product_document_form" model="ir.ui.view">
-        <field name="name">product.document.form.prescriptions</field>
+        <field name="name">product.document.form.prescription</field>
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_form"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="prescriptions" string="Prescriptions">
+                <group name="prescription" string="Prescription">
                     <field name="attached_on"/>
                 </group>
             </sheet>
@@ -15,7 +15,7 @@
     </record>
 
     <record id="product_document_kanban" model="ir.ui.view">
-        <field name="name">product.document.kanban.prescriptions</field>
+        <field name="name">product.document.kanban.prescription</field>
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_kanban"/>
         <field name="arch" type="xml">
@@ -29,7 +29,7 @@
     </record>
 
     <record id="product_document_list" model="ir.ui.view">
-        <field name="name">product.document.list.prescriptions</field>
+        <field name="name">product.document.list.prescription</field>
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_list"/>
         <field name="arch" type="xml">
@@ -40,7 +40,7 @@
     </record>
 
     <record id="product_document_search" model="ir.ui.view">
-        <field name="name">product.document.search.prescriptions</field>
+        <field name="name">product.document.search.prescription</field>
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_search"/>
         <field name="arch" type="xml">
@@ -49,9 +49,9 @@
                 <filter name="quotation"
                     string="Draft Rx"
                     domain="[('attached_on', '=', 'quotation')]"/>
-                <filter name="prescriptions_order"
-                    string="Prescriptions Order"
-                    domain="[('attached_on', '=', 'prescriptions_order')]"/>
+                <filter name="prescription_order"
+                    string="Prescription Order"
+                    domain="[('attached_on', '=', 'prescription_order')]"/>
             </search>
         </field>
     </record>

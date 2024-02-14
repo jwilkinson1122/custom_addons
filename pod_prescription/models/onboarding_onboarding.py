@@ -8,5 +8,5 @@ class Onboarding(models.Model):
 
     # Prescription Draft Rx Onboarding
     @api.model
-    def action_close_panel_prescriptions_quotation(self):
-        self.action_close_panel('pod_prescriptions.onboarding_onboarding_prescriptions_quotation')
+    def action_close_panel_prescription_quotation(self):
+        self.action_close_panel('pod_prescription.onboarding_onboarding_prescription_quotation')

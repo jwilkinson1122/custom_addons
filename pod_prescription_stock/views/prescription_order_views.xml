@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <record id="view_order_form_inherit_prescriptions_stock" model="ir.ui.view">
-            <field name="name">prescriptions.order.form.prescriptions.stock</field>
-            <field name="model">prescriptions.order</field>
-            <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
+        <record id="view_order_form_inherit_prescription_stock" model="ir.ui.view">
+            <field name="name">prescription.order.form.prescription.stock</field>
+            <field name="model">prescription.order</field>
+            <field name="inherit_id" ref="pod_prescription.view_order_form"/>
             <field name="arch" type="xml">
                 <!-- <xpath expr="//button[@name='action_view_invoice']" position="before">
                     <button type="object" name="action_view_delivery" class="oe_stat_button" icon="fa-truck" invisible="delivery_count == 0" groups="stock.group_stock_user">
                         <field name="delivery_count" widget="statinfo" string="Delivery"/>
                     </button>
                 </xpath> -->
-                <xpath expr="//group[@name='prescriptions_shipping']" position="attributes">
+                <xpath expr="//group[@name='prescription_shipping']" position="attributes">
                     <attribute name="groups"></attribute>                    <!-- Remove the res.group on the group and set it on the field directly-->
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
-                    <field name="warehouse_id" invisible="1" readonly="state == 'prescriptions'"/>
+                    <field name="warehouse_id" invisible="1" readonly="state == 'prescription'"/>
                     <!-- needed for js logic -->
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'prescriptions'"/>
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'prescription'"/>
                     <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
                     <field name="incoterm_location"/>
                     <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>
@@ -35,7 +35,7 @@
                     <field name="effective_date" invisible="not effective_date"/>
                 </xpath>
                 <field name="effective_date" position="after">
-                    <field name="delivery_status" invisible="state != 'prescriptions'"/>
+                    <field name="delivery_status" invisible="state != 'prescription'"/>
                 </field>
                 <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
                     <field name="show_json_popover" invisible="1"/>
@@ -50,21 +50,21 @@
             </field>
         </record>
 
-        <record id="prescriptions_order_tree" model="ir.ui.view">
-            <field name="name">prescriptions.order.tree.inherit.prescriptions.stock</field>
-            <field name="model">prescriptions.order</field>
-            <field name="inherit_id" ref="pod_prescriptions.prescriptions_order_tree"/>
+        <record id="prescription_order_tree" model="ir.ui.view">
+            <field name="name">prescription.order.tree.inherit.prescription.stock</field>
+            <field name="model">prescription.order</field>
+            <field name="inherit_id" ref="pod_prescription.prescription_order_tree"/>
             <field name="arch" type="xml">
                 <field name="tag_ids" position="after">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" readonly="state == 'prescriptions'"/>
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" readonly="state == 'prescription'"/>
                 </field>
             </field>
         </record>
 
         <record id="view_order_tree" model="ir.ui.view">
-            <field name="name">prescriptions.order.tree.inherit.prescriptions.stock</field>
-            <field name="model">prescriptions.order</field>
-            <field name="inherit_id" ref="pod_prescriptions.view_order_tree"/>
+            <field name="name">prescription.order.tree.inherit.prescription.stock</field>
+            <field name="model">prescription.order</field>
+            <field name="inherit_id" ref="pod_prescription.view_order_tree"/>
             <field name="arch" type="xml">
                 <field name="invoice_status" position="before">
                     <field name="effective_date" column_invisible="True"/>
@@ -73,10 +73,10 @@
             </field>
         </record>
 
-        <record id="view_order_line_tree_inherit_prescriptions_stock" model="ir.ui.view">
-            <field name="name">prescriptions.order.line.tree.prescriptions.stock.location</field>
-            <field name="inherit_id" ref="pod_prescriptions.view_order_line_tree"/>
-            <field name="model">prescriptions.order.line</field>
+        <record id="view_order_line_tree_inherit_prescription_stock" model="ir.ui.view">
+            <field name="name">prescription.order.line.tree.prescription.stock.location</field>
+            <field name="inherit_id" ref="pod_prescription.view_order_line_tree"/>
+            <field name="model">prescription.order.line</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='price_subtotal']" position="before">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
@@ -84,10 +84,10 @@
             </field>
         </record>
 
-        <record id="view_order_form_inherit_prescriptions_stock_qty" model="ir.ui.view">
-            <field name="name">prescriptions.order.line.tree.prescriptions.stock.qty</field>
-            <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
-            <field name="model">prescriptions.order</field>
+        <record id="view_order_form_inherit_prescription_stock_qty" model="ir.ui.view">
+            <field name="name">prescription.order.line.tree.prescription.stock.qty</field>
+            <field name="inherit_id" ref="pod_prescription.view_order_form"/>
+            <field name="model">prescription.order</field>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
                     <!-- below fields are used in the widget custom_qty_at_date_widget -->

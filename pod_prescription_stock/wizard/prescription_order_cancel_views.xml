@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="prescriptions_order_cancel_view_form_inherit" model="ir.ui.view">
-        <field name="name">prescriptions.order.cancel.form.inherit</field>
-        <field name="model">prescriptions.order.cancel</field>
-        <field name="inherit_id" ref="pod_prescriptions.prescriptions_order_cancel_view_form"/>
+    <record id="prescription_order_cancel_view_form_inherit" model="ir.ui.view">
+        <field name="name">prescription.order.cancel.form.inherit</field>
+        <field name="model">prescription.order.cancel</field>
+        <field name="inherit_id" ref="pod_prescription.prescription_order_cancel_view_form"/>
         <field name="arch" type="xml">
             <span id="display_invoice_alert" position="after">
                 <field name="display_delivery_alert" invisible="1"/>

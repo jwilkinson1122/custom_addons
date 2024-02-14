@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 
 // This tour relies on data created on the Python test.
-registry.category("web_tour.tours").add('prescriptions_signature', {
+registry.category("web_tour.tours").add('prescription_signature', {
     test: true,
     url: '/my/quotes',
     steps: () => [

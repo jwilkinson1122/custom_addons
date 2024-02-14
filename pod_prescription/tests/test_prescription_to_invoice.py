@@ -6,7 +6,7 @@ from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_is_zero
 
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -17,7 +17,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Create the SO with four order lines
-        cls.prescriptions_order = cls.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        cls.prescription_order = cls.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -51,19 +51,19 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             cls.sol_serv_deliver,
             cls.sol_serv_order,
             cls.sol_prod_deliver,
-        ) = cls.prescriptions_order.order_line
+        ) = cls.prescription_order.order_line
 
         # Context
         cls.context = {
-            'active_model': 'prescriptions.order',
-            'active_ids': [cls.prescriptions_order.id],
-            'active_id': cls.prescriptions_order.id,
+            'active_model': 'prescription.order',
+            'active_ids': [cls.prescription_order.id],
+            'active_id': cls.prescription_order.id,
             'default_journal_id': cls.company_data['default_journal_prescription'].id,
         }
 
     def _check_order_search(self, orders, domain, expected_result):
         domain += [('id', 'in', orders.ids)]
-        result = self.env['prescriptions.order'].search(domain)
+        result = self.env['prescription.order'].search(domain)
         self.assertEqual(result, expected_result, "Unexpected result on search orders")
 
     def test_search_invoice_ids(self):
@@ -71,44 +71,44 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
 
         # Make qty zero to have a line without invoices
         self.sol_prod_order.product_uom_qty = 0
-        self.prescriptions_order.action_confirm()
+        self.prescription_order.action_confirm()
 
         # Tests before creating an invoice
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.prescriptions_order)
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '!=', False)], self.env['prescriptions.order'])
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.prescription_order)
+        self._check_order_search(self.prescription_order, [('invoice_ids', '!=', False)], self.env['prescription.order'])
 
         # Create invoice
-        moves = self.prescriptions_order._create_invoices()
+        moves = self.prescription_order._create_invoices()
 
         # Tests after creating the invoice
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', 'in', moves.ids)], self.prescriptions_order)
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.env['prescriptions.order'])
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '!=', False)], self.prescriptions_order)
+        self._check_order_search(self.prescription_order, [('invoice_ids', 'in', moves.ids)], self.prescription_order)
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.env['prescription.order'])
+        self._check_order_search(self.prescription_order, [('invoice_ids', '!=', False)], self.prescription_order)
 
     def test_downpayment(self):
         """ Test invoice with a way of downpayment and check downpayment's SO line is created
-            and also check a total amount of invoice is equal to a respective prescriptions order's total amount
+            and also check a total amount of invoice is equal to a respective prescription order's total amount
         """
         # Confirm the SO
-        self.prescriptions_order.action_confirm()
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.prescriptions_order)
+        self.prescription_order.action_confirm()
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.prescription_order)
         # Let's do an invoice for a deposit of 100
-        downpayment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
-        downpayment2 = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        downpayment2 = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment2.create_invoices()
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.env['prescriptions.order'])
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.env['prescription.order'])
 
-        self.assertEqual(len(self.prescriptions_order.invoice_ids), 2, 'Invoice should be created for the SO')
-        downpayment_line = self.prescriptions_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(len(self.prescription_order.invoice_ids), 2, 'Invoice should be created for the SO')
+        downpayment_line = self.prescription_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 2, 'SO line downpayment should be created on SO')
 
         # Update delivered quantity of SO lines
@@ -116,49 +116,49 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         self.sol_prod_deliver.write({'qty_delivered': 2.0})
 
         # Let's do an invoice with refunds
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         payment.create_invoices()
 
-        self.assertEqual(len(self.prescriptions_order.invoice_ids), 3, 'Invoice should be created for the SO')
+        self.assertEqual(len(self.prescription_order.invoice_ids), 3, 'Invoice should be created for the SO')
 
-        invoice = max(self.prescriptions_order.invoice_ids)
+        invoice = max(self.prescription_order.invoice_ids)
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
-                         len(self.prescriptions_order.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
+                         len(self.prescription_order.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
-        self.assertEqual(invoice.amount_total, self.prescriptions_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
+        self.assertEqual(invoice.amount_total, self.prescription_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
 
     def test_downpayment_validation(self):
         """ Test invoice for downpayment and check it can be validated
         """
-        # Lock the prescriptions orders when confirmed
-        self.env.user.groups_id += self.env.ref('pod_prescriptions.group_auto_done_setting')
+        # Lock the prescription orders when confirmed
+        self.env.user.groups_id += self.env.ref('pod_prescription.group_auto_done_setting')
 
         # Confirm the SO
-        self.prescriptions_order.action_confirm()
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.prescriptions_order)
+        self.prescription_order.action_confirm()
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.prescription_order)
         # Let's do an invoice for a deposit of 10%
-        downpayment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'percentage',
             'amount': 10,
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.env['prescriptions.order'])
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.env['prescription.order'])
 
         # Update delivered quantity of SO lines
         self.sol_serv_deliver.write({'qty_delivered': 4.0})
         self.sol_prod_deliver.write({'qty_delivered': 2.0})
 
         # Validate invoice
-        self.prescriptions_order.invoice_ids.action_post()
+        self.prescription_order.invoice_ids.action_post()
 
     def test_downpayment_line_remains_on_SO(self):
         """ Test downpayment's SO line is created and remains unchanged even if everything is invoiced
         """
         # Create the SO with one line
-        prescriptions_order = self.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        prescription_order = self.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -170,36 +170,36 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             }),]
         })
         # Confirm the SO
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
         # Update delivered quantity of SO line
-        prescriptions_order.order_line.write({'qty_delivered': 5.0})
+        prescription_order.order_line.write({'qty_delivered': 5.0})
         context = {
-            'active_model': 'prescriptions.order',
-            'active_ids': [prescriptions_order.id],
-            'active_id': prescriptions_order.id,
+            'active_model': 'prescription.order',
+            'active_ids': [prescription_order.id],
+            'active_id': prescription_order.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
         # Let's do an invoice for a down payment of 50
-        downpayment = self.env['prescriptions.advance.payment.inv'].with_context(context).create({
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         # Let's do the invoice
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(context).create({
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         payment.create_invoices()
         # Confirm all invoices
-        for invoice in prescriptions_order.invoice_ids:
+        for invoice in prescription_order.invoice_ids:
             invoice.action_post()
-        downpayment_line = prescriptions_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        downpayment_line = prescription_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on SO')
 
     def test_downpayment_fixed_amount_with_zero_total_amount(self):
         # Create the SO with one line and amount total is zero
-        prescriptions_order = self.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        prescription_order = self.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -211,16 +211,16 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 'tax_id': False,
             }), ]
         })
-        prescriptions_order.action_confirm()
-        prescriptions_order.order_line.write({'qty_delivered': 5.0})
+        prescription_order.action_confirm()
+        prescription_order.order_line.write({'qty_delivered': 5.0})
         context = {
-            'active_model': 'prescriptions.order',
-            'active_ids': [prescriptions_order.id],
-            'active_id': prescriptions_order.id,
+            'active_model': 'prescription.order',
+            'active_ids': [prescription_order.id],
+            'active_id': prescription_order.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
         # Let's do an invoice for a down payment of 50
-        downpayment = self.env['prescriptions.advance.payment.inv'].with_context(context).create({
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id
@@ -231,35 +231,35 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
 
     def test_downpayment_percentage_tax_icl(self):
         """ Test invoice with a percentage downpayment and an included tax
-            Check the total amount of invoice is correct and equal to a respective prescriptions order's total amount
+            Check the total amount of invoice is correct and equal to a respective prescription order's total amount
         """
         # Confirm the SO
-        self.prescriptions_order.action_confirm()
+        self.prescription_order.action_confirm()
         tax_downpayment = self.company_data['default_tax_prescription'].copy({
             'name': 'default price included',
             'price_include': True,
         })
         # Let's do an invoice for a deposit of 100
-        product_id = self.env.company.prescriptions_down_payment_product_id
+        product_id = self.env.company.prescription_down_payment_product_id
         product_id.taxes_id = tax_downpayment.ids
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'percentage',
             'amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
         payment.create_invoices()
 
-        self.assertEqual(len(self.prescriptions_order.invoice_ids), 1, 'Invoice should be created for the SO')
-        downpayment_line = self.prescriptions_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(len(self.prescription_order.invoice_ids), 1, 'Invoice should be created for the SO')
+        downpayment_line = self.prescription_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 1, 'SO line downpayment should be created on SO')
-        self.assertEqual(downpayment_line.price_unit, self.prescriptions_order.amount_total/2, 'downpayment should have the correct amount')
+        self.assertEqual(downpayment_line.price_unit, self.prescription_order.amount_total/2, 'downpayment should have the correct amount')
 
-        invoice = self.prescriptions_order.invoice_ids[0]
+        invoice = self.prescription_order.invoice_ids[0]
         downpayment_aml = invoice.line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))[0]
-        self.assertEqual(downpayment_aml.price_total, self.prescriptions_order.amount_total/2, 'downpayment should have the correct amount')
-        self.assertEqual(downpayment_aml.price_unit, self.prescriptions_order.amount_total/2, 'downpayment should have the correct amount')
+        self.assertEqual(downpayment_aml.price_total, self.prescription_order.amount_total/2, 'downpayment should have the correct amount')
+        self.assertEqual(downpayment_aml.price_unit, self.prescription_order.amount_total/2, 'downpayment should have the correct amount')
         invoice.action_post()
-        self.assertEqual(downpayment_line.price_unit, self.prescriptions_order.amount_total/2, 'downpayment should have the correct amount')
+        self.assertEqual(downpayment_line.price_unit, self.prescription_order.amount_total/2, 'downpayment should have the correct amount')
 
     def test_invoice_with_discount(self):
         """ Test invoice with a discount and check discount applied on both SO lines and an invoice lines """
@@ -269,18 +269,18 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         self.sol_serv_order.write({'discount': -10.0})
         self.sol_prod_deliver.write({'qty_delivered': 2.0})
 
-        for line in self.prescriptions_order.order_line.filtered(lambda l: l.discount):
+        for line in self.prescription_order.order_line.filtered(lambda l: l.discount):
             product_price = line.price_unit * line.product_uom_qty
             self.assertEqual(line.discount, (product_price - line.price_subtotal) / product_price * 100, 'Discount should be applied on order line')
 
         # lines are in draft
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             self.assertTrue(float_is_zero(line.untaxed_amount_to_invoice, precision_digits=2), "The amount to invoice should be zero, as the line is in draf state")
             self.assertTrue(float_is_zero(line.untaxed_amount_invoiced, precision_digits=2), "The invoiced amount should be zero, as the line is in draft state")
 
-        self.prescriptions_order.action_confirm()
+        self.prescription_order.action_confirm()
 
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             self.assertTrue(float_is_zero(line.untaxed_amount_invoiced, precision_digits=2), "The invoiced amount should be zero, as the line is in draft state")
 
         self.assertEqual(
@@ -291,35 +291,35 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             self.sol_serv_deliver.untaxed_amount_to_invoice,
             576,
             "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
-        # 'untaxed_amount_to_invoice' is invalid when 'pod_prescriptions_stock' is installed.
+        # 'untaxed_amount_to_invoice' is invalid when 'pod_prescription_stock' is installed.
         # self.assertEqual(self.sol_prod_deliver.untaxed_amount_to_invoice, 140, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
 
         # Let's do an invoice with invoiceable lines
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.prescriptions_order)
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.prescription_order)
         payment.create_invoices()
-        self._check_order_search(self.prescriptions_order, [('invoice_ids', '=', False)], self.env['prescriptions.order'])
-        invoice = self.prescriptions_order.invoice_ids[0]
+        self._check_order_search(self.prescription_order, [('invoice_ids', '=', False)], self.env['prescription.order'])
+        invoice = self.prescription_order.invoice_ids[0]
         invoice.action_post()
 
         # Check discount appeared on both SO lines and invoice lines
-        for line, inv_line in zip(self.prescriptions_order.order_line, invoice.invoice_line_ids):
+        for line, inv_line in zip(self.prescription_order.order_line, invoice.invoice_line_ids):
             self.assertEqual(line.discount, inv_line.discount, 'Discount on lines of order and invoice should be same')
 
     def test_invoice(self):
         """ Test create and invoice from the SO, and check qty invoice/to invoice, and the related amounts """
         # lines are in draft
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             self.assertTrue(float_is_zero(line.untaxed_amount_to_invoice, precision_digits=2), "The amount to invoice should be zero, as the line is in draf state")
             self.assertTrue(float_is_zero(line.untaxed_amount_invoiced, precision_digits=2), "The invoiced amount should be zero, as the line is in draft state")
 
         # Confirm the SO
-        self.prescriptions_order.action_confirm()
+        self.prescription_order.action_confirm()
 
         # Check ordered quantity, quantity to invoice and invoiced quantity of SO lines
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             if line.product_id.invoice_policy == 'delivery':
                 self.assertEqual(line.qty_to_invoice, 0.0, 'Quantity to invoice should be same as ordered quantity')
                 self.assertEqual(line.qty_invoiced, 0.0, 'Invoiced quantity should be zero as no any invoice created for SO')
@@ -332,12 +332,12 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line is confirmed")
 
         # Let's do an invoice with invoiceable lines
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
         payment.create_invoices()
 
-        invoice = self.prescriptions_order.invoice_ids[0]
+        invoice = self.prescription_order.invoice_ids[0]
 
         # Update quantity of an invoice lines
         move_form = Form(invoice)
@@ -348,7 +348,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         invoice = move_form.save()
 
         # amount to invoice / invoiced should not have changed (amounts take only confirmed invoice into account)
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             if line.product_id.invoice_policy == 'delivery':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be zero")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as delivered lines are not delivered yet")
@@ -367,7 +367,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         invoice.action_post()
 
         # Check quantity to invoice on SO lines
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             if line.product_id.invoice_policy == 'delivery':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
@@ -375,38 +375,38 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line based on delivered quantity")
             else:
                 if line == self.sol_prod_order:
-                    self.assertEqual(line.qty_to_invoice, 2.0, "The ordered prescriptions line are totally invoiced (qty to invoice is zero)")
-                    self.assertEqual(line.qty_invoiced, 3.0, "The ordered (prod) prescriptions line are totally invoiced (qty invoiced come from the invoice lines)")
+                    self.assertEqual(line.qty_to_invoice, 2.0, "The ordered prescription line are totally invoiced (qty to invoice is zero)")
+                    self.assertEqual(line.qty_invoiced, 3.0, "The ordered (prod) prescription line are totally invoiced (qty invoiced come from the invoice lines)")
                 else:
-                    self.assertEqual(line.qty_to_invoice, 1.0, "The ordered prescriptions line are totally invoiced (qty to invoice is zero)")
-                    self.assertEqual(line.qty_invoiced, 2.0, "The ordered (serv) prescriptions line are totally invoiced (qty invoiced = the invoice lines)")
+                    self.assertEqual(line.qty_to_invoice, 1.0, "The ordered prescription line are totally invoiced (qty to invoice is zero)")
+                    self.assertEqual(line.qty_invoiced, 2.0, "The ordered (serv) prescription line are totally invoiced (qty invoiced = the invoice lines)")
                 self.assertEqual(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
                 self.assertEqual(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
 
-    def test_multiple_prescriptions_orders_on_same_invoice(self):
+    def test_multiple_prescription_orders_on_same_invoice(self):
         """ The model allows the association of multiple SO lines linked to the same invoice line.
             Check that the operations behave well, if a custom module creates such a situation.
         """
-        self.prescriptions_order.action_confirm()
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        self.prescription_order.action_confirm()
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
         payment.create_invoices()
 
         # create a second SO whose lines are linked to the same invoice lines
-        # this is a way to create a situation where prescriptions_line_ids has multiple items
-        prescriptions_order_data = self.prescriptions_order.copy_data()[0]
-        prescriptions_order_data['order_line'] = [
+        # this is a way to create a situation where prescription_line_ids has multiple items
+        prescription_order_data = self.prescription_order.copy_data()[0]
+        prescription_order_data['order_line'] = [
             (0, 0, line.copy_data({
                 'invoice_lines': [(6, 0, line.invoice_lines.ids)],
             })[0])
-            for line in self.prescriptions_order.order_line
+            for line in self.prescription_order.order_line
         ]
-        self.prescriptions_order.create(prescriptions_order_data)
+        self.prescription_order.create(prescription_order_data)
 
         # we should now have at least one move line linked to several order lines
-        invoice = self.prescriptions_order.invoice_ids[0]
-        self.assertTrue(any(len(move_line.prescriptions_line_ids) > 1
+        invoice = self.prescription_order.invoice_ids[0]
+        self.assertTrue(any(len(move_line.prescription_line_ids) > 1
                             for move_line in invoice.line_ids))
 
         # however these actions should not raise
@@ -417,80 +417,80 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
     def test_invoice_with_sections(self):
         """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
 
-        prescriptions_order = self.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        prescription_order = self.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
-        PrescriptionOrderLine = self.env['prescriptions.order.line'].with_context(tracking_disable=True)
+        PrescriptionOrderLine = self.env['prescription.order.line'].with_context(tracking_disable=True)
         PrescriptionOrderLine.create({
             'name': 'Section',
             'display_type': 'line_section',
-            'order_id': prescriptions_order.id,
+            'order_id': prescription_order.id,
         })
         sol_prod_deliver = PrescriptionOrderLine.create({
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'order_id': prescriptions_order.id,
+            'order_id': prescription_order.id,
             'tax_id': False,
         })
 
         # Confirm the SO
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
         sol_prod_deliver.write({'qty_delivered': 5.0})
 
         # Context
         self.context = {
-            'active_model': 'prescriptions.order',
-            'active_ids': [prescriptions_order.id],
-            'active_id': prescriptions_order.id,
+            'active_model': 'prescription.order',
+            'active_ids': [prescription_order.id],
+            'active_id': prescription_order.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
 
         # Let's do an invoice with invoiceable lines
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        payment = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
         payment.create_invoices()
 
-        invoice = prescriptions_order.invoice_ids[0]
+        invoice = prescription_order.invoice_ids[0]
 
         self.assertEqual(invoice.line_ids[0].display_type, 'line_section')
 
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""
-        prescriptions_order = self.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        prescription_order = self.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
-        PrescriptionOrderLine = self.env['prescriptions.order.line'].with_context(tracking_disable=True)
+        PrescriptionOrderLine = self.env['prescription.order.line'].with_context(tracking_disable=True)
         sol_prod_deliver = PrescriptionOrderLine.create({
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'order_id': prescriptions_order.id,
+            'order_id': prescription_order.id,
             'tax_id': False,
         })
 
         # Confirm the SO
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
         sol_prod_deliver.write({'qty_delivered': 5.0})
         # Context
         self.context = {
-            'active_model': 'prescriptions.order',
-            'active_ids': [prescriptions_order.id],
-            'active_id': prescriptions_order.id,
+            'active_model': 'prescription.order',
+            'active_ids': [prescription_order.id],
+            'active_id': prescription_order.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
 
         # Let's do an invoice with invoiceable lines
-        invoicing_wizard = self.env['prescriptions.advance.payment.inv'].with_context(self.context).create({
+        invoicing_wizard = self.env['prescription.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
         invoicing_wizard.create_invoices()
@@ -499,7 +499,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         # We would have to change the digits of the field to
         # test a greater decimal precision.
         quantity = 5.13
-        move_form = Form(prescriptions_order.invoice_ids)
+        move_form = Form(prescription_order.invoice_ids)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = quantity
         move_form.save()
@@ -520,11 +520,11 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
 
     def test_multi_company_invoice(self):
         """Checks that the company of the invoices generated in a multi company environment using the
-           'prescriptions.advance.payment.inv' wizard fit with the company of the SO and not with the current company.
+           'prescription.advance.payment.inv' wizard fit with the company of the SO and not with the current company.
         """
-        so_company_id = self.prescriptions_order.company_id.id
+        so_company_id = self.prescription_order.company_id.id
         yet_another_company_id = self.company_data_2['company'].id
-        so_for_downpayment = self.prescriptions_order.copy()
+        so_for_downpayment = self.prescription_order.copy()
 
         self.context.update(allowed_company_ids=[yet_another_company_id, self.env.company.id], company_id=yet_another_company_id)
         context_for_downpayment = self.context.copy()
@@ -536,16 +536,16 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         no_journal_ctxt.pop('default_journal_id', None)
         no_journal_ctxt.pop('journal_id', None)
 
-        self.prescriptions_order.with_context(self.context).action_confirm()
-        payment = self.env['prescriptions.advance.payment.inv'].with_context(no_journal_ctxt).create({
+        self.prescription_order.with_context(self.context).action_confirm()
+        payment = self.env['prescription.advance.payment.inv'].with_context(no_journal_ctxt).create({
             'advance_payment_method': 'percentage',
             'amount': 50,
         })
         payment.create_invoices()
-        self.assertEqual(self.prescriptions_order.invoice_ids[0].company_id.id, so_company_id, "The company of the invoice should be the same as the one from the SO")
+        self.assertEqual(self.prescription_order.invoice_ids[0].company_id.id, so_company_id, "The company of the invoice should be the same as the one from the SO")
 
         so_for_downpayment.with_context(context_for_downpayment).action_confirm()
-        downpayment = self.env['prescriptions.advance.payment.inv'].with_context(context_for_downpayment).create({
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(context_for_downpayment).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
             'deposit_account_id': self.company_data['default_account_revenue'].id
@@ -565,7 +565,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'product_id': self.product_a.id,
         })
 
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner_a
 
         with so_form.order_line.new() as sol:
@@ -577,12 +577,12 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         so._force_lines_to_invoice_policy_order()
 
         so_context = {
-            'active_model': 'prescriptions.order',
+            'active_model': 'prescription.order',
             'active_ids': [so.id],
             'active_id': so.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
-        down_payment = self.env['prescriptions.advance.payment.inv'].with_context(so_context).create({})
+        down_payment = self.env['prescription.advance.payment.inv'].with_context(so_context).create({})
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
@@ -603,7 +603,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'product_id': self.product_a.id,
         })
 
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner_a
         so_form.analytic_account_id = analytic_account_so
 
@@ -616,12 +616,12 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         so._force_lines_to_invoice_policy_order()
 
         so_context = {
-            'active_model': 'prescriptions.order',
+            'active_model': 'prescription.order',
             'active_ids': [so.id],
             'active_id': so.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
-        down_payment = self.env['prescriptions.advance.payment.inv'].with_context(so_context).create({})
+        down_payment = self.env['prescription.advance.payment.inv'].with_context(so_context).create({})
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
@@ -649,8 +649,8 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'product_id': self.product_a.id,
         })
 
-        so = self.env['prescriptions.order'].create({'partner_id': self.partner_a.id})
-        self.env['prescriptions.order.line'].create({
+        so = self.env['prescription.order'].create({'partner_id': self.partner_a.id})
+        self.env['prescription.order.line'].create({
             'order_id': so.id,
             'name': 'test',
             'product_id': self.product_a.id
@@ -662,7 +662,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         self.assertRecordValues(aml, [{'analytic_distribution': analytic_distribution_model.analytic_distribution}])
 
     def test_invoice_after_product_return_price_not_default(self):
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'name': 'Prescription order',
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -673,25 +673,25 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         self._check_order_search(so, [('invoice_ids', '=', False)], so)
         so.action_confirm()
         so_context = {
-            'active_model': 'prescriptions.order',
+            'active_model': 'prescription.order',
             'active_ids': [so.id],
             'active_id': so.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }
-        invoicing_wizard = self.env['prescriptions.advance.payment.inv'].with_context(so_context).create({})
+        invoicing_wizard = self.env['prescription.advance.payment.inv'].with_context(so_context).create({})
         invoicing_wizard.create_invoices()
         self.assertTrue(so.invoice_ids, "The invoice was not created")
         # simulating return by changing product_uom_qty to 0
         so.order_line.product_uom_qty = 0
         # checking if the price_unit is the same
         self.assertEqual(so.order_line.price_unit, 123,
-                         "The unit price should be the same as the one used to create the prescriptions order line")
+                         "The unit price should be the same as the one used to create the prescription order line")
 
     def test_group_invoice(self):
-        """ Test that invoicing multiple prescriptions order for the same customer works. """
+        """ Test that invoicing multiple prescription order for the same customer works. """
         # Create 3 SOs for the same partner, one of which that uses another currency
         eur_pricelist = self.env['product.pricelist'].create({'name': 'EUR', 'currency_id': self.env.ref('base.EUR').id})
-        so1 = self.prescriptions_order.with_context(mail_notrack=True).copy()
+        so1 = self.prescription_order.with_context(mail_notrack=True).copy()
         so1.pricelist_id = eur_pricelist
         so2 = so1.copy()
         usd_pricelist = self.env['product.pricelist'].create({'name': 'USD', 'currency_id': self.env.ref('base.USD').id})
@@ -700,7 +700,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         orders = so1 | so2 | so3
         orders.action_confirm()
         # Create the invoicing wizard and invoice all of them at once
-        wiz = self.env['prescriptions.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
+        wiz = self.env['prescription.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
         res = wiz.create_invoices()
         # Check that exactly 2 invoices are generated
         self.assertEqual(
@@ -712,22 +712,22 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
     def test_so_note_to_invoice(self):
         """Test that notes from SO are pushed into invoices"""
 
-        self.prescriptions_order.order_line = [Command.create({
+        self.prescription_order.order_line = [Command.create({
             'name': 'This is a note',
             'display_type': 'line_note',
             'product_id': False,
             'product_uom_qty': 0,
             'product_uom': False,
             'price_unit': 0,
-            'order_id': self.prescriptions_order.id,
+            'order_id': self.prescription_order.id,
             'tax_id': False,
         })]
 
         # confirm quotation
-        self.prescriptions_order.action_confirm()
+        self.prescription_order.action_confirm()
 
         # create invoice
-        invoice = self.prescriptions_order._create_invoices()
+        invoice = self.prescription_order._create_invoices()
 
         # check note from SO has been pushed in invoice
         self.assertEqual(
@@ -748,7 +748,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'service_type': 'manual',
         })
         prod_gap = self.company_data['product_service_order']
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -785,55 +785,55 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             (160, 2, 0, 0),
             'Prescription: line is wrong after confirming vendor invoice')
 
-    def test_prescriptions_order_standard_flow_with_invoicing(self):
-        """ Test the prescriptions order flow (invoicing and quantity updates)
+    def test_prescription_order_standard_flow_with_invoicing(self):
+        """ Test the prescription order flow (invoicing and quantity updates)
             - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
         """
-        self.prescriptions_order.order_line.product_uom_qty = 2.0
+        self.prescription_order.order_line.product_uom_qty = 2.0
         # TODO?: validate invoice and register payments
-        self.prescriptions_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
+        self.prescription_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
-        self.assertEqual(self.prescriptions_order.amount_total, 1240.0, 'Prescription: total amount is wrong')
-        self.prescriptions_order.order_line._compute_product_updatable()
-        self.assertTrue(self.prescriptions_order.order_line[0].product_updatable)
+        self.assertEqual(self.prescription_order.amount_total, 1240.0, 'Prescription: total amount is wrong')
+        self.prescription_order.order_line._compute_product_updatable()
+        self.assertTrue(self.prescription_order.order_line[0].product_updatable)
         # send quotation
-        email_act = self.prescriptions_order.action_quotation_send()
+        email_act = self.prescription_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
-        self.prescriptions_order.with_context(**email_ctx).message_post_with_source(
+        self.prescription_order.with_context(**email_ctx).message_post_with_source(
             self.env['mail.template'].browse(email_ctx.get('default_template_id')),
             subtype_xmlid='mail.mt_comment',
         )
-        self.assertTrue(self.prescriptions_order.state == 'sent', 'Prescription: state after sending is wrong')
-        self.prescriptions_order.order_line._compute_product_updatable()
-        self.assertTrue(self.prescriptions_order.order_line[0].product_updatable)
+        self.assertTrue(self.prescription_order.state == 'sent', 'Prescription: state after sending is wrong')
+        self.prescription_order.order_line._compute_product_updatable()
+        self.assertTrue(self.prescription_order.order_line[0].product_updatable)
 
         # confirm quotation
-        self.prescriptions_order.action_confirm()
-        self.assertTrue(self.prescriptions_order.state == 'prescriptions')
-        self.assertTrue(self.prescriptions_order.invoice_status == 'to invoice')
+        self.prescription_order.action_confirm()
+        self.assertTrue(self.prescription_order.state == 'prescription')
+        self.assertTrue(self.prescription_order.invoice_status == 'to invoice')
 
         # create invoice: only 'invoice on order' products are invoiced
-        invoice = self.prescriptions_order._create_invoices()
+        invoice = self.prescription_order._create_invoices()
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Prescription: invoice is missing lines')
         self.assertEqual(invoice.amount_total, 740.0, 'Prescription: invoice total amount is wrong')
-        self.assertTrue(self.prescriptions_order.invoice_status == 'no', 'Prescription: SO status after invoicing should be "nothing to invoice"')
-        self.assertTrue(len(self.prescriptions_order.invoice_ids) == 1, 'Prescription: invoice is missing')
-        self.prescriptions_order.order_line._compute_product_updatable()
-        self.assertFalse(self.prescriptions_order.order_line[0].product_updatable)
+        self.assertTrue(self.prescription_order.invoice_status == 'no', 'Prescription: SO status after invoicing should be "nothing to invoice"')
+        self.assertTrue(len(self.prescription_order.invoice_ids) == 1, 'Prescription: invoice is missing')
+        self.prescription_order.order_line._compute_product_updatable()
+        self.assertFalse(self.prescription_order.order_line[0].product_updatable)
 
         # deliver lines except 'time and material' then invoice again
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
-        self.assertTrue(self.prescriptions_order.invoice_status == 'to invoice', 'Prescription: SO status after delivery should be "to invoice"')
-        invoice2 = self.prescriptions_order._create_invoices()
+        self.assertTrue(self.prescription_order.invoice_status == 'to invoice', 'Prescription: SO status after delivery should be "to invoice"')
+        invoice2 = self.prescription_order._create_invoices()
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Prescription: second invoice is missing lines')
         self.assertEqual(invoice2.amount_total, 500.0, 'Prescription: second invoice total amount is wrong')
-        self.assertTrue(self.prescriptions_order.invoice_status == 'invoiced', 'Prescription: SO status after invoicing everything should be "invoiced"')
-        self.assertTrue(len(self.prescriptions_order.invoice_ids) == 2, 'Prescription: invoice is missing')
+        self.assertTrue(self.prescription_order.invoice_status == 'invoiced', 'Prescription: SO status after invoicing everything should be "invoiced"')
+        self.assertTrue(len(self.prescription_order.invoice_ids) == 2, 'Prescription: invoice is missing')
 
         # go over the sold quantity
         self.sol_serv_order.write({'qty_delivered': 10})
-        self.assertTrue(self.prescriptions_order.invoice_status == 'upselling', 'Prescription: SO status after increasing delivered qty higher than ordered qty should be "upselling"')
+        self.assertTrue(self.prescription_order.invoice_status == 'upselling', 'Prescription: SO status after increasing delivered qty higher than ordered qty should be "upselling"')
 
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
@@ -848,10 +848,10 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         self.env.flush_all()
         self.env.invalidate_all()
 
-        invoice3 = self.prescriptions_order._create_invoices()
+        invoice3 = self.prescription_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Prescription: third invoice is missing lines')
         self.assertEqual(invoice3.amount_total, 720.0, 'Prescription: second invoice total amount is wrong')
-        self.assertTrue(self.prescriptions_order.invoice_status == 'invoiced', 'Prescription: SO status after invoicing everything (including the upsel) should be "invoiced"')
+        self.assertTrue(self.prescription_order.invoice_status == 'invoiced', 'Prescription: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
@@ -863,7 +863,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 
-        so_1 = self.env['prescriptions.order'].with_user(self.company_data['default_user_personnel']).create({
+        so_1 = self.env['prescription.order'].with_user(self.company_data['default_user_personnel']).create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'company_id': self.company_data['company'].id,
         })
@@ -895,7 +895,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
             self.skipTest("This test requires the installation of the account_account module")
 
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -904,13 +904,13 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 }),
             ],
         })
-        line = prescriptions_order.order_line[0]
+        line = prescription_order.order_line[0]
 
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
         line.qty_delivered = 10
 
-        invoice = prescriptions_order._create_invoices()
+        invoice = prescription_order._create_invoices()
         invoice.action_post()
 
         self.assertEqual(line.qty_invoiced, 10)
@@ -925,38 +925,38 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
 
-    def test_prescriptionsperson_in_invoice_followers(self):
+    def test_prescriptionperson_in_invoice_followers(self):
         """
-        Test if the prescriptionsperson is in the followers list of invoice created from SO
+        Test if the prescriptionperson is in the followers list of invoice created from SO
         """
-        # create a prescriptionsperson
-        prescriptionsperson = self.env['res.users'].create({
-            'name': 'Prescriptions Person',
-            'login': 'prescriptionsperson',
+        # create a prescriptionperson
+        prescriptionperson = self.env['res.users'].create({
+            'name': 'Prescription Person',
+            'login': 'prescriptionperson',
             'email': 'test@test.com',
-            'groups_id': [(6, 0, [self.env.ref('pod_prescriptions_team.group_prescriptions_personnel').id])]
+            'groups_id': [(6, 0, [self.env.ref('pod_prescription_team.group_prescription_personnel').id])]
         })
 
         # create a SO and generate invoice from it
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
-            'user_id': prescriptionsperson.id,
+            'user_id': prescriptionperson.id,
             'order_line': [(0, 0, {
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 1,
             })]
         })
-        prescriptions_order.action_confirm()
-        invoice = prescriptions_order._create_invoices(final=True)
+        prescription_order.action_confirm()
+        invoice = prescription_order._create_invoices(final=True)
 
-        # check if the prescriptionsperson is in the followers list of invoice created from SO
-        self.assertIn(prescriptionsperson.partner_id, invoice.message_partner_ids, 'Prescriptions Person not in the followers list of '
+        # check if the prescriptionperson is in the followers list of invoice created from SO
+        self.assertIn(prescriptionperson.partner_id, invoice.message_partner_ids, 'Prescription Person not in the followers list of '
                                                                            'invoice created from SO')
     def test_amount_to_invoice_multiple_so(self):
         """ Testing creating two SOs with the same customer and invoicing them together. We have to ensure
             that the amount to invoice is correct for each SO.
         """
-        prescriptions_order_1 = self.env['prescriptions.order'].create({
+        prescription_order_1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -965,7 +965,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 }),
             ],
         })
-        prescriptions_order_2 = self.env['prescriptions.order'].create({
+        prescription_order_2 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -975,26 +975,26 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             ],
         })
 
-        prescriptions_order_1.action_confirm()
-        prescriptions_order_2.action_confirm()
-        prescriptions_order_1.order_line.qty_delivered = 10
-        prescriptions_order_2.order_line.qty_delivered = 20
+        prescription_order_1.action_confirm()
+        prescription_order_2.action_confirm()
+        prescription_order_1.order_line.qty_delivered = 10
+        prescription_order_2.order_line.qty_delivered = 20
 
-        self.env['prescriptions.advance.payment.inv'].create({
+        self.env['prescription.advance.payment.inv'].create({
             'advance_payment_method': 'delivered',
-            'prescriptions_order_ids': [Command.set((prescriptions_order_1 + prescriptions_order_2).ids)],
+            'prescription_order_ids': [Command.set((prescription_order_1 + prescription_order_2).ids)],
         }).create_invoices()
 
-        prescriptions_order_1.invoice_ids.action_post()
+        prescription_order_1.invoice_ids.action_post()
 
-        self.assertEqual(prescriptions_order_1.amount_to_invoice, 0.0)
-        self.assertEqual(prescriptions_order_2.amount_to_invoice, 0.0)
+        self.assertEqual(prescription_order_1.amount_to_invoice, 0.0)
+        self.assertEqual(prescription_order_2.amount_to_invoice, 0.0)
 
     def test_amount_to_invoice_one_line_multiple_so(self):
         """ Testing creating two SOs linked to the same invoice line. Drawback: the substracted
-            amount to the amount_total will take both prescriptions order into account.
+            amount to the amount_total will take both prescription order into account.
         """
-        prescriptions_order_1 = self.env['prescriptions.order'].create({
+        prescription_order_1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -1003,7 +1003,7 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
                 }),
             ],
         })
-        prescriptions_order_2 = self.env['prescriptions.order'].create({
+        prescription_order_2 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -1013,20 +1013,20 @@ class TestPrescriptionToInvoice(TestPrescriptionCommon):
             ],
         })
 
-        prescriptions_order_1.action_confirm()
-        prescriptions_order_2.action_confirm()
-        prescriptions_order_1.order_line.qty_delivered = 10
-        prescriptions_order_2.order_line.qty_delivered = 20
+        prescription_order_1.action_confirm()
+        prescription_order_2.action_confirm()
+        prescription_order_1.order_line.qty_delivered = 10
+        prescription_order_2.order_line.qty_delivered = 20
 
-        self.env['prescriptions.advance.payment.inv'].create({
+        self.env['prescription.advance.payment.inv'].create({
             'advance_payment_method': 'delivered',
-            'prescriptions_order_ids': [Command.set((prescriptions_order_2).ids)],
+            'prescription_order_ids': [Command.set((prescription_order_2).ids)],
         }).create_invoices()
 
-        prescriptions_order_1.invoice_ids = prescriptions_order_2.invoice_ids
-        prescriptions_order_1.invoice_ids.line_ids.prescriptions_line_ids += prescriptions_order_1.order_line
+        prescription_order_1.invoice_ids = prescription_order_2.invoice_ids
+        prescription_order_1.invoice_ids.line_ids.prescription_line_ids += prescription_order_1.order_line
 
-        prescriptions_order_1.invoice_ids.action_post()
+        prescription_order_1.invoice_ids.action_post()
 
-        self.assertEqual(prescriptions_order_1.amount_to_invoice, -700.0)
-        self.assertEqual(prescriptions_order_2.amount_to_invoice, 0.0)
+        self.assertEqual(prescription_order_1.amount_to_invoice, -700.0)
+        self.assertEqual(prescription_order_2.amount_to_invoice, 0.0)

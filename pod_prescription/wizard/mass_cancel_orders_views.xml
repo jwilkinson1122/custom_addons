@@ -2,24 +2,24 @@
 <odoo>
 
     <record id="mass_cancel_orders_view_form" model="ir.ui.view">
-        <field name="name">prescriptions.mass.cancel.orders.form</field>
-        <field name="model">prescriptions.mass.cancel.orders</field>
+        <field name="name">prescription.mass.cancel.orders.form</field>
+        <field name="model">prescription.mass.cancel.orders</field>
         <field name="arch" type="xml">
             <form string="Cancel quotations">
-                <field name="prescriptions_order_ids" invisible="1"/>
-                <field name="prescriptions_orders_count" invisible="1"/>
+                <field name="prescription_order_ids" invisible="1"/>
+                <field name="prescription_orders_count" invisible="1"/>
                 <field name="has_confirmed_order" invisible="1"/>
                 <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
-                        Some confirmed prescriptions orders are selected. Their related documents might be
+                        Some confirmed prescription orders are selected. Their related documents might be
                         affected by the cancellation.
                     </p>
                 </div>
-                <div invisible="prescriptions_orders_count &gt; 1">
+                <div invisible="prescription_orders_count &gt; 1">
                     Are you sure you want to cancel the selected quotation?
                 </div>
-                <div invisible="prescriptions_orders_count == 1">
-                    Are you sure you want to cancel the <field name="prescriptions_orders_count"/> selected
+                <div invisible="prescription_orders_count == 1">
+                    Are you sure you want to cancel the <field name="prescription_orders_count"/> selected
                     quotations?
                 </div>
                 <footer>
@@ -35,11 +35,11 @@
 
     <record id="action_mass_cancel_orders" model="ir.actions.act_window">
         <field name="name">Cancel quotations</field>
-        <field name="res_model">prescriptions.mass.cancel.orders</field>
+        <field name="res_model">prescription.mass.cancel.orders</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="mass_cancel_orders_view_form"/>
         <field name="target">new</field>
-        <field name="binding_model_id" ref="model_prescriptions_order"/>
+        <field name="binding_model_id" ref="model_prescription_order"/>
         <field name="binding_view_types">list</field>
     </record>
 

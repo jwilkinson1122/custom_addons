@@ -3,7 +3,7 @@
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
 
-from odoo.addons.pod_prescriptions.controllers import portal
+from odoo.addons.pod_prescription.controllers import portal
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -12,8 +12,8 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_quote_option_update(self, order_id, line_id, access_token=None, remove=False, unlink=False, input_quantity=False, **kwargs):
         """ Update the quantity or Remove an optional SOline from a SO.
 
-        :param int order_id: `prescriptions.order` id
-        :param int line_id: `prescriptions.order.line` id
+        :param int order_id: `prescription.order` id
+        :param int line_id: `prescription.order.line` id
         :param str access_token: portal access_token of the specified order
         :param bool remove: if true, 1 unit will be removed from the line
         :param bool unlink: if true, the option will be removed from the SO
@@ -21,15 +21,15 @@ class CustomerPortal(portal.CustomerPortal):
         :param dict kwargs: unused parameters
         """
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        # Redundant with can be edited on portal for line, ask prescriptions if can rbe removed
+        # Redundant with can be edited on portal for line, ask prescription if can rbe removed
         if not order_sudo._can_be_edited_on_portal():
             return False
 
-        order_line = request.env['prescriptions.order.line'].sudo().browse(int(line_id)).exists()
+        order_line = request.env['prescription.order.line'].sudo().browse(int(line_id)).exists()
         if not order_line or order_line.order_id != order_sudo:
             return False
 
@@ -52,17 +52,17 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_quote_add_option(self, order_id, option_id, access_token=None, **kwargs):
         """ Add the specified option to the specified order.
 
-        :param int order_id: `prescriptions.order` id
-        :param int option_id: `prescriptions.order.option` id
+        :param int order_id: `prescription.order` id
+        :param int option_id: `prescription.order.option` id
         :param str access_token: portal access_token of the specified order
         :param dict kwargs: unused parameters
         """
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        option_sudo = request.env['prescriptions.order.option'].sudo().browse(option_id)
+        option_sudo = request.env['prescription.order.option'].sudo().browse(option_id)
 
         if order_sudo != option_sudo.order_id:
             return request.redirect(order_sudo.get_portal_url())

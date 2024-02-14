@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="podPrescriptionProductConfigurator.productList">
         <h4 class="mt-4 mb-3" t-if="this.props.areProductsOptional">Add optional products</h4>
-        <table class="o_prescriptions_product_configurator_table table table-sm position-relative mb-0" t-att-class="{'o_prescriptions_product_configurator_table_optional': this.props.areProductsOptional}">
+        <table class="o_prescription_product_configurator_table table table-sm position-relative mb-0" t-att-class="{'o_prescription_product_configurator_table_optional': this.props.areProductsOptional}">
             <thead t-if="!this.props.areProductsOptional">
                 <tr>
                     <th class="px-0 border-bottom-0" colspan="2">Product</th>

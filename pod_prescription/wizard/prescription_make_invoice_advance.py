@@ -8,8 +8,8 @@ from odoo.tools import format_date, frozendict
 
 
 class PrescriptionAdvancePaymentInv(models.TransientModel):
-    _name = 'prescriptions.advance.payment.inv'
-    _description = "Prescriptions Advance Payment Invoice"
+    _name = 'prescription.advance.payment.inv'
+    _description = "Prescription Advance Payment Invoice"
 
     advance_payment_method = fields.Selection(
         selection=[
@@ -23,8 +23,8 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
         help="A standard invoice is issued with all the order lines ready for invoicing,"
             "according to their invoicing policy (based on ordered or delivered quantity).")
     count = fields.Integer(string="Order Count", compute='_compute_count')
-    prescriptions_order_ids = fields.Many2many(
-        'prescriptions.order', default=lambda self: self.env.context.get('active_ids'))
+    prescription_order_ids = fields.Many2many(
+        'prescription.order', default=lambda self: self.env.context.get('active_ids'))
 
     # Down Payment logic
     has_down_payments = fields.Boolean(
@@ -73,7 +73,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
     deposit_taxes_id = fields.Many2many(
         comodel_name='account.tax',
         string="Customer Taxes",
-        domain=[('type_tax_use', '=', 'prescriptions')],
+        domain=[('type_tax_use', '=', 'prescription')],
         check_company=True,
         help="Taxes used for deposits")
 
@@ -87,59 +87,59 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_count(self):
         for wizard in self:
-            wizard.count = len(wizard.prescriptions_order_ids)
+            wizard.count = len(wizard.prescription_order_ids)
 
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_has_down_payments(self):
         for wizard in self:
             wizard.has_down_payments = bool(
-                wizard.prescriptions_order_ids.order_line.filtered('is_downpayment')
+                wizard.prescription_order_ids.order_line.filtered('is_downpayment')
             )
 
     # next computed fields are only used for down payments invoices and therefore should only
     # have a value when 1 unique SO is invoiced through the wizard
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_currency_id(self):
         self.currency_id = False
         for wizard in self:
             if wizard.count == 1:
-                wizard.currency_id = wizard.prescriptions_order_ids.currency_id
+                wizard.currency_id = wizard.prescription_order_ids.currency_id
 
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_company_id(self):
         self.company_id = False
         for wizard in self:
             if wizard.count == 1:
-                wizard.company_id = wizard.prescriptions_order_ids.company_id
+                wizard.company_id = wizard.prescription_order_ids.company_id
 
     @api.depends('company_id')
     def _compute_product_id(self):
         self.product_id = False
         for wizard in self:
             if wizard.count == 1:
-                wizard.product_id = wizard.company_id.prescriptions_down_payment_product_id
+                wizard.product_id = wizard.company_id.prescription_down_payment_product_id
 
     @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
     def _compute_display_invoice_amount_warning(self):
         for wizard in self:
             invoice_amount = wizard.fixed_amount
             if wizard.advance_payment_method == 'percentage':
-                invoice_amount = wizard.amount / 100 * sum(wizard.prescriptions_order_ids.mapped('amount_total'))
+                invoice_amount = wizard.amount / 100 * sum(wizard.prescription_order_ids.mapped('amount_total'))
             wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice
 
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = wizard.prescriptions_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+            wizard.display_draft_invoice_warning = wizard.prescription_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
 
-    @api.depends('prescriptions_order_ids')
+    @api.depends('prescription_order_ids')
     def _compute_invoice_amounts(self):
         for wizard in self:
-            wizard.amount_invoiced = sum(wizard.prescriptions_order_ids._origin.mapped('amount_invoiced'))
-            wizard.amount_to_invoice = sum(wizard.prescriptions_order_ids._origin.mapped('amount_to_invoice'))
+            wizard.amount_invoiced = sum(wizard.prescription_order_ids._origin.mapped('amount_invoiced'))
+            wizard.amount_to_invoice = sum(wizard.prescription_order_ids._origin.mapped('amount_to_invoice'))
 
     #=== ONCHANGE METHODS ===#
 
@@ -177,8 +177,8 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
 
     def create_invoices(self):
         self._check_amount_is_positive()
-        invoices = self._create_invoices(self.prescriptions_order_ids)
-        return self.prescriptions_order_ids.action_view_invoice(invoices=invoices)
+        invoices = self._create_invoices(self.prescription_order_ids)
+        return self.prescription_order_ids.action_view_invoice(invoices=invoices)
 
     def view_draft_invoices(self):
         return {
@@ -187,29 +187,29 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
             'view_mode': 'tree',
             'views': [(False, 'list'), (False, 'form')],
             'res_model': 'account.move',
-            'domain': [('line_ids.prescriptions_line_ids.order_id', 'in', self.prescriptions_order_ids.ids), ('state', '=', 'draft')],
+            'domain': [('line_ids.prescription_line_ids.order_id', 'in', self.prescription_order_ids.ids), ('state', '=', 'draft')],
         }
 
     #=== BUSINESS METHODS ===#
 
-    def _create_invoices(self, prescriptions_orders):
+    def _create_invoices(self, prescription_orders):
         self.ensure_one()
         if self.advance_payment_method == 'delivered':
-            return prescriptions_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
+            return prescription_orders._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
         else:
-            self.prescriptions_order_ids.ensure_one()
+            self.prescription_order_ids.ensure_one()
             self = self.with_company(self.company_id)
-            order = self.prescriptions_order_ids
+            order = self.prescription_order_ids
 
             # Create deposit product if necessary
             if not self.product_id:
-                self.company_id.prescriptions_down_payment_product_id = self.env['product.product'].create(
+                self.company_id.prescription_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
                 self._compute_product_id()
 
             # Create down payment section if necessary
-            PrescriptionOrderline = self.env['prescriptions.order.line'].with_context(prescriptions_no_log_for_new_lines=True)
+            PrescriptionOrderline = self.env['prescription.order.line'].with_context(prescription_no_log_for_new_lines=True)
             if not any(line.display_type and line.is_downpayment for line in order.order_line):
                 PrescriptionOrderline.create(
                     self._prepare_down_payment_section_values(order)

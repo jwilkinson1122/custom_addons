@@ -1,5 +1,5 @@
 
 
 from . import product_template
-from . import prescriptions_order
-from . import prescriptions_order_line
+from . import prescription_order
+from . import prescription_order_line

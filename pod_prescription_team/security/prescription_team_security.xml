@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="ir_module_category_prescriptions" model="ir.module.category">
-            <field name="name">Prescriptions Management</field>
-            <field name="description">Helps you handle your quotations, prescriptions orders and invoicing.</field>
+        <record id="ir_module_category_prescription" model="ir.module.category">
+            <field name="name">Prescription Management</field>
+            <field name="description">Helps you handle your quotations, prescription orders and invoicing.</field>
             <field name="sequence">1</field>
         </record>
 
-        <record id="group_prescriptions_personnel" model="res.groups">
+        <record id="group_prescription_personnel" model="res.groups">
             <field name="name">User: Own Documents Only</field>
-            <field name="category_id" ref="ir_module_category_prescriptions"/>
+            <field name="category_id" ref="ir_module_category_prescription"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="comment">the user will have access to his own data in the prescriptions application.</field>
+            <field name="comment">the user will have access to his own data in the prescription application.</field>
         </record>
 
-        <record id="group_prescriptions_personnel_all_leads" model="res.groups">
+        <record id="group_prescription_personnel_all_leads" model="res.groups">
             <field name="name">User: All Documents</field>
-            <field name="category_id" ref="ir_module_category_prescriptions"/>
-            <field name="implied_ids" eval="[(4, ref('group_prescriptions_personnel'))]"/>
-            <field name="comment">the user will have access to all records of everyone in the prescriptions application.</field>
+            <field name="category_id" ref="ir_module_category_prescription"/>
+            <field name="implied_ids" eval="[(4, ref('group_prescription_personnel'))]"/>
+            <field name="comment">the user will have access to all records of everyone in the prescription application.</field>
         </record>
 
-        <record id="group_prescriptions_manager" model="res.groups">
+        <record id="group_prescription_manager" model="res.groups">
             <field name="name">Administrator</field>
-            <field name="comment">the user will have an access to the prescriptions configuration as well as statistic reports.</field>
-            <field name="category_id" ref="ir_module_category_prescriptions"/>
-            <field name="implied_ids" eval="[(4, ref('group_prescriptions_personnel_all_leads')),
+            <field name="comment">the user will have an access to the prescription configuration as well as statistic reports.</field>
+            <field name="category_id" ref="ir_module_category_prescription"/>
+            <field name="implied_ids" eval="[(4, ref('group_prescription_personnel_all_leads')),
                 (4, ref('mail.group_mail_template_editor'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
     <data noupdate="0">
-        <record id="crm_rule_all_prescriptions_team" model="ir.rule">
-            <field name="name">All Prescriptionsteam</field>
-            <field ref="pod_prescriptions_team.model_crm_team" name="model_id"/>
+        <record id="crm_rule_all_prescription_team" model="ir.rule">
+            <field name="name">All Prescriptionteam</field>
+            <field ref="pod_prescription_team.model_crm_team" name="model_id"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('pod_prescriptions_team.group_prescriptions_personnel_all_leads'))]"/>
+            <field name="groups" eval="[(4, ref('pod_prescription_team.group_prescription_personnel_all_leads'))]"/>
         </record>
 
-        <record model="ir.rule" id="prescriptions_team_comp_rule">
-            <field name="name">Prescriptions Team multi-company</field>
+        <record model="ir.rule" id="prescription_team_comp_rule">
+            <field name="name">Prescription Team multi-company</field>
             <field name="model_id" ref="model_crm_team"/>
             <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('pod_prescriptions_team.group_prescriptions_manager'))]"/>
+            <field name="groups_id" eval="[(4,ref('pod_prescription_team.group_prescription_manager'))]"/>
         </record>
     </data>
 </odoo>

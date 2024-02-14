@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class PrescriptionReport(models.Model):
-    _inherit = "prescriptions.report"
+    _inherit = "prescription.report"
 
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
 

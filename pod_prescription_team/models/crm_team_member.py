@@ -7,17 +7,17 @@ from odoo import api, exceptions, fields, models, _
 class CrmTeamMember(models.Model):
     _name = 'crm.team.member'
     _inherit = ['mail.thread']
-    _description = 'Prescriptions Team Member'
+    _description = 'Prescription Team Member'
     _rec_name = 'user_id'
     _order = 'create_date ASC, id'
     _check_company_auto = True
 
     crm_team_id = fields.Many2one(
-        'crm.team', string='Prescriptions Team', group_expand='_read_group_crm_team_id',
+        'crm.team', string='Prescription Team', group_expand='_read_group_crm_team_id',
         default=False,  # TDE: temporary fix to activate depending computed fields
         check_company=True, index=True, ondelete="cascade", required=True)
     user_id = fields.Many2one(
-        'res.users', string='Prescriptions Person',  # TDE FIXME check responsible field
+        'res.users', string='Prescription Person',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,
         domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]")
     user_in_teams_ids = fields.Many2many(
@@ -29,7 +29,7 @@ class CrmTeamMember(models.Model):
     active = fields.Boolean(string='Active', default=True)
     is_membership_multi = fields.Boolean(
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
-        help='If True, users may belong to several prescriptions teams. Otherwise membership is limited to a single prescriptions team.')
+        help='If True, users may belong to several prescription teams. Otherwise membership is limited to a single prescription team.')
     member_warning = fields.Text(compute='_compute_member_warning')
     # personnel information
     image_1920 = fields.Image("Image", related="user_id.image_1920", max_width=1920, max_height=1920)
@@ -105,7 +105,7 @@ class CrmTeamMember(models.Model):
 
     @api.depends('crm_team_id')
     def _compute_is_membership_multi(self):
-        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('pod_prescriptions_team.membership_multi', False)
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('pod_prescription_team.membership_multi', False)
         self.is_membership_multi = multi_enabled
 
     @api.depends('is_membership_multi', 'active', 'user_id', 'crm_team_id')
@@ -154,7 +154,7 @@ class CrmTeamMember(models.Model):
         when creating them as chatter is mainly used for information purpose
         (tracked fields).
         """
-        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('pod_prescriptions_team.membership_multi', False)
+        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('pod_prescription_team.membership_multi', False)
         if not is_membership_multi:
             self._synchronize_memberships(values_list)
         return super(CrmTeamMember, self.with_context(
@@ -171,7 +171,7 @@ class CrmTeamMember(models.Model):
         maybe archive / activate them. Updating manually memberships by
         modifying user_id or team_id is advanced and does not benefit from our
         support. """
-        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('pod_prescriptions_team.membership_multi', False)
+        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('pod_prescription_team.membership_multi', False)
         if not is_membership_multi and values.get('active'):
             self._synchronize_memberships([
                 dict(user_id=membership.user_id.id, crm_team_id=membership.crm_team_id.id)

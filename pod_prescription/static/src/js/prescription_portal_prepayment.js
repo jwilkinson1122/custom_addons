@@ -3,18 +3,18 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
-    selector: '.o_portal_prescriptions_sidebar',
+    selector: '.o_portal_prescription_sidebar',
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
-        'click button[name="o_prescriptions_portal_amount_prepayment_button"]': '_onClickAmountPrepaymentButton',
-        'click button[name="o_prescriptions_portal_amount_total_button"]': '_onClickAmountTotalButton',
+        'click button[name="o_prescription_portal_amount_prepayment_button"]': '_onClickAmountPrepaymentButton',
+        'click button[name="o_prescription_portal_amount_total_button"]': '_onClickAmountTotalButton',
     }),
 
     start: async function () {
         this.AmountTotalButton = document.querySelector(
-            'button[name="o_prescriptions_portal_amount_total_button"]'
+            'button[name="o_prescription_portal_amount_total_button"]'
         );
         this.AmountPrepaymentButton = document.querySelector(
-            'button[name="o_prescriptions_portal_amount_prepayment_button"]'
+            'button[name="o_prescription_portal_amount_prepayment_button"]'
         );
 
         if (!this.AmountTotalButton) {
@@ -36,7 +36,7 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
 
         // When updating the amount re-open the modal.
         if (showPaymentModal) {
-            const payNowButton = this.$('#o_prescriptions_portal_paynow')[0];
+            const payNowButton = this.$('#o_prescription_portal_paynow')[0];
             payNowButton && payNowButton.click();
         }
     },
@@ -48,8 +48,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(true);
         } else {
-            this.$('div[id="o_prescriptions_portal_use_amount_total"]').hide();
-            this.$('div[id="o_prescriptions_portal_use_amount_prepayment"]').show();
+            this.$('div[id="o_prescription_portal_use_amount_total"]').hide();
+            this.$('div[id="o_prescription_portal_use_amount_prepayment"]').show();
         }
     },
 
@@ -60,8 +60,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(false);
         } else {
-            this.$('div[id="o_prescriptions_portal_use_amount_total"]').show();
-            this.$('div[id="o_prescriptions_portal_use_amount_prepayment"]').hide();
+            this.$('div[id="o_prescription_portal_use_amount_total"]').show();
+            this.$('div[id="o_prescription_portal_use_amount_prepayment"]').hide();
         }
     },
 

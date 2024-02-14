@@ -7,20 +7,20 @@ from odoo import fields, models
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
-    allowed_so_line_ids = fields.Many2many('prescriptions.order.line', compute='_compute_allowed_so_line_ids')
-    so_line = fields.Many2one('prescriptions.order.line', string='Prescriptions Order Item', domain="[('id', 'in', allowed_so_line_ids)]")
+    allowed_so_line_ids = fields.Many2many('prescription.order.line', compute='_compute_allowed_so_line_ids')
+    so_line = fields.Many2one('prescription.order.line', string='Prescription Order Item', domain="[('id', 'in', allowed_so_line_ids)]")
 
-    def _default_prescriptions_line_domain(self):
+    def _default_prescription_line_domain(self):
         """ This is only used for delivered quantity of SO line based on analytic line, and timesheet
-            (see prescriptions_timesheet). This can be override to allow further customization.
+            (see prescription_timesheet). This can be override to allow further customization.
         """
         self.ensure_one()
         return [('qty_delivered_method', '=', 'analytic')]
 
     def _compute_allowed_so_line_ids(self):
         for timesheet in self:
-            domain = timesheet._default_prescriptions_line_domain()
-            timesheet.allowed_so_line_ids = self.env['prescriptions.order.line'].search(domain)
+            domain = timesheet._default_prescription_line_domain()
+            timesheet.allowed_so_line_ids = self.env['prescription.order.line'].search(domain)
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -29,7 +29,7 @@ class AccountAnalyticApplicability(models.Model):
 
     business_domain = fields.Selection(
         selection_add=[
-            ('prescriptions_order', 'Prescription Order'),
+            ('prescription_order', 'Prescription Order'),
         ],
-        ondelete={'prescriptions_order': 'cascade'},
+        ondelete={'prescription_order': 'cascade'},
     )

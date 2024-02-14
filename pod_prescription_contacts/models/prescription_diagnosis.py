@@ -2,7 +2,7 @@ from odoo import models, fields
 
 
 class Diagnosis(models.Model):
-    _name = 'prescriptions.diagnosis'
+    _name = 'prescription.diagnosis'
     _description = "Diagnosis"
     _order = 'sequence,id'
 

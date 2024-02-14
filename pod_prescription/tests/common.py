@@ -6,25 +6,25 @@ from odoo.tests import TransactionCase
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.common import ProductCommon
-from odoo.addons.pod_prescriptions_team.tests.common import PrescriptionsTeamCommon
+from odoo.addons.pod_prescription_team.tests.common import PrescriptionTeamCommon
 
 
 class PrescriptionCommon(
     ProductCommon, # BaseCommon, UomCommon
-    PrescriptionsTeamCommon,
+    PrescriptionTeamCommon,
 ):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        # Not defined in product common because only used in prescriptions
+        # Not defined in product common because only used in prescription
         cls.group_discount_per_so_line = cls.env.ref('product.group_discount_per_so_line')
 
-        cls.empty_order = cls.env['prescriptions.order'].create({
+        cls.empty_order = cls.env['prescription.order'].create({
             'partner_id': cls.partner.id,
         })
-        cls.prescriptions_order = cls.env['prescriptions.order'].create({
+        cls.prescription_order = cls.env['prescription.order'].create({
             'partner_id': cls.partner.id,
             'order_line': [
                 Command.create({
@@ -44,15 +44,15 @@ class PrescriptionCommon(
 
 
 class TestPrescriptionCommonBase(TransactionCase):
-    ''' Setup with prescriptions test configuration. '''
+    ''' Setup with prescription test configuration. '''
 
     @classmethod
-    def setup_prescriptions_configuration_for_company(cls, company):
+    def setup_prescription_configuration_for_company(cls, company):
         Users = cls.env['res.users'].with_context(no_reset_password=True)
 
         company_data = {
-            # Prescriptions Team
-            'default_prescriptions_team': cls.env['crm.team'].with_context(tracking_disable=True).create({
+            # Prescription Team
+            'default_prescription_team': cls.env['crm.team'].with_context(tracking_disable=True).create({
                 'name': 'Test Channel',
                 'company_id': company.id,
             }),
@@ -64,7 +64,7 @@ class TestPrescriptionCommonBase(TransactionCase):
                 'email': 'default_user_personnel@example.com',
                 'signature': '--\nMark',
                 'notification_type': 'email',
-                'groups_id': [(6, 0, cls.env.ref('pod_prescriptions_team.group_prescriptions_personnel').ids)],
+                'groups_id': [(6, 0, cls.env.ref('pod_prescription_team.group_prescription_personnel').ids)],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),
@@ -156,8 +156,8 @@ class TestPrescriptionCommonBase(TransactionCase):
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
             }),
-            'product_order_prescriptions_price': cls.env['product.product'].with_company(company).create({
-                'name': 'product_order_prescriptions_price',
+            'product_order_prescription_price': cls.env['product.product'].with_company(company).create({
+                'name': 'product_order_prescription_price',
                 'categ_id': company_data['product_category'].id,
                 'standard_price': 235.0,
                 'list_price': 280.0,
@@ -167,12 +167,12 @@ class TestPrescriptionCommonBase(TransactionCase):
                 'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
-                'expense_policy': 'prescriptions_price',
+                'expense_policy': 'prescription_price',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
             }),
-            'product_delivery_prescriptions_price': cls.env['product.product'].with_company(company).create({
-                'name': 'product_delivery_prescriptions_price',
+            'product_delivery_prescription_price': cls.env['product.product'].with_company(company).create({
+                'name': 'product_delivery_prescription_price',
                 'categ_id': company_data['product_category'].id,
                 'standard_price': 55.0,
                 'list_price': 70.0,
@@ -182,7 +182,7 @@ class TestPrescriptionCommonBase(TransactionCase):
                 'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
-                'expense_policy': 'prescriptions_price',
+                'expense_policy': 'prescription_price',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
             }),
@@ -222,13 +222,13 @@ class TestPrescriptionCommonBase(TransactionCase):
 
 
 class TestPrescriptionCommon(AccountTestInvoicingCommon, TestPrescriptionCommonBase):
-    ''' Setup to be used post-install with prescriptions and accounting test configuration.'''
+    ''' Setup to be used post-install with prescription and accounting test configuration.'''
 
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
 
-        company_data.update(cls.setup_prescriptions_configuration_for_company(company_data['company']))
+        company_data.update(cls.setup_prescription_configuration_for_company(company_data['company']))
 
         company_data['product_category'].write({
             'property_account_income_categ_id': company_data['default_account_revenue'].id,

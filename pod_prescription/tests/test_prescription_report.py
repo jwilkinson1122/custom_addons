@@ -5,7 +5,7 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -25,12 +25,12 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
         # shared between companies is USD
         cls._use_currency('USD')
 
-    def test_prescriptions_report_foreign_currency(self):
+    def test_prescription_report_foreign_currency(self):
         """
         Test that amounts are correctly converted between currencies.
         There are two different conversions to take into account:
-        - currency of the prescriptions order pricelist -> currency of the prescriptions order company
-        - currency of prescriptions order company -> currency of the current user company
+        - currency of the prescription order pricelist -> currency of the prescription order company
+        - currency of prescription order company -> currency of the current user company
         Adjustment between past and present rates must also be taken into account.
         """
 
@@ -69,13 +69,13 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
             self.env.company, today
         )
 
-        prescriptions_orders = self.env['prescriptions.order']
-        expected_reported_amount = 0  # The total amount of all prescriptions orders in the report.
+        prescription_orders = self.env['prescription.order']
+        expected_reported_amount = 0  # The total amount of all prescription orders in the report.
         qty = 0  # to add variety to the data
 
-        # Create prescriptions orders
+        # Create prescription orders
         for company in companies:
-            PrescriptionOrder = self.env['prescriptions.order'].with_company(company)
+            PrescriptionOrder = self.env['prescription.order'].with_company(company)
             for date in (past_day, today):
                 for pricelist in pricelists:
                     qty += 1
@@ -87,7 +87,7 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
                             {'product_id': self.product.id, 'product_uom_qty': qty}
                         )],
                     })
-                    prescriptions_orders |= order
+                    prescription_orders |= order
 
                     expected_so_currency_rate = self.env['res.currency.rate'].search([
                         ('name', '=', date),
@@ -122,9 +122,9 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
                     )
 
         # The report should show the amount in the current (in this case usd) company currency.
-        report_lines = self.env['prescriptions.report'].sudo().with_context(
+        report_lines = self.env['prescription.report'].sudo().with_context(
             allow_company_ids=[self.usd_cmp.id, self.eur_cmp.id]
-        ).search([('order_reference', 'in', [f'prescriptions.order,{so_id}' for so_id in prescriptions_orders.ids])])
+        ).search([('order_reference', 'in', [f'prescription.order,{so_id}' for so_id in prescription_orders.ids])])
 
         price_total = sum(report_lines.mapped('price_total'))
         self.assertAlmostEqual(price_total, expected_reported_amount)

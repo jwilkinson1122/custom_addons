@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="prescriptions_order_view_form" model="ir.ui.view">
-        <field name="name">prescriptions.order.form.inherit.prescriptions.product.configurator</field>
-        <field name="model">prescriptions.order</field>
-        <field name="inherit_id" ref="pod_prescriptions.view_order_form"/>
+    <record id="prescription_order_view_form" model="ir.ui.view">
+        <field name="name">prescription.order.form.inherit.prescription.product.configurator</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id" ref="pod_prescription.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
                 <attribute name="column_invisible">0</attribute>

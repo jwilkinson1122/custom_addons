@@ -16,7 +16,7 @@ class PrescriptionTestTaxTotals(TestTaxTotals):
         })
 
     def _create_document_for_tax_totals_test(self, lines_data):
-        # Overridden in order to run the inherited tests with prescriptions.order's
+        # Overridden in order to run the inherited tests with prescription.order's
         # tax_totals field instead of account.move's
 
         lines_vals = [
@@ -29,7 +29,7 @@ class PrescriptionTestTaxTotals(TestTaxTotals):
             })
         for amount, taxes in lines_data]
 
-        return self.env['prescriptions.order'].create({
+        return self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': lines_vals,
         })

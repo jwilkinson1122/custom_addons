@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from . import base_partner_merge
-from . import prescriptions_abstract
-from . import prescriptions_patient
-from . import prescriptions_role
-from . import prescriptions_diagnosis
-from . import prescriptions_flag
-from . import prescriptions_flag_category
-from . import prescriptions_practice_type
+from . import prescription_abstract
+from . import prescription_patient
+from . import prescription_role
+from . import prescription_diagnosis
+from . import prescription_flag
+from . import prescription_flag_category
+from . import prescription_practice_type
 from . import res_partner
 from . import res_users
 from . import ir_actions

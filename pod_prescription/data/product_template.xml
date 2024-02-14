@@ -13,7 +13,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10045</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_everyday.jpg" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_everyday.jpg" />
     </record>
 
     <record id="product_template_superglass_everyday" model="product.template" context="{'create_product_product': False}">
@@ -29,7 +29,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10050</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_everyday.jpg" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_everyday.jpg" />
     </record>
 
     <record id="product_template_superglass_proformance" model="product.template" context="{'create_product_product': False}">
@@ -45,7 +45,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10055</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_proformance.jpg" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_proformance.jpg" />
     </record>
 
     <!-- <record id="product_template_polypropylene_semi_flexible" model="product.template" context="{'create_product_product': False}">
@@ -61,7 +61,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10055</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_proformance.jpg" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_proformance.jpg" />
     </record> -->
 
     <record id="product_template_arch_height_standard" model="product.template" context="{'create_product_product': False}">
@@ -77,7 +77,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10060</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_options/arch_height.png" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_options/arch_height.png" />
     </record>
     <record id="product_template_arch_height_sulcus" model="product.template" context="{'create_product_product': False}">
         <field name="name">Arch Height - Sulcus</field>
@@ -92,7 +92,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10065</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_options/arch_height.png" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_options/arch_height.png" />
     </record>
     <record id="product_template_arch_height_full" model="product.template" context="{'create_product_product': False}">
         <field name="name">Arch Height - Full</field>
@@ -107,7 +107,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10070</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_options/arch_height.png" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_options/arch_height.png" />
     </record>
     <record id="product_template_arch_height_complete" model="product.template" context="{'create_product_product': False}">
         <field name="name">Arch Height - Complete</field>
@@ -122,7 +122,7 @@
         <field name="has_configurable_attributes" eval="True" />
         <field name="is_published" eval="True" />
         <field name="website_sequence">10070</field>
-        <field name="image_1920" type="base64" file="pod_prescriptions/static/src/binary/product_options/arch_height.png" />
+        <field name="image_1920" type="base64" file="pod_prescription/static/src/binary/product_options/arch_height.png" />
     </record>
 
 </odoo>

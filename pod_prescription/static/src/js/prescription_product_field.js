@@ -84,7 +84,7 @@ export class PrescriptionOrderLineProductField extends Many2OneField {
     }
 
     async _onProductTemplateUpdate() {}
-    async _onProductUpdate() {} // event_booth_prescription, event_prescription, prescriptions_renting
+    async _onProductUpdate() {} // event_booth_prescription, event_prescription, prescription_renting
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {
@@ -93,11 +93,11 @@ export class PrescriptionOrderLineProductField extends Many2OneField {
             this._editProductConfiguration();
         }
     }
-    _editLineConfiguration() {} // event_booth_prescription, event_prescription, prescriptions_renting
-    _editProductConfiguration() {} // pod_prescriptions_product_configurator, pod_prescriptions_product_matrix
+    _editLineConfiguration() {} // event_booth_prescription, event_prescription, prescription_renting
+    _editProductConfiguration() {} // pod_prescription_product_configurator, pod_prescription_product_matrix
 }
 
-PrescriptionOrderLineProductField.template = "pod_prescriptions.PrescriptionProductField";
+PrescriptionOrderLineProductField.template = "pod_prescription.PrescriptionProductField";
 
 export const prescriptionOrderLineProductField = {
     ...many2OneField,

@@ -9,7 +9,7 @@ const serviceRegistry = registry.category("services");
 let serverData;
 let target;
 
-QUnit.module("Prescriptions Team Dashboard", {
+QUnit.module("Prescription Team Dashboard", {
     beforeEach() {
         target = getFixture();
         serverData = {
@@ -60,7 +60,7 @@ QUnit.test("edit target with several o_kanban_primary_bottom divs", async (asser
                 <field name="invoiced_target"/>
                 <templates>
                     <div t-name="kanban-box" class="container o_kanban_card_content">
-                        <field name="invoiced" widget="prescriptions_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/>
+                        <field name="invoiced" widget="prescription_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/>
                         <div class="col-12 o_kanban_primary_bottom"/>
                         <div class="col-12 o_kanban_primary_bottom bottom_block"/>
                     </div>
@@ -81,10 +81,10 @@ QUnit.test("edit target with several o_kanban_primary_bottom divs", async (asser
 
     assert.containsOnce(
         target,
-        ".o_field_prescriptions_team_progressbar:contains(Click to define an invoicing target)"
+        ".o_field_prescription_team_progressbar:contains(Click to define an invoicing target)"
     );
     assert.containsN(target, ".o_kanban_primary_bottom", 2);
     assert.containsNone(target, ".o_progressbar input");
 
-    await click(target, ".prescriptions_progressbar_form_link"); // should trigger a do_action
+    await click(target, ".prescription_progressbar_form_link"); // should trigger a do_action
 });

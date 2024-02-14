@@ -11,5 +11,5 @@ class PaymentProvider(models.Model):
         selection=[
             ('so_name', 'Based on Document Reference'),
             ('partner', 'Based on Customer ID')], default='so_name',
-        help='You can set here the communication type that will appear on prescriptions orders.'
+        help='You can set here the communication type that will appear on prescription orders.'
              'The communication will be given to the customer when they choose the payment method.')

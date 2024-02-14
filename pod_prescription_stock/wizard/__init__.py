@@ -2,4 +2,4 @@
 
 
 from . import stock_rules_report
-from . import prescriptions_order_cancel
+from . import prescription_order_cancel

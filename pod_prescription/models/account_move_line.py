@@ -10,16 +10,16 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     is_downpayment = fields.Boolean()
-    prescriptions_line_ids = fields.Many2many(
-        'prescriptions.order.line',
-        'prescription_order_line_sale_rel',
-        'sale_line_id', 'prescription_line_id',
-        string='Prescriptions Order Lines', readonly=True, copy=False)
+    prescription_line_ids = fields.Many2many(
+        'prescription.order.line',
+        'prescription_order_line_invoice_rel',
+        'invoice_line_id', 'order_line_id',
+        string='Prescription Order Lines', readonly=True, copy=False)
 
     def _copy_data_extend_business_fields(self, values):
-        # OVERRIDE to copy the 'prescriptions_line_ids' field as well.
+        # OVERRIDE to copy the 'prescription_line_ids' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
-        values['prescriptions_line_ids'] = [(6, None, self.prescriptions_line_ids.ids)]
+        values['prescription_line_ids'] = [(6, None, self.prescription_line_ids.ids)]
 
     def _prepare_analytic_lines(self):
         """ Note: This method is called only on the move.line that having an analytic distribution, and
@@ -33,138 +33,138 @@ class AccountMoveLine(models.Model):
             for index, move_line in enumerate(self):
                 values = values_list[index]
                 if 'so_line' not in values:
-                    if move_line._prescriptions_can_be_reinvoice():
+                    if move_line._prescription_can_be_reinvoice():
                         move_to_reinvoice |= move_line
 
-        # insert the prescriptions line in the create values of the analytic entries
+        # insert the prescription line in the create values of the analytic entries
         if move_to_reinvoice:
-            map_prescriptions_line_per_move = move_to_reinvoice._prescriptions_create_reinvoice_prescriptions_line()
+            map_prescription_line_per_move = move_to_reinvoice._prescription_create_reinvoice_prescription_line()
             for values in values_list:
-                prescriptions_line = map_prescriptions_line_per_move.get(values.get('move_line_id'))
-                if prescriptions_line:
-                    values['so_line'] = prescriptions_line.id
+                prescription_line = map_prescription_line_per_move.get(values.get('move_line_id'))
+                if prescription_line:
+                    values['so_line'] = prescription_line.id
 
         return values_list
 
-    def _prescriptions_can_be_reinvoice(self):
+    def _prescription_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
             For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
         """
         self.ensure_one()
-        if self.prescriptions_line_ids:
+        if self.prescription_line_ids:
             return False
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
-    def _prescriptions_create_reinvoice_prescriptions_line(self):
+    def _prescription_create_reinvoice_prescription_line(self):
 
-        prescriptions_order_map = self._prescriptions_determine_order()
+        prescription_order_map = self._prescription_determine_order()
 
-        prescriptions_line_values_to_create = []  # the list of creation values of prescriptions line to create.
-        existing_prescriptions_line_cache = {}  # in the prescriptions_price-delivery case, we can reuse the same prescriptions line. This cache will avoid doing a search each time the case happen
-        # `map_move_prescriptions_line` is map where
+        prescription_line_values_to_create = []  # the list of creation values of prescription line to create.
+        existing_prescription_line_cache = {}  # in the prescription_price-delivery case, we can reuse the same prescription line. This cache will avoid doing a search each time the case happen
+        # `map_move_prescription_line` is map where
         #   - key is the move line identifier
-        #   - value is either a prescriptions.order.line record (existing case), or an integer representing the index of the prescriptions line to create in
-        #     the `prescriptions_line_values_to_create` (not existing case, which will happen more often than the first one).
-        map_move_prescriptions_line = {}
+        #   - value is either a prescription.order.line record (existing case), or an integer representing the index of the prescription line to create in
+        #     the `prescription_line_values_to_create` (not existing case, which will happen more often than the first one).
+        map_move_prescription_line = {}
 
         for move_line in self:
-            prescriptions_order = prescriptions_order_map.get(move_line.id)
+            prescription_order = prescription_order_map.get(move_line.id)
 
-            # no reinvoice as no prescriptions order was found
-            if not prescriptions_order:
+            # no reinvoice as no prescription order was found
+            if not prescription_order:
                 continue
 
-            # raise if the prescriptions order is not currently open
-            if prescriptions_order.state in ('draft', 'sent'):
+            # raise if the prescription order is not currently open
+            if prescription_order.state in ('draft', 'sent'):
                 raise UserError(_(
-                    "The Prescriptions Order %(order)s linked to the Analytic Account %(account)s must be"
+                    "The Prescription Order %(order)s linked to the Analytic Account %(account)s must be"
                     " validated before registering expenses.",
-                    order=prescriptions_order.name,
-                    account=prescriptions_order.analytic_account_id.name,
+                    order=prescription_order.name,
+                    account=prescription_order.analytic_account_id.name,
                 ))
-            elif prescriptions_order.state == 'cancel':
+            elif prescription_order.state == 'cancel':
                 raise UserError(_(
-                    "The Prescriptions Order %(order)s linked to the Analytic Account %(account)s is cancelled."
-                    " You cannot register an expense on a cancelled Prescriptions Order.",
-                    order=prescriptions_order.name,
-                    account=prescriptions_order.analytic_account_id.name,
+                    "The Prescription Order %(order)s linked to the Analytic Account %(account)s is cancelled."
+                    " You cannot register an expense on a cancelled Prescription Order.",
+                    order=prescription_order.name,
+                    account=prescription_order.analytic_account_id.name,
                 ))
-            elif prescriptions_order.locked:
+            elif prescription_order.locked:
                 raise UserError(_(
-                    "The Prescriptions Order %(order)s linked to the Analytic Account %(account)s is currently locked."
-                    " You cannot register an expense on a locked Prescriptions Order."
+                    "The Prescription Order %(order)s linked to the Analytic Account %(account)s is currently locked."
+                    " You cannot register an expense on a locked Prescription Order."
                     " Please create a new SO linked to this Analytic Account.",
-                    order=prescriptions_order.name,
-                    account=prescriptions_order.analytic_account_id.name,
+                    order=prescription_order.name,
+                    account=prescription_order.analytic_account_id.name,
                 ))
 
-            price = move_line._prescriptions_get_invoice_price(prescriptions_order)
+            price = move_line._prescription_get_invoice_price(prescription_order)
 
-            # find the existing prescriptions.line or keep its creation values to process this in batch
-            prescriptions_line = None
-            if move_line.product_id.expense_policy == 'prescriptions_price' and move_line.product_id.invoice_policy == 'delivery':  # for those case only, we can try to reuse one
-                map_entry_key = (prescriptions_order.id, move_line.product_id.id, price)  # cache entry to limit the call to search
-                prescriptions_line = existing_prescriptions_line_cache.get(map_entry_key)
-                if prescriptions_line:  # already search, so reuse it. prescriptions_line can be prescriptions.order.line record or index of a "to create values" in `prescriptions_line_values_to_create`
-                    map_move_prescriptions_line[move_line.id] = prescriptions_line
-                    existing_prescriptions_line_cache[map_entry_key] = prescriptions_line
-                else:  # search for existing prescriptions line
-                    prescriptions_line = self.env['prescriptions.order.line'].search([
-                        ('order_id', '=', prescriptions_order.id),
+            # find the existing prescription.line or keep its creation values to process this in batch
+            prescription_line = None
+            if move_line.product_id.expense_policy == 'prescription_price' and move_line.product_id.invoice_policy == 'delivery':  # for those case only, we can try to reuse one
+                map_entry_key = (prescription_order.id, move_line.product_id.id, price)  # cache entry to limit the call to search
+                prescription_line = existing_prescription_line_cache.get(map_entry_key)
+                if prescription_line:  # already search, so reuse it. prescription_line can be prescription.order.line record or index of a "to create values" in `prescription_line_values_to_create`
+                    map_move_prescription_line[move_line.id] = prescription_line
+                    existing_prescription_line_cache[map_entry_key] = prescription_line
+                else:  # search for existing prescription line
+                    prescription_line = self.env['prescription.order.line'].search([
+                        ('order_id', '=', prescription_order.id),
                         ('price_unit', '=', price),
                         ('product_id', '=', move_line.product_id.id),
                         ('is_expense', '=', True),
                     ], limit=1)
-                    if prescriptions_line:  # found existing one, so keep the browse record
-                        map_move_prescriptions_line[move_line.id] = existing_prescriptions_line_cache[map_entry_key] = prescriptions_line
+                    if prescription_line:  # found existing one, so keep the browse record
+                        map_move_prescription_line[move_line.id] = existing_prescription_line_cache[map_entry_key] = prescription_line
                     else:  # should be create, so use the index of creation values instead of browse record
                         # save value to create it
-                        prescriptions_line_values_to_create.append(move_line._prescriptions_prepare_prescriptions_line_values(prescriptions_order, price))
+                        prescription_line_values_to_create.append(move_line._prescription_prepare_prescription_line_values(prescription_order, price))
                         # store it in the cache of existing ones
-                        existing_prescriptions_line_cache[map_entry_key] = len(prescriptions_line_values_to_create) - 1  # save the index of the value to create prescriptions line
-                        # store it in the map_move_prescriptions_line map
-                        map_move_prescriptions_line[move_line.id] = len(prescriptions_line_values_to_create) - 1  # save the index of the value to create prescriptions line
+                        existing_prescription_line_cache[map_entry_key] = len(prescription_line_values_to_create) - 1  # save the index of the value to create prescription line
+                        # store it in the map_move_prescription_line map
+                        map_move_prescription_line[move_line.id] = len(prescription_line_values_to_create) - 1  # save the index of the value to create prescription line
 
             else:  # save its value to create it anyway
-                prescriptions_line_values_to_create.append(move_line._prescriptions_prepare_prescriptions_line_values(prescriptions_order, price))
-                map_move_prescriptions_line[move_line.id] = len(prescriptions_line_values_to_create) - 1  # save the index of the value to create prescriptions line
+                prescription_line_values_to_create.append(move_line._prescription_prepare_prescription_line_values(prescription_order, price))
+                map_move_prescription_line[move_line.id] = len(prescription_line_values_to_create) - 1  # save the index of the value to create prescription line
 
-        # create the prescriptions lines in batch
-        new_prescriptions_lines = self.env['prescriptions.order.line'].create(prescriptions_line_values_to_create)
+        # create the prescription lines in batch
+        new_prescription_lines = self.env['prescription.order.line'].create(prescription_line_values_to_create)
 
-        # build result map by replacing index with newly created record of prescriptions.order.line
+        # build result map by replacing index with newly created record of prescription.order.line
         result = {}
-        for move_line_id, unknown_prescriptions_line in map_move_prescriptions_line.items():
-            if isinstance(unknown_prescriptions_line, int):  # index of newly created prescriptions line
-                result[move_line_id] = new_prescriptions_lines[unknown_prescriptions_line]
-            elif isinstance(unknown_prescriptions_line, models.BaseModel):  # already record of prescriptions.order.line
-                result[move_line_id] = unknown_prescriptions_line
+        for move_line_id, unknown_prescription_line in map_move_prescription_line.items():
+            if isinstance(unknown_prescription_line, int):  # index of newly created prescription line
+                result[move_line_id] = new_prescription_lines[unknown_prescription_line]
+            elif isinstance(unknown_prescription_line, models.BaseModel):  # already record of prescription.order.line
+                result[move_line_id] = unknown_prescription_line
         return result
 
-    def _prescriptions_determine_order(self):
-        """ Get the mapping of move.line with the prescriptions.order record on which its analytic entries should be reinvoiced
-            :return a dict where key is the move line id, and value is prescriptions.order record (or None).
+    def _prescription_determine_order(self):
+        """ Get the mapping of move.line with the prescription.order record on which its analytic entries should be reinvoiced
+            :return a dict where key is the move line id, and value is prescription.order record (or None).
         """
         mapping = {}
         for move_line in self:
             if move_line.analytic_distribution:
                 distribution_json = move_line.analytic_distribution
-                prescriptions_order = self.env['prescriptions.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys())),
-                                                            ('state', '=', 'prescriptions')], order='create_date ASC', limit=1)
-                if prescriptions_order:
-                    mapping[move_line.id] = prescriptions_order
+                prescription_order = self.env['prescription.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys())),
+                                                            ('state', '=', 'prescription')], order='create_date ASC', limit=1)
+                if prescription_order:
+                    mapping[move_line.id] = prescription_order
                 else:
-                    prescriptions_order = self.env['prescriptions.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys()))], order='create_date ASC', limit=1)
-                    mapping[move_line.id] = prescriptions_order
+                    prescription_order = self.env['prescription.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys()))], order='create_date ASC', limit=1)
+                    mapping[move_line.id] = prescription_order
 
         # map of AAL index with the SO on which it needs to be reinvoiced. Maybe be None if no SO found
         return mapping
 
-    def _prescriptions_prepare_prescriptions_line_values(self, order, price):
-        """ Generate the prescriptions.line creation value from the current move line """
+    def _prescription_prepare_prescription_line_values(self, order, price):
+        """ Generate the prescription.line creation value from the current move line """
         self.ensure_one()
-        last_so_line = self.env['prescriptions.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
+        last_so_line = self.env['prescription.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
@@ -184,16 +184,16 @@ class AccountMoveLine(models.Model):
             'is_expense': True,
         }
 
-    def _prescriptions_get_invoice_price(self, order):
+    def _prescription_get_invoice_price(self, order):
         """ Based on the current move line, compute the price to reinvoice the analytic line that is going to be created (so the
-            price of the prescriptions line).
+            price of the prescription line).
         """
         self.ensure_one()
 
         unit_amount = self.quantity
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
-        if self.product_id.expense_policy == 'prescriptions_price':
+        if self.product_id.expense_policy == 'prescription_price':
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
@@ -218,4 +218,4 @@ class AccountMoveLine(models.Model):
 
     def _get_downpayment_lines(self):
         # OVERRIDE
-        return self.prescriptions_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())
+        return self.prescription_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())

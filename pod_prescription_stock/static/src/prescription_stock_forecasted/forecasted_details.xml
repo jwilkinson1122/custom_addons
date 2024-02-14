@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t name="pod_prescriptions_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+    <t name="pod_prescription_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="props.docs.draft_prescriptions_qty" name="draft_so_out" t-attf-class="#{props.docs.draft_prescriptions_orders_matched and 'o_grid_match'}">
-                <td colspan="2">Prescriptions</td>
-                <td t-out="_formatFloat(-props.docs.draft_prescriptions_qty)" class="text-end"/>
+            <tr t-if="props.docs.draft_prescription_qty" name="draft_so_out" t-attf-class="#{props.docs.draft_prescription_orders_matched and 'o_grid_match'}">
+                <td colspan="2">Prescription</td>
+                <td t-out="_formatFloat(-props.docs.draft_prescription_qty)" class="text-end"/>
                 <td>
-                    <t t-foreach="props.docs.draft_prescriptions_orders" t-as="prescriptions_order" t-key="prescriptions_order_index">
-                        <t t-if="prescriptions_order_index > 0"> | </t>
-                        <a t-attf-href="#" t-out="prescriptions_order.name"
+                    <t t-foreach="props.docs.draft_prescription_orders" t-as="prescription_order" t-key="prescription_order_index">
+                        <t t-if="prescription_order_index > 0"> | </t>
+                        <a t-attf-href="#" t-out="prescription_order.name"
                             class="fw-bold"
-                            t-on-click.prevent="() => this.props.openView('prescriptions.order', 'form', prescriptions_order.id)"/>
+                            t-on-click.prevent="() => this.props.openView('prescription.order', 'form', prescription_order.id)"/>
                     </t>
                 </td>
             </tr>
         </xpath>
         <xpath expr="//td[@name='usedby_cell']" position="inside">
-            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.prescriptions_id">
-                | <span t-out="_formatMonetary(line.move_out.picking_id.prescriptions_id.amount_untaxed, line.move_out.picking_id.prescriptions_id.currency_id.id)" class="fw-bold"/>
-                | <span t-out="line.move_out.picking_id.prescriptions_id.partner_id.name"/>
+            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.prescription_id">
+                | <span t-out="_formatMonetary(line.move_out.picking_id.prescription_id.amount_untaxed, line.move_out.picking_id.prescription_id.currency_id.id)" class="fw-bold"/>
+                | <span t-out="line.move_out.picking_id.prescription_id.partner_id.name"/>
             </span>
         </xpath>
     </t>

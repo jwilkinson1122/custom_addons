@@ -3,7 +3,7 @@
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.addons.product.tests.common import ProductVariantsCommon
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 
 @tagged('post_install', '-at_install')
@@ -12,7 +12,7 @@ class TestProductConfiguratorData(HttpCase, ProductVariantsCommon, PrescriptionC
     def request_get_values(self, product_template):
         base_url = product_template.get_base_url()
         response = self.opener.post(
-            url=base_url + '/pod_prescriptions_product_configurator/get_values',
+            url=base_url + '/pod_prescription_product_configurator/get_values',
             json={
                 'params': {
                     'product_template_id': product_template.id,

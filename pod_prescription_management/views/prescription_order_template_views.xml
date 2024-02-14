@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="prescriptions_order_template_view_search" model="ir.ui.view">
-        <field name="name">prescriptions.order.template.search</field>
-        <field name="model">prescriptions.order.template</field>
+    <record id="prescription_order_template_view_search" model="ir.ui.view">
+        <field name="name">prescription.order.template.search</field>
+        <field name="model">prescription.order.template</field>
         <field name="arch" type="xml">
             <search string="Search Draft Rx Template">
                 <field name="name"/>
@@ -14,22 +14,22 @@
         </field>
     </record>
 
-    <record id="prescriptions_order_template_view_form" model="ir.ui.view">
-        <field name="name">prescriptions.order.template.form</field>
-        <field name="model">prescriptions.order.template</field>
+    <record id="prescription_order_template_view_form" model="ir.ui.view">
+        <field name="name">prescription.order.template.form</field>
+        <field name="model">prescription.order.template</field>
         <field name="arch" type="xml">
             <form string="Draft Rx Template">
                 <sheet>
                     <div name="button_box" class="oe_button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="oe_title" name="prescriptions_order_template_title">
-                        <label for="name" id="prescriptions_order_template_title"/>
+                    <div class="oe_title" name="prescription_order_template_title">
+                        <label for="name" id="prescription_order_template_title"/>
                         <h1>
                             <field name="name" placeholder="e.g. Standard Consultancy Package" class="d-block"/>
                         </h1>
                     </div>
                     <group>
-                        <group name="prescriptions_info">
+                        <group name="prescription_info">
                             <field name="active" invisible="1"/>
                             <label for="number_of_days" string="Draft Rx expires after"/>
                             <div id="number_of_days">
@@ -43,14 +43,14 @@
                                    widget="percentage"
                                    string="Prepayment amount"
                                    style="width: 3rem"/>
-                            <field name="mail_template_id" context="{'default_model': 'prescriptions.order'}"/>
+                            <field name="mail_template_id" context="{'default_model': 'prescription.order'}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="journal_id"/>
                         </group>
                     </group>
                     <notebook name="main_book">
                         <page string="Lines" name="order_lines">
-                        <field name="prescriptions_order_template_line_ids" widget="section_and_note_one2many">
+                        <field name="prescription_order_template_line_ids" widget="section_and_note_one2many">
                             <form string="Draft Rx Template Lines">
                                 <!--
                                     We need the sequence field to be here for new lines to be added at the correct position.
@@ -103,7 +103,7 @@
                         </field>
                     </page>
                     <page string="Optional Products" name="optional_products">
-                        <field name="prescriptions_order_template_option_ids">
+                        <field name="prescription_order_template_option_ids">
                           <tree string="Draft Rx Template Lines" editable="bottom">
                             <field name="product_id"/>
                             <field name="name"/>
@@ -116,7 +116,7 @@
                     </page>
                         <page string="Terms &amp; Conditions" name="terms_and_conditions">
                             <field name="note" nolabel="1"
-                                   placeholder="The Administrator can set default Terms &amp; Conditions in Prescriptions Settings. Terms set here will show up instead if you select this quotation template."/>
+                                   placeholder="The Administrator can set default Terms &amp; Conditions in Prescription Settings. Terms set here will show up instead if you select this quotation template."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -124,9 +124,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_order_template_view_tree" model="ir.ui.view">
-        <field name="name">prescriptions.order.template.tree</field>
-        <field name="model">prescriptions.order.template</field>
+    <record id="prescription_order_template_view_tree" model="ir.ui.view">
+        <field name="name">prescription.order.template.tree</field>
+        <field name="model">prescription.order.template</field>
         <field name="arch" type="xml">
             <tree string="Draft Rx Template">
                 <field name="name"/>
@@ -135,9 +135,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_order_template_action" model="ir.actions.act_window">
+    <record id="prescription_order_template_action" model="ir.actions.act_window">
         <field name="name">Draft RX Templates</field>
-        <field name="res_model">prescriptions.order.template</field>
+        <field name="res_model">prescription.order.template</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -145,7 +145,7 @@
             </p><p>
                 Use templates to create polished, professional quotes in minutes.
                 Send these quotes by email and let your customers sign online.
-                Use cross-selling and discounts to push and boost your prescriptions.
+                Use cross-selling and discounts to push and boost your prescription.
             </p>
         </field>
     </record>

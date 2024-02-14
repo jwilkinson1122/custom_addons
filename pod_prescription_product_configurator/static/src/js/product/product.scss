@@ -1,19 +1,19 @@
-.table.o_prescriptions_product_configurator_table {
+.table.o_prescription_product_configurator_table {
     & tr:first-child > td {
         padding-top: 0 !important;
     }
 
-    &.o_prescriptions_product_configurator_table_optional > :not(caption) > *:last-child > * {
+    &.o_prescription_product_configurator_table_optional > :not(caption) > *:last-child > * {
         border-bottom: 0;
     }
 }
 
-.o_prescriptions_product_configurator_img {
+.o_prescription_product_configurator_img {
     width: 120px;
     max-height: 240px;
 }
 
-.o_prescriptions_product_configurator_qty {
+.o_prescription_product_configurator_qty {
     width: 160px;
 
     input {
@@ -31,6 +31,6 @@
     }
 }
 
-.o_prescriptions_product_configurator_price {
+.o_prescription_product_configurator_price {
     width: 160px;
 }

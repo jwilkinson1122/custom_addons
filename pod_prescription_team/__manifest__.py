@@ -5,13 +5,13 @@
     'name': 'NWPL - Prescription Teams',
     "author": "NWPL",
     'version': '17.0.0.0.0',
-    'category': 'Podiatry/Prescriptions',
-    'summary': 'Prescriptions Teams',
-    'description': """Manage Prescriptions Teams with CRM and Prescriptions.""",
+    'category': 'Podiatry/Prescription',
+    'summary': 'Prescription Teams',
+    'description': """Manage Prescription Teams with CRM and Prescription.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': ['base', 'mail'],
     'data': [
-        'security/prescriptions_team_security.xml',
+        'security/prescription_team_security.xml',
         'security/ir.model.access.csv',
         'data/crm_team_data.xml',
         'views/crm_tag_views.xml',
@@ -27,7 +27,7 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_team/static/**/*',
+            'pod_prescription_team/static/**/*',
         ],
     },
     'license': 'LGPL-3',

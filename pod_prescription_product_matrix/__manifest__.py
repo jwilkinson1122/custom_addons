@@ -4,26 +4,26 @@
     'name': "NWPL - Prescription Matrix",
     "author": "NWPL",
     'website': 'https://www.nwpodiatric.com',
-    'summary': "Add variants to Prescriptions Order through a grid entry.",
+    'summary': "Add variants to Prescription Order through a grid entry.",
     'description': """Choose product variants quantity through a Grid Entry.""",
-    'category': 'Podiatry/Prescriptions',
+    'category': 'Podiatry/Prescription',
     'version': '17.0.0.0.0',
     'depends': [
-        'pod_prescriptions', 
+        'pod_prescription', 
         'product_matrix', 
-        'pod_prescriptions_product_configurator'
+        'pod_prescription_product_configurator'
         ],
     'data': [
         'views/product_template_views.xml',
-        'views/prescriptions_order_views.xml',
-        'report/prescriptions_report_templates.xml',
+        'views/prescription_order_views.xml',
+        'report/prescription_report_templates.xml',
     ],
     'demo': [
         'data/product_matrix_demo.xml'
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_product_matrix/static/src/**/*',
+            'pod_prescription_product_matrix/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

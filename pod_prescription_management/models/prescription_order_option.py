@@ -6,20 +6,20 @@ from odoo.exceptions import UserError
 
 
 class PrescriptionOrderOption(models.Model):
-    _name = 'prescriptions.order.option'
+    _name = 'prescription.order.option'
     _description = "Prescription Options"
     _order = 'sequence, id'
 
     # FIXME ANVFE wtf is it not required ???
     # TODO related to order.company_id and restrict product choice based on company
-    order_id = fields.Many2one('prescriptions.order', 'Prescriptions Order Reference', ondelete='cascade', index=True)
+    order_id = fields.Many2one('prescription.order', 'Prescription Order Reference', ondelete='cascade', index=True)
 
     product_id = fields.Many2one(
         comodel_name='product.product',
         required=True,
         domain=lambda self: self._product_id_domain())
     line_id = fields.Many2one(
-        comodel_name='prescriptions.order.line', ondelete='set null', copy=False)
+        comodel_name='prescription.order.line', ondelete='set null', copy=False)
     sequence = fields.Integer(
         string='Sequence', help="Gives the sequence order when displaying a list of optional products.")
 
@@ -86,7 +86,7 @@ class PrescriptionOrderOption(models.Model):
                 continue
             # To compute the price_unit a so line is created in cache
             values = option._get_values_to_add_to_order()
-            new_sol = self.env['prescriptions.order.line'].new(values)
+            new_sol = self.env['prescription.order.line'].new(values)
             new_sol._compute_price_unit()
             option.price_unit = new_sol.price_unit
             # Avoid attaching the new line when called on template change
@@ -99,7 +99,7 @@ class PrescriptionOrderOption(models.Model):
                 continue
             # To compute the discount a so line is created in cache
             values = option._get_values_to_add_to_order()
-            new_sol = self.env['prescriptions.order.line'].new(values)
+            new_sol = self.env['prescription.order.line'].new(values)
             new_sol._compute_discount()
             option.discount = new_sol.discount
             # Avoid attaching the new line when called on template change
@@ -131,8 +131,8 @@ class PrescriptionOrderOption(models.Model):
 
     @api.model
     def _product_id_domain(self):
-        """ Returns the domain of the products that can be added as a prescriptions order option. """
-        return [('prescriptions_ok', '=', True)]
+        """ Returns the domain of the products that can be added as a prescription order option. """
+        return [('prescription_ok', '=', True)]
 
     #=== ACTION METHODS ===#
 
@@ -142,16 +142,16 @@ class PrescriptionOrderOption(models.Model):
     def add_option_to_order(self):
         self.ensure_one()
 
-        prescriptions_order = self.order_id
+        prescription_order = self.order_id
 
-        if not prescriptions_order._can_be_edited_on_portal():
+        if not prescription_order._can_be_edited_on_portal():
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
-        order_line = self.env['prescriptions.order.line'].create(values)
+        order_line = self.env['prescription.order.line'].create(values)
 
         self.write({'line_id': order_line.id})
-        if prescriptions_order:
-            prescriptions_order.add_option_to_order_with_taxcloud()
+        if prescription_order:
+            prescription_order.add_option_to_order_with_taxcloud()
 
         return order_line

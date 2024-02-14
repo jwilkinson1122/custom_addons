@@ -14,7 +14,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         cls.test_product_delivery.invoice_policy = 'delivery'
 
     def _create_prescription(self, product, date, quantity=1.0):
-        rslt = self.env['prescriptions.order'].create({
+        rslt = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
             'order_line': [
@@ -30,7 +30,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         rslt.action_confirm()
         return rslt
 
-    def _create_invoice_for_so(self, prescriptions_order, product, date, quantity=1.0):
+    def _create_invoice_for_so(self, prescription_order, product, date, quantity=1.0):
         rslt = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
@@ -44,11 +44,11 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
                 'discount': 0.0,
                 'product_uom_id': product.uom_id.id,
                 'product_id': product.id,
-                'prescriptions_line_ids': [(6, 0, prescriptions_order.order_line.ids)],
+                'prescription_line_ids': [(6, 0, prescription_order.order_line.ids)],
             })],
         })
 
-        prescriptions_order.invoice_ids += rslt
+        prescription_order.invoice_ids += rslt
         return rslt
 
     def _set_initial_stock_for_product(self, product):
@@ -76,13 +76,13 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         test_product = self.test_product_delivery
         self._set_initial_stock_for_product(test_product)
 
-        prescriptions_order = self._create_prescription(test_product, '2108-01-01')
-        self._process_pickings(prescriptions_order.picking_ids)
+        prescription_order = self._create_prescription(test_product, '2108-01-01')
+        self._process_pickings(prescription_order.picking_ids)
 
-        invoice = self._create_invoice_for_so(prescriptions_order, test_product, '2018-02-12')
+        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-12')
         invoice.action_post()
-        picking = self.env['stock.picking'].search([('prescriptions_id', '=', prescriptions_order.id)])
-        self.check_reconciliation(invoice, picking, operation='prescriptions')
+        picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)])
+        self.check_reconciliation(invoice, picking, operation='prescription')
 
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then send
@@ -93,15 +93,15 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         self.test_product_delivery.standard_price = 13
         self._set_initial_stock_for_product(test_product)
 
-        prescriptions_order = self._create_prescription(test_product, '2018-01-01')
+        prescription_order = self._create_prescription(test_product, '2018-01-01')
 
-        invoice = self._create_invoice_for_so(prescriptions_order, test_product, '2018-02-03')
+        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-03')
         invoice.action_post()
 
-        self._process_pickings(prescriptions_order.picking_ids)
+        self._process_pickings(prescription_order.picking_ids)
 
-        picking = self.env['stock.picking'].search([('prescriptions_id', '=', prescriptions_order.id)])
-        self.check_reconciliation(invoice, picking, operation='prescriptions')
+        picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)])
+        self.check_reconciliation(invoice, picking, operation='prescription')
 
         #return the goods and refund the invoice
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -122,7 +122,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")
         self.assertEqual(invoice.reversal_move_id.payment_state, 'paid', "Refund should be in 'paid' state.")
         self.assertEqual(new_invoice.state, 'draft', "New invoice should be in 'draft' state.")
-        self.check_reconciliation(invoice.reversal_move_id, return_pick, operation='prescriptions')
+        self.check_reconciliation(invoice.reversal_move_id, return_pick, operation='prescription')
 
     def test_multiple_shipments_invoices(self):
         """ Tests the case into which we deliver part of the goods first, then 2 invoices at different rates, and finally the remaining quantities
@@ -130,19 +130,19 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         test_product = self.test_product_delivery
         self._set_initial_stock_for_product(test_product)
 
-        prescriptions_order = self._create_prescription(test_product, '2018-01-01', quantity=5)
+        prescription_order = self._create_prescription(test_product, '2018-01-01', quantity=5)
 
-        self._process_pickings(prescriptions_order.picking_ids, quantity=2.0)
-        picking = self.env['stock.picking'].search([('prescriptions_id', '=', prescriptions_order.id)], order="id asc", limit=1)
+        self._process_pickings(prescription_order.picking_ids, quantity=2.0)
+        picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)], order="id asc", limit=1)
 
-        invoice = self._create_invoice_for_so(prescriptions_order, test_product, '2018-02-03', quantity=3)
+        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-03', quantity=3)
         invoice.action_post()
-        self.check_reconciliation(invoice, picking, full_reconcile=False, operation='prescriptions')
+        self.check_reconciliation(invoice, picking, full_reconcile=False, operation='prescription')
 
-        invoice2 = self._create_invoice_for_so(prescriptions_order, test_product, '2018-03-12', quantity=2)
+        invoice2 = self._create_invoice_for_so(prescription_order, test_product, '2018-03-12', quantity=2)
         invoice2.action_post()
-        self.check_reconciliation(invoice2, picking, full_reconcile=False, operation='prescriptions')
+        self.check_reconciliation(invoice2, picking, full_reconcile=False, operation='prescription')
 
-        self._process_pickings(prescriptions_order.picking_ids.filtered(lambda x: x.state != 'done'), quantity=3.0)
-        picking = self.env['stock.picking'].search([('prescriptions_id', '=', prescriptions_order.id)], order='id desc', limit=1)
-        self.check_reconciliation(invoice2, picking, operation='prescriptions')
+        self._process_pickings(prescription_order.picking_ids.filtered(lambda x: x.state != 'done'), quantity=3.0)
+        picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)], order='id desc', limit=1)
+        self.check_reconciliation(invoice2, picking, operation='prescription')

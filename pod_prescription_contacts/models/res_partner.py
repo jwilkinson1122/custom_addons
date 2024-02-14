@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = "res.partner"
     
-    is_partner = fields.Boolean(string='Prescriptions', default=False)
+    is_partner = fields.Boolean(string='Prescription', default=False)
     is_company = fields.Boolean(string='Company', default=False)
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
@@ -21,7 +21,7 @@ class Partner(models.Model):
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
-    practice_type_id = fields.Many2one(string='Practice Type', comodel_name='prescriptions.practice.type')
+    practice_type_id = fields.Many2one(string='Practice Type', comodel_name='prescription.practice.type')
     practice_type = fields.Selection(
         [('clinic', 'Clinic'),
          ('hospital', 'Hospital'),
@@ -33,12 +33,12 @@ class Partner(models.Model):
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
-    practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="prescriptions.role")
+    practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="prescription.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
-    patient_ids = fields.One2many("prescriptions.patient", inverse_name="partner_id")
+    patient_ids = fields.One2many("prescription.patient", inverse_name="partner_id")
     patient_count = fields.Integer(string='Patient Count', compute='_compute_patient_counts')
-    patient_records = fields.One2many('prescriptions.patient', compute='_compute_patient_records', string="Patients")
+    patient_records = fields.One2many('prescription.patient', compute='_compute_patient_records', string="Patients")
     patient_text = fields.Char(compute="_compute_patient_text")
     
     # Compute Methods
@@ -149,7 +149,7 @@ class Partner(models.Model):
     def _compute_patient_records(self):
         for record in self:
             if isinstance(record.id, models.NewId):
-                record.patient_records = self.env['prescriptions.patient']  # Assigning a default value for new records
+                record.patient_records = self.env['prescription.patient']  # Assigning a default value for new records
                 continue
 
             if record.is_practitioner or record.is_company:
@@ -157,14 +157,14 @@ class Partner(models.Model):
                 all_partners -= record
                 record.patient_records = all_partners.mapped('patient_ids')
             else:
-                record.patient_records = self.env['prescriptions.patient']
+                record.patient_records = self.env['prescription.patient']
 
     # def action_show_patients(self):
     #         self.ensure_one()
     #         action = {
     #             'name': _('Patients'),
     #             'type': 'ir.actions.act_window',
-    #             'res_model': 'prescriptions.patient',  
+    #             'res_model': 'prescription.patient',  
     #             'view_mode': 'tree,form',
     #             'domain': [('partner_id', '=', self.id)],
     #             'context': {'default_partner_id': self.id},
@@ -200,7 +200,7 @@ class Partner(models.Model):
                 raise ValidationError(_("Roles are required for practitioners."))
     
     @api.model
-    def _get_prescriptions_identifiers(self):
+    def _get_prescription_identifiers(self):
         """
         It must return a list of triads of check field, identifier field and
         defintion function
@@ -273,7 +273,7 @@ class Partner(models.Model):
 
     
     @api.model
-    def default_prescriptions_fields(self):
+    def default_prescription_fields(self):
         fields = ["is_partner", "is_company", "is_location", "is_practitioner"]
         # If there's a need to add more fields from parent or other inheriting models, you can do rx here.
         return fields
@@ -296,9 +296,9 @@ class Partner(models.Model):
             self.sudo().patient_ids.check_access_rights(mode)
         
         checks = [
-            (self.is_partner, self._check_prescriptions_user, "pod_prescriptions_contacts.group_contacts_user"),
-            (self.is_company, self._check_prescriptions_practice, "pod_prescriptions_contacts.group_contacts_configurator"),
-            (self.is_practitioner, self._check_prescriptions_practitioner, "pod_prescriptions_contacts.group_contacts_configurator")
+            (self.is_partner, self._check_prescription_user, "pod_prescription_contacts.group_contacts_user"),
+            (self.is_company, self._check_prescription_practice, "pod_prescription_contacts.group_contacts_configurator"),
+            (self.is_practitioner, self._check_prescription_practitioner, "pod_prescription_contacts.group_contacts_configurator")
         ]
         
         for condition, check_method, group in checks:
@@ -306,20 +306,20 @@ class Partner(models.Model):
                 _logger.info("Access Denied by ACLs for operation: %s, uid: %s, model: %s", mode, self._uid, self._name)
                 raise AccessError(_("You are not allowed to %(mode)s Contacts (res.partner) records.", mode=mode))
 
-    def _check_prescriptions_user(self):
-        return self.env.user.has_group("pod_prescriptions_contacts.group_contacts_user")
+    def _check_prescription_user(self):
+        return self.env.user.has_group("pod_prescription_contacts.group_contacts_user")
         
-    def _check_prescriptions_practice(self):
-        return self.env.user.has_group("pod_prescriptions_contacts.group_contacts_configurator")
+    def _check_prescription_practice(self):
+        return self.env.user.has_group("pod_prescription_contacts.group_contacts_configurator")
         
-    def _check_prescriptions_practitioner(self):
-        return self.env.user.has_group("pod_prescriptions_contacts.group_contacts_configurator")
+    def _check_prescription_practitioner(self):
+        return self.env.user.has_group("pod_prescription_contacts.group_contacts_configurator")
 
     @api.model
     def default_get(self, fields_list):
         """We want to avoid passing the fields on the practitioners of the partner"""
         result = super().default_get(fields_list)
-        for field in self.default_prescriptions_fields():
+        for field in self.default_prescription_fields():
             if result.get(field) and self.env.context.get("default_parent_id"):
                 result[field] = False
         return result

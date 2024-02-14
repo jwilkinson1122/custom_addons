@@ -3,8 +3,8 @@
 from odoo import models, fields
 
 
-class PrescriptionsPracticeType(models.Model):
-    _name = 'prescriptions.practice.type'
+class PrescriptionPracticeType(models.Model):
+    _name = 'prescription.practice.type'
     _description = 'Practice Types'
 
     name = fields.Char(

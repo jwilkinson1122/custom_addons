@@ -9,7 +9,7 @@ import {
 import { useEffect } from "@odoo/owl";
 
 /**
- * A custom Component for the view of prescriptions teams on the kanban view in the CRM app.
+ * A custom Component for the view of prescription teams on the kanban view in the CRM app.
  *
  * The wanted behavior is to show a progress bar when an invoicing target is defined or show
  * a link redirecting to the record's form view otherwise.
@@ -42,11 +42,11 @@ export class PrescriptionProgressBarField extends KanbanProgressBarField {
 /**
  * Define the template name used on the component.
  */
-PrescriptionProgressBarField.template = "pod_prescriptions.PrescriptionProgressBarField";
+PrescriptionProgressBarField.template = "pod_prescription.PrescriptionProgressBarField";
 
 export const prescriptionProgressBarField = {
     ...kanbanProgressBarField,
     component: PrescriptionProgressBarField,
 };
 
-registry.category("fields").add("prescriptions_team_progressbar", prescriptionProgressBarField);
+registry.category("fields").add("prescription_team_progressbar", prescriptionProgressBarField);

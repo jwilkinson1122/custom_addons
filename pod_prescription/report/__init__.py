@@ -2,4 +2,4 @@
 
 
 from . import account_invoice_report
-from . import prescriptions_report
+from . import prescription_report

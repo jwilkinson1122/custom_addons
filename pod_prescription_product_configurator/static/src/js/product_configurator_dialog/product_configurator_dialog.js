@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
-    static template = 'pod_prescriptions_product_configurator.dialog';
+    static template = 'pod_prescription_product_configurator.dialog';
     static props = {
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
@@ -74,7 +74,7 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
 
     async _loadData(onlyMainProduct) {
-        return this.rpc('/pod_prescriptions_product_configurator/get_values', {
+        return this.rpc('/pod_prescription_product_configurator/get_values', {
             product_template_id: this.props.productTemplateId,
             quantity: this.props.quantity,
             currency_id: this.props.currencyId,
@@ -88,14 +88,14 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     async _createProduct(product) {
-        return this.rpc('/pod_prescriptions_product_configurator/create_product', {
+        return this.rpc('/pod_prescription_product_configurator/create_product', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
         });
     }
 
     async _updateCombination(product, quantity) {
-        return this.rpc('/pod_prescriptions_product_configurator/update_combination', {
+        return this.rpc('/pod_prescription_product_configurator/update_combination', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
             currency_id: this.props.currencyId,
@@ -108,7 +108,7 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     async _getOptionalProducts(product) {
-        return this.rpc('/pod_prescriptions_product_configurator/get_optional_products', {
+        return this.rpc('/pod_prescription_product_configurator/get_optional_products', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
             parent_combination: this._getParentsCombination(product),

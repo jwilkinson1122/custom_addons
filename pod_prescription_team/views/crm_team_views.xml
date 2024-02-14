@@ -5,7 +5,7 @@
         <field name="name">crm.team.view.search</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <search string="Prescriptionsteams Search">
+            <search string="Prescriptionteams Search">
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="name"/>
                 <field name="user_id"/>
@@ -22,7 +22,7 @@
         <field name="name">crm.team.form</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <form string="Prescriptions Team" class="o_crm_team_form_view">
+            <form string="Prescription Team" class="o_crm_team_form_view">
                 <div class="alert alert-info text-center" role="alert"
                     invisible="is_membership_multi or not member_warning">
                     <field name="member_warning"/>
@@ -31,7 +31,7 @@
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
-                        <label for="name" string="Prescriptions Team"/>
+                        <label for="name" string="Prescription Team"/>
                         <h1>
                             <field class="text-break" name="name" placeholder="e.g. North America"/>
                         </h1>
@@ -83,16 +83,16 @@
                                 class="w-100"
                                 invisible="is_membership_multi or not is_membership_multi"
                                 context="{
-                                    'kanban_view_ref': 'pod_prescriptions_team.crm_team_member_view_kanban_from_team',
-                                    'form_view_ref': 'pod_prescriptions_team.crm_team_member_view_form_from_team',
-                                    'tree_view_ref': 'pod_prescriptions_team.crm_team_member_view_tree_from_team',
+                                    'kanban_view_ref': 'pod_prescription_team.crm_team_member_view_kanban_from_team',
+                                    'form_view_ref': 'pod_prescription_team.crm_team_member_view_form_from_team',
+                                    'tree_view_ref': 'pod_prescription_team.crm_team_member_view_tree_from_team',
                                     'default_crm_team_id': id,
                                 }"/>
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" help="Follow this prescriptions_team to automatically track the events associated to users of this team."/>
+                    <field name="message_follower_ids" help="Follow this prescription_team to automatically track the events associated to users of this team."/>
                     <field name="message_ids"/>
                 </div>
             </form>
@@ -104,7 +104,7 @@
         <field name="name">crm.team.tree</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <tree string="Prescriptions Team" sample="1" multi_edit="1">
+            <tree string="Prescription Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name" readonly="1"/>
                 <field name="active" column_invisible="True"/>
@@ -137,7 +137,7 @@
         </field>
     </record>
 
-    <!-- Case Teams Prescriptionsteams dashboard view -->
+    <!-- Case Teams Prescriptionteams dashboard view -->
    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view" >
         <field name="name">crm.team.view.kanban.dashboard</field>
         <field name="model">crm.team</field>
@@ -172,7 +172,7 @@
                                 </div>
                             </div>
 
-                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="pod_prescriptions_team.group_prescriptions_manager">
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="pod_prescription_team.group_prescription_manager">
                                 <div role="menuitem" aria-haspopup="true" class="col-8">
                                     <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                 </div>
@@ -191,7 +191,7 @@
                             </div>
                             <div class="container o_kanban_card_content">
                                 <div class="row o_kanban_card_upper_content">
-                                    <div class="col-4 o_kanban_primary_left" name="to_replace_in_prescriptions_crm">
+                                    <div class="col-4 o_kanban_primary_left" name="to_replace_in_prescription_crm">
                                         <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
                                     </div>
                                     <div class="col-8 o_kanban_primary_right" style="padding-bottom:0;">
@@ -202,14 +202,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 o_kanban_primary_bottom">
-                                        <t t-call="PrescriptionsTeamDashboardGraph"/>
+                                        <t t-call="PrescriptionTeamDashboardGraph"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </t>
-                    <t t-name="PrescriptionsTeamDashboardGraph">
-                        <div t-if="record.dashboard_graph_data.raw_value" class="o_prescriptions_team_kanban_graph_section">
+                    <t t-name="PrescriptionTeamDashboardGraph">
+                        <div t-if="record.dashboard_graph_data.raw_value" class="o_prescription_team_kanban_graph_section">
                             <field name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="'bar'"/>
                         </div>
                     </t>
@@ -218,17 +218,17 @@
         </field>
     </record>
 
-    <!-- Prescriptions Teams Actions -->
-    <record id="crm_team_action_prescriptions" model="ir.actions.act_window">
-        <field name="name">Prescriptions Teams</field>
+    <!-- Prescription Teams Actions -->
+    <record id="crm_team_action_prescription" model="ir.actions.act_window">
+        <field name="name">Prescription Teams</field>
         <field name="res_model">crm.team</field>
         <field name="view_mode">kanban,form</field>
-        <field name="context">{'in_prescriptions_app': True}</field>
+        <field name="context">{'in_prescription_app': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Define a new prescriptions team
+                Define a new prescription team
             </p><p>
-                Use Prescriptions Teams to organize your prescriptions departments.
+                Use Prescription Teams to organize your prescription departments.
                 Each team will work with a separate pipeline.
             </p>
         </field>
@@ -241,24 +241,24 @@
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Define a new prescriptions team
+                Define a new prescription team
             </p><p>
-                Use Prescriptions Teams to organize your prescriptions departments.
+                Use Prescription Teams to organize your prescription departments.
                 Each team will work with a separate pipeline.
             </p>
         </field>
     </record>
 
     <record id="crm_team_action_config" model="ir.actions.act_window">
-        <field name="name">Prescriptions Teams</field>
+        <field name="name">Prescription Teams</field>
         <field name="res_model">crm.team</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a Prescriptions Team
+                Create a Prescription Team
             </p><p>
-                Use Prescriptions Teams to organize your prescriptions departments and draw up reports.
+                Use Prescription Teams to organize your prescription departments and draw up reports.
             </p>
         </field>
     </record>

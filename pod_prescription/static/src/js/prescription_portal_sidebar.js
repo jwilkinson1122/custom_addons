@@ -5,7 +5,7 @@ import PortalSidebar from "@portal/js/portal_sidebar";
 import { uniqueId } from "@web/core/utils/functions";
 
 publicWidget.registry.PrescriptionPortalSidebar = PortalSidebar.extend({
-    selector: '.o_portal_prescriptions_sidebar',
+    selector: '.o_portal_prescription_sidebar',
 
     /**
      * @constructor
@@ -26,8 +26,8 @@ publicWidget.registry.PrescriptionPortalSidebar = PortalSidebar.extend({
         this._generateMenu();
         // After signature, automatically open the popup for payment
         const hash = new URLSearchParams(window.location.hash.substring(1));
-        if (hash.get("allow_payment") === "yes" && this.$("#o_prescriptions_portal_paynow").length) {
-            this.el.querySelector('#o_prescriptions_portal_paynow').click();
+        if (hash.get("allow_payment") === "yes" && this.$("#o_prescription_portal_paynow").length) {
+            this.el.querySelector('#o_prescription_portal_paynow').click();
             hash.delete("allow_payment");
             window.location.hash = hash.toString();
         }

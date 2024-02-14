@@ -7,13 +7,13 @@ from odoo.exceptions import ValidationError
 
 
 class PrescriptionOrderDiscount(models.TransientModel):
-    _name = 'prescriptions.order.discount'
+    _name = 'prescription.order.discount'
     _description = "Discount Wizard"
 
-    prescriptions_order_id = fields.Many2one(
-        'prescriptions.order', default=lambda self: self.env.context.get('active_id'), required=True)
-    company_id = fields.Many2one(related='prescriptions_order_id.company_id')
-    currency_id = fields.Many2one(related='prescriptions_order_id.currency_id')
+    prescription_order_id = fields.Many2one(
+        'prescription.order', default=lambda self: self.env.context.get('active_id'), required=True)
+    company_id = fields.Many2one(related='prescription_order_id.company_id')
+    currency_id = fields.Many2one(related='prescription_order_id.currency_id')
     discount_amount = fields.Monetary(string="Amount")
     discount_percentage = fields.Float(string="Percentage")
     discount_type = fields.Selection(
@@ -51,7 +51,7 @@ class PrescriptionOrderDiscount(models.TransientModel):
         self.ensure_one()
 
         vals = {
-            'order_id': self.prescriptions_order_id.id,
+            'order_id': self.prescription_order_id.id,
             'product_id': product.id,
             'sequence': 999,
             'price_unit': -amount,
@@ -67,12 +67,12 @@ class PrescriptionOrderDiscount(models.TransientModel):
         """Create SOline(s) according to wizard configuration"""
         self.ensure_one()
 
-        discount_product = self.company_id.prescriptions_discount_product_id
+        discount_product = self.company_id.prescription_discount_product_id
         if not discount_product:
-            self.company_id.prescriptions_discount_product_id = self.env['product.product'].create(
+            self.company_id.prescription_discount_product_id = self.env['product.product'].create(
                 self._prepare_discount_product_values()
             )
-            discount_product = self.company_id.prescriptions_discount_product_id
+            discount_product = self.company_id.prescription_discount_product_id
 
         if self.discount_type == 'amount':
             vals_list = [
@@ -84,7 +84,7 @@ class PrescriptionOrderDiscount(models.TransientModel):
             ]
         else: # so_discount
             total_price_per_tax_groups = defaultdict(float)
-            for line in self.prescriptions_order_id.order_line:
+            for line in self.prescription_order_id.order_line:
                 if not line.product_uom_qty or not line.price_unit:
                     continue
 
@@ -122,12 +122,12 @@ class PrescriptionOrderDiscount(models.TransientModel):
                         ),
                     ) for taxes, subtotal in total_price_per_tax_groups.items()
                 ]
-        return self.env['prescriptions.order.line'].create(vals_list)
+        return self.env['prescription.order.line'].create(vals_list)
 
     def action_apply_discount(self):
         self.ensure_one()
         self = self.with_company(self.company_id)
         if self.discount_type == 'sol_discount':
-            self.prescriptions_order_id.order_line.write({'discount': self.discount_percentage*100})
+            self.prescription_order_id.order_line.write({'discount': self.discount_percentage*100})
         else:
             self._create_discount_lines()

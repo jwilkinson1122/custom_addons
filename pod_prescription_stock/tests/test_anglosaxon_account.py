@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.pod_prescriptions_stock.tests.test_anglo_saxon_valuation_reconciliation import TestValuationReconciliationCommon
+from odoo.addons.pod_prescription_stock.tests.test_anglo_saxon_valuation_reconciliation import TestValuationReconciliationCommon
 from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
@@ -7,7 +7,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
 
     def test_cogs_should_use_price_from_the_right_company(self):
         """
-        Reproduce the flow of creating an invoice from a prescriptions order with company A
+        Reproduce the flow of creating an invoice from a prescription order with company A
         and posting the invoice with both companies selected and company B as the main.
         """
         company_a_data = self.company_data
@@ -21,7 +21,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
         company_b_standard_price = 10.0
         product.with_company(company_b_data['company']).standard_price = company_b_standard_price
 
-        # create prescriptions order with company A in draft (by default, self.env.user.company_id is company A)
+        # create prescription order with company A in draft (by default, self.env.user.company_id is company A)
         company_a_order = self._create_prescription(product, '2021-01-01')
         company_a_invoice = self._create_invoice_for_so(company_a_order, product, '2021-01-10')
 

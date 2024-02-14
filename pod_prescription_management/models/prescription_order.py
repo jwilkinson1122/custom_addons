@@ -9,16 +9,16 @@ from odoo.tools import is_html_empty
 
 
 class PrescriptionOrder(models.Model):
-    _inherit = 'prescriptions.order'
+    _inherit = 'prescription.order'
 
-    prescriptions_order_template_id = fields.Many2one(
-        comodel_name='prescriptions.order.template',
+    prescription_order_template_id = fields.Many2one(
+        comodel_name='prescription.order.template',
         string="Draft Rx Template",
-        compute='_compute_prescriptions_order_template_id',
+        compute='_compute_prescription_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    prescriptions_order_option_ids = fields.One2many(
-        comodel_name='prescriptions.order.option', inverse_name='order_id',
+    prescription_order_option_ids = fields.One2many(
+        comodel_name='prescription.order.option', inverse_name='order_id',
         string="Optional Products Lines",
         copy=True)
 
@@ -26,63 +26,63 @@ class PrescriptionOrder(models.Model):
 
     # Do not make it depend on `company_id` field
     # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
-    def _compute_prescriptions_order_template_id(self):
+    def _compute_prescription_order_template_id(self):
         for order in self:
-            company_template = order.company_id.prescriptions_order_template_id
-            if company_template and order.prescriptions_order_template_id != company_template:
+            company_template = order.company_id.prescription_order_template_id
+            if company_template and order.prescription_order_template_id != company_template:
                 if 'website_id' in self._fields and order.website_id:
                     # don't apply quotation template for order created via eCommerce
                     continue
-                order.prescriptions_order_template_id = order.company_id.prescriptions_order_template_id.id
+                order.prescription_order_template_id = order.company_id.prescription_order_template_id.id
 
-    @api.depends('partner_id', 'prescriptions_order_template_id')
+    @api.depends('partner_id', 'prescription_order_template_id')
     def _compute_note(self):
         super()._compute_note()
-        for order in self.filtered('prescriptions_order_template_id'):
-            template = order.prescriptions_order_template_id.with_context(lang=order.partner_id.lang)
+        for order in self.filtered('prescription_order_template_id'):
+            template = order.prescription_order_template_id.with_context(lang=order.partner_id.lang)
             order.note = template.note if not is_html_empty(template.note) else order.note
 
-    @api.depends('prescriptions_order_template_id')
+    @api.depends('prescription_order_template_id')
     def _compute_require_signature(self):
         super()._compute_require_signature()
-        for order in self.filtered('prescriptions_order_template_id'):
-            order.require_signature = order.prescriptions_order_template_id.require_signature
+        for order in self.filtered('prescription_order_template_id'):
+            order.require_signature = order.prescription_order_template_id.require_signature
 
-    @api.depends('prescriptions_order_template_id')
+    @api.depends('prescription_order_template_id')
     def _compute_require_payment(self):
         super()._compute_require_payment()
-        for order in self.filtered('prescriptions_order_template_id'):
-            order.require_payment = order.prescriptions_order_template_id.require_payment
+        for order in self.filtered('prescription_order_template_id'):
+            order.require_payment = order.prescription_order_template_id.require_payment
 
-    @api.depends('prescriptions_order_template_id')
+    @api.depends('prescription_order_template_id')
     def _compute_prepayment_percent(self):
         super()._compute_prepayment_percent()
-        for order in self.filtered('prescriptions_order_template_id'):
+        for order in self.filtered('prescription_order_template_id'):
             if order.require_payment:
-                order.prepayment_percent = order.prescriptions_order_template_id.prepayment_percent
+                order.prepayment_percent = order.prescription_order_template_id.prepayment_percent
 
-    @api.depends('prescriptions_order_template_id')
+    @api.depends('prescription_order_template_id')
     def _compute_validity_date(self):
         super()._compute_validity_date()
-        for order in self.filtered('prescriptions_order_template_id'):
-            validity_days = order.prescriptions_order_template_id.number_of_days
+        for order in self.filtered('prescription_order_template_id'):
+            validity_days = order.prescription_order_template_id.number_of_days
             if validity_days > 0:
                 order.validity_date = fields.Date.context_today(order) + timedelta(validity_days)
 
-    @api.depends('prescriptions_order_template_id')
+    @api.depends('prescription_order_template_id')
     def _compute_journal_id(self):
         super()._compute_journal_id()
-        for order in self.filtered('prescriptions_order_template_id'):
-            order.journal_id = order.prescriptions_order_template_id.journal_id
+        for order in self.filtered('prescription_order_template_id'):
+            order.journal_id = order.prescription_order_template_id.journal_id
 
     #=== CONSTRAINT METHODS ===#
 
-    @api.constrains('company_id', 'prescriptions_order_option_ids')
+    @api.constrains('company_id', 'prescription_order_option_ids')
     def _check_optional_product_company_id(self):
         for order in self:
-            companies = order.prescriptions_order_option_ids.product_id.company_id
+            companies = order.prescription_order_option_ids.product_id.company_id
             if companies and companies != order.company_id:
-                bad_products = order.prescriptions_order_option_ids.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
+                bad_products = order.prescription_order_option_ids.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
                 raise ValidationError(_(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
                     product_company=', '.join(companies.mapped('display_name')),
@@ -97,16 +97,16 @@ class PrescriptionOrder(models.Model):
         """Trigger quotation template recomputation on unsaved records company change"""
         if self._origin.id:
             return
-        self._compute_prescriptions_order_template_id()
+        self._compute_prescription_order_template_id()
 
-    @api.onchange('prescriptions_order_template_id')
-    def _onchange_prescriptions_order_template_id(self):
-        prescriptions_order_template = self.prescriptions_order_template_id.with_context(lang=self.partner_id.lang)
+    @api.onchange('prescription_order_template_id')
+    def _onchange_prescription_order_template_id(self):
+        prescription_order_template = self.prescription_order_template_id.with_context(lang=self.partner_id.lang)
 
         order_lines_data = [fields.Command.clear()]
         order_lines_data += [
             fields.Command.create(line._prepare_order_line_values())
-            for line in prescriptions_order_template.prescriptions_order_template_line_ids
+            for line in prescription_order_template.prescription_order_template_line_ids
         ]
 
         # set first line to sequence -99, so a resequence on first page doesn't cause following page
@@ -119,10 +119,10 @@ class PrescriptionOrder(models.Model):
         option_lines_data = [fields.Command.clear()]
         option_lines_data += [
             fields.Command.create(option._prepare_option_line_values())
-            for option in prescriptions_order_template.prescriptions_order_template_option_ids
+            for option in prescription_order_template.prescription_order_template_option_ids
         ]
 
-        self.prescriptions_order_option_ids = option_lines_data
+        self.prescription_order_option_ids = option_lines_data
 
     #=== ACTION METHODS ===#
 
@@ -132,8 +132,8 @@ class PrescriptionOrder(models.Model):
             self = self.with_user(SUPERUSER_ID)
 
         for order in self:
-            if order.prescriptions_order_template_id and order.prescriptions_order_template_id.mail_template_id:
-                order.message_post_with_source(order.prescriptions_order_template_id.mail_template_id)
+            if order.prescription_order_template_id and order.prescription_order_template_id.mail_template_id:
+                order.message_post_with_source(order.prescription_order_template_id.mail_template_id)
         return res
 
     def _recompute_prices(self):
@@ -141,9 +141,9 @@ class PrescriptionOrder(models.Model):
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist discount_policy is different than when the price was first computed.
-        self.prescriptions_order_option_ids.discount = 0.0
-        self.prescriptions_order_option_ids._compute_price_unit()
-        self.prescriptions_order_option_ids._compute_discount()
+        self.prescription_order_option_ids.discount = 0.0
+        self.prescription_order_option_ids._compute_price_unit()
+        self.prescription_order_option_ids._compute_discount()
 
     def _can_be_edited_on_portal(self):
         self.ensure_one()

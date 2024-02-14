@@ -2,12 +2,12 @@
 
 
 from odoo import exceptions
-from odoo.addons.pod_prescriptions_team.tests.common import TestPrescriptionsCommon
+from odoo.addons.pod_prescription_team.tests.common import TestPrescriptionCommon
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-class TestMembership(TestPrescriptionsCommon):
+class TestMembership(TestPrescriptionCommon):
     """Tests to ensure membership behavior """
 
     @classmethod
@@ -17,56 +17,56 @@ class TestMembership(TestPrescriptionsCommon):
             'name': 'Test Specific',
             'sequence': 10,
         })
-        cls.env['ir.config_parameter'].set_param('pod_prescriptions_team.membership_multi', True)
+        cls.env['ir.config_parameter'].set_param('pod_prescription_team.membership_multi', True)
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_fields(self):
-        self.assertTrue(self.prescriptions_team_1.with_user(self.env.user).is_membership_multi)
+        self.assertTrue(self.prescription_team_1.with_user(self.env.user).is_membership_multi)
         self.assertTrue(self.new_team.with_user(self.env.user).is_membership_multi)
 
-        self.env['ir.config_parameter'].sudo().set_param('pod_prescriptions_team.membership_multi', False)
-        self.assertFalse(self.prescriptions_team_1.with_user(self.env.user).is_membership_multi)
+        self.env['ir.config_parameter'].sudo().set_param('pod_prescription_team.membership_multi', False)
+        self.assertFalse(self.prescription_team_1.with_user(self.env.user).is_membership_multi)
         self.assertFalse(self.new_team.with_user(self.env.user).is_membership_multi)
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_members_mono(self):
         """ Test mono mode using the user m2m relationship """
-        self.env['ir.config_parameter'].sudo().set_param('pod_prescriptions_team.membership_multi', False)
+        self.env['ir.config_parameter'].sudo().set_param('pod_prescription_team.membership_multi', False)
         # ensure initial data
-        prescriptions_team_1 = self.prescriptions_team_1.with_user(self.env.user)
+        prescription_team_1 = self.prescription_team_1.with_user(self.env.user)
         new_team = self.new_team.with_user(self.env.user)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
 
         # test various add / remove on computed m2m
         self.assertEqual(new_team.member_ids, self.env['res.users'])
         new_team.write({'member_ids': [(4, self.env.uid)]})
         self.assertEqual(new_team.member_ids, self.env.user)
-        new_team.write({'member_ids': [(4, self.user_prescriptions_leads.id)]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
-        new_team.write({'member_ids': [(3, self.user_prescriptions_leads.id)]})
+        new_team.write({'member_ids': [(4, self.user_prescription_leads.id)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
+        new_team.write({'member_ids': [(3, self.user_prescription_leads.id)]})
         self.assertEqual(new_team.member_ids, self.env.user)
-        new_team.write({'member_ids': [(6, 0, (self.user_prescriptions_leads | self.env.user).ids)]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
+        new_team.write({'member_ids': [(6, 0, (self.user_prescription_leads | self.env.user).ids)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
 
-        # archived memberships on prescriptions_team_1 for user_prescriptions_leads
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_admin)
+        # archived memberships on prescription_team_1 for user_prescription_leads
+        self.assertEqual(prescription_team_1.member_ids, self.user_admin)
 
         # create a new user on the fly, just for testing
-        self.user_prescriptions_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        self.user_prescription_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
         new_team.write({'member_ids': [(0, 0, {
             'name': 'Marty OnTheMCFly',
             'login': 'mcfly@test.example.com',
         })]})
         new_user = self.env['res.users'].search([('login', '=', 'mcfly@test.example.com')])
         self.assertTrue(len(new_user))
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads | new_user)
-        self.user_prescriptions_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads | new_user)
+        self.user_prescription_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
 
         self.env.flush_all()
-        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescriptions_leads.id)])
-        self.assertEqual(len(memberships), 3)  # subscribed twice to new_team + subscribed to prescriptions_team_1
-        self.assertEqual(memberships.crm_team_id, prescriptions_team_1 | new_team)
-        self.assertFalse(memberships.filtered(lambda m: m.crm_team_id == prescriptions_team_1).active)
+        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescription_leads.id)])
+        self.assertEqual(len(memberships), 3)  # subscribed twice to new_team + subscribed to prescription_team_1
+        self.assertEqual(memberships.crm_team_id, prescription_team_1 | new_team)
+        self.assertFalse(memberships.filtered(lambda m: m.crm_team_id == prescription_team_1).active)
         new_team_memberships = memberships.filtered(lambda m: m.crm_team_id == new_team)
         self.assertEqual(len(new_team_memberships), 2)  # subscribed, removed, then subscribed again
         self.assertTrue(set(new_team_memberships.mapped('active')), set([False, True]))
@@ -75,74 +75,74 @@ class TestMembership(TestPrescriptionsCommon):
         with self.assertRaises(exceptions.UserError):
             self.env['crm.team.member'].create({'crm_team_id': new_team.id, 'user_id': new_user.id})
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_members_multi(self):
         # ensure initial data
-        prescriptions_team_1 = self.prescriptions_team_1.with_user(self.env.user)
+        prescription_team_1 = self.prescription_team_1.with_user(self.env.user)
         new_team = self.new_team.with_user(self.env.user)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
 
         # test various add / remove on computed m2m
         self.assertEqual(new_team.member_ids, self.env['res.users'])
-        new_team.write({'member_ids': [(4, self.env.uid), (4, self.user_prescriptions_leads.id)]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
-        new_team.write({'member_ids': [(3, self.user_prescriptions_leads.id)]})
+        new_team.write({'member_ids': [(4, self.env.uid), (4, self.user_prescription_leads.id)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
+        new_team.write({'member_ids': [(3, self.user_prescription_leads.id)]})
         self.assertEqual(new_team.member_ids, self.env.user)
-        new_team.write({'member_ids': [(6, 0, (self.user_prescriptions_leads | self.env.user).ids)]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
+        new_team.write({'member_ids': [(6, 0, (self.user_prescription_leads | self.env.user).ids)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
 
-        # nothing changed on prescriptions_team_1
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        # nothing changed on prescription_team_1
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
 
         # create a new user on the fly, just for testing
-        self.user_prescriptions_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        self.user_prescription_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
         new_team.write({'member_ids': [(0, 0, {
             'name': 'Marty OnTheMCFly',
             'login': 'mcfly@test.example.com',
         })]})
         new_user = self.env['res.users'].search([('login', '=', 'mcfly@test.example.com')])
         self.assertTrue(len(new_user))
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads | new_user)
-        self.user_prescriptions_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads | new_user)
+        self.user_prescription_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
         self.env.flush_all()
 
         # still avoid duplicated team / user entries
         with self.assertRaises(exceptions.UserError):
             self.env['crm.team.member'].create({'crm_team_id': new_team.id, 'user_id': new_user.id})
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_memberships_mono(self):
         """ Test mono mode: updating crm_team_member_ids field """
-        self.env['ir.config_parameter'].sudo().set_param('pod_prescriptions_team.membership_multi', False)
+        self.env['ir.config_parameter'].sudo().set_param('pod_prescription_team.membership_multi', False)
         # ensure initial data
-        prescriptions_team_1 = self.env['crm.team'].browse(self.prescriptions_team_1.ids)
+        prescription_team_1 = self.env['crm.team'].browse(self.prescription_team_1.ids)
         new_team = self.env['crm.team'].browse(self.new_team.ids)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
 
-        # subscribe on new team (user_prescriptions_leads will have two memberships -> old one deactivated)
+        # subscribe on new team (user_prescription_leads will have two memberships -> old one deactivated)
         self.assertEqual(new_team.member_ids, self.env['res.users'])
         new_team.write({'crm_team_member_ids': [
-            (0, 0, {'user_id': self.user_prescriptions_leads.id}),
+            (0, 0, {'user_id': self.user_prescription_leads.id}),
             (0, 0, {'user_id': self.uid}),
         ]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_admin)
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
+        self.assertEqual(prescription_team_1.member_ids, self.user_admin)
         self.env.flush_all()
 
-        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescriptions_leads.id)])
-        self.assertEqual(memberships.crm_team_id, prescriptions_team_1 | new_team)
-        self.assertFalse(memberships.filtered(lambda m: m.crm_team_id == prescriptions_team_1).active)
+        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescription_leads.id)])
+        self.assertEqual(memberships.crm_team_id, prescription_team_1 | new_team)
+        self.assertFalse(memberships.filtered(lambda m: m.crm_team_id == prescription_team_1).active)
         self.assertTrue(memberships.filtered(lambda m: m.crm_team_id == new_team).active)
 
-        # subscribe user_prescriptions_leads on old team -> old membership still archived and kept
-        prescriptions_team_1.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_leads.id})]})
-        memberships_new = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescriptions_leads.id)])
+        # subscribe user_prescription_leads on old team -> old membership still archived and kept
+        prescription_team_1.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescription_leads.id})]})
+        memberships_new = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescription_leads.id)])
         self.assertTrue(memberships < memberships_new)
-        self.assertEqual(memberships.crm_team_id, prescriptions_team_1 | new_team)
+        self.assertEqual(memberships.crm_team_id, prescription_team_1 | new_team)
 
         # old membership is still inactive, new membership is active
-        old_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescriptions_team_1 and m in memberships)
-        new_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescriptions_team_1 and m not in memberships)
+        old_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescription_team_1 and m in memberships)
+        new_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescription_team_1 and m not in memberships)
         new_nt = memberships_new.filtered(lambda m: m.crm_team_id == new_team)
         self.assertFalse(old_st_1.active)
         self.assertTrue(new_st_1.active)
@@ -150,7 +150,7 @@ class TestMembership(TestPrescriptionsCommon):
 
         # check members fields
         self.assertEqual(new_team.member_ids, self.env.user)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_admin | self.user_prescriptions_leads)
+        self.assertEqual(prescription_team_1.member_ids, self.user_admin | self.user_prescription_leads)
 
         # activate another team membership: previous team membership should be de activated
         new_nt.toggle_active()
@@ -167,57 +167,57 @@ class TestMembership(TestPrescriptionsCommon):
         with self.assertRaises(exceptions.UserError):
             new_st_1.toggle_active()
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_memberships_multi(self):
         # ensure initial data
-        prescriptions_team_1 = self.env['crm.team'].browse(self.prescriptions_team_1.ids)
+        prescription_team_1 = self.env['crm.team'].browse(self.prescription_team_1.ids)
         new_team = self.env['crm.team'].browse(self.new_team.ids)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
 
-        # subscribe on new team (user_prescriptions_leads will have two memberships -> old one deactivated)
+        # subscribe on new team (user_prescription_leads will have two memberships -> old one deactivated)
         self.assertEqual(new_team.member_ids, self.env['res.users'])
         new_team.write({'crm_team_member_ids': [
-            (0, 0, {'user_id': self.user_prescriptions_leads.id}),
+            (0, 0, {'user_id': self.user_prescription_leads.id}),
             (0, 0, {'user_id': self.uid}),
         ]})
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
         self.env.flush_all()
 
-        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescriptions_leads.id)])
-        self.assertEqual(memberships.crm_team_id, prescriptions_team_1 | new_team)
-        self.assertTrue(memberships.filtered(lambda m: m.crm_team_id == prescriptions_team_1).active)
+        memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescription_leads.id)])
+        self.assertEqual(memberships.crm_team_id, prescription_team_1 | new_team)
+        self.assertTrue(memberships.filtered(lambda m: m.crm_team_id == prescription_team_1).active)
         self.assertTrue(memberships.filtered(lambda m: m.crm_team_id == new_team).active)
 
-        # archive membership on prescriptions_team_1 and try creating a new one
-        memberships.filtered(lambda m: m.crm_team_id == prescriptions_team_1).write({'active': False})
-        # subscribe user_prescriptions_leads on old team -> old membership still archived and kept
-        prescriptions_team_1.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescriptions_leads.id})]})
-        memberships_new = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescriptions_leads.id)])
+        # archive membership on prescription_team_1 and try creating a new one
+        memberships.filtered(lambda m: m.crm_team_id == prescription_team_1).write({'active': False})
+        # subscribe user_prescription_leads on old team -> old membership still archived and kept
+        prescription_team_1.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_prescription_leads.id})]})
+        memberships_new = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_prescription_leads.id)])
         self.assertTrue(memberships < memberships_new)
-        self.assertEqual(memberships.crm_team_id, prescriptions_team_1 | new_team)
+        self.assertEqual(memberships.crm_team_id, prescription_team_1 | new_team)
 
         # old membership is still inactive, new membership is active
-        old_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescriptions_team_1 and m in memberships)
-        new_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescriptions_team_1 and m not in memberships)
+        old_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescription_team_1 and m in memberships)
+        new_st_1 = memberships_new.filtered(lambda m: m.crm_team_id == prescription_team_1 and m not in memberships)
         new_nt = memberships_new.filtered(lambda m: m.crm_team_id == new_team)
         self.assertFalse(old_st_1.active)
         self.assertTrue(new_st_1.active)
         self.assertTrue(new_nt.active)
 
         # check members fields
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_admin | self.user_prescriptions_leads)
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
+        self.assertEqual(prescription_team_1.member_ids, self.user_admin | self.user_prescription_leads)
 
         # try to activate duplicate memberships again, which should trigger issues
         with self.assertRaises(exceptions.UserError):
             old_st_1.toggle_active()
 
-    @users('user_prescriptions_manager')
+    @users('user_prescription_manager')
     def test_memberships_sync(self):
-        prescriptions_team_1 = self.env['crm.team'].browse(self.prescriptions_team_1.ids)
+        prescription_team_1 = self.env['crm.team'].browse(self.prescription_team_1.ids)
         new_team = self.env['crm.team'].browse(self.new_team.ids)
-        self.assertEqual(prescriptions_team_1.member_ids, self.user_prescriptions_leads | self.user_admin)
+        self.assertEqual(prescription_team_1.member_ids, self.user_prescription_leads | self.user_admin)
         self.assertEqual(new_team.crm_team_member_ids, self.env['crm.team.member'])
         self.assertEqual(new_team.crm_team_member_all_ids, self.env['crm.team.member'])
         self.assertEqual(new_team.member_ids, self.env['res.users'])
@@ -233,12 +233,12 @@ class TestMembership(TestPrescriptionsCommon):
 
         # adding members correctly update o2m with right values
         new_team.write({
-            'member_ids': [(4, self.user_prescriptions_leads.id)]
+            'member_ids': [(4, self.user_prescription_leads.id)]
         })
-        added = self.env['crm.team.member'].search([('crm_team_id', '=', new_team.id), ('user_id', '=', self.user_prescriptions_leads.id)])
+        added = self.env['crm.team.member'].search([('crm_team_id', '=', new_team.id), ('user_id', '=', self.user_prescription_leads.id)])
         self.assertEqual(new_team.crm_team_member_ids, new_member + added)
         self.assertEqual(new_team.crm_team_member_all_ids, new_member + added)
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
 
         # archiving membership correctly updates m2m and o2m
         added.write({'active': False})
@@ -250,11 +250,11 @@ class TestMembership(TestPrescriptionsCommon):
         added.write({'active': True})
         self.assertEqual(new_team.crm_team_member_ids, new_member + added)
         self.assertEqual(new_team.crm_team_member_all_ids, new_member + added)
-        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescriptions_leads)
+        self.assertEqual(new_team.member_ids, self.env.user | self.user_prescription_leads)
 
         # archived are kept if duplicated on write
         admin_original = self.env['crm.team.member'].search([
-            ('crm_team_id', '=', prescriptions_team_1.id),
+            ('crm_team_id', '=', prescription_team_1.id),
             ('user_id', '=', self.user_admin.id)
         ])
         self.assertTrue(bool(admin_original))
@@ -273,9 +273,9 @@ class TestMembership(TestPrescriptionsCommon):
 
         # change team of membership should raise unicity constraint
         with self.assertRaises(exceptions.UserError), mute_logger('odoo.sql_db'):
-            added.write({'crm_team_id': prescriptions_team_1.id})
+            added.write({'crm_team_id': prescription_team_1.id})
 
-    def test_prescriptions_team_member_search(self):
+    def test_prescription_team_member_search(self):
         """ when a search is triggered on the member_ids field in crm.team
         it is currently returning the archived records also. this test will
         ensure that the search wont return archived record.
@@ -293,30 +293,30 @@ class TestMembership(TestPrescriptionsCommon):
         ])
         self.assertFalse(partner_exists, msg="Partner should return empty as current user is removed from team")
 
-    def test_users_prescriptions_team_id(self):
-        self.assertTrue(self.prescriptions_team_1.sequence < self.new_team.sequence)
+    def test_users_prescription_team_id(self):
+        self.assertTrue(self.prescription_team_1.sequence < self.new_team.sequence)
 
-        self.assertEqual(self.user_prescriptions_leads.crm_team_ids, self.prescriptions_team_1)
-        self.assertEqual(self.user_prescriptions_leads.prescriptions_team_id, self.prescriptions_team_1)
+        self.assertEqual(self.user_prescription_leads.crm_team_ids, self.prescription_team_1)
+        self.assertEqual(self.user_prescription_leads.prescription_team_id, self.prescription_team_1)
 
         # subscribe to new team -> default team is still the old one
         self.new_team.write({
-            'member_ids': [(4, self.user_prescriptions_leads.id)]
+            'member_ids': [(4, self.user_prescription_leads.id)]
         })
-        self.assertEqual(self.user_prescriptions_leads.crm_team_ids, self.prescriptions_team_1 | self.new_team)
-        self.assertEqual(self.user_prescriptions_leads.prescriptions_team_id, self.prescriptions_team_1)
+        self.assertEqual(self.user_prescription_leads.crm_team_ids, self.prescription_team_1 | self.new_team)
+        self.assertEqual(self.user_prescription_leads.prescription_team_id, self.prescription_team_1)
 
         # archive membership to first team -> second one becomes default
-        self.prescriptions_team_1_m1.write({'active': False})
-        self.assertEqual(self.user_prescriptions_leads.crm_team_ids, self.new_team)
-        self.assertEqual(self.user_prescriptions_leads.prescriptions_team_id, self.new_team)
+        self.prescription_team_1_m1.write({'active': False})
+        self.assertEqual(self.user_prescription_leads.crm_team_ids, self.new_team)
+        self.assertEqual(self.user_prescription_leads.prescription_team_id, self.new_team)
 
         # activate membership to first team -> first one becomes default again
-        self.prescriptions_team_1_m1.write({'active': True})
-        self.assertEqual(self.user_prescriptions_leads.crm_team_ids, self.prescriptions_team_1 | self.new_team)
-        self.assertEqual(self.user_prescriptions_leads.prescriptions_team_id, self.prescriptions_team_1)
+        self.prescription_team_1_m1.write({'active': True})
+        self.assertEqual(self.user_prescription_leads.crm_team_ids, self.prescription_team_1 | self.new_team)
+        self.assertEqual(self.user_prescription_leads.prescription_team_id, self.prescription_team_1)
 
         # keep only one membership -> default team
-        self.prescriptions_team_1_m1.unlink()
-        self.assertEqual(self.user_prescriptions_leads.crm_team_ids, self.new_team)
-        self.assertEqual(self.user_prescriptions_leads.prescriptions_team_id, self.new_team)
+        self.prescription_team_1_m1.unlink()
+        self.assertEqual(self.user_prescription_leads.crm_team_ids, self.new_team)
+        self.assertEqual(self.user_prescription_leads.prescription_team_id, self.new_team)

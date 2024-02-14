@@ -2,29 +2,29 @@
 
 
 from odoo import api, fields, models, tools
-from odoo.addons.pod_prescriptions.models.prescriptions_order import PRESCRIPTION_STATE
+from odoo.addons.pod_prescription.models.prescription_order import SALE_ORDER_STATE
 
 
 class PrescriptionReport(models.Model):
-    _name = "prescriptions.report"
-    _description = "Prescriptions Analysis Report"
+    _name = "prescription.report"
+    _description = "Prescription Analysis Report"
     _auto = False
     _rec_name = 'date'
     _order = 'date desc'
 
     @api.model
     def _get_done_states(self):
-        return ['prescriptions']
+        return ['prescription']
 
-    # prescriptions.order fields
+    # prescription.order fields
     name = fields.Char(string="Order Reference", readonly=True)
     date = fields.Datetime(string="Order Date", readonly=True)
     partner_id = fields.Many2one(comodel_name='res.partner', string="Customer", readonly=True)
     company_id = fields.Many2one(comodel_name='res.company', readonly=True)
     pricelist_id = fields.Many2one(comodel_name='product.pricelist', readonly=True)
-    team_id = fields.Many2one(comodel_name='crm.team', string="Prescriptions Team", readonly=True)
-    user_id = fields.Many2one(comodel_name='res.users', string="Prescriptionsperson", readonly=True)
-    state = fields.Selection(selection=PRESCRIPTION_STATE, string="Status", readonly=True)
+    team_id = fields.Many2one(comodel_name='crm.team', string="Prescription Team", readonly=True)
+    user_id = fields.Many2one(comodel_name='res.users', string="Prescriptionperson", readonly=True)
+    state = fields.Selection(selection=SALE_ORDER_STATE, string="Status", readonly=True)
     analytic_account_id = fields.Many2one(
         comodel_name='account.analytic.account', string="Analytic Account", readonly=True)
     invoice_status = fields.Selection(
@@ -49,8 +49,8 @@ class PrescriptionReport(models.Model):
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
     state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
 
-    # prescriptions.order.line fields
-    order_reference = fields.Reference(string='Related Order', selection=[('prescriptions.order', 'Prescriptions Order')], group_operator="count_distinct")
+    # prescription.order.line fields
+    order_reference = fields.Reference(string='Related Order', selection=[('prescription.order', 'Prescription Order')], group_operator="count_distinct")
 
     categ_id = fields.Many2one(
         comodel_name='product.category', string="Product Category", readonly=True)
@@ -145,7 +145,7 @@ class PrescriptionReport(models.Model):
                 * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS discount_amount,
-            concat('prescriptions.order', ',', s.id) AS order_reference"""
+            concat('prescription.order', ',', s.id) AS order_reference"""
 
         additional_fields_info = self._select_additional_fields()
         template = """,
@@ -168,8 +168,8 @@ class PrescriptionReport(models.Model):
 
     def _from_prescription(self):
         return """
-            prescriptions_order_line l
-            LEFT JOIN prescriptions_order s ON s.id=l.order_id
+            prescription_order_line l
+            LEFT JOIN prescription_order s ON s.id=l.order_id
             JOIN res_partner partner ON s.partner_id = partner.id
             LEFT JOIN product_product p ON l.product_id=p.id
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id

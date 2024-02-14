@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { PrescriptionOrderLineProductField } from '@pod_prescriptions/js/prescriptions_product_field';
+import { PrescriptionOrderLineProductField } from '@pod_prescription/js/prescription_product_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
-import "@pod_prescriptions_product_configurator/js/prescriptions_product_field";
+import "@pod_prescription_product_configurator/js/prescription_product_field";
 
 
 patch(PrescriptionOrderLineProductField.prototype, {

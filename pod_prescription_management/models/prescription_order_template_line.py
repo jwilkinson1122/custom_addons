@@ -6,32 +6,32 @@ from odoo.exceptions import UserError
 
 
 class PrescriptionOrderTemplateLine(models.Model):
-    _name = "prescriptions.order.template.line"
+    _name = "prescription.order.template.line"
     _description = "Draft Rx Template Line"
-    _order = 'prescriptions_order_template_id, sequence, id'
+    _order = 'prescription_order_template_id, sequence, id'
 
     _sql_constraints = [
         ('accountable_product_id_required',
             "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))",
-            "Missing required product and UoM on accountable prescriptions quote line."),
+            "Missing required product and UoM on accountable prescription quote line."),
 
         ('non_accountable_fields_null',
             "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",
-            "Forbidden product, quantity and UoM on non-accountable prescriptions quote line"),
+            "Forbidden product, quantity and UoM on non-accountable prescription quote line"),
     ]
 
-    prescriptions_order_template_id = fields.Many2one(
-        comodel_name='prescriptions.order.template',
+    prescription_order_template_id = fields.Many2one(
+        comodel_name='prescription.order.template',
         string='Draft Rx Template Reference',
         index=True, required=True,
         ondelete='cascade')
     sequence = fields.Integer(
         string="Sequence",
-        help="Gives the sequence order when displaying a list of prescriptions quote lines.",
+        help="Gives the sequence order when displaying a list of prescription quote lines.",
         default=10)
 
     company_id = fields.Many2one(
-        related='prescriptions_order_template_id.company_id', store=True, index=True)
+        related='prescription_order_template_id.company_id', store=True, index=True)
 
     product_id = fields.Many2one(
         comodel_name='product.product',
@@ -87,7 +87,7 @@ class PrescriptionOrderTemplateLine(models.Model):
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError(_("You cannot change the type of a prescriptions quote line. Instead you should delete the current line and create a new line of the proper type."))
+            raise UserError(_("You cannot change the type of a prescription quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super().write(values)
 
     #=== BUSINESS METHODS ===#
@@ -95,12 +95,12 @@ class PrescriptionOrderTemplateLine(models.Model):
     @api.model
     def _product_id_domain(self):
         """ Returns the domain of the products that can be added to the template. """
-        return [('prescriptions_ok', '=', True)]
+        return [('prescription_ok', '=', True)]
 
     def _prepare_order_line_values(self):
         """ Give the values to create the corresponding order line.
 
-        :return: `prescriptions.order.line` create values
+        :return: `prescription.order.line` create values
         :rtype: dict
         """
         self.ensure_one()

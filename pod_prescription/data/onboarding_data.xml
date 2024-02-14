@@ -2,11 +2,11 @@
 <odoo>
 <data noupdate="0">
     <!-- Prescription Draft Rx - ONBOARDING STEPS -->
-    <record id="onboarding_onboarding_step_prescriptions_order_confirmation" model="onboarding.onboarding.step">
+    <record id="onboarding_onboarding_step_prescription_order_confirmation" model="onboarding.onboarding.step">
         <field name="title">Order Confirmation</field>
         <field name="description">Choose between electronic signatures or online payments.</field>
         <field name="button_text">Set payments</field>
-        <field name="panel_step_open_action_name">action_open_step_prescriptions_order_confirmation</field>
+        <field name="panel_step_open_action_name">action_open_step_prescription_order_confirmation</field>
         <field name="step_image" type="base64" file="base/static/img/onboarding_default.png"></field>
         <field name="step_image_filename">onboarding_default.png</field>
         <field name="step_image_alt">Onboarding Order Confirmation</field>
@@ -25,16 +25,16 @@
     </record>
 
     <!-- Prescription Draft Rx - ONBOARDING PANEL -->
-    <record id="onboarding_onboarding_prescriptions_quotation" model="onboarding.onboarding">
+    <record id="onboarding_onboarding_prescription_quotation" model="onboarding.onboarding">
         <field name="name">Prescription Draft Rx Onboarding</field>
         <field name="step_ids" eval="[
-            Command.link(ref('pod_prescriptions.onboarding_onboarding_step_prescriptions_order_confirmation')),
-            Command.link(ref('pod_prescriptions.onboarding_onboarding_step_sample_quotation')),
+            Command.link(ref('pod_prescription.onboarding_onboarding_step_prescription_order_confirmation')),
+            Command.link(ref('pod_prescription.onboarding_onboarding_step_sample_quotation')),
             Command.link(ref('account.onboarding_onboarding_step_company_data')),
             Command.link(ref('account.onboarding_onboarding_step_base_document_layout'))
         ]"/>
-        <field name="route_name">prescriptions_quotation</field>
-        <field name="panel_close_action_name">action_close_panel_prescriptions_quotation</field>
+        <field name="route_name">prescription_quotation</field>
+        <field name="panel_close_action_name">action_close_panel_prescription_quotation</field>
     </record>
 
 </data>

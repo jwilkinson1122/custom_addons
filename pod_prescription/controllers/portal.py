@@ -20,7 +20,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
 
-        PrescriptionOrder = request.env['prescriptions.order']
+        PrescriptionOrder = request.env['prescription.order']
         if 'quotation_count' in counters:
             values['quotation_count'] = PrescriptionOrder.search_count(self._prepare_quotations_domain(partner)) \
                 if PrescriptionOrder.check_access_rights('read', raise_exception=False) else 0
@@ -39,20 +39,20 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def _prepare_orders_domain(self, partner):
         return [
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', '=', 'prescriptions'),
+            ('state', '=', 'prescription'),
         ]
 
-    def _get_prescriptions_searchbar_sortings(self):
+    def _get_prescription_searchbar_sortings(self):
         return {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
             'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
-    def _prepare_prescriptions_portal_rendering_values(
+    def _prepare_prescription_portal_rendering_values(
         self, page=1, date_begin=None, date_end=None, sortby=None, quotation_page=False, **kwargs
     ):
-        PrescriptionOrder = request.env['prescriptions.order']
+        PrescriptionOrder = request.env['prescription.order']
 
         if not sortby:
             sortby = 'date'
@@ -67,7 +67,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             url = "/my/orders"
             domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = self._get_prescriptions_searchbar_sortings()
+        searchbar_sortings = self._get_prescription_searchbar_sortings()
 
         sort_order = searchbar_sortings[sortby]['order']
 
@@ -98,15 +98,15 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, **kwargs):
-        values = self._prepare_prescriptions_portal_rendering_values(quotation_page=True, **kwargs)
+        values = self._prepare_prescription_portal_rendering_values(quotation_page=True, **kwargs)
         request.session['my_quotations_history'] = values['quotations'].ids[:100]
-        return request.render("prescriptions.portal_my_quotations", values)
+        return request.render("prescription.portal_my_quotations", values)
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, **kwargs):
-        values = self._prepare_prescriptions_portal_rendering_values(quotation_page=False, **kwargs)
+        values = self._prepare_prescription_portal_rendering_values(quotation_page=False, **kwargs)
         request.session['my_orders_history'] = values['orders'].ids[:100]
-        return request.render("prescriptions.portal_my_orders", values)
+        return request.render("prescription.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_page(
@@ -120,7 +120,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         **kw
     ):
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -128,7 +128,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return self._show_report(
                 model=order_sudo,
                 report_type=report_type,
-                report_ref='pod_prescriptions.action_report_prescription_order',
+                report_ref='pod_prescription.action_report_prescription_order',
                 download=download,
             )
 
@@ -146,7 +146,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 msg = _('Draft Rx viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 del context
                 _message_post_helper(
-                    "prescriptions.order",
+                    "prescription.order",
                     order_sudo.id,
                     message=msg,
                     token=order_sudo.access_token,
@@ -160,7 +160,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                       f'&action={order_sudo._get_portal_return_action().id}'\
                       f'&view_type=form'
         values = {
-            'prescriptions_order': order_sudo,
+            'prescription_order': order_sudo,
             'product_documents': order_sudo._get_product_documents(),
             'message': message,
             'report_type': 'html',
@@ -185,12 +185,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
         values = self._get_page_view_values(
             order_sudo, access_token, values, history_session_key, False)
 
-        return request.render('pod_prescriptions.prescriptions_order_portal_template', values)
+        return request.render('pod_prescription.prescription_order_portal_template', values)
 
     def _get_payment_values(self, order_sudo, downpayment=False, **kwargs):
         """ Return the payment-specific QWeb context values.
 
-        :param prescriptions.order order_sudo: The prescriptions order being paid.
+        :param prescription.order order_sudo: The prescription order being paid.
         :param bool downpayment: Whether the current payment is a downpayment.
         :param dict kwargs: Locally unused data passed to `_get_compatible_providers` and
                             `_get_available_tokens`.
@@ -212,7 +212,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             partner_sudo.id,
             amount,
             currency_id=currency.id,
-            prescriptions_order_id=order_sudo.id,
+            prescription_order_id=order_sudo.id,
             **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
@@ -235,7 +235,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo, prescriptions_order_id=order_sudo.id
+                providers_sudo, prescription_order_id=order_sudo.id
             ),
         }
         payment_context = {
@@ -261,7 +261,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         # get from query string if not on json param
         access_token = access_token or request.httprequest.args.get('access_token')
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return {'error': _('Invalid order.')}
 
@@ -284,10 +284,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
 
-        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('pod_prescriptions.action_report_prescription_order', [order_sudo.id])[0]
+        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('pod_prescription.action_report_prescription_order', [order_sudo.id])[0]
 
         _message_post_helper(
-            'prescriptions.order',
+            'prescription.order',
             order_sudo.id,
             _('Order signed by %s', name),
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
@@ -305,14 +305,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def portal_quote_decline(self, order_id, access_token=None, decline_message=None, **kwargs):
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
         if order_sudo._has_to_be_signed() and decline_message:
             order_sudo._action_cancel()
             _message_post_helper(
-                'prescriptions.order',
+                'prescription.order',
                 order_sudo.id,
                 decline_message,
                 token=access_token,
@@ -326,7 +326,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
     @http.route('/my/orders/<int:order_id>/document/<int:document_id>', type='http', auth='public')
     def portal_quote_document(self, order_id, document_id, access_token):
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -348,7 +348,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
     def portal_order_transaction(self, order_id, access_token, **kwargs):
         """ Create a draft transaction and return its processing values.
 
-        :param int order_id: The prescriptions order to pay, as a `prescriptions.order` id
+        :param int order_id: The prescription order to pay, as a `prescription.order` id
         :param str access_token: The access token used to authenticate the request
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
@@ -357,7 +357,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            order_sudo = self._document_check_access('prescriptions.order', order_id, access_token)
+            order_sudo = self._document_check_access('prescription.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
@@ -369,10 +369,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs.update({
             'partner_id': partner_sudo.id,
             'currency_id': order_sudo.currency_id.id,
-            'prescriptions_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
+            'prescription_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         tx_sudo = self._create_transaction(
-            custom_create_values={'prescriptions_order_ids': [Command.set([order_id])]}, **kwargs,
+            custom_create_values={'prescription_order_ids': [Command.set([order_id])]}, **kwargs,
         )
 
         return tx_sudo._get_processing_values()
@@ -380,12 +380,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
     # Payment overrides
 
     @http.route()
-    def payment_pay(self, *args, amount=None, prescriptions_order_id=None, access_token=None, **kwargs):
-        """ Override of `payment` to replace the missing transaction values by that of the prescriptions
+    def payment_pay(self, *args, amount=None, prescription_order_id=None, access_token=None, **kwargs):
+        """ Override of `payment` to replace the missing transaction values by that of the prescription
         order.
 
         :param str amount: The (possibly partial) amount to pay used to check the access token
-        :param str prescriptions_order_id: The prescriptions order for which a payment id made, as a `prescriptions.order` id
+        :param str prescription_order_id: The prescription order for which a payment id made, as a `prescription.order` id
         :param str access_token: The access token used to authenticate the partner
         :return: The result of the parent method
         :rtype: str
@@ -393,9 +393,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
         amount = self._cast_as_float(amount)
-        prescriptions_order_id = self._cast_as_int(prescriptions_order_id)
-        if prescriptions_order_id:
-            order_sudo = request.env['prescriptions.order'].sudo().browse(prescriptions_order_id).exists()
+        prescription_order_id = self._cast_as_int(prescription_order_id)
+        if prescription_order_id:
+            order_sudo = request.env['prescription.order'].sudo().browse(prescription_order_id).exists()
             if not order_sudo:
                 raise ValidationError(_("The provided parameters are invalid."))
 
@@ -414,27 +414,27 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 # To fix the partner if incorrect and avoid mismatches when creating the tx.
                 'partner_id': order_sudo.partner_invoice_id.id,
                 'company_id': order_sudo.company_id.id,
-                'prescriptions_order_id': prescriptions_order_id,
+                'prescription_order_id': prescription_order_id,
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_extra_payment_form_values(self, prescriptions_order_id=None, access_token=None, **kwargs):
-        """ Override of `payment` to reroute the payment flow to the portal view of the prescriptions order.
+    def _get_extra_payment_form_values(self, prescription_order_id=None, access_token=None, **kwargs):
+        """ Override of `payment` to reroute the payment flow to the portal view of the prescription order.
 
-        :param str prescriptions_order_id: The prescriptions order for which a payment is made, as a `prescriptions.order` id.
+        :param str prescription_order_id: The prescription order for which a payment is made, as a `prescription.order` id.
         :param str access_token: The portal or payment access token, respectively if we are in a
                                  portal or payment link flow.
         :return: The extended rendering context values.
         :rtype: dict
         """
         form_values = super()._get_extra_payment_form_values(
-            prescriptions_order_id=prescriptions_order_id, access_token=access_token, **kwargs
+            prescription_order_id=prescription_order_id, access_token=access_token, **kwargs
         )
-        if prescriptions_order_id:
-            prescriptions_order_id = self._cast_as_int(prescriptions_order_id)
+        if prescription_order_id:
+            prescription_order_id = self._cast_as_int(prescription_order_id)
 
             try:  # Check document access against what could be a portal access token.
-                order_sudo = self._document_check_access('prescriptions.order', prescriptions_order_id, access_token)
+                order_sudo = self._document_check_access('prescription.order', prescription_order_id, access_token)
             except AccessError:  # It is a payment access token computed on the payment context.
                 if not payment_utils.check_access_token(
                     access_token,
@@ -443,13 +443,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
                     kwargs.get('currency_id'),
                 ):
                     raise
-                order_sudo = request.env['prescriptions.order'].sudo().browse(prescriptions_order_id)
+                order_sudo = request.env['prescription.order'].sudo().browse(prescription_order_id)
 
-            # Interrupt the payment flow if the prescriptions order has been canceled.
+            # Interrupt the payment flow if the prescription order has been canceled.
             if order_sudo.state == 'cancel':
                 form_values['amount'] = 0.0
 
-            # Reroute the next steps of the payment flow to the portal view of the prescriptions order.
+            # Reroute the next steps of the payment flow to the portal view of the prescription order.
             form_values.update({
                 'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
                 'landing_route': order_sudo.get_portal_url(),

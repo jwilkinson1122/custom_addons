@@ -6,21 +6,21 @@
         <field name="product_template_attribute_value_ids" eval="[(6, 0, [
         ref('product_template_attribute_value_lt'),
         ])]"/>
-        <field name="image_variant_1024" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_everyday.jpg"/>
+        <field name="image_variant_1024" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_everyday.jpg"/>
     </record>
     <record id="product_product_71" model="product.product">
         <field name="product_tmpl_id" ref="product_template_superglass_flex"/>
         <field name="product_template_attribute_value_ids" eval="[(6, 0, [
         ref('product_template_attribute_value_rt'),
         ])]"/>
-        <field name="image_variant_1024" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_everyday.jpg"/>
+        <field name="image_variant_1024" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_everyday.jpg"/>
     </record>
     <record id="product_product_72" model="product.product">
         <field name="product_tmpl_id" ref="product_template_superglass_flex"/>
         <field name="product_template_attribute_value_ids" eval="[(6, 0, [
         ref('product_template_attribute_value_bl'),
         ])]"/>
-        <field name="image_variant_1024" type="base64" file="pod_prescriptions/static/src/binary/product_custom/sg_everyday.jpg"/>
+        <field name="image_variant_1024" type="base64" file="pod_prescription/static/src/binary/product_custom/sg_everyday.jpg"/>
     </record>
  
 

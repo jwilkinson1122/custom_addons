@@ -2,9 +2,9 @@
 
 <odoo>
 
-    <record id="prescriptions_patient_tree" model="ir.ui.view">
-        <field name="name">prescriptions.patient.tree</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_tree" model="ir.ui.view">
+        <field name="name">prescription.patient.tree</field>
+        <field name="model">prescription.patient</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="internal_identifier" />
@@ -13,9 +13,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_patient_his_tree" model="ir.ui.view">
-        <field name="name">prescriptions.patient.tree</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_his_tree" model="ir.ui.view">
+        <field name="name">prescription.patient.tree</field>
+        <field name="model">prescription.patient</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <tree>
@@ -27,9 +27,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_patient_form" model="ir.ui.view">
-        <field name="name">prescriptions.patient.form</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_form" model="ir.ui.view">
+        <field name="name">prescription.patient.form</field>
+        <field name="model">prescription.patient</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Partners">
@@ -156,14 +156,14 @@
 
 
                     <notebook colspan="4">
-                        <page name="prescriptions_administration" string="Administration data">
+                        <page name="prescription_administration" string="Administration data">
                             <field name="internal_identifier" />
 
                             <group>
-                                <group id="prescriptions_administration_info">
+                                <group id="prescription_administration_info">
                                     <field name="gender" />
                                 </group>
-                                <group id="prescriptions_administration_date">
+                                <group id="prescription_administration_date">
                                     <field name="birth_date" />
                                 </group>
                             </group>
@@ -205,9 +205,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_patient_his_form" model="ir.ui.view">
-        <field name="name">prescriptions.patient.form</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_his_form" model="ir.ui.view">
+        <field name="name">prescription.patient.form</field>
+        <field name="model">prescription.patient</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <form create="0" edit="0">
@@ -232,11 +232,11 @@
                     <notebook>
                         <page name="administration_data" string="Administration Info">
                             <group>
-                                <group id="prescriptions_administration_contact">
+                                <group id="prescription_administration_contact">
                                     <field name="email" />
                                     <field name="mobile" />
                                 </group>
-                                <group id="prescriptions_administration_street">
+                                <group id="prescription_administration_street">
                                     <field name="street" />
                                 </group>
                             </group>
@@ -247,9 +247,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_patient_kanban" model="ir.ui.view">
-        <field name="name">prescriptions.patient.kanban</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_kanban" model="ir.ui.view">
+        <field name="name">prescription.patient.kanban</field>
+        <field name="model">prescription.patient</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban string="Patients" class="o_res_partner_kanban">
@@ -321,22 +321,22 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
                             <t t-if="!record.is_company.raw_value">
-                                <t t-set="avatar_image" t-value="kanban_image('prescriptions.patient', 'avatar_128', record.id.raw_value)"/>
+                                <t t-set="avatar_image" t-value="kanban_image('prescription.patient', 'avatar_128', record.id.raw_value)"/>
                                 <div class="o_kanban_image_fill_left d-none d-md-block">
                                     <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
-                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescriptions.patient', 'avatar_128', record.raw_value)"/>
+                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescription.patient', 'avatar_128', record.raw_value)"/>
                                 </div>
                                 <div class="o_kanban_image d-md-none d-block">
                                     <img t-attf-src="#{avatar_image}" t-att-alt="record.id.value"/>
-                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescriptions.patient', 'avatar_128', record.raw_value)"/>
+                                    <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescription.patient', 'avatar_128', record.raw_value)"/>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="o_kanban_image_fill_left d-none d-md-block o_kanban_image_full">
-                                    <img t-attf-src="#{kanban_image('prescriptions.patient', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
+                                    <img t-attf-src="#{kanban_image('prescription.patient', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
                                 </div>
                                 <div class="o_kanban_image d-md-none d-block o_kanban_image_full">
-                                    <img t-attf-src="#{kanban_image('prescriptions.patient', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
+                                    <img t-attf-src="#{kanban_image('prescription.patient', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
                                 </div>
                             </t>
                             <div class="ribbon ribbon-top-right" invisible="active">
@@ -386,9 +386,9 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
 
-                            <t t-set="background_image" t-value="kanban_image('prescriptions.patient', 'avatar_128', record.id.raw_value)"/>
+                            <t t-set="background_image" t-value="kanban_image('prescription.patient', 'avatar_128', record.id.raw_value)"/>
                             <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
-                                <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescriptions.patient', 'avatar_128', record.raw_value)"/>
+                                <img class="o_kanban_image_inner_pic" t-if="record.raw_value" t-att-alt="record.value" t-att-src="kanban_image('prescription.patient', 'avatar_128', record.raw_value)"/>
                             </div>
                    
 
@@ -441,9 +441,9 @@
         </field>
     </record>
 
-    <record id="prescriptions_patient_search_view" model="ir.ui.view">
-        <field name="name">prescriptions.patient.search</field>
-        <field name="model">prescriptions.patient</field>
+    <record id="prescription_patient_search_view" model="ir.ui.view">
+        <field name="name">prescription.patient.search</field>
+        <field name="model">prescription.patient</field>
         <field name="arch" type="xml">
             <search string="Patients">
                 <field name="name"/>
@@ -470,12 +470,12 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="prescriptions_patient_window_action">
+    <record model="ir.actions.act_window" id="prescription_patient_window_action">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">prescriptions.patient</field>
+        <field name="res_model">prescription.patient</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="search_view_id" ref="prescriptions_patient_search_view"/>
+        <field name="search_view_id" ref="prescription_patient_search_view"/>
         <field name="context">{'default_company_type': 'person'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -487,67 +487,67 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="prescriptions_patient_his_window_action">
+    <record model="ir.actions.act_window" id="prescription_patient_his_window_action">
         <field name="name">Historys</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">prescriptions.patient</field>
+        <field name="res_model">prescription.patient</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window.view" id="prescriptions_patient_his_window_action_tree">
-        <field name="act_window_id" ref="prescriptions_patient_his_window_action" />
+    <record model="ir.actions.act_window.view" id="prescription_patient_his_window_action_tree">
+        <field name="act_window_id" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="20" />
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="prescriptions_patient_his_tree" />
+        <field name="view_id" ref="prescription_patient_his_tree" />
     </record>
 
-    <record model="ir.actions.act_window.view" id="prescriptions_patient_his_window_action_form">
-        <field name="act_window_id" ref="prescriptions_patient_his_window_action" />
+    <record model="ir.actions.act_window.view" id="prescription_patient_his_window_action_form">
+        <field name="act_window_id" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="20" />
         <field name="view_mode">form</field>
-        <field name="view_id" ref="prescriptions_patient_his_form" />
+        <field name="view_id" ref="prescription_patient_his_form" />
     </record>
 
-    <!-- <record model="ir.ui.menu" id="prescriptions_patient_menu">
+    <!-- <record model="ir.ui.menu" id="prescription_patient_menu">
         <field name="name">Patients</field>
-        <field name="parent_id" ref="pod_prescriptions_contacts.prescriptions_root_menu_administration" />
-        <field name="action" ref="prescriptions_patient_window_action" />
+        <field name="parent_id" ref="pod_prescription_contacts.prescription_root_menu_administration" />
+        <field name="action" ref="prescription_patient_window_action" />
         <field name="sequence" eval="5" />
     </record> -->
 
-    <!-- <record model="ir.ui.menu" id="prescriptions_patient_menu">
+    <!-- <record model="ir.ui.menu" id="prescription_patient_menu">
         <field name="name">Patients</field>
         <field name="parent_id" ref="contacts.menu_contacts" />
-        <field name="action" ref="prescriptions_patient_window_action" />
+        <field name="action" ref="prescription_patient_window_action" />
         <field name="sequence" eval="6" />
     </record> -->
 
 
-    <!-- <record model="ir.ui.menu" id="prescriptions_patient_his_menu">
+    <!-- <record model="ir.ui.menu" id="prescription_patient_his_menu">
         <field name="name">History</field>
-        <field name="parent_id" ref="pod_prescriptions_contacts.prescriptions_root_menu_administration" />
-        <field name="action" ref="prescriptions_patient_his_window_action" />
+        <field name="parent_id" ref="pod_prescription_contacts.prescription_root_menu_administration" />
+        <field name="action" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="6" />
     </record> -->
 
-    <!-- <record model="ir.ui.menu" id="prescriptions_patient_his_menu">
+    <!-- <record model="ir.ui.menu" id="prescription_patient_his_menu">
         <field name="name">History</field>
         <field name="parent_id" ref="contacts.menu_contacts" />
-        <field name="action" ref="prescriptions_patient_his_window_action" />
+        <field name="action" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="6" />
     </record> -->
 
-    <!-- <record model="ir.ui.menu" id="prescriptions_patient">
+    <!-- <record model="ir.ui.menu" id="prescription_patient">
         <field name="name">Patients</field>
-        <field name="parent_id" ref="pod_prescriptions_contacts.prescriptions_root_administration" />
-        <field name="action" ref="prescriptions_patient_window_action" />
+        <field name="parent_id" ref="pod_prescription_contacts.prescription_root_administration" />
+        <field name="action" ref="prescription_patient_window_action" />
         <field name="sequence" eval="40" />
     </record>
 
-    <record model="ir.ui.menu" id="prescriptions_patient_his">
+    <record model="ir.ui.menu" id="prescription_patient_his">
         <field name="name">HIS</field>
-        <field name="parent_id" ref="prescriptions_root" />
-        <field name="action" ref="prescriptions_patient_his_window_action" />
+        <field name="parent_id" ref="prescription_root" />
+        <field name="action" ref="prescription_patient_his_window_action" />
         <field name="sequence" eval="1" />
     </record> -->
 

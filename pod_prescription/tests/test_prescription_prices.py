@@ -9,7 +9,7 @@ from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_compare, mute_logger, float_round
 
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 
 @tagged('post_install', '-at_install')
@@ -106,7 +106,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         with freeze_time(today):
             # Create an order today, add line today, rule active today works
             self.empty_order.date_order = today
-            order_line = self.env['prescriptions.order.line'].create({
+            order_line = self.env['prescription.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
@@ -119,7 +119,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
 
             # Create an order tomorrow, add line today, rule active today doesn't work
             self.empty_order.date_order = tomorrow
-            order_line = self.env['prescriptions.order.line'].create({
+            order_line = self.env['prescription.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
@@ -131,7 +131,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         with freeze_time(tomorrow):
             # Create an order tomorrow, add line tomorrow, rule active today doesn't work
             self.empty_order.date_order = tomorrow
-            order_line = self.env['prescriptions.order.line'].create({
+            order_line = self.env['prescription.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
@@ -142,7 +142,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
 
             # Create an order today, add line tomorrow, rule active today works
             self.empty_order.date_order = today
-            order_line = self.env['prescriptions.order.line'].create({
+            order_line = self.env['prescription.order.line'].create({
                 'order_id': self.empty_order.id,
                 'product_id': self.product.id,
             })
@@ -224,7 +224,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
                 'currency_id': other_currency.id,
                 'company_id': self.env.company.id,
             })
-            order_in_other_currency = self.env['prescriptions.order'].create({
+            order_in_other_currency = self.env['prescription.order'].create({
                 'partner_id': self.partner.id,
                 'pricelist_id': pricelist_in_other_curr.id,
                 'order_line': [
@@ -242,7 +242,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         """aka surcharges"""
         self.discount = -10
         rule = self._create_discount_pricelist_rule()
-        order_line = self.env['prescriptions.order.line'].create({
+        order_line = self.env['prescription.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
@@ -252,7 +252,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         # Even when the discount is supposed to be shown
         #   Surcharges shouldn't be shown to the user
         self.pricelist.discount_policy = 'without_discount'
-        order_line = self.env['prescriptions.order.line'].create({
+        order_line = self.env['prescription.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
@@ -291,7 +291,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             'date_order': '2018-07-11',
         })
 
-        order_line = self.env['prescriptions.order.line'].create({
+        order_line = self.env['prescription.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
@@ -342,7 +342,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             'pricelist_id': pricelist_eur.id,
         })
 
-        order_line = self.env['prescriptions.order.line'].create({
+        order_line = self.env['prescription.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
@@ -428,7 +428,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         # company currency = so currency
         # product_1.currency != so currency
         # product_2.cost_currency_id = so currency
-        prescriptions_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescriptions.order'].create({
+        prescription_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescription.order'].create({
             'partner_id': self.env.user.partner_id.id,
             'pricelist_id': pricelist.id,
             'order_line': [
@@ -443,8 +443,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             ]
         })
 
-        so_line_1 = prescriptions_order.order_line[0]
-        so_line_2 = prescriptions_order.order_line[1]
+        so_line_1 = prescription_order.order_line[0]
+        so_line_2 = prescription_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
         self.assertEqual(so_line_1.price_unit, 50.0)
         self.assertEqual(so_line_2.discount, 10)
@@ -455,7 +455,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         # product_1.currency == so currency
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
-        prescriptions_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescriptions.order'].create({
+        prescription_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescription.order'].create({
             'partner_id': self.env.user.partner_id.id,
             'pricelist_id': pricelist.id,
             'order_line': [
@@ -471,8 +471,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             ]
         })
 
-        so_line_1 = prescriptions_order.order_line[0]
-        so_line_2 = prescriptions_order.order_line[1]
+        so_line_1 = prescription_order.order_line[0]
+        so_line_2 = prescription_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
         self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
@@ -484,15 +484,15 @@ class TestPrescriptionPrices(PrescriptionCommon):
         `_recompute_prices` is shown as a button to update
         prices when the pricelist was changed.
         """
-        prescriptions_order = self.prescriptions_order
-        so_amount = prescriptions_order.amount_total
+        prescription_order = self.prescription_order
+        so_amount = prescription_order.amount_total
         start_so_amount = so_amount
-        prescriptions_order._recompute_prices()
+        prescription_order._recompute_prices()
         self.assertEqual(
-            prescriptions_order.amount_total, so_amount,
+            prescription_order.amount_total, so_amount,
             "Updating the prices of an unmodified SO shouldn't modify the amounts")
 
-        pricelist = prescriptions_order.pricelist_id
+        pricelist = prescription_order.pricelist_id
         pricelist.item_ids = [
             fields.Command.create({
                 'percent_price': 5.0,
@@ -500,27 +500,27 @@ class TestPrescriptionPrices(PrescriptionCommon):
             })
         ]
         pricelist.discount_policy = "without_discount"
-        prescriptions_order._recompute_prices()
+        prescription_order._recompute_prices()
 
-        self.assertTrue(all(line.discount == 5 for line in prescriptions_order.order_line))
-        self.assertEqual(prescriptions_order.amount_undiscounted, so_amount)
-        self.assertEqual(prescriptions_order.amount_total, 0.95*so_amount)
+        self.assertTrue(all(line.discount == 5 for line in prescription_order.order_line))
+        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
+        self.assertEqual(prescription_order.amount_total, 0.95*so_amount)
 
         pricelist.discount_policy = "with_discount"
-        prescriptions_order._recompute_prices()
+        prescription_order._recompute_prices()
 
-        self.assertTrue(all(line.discount == 0 for line in prescriptions_order.order_line))
-        self.assertEqual(prescriptions_order.amount_undiscounted, so_amount)
-        self.assertEqual(prescriptions_order.amount_total, 0.95*so_amount)
+        self.assertTrue(all(line.discount == 0 for line in prescription_order.order_line))
+        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
+        self.assertEqual(prescription_order.amount_total, 0.95*so_amount)
 
         # Test taking off the pricelist
-        prescriptions_order.pricelist_id = False
-        prescriptions_order._recompute_prices()
+        prescription_order.pricelist_id = False
+        prescription_order._recompute_prices()
 
-        self.assertTrue(all(line.discount == 0 for line in prescriptions_order.order_line))
-        self.assertEqual(prescriptions_order.amount_undiscounted, so_amount)
+        self.assertTrue(all(line.discount == 0 for line in prescription_order.order_line))
+        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
         self.assertEqual(
-            prescriptions_order.amount_total, start_so_amount,
+            prescription_order.amount_total, start_so_amount,
             "The SO amount without pricelist should be the same than with an empty pricelist"
         )
 
@@ -529,15 +529,15 @@ class TestPrescriptionPrices(PrescriptionCommon):
     # all the useless setup not needed here.
     # If you need the accounting common (journals, ...), use/make another test class
 
-    def test_prescriptions_tax_mapping(self):
+    def test_prescription_tax_mapping(self):
         tax_a, tax_b = self.env['account.tax'].create([{
             'name': 'Test tax A',
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
             'price_include': True,
             'amount': 15.0,
         }, {
             'name': 'Test tax B',
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
             'amount': 6.0,
         }])
 
@@ -711,7 +711,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         # Create the SO with one SO line and apply a pricelist and fiscal position on it
         # Then check if price unit and price subtotal matches the expected values
 
-        PrescriptionOrder = self.env['prescriptions.order']
+        PrescriptionOrder = self.env['prescription.order']
 
         # Test Mapping included to included
         order_form = Form(PrescriptionOrder)
@@ -722,8 +722,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_a.product_variant_id.name
             line.product_id = product_tmpl_a.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 106, 'price_subtotal': 100}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 106, 'price_subtotal': 100}])
 
         # Test Mapping excluded to included
         order_form = Form(PrescriptionOrder)
@@ -734,8 +734,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_b.product_variant_id.name
             line.product_id = product_tmpl_b.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 100, 'price_subtotal': 94.34}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 94.34}])
 
         # Test Mapping included to excluded
         order_form = Form(PrescriptionOrder)
@@ -746,8 +746,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_a.product_variant_id.name
             line.product_id = product_tmpl_a.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
         # Test Mapping excluded to excluded
         order_form = Form(PrescriptionOrder)
@@ -758,8 +758,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_b.product_variant_id.name
             line.product_id = product_tmpl_b.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
         # Test Mapping (included,excluded) to (included, included)
         order_form = Form(PrescriptionOrder)
@@ -770,8 +770,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_c.product_variant_id.name
             line.product_id = product_tmpl_c.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 100, 'price_subtotal': 84.91}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 84.91}])
 
         # Test Mapping (excluded,included) to (excluded, excluded)
         order_form = Form(PrescriptionOrder)
@@ -782,8 +782,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             line.name = product_tmpl_d.product_variant_id.name
             line.product_id = product_tmpl_d.product_variant_id
             line.product_uom_qty = 1.0
-        prescriptions_order = order_form.save()
-        self.assertRecordValues(prescriptions_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
+        prescription_order = order_form.save()
+        self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
     def test_so_tax_mapping(self):
         order = self.empty_order
@@ -792,11 +792,11 @@ class TestPrescriptionPrices(PrescriptionCommon):
             'name': 'Include Tax',
             'amount': '21.00',
             'price_include': True,
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
         }, {
             'name': 'Exclude Tax',
             'amount': '0.00',
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
         }])
 
         self.product.write({
@@ -829,14 +829,14 @@ class TestPrescriptionPrices(PrescriptionCommon):
         """ Check that fixed tax include are correctly computed while the price_unit is 0 """
         taxes = self.env['account.tax'].create([{
             'name': 'BEBAT 0.05',
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
             'amount_type': 'fixed',
             'amount': 0.05,
             'price_include': True,
             'include_base_amount': True,
         }, {
             'name': 'Recupel 0.25',
-            'type_tax_use': 'prescriptions',
+            'type_tax_use': 'prescription',
             'amount_type': 'fixed',
             'amount': 0.25,
             'price_include': True,
@@ -863,7 +863,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             'amount_total': 0.0,
         }])
 
-    def test_prescriptions_with_taxes(self):
+    def test_prescription_with_taxes(self):
         """ Test SO with taxes applied on its lines and check subtotal applied on its lines and total applied on the SO """
         tax_include, tax_exclude = self.env['account.tax'].create([{
             'name': 'Tax with price include',
@@ -874,11 +874,11 @@ class TestPrescriptionPrices(PrescriptionCommon):
             'amount': 10,
         }])
 
-        # Apply taxes on the prescriptions order lines
-        self.prescriptions_order.order_line[0].write({'tax_id': [Command.link(tax_include.id)]})
-        self.prescriptions_order.order_line[1].write({'tax_id': [Command.link(tax_exclude.id)]})
+        # Apply taxes on the prescription order lines
+        self.prescription_order.order_line[0].write({'tax_id': [Command.link(tax_include.id)]})
+        self.prescription_order.order_line[1].write({'tax_id': [Command.link(tax_exclude.id)]})
 
-        for line in self.prescriptions_order.order_line:
+        for line in self.prescription_order.order_line:
             if line.tax_id.price_include:
                 price = line.price_unit * line.product_uom_qty - line.price_tax
             else:
@@ -887,8 +887,8 @@ class TestPrescriptionPrices(PrescriptionCommon):
             self.assertEqual(float_compare(line.price_subtotal, price, precision_digits=2), 0)
 
         self.assertAlmostEqual(
-            self.prescriptions_order.amount_total,
-            self.prescriptions_order.amount_untaxed + self.prescriptions_order.amount_tax,
+            self.prescription_order.amount_total,
+            self.prescription_order.amount_untaxed + self.prescription_order.amount_tax,
             places=2)
 
     def test_discount_and_untaxed_subtotal(self):
@@ -980,7 +980,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         self.assertEqual(line.price_subtotal, 136.36)
 
     def test_product_quantity_rounding(self):
-        """When adding a prescriptions order line, product quantity should be rounded
+        """When adding a prescription order line, product quantity should be rounded
         according to decimal precision"""
         order = self.empty_order
 

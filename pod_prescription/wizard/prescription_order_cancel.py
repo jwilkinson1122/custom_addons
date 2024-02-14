@@ -6,9 +6,9 @@ from odoo.exceptions import UserError
 
 
 class PrescriptionOrderCancel(models.TransientModel):
-    _name = 'prescriptions.order.cancel'
+    _name = 'prescription.order.cancel'
     _inherit = 'mail.composer.mixin'
-    _description = "Prescriptions Order Cancel"
+    _description = "Prescription Order Cancel"
 
     @api.model
     def _default_author_id(self):
@@ -30,7 +30,7 @@ class PrescriptionOrderCancel(models.TransientModel):
         compute='_compute_recipient_ids',
         readonly=False,
     )
-    order_id = fields.Many2one('prescriptions.order', string="Prescription Order", required=True, ondelete='cascade')
+    order_id = fields.Many2one('prescription.order', string="Prescription Order", required=True, ondelete='cascade')
     display_invoice_alert = fields.Boolean(
         string="Invoice Alert",
         compute='_compute_display_invoice_alert',

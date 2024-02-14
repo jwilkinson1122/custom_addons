@@ -19,13 +19,13 @@ export class QtyAtDatePopover extends Component {
                 active_id: this.props.record.data.product_id[0],
                 warehouse: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id[0],
                 move_to_match_ids: this.props.record.data.move_ids.records.map(record => record.resId),
-                prescriptions_line_to_match_id: this.props.record.resId,
+                prescription_line_to_match_id: this.props.record.resId,
             },
         });
     }
 }
 
-QtyAtDatePopover.template = "pod_prescriptions_stock.QtyAtDatePopover";
+QtyAtDatePopover.template = "pod_prescription_stock.QtyAtDatePopover";
 
 export class CustomQtyAtDateWidget extends Component {
     setup() {
@@ -41,7 +41,7 @@ export class CustomQtyAtDateWidget extends Component {
         const { data } = this.props.record;
         if (data.scheduled_date) {
             // TODO: might need some round_decimals to avoid errors
-            if (data.state === 'prescriptions') {
+            if (data.state === 'prescription') {
                 this.calcData.will_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
             } else {
                 this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
@@ -79,7 +79,7 @@ export class CustomQtyAtDateWidget extends Component {
 }
 
 CustomQtyAtDateWidget.components = { Popover: QtyAtDatePopover };
-CustomQtyAtDateWidget.template = "pod_prescriptions_stock.CustomQtyAtDate";
+CustomQtyAtDateWidget.template = "pod_prescription_stock.CustomQtyAtDate";
 
 export const customQtyAtDateWidget = {
     component: CustomQtyAtDateWidget,

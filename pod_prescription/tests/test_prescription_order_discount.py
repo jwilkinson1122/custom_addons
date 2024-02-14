@@ -3,7 +3,7 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 
 @tagged('post_install', '-at_install')
@@ -12,8 +12,8 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.wizard = cls.env['prescriptions.order.discount'].create({
-            'prescriptions_order_id': cls.prescriptions_order.id,
+        cls.wizard = cls.env['prescription.order.discount'].create({
+            'prescription_order_id': cls.prescription_order.id,
             'discount_type': 'amount',
         })
 
@@ -24,14 +24,14 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         })
         self.wizard.action_apply_discount()
 
-        discount_line = self.prescriptions_order.order_line[-1]
+        discount_line = self.prescription_order.order_line[-1]
         self.assertEqual(discount_line.price_unit, -55)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
         self.assertFalse(discount_line.tax_id)
 
     def test_so_discount(self):
-        solines = self.prescriptions_order.order_line
-        amount_before_discount = self.prescriptions_order.amount_total
+        solines = self.prescription_order.order_line
+        amount_before_discount = self.prescription_order.amount_total
         self.assertEqual(len(solines), 2)
 
         # No taxes
@@ -42,7 +42,7 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         })
         self.wizard.action_apply_discount()
 
-        discount_line = self.prescriptions_order.order_line[-1]
+        discount_line = self.prescription_order.order_line[-1]
         self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
         self.assertFalse(discount_line.tax_id)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
@@ -53,7 +53,7 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         solines.tax_id = dumb_tax
         self.wizard.action_apply_discount()
 
-        discount_line = self.prescriptions_order.order_line - solines
+        discount_line = self.prescription_order.order_line - solines
         discount_line.ensure_one()
         self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
@@ -63,7 +63,7 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         discount_line.unlink()
         solines[0].tax_id = [Command.clear()]
         self.wizard.action_apply_discount()
-        discount_lines = self.prescriptions_order.order_line - solines
+        discount_lines = self.prescription_order.order_line - solines
         self.assertEqual(len(discount_lines), 2)
         self.assertEqual(discount_lines[0].price_unit, -solines[0].price_subtotal * 0.5)
         self.assertEqual(discount_lines[1].price_unit, -solines[1].price_subtotal * 0.5)
@@ -72,7 +72,7 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         self.assertTrue(all(line.product_uom_qty == 1.0 for line in discount_lines))
 
     def test_sol_discount(self):
-        so_amount = self.prescriptions_order.amount_untaxed
+        so_amount = self.prescription_order.amount_untaxed
         self.wizard.write({
             'discount_percentage': 0.5,  # 50%
             'discount_type': 'sol_discount',
@@ -80,6 +80,6 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         self.wizard.action_apply_discount()
 
         self.assertTrue(
-            all(line.discount == 50 for line in self.prescriptions_order.order_line)
+            all(line.discount == 50 for line in self.prescription_order.order_line)
         )
-        self.assertAlmostEqual(self.prescriptions_order.amount_untaxed, so_amount*0.5)
+        self.assertAlmostEqual(self.prescription_order.amount_untaxed, so_amount*0.5)

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <template id="report_prescription_order_document_inherit_prescriptions_stock" inherit_id="pod_prescriptions.report_prescription_order_document">
+    <template id="report_prescription_order_document_inherit_prescription_stock" inherit_id="pod_prescription.report_prescription_order_document">
         <xpath expr="//div[@name='expiration_date']" position="after">
             <div class="col-auto col-3 mw-100 mb-2" t-if="doc.incoterm">
                 <strong>Incoterm:</strong>

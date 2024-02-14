@@ -4,7 +4,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseUsersCommon, HttpCaseWithUserPortal
-from odoo.addons.pod_prescriptions.tests.common import PrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import PrescriptionCommon
 
 
 @tagged('post_install', '-at_install')
@@ -12,8 +12,8 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, PrescriptionCommon)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_controller(self):
-        private_so = self.prescriptions_order
-        portal_so = self.prescriptions_order.copy()
+        private_so = self.prescription_order
+        portal_so = self.prescription_order.copy()
         portal_so.message_subscribe(self.user_portal.partner_id.ids)
 
         portal_so._portal_ensure_token()
@@ -68,28 +68,28 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, PrescriptionCommon)
 @tagged('post_install', '-at_install')
 class TestPrescriptionSignature(HttpCaseWithUserPortal):
 
-    def test_01_portal_prescriptions_signature_tour(self):
+    def test_01_portal_prescription_signature_tour(self):
         """The goal of this test is to make sure the portal user can sign SO."""
 
         portal_user_partner = self.partner_portal
         # create a SO to be signed
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'name': 'test SO',
             'partner_id': portal_user_partner.id,
             'state': 'sent',
             'require_payment': False,
         })
-        self.env['prescriptions.order.line'].create({
-            'order_id': prescriptions_order.id,
+        self.env['prescription.order.line'].create({
+            'order_id': prescription_order.id,
             'product_id': self.env['product.product'].create({'name': 'A product'}).id,
         })
 
         # must be sent to the user so he can see it
-        email_act = prescriptions_order.action_quotation_send()
+        email_act = prescription_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
-        prescriptions_order.with_context(**email_ctx).message_post_with_source(
+        prescription_order.with_context(**email_ctx).message_post_with_source(
             self.env['mail.template'].browse(email_ctx.get('default_template_id')),
             subtype_xmlid='mail.mt_comment',
         )
 
-        self.start_tour("/", 'prescriptions_signature', login="portal")
+        self.start_tour("/", 'prescription_signature', login="portal")

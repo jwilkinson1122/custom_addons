@@ -8,7 +8,7 @@ import {
 
 export class Product extends Component {
     static components = { PTAL };
-    static template = "pod_prescriptions_product_configurator.product";
+    static template = "pod_prescription_product_configurator.product";
     static props = {
         id: { type: [Number, {value: false}], optional: true },
         product_tmpl_id: Number,

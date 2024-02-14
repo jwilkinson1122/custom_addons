@@ -2,10 +2,10 @@
 <odoo>
     <data noupdate="0">
         <!-- Activities -->
-        <record id="mail_act_prescriptions_upsell" model="mail.activity.type">
+        <record id="mail_act_prescription_upsell" model="mail.activity.type">
             <field name="name">Order Upsell</field>
             <field name="icon">fa-line-chart</field>
-            <field name="res_model">prescriptions.order</field>
+            <field name="res_model">prescription.order</field>
         </record>
     </data>
 </odoo>

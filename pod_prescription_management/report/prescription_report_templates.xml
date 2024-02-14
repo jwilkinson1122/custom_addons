@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_prescription_order_document_inherit_prescriptions_management" inherit_id="pod_prescriptions.report_prescription_order_document">
+<template id="report_prescription_order_document_inherit_prescription_management" inherit_id="pod_prescription.report_prescription_order_document">
     <xpath expr="//div[@name='signature']" position="after">
-        <div t-if="not (doc.prescriptions_order_option_ids and doc.state in ['draft', 'sent'])" class="oe_structure">&#8203;</div>
+        <div t-if="not (doc.prescription_order_option_ids and doc.state in ['draft', 'sent'])" class="oe_structure">&#8203;</div>
         <div t-else="">
-            <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in doc.prescriptions_order_option_ids)" />
+            <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in doc.prescription_order_option_ids)" />
             <h4 name="h_optional_products">
                 <span>Options</span>
             </h4>
@@ -16,8 +16,8 @@
                         <td name="th_option_price_unit" class="text-end">Unit Price</td>
                     </tr>
                 </thead>
-                <tbody class="prescriptions_tbody">
-                    <tr t-foreach="doc.prescriptions_order_option_ids" t-as="option">
+                <tbody class="prescription_tbody">
+                    <tr t-foreach="doc.prescription_order_option_ids" t-as="option">
                         <td name="td_option_name">
                             <span t-field="option.name">Extra Chips</span>
                         </td>

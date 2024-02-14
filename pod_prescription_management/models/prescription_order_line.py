@@ -5,25 +5,25 @@ from odoo import api, fields, models
 
 
 class PrescriptionOrderLine(models.Model):
-    _inherit = "prescriptions.order.line"
-    _description = "Prescriptions Order Line"
+    _inherit = "prescription.order.line"
+    _description = "Prescription Order Line"
 
-    prescriptions_order_option_ids = fields.One2many('prescriptions.order.option', 'line_id', 'Optional Products Lines')
+    prescription_order_option_ids = fields.One2many('prescription.order.option', 'line_id', 'Optional Products Lines')
 
     @api.depends('product_id')
     def _compute_name(self):
         # Take the description on the order template if the product is present in it
         super()._compute_name()
         for line in self:
-            if line.product_id and line.order_id.prescriptions_order_template_id and line._use_template_name():
-                for template_line in line.order_id.prescriptions_order_template_id.prescriptions_order_template_line_ids:
+            if line.product_id and line.order_id.prescription_order_template_id and line._use_template_name():
+                for template_line in line.order_id.prescription_order_template_id.prescription_order_template_line_ids:
                     if line.product_id == template_line.product_id:
                         lang = line.order_id.partner_id.lang
-                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_prescriptions_order_line_multiline_description_variants()
+                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_prescription_order_line_multiline_description_variants()
                         break
 
     def _use_template_name(self):
-        """ Allows overriding to avoid using the template lines descriptions for the prescriptions order lines descriptions.
+        """ Allows overriding to avoid using the template lines descriptions for the prescription order lines descriptions.
     This is typically useful for 'configured' products, such as event_ticket or event_booth, where we need to have
     specific configuration information inside description instead of the default values.
     """
@@ -38,12 +38,12 @@ class PrescriptionOrderLine(models.Model):
 
     def _lines_without_price_recomputation(self):
         """ Hook to allow filtering the lines to avoid the recomputation of the price. """
-        return self.filtered('prescriptions_order_option_ids')
+        return self.filtered('prescription_order_option_ids')
 
     #=== TOOLING ===#
 
     def _can_be_edited_on_portal(self):
         return self.order_id._can_be_edited_on_portal() and (
-            self.prescriptions_order_option_ids
-            or self.product_id in self.order_id.prescriptions_order_option_ids.product_id
+            self.prescription_order_option_ids
+            or self.product_id in self.order_id.prescription_order_option_ids.product_id
         )

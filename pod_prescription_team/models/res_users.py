@@ -8,14 +8,14 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     crm_team_ids = fields.Many2many(
-        'crm.team', 'crm_team_member', 'user_id', 'crm_team_id', string='Prescriptions Teams',
+        'crm.team', 'crm_team_member', 'user_id', 'crm_team_id', string='Prescription Teams',
         check_company=True, copy=False, readonly=True,
         compute='_compute_crm_team_ids', search='_search_crm_team_ids')
-    crm_team_member_ids = fields.One2many('crm.team.member', 'user_id', string='Prescriptions Team Members')
-    prescriptions_team_id = fields.Many2one(
-        'crm.team', string='User Prescriptions Team', compute='_compute_prescriptions_team_id',
+    crm_team_member_ids = fields.One2many('crm.team.member', 'user_id', string='Prescription Team Members')
+    prescription_team_id = fields.Many2one(
+        'crm.team', string='User Prescription Team', compute='_compute_prescription_team_id',
         readonly=True, store=True,
-        help="Main user prescriptions team. Used notably for pipeline, or to set prescriptions team in invoicing or subscription.")
+        help="Main user prescription team. Used notably for pipeline, or to set prescription team in invoicing or subscription.")
 
     @api.depends('crm_team_member_ids.active')
     def _compute_crm_team_ids(self):
@@ -26,10 +26,10 @@ class ResUsers(models.Model):
         return [('crm_team_member_ids.crm_team_id', operator, value)]
 
     @api.depends('crm_team_member_ids.crm_team_id', 'crm_team_member_ids.create_date', 'crm_team_member_ids.active')
-    def _compute_prescriptions_team_id(self):
+    def _compute_prescription_team_id(self):
         for user in self:
             if not user.crm_team_member_ids.ids:
-                user.prescriptions_team_id = False
+                user.prescription_team_id = False
             else:
                 sorted_memberships = user.crm_team_member_ids  # sorted by create date
-                user.prescriptions_team_id = sorted_memberships[0].crm_team_id if sorted_memberships else False
+                user.prescription_team_id = sorted_memberships[0].crm_team_id if sorted_memberships else False

@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="product_template_form_view" model="ir.ui.view">
-        <field name="name">product.template.form.view.inherit.prescriptions</field>
+        <field name="name">product.template.form.view.inherit.prescription</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -35,36 +35,36 @@
     </record>
 
     <!-- TODO VFE inherit product_template_form_view and factorize both views -->
-    <record id="product_form_view_prescriptions_order_button" model="ir.ui.view">
-        <field name="name">product.product.prescriptions.order</field>
+    <record id="product_form_view_prescription_order_button" model="ir.ui.view">
+        <field name="name">product.product.prescription.order</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
             <!-- <xpath expr="//page[@name='inventory']" position="after">
-                <page name='prescriptions' string='Prescriptions'>
+                <page name='prescription' string='Prescription'>
                     <group>
-                        <field name="prescriptions_ok" invisible="1" /> 
+                        <field name="prescription_ok" invisible="1" /> 
                     </group>
                 </page>
             </xpath> -->
             <xpath expr="//div[@name='options']" position="inside">
                 <div>
-                    <field name="prescriptions_ok"/>
-                    <label for="prescriptions_ok" string="Show in Prescriptions"/>
+                    <field name="prescription_ok"/>
+                    <label for="prescription_ok" string="Show in Prescription"/>
                 </div>
             </xpath>
        
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
-                    name="action_view_prescriptions"
+                    name="action_view_prescription"
                     type="object"
                     icon="fa-signal"
                     help="Sold in the last 365 days"
-                    groups="pod_prescriptions_team.group_prescriptions_personnel"
-                    invisible="not prescriptions_ok">
+                    groups="pod_prescription_team.group_prescription_personnel"
+                    invisible="not prescription_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
-                            <field name="prescriptions_count" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="prescription_count" widget="statinfo" nolabel="1" class="oe_inline"/>
                             <field name="uom_name" class="oe_inline"/>
                         </span>
                         <span class="o_stat_text">Sold</span>
@@ -72,40 +72,40 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <t groups="pod_prescriptions_team.group_prescriptions_personnel">
-                    <group string="Warning when Selling this Product" groups="pod_prescriptions.group_warning_prescription">
-                        <field name="prescriptions_line_warn" nolabel="1" colspan="2"/>
-                        <field name="prescriptions_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
-                                readonly="prescriptions_line_warn == 'no-message'"
-                                required="prescriptions_line_warn != 'no-message'"/>
+                <t groups="pod_prescription_team.group_prescription_personnel">
+                    <group string="Warning when Selling this Product" groups="pod_prescription.group_warning_prescription">
+                        <field name="prescription_line_warn" nolabel="1" colspan="2"/>
+                        <field name="prescription_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
+                                readonly="prescription_line_warn == 'no-message'"
+                                required="prescription_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>
         </field>
     </record>
 
-    <record id="product_template_form_view_prescriptions_order_button" model="ir.ui.view">
-        <field name="name">product.template.prescriptions.order.button</field>
+    <record id="product_template_form_view_prescription_order_button" model="ir.ui.view">
+        <field name="name">product.template.prescription.order.button</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
  
             <xpath expr="//div[@name='options']" position="inside">
                 <div>
-                    <field name="prescriptions_ok" />
-                    <label for="prescriptions_ok" string="Show in Prescriptions"/>
+                    <field name="prescription_ok" />
+                    <label for="prescription_ok" string="Show in Prescription"/>
                 </div>
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
-                    name="action_view_prescriptions"
+                    name="action_view_prescription"
                     type="object" icon="fa-signal"
                     help="Sold in the last 365 days"
-                    groups="pod_prescriptions_team.group_prescriptions_personnel"
-                    invisible="not prescriptions_ok">
+                    groups="pod_prescription_team.group_prescription_personnel"
+                    invisible="not prescription_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
-                            <field name="prescriptions_count" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="prescription_count" widget="statinfo" nolabel="1" class="oe_inline"/>
                             <field name="uom_name" class="oe_inline"/>
                         </span>
                         <span class="o_stat_text">Sold</span>
@@ -113,13 +113,13 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <t groups="pod_prescriptions_team.group_prescriptions_personnel">
-                    <group string="Warning when Selling this Product" groups="pod_prescriptions.group_warning_prescription">
-                        <field name="prescriptions_line_warn" string="Warning"/>
-                        <field name="prescriptions_line_warn_msg" string="Message" placeholder="Type a message..."
-                                invisible="prescriptions_line_warn == 'no-message'"
-                                readonly="prescriptions_line_warn == 'no-message'"
-                                required="prescriptions_line_warn != 'no-message'"/>
+                <t groups="pod_prescription_team.group_prescription_personnel">
+                    <group string="Warning when Selling this Product" groups="pod_prescription.group_warning_prescription">
+                        <field name="prescription_line_warn" string="Warning"/>
+                        <field name="prescription_line_warn_msg" string="Message" placeholder="Type a message..."
+                                invisible="prescription_line_warn == 'no-message'"
+                                readonly="prescription_line_warn == 'no-message'"
+                                required="prescription_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>
@@ -132,7 +132,7 @@
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="view_id" ref="product.product_template_kanban_view"/>
         <field name="search_view_id" ref="product.product_template_search_view"/>
-        <field name="context">{"search_default_filter_to_sell":1, "prescriptions_multi_pricelist_product_template": 1}</field>
+        <field name="context">{"search_default_filter_to_sell":1, "prescription_multi_pricelist_product_template": 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -144,26 +144,26 @@
     </record>
 
     <record id="product_view_kanban_catalog" model="ir.ui.view">
-        <field name="name">product.view.kanban.catalog.inherit.prescriptions</field>
+        <field name="name">product.view.kanban.catalog.inherit.prescription</field>
         <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
             <xpath expr="//t[@t-name='kanban-menu']" position="attributes">
-                <attribute name="groups">pod_prescriptions_team.group_prescriptions_manager</attribute>
+                <attribute name="groups">pod_prescription_team.group_prescription_manager</attribute>
             </xpath>
         </field>
     </record>
 
     <record id="product_view_search_catalog" model="ir.ui.view">
-        <field name="name">product.view.search.catalog.inherit.prescriptions</field>
+        <field name="name">product.view.search.catalog.inherit.prescription</field>
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
             <filter name="products" position="after">
                 <filter string="In the Order"
-                        invisible="context.get('active_model', '') != 'prescriptions.order.line'"
+                        invisible="context.get('active_model', '') != 'prescription.order.line'"
                         name="products_in_order"
-                        domain="[('product_catalog_product_is_in_prescriptions_order', '=', True)]"/>
+                        domain="[('product_catalog_product_is_in_prescription_order', '=', True)]"/>
             </filter>
         </field>
     </record>

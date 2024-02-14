@@ -3,12 +3,12 @@
 
 
 {
-    'name': 'NWPL - Prescriptions Base',
+    'name': 'NWPL - Prescription Base',
     "author": "NWPL",
     'version': '17.0.0.0.0',
-    'category': 'Podiatry/Prescriptions',
-    'summary': 'Prescriptions internal machinery',
-    'description': """This module contains all the features of Prescriptions Management.""",
+    'category': 'Podiatry/Prescription',
+    'summary': 'Prescription internal machinery',
+    'description': """This module contains all the features of Prescription Management.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': [
         'knowledge',
@@ -24,8 +24,8 @@
         'website_sale_product_configurator',
         'website_sale_stock',
         # 'website_sale_wishlist',
-        'pod_prescriptions_contacts',
-        'pod_prescriptions_team',
+        'pod_prescription_contacts',
+        'pod_prescription_team',
         'account_payment',  # -> account, payment, portal
         'utm',
         'theme_orchid',
@@ -38,11 +38,10 @@
         'report/account_invoice_report_views.xml',
         'report/ir_actions_report_templates.xml',
         'report/ir_actions_report.xml',
-        'report/prescriptions_report_views.xml',
+        'report/prescription_report_views.xml',
 
         'data/ir_cron.xml',
         'data/ir_sequence_data.xml',
-        'data/prescriptions_stage_data.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
@@ -64,13 +63,12 @@
         'wizard/mass_cancel_orders_views.xml',
         'wizard/payment_link_wizard_views.xml',
         'wizard/res_config_settings_views.xml',
-        'wizard/prescriptions_make_invoice_advance_views.xml',
-        'wizard/prescriptions_order_cancel_views.xml',
-        'wizard/prescriptions_order_discount_views.xml',
+        'wizard/prescription_make_invoice_advance_views.xml',
+        'wizard/prescription_order_cancel_views.xml',
+        'wizard/prescription_order_discount_views.xml',
 
-        # Define prescriptions order views before their references
-        'views/prescriptions_order_views.xml',
-        'views/prescriptions_order_kanban_view.xml',
+        # Define prescription order views before their references
+        'views/prescription_order_views.xml',
         'views/sale_order_view.xml',
         'views/account_views.xml',
         'views/crm_team_views.xml',
@@ -81,15 +79,15 @@
         'views/product_packaging_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
-        'views/prescriptions_order_line_views.xml',
-        'views/prescriptions_portal_templates.xml',
+        'views/prescription_order_line_views.xml',
+        'views/prescription_portal_templates.xml',
         'views/utm_campaign_views.xml',
 
-        'views/prescriptions_menus.xml',  # Last because referencing actions defined in previous files
+        'views/prescription_menus.xml',  # Last because referencing actions defined in previous files
     ],
     'demo': [
         'data/product_demo.xml',
-        'data/prescriptions_demo.xml',
+        'data/prescription_demo.xml',
         'demo/website.xml',
         'demo/website_attachments.xml',
         'demo/website_page_views.xml',
@@ -97,27 +95,27 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions/static/src/scss/prescriptions_onboarding.scss',
-            'pod_prescriptions/static/src/js/prescriptions_progressbar_field.js',
-            'pod_prescriptions/static/src/js/tours/prescriptions.js',
-            'pod_prescriptions/static/src/js/prescriptions_product_field.js',
-            'pod_prescriptions/static/src/xml/**/*',
+            'pod_prescription/static/src/scss/prescription_onboarding.scss',
+            'pod_prescription/static/src/js/prescription_progressbar_field.js',
+            'pod_prescription/static/src/js/tours/prescription.js',
+            'pod_prescription/static/src/js/prescription_product_field.js',
+            'pod_prescription/static/src/xml/**/*',
         ],
         'web.assets_frontend': [
-            'pod_prescriptions/static/src/scss/prescriptions_portal.scss',
-            'pod_prescriptions/static/src/js/prescriptions_portal_sidebar.js',
-            'pod_prescriptions/static/src/js/prescriptions_portal_prepayment.js',
-            'pod_prescriptions/static/src/js/prescriptions_portal.js',
+            'pod_prescription/static/src/scss/prescription_portal.scss',
+            'pod_prescription/static/src/js/prescription_portal_sidebar.js',
+            'pod_prescription/static/src/js/prescription_portal_prepayment.js',
+            'pod_prescription/static/src/js/prescription_portal.js',
         ],
         'web.assets_tests': [
-            'pod_prescriptions/static/tests/tours/**/*',
+            'pod_prescription/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            'pod_prescriptions/static/tests/**/*',
-            ('remove', 'pod_prescriptions/static/tests/tours/**/*')
+            'pod_prescription/static/tests/**/*',
+            ('remove', 'pod_prescription/static/tests/tours/**/*')
         ],
         'web.report_assets_common': [
-            'pod_prescriptions/static/src/scss/prescriptions_report.scss',
+            'pod_prescription/static/src/scss/prescription_report.scss',
         ],
     },
     'installable': True,

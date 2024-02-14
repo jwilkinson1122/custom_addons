@@ -13,9 +13,9 @@ from odoo.tools import float_is_zero, float_compare, float_round, format_date, g
 
 
 class PrescriptionOrderLine(models.Model):
-    _name = 'prescriptions.order.line'
+    _name = 'prescription.order.line'
     _inherit = 'analytic.mixin'
-    _description = "Prescriptions Order Line"
+    _description = "Prescription Order Line"
     _rec_names_search = ['name', 'order_id.name']
     _order = 'order_id, sequence, id'
     _check_company_auto = True
@@ -23,14 +23,19 @@ class PrescriptionOrderLine(models.Model):
     _sql_constraints = [
         ('accountable_required_fields',
             "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
-            "Missing required fields on accountable prescriptions order line."),
+            "Missing required fields on accountable prescription order line."),
         ('non_accountable_null_fields',
             "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))",
-            "Forbidden values on non-accountable prescriptions order line"),
+            "Forbidden values on non-accountable prescription order line"),
     ]
 
+    # Fields are ordered according by tech & business logics
+    # and computed fields are defined after their dependencies.
+    # This reduces execution stacks depth when precomputing fields
+    # on record creation (and is also a good ordering logic imho)
+
     order_id = fields.Many2one(
-        comodel_name='prescriptions.order',
+        comodel_name='prescription.order',
         string="Order Reference",
         required=True, ondelete='cascade', index=True, copy=False)
     
@@ -50,7 +55,7 @@ class PrescriptionOrderLine(models.Model):
         store=True, index=True, precompute=True)
     personnel_id = fields.Many2one(
         related='order_id.user_id',
-        string="Prescriptions Person",
+        string="Prescription Person",
         store=True, precompute=True)
     state = fields.Selection(
         related='order_id.state',
@@ -67,18 +72,18 @@ class PrescriptionOrderLine(models.Model):
         default=False)
     is_downpayment = fields.Boolean(
         string="Is a down payment",
-        help="Down payments are made when creating invoices from a prescriptions order."
-            " They are not copied when duplicating a prescriptions order.")
+        help="Down payments are made when creating invoices from a prescription order."
+            " They are not copied when duplicating a prescription order.")
     is_expense = fields.Boolean(
         string="Is expense",
-        help="Is true if the prescriptions order line comes from an expense or a vendor bills")
+        help="Is true if the prescription order line comes from an expense or a vendor bills")
 
     # Generic configuration fields
     product_id = fields.Many2one(
         comodel_name='product.product',
         string="Product",
         change_default=True, ondelete='restrict', check_company=True, index='btree_not_null',
-        domain="[('prescriptions_ok', '=', True)]")
+        domain="[('prescription_ok', '=', True)]")
         
     product_template_id = fields.Many2one(
         string="Product Template",
@@ -86,14 +91,14 @@ class PrescriptionOrderLine(models.Model):
         compute='_compute_product_template_id',
         readonly=False,
         search='_search_product_template_id',
-        domain=[('prescriptions_ok', '=', True)])
+        domain=[('prescription_ok', '=', True)])
     
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
     product_custom_attribute_value_ids = fields.Many2many(
         comodel_name='product.attribute.custom.value',
-        relation='prescriptions_order_line_rel',   
-        inverse_name='prescriptions_order_line_id',
+        relation='prescription_order_line_rel',   
+        inverse_name='prescription_order_line_id',
         string="Custom Values",
         compute='_compute_custom_attribute_values',
         store=True, readonly=False, precompute=True, copy=True
@@ -104,6 +109,32 @@ class PrescriptionOrderLine(models.Model):
         string="Extra Values",
         compute='_compute_no_variant_attribute_values',
         store=True, readonly=False, precompute=True, ondelete='restrict')
+
+
+    # product_template_id = fields.Many2one(
+    #     "product.template",
+    #     string="Product Template",
+    #     related="product_id.product_tmpl_id",
+    #     domain=[("purchase_ok", "=", True)],
+    # )
+    # is_configurable_product = fields.Boolean(
+    #     "Is the product configurable?",
+    #     related="product_template_id.has_configurable_attributes",
+    # )
+    # product_template_attribute_value_ids = fields.Many2many(
+    #     related="product_id.product_template_attribute_value_ids", readonly=True
+    # )
+    # product_no_variant_attribute_value_ids = fields.Many2many(
+    #     "product.template.attribute.value",
+    #     string="Product attribute values that do not create variants",
+    #     ondelete="restrict",
+    # )
+    # product_custom_attribute_value_ids = fields.One2many(
+    #     "product.attribute.custom.value",
+    #     "purchase_order_line_id",
+    #     string="Custom Values",
+    #     copy=True,
+    # )
 
     name = fields.Text(
         string="Description",
@@ -169,12 +200,13 @@ class PrescriptionOrderLine(models.Model):
         compute='_compute_price_reduce_taxinc',
         store=True, precompute=True)
 
+    # Logistics/Delivery fields
     product_packaging_id = fields.Many2one(
         comodel_name='product.packaging',
         string="Packaging",
         compute='_compute_product_packaging_id',
         store=True, readonly=False, precompute=True,
-        domain="[('prescriptions', '=', True), ('product_id','=',product_id)]",
+        domain="[('prescription', '=', True), ('product_id','=',product_id)]",
         check_company=True)
     product_packaging_qty = fields.Float(
         string="Packaging Quantity",
@@ -184,7 +216,8 @@ class PrescriptionOrderLine(models.Model):
     customer_lead = fields.Float(
         string="Lead Time",
         compute='_compute_customer_lead',
-        store=True, readonly=False, required=True, precompute=True)
+        store=True, readonly=False, required=True, precompute=True,
+        help="Number of days between the order confirmation and the shipping of the products to the customer")
 
     qty_delivered_method = fields.Selection(
         selection=[
@@ -193,7 +226,12 @@ class PrescriptionOrderLine(models.Model):
         ],
         string="Method to update delivered qty",
         compute='_compute_qty_delivered_method',
-        store=True, precompute=True)
+        store=True, precompute=True,
+        help="According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+             "  - Manual: the quantity is set manually on the line\n"
+             "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+             "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this prescription line\n"
+             "  - Stock Moves: the quantity comes from confirmed pickings\n")
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
@@ -216,36 +254,30 @@ class PrescriptionOrderLine(models.Model):
         comodel_name='account.analytic.line', inverse_name='so_line',
         string="Analytic lines")
 
-    sale_lines = fields.Many2many(
+    invoice_lines = fields.Many2many(
         comodel_name='account.move.line',
-        relation='prescription_order_line_sale_rel', column1='prescription_line_id', column2='sale_line_id',
-        string="Sale Order Lines",
+        relation='prescription_order_line_invoice_rel', column1='order_line_id', column2='invoice_line_id',
+        string="Invoice Lines",
         copy=False)
-    
-    # invoice_lines = fields.Many2many(
-    #     comodel_name='account.move.line',
-    #     relation='prescriptions_order_line_sale_rel', column1='order_line_id', column2='invoice_line_id',
-    #     string="Invoice Lines",
-    #     copy=False)
-    # invoice_status = fields.Selection(
-    #     selection=[
-    #         ('upselling', "Upselling Opportunity"),
-    #         ('invoiced', "Fully Invoiced"),
-    #         ('to invoice', "To Invoice"),
-    #         ('no', "Nothing to Invoice"),
-    #     ],
-    #     string="Invoice Status",
-    #     compute='_compute_invoice_status',
-    #     store=True)
+    invoice_status = fields.Selection(
+        selection=[
+            ('upselling', "Upselling Opportunity"),
+            ('invoiced', "Fully Invoiced"),
+            ('to invoice', "To Invoice"),
+            ('no', "Nothing to Invoice"),
+        ],
+        string="Invoice Status",
+        compute='_compute_invoice_status',
+        store=True)
 
-    # untaxed_amount_invoiced = fields.Monetary(
-    #     string="Untaxed Invoiced Amount",
-    #     compute='_compute_untaxed_amount_invoiced',
-    #     store=True)
-    # untaxed_amount_to_invoice = fields.Monetary(
-    #     string="Untaxed Amount To Invoice",
-    #     compute='_compute_untaxed_amount_to_invoice',
-    #     store=True)
+    untaxed_amount_invoiced = fields.Monetary(
+        string="Untaxed Invoiced Amount",
+        compute='_compute_untaxed_amount_invoiced',
+        store=True)
+    untaxed_amount_to_invoice = fields.Monetary(
+        string="Untaxed Amount To Invoice",
+        compute='_compute_untaxed_amount_to_invoice',
+        store=True)
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.detailed_type', depends=['product_id'])
@@ -287,6 +319,7 @@ class PrescriptionOrderLine(models.Model):
             if not line.product_custom_attribute_value_ids:
                 continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+            # remove the is_custom values that don't belong to this template
             for pacv in line.product_custom_attribute_value_ids:
                 if pacv.custom_product_template_attribute_value_id not in valid_values:
                     line.product_custom_attribute_value_ids -= pacv
@@ -300,6 +333,7 @@ class PrescriptionOrderLine(models.Model):
             if not line.product_no_variant_attribute_value_ids:
                 continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+            # remove the no_variant attributes that don't belong to this template
             for ptav in line.product_no_variant_attribute_value_ids:
                 if ptav._origin not in valid_values:
                     line.product_no_variant_attribute_value_ids -= ptav
@@ -311,7 +345,7 @@ class PrescriptionOrderLine(models.Model):
                 continue
             if not line.order_partner_id.is_public:
                 line = line.with_context(lang=line.order_partner_id.lang)
-            name = line._get_prescriptions_order_line_multiline_description_prescription()
+            name = line._get_prescription_order_line_multiline_description_prescription()
             if line.is_downpayment and not line.display_type:
                 context = {'lang': line.order_partner_id.lang}
                 dp_state = line._get_downpayment_state()
@@ -331,11 +365,27 @@ class PrescriptionOrderLine(models.Model):
                 del context
             line.name = name
 
-    def _get_prescriptions_order_line_multiline_description_prescription(self):
-        self.ensure_one()
-        return self.product_id.get_product_multiline_description_prescription() + self._get_prescriptions_order_line_multiline_description_variants()
+    def _get_prescription_order_line_multiline_description_prescription(self):
+        """ Compute a default multiline description for this prescription order line.
 
-    def _get_prescriptions_order_line_multiline_description_variants(self):
+        In most cases the product description is enough but sometimes we need to append information that only
+        exists on the prescription order line itself.
+        e.g:
+        - custom attributes and attributes that don't create variants, both introduced by the "product configurator"
+        - in event_prescription we need to know specifically the prescription order line as well as the product to generate the name:
+          the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the prescription order line).
+        """
+        self.ensure_one()
+        return self.product_id.get_product_multiline_description_prescription() + self._get_prescription_order_line_multiline_description_variants()
+
+    def _get_prescription_order_line_multiline_description_variants(self):
+        """When using no_variant attributes or is_custom values, the product
+        itself is not sufficient to create the description: we need to add
+        information about those special attributes and values.
+
+        :return: the description related to special variant attributes/values
+        :rtype: string
+        """
         if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
             return ""
 
@@ -344,9 +394,13 @@ class PrescriptionOrderLine(models.Model):
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
+
+        # display the no_variant attributes, except those that are also
+        # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - multi_ptavs - custom_ptavs):
             name += "\n" + ptav.display_name
 
+        # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
             name += "\n" + _(
                 "%(attribute)s: %(values)s",
@@ -354,6 +408,7 @@ class PrescriptionOrderLine(models.Model):
                 values=", ".join(ptav.name for ptav in ptavs)
             )
 
+        # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
         sorted_custom_ptav = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id.sorted()
         for patv in sorted_custom_ptav:
             pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
@@ -386,7 +441,7 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
         taxes_by_product_company = defaultdict(lambda: self.env['account.tax'])
-        lines_by_company = defaultdict(lambda: self.env['prescriptions.order.line'])
+        lines_by_company = defaultdict(lambda: self.env['prescription.order.line'])
         cached_taxes = {}
         for line in self:
             lines_by_company[line.company_id] += line
@@ -400,6 +455,7 @@ class PrescriptionOrderLine(models.Model):
                     taxes = taxes_by_product_company[(line.product_id, comp)]
                     comp = comp.parent_id
                 if not line.product_id or not taxes:
+                    # Nothing to map
                     line.tax_id = False
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
@@ -409,6 +465,7 @@ class PrescriptionOrderLine(models.Model):
                 else:
                     result = fiscal_position.map_tax(taxes)
                     cached_taxes[cache_key] = result
+                # If company_id is set, always filter taxes by the company
                 line.tax_id = result
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -427,6 +484,8 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
+            # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
+            # manually edited
             if line.qty_invoiced > 0:
                 continue
             if not line.product_uom or not line.product_id:
@@ -437,24 +496,43 @@ class PrescriptionOrderLine(models.Model):
                     line.company_id or line.env.company,
                     line.order_id.currency_id,
                     line.order_id.date_order,
-                    'prescriptions',
+                    'prescription',
                     fiscal_position=line.order_id.fiscal_position_id,
                     product_price_unit=price,
                     product_currency=line.currency_id
                 )
 
     def _get_display_price(self):
+        """Compute the displayed unit price for a given line.
+
+        Overridden in custom flows:
+        * where the price is not specified by the pricelist
+        * where the discount is not specified by the pricelist
+
+        Note: self.ensure_one()
+        """
         self.ensure_one()
+
         pricelist_price = self._get_pricelist_price()
+
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return pricelist_price
+
         if not self.pricelist_item_id:
+            # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
         base_price = self._get_pricelist_price_before_discount()
+
+        # negative discounts (= surcharge) are included in the display price
         return max(base_price, pricelist_price)
 
     def _get_pricelist_price(self):
+        """Compute the price given by the pricelist for the given line information.
+
+        :return: the product prescription price in the order currency (without taxes)
+        :rtype: float
+        """
         self.ensure_one()
         self.product_id.ensure_one()
 
@@ -469,12 +547,18 @@ class PrescriptionOrderLine(models.Model):
         return price
 
     def _get_product_price_context(self):
+        """Gives the context for product price computation.
+
+        :return: additional context to consider extra prices from attributes in the base product price.
+        :rtype: dict
+        """
         self.ensure_one()
         return self.product_id._get_product_price_context(
             self.product_no_variant_attribute_value_ids,
         )
 
     def _get_pricelist_price_context(self):
+        """DO NOT USE in new code, this contextual logic should be dropped or heavily refactored soon"""
         self.ensure_one()
         return {
             'pricelist': self.order_id.pricelist_id.id,
@@ -484,6 +568,11 @@ class PrescriptionOrderLine(models.Model):
         }
 
     def _get_pricelist_price_before_discount(self):
+        """Compute the price used as base for the pricelist price computation.
+
+        :return: the product prescription price in the order currency (without taxes)
+        :rtype: float
+        """
         self.ensure_one()
         self.product_id.ensure_one()
 
@@ -510,18 +599,28 @@ class PrescriptionOrderLine(models.Model):
             line.discount = 0.0
 
             if not line.pricelist_item_id:
+                # No pricelist rule was found for the product
+                # therefore, the pricelist didn't apply any discount/change
+                # to the existing prescription price.
                 continue
 
             line = line.with_company(line.company_id)
             pricelist_price = line._get_pricelist_price()
             base_price = line._get_pricelist_price_before_discount()
 
-            if base_price != 0:  
+            if base_price != 0:  # Avoid division by zero
                 discount = (base_price - pricelist_price) / base_price * 100
                 if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
+                    # only show negative discounts if price is negative
+                    # otherwise it's a surcharge which shouldn't be shown to the customer
                     line.discount = discount
 
     def _convert_to_tax_base_line_dict(self, **kwargs):
+        """ Convert the current record to a dictionary in order to use the generic taxes computation method
+        defined on account.tax.
+
+        :return: A python dictionary.
+        """
         self.ensure_one()
         return self.env['account.tax']._convert_to_tax_base_line_dict(
             self,
@@ -568,11 +667,13 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _compute_product_packaging_id(self):
         for line in self:
+            # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
+            # suggest biggest suitable packaging matching the SO's company
             if line.product_id and line.product_uom_qty and line.product_uom:
                 suggested_packaging = line.product_id.packaging_ids\
-                        .filtered(lambda p: p.prescriptions and (p.product_id.company_id <= p.company_id <= line.company_id))\
+                        .filtered(lambda p: p.prescription and (p.product_id.company_id <= p.company_id <= line.company_id))\
                         ._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
                 line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
@@ -584,15 +685,26 @@ class PrescriptionOrderLine(models.Model):
                 continue
             line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_uom_qty, line.product_uom)
 
+    # This computed default is necessary to have a clean computation inheritance
+    # (cf pod_prescription_stock) instead of simply removing the default and specifying
+    # the compute attribute & method in pod_prescription_stock.
     def _compute_customer_lead(self):
         self.customer_lead = 0.0
 
     @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
+        """ Prescription module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
+                - consu + expense_policy : analytic (sum of analytic unit_amount)
+                - consu + no expense_policy : manual (set manually on SOL)
+                - service (+ service_type='manual', the only available option) : manual
+
+            This is true when only prescription is installed: pod_prescription_stock redifine the behavior for 'consu' type,
+            and prescription_timesheet implements the behavior of 'service' + service_type=timesheet.
+        """
         for line in self:
             if line.is_expense:
                 line.qty_delivered_method = 'analytic'
-            else:  
+            else:  # service and consu
                 line.qty_delivered_method = 'manual'
 
     @api.depends(
@@ -601,6 +713,13 @@ class PrescriptionOrderLine(models.Model):
         'analytic_line_ids.unit_amount',
         'analytic_line_ids.product_uom_id')
     def _compute_qty_delivered(self):
+        """ This method compute the delivered quantity of the SO lines: it covers the case provide by prescription module, aka
+            expense/vendor bills (sum of unit_amount of AAL), and manual case.
+            This method should be overridden to provide other way to automatically compute delivered qty. Overrides should
+            take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
+            records.
+        """
+        # compute for analytic lines
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
@@ -621,19 +740,29 @@ class PrescriptionOrderLine(models.Model):
         return ''
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
+        """ Compute and write the delivered quantity of current SO lines, based on their related
+            analytic lines.
+            :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
+        """
         result = defaultdict(float)
+
+        # avoid recomputation if no SO lines concerned
         if not self:
             return result
 
+        # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
         data = self.env['account.analytic.line']._read_group(
             domain,
             ['product_uom_id', 'so_line'],
             ['unit_amount:sum', 'move_line_id:count_distinct', '__count'],
         )
+
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         for uom, so_line, unit_amount_sum, move_line_id_count_distinct, count in data:
             if not uom:
                 continue
+            # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
             if move_line_id_count_distinct == 1 and count > 1:
                 qty = unit_amount_sum / count
             else:
@@ -644,111 +773,147 @@ class PrescriptionOrderLine(models.Model):
 
         return result
 
-    # @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
-    # def _compute_qty_invoiced(self):
-    #     for line in self:
-    #         qty_invoiced = 0.0
-    #         for invoice_line in line._get_invoice_lines():
-    #             if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
-    #                 if invoice_line.move_id.move_type == 'out_invoice':
-    #                     qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
-    #                 elif invoice_line.move_id.move_type == 'out_refund':
-    #                     qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
-    #         line.qty_invoiced = qty_invoiced
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
+    def _compute_qty_invoiced(self):
+        """
+        Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
+        that this is the case only if the refund is generated from the SO and that is intentional: if
+        a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
+        it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
+        """
+        for line in self:
+            qty_invoiced = 0.0
+            for invoice_line in line._get_invoice_lines():
+                if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
+                    if invoice_line.move_id.move_type == 'out_invoice':
+                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                    elif invoice_line.move_id.move_type == 'out_refund':
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+            line.qty_invoiced = qty_invoiced
 
-    # def _get_invoice_lines(self):
-    #     self.ensure_one()
-    #     if self._context.get('accrual_entry_date'):
-    #         return self.invoice_lines.filtered(
-    #             lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
-    #         )
-    #     else:
-    #         return self.invoice_lines
+    def _get_invoice_lines(self):
+        self.ensure_one()
+        if self._context.get('accrual_entry_date'):
+            return self.invoice_lines.filtered(
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
+            )
+        else:
+            return self.invoice_lines
 
-    # @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state')
-    # def _compute_qty_to_invoice(self):
-    #     """
-    #     Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
-    #     calculated from the ordered quantity. Otherwise, the quantity delivered is used.
-    #     """
-    #     for line in self:
-    #         if line.state == 'prescriptions' and not line.display_type:
-    #             if line.product_id.invoice_policy == 'order':
-    #                 line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
-    #             else:
-    #                 line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
-    #         else:
-    #             line.qty_to_invoice = 0
+    # no trigger product_id.invoice_policy to avoid retroactively changing SO
+    @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state')
+    def _compute_qty_to_invoice(self):
+        """
+        Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
+        calculated from the ordered quantity. Otherwise, the quantity delivered is used.
+        """
+        for line in self:
+            if line.state == 'prescription' and not line.display_type:
+                if line.product_id.invoice_policy == 'order':
+                    line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                else:
+                    line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
+            else:
+                line.qty_to_invoice = 0
 
-    # @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
-    # def _compute_invoice_status(self):
-    #     precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-    #     for line in self:
-    #         if line.state != 'prescriptions':
-    #             line.invoice_status = 'no'
-    #         elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
-    #             line.invoice_status = 'invoiced'
-    #         elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
-    #             line.invoice_status = 'to invoice'
-    #         elif line.state == 'prescriptions' and line.product_id.invoice_policy == 'order' and\
-    #                 line.product_uom_qty >= 0.0 and\
-    #                 float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
-    #             line.invoice_status = 'upselling'
-    #         elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
-    #             line.invoice_status = 'invoiced'
-    #         else:
-    #             line.invoice_status = 'no'
+    @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
+    def _compute_invoice_status(self):
+        """
+        Compute the invoice status of a SO line. Possible statuses:
+        - no: if the SO is not in status 'prescription', we consider that there is nothing to
+          invoice. This is also the default value if the conditions of no other status is met.
+        - to invoice: we refer to the quantity to invoice of the line. Refer to method
+          `_compute_qty_to_invoice()` for more information on how this quantity is calculated.
+        - upselling: this is possible only for a product invoiced on ordered quantities for which
+          we delivered more than expected. The could arise if, for example, a project took more
+          time than expected but we decided not to invoice the extra cost to the client. This
+          occurs only in state 'prescription', the upselling opportunity is removed from the list.
+        - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
+        """
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for line in self:
+            if line.state != 'prescription':
+                line.invoice_status = 'no'
+            elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
+                line.invoice_status = 'invoiced'
+            elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                line.invoice_status = 'to invoice'
+            elif line.state == 'prescription' and line.product_id.invoice_policy == 'order' and\
+                    line.product_uom_qty >= 0.0 and\
+                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
+                line.invoice_status = 'upselling'
+            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
+                line.invoice_status = 'invoiced'
+            else:
+                line.invoice_status = 'no'
 
-    # @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
-    # def _compute_untaxed_amount_invoiced(self):
-    #     """ Compute the untaxed amount already invoiced from the prescriptions order line, taking the refund attached
-    #         the so line into account. This amount is computed as
-    #             SUM(inv_line.price_subtotal) - SUM(ref_line.price_subtotal)
-    #         where
-    #             `inv_line` is a customer invoice line linked to the SO line
-    #             `ref_line` is a customer credit note (refund) line linked to the SO line
-    #     """
-    #     for line in self:
-    #         amount_invoiced = 0.0
-    #         for invoice_line in line._get_invoice_lines():
-    #             if invoice_line.move_id.state == 'posted':
-    #                 invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
-    #                 if invoice_line.move_id.move_type == 'out_invoice':
-    #                     amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
-    #                 elif invoice_line.move_id.move_type == 'out_refund':
-    #                     amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
-    #         line.untaxed_amount_invoiced = amount_invoiced
+    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
+    def _compute_untaxed_amount_invoiced(self):
+        """ Compute the untaxed amount already invoiced from the prescription order line, taking the refund attached
+            the so line into account. This amount is computed as
+                SUM(inv_line.price_subtotal) - SUM(ref_line.price_subtotal)
+            where
+                `inv_line` is a customer invoice line linked to the SO line
+                `ref_line` is a customer credit note (refund) line linked to the SO line
+        """
+        for line in self:
+            amount_invoiced = 0.0
+            for invoice_line in line._get_invoice_lines():
+                if invoice_line.move_id.state == 'posted':
+                    invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
+                    if invoice_line.move_id.move_type == 'out_invoice':
+                        amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+                    elif invoice_line.move_id.move_type == 'out_refund':
+                        amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+            line.untaxed_amount_invoiced = amount_invoiced
 
-    # @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty', 'price_unit')
-    # def _compute_untaxed_amount_to_invoice(self):
-    #     for line in self:
-    #         amount_to_invoice = 0.0
-    #         if line.state == 'prescriptions':
-    #             price_subtotal = 0.0
-    #             uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
-    #             price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-    #             price_subtotal = price_reduce * uom_qty_to_consider
-    #             if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
-    #                 price_subtotal = line.tax_id.compute_all(
-    #                     price_reduce,
-    #                     currency=line.currency_id,
-    #                     quantity=uom_qty_to_consider,
-    #                     product=line.product_id,
-    #                     partner=line.order_id.partner_shipping_id)['total_excluded']
-    #             inv_lines = line._get_invoice_lines()
-    #             if any(inv_lines.mapped(lambda l: l.discount != line.discount)):
-    #                 amount = 0
-    #                 for l in inv_lines:
-    #                     if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
-    #                         amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
-    #                     else:
-    #                         amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
+    @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty', 'price_unit')
+    def _compute_untaxed_amount_to_invoice(self):
+        """ Total of remaining amount to invoice on the prescription order line (taxes excl.) as
+                total_sol - amount already invoiced
+            where Total_sol depends on the invoice policy of the product.
 
-    #                 amount_to_invoice = max(price_subtotal - amount, 0)
-    #             else:
-    #                 amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+            Note: Draft invoice are ignored on purpose, the 'to invoice' amount should
+            come only from the SO lines.
+        """
+        for line in self:
+            amount_to_invoice = 0.0
+            if line.state == 'prescription':
+                # Note: do not use price_subtotal field as it returns zero when the ordered quantity is
+                # zero. It causes problem for expense line (e.i.: ordered qty = 0, deli qty = 4,
+                # price_unit = 20 ; subtotal is zero), but when you can invoice the line, you see an
+                # amount and not zero. Since we compute untaxed amount, we can use directly the price
+                # reduce (to include discount) without using `compute_all()` method on taxes.
+                price_subtotal = 0.0
+                uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
+                price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                price_subtotal = price_reduce * uom_qty_to_consider
+                if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
+                    # As included taxes are not excluded from the computed subtotal, `compute_all()` method
+                    # has to be called to retrieve the subtotal without them.
+                    # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
+                    price_subtotal = line.tax_id.compute_all(
+                        price_reduce,
+                        currency=line.currency_id,
+                        quantity=uom_qty_to_consider,
+                        product=line.product_id,
+                        partner=line.order_id.partner_shipping_id)['total_excluded']
+                inv_lines = line._get_invoice_lines()
+                if any(inv_lines.mapped(lambda l: l.discount != line.discount)):
+                    # In case of re-invoicing with different discount we try to calculate manually the
+                    # remaining amount to invoice
+                    amount = 0
+                    for l in inv_lines:
+                        if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
+                            amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
+                        else:
+                            amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
 
-    #         line.untaxed_amount_to_invoice = amount_to_invoice
+                    amount_to_invoice = max(price_subtotal - amount, 0)
+                else:
+                    amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+
+            line.untaxed_amount_to_invoice = amount_to_invoice
 
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
@@ -763,35 +928,25 @@ class PrescriptionOrderLine(models.Model):
                 })
                 line.analytic_distribution = distribution or line.analytic_distribution
 
-    # @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
-    # def _compute_product_updatable(self):
-    #     for line in self:
-    #         if line.state == 'cancel':
-    #             line.product_updatable = False
-    #         elif line.state == 'prescriptions' and (
-    #             line.order_id.locked
-    #             or line.qty_invoiced > 0
-    #             or line.qty_delivered > 0
-    #         ):
-    #             line.product_updatable = False
-    #         else:
-    #             line.product_updatable = True
-
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
         for line in self:
             if line.state == 'cancel':
                 line.product_updatable = False
-            elif line.state == 'prescriptions' and line.order_id.locked:
+            elif line.state == 'prescription' and (
+                line.order_id.locked
+                or line.qty_invoiced > 0
+                or line.qty_delivered > 0
+            ):
                 line.product_updatable = False
             else:
                 line.product_updatable = True
 
-
     @api.depends('state')
     def _compute_product_uom_readonly(self):
         for line in self:
-            line.product_uom_readonly = line.ids and line.state in ['prescriptions', 'cancel']
+            # line.ids checks whether it's a new record not yet saved
+            line.product_uom_readonly = line.ids and line.state in ['prescription', 'cancel']
 
     #=== CONSTRAINT METHODS ===#
 
@@ -803,14 +958,14 @@ class PrescriptionOrderLine(models.Model):
             return
 
         product = self.product_id
-        if product.prescriptions_line_warn != 'no-message':
-            if product.prescriptions_line_warn == 'block':
+        if product.prescription_line_warn != 'no-message':
+            if product.prescription_line_warn == 'block':
                 self.product_id = False
 
             return {
                 'warning': {
                     'title': _("Warning for %s", product.name),
-                    'message': product.prescriptions_line_warn_msg,
+                    'message': product.prescription_line_warn_msg,
                 }
             }
 
@@ -841,13 +996,14 @@ class PrescriptionOrderLine(models.Model):
                 vals['product_uom_qty'] = 0.0
 
         lines = super().create(vals_list)
-        if self.env.context.get('prescriptions_no_log_for_new_lines'):
+        if self.env.context.get('prescription_no_log_for_new_lines'):
             return lines
 
         for line in lines:
-            if line.product_id and line.state == 'prescriptions':
+            if line.product_id and line.state == 'prescription':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
+                # create an analytic account if at least an expense product
                 if line.product_id.expense_policy not in [False, 'no'] and not line.order_id.analytic_account_id:
                     line.order_id._create_analytic_account()
 
@@ -855,14 +1011,14 @@ class PrescriptionOrderLine(models.Model):
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError(_("You cannot change the type of a prescriptions order line. Instead you should delete the current line and create a new line of the proper type."))
+            raise UserError(_("You cannot change the type of a prescription order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
-                lambda r: r.state == 'prescriptions' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+                lambda r: r.state == 'prescription' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
 
-        # Prevent writing on a locked RX.
+        # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
         if any(self.order_id.mapped('locked')) and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
@@ -888,7 +1044,7 @@ class PrescriptionOrderLine(models.Model):
         return result
 
     def _get_protected_fields(self):
-        """ Give the fields that should not be modified on a locked RX.
+        """ Give the fields that should not be modified on a locked SO.
 
         :returns: list of field names
         :rtype: list
@@ -917,9 +1073,18 @@ class PrescriptionOrderLine(models.Model):
             order.message_post(body=msg)
 
     def _check_line_unlink(self):
+        """ Check whether given lines can be deleted or not.
+
+        * Lines cannot be deleted if the order is confirmed.
+        * Down payment lines who have not yet been invoiced bypass that exception.
+        * Sections and Notes can always be deleted.
+
+        :returns: Prescription Order Lines that cannot be deleted
+        :rtype: `prescription.order.line` recordset
+        """
         return self.filtered(
             lambda line:
-                line.state == 'prescriptions'
+                line.state == 'prescription'
                 and (line.invoice_lines or not line.is_downpayment)
                 and not line.display_type
         )
@@ -927,20 +1092,20 @@ class PrescriptionOrderLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
-            raise UserError(_("Once a prescriptions order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n\
+            raise UserError(_("Once a prescription order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n\
                 Set the quantity to 0 instead."))
 
     #=== ACTION METHODS ===#
 
     def action_add_from_catalog(self):
-        order = self.env['prescriptions.order'].browse(self.env.context.get('order_id'))
+        order = self.env['prescription.order'].browse(self.env.context.get('order_id'))
         return order.action_add_from_catalog()
 
     #=== BUSINESS METHODS ===#
 
     def _expected_date(self):
         self.ensure_one()
-        if self.state == 'prescriptions' and self.order_id.date_order:
+        if self.state == 'prescription' and self.order_id.date_order:
             order_date = self.order_id.date_order
         else:
             order_date = fields.Datetime.now()
@@ -949,38 +1114,52 @@ class PrescriptionOrderLine(models.Model):
     def compute_uom_qty(self, new_qty, stock_move, rounding=True):
         return self.product_uom._compute_quantity(new_qty, stock_move.product_uom, rounding)
 
-    # def _get_invoice_line_sequence(self, new=0, old=0):
-    #     return new or old
+    def _get_invoice_line_sequence(self, new=0, old=0):
+        """
+        Method intended to be overridden in third-party module if we want to prevent the resequencing
+        of invoice lines.
 
-    # def _prepare_invoice_line(self, **optional_values):
-    #     self.ensure_one()
-    #     res = {
-    #         'display_type': self.display_type or 'product',
-    #         'sequence': self.sequence,
-    #         'name': self.name,
-    #         'product_id': self.product_id.id,
-    #         'product_uom_id': self.product_uom.id,
-    #         'quantity': self.qty_to_invoice,
-    #         'discount': self.discount,
-    #         'price_unit': self.price_unit,
-    #         'tax_ids': [Command.set(self.tax_id.ids)],
-    #         'prescriptions_line_ids': [Command.link(self.id)],
-    #         'is_downpayment': self.is_downpayment,
-    #     }
-    #     analytic_account_id = self.order_id.analytic_account_id.id
-    #     if self.analytic_distribution and not self.display_type:
-    #         res['analytic_distribution'] = self.analytic_distribution
-    #     if analytic_account_id and not self.display_type:
-    #         analytic_account_id = str(analytic_account_id)
-    #         if 'analytic_distribution' in res:
-    #             res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
-    #         else:
-    #             res['analytic_distribution'] = {analytic_account_id: 100}
-    #     if optional_values:
-    #         res.update(optional_values)
-    #     if self.display_type:
-    #         res['account_id'] = False
-    #     return res
+        :param int new:   the new line sequence
+        :param int old:   the old line sequence
+
+        :return:          the sequence of the SO line, by default the new one.
+        """
+        return new or old
+
+    def _prepare_invoice_line(self, **optional_values):
+        """Prepare the values to create the new invoice line for a prescription order line.
+
+        :param optional_values: any parameter that should be added to the returned invoice line
+        :rtype: dict
+        """
+        self.ensure_one()
+        res = {
+            'display_type': self.display_type or 'product',
+            'sequence': self.sequence,
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom.id,
+            'quantity': self.qty_to_invoice,
+            'discount': self.discount,
+            'price_unit': self.price_unit,
+            'tax_ids': [Command.set(self.tax_id.ids)],
+            'prescription_line_ids': [Command.link(self.id)],
+            'is_downpayment': self.is_downpayment,
+        }
+        analytic_account_id = self.order_id.analytic_account_id.id
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
+        if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
+            if 'analytic_distribution' in res:
+                res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
+            else:
+                res['analytic_distribution'] = {analytic_account_id: 100}
+        if optional_values:
+            res.update(optional_values)
+        if self.display_type:
+            res['account_id'] = False
+        return res
 
     def _prepare_sale_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         self.ensure_one()
@@ -990,12 +1169,12 @@ class PrescriptionOrderLine(models.Model):
             'product_uom': self.product_id.uom_po_id.id,
             'product_uom_qty': product_qty,
             'price_unit': price_unit,
-            'prescriptions_line_ids': [Command.link(self.id)],
+            'prescription_line_ids': [Command.link(self.id)],
         }
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
-        coming from a prescriptions order line. This method could be override in order to add other custom key that could
+        coming from a prescription order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
         return {}
@@ -1004,7 +1183,7 @@ class PrescriptionOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.display_type and l.state in ['draft', 'sent']):
             line._validate_distribution(**{
                 'product': line.product_id.id,
-                'business_domain': 'prescriptions_order',
+                'business_domain': 'prescription_order',
                 'company_id': line.company_id.id,
             })
 
@@ -1023,16 +1202,16 @@ class PrescriptionOrderLine(models.Model):
 
     #=== HOOKS ===#
 
-    # def _is_delivery(self):
-    #     self.ensure_one()
-    #     return False
+    def _is_delivery(self):
+        self.ensure_one()
+        return False
 
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
 
     def _get_product_catalog_lines_data(self, **kwargs):
-        """ Return information about prescriptions order lines in `self`.
+        """ Return information about prescription order lines in `self`.
 
         If `self` is empty, this method returns only the default value(s) needed for the product
         catalog. In this case, the quantity that equals 0.

@@ -10,8 +10,8 @@ from odoo.tests import common, tagged
 @tagged('post_install', '-at_install')
 class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
 
-    def test_prescriptions_order_expected_date(self):
-        """ Test expected date and effective date of Prescriptions Orders """
+    def test_prescription_order_expected_date(self):
+        """ Test expected date and effective date of Prescription Orders """
         Product = self.env['product.product']
 
         product_A = Product.create({
@@ -37,7 +37,7 @@ class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
         self.env['stock.quant']._update_available_quantity(product_B, self.company_data['default_warehouse'].lot_stock_id, 10)
         self.env['stock.quant']._update_available_quantity(product_C, self.company_data['default_warehouse'].lot_stock_id, 10)
 
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',
             'order_line': [
@@ -50,48 +50,48 @@ class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
         # if Shipping Policy is set to `direct`(when SO is in draft state) then expected date should be
         # current date + shortest lead time from all of it's order lines
         expected_date = fields.Datetime.now() + timedelta(days=5)
-        self.assertAlmostEqual(expected_date, prescriptions_order.expected_date,
-            msg="Wrong expected date on prescriptions order!", delta=timedelta(seconds=1))
+        self.assertAlmostEqual(expected_date, prescription_order.expected_date,
+            msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
         # if Shipping Policy is set to `one`(when SO is in draft state) then expected date should be
         # current date + longest lead time from all of it's order lines
-        prescriptions_order.write({'picking_policy': 'one'})
+        prescription_order.write({'picking_policy': 'one'})
         expected_date = fields.Datetime.now() + timedelta(days=15)
-        self.assertAlmostEqual(expected_date, prescriptions_order.expected_date,
-            msg="Wrong expected date on prescriptions order!", delta=timedelta(seconds=1))
+        self.assertAlmostEqual(expected_date, prescription_order.expected_date,
+            msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
         # Setting confirmation date of SO to 5 days from today so that the expected/effective date could be checked
         # against real confirmation date
         confirm_date = fields.Datetime.now() + timedelta(days=5)
-        prescriptions_order.write({'date_order': confirm_date})
+        prescription_order.write({'date_order': confirm_date})
 
         # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
         # SO confirmation date + longest lead time from all of it's order lines
         expected_date = confirm_date + timedelta(days=15)
-        self.assertAlmostEqual(expected_date, prescriptions_order.expected_date,
-            msg="Wrong expected date on prescriptions order!", delta=timedelta(seconds=1))
+        self.assertAlmostEqual(expected_date, prescription_order.expected_date,
+            msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
         # if Shipping Policy is set to `direct`(when SO is confirmed) then expected date should be
         # SO confirmation date + shortest lead time from all of it's order lines
-        prescriptions_order.write({'picking_policy': 'direct'})
+        prescription_order.write({'picking_policy': 'direct'})
         expected_date = confirm_date + timedelta(days=5)
-        self.assertAlmostEqual(expected_date, prescriptions_order.expected_date,
-            msg="Wrong expected date on prescriptions order!", delta=timedelta(seconds=1))
+        self.assertAlmostEqual(expected_date, prescription_order.expected_date,
+            msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
         # Check effective date, it should be date on which the first shipment successfully delivered to customer
-        picking = prescriptions_order.picking_ids[0]
+        picking = prescription_order.picking_ids[0]
         picking.move_ids.picked = True
         picking._action_done()
         self.assertEqual(picking.state, 'done', "Picking not processed correctly!")
-        self.assertEqual(fields.Date.today(), prescriptions_order.effective_date.date(), "Wrong effective date on prescriptions order!")
+        self.assertEqual(fields.Date.today(), prescription_order.effective_date.date(), "Wrong effective date on prescription order!")
 
-    def test_prescriptions_order_commitment_date(self):
+    def test_prescription_order_commitment_date(self):
 
-        # In order to test the Commitment Date feature in Prescriptions Orders in Odoo,
-        # I copy a demo Prescriptions Order with committed Date on 2010-07-12
-        new_order = self.env['prescriptions.order'].create({
+        # In order to test the Commitment Date feature in Prescription Orders in Odoo,
+        # I copy a demo Prescription Order with committed Date on 2010-07-12
+        new_order = self.env['prescription.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
             'order_line': [(0, 0, {
                 'name': "A product",
@@ -104,7 +104,7 @@ class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
             })],
             'commitment_date': '2010-07-12',
         })
-        # I confirm the Prescriptions Order.
+        # I confirm the Prescription Order.
         new_order.action_confirm()
         # I verify that the Procurements and Stock Moves have been generated with the correct date
         security_delay = timedelta(days=new_order.company_id.security_lead)

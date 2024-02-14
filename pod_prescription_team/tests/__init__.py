@@ -2,6 +2,6 @@
 
 
 from . import common
-from . import test_prescriptions_team
-from . import test_prescriptions_team_internals
-from . import test_prescriptions_team_membership
+from . import test_prescription_team
+from . import test_prescription_team_internals
+from . import test_prescription_team_membership

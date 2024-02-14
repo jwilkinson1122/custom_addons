@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class PrescriptionOrder(models.Model):
-    _inherit = 'prescriptions.order'
+    _inherit = 'prescription.order'
 
     # if set, the matrix of the products configurable by matrix will be shown
     # on the report of the order.
@@ -90,7 +90,7 @@ class PrescriptionOrder(models.Model):
                         Therefore, it only raises an Error for now.
                         """
                         if len(order_lines) > 1:
-                            raise ValidationError(_("You cannot change the quantity of a product present in multiple prescriptions lines."))
+                            raise ValidationError(_("You cannot change the quantity of a product present in multiple prescription lines."))
                         else:
                             order_lines[0].product_uom_qty = qty
                             # If we want to support multiple lines edition:
@@ -101,7 +101,7 @@ class PrescriptionOrder(models.Model):
                             #     self.order_line -= order_lines[1:]
                 else:
                     if not default_so_line_vals:
-                        OrderLine = self.env['prescriptions.order.line']
+                        OrderLine = self.env['prescription.order.line']
                         default_so_line_vals = OrderLine.default_get(OrderLine._fields.keys())
                     last_sequence = self.order_line[-1:].sequence
                     if last_sequence:

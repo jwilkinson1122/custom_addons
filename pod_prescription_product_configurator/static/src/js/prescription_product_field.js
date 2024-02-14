@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PrescriptionOrderLineProductField } from '@pod_prescriptions/js/prescriptions_product_field';
+import { PrescriptionOrderLineProductField } from '@pod_prescription/js/prescription_product_field';
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
@@ -71,7 +71,7 @@ patch(PrescriptionOrderLineProductField.prototype, {
             if (!result.mode || result.mode === 'configurator') {
                 this._openProductConfigurator();
             } else {
-                // only triggered when pod_prescriptions_product_matrix is installed.
+                // only triggered when pod_prescription_product_matrix is installed.
                 this._openGridConfigurator();
             }
         }

@@ -8,11 +8,11 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class PrescriptionsPatient(models.Model):
+class PrescriptionPatient(models.Model):
     # FHIR Entity: Patient (http://hl7.org/fhir/patient.html)
-    _name = "prescriptions.patient"
-    _description = "Prescriptions Patient"
-    _inherit = ["prescriptions.abstract", "mail.thread", "mail.activity.mixin"]
+    _name = "prescription.patient"
+    _description = "Prescription Patient"
+    _inherit = ["prescription.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 
     partner_id = fields.Many2one("res.partner", required=True, ondelete="restrict")
@@ -48,24 +48,24 @@ class PrescriptionsPatient(models.Model):
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
     
-    # patient_prescriptions_ids = fields.One2many("prescriptions.prescription", inverse_name="patient_id")
-    # patient_prescriptions_count = fields.Integer(compute="_compute_patient_prescriptions_count")
+    # patient_prescription_ids = fields.One2many("prescription.prescription", inverse_name="patient_id")
+    # patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
             
-    # @api.depends("patient_prescriptions_ids")
-    # def _compute_patient_prescriptions_count(self):
+    # @api.depends("patient_prescription_ids")
+    # def _compute_patient_prescription_count(self):
     #     for rec in self:
-    #         rec.patient_prescriptions_count = len(rec.patient_prescriptions_ids.ids)
+    #         rec.patient_prescription_count = len(rec.patient_prescription_ids.ids)
 
 
     # def action_view_patient_prescription(self):
     #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("prescriptions_mgmt.action_prescriptions_prescription")
+    #     result = self.env["ir.actions.act_window"]._for_xml_id("prescription_mgmt.action_prescription_prescription")
     #     result["context"] = {"default_patient_id": self.id}
     #     result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
-    #     if len(self.patient_prescriptions_ids) == 1:
-    #         res = self.env.ref("prescriptions_mgmt.view_prescriptions_prescriptions_form", False)  # Ensure the XML ID is correct
+    #     if len(self.patient_prescription_ids) == 1:
+    #         res = self.env.ref("prescription_mgmt.view_prescription_prescription_form", False)  # Ensure the XML ID is correct
     #         result["views"] = [(res and res.id or False, "form")]
-    #         result["res_id"] = self.patient_prescriptions_ids.ids[0]   
+    #         result["res_id"] = self.patient_prescription_ids.ids[0]   
     #     return result
     shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
         'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
@@ -85,7 +85,7 @@ class PrescriptionsPatient(models.Model):
             record.patient_age = age
             
             
-    patient_flag_ids = fields.One2many("prescriptions.flag", inverse_name="patient_id")
+    patient_flag_ids = fields.One2many("prescription.flag", inverse_name="patient_id")
     patient_flag_count = fields.Integer(compute="_compute_patient_flag_count")
             
     @api.depends("patient_flag_ids")
@@ -95,11 +95,11 @@ class PrescriptionsPatient(models.Model):
 
     def action_view_patient_flags(self):
         self.ensure_one()
-        result = self.env["ir.actions.act_window"]._for_xml_id("pod_prescriptions_contacts.prescriptions_flag_action")
+        result = self.env["ir.actions.act_window"]._for_xml_id("pod_prescription_contacts.prescription_flag_action")
         result["context"] = {"default_patient_id": self.id}
         result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
         if len(self.patient_flag_ids) == 1:
-            res = self.env.ref("prescriptions.flag.view.form", False)
+            res = self.env.ref("prescription.flag.view.form", False)
             result["views"] = [(res and res.id or False, "form")]
             result["res_id"] = self.patient_flag_ids.id
         return result
@@ -107,13 +107,13 @@ class PrescriptionsPatient(models.Model):
     @api.model
     def _get_internal_identifier(self, vals):
         return (
-            self.env["ir.sequence"].sudo().next_by_code("prescriptions.patient")
+            self.env["ir.sequence"].sudo().next_by_code("prescription.patient")
             or "/"
         )
         
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(PrescriptionsPatient, self).create(vals_list)
+        records = super(PrescriptionPatient, self).create(vals_list)
         for record in records:
             record.apply_practitioner_logic()
         return records
@@ -170,8 +170,8 @@ class PrescriptionsPatient(models.Model):
     def action_open_prescription(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Prescriptions',
-            'res_model': 'prescriptions.prescription',
+            'name': 'Prescription',
+            'res_model': 'prescription.prescription',
             'domain': [('patient_id', '=', self.id)],
             'context': {'default_patient_id': self.id},
             'view_mode': 'kanban,tree,form',
@@ -181,7 +181,7 @@ class PrescriptionsPatient(models.Model):
     def unlink(self):
         # Trying to delete the records in the current recordset
         try:
-            return super(PrescriptionsPatient, self).unlink()
+            return super(PrescriptionPatient, self).unlink()
         except Exception as e:
             _logger.error(f"An error occurred while trying to delete the patient records: {e}")
 

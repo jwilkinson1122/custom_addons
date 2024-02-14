@@ -5,13 +5,13 @@
         <field name="name">crm.team.member.view.search</field>
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
-            <search string="Prescriptions Person">
+            <search string="Prescription Person">
                 <field name="user_id"/>
                 <field name="crm_team_id"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Prescriptions Team" name="groupby_crm_team_id" context="{'group_by': 'crm_team_id'}"/>
+                    <filter string="Prescription Team" name="groupby_crm_team_id" context="{'group_by': 'crm_team_id'}"/>
                 </group>
             </search>
         </field>
@@ -21,7 +21,7 @@
         <field name="name">crm.team.member.view.tree</field>
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
-            <tree string="Prescriptions Men" sample="1">
+            <tree string="Prescription Men" sample="1">
                 <field name="crm_team_id"/>
                 <field name="user_id"/>
             </tree>
@@ -31,7 +31,7 @@
     <record id="crm_team_member_view_tree_from_team" model="ir.ui.view">
         <field name="name">crm.team.member.view.tree.from.team</field>
         <field name="model">crm.team.member</field>
-        <field name="inherit_id" ref="pod_prescriptions_team.crm_team_member_view_tree"/>
+        <field name="inherit_id" ref="pod_prescription_team.crm_team_member_view_tree"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
@@ -80,7 +80,7 @@
     <record id="crm_team_member_view_kanban_from_team" model="ir.ui.view">
         <field name="name">crm.team.member.view.kanban.from.team</field>
         <field name="model">crm.team.member</field>
-        <field name="inherit_id" ref="pod_prescriptions_team.crm_team_member_view_kanban"/>
+        <field name="inherit_id" ref="pod_prescription_team.crm_team_member_view_kanban"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
@@ -93,7 +93,7 @@
         <field name="name">crm.team.member.view.form</field>
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
-            <form string="Prescriptions Men">
+            <form string="Prescription Men">
                 <field name="active" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="is_membership_multi" invisible="1"/>
@@ -118,7 +118,7 @@
                     </div>
                     <group name="member_partner_info">
                         <group name="group_owner">
-                            <field name="crm_team_id" context="{'kanban_view_ref': 'pod_prescriptions_team.crm_team_view_kanban'}"/>
+                            <field name="crm_team_id" context="{'kanban_view_ref': 'pod_prescription_team.crm_team_view_kanban'}"/>
                         </group>
                         <group class="ps-0" name="group_user">
                             <field name="company_id" invisible="not user_id"
@@ -140,7 +140,7 @@
     <record id="crm_team_member_view_form_from_team" model="ir.ui.view">
         <field name="name">crm.team.member.view.form.from.team</field>
         <field name="model">crm.team.member</field>
-        <field name="inherit_id" ref="pod_prescriptions_team.crm_team_member_view_form"/>
+        <field name="inherit_id" ref="pod_prescription_team.crm_team_member_view_form"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
@@ -156,7 +156,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new personnel
             </p><p>
-                Link prescriptionspersons to prescriptions teams.
+                Link prescriptionpersons to prescription teams.
             </p>
         </field>
     </record>

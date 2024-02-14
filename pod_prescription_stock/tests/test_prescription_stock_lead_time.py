@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 from odoo import fields
 from odoo.tests import tagged
 
@@ -20,13 +20,13 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
 
     def test_00_product_company_level_delays(self):
         """ In order to check schedule date, set product's Customer Lead Time
-            and company's Prescriptions Safety Days."""
+            and company's Prescription Safety Days."""
 
-        # Update company with Prescriptions Safety Days
+        # Update company with Prescription Safety Days
         self.env.company.security_lead = 3.00
 
-        # Create prescriptions order of product_1
-        order = self.env['prescriptions.order'].create({
+        # Create prescription order of product_1
+        order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
@@ -40,7 +40,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
 
         self.assertEqual(order.order_line.customer_lead, self.test_product_order.prescription_delay)
 
-        # Confirm our standard prescriptions order
+        # Confirm our standard prescription order
         order.action_confirm()
 
         # Check the picking crated or not
@@ -49,7 +49,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         # Check schedule date of picking
         out_date = order.date_order + timedelta(days=self.test_product_order.prescription_delay) - timedelta(days=self.env.company.security_lead)
         min_date = order.picking_ids[0].scheduled_date
-        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Prescriptions Safety Days.')
+        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Prescription Safety Days.')
 
     def test_01_product_route_level_delays(self):
         """ In order to check schedule dates, set product's Customer Lead Time
@@ -62,8 +62,8 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         for pull_rule in self.company_data['default_warehouse'].delivery_route_id.rule_ids:
             pull_rule.write({'delay': 2})
 
-        # Create prescriptions order of product_1
-        order = self.env['prescriptions.order'].create({
+        # Create prescription order of product_1
+        order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -76,7 +76,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
                                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                                    'customer_lead': self.test_product_order.prescription_delay})]})
 
-        # Confirm our standard prescriptions order
+        # Confirm our standard prescription order
         order.action_confirm()
 
         # Check the picking crated or not
@@ -108,21 +108,21 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         # -> Set Warehouse with Outgoing Shipments : pick + pack + ship
         # -> Set Delay : 5 days on stock rules
         # -> Set Customer Lead Time on product : 30 days
-        # -> Set Prescriptions Safety Days : 2 days
+        # -> Set Prescription Safety Days : 2 days
         # -> Create an SO and confirm it with confirmation Date : 12/18/2018
 
         # -> Pickings : OUT -> Scheduled Date : 01/12/2019, Deadline Date: 01/14/2019
         #              PACK -> Scheduled Date : 01/07/2019, Deadline Date: 01/09/2019
         #              PICK -> Scheduled Date : 01/02/2019, Deadline Date: 01/04/2019
 
-        # -> Now, change commitment_date in the prescriptions order = out_deadline_date + 5 days
+        # -> Now, change commitment_date in the prescription order = out_deadline_date + 5 days
 
         # -> Deadline Date should be changed and Scheduled date should be unchanged:
         #              OUT  -> Deadline Date : 01/19/2019
         #              PACK -> Deadline Date : 01/14/2019
         #              PICK -> Deadline Date : 01/09/2019
 
-        # Update company with Prescriptions Safety Days
+        # Update company with Prescription Safety Days
         self.env.company.security_lead = 2.00
 
         # Update warehouse_1 with Outgoing Shippings pick + pack + ship
@@ -134,8 +134,8 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         # Update the product_1 with type and Customer Lead Time
         self.test_product_order.write({'type': 'product', 'prescription_delay': 30.0})
 
-        # Now, create prescriptions order of product_1 with customer_lead set on product
-        order = self.env['prescriptions.order'].create({
+        # Now, create prescription order of product_1 with customer_lead set on product
+        order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -148,7 +148,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
                                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                                    'customer_lead': self.test_product_order.prescription_delay})]})
 
-        # Confirm our standard prescriptions order
+        # Confirm our standard prescription order
         order.action_confirm()
 
         # Check the picking crated or not
@@ -187,7 +187,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
             pick.date_deadline, deadline_date, delta=timedelta(seconds=1),
             msg='Deadline date of pack type picking should be equal to: Deadline date of ship type picking - pull rule delay.')
 
-        # Now change the commitment date (Delivery Date) of the prescriptions order
+        # Now change the commitment date (Delivery Date) of the prescription order
         new_deadline = deadline_date + timedelta(days=5)
         order.write({'commitment_date': new_deadline})
 
@@ -209,17 +209,17 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         self.assertEqual(pick.date_deadline, new_deadline)
 
     def test_03_product_company_level_delays(self):
-        """Partial duplicate of test_02 to make sure there is no default value specified in prescriptions
+        """Partial duplicate of test_02 to make sure there is no default value specified in prescription
         that disables the computation of the customer_lead.
         """
-        order = self.env['prescriptions.order'].create({
+        order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': self.company_data['default_warehouse'].id,
         })
 
-        order_line = self.env['prescriptions.order.line'].create({
+        order_line = self.env['prescription.order.line'].create({
             'product_id': self.test_product_order.id,
             'product_uom_qty': 10,
             'product_uom': self.env.ref('uom.product_uom_unit').id,
@@ -228,7 +228,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
 
         self.assertEqual(order_line.customer_lead, self.test_product_order.prescription_delay)
 
-        # Confirm our standard prescriptions order
+        # Confirm our standard prescription order
         order.action_confirm()
 
         # Check the picking crated or not
@@ -237,4 +237,4 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         # Check schedule date of picking
         out_date = order.date_order + timedelta(days=self.test_product_order.prescription_delay) - timedelta(days=self.env.company.security_lead)
         min_date = order.picking_ids[0].scheduled_date
-        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Prescriptions Safety Days.')
+        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Prescription Safety Days.')

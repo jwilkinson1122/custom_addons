@@ -58,7 +58,7 @@
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
-        <!-- <field name="groups_id" eval="[(4, ref('pod_prescriptions_contacts.group_contacts_user'))]" /> -->
+        <!-- <field name="groups_id" eval="[(4, ref('pod_prescription_contacts.group_contacts_user'))]" /> -->
         <field name="arch" type="xml">
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_company" invisible="1" />
@@ -135,7 +135,7 @@
 
             <xpath expr='//page[@name="contact_addresses"]' position="before">
                 <page string="Details" name="partner_info" autofocus="autofocus">
-                    <group name="prescriptions_config">
+                    <group name="prescription_config">
                         <field name="is_partner" invisible="1" />
                         <field name="is_company" invisible="1" />
                         <field name="is_location" invisible="1" />
@@ -392,7 +392,7 @@
             <!-- Page for partner info -->
             <!-- <xpath expr='//page[@name="internal_notes"]' position="before">
                 <page name="partner_info" string="Information">
-                    <group name="prescriptions_config">
+                    <group name="prescription_config">
                         <field name="is_partner" />
                         <field name="is_company" invisible="not is_company"/>
                         <field name="is_location" invisible="not is_location"/>
@@ -487,7 +487,7 @@
     </record>
 
 
-    <record id="prescriptions_account_action" model="ir.actions.act_window">
+    <record id="prescription_account_action" model="ir.actions.act_window">
         <field name="name">Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -509,7 +509,7 @@
         </field>
     </record>
 
-    <record id="prescriptions_location_action" model="ir.actions.act_window">
+    <record id="prescription_location_action" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -530,7 +530,7 @@
         </field>
     </record>
 
-    <record id="prescriptions_practitioner_action" model="ir.actions.act_window">
+    <record id="prescription_practitioner_action" model="ir.actions.act_window">
         <field name="name">Practitioners</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>

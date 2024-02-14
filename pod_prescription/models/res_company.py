@@ -27,7 +27,7 @@ class ResCompany(models.Model):
         help="Days between quotation proposal and expiration."
             " 0 days means automatic expiration is disabled",
     )
-    prescriptions_discount_product_id = fields.Many2one(
+    prescription_discount_product_id = fields.Many2one(
         comodel_name='product.product',
         string="Discount Product",
         domain=[
@@ -37,7 +37,7 @@ class ResCompany(models.Model):
         help="Default product used for discounts",
         check_company=True,
     )
-    prescriptions_down_payment_product_id = fields.Many2one(
+    prescription_down_payment_product_id = fields.Many2one(
         comodel_name='product.product',
         string="Deposit Product",
         domain=[
@@ -48,8 +48,8 @@ class ResCompany(models.Model):
         check_company=True,
     )
 
-    # prescriptions onboarding
-    prescriptions_onboarding_payment_method = fields.Selection(
+    # prescription onboarding
+    prescription_onboarding_payment_method = fields.Selection(
         selection=[
             ('digital_signature', "Sign online"),
             ('paypal', "PayPal"),

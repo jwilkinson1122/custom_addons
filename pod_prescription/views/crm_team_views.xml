@@ -2,10 +2,10 @@
 <odoo>
 
     <!-- Dedicated actions used in views below -->
-    <record id="action_quotations_prescriptions_teams" model="ir.actions.act_window">
-        <field name="name">Prescriptions</field>
-        <field name="res_model">prescriptions.order</field>
-        <field name="view_id" ref="pod_prescriptions.view_quotation_tree"/>
+    <record id="action_quotations_prescription_teams" model="ir.actions.act_window">
+        <field name="name">Prescription</field>
+        <field name="res_model">prescription.order</field>
+        <field name="view_id" ref="pod_prescription.view_quotation_tree"/>
         <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
         <field name="context">{
                 'search_default_team_id': [active_id],
@@ -14,19 +14,19 @@
             }
         </field>
         <field name="domain">[]</field>
-        <field name="search_view_id" ref="pod_prescriptions.prescriptions_order_view_search_inherit_quotation"/>
+        <field name="search_view_id" ref="pod_prescription.prescription_order_view_search_inherit_quotation"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new prescriptions!
+            Create a new quotation, the first step of a new prescription!
             </p><p>
-            Once the quotation is confirmed by the customer, it becomes a prescriptions order.<br/> You will be able to create an invoice and collect the payment.
+            Once the quotation is confirmed by the customer, it becomes a prescription order.<br/> You will be able to create an invoice and collect the payment.
             </p>
         </field>
     </record>
 
     <record id="action_quotation_form" model="ir.actions.act_window">
         <field name="name">New Draft Rx</field>
-        <field name="res_model">prescriptions.order</field>
+        <field name="res_model">prescription.order</field>
         <field name="view_mode">form</field>
         <field name="context">{
                 'search_default_team_id': [active_id],
@@ -34,14 +34,14 @@
                 'default_user_id': uid,
         }
         </field>
-        <field name="search_view_id" ref="prescriptions_order_view_search_inherit_quotation"/>
+        <field name="search_view_id" ref="prescription_order_view_search_inherit_quotation"/>
     </record>
 
-    <record id="action_prescriptions_prescriptions_teams" model="ir.actions.act_window">
-        <field name="name">Prescriptions Orders</field>
-        <field name="res_model">prescriptions.order</field>
+    <record id="action_prescription_prescription_teams" model="ir.actions.act_window">
+        <field name="name">Prescription Orders</field>
+        <field name="res_model">prescription.order</field>
         <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-        <field name="search_view_id" ref="pod_prescriptions.prescriptions_order_view_search_inherit_prescription"/>
+        <field name="search_view_id" ref="pod_prescription.prescription_order_view_search_inherit_prescription"/>
         <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
         <field name="context">{
                 'search_default_team_id': [active_id],
@@ -50,18 +50,18 @@
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new prescriptions!
+            Create a new quotation, the first step of a new prescription!
             </p><p>
-            Once the quotation is confirmed by the customer, it becomes a prescriptions order.<br/> You will be able to create an invoice and collect the payment.
+            Once the quotation is confirmed by the customer, it becomes a prescription order.<br/> You will be able to create an invoice and collect the payment.
             </p>
         </field>
     </record>
 
-    <record id="action_prescriptions_to_invoice_prescriptions_teams" model="ir.actions.act_window">
-        <field name="name">Prescriptions Orders</field>
-        <field name="res_model">prescriptions.order</field>
+    <record id="action_prescription_to_invoice_prescription_teams" model="ir.actions.act_window">
+        <field name="name">Prescription Orders</field>
+        <field name="res_model">prescription.order</field>
         <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-        <field name="search_view_id" ref="pod_prescriptions.prescriptions_order_view_search_inherit_prescription"/>
+        <field name="search_view_id" ref="pod_prescription.prescription_order_view_search_inherit_prescription"/>
         <field name="domain">[('invoice_status','=','to invoice')]</field>
         <field name="context">{
                 'search_default_team_id': [active_id],
@@ -72,11 +72,11 @@
 
     <!-- crm.team views (& actions) -->
 
-    <record id="crm_team_prescriptions_teams_view_form" model="ir.ui.view">
+    <record id="crm_team_prescription_teams_view_form" model="ir.ui.view">
         <field name="name">crm.team.form</field>
         <field name="model">crm.team</field>
         <field name="priority">9</field>
-        <field name="inherit_id" ref="pod_prescriptions_team.crm_team_view_form"/>
+        <field name="inherit_id" ref="pod_prescription_team.crm_team_view_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <label for="invoiced_target"/>
@@ -89,9 +89,9 @@
     </record>
 
     <record id="crm_team_view_kanban_dashboard" model="ir.ui.view">
-        <field name="name">crm.team.view.kanban.dashboard.inherit.prescriptions</field>
+        <field name="name">crm.team.view.kanban.dashboard.inherit.prescription</field>
         <field name="model">crm.team</field>
-        <field name="inherit_id" ref="pod_prescriptions_team.crm_team_view_kanban_dashboard"/>
+        <field name="inherit_id" ref="pod_prescription_team.crm_team_view_kanban_dashboard"/>
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="invoiced_target"/>
@@ -100,21 +100,21 @@
             <xpath expr="//t[@name='second_options']" position="after">
                 <div class="row" t-if="record.quotations_count.raw_value">
                     <div class="col">
-                        <a name="%(action_quotations_prescriptions_teams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
+                        <a name="%(action_quotations_prescription_teams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
                             <field name="quotations_count" class="me-1"/>
                             <t t-if="record.quotations_count.raw_value == 1">Draft Rx</t>
-                            <t t-else="">Prescriptions</t>
+                            <t t-else="">Prescription</t>
                         </a>
                     </div>
                     <div class="col-auto text-truncate">
                         <field name="quotations_amount" widget="monetary"/>
                     </div>
                 </div>
-                <div class="row" name="orders_to_invoice" t-if="record.prescriptions_to_invoice_count.raw_value">
+                <div class="row" name="orders_to_invoice" t-if="record.prescription_to_invoice_count.raw_value">
                     <div class="col-8">
-                        <a name="%(action_prescriptions_to_invoice_prescriptions_teams)d" type="action">
-                            <field name="prescriptions_to_invoice_count" class="me-1"/>
-                            <t t-if="record.prescriptions_to_invoice_count.raw_value == 1">Order to Invoice</t>
+                        <a name="%(action_prescription_to_invoice_prescription_teams)d" type="action">
+                            <field name="prescription_to_invoice_count" class="me-1"/>
+                            <t t-if="record.prescription_to_invoice_count.raw_value == 1">Order to Invoice</t>
                             <t t-else="">Orders to Invoice</t>
                         </a>
                     </div>
@@ -122,30 +122,30 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_primary_bottom')]" position="after">
-                <t groups="pod_prescriptions_team.group_prescriptions_manager">
+                <t groups="pod_prescription_team.group_prescription_manager">
                     <div class="col-12 o_kanban_primary_bottom bottom_block">
-                        <field name="invoiced" widget="prescriptions_team_progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
+                        <field name="invoiced" widget="prescription_team_progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                     </div>
                 </t>
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                 <div>
-                    <a name="%(action_prescriptions_prescriptions_teams)d" type="action">Prescriptions Orders</a>
+                    <a name="%(action_prescription_prescription_teams)d" type="action">Prescription Orders</a>
                 </div>
                 <div groups="account.group_account_invoice">
-                    <a name="%(action_invoice_prescriptions_teams)d" type="action">Invoices</a>
+                    <a name="%(action_invoice_prescription_teams)d" type="action">Invoices</a>
                 </div>
             </xpath>
 
             <div name="o_team_kanban_report_separator" position="before">
-                <div name="prescriptions_report">
-                    <a name="%(action_order_report_so_prescriptions_team)d" type="action">
-                        Prescriptions
+                <div name="prescription_report">
+                    <a name="%(action_order_report_so_prescription_team)d" type="action">
+                        Prescription
                     </a>
                 </div>
                 <div groups="account.group_account_invoice" name="invoices_report">
-                    <a name="%(action_account_invoice_report_prescriptions_team)d" type="action">
+                    <a name="%(action_account_invoice_report_prescription_team)d" type="action">
                         Invoices
                     </a>
                 </div>
@@ -153,8 +153,8 @@
         </field>
     </record>
 
-    <record id="pod_prescriptions_team.mail_activity_type_action_config_prescriptions" model="ir.actions.act_window">
-        <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['prescriptions.order', 'res.partner', 'product.template', 'product.product'])]</field>
+    <record id="pod_prescription_team.mail_activity_type_action_config_prescription" model="ir.actions.act_window">
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['prescription.order', 'res.partner', 'product.template', 'product.product'])]</field>
     </record>
 
 </odoo>

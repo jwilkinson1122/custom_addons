@@ -5,18 +5,18 @@ from odoo import api, fields, models
 
 
 class PrescriptionOrderTemplateOption(models.Model):
-    _name = "prescriptions.order.template.option"
+    _name = "prescription.order.template.option"
     _description = "Draft Rx Template Option"
     _check_company_auto = True
 
-    prescriptions_order_template_id = fields.Many2one(
-        comodel_name='prescriptions.order.template',
+    prescription_order_template_id = fields.Many2one(
+        comodel_name='prescription.order.template',
         string="Draft Rx Template Reference",
         index=True, required=True,
         ondelete='cascade')
 
     company_id = fields.Many2one(
-        related='prescriptions_order_template_id.company_id', store=True, index=True)
+        related='prescription_order_template_id.company_id', store=True, index=True)
 
     product_id = fields.Many2one(
         comodel_name='product.product',
@@ -62,12 +62,12 @@ class PrescriptionOrderTemplateOption(models.Model):
     @api.model
     def _product_id_domain(self):
         """Returns the domain of the products that can be added as a template option."""
-        return [('prescriptions_ok', '=', True)]
+        return [('prescription_ok', '=', True)]
 
     def _prepare_option_line_values(self):
         """ Give the values to create the corresponding option line.
 
-        :return: `prescriptions.order.option` create values
+        :return: `prescription.order.option` create values
         :rtype: dict
         """
         self.ensure_one()

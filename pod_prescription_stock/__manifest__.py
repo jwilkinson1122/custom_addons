@@ -7,38 +7,38 @@
     'version': '17.0.0.0.0',
     'website': 'https://www.nwpodiatric.com',
     'category': 'Hidden',
-    'summary': 'Link prescriptions and warehouses management applications',
-    'description': """Link prescriptions and warehouses management applications.""",
+    'summary': 'Link prescription and warehouses management applications',
+    'description': """Link prescription and warehouses management applications.""",
     'depends': [
-        'pod_prescriptions', 
+        'pod_prescription', 
         'stock_account'
         ],
     'data': [
-        'security/prescriptions_stock_security.xml',
+        'security/prescription_stock_security.xml',
         'security/ir.model.access.csv',
 
-        'views/prescriptions_order_views.xml',
+        'views/prescription_order_views.xml',
         'views/stock_route_views.xml',
         'views/res_config_settings_views.xml',
-        'views/prescriptions_stock_portal_template.xml',
+        'views/prescription_stock_portal_template.xml',
         'views/stock_lot_views.xml',
         'views/res_users_views.xml',
 
-        'report/prescriptions_order_report_templates.xml',
+        'report/prescription_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',
 
         'data/mail_templates.xml',
-        'data/prescriptions_stock_data.xml',
+        'data/prescription_stock_data.xml',
 
         'wizard/stock_rules_report_views.xml',
-        'wizard/prescriptions_order_cancel_views.xml',
+        'wizard/prescription_order_cancel_views.xml',
     ],
-    'demo': ['data/prescriptions_order_demo.xml'],
+    'demo': ['data/prescription_order_demo.xml'],
     'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_stock/static/src/**/*',
+            'pod_prescription_stock/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

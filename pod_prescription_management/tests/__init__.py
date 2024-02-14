@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
 
-from . import test_prescriptions_ui
-from . import test_prescriptions_order
+from . import test_prescription_ui
+from . import test_prescription_order

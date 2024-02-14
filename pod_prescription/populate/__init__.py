@@ -1,3 +1,3 @@
 from . import product_attribute
-from . import prescriptions_order
+from . import prescription_order
 from . import product

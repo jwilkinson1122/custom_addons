@@ -2,7 +2,7 @@
 <odoo>
     <data>
     	<record id="stock.route_warehouse0_mto" model="stock.route">
-            <field name="prescriptions_selectable">True</field>
+            <field name="prescription_selectable">True</field>
         </record>
     </data>
 </odoo>

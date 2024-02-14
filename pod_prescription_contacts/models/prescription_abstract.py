@@ -4,9 +4,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class PrescriptionsAbstract(models.AbstractModel):
+class PrescriptionAbstract(models.AbstractModel):
     # FHIR Entity: default entity, as all models have internal_identifiers
-    _name = "prescriptions.abstract"
+    _name = "prescription.abstract"
     _description = "Default FHIR entity"
 
     internal_identifier = fields.Char(
@@ -25,7 +25,7 @@ class PrescriptionsAbstract(models.AbstractModel):
                 vals_upd
             )
             return super().create(vals_upd)
-        # return super(PrescriptionsAbstract, self).create(vals_upd)
+        # return super(PrescriptionAbstract, self).create(vals_upd)
  
 
     def _get_internal_identifier(self, vals):

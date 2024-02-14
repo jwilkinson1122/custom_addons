@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="view_order_line_tree" model="ir.ui.view">
-        <field name="name">prescriptions.order.line.tree</field>
-        <field name="model">prescriptions.order.line</field>
+        <field name="name">prescription.order.line.tree</field>
+        <field name="model">prescription.order.line</field>
         <field name="arch" type="xml">
-            <tree string="Prescriptions Order Lines" create="false">
+            <tree string="Prescription Order Lines" create="false">
                 <field name="order_id"/>
                 <field name="order_partner_id"/>
                 <field name="name"/>
@@ -21,11 +21,11 @@
         </field>
     </record>
 
-    <record id="prescriptions_order_line_view_form_readonly" model="ir.ui.view">
-        <field name="name">prescriptions.order.line.form.readonly</field>
-        <field name="model">prescriptions.order.line</field>
+    <record id="prescription_order_line_view_form_readonly" model="ir.ui.view">
+        <field name="name">prescription.order.line.form.readonly</field>
+        <field name="model">prescription.order.line</field>
         <field name="arch" type="xml">
-            <form string="Prescriptions Order Item" edit="false">
+            <form string="Prescription Order Item" edit="false">
                 <field name="display_type" invisible="1"/>
                 <sheet>
                     <div class="oe_title">
@@ -49,9 +49,9 @@
                             <field name="name"/>
                             <field name="product_uom_qty"/>
                             <field name="qty_delivered" 
-                                invisible="state not in ['prescriptions', 'done']"
+                                invisible="state not in ['prescription', 'done']"
                                 readonly="qty_delivered_method != 'manual'"/>
-                            <field name="qty_invoiced" invisible="state not in ['prescriptions', 'done']"/>
+                            <field name="qty_invoiced" invisible="state not in ['prescription', 'done']"/>
                             <field name="product_uom"
                                 force_save="1"
                                 groups="uom.group_uom"
@@ -73,7 +73,7 @@
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                                 context="{'search_view_ref': 'account.account_tax_view_search'}"
-                                domain="[('type_tax_use', '=', 'prescriptions'), ('company_id', '=', company_id), ('country_id', '=', tax_country_id)]"
+                                domain="[('type_tax_use', '=', 'prescription'), ('company_id', '=', company_id), ('country_id', '=', tax_country_id)]"
                                 readonly="qty_invoiced &gt; 0"/>
                             <field name="price_tax" widget="monetary"/>
                             <field name="price_total" widget="monetary"/>
@@ -85,20 +85,20 @@
         </field>
     </record>
 
-    <record id="view_prescriptions_order_line_filter" model="ir.ui.view">
-        <field name="name">prescriptions.order.line.select</field>
-        <field name="model">prescriptions.order.line</field>
+    <record id="view_prescription_order_line_filter" model="ir.ui.view">
+        <field name="name">prescription.order.line.select</field>
+        <field name="model">prescription.order.line</field>
         <field name="arch" type="xml">
-            <search string="Search Prescriptions Order">
+            <search string="Search Prescription Order">
                 <filter string="To Invoice"
                     name="to_invoice"
                     domain="[('qty_to_invoice', '!=', 0)]"
-                    help="Prescriptions Order Lines ready to be invoiced"/>
+                    help="Prescription Order Lines ready to be invoiced"/>
                 <separator/>
-                <filter string="My Prescriptions Order Lines"
-                    name="my_prescriptions_order_lines"
+                <filter string="My Prescription Order Lines"
+                    name="my_prescription_order_lines"
                     domain="[('personnel_id','=',uid)]"
-                    help="Prescriptions Order Lines related to a Prescriptions Order of mine"/>
+                    help="Prescription Order Lines related to a Prescription Order of mine"/>
                 <field name="order_id"/>
                 <field name="order_partner_id" operator="child_of"/>
                 <field name="product_id"/>
@@ -106,15 +106,15 @@
                 <group expand="0" string="Group By">
                     <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                     <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}"/>
-                    <filter string="Prescriptions Person" name="prescriptionsperson" domain="[]" context="{'group_by':'personnel_id'}"/>
+                    <filter string="Prescription Person" name="prescriptionperson" domain="[]" context="{'group_by':'personnel_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="prescriptions_order_line_view_kanban" model="ir.ui.view">
-        <field name="name">prescriptions.order.line.kanban</field>
-        <field name="model">prescriptions.order.line</field>
+    <record id="prescription_order_line_view_kanban" model="ir.ui.view">
+        <field name="name">prescription.order.line.kanban</field>
+        <field name="model">prescription.order.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>

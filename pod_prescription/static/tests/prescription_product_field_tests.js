@@ -13,13 +13,13 @@ QUnit.module("Fields", (hooks) => {
         target = getFixture();
         serverData = {
             models: {
-                'prescriptions.order': {
+                'prescription.order': {
                     fields: {
                         display_name: { string: "Displayed name", type: "char" },
                         order_line: {
                             string: "order lines",
                             type: "one2many",
-                            relation: "prescriptions.order.line",
+                            relation: "prescription.order.line",
                             relation_field: "order_id",
                         },
                     },
@@ -32,12 +32,12 @@ QUnit.module("Fields", (hooks) => {
                     ],
                     onchanges: {},
                 },
-                'prescriptions.order.line': {
+                'prescription.order.line': {
                     fields: {
                         order_id: {
                             string: "Order Reference",
                             type: "many2one",
-                            relation: "prescriptions.order",
+                            relation: "prescription.order",
                             relation_field: "order_line",
                         },
                         product_template_id: {
@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
 
         await makeView({
             type: "form",
-            resModel: "prescriptions.order",
+            resModel: "prescription.order",
             serverData,
             arch: `
                 <form>

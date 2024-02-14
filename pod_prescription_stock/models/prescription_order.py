@@ -11,18 +11,23 @@ _logger = logging.getLogger(__name__)
 
 
 class PrescriptionOrder(models.Model):
-    _inherit = "prescriptions.order"
+    _inherit = "prescription.order"
 
     incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+        'account.incoterms', 'Incoterm',
+        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
-        ('one', 'When all products are ready')], string='Shipping Policy', required=True, default='direct', help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        ('one', 'When all products are ready')],
+        string='Shipping Policy', required=True, default='direct',
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse', required=True, compute='_compute_warehouse_id', store=True, readonly=False, precompute=True, check_company=True)
-    picking_ids = fields.One2many('stock.picking', 'prescriptions_id', string='Transfers')
+        'stock.warehouse', string='Warehouse', required=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        check_company=True)
+    picking_ids = fields.One2many('stock.picking', 'prescription_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     delivery_status = fields.Selection([
         ('pending', 'Not Delivered'),
@@ -82,8 +87,7 @@ class PrescriptionOrder(models.Model):
         super(PrescriptionOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-        # for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x.display_type):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
                 dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
@@ -91,7 +95,7 @@ class PrescriptionOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
     def write(self, values):
-        if values.get('order_line') and self.state == 'prescriptions':
+        if values.get('order_line') and self.state == 'prescription':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
@@ -99,7 +103,7 @@ class PrescriptionOrder(models.Model):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
-                message = _("""The delivery address has been changed on the Prescriptions Order<br/>
+                message = _("""The delivery address has been changed on the Prescription Order<br/>
                         From <strong>"%s"</strong> To <strong>"%s"</strong>,
                         You should probably update the partner on this document.""",
                             record.partner_shipping_id.display_name, new_partner.display_name)
@@ -113,7 +117,7 @@ class PrescriptionOrder(models.Model):
                 order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
 
         res = super(PrescriptionOrder, self).write(values)
-        if values.get('order_line') and self.state == 'prescriptions':
+        if values.get('order_line') and self.state == 'prescription':
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for order in self:
                 to_log = {}
@@ -132,7 +136,7 @@ class PrescriptionOrder(models.Model):
         for order in self:
             late_stock_picking = order.picking_ids.filtered(lambda p: p.delay_alert_date)
             order.json_popover = json.dumps({
-                'popoverTemplate': 'pod_prescriptions_stock.DelayAlertWidget',
+                'popoverTemplate': 'pod_prescription_stock.DelayAlertWidget',
                 'late_elements': [{
                         'id': late_move.id,
                         'name': late_move.display_name,
@@ -155,7 +159,7 @@ class PrescriptionOrder(models.Model):
     def _compute_warehouse_id(self):
         for order in self:
             default_warehouse_id = self.env['ir.default'].with_company(
-                order.company_id.id)._get_model_defaults('prescriptions.order').get('warehouse_id')
+                order.company_id.id)._get_model_defaults('prescription.order').get('warehouse_id')
             if order.state in ['draft', 'sent'] or not order.ids:
                 # Should expect empty
                 if default_warehouse_id is not None:
@@ -183,10 +187,10 @@ class PrescriptionOrder(models.Model):
 
     def _action_cancel(self):
         documents = None
-        for prescriptions_order in self:
-            if prescriptions_order.state == 'prescriptions' and prescriptions_order.order_line:
-                prescriptions_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in prescriptions_order.order_line}
-                documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(prescriptions_order_lines_quantities, 'move_ids', 'UP')
+        for prescription_order in self:
+            if prescription_order.state == 'prescription' and prescription_order.order_line:
+                prescription_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in prescription_order.order_line}
+                documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(prescription_order_lines_quantities, 'move_ids', 'UP')
         self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
         if documents:
             filtered_documents = {}
@@ -201,7 +205,7 @@ class PrescriptionOrder(models.Model):
     def _get_action_view_picking(self, pickings):
         '''
         This function returns an action that display existing delivery orders
-        of given prescriptions order ids. It can either be a in a list or in a form
+        of given prescription order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
@@ -235,15 +239,15 @@ class PrescriptionOrder(models.Model):
             order_exceptions, visited_moves = rendering_context
             visited_moves = list(visited_moves)
             visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
-            order_line_ids = self.env['prescriptions.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
-            prescriptions_order_ids = order_line_ids.mapped('order_id')
+            order_line_ids = self.env['prescription.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
+            prescription_order_ids = order_line_ids.mapped('order_id')
             impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {
-                'prescriptions_order_ids': prescriptions_order_ids,
+                'prescription_order_ids': prescription_order_ids,
                 'order_exceptions': order_exceptions.values(),
                 'impacted_pickings': impacted_pickings,
                 'cancel': cancel
             }
-            return self.env['ir.qweb']._render('pod_prescriptions_stock.exception_on_so', values)
+            return self.env['ir.qweb']._render('pod_prescription_stock.exception_on_so', values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)

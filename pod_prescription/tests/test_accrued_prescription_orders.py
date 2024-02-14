@@ -15,7 +15,7 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.alt_inc_account = cls.company_data['default_account_revenue'].copy()
         # set 'invoice_policy' to 'delivery' to take 'qty_delivered' into account when computing 'untaxed_amount_to_invoice'
-        # set 'type' to 'service' to allow manualy set 'qty_delivered' even with pod_prescriptions_stock installed
+        # set 'type' to 'service' to allow manualy set 'qty_delivered' even with pod_prescription_stock installed
         cls.product_a.update({
             'type': 'service',
             'invoice_policy': 'delivery',
@@ -41,7 +41,7 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
             'plan_id': cls.default_plan.id,
             'company_id': False,
         })
-        cls.prescriptions_order = cls.env['prescriptions.order'].with_context(tracking_disable=True).create({
+        cls.prescription_order = cls.env['prescription.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
@@ -69,13 +69,13 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
                 })
             ]
         })
-        cls.prescriptions_order.analytic_account_id = cls.analytic_account_c
-        cls.prescriptions_order.action_confirm()
+        cls.prescription_order.analytic_account_id = cls.analytic_account_c
+        cls.prescription_order.action_confirm()
         cls.account_expense = cls.company_data['default_account_expense']
         cls.account_revenue = cls.company_data['default_account_revenue']
         cls.wizard = cls.env['account.accrued.orders.wizard'].with_context({
-            'active_model': 'prescriptions.order',
-            'active_ids': cls.prescriptions_order.ids,
+            'active_model': 'prescription.order',
+            'active_ids': cls.prescription_order.ids,
         }).create({
             'account_id': cls.account_expense.id,
         })
@@ -86,7 +86,7 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
             self.wizard.create_entries()
 
         # 5 qty of each product invoiceable
-        self.prescriptions_order.order_line.qty_delivered = 5
+        self.prescription_order.order_line.qty_delivered = 5
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
             {'account_id': self.account_revenue.id, 'debit': 5000, 'credit': 0},
@@ -99,7 +99,7 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
         ])
 
         # delivered products invoiced, nothing to invoice left
-        invoices = self.prescriptions_order._create_invoices()
+        invoices = self.prescription_order._create_invoices()
         invoices.invoice_date = self.wizard.date
         invoices.action_post()
         with self.assertRaises(UserError):
@@ -108,10 +108,10 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
 
     def test_multi_currency_accrued_order(self):
         # 5 qty of each product billeable
-        self.prescriptions_order.order_line.qty_delivered = 5
-        # self.prescriptions_order.order_line.product_uom_qty = 5
+        self.prescription_order.order_line.qty_delivered = 5
+        # self.prescription_order.order_line.product_uom_qty = 5
         # set currency != company currency
-        self.prescriptions_order.currency_id = self.currency_data['currency']
+        self.prescription_order.currency_id = self.currency_data['currency']
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
             {'account_id': self.account_revenue.id, 'debit': 5000 / 2, 'credit': 0, 'amount_currency': 5000},
@@ -124,7 +124,7 @@ class TestAccruedPrescriptionOrders(AccountTestInvoicingCommon):
         ])
 
     def test_analytic_account_accrued_order(self):
-        self.prescriptions_order.order_line.qty_delivered = 10
+        self.prescription_order.order_line.qty_delivered = 10
 
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines

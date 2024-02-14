@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
@@ -11,13 +11,13 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestCommon):
 
-    def _get_new_prescriptions_order(self, amount=10.0, product=False):
-        """ Creates and returns a prescriptions order with one default order line.
+    def _get_new_prescription_order(self, amount=10.0, product=False):
+        """ Creates and returns a prescription order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
         product = product or self.company_data['product_delivery_no']
-        prescriptions_order_vals = {
+        prescription_order_vals = {
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -29,15 +29,15 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        prescriptions_order = self.env['prescriptions.order'].create(prescriptions_order_vals)
-        return prescriptions_order
+        prescription_order = self.env['prescription.order'].create(prescription_order_vals)
+        return prescription_order
 
-    def test_00_prescriptions_stock_invoice(self):
+    def test_00_prescription_stock_invoice(self):
         """
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
         and whatever other model there is in stock with "invoice on delivery" products
         """
-        self.so = self.env['prescriptions.order'].create({
+        self.so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -108,13 +108,13 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(self.so.invoice_status, 'invoiced',
                          'Prescription Stock: so invoice_status should be "fully invoiced" after complete delivery and invoicing')
 
-    def test_01_prescriptions_stock_order(self):
+    def test_01_prescription_stock_order(self):
         """
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
         and whatever other model there is in stock with "invoice on order" products
         """
         # let's cheat and put all our products to "invoice on order"
-        self.so = self.env['prescriptions.order'].create({
+        self.so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -149,7 +149,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'type': 'service',
             'invoice_policy': 'order',
         })
-        adv_wiz = self.env['prescriptions.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
+        adv_wiz = self.env['prescription.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
             'product_id': advance_product.id,
@@ -173,7 +173,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         with self.assertRaises(UserError):
             self.so._create_invoices()
 
-    def test_02_prescriptions_stock_return(self):
+    def test_02_prescription_stock_return(self):
         """
         Test a SO with a product invoiced on delivery. Deliver and invoice the SO, then do a return
         of the picking. Check that a refund invoice is well generated.
@@ -192,7 +192,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
                 'price_unit': self.product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        self.so = self.env['prescriptions.order'].create(so_vals)
+        self.so = self.env['prescription.order'].create(so_vals)
 
         # confirm our standard so, check the picking
         self.so.action_confirm()
@@ -236,7 +236,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Prescription Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)
         self.assertAlmostEqual(self.so.order_line.sorted()[0].qty_delivered, 3.0, msg='Prescription Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line.sorted()[0].qty_delivered)
         # let's do an invoice with refunds
-        adv_wiz = self.env['prescriptions.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
+        adv_wiz = self.env['prescription.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'delivered',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
@@ -246,7 +246,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
     def test_04_create_picking_update_prescription_orderline(self):
         """
-        Test that updating multiple prescriptions order lines after a successful delivery creates a single picking containing
+        Test that updating multiple prescription order lines after a successful delivery creates a single picking containing
         the new move lines.
         """
         # sell two products
@@ -255,7 +255,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         item2 = self.company_data['product_delivery_no']    # storable
         item2.type = 'product'    # storable
 
-        self.so = self.env['prescriptions.order'].create({
+        self.so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -286,7 +286,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
                 self.assertEqual(picking.move_ids.product_id.id, item1.id)
                 self.assertEqual(move.state, 'done')
 
-        # update the two original prescriptions order lines
+        # update the two original prescription order lines
         self.so.write({
             'order_line': [
                 (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
@@ -303,7 +303,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             elif backorder_move.product_id.id == item2.id:
                 self.assertEqual(backorder_move.product_qty, 2)
 
-        # add a new prescriptions order lines
+        # add a new prescription order lines
         self.so.write({
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -322,7 +322,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         item2.type = 'product'    # storable
 
         self.env['stock.quant']._update_available_quantity(item2, self.company_data['default_warehouse'].lot_stock_id, 2)
-        self.so = self.env['prescriptions.order'].create({
+        self.so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -336,7 +336,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.so.picking_ids.sorted()[0].button_validate()
         self.assertEqual(self.so.picking_ids.sorted()[0].state, "done")
 
-        # update the two original prescriptions order lines
+        # update the two original prescription order lines
         self.so.write({
             'order_line': [
                 (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
@@ -347,14 +347,14 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(len(self.so.picking_ids), 2)
 
     def test_05_confirm_cancel_confirm(self):
-        """ Confirm a prescriptions order, cancel it, set to quotation, change the
+        """ Confirm a prescription order, cancel it, set to quotation, change the
         partner, confirm it again: the second delivery order should have
         the new partner.
         """
         item1 = self.company_data['product_order_no']
         partner1 = self.partner_a.id
         partner2 = self.env['res.partner'].create({'name': 'Another Test Partner'})
-        so1 = self.env['prescriptions.order'].create({
+        so1 = self.env['prescription.order'].create({
             'partner_id': partner1,
             'order_line': [(0, 0, {
                 'name': item1.name,
@@ -377,10 +377,10 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(picking2.partner_id.id, partner2.id)
 
     def test_06_uom(self):
-        """ Sell a dozen of products stocked in units. Check that the quantities on the prescriptions order
+        """ Sell a dozen of products stocked in units. Check that the quantities on the prescription order
         lines as well as the delivered quantities are handled in dozen while the moves themselves
         are handled in units. Edit the ordered quantities, check that the quantities are correctly
-        updated on the moves. Edit the ir.config_parameter to propagate the uom of the prescriptions order
+        updated on the moves. Edit the ir.config_parameter to propagate the uom of the prescription order
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
         """
@@ -391,7 +391,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(item1.uom_id.id, uom_unit.id)
 
         # sell a dozen
-        so1 = self.env['prescriptions.order'].create({
+        so1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': item1.name,
@@ -457,7 +457,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(so1.order_line.qty_delivered, 3.0)
 
     def test_07_forced_qties(self):
-        """ Make multiple prescriptions order lines of the same product which isn't available in stock. On
+        """ Make multiple prescription order lines of the same product which isn't available in stock. On
         the picking, create new move lines (through the detailed operations view). See that the move
         lines are correctly dispatched through the moves.
         """
@@ -468,7 +468,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(item1.uom_id.id, uom_unit.id)
 
         # sell a dozen
-        so1 = self.env['prescriptions.order'].create({
+        so1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -516,7 +516,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         # Sell and deliver 10 units
         item1 = self.company_data['product_order_no']
         uom_unit = self.env.ref('uom.product_uom_unit')
-        so1 = self.env['prescriptions.order'].create({
+        so1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -563,8 +563,8 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(so1.picking_ids.sorted('id')[-1].move_ids.product_qty, 10)
 
     def test_09_qty_available(self):
-        """ create a prescriptions order in warehouse1, change to warehouse2 and check the
-        available quantities on prescriptions order lines are well updated """
+        """ create a prescription order in warehouse1, change to warehouse2 and check the
+        available quantities on prescription order lines are well updated """
         # sell two products
         item1 = self.company_data['product_order_no']
         item1.type = 'product'
@@ -579,7 +579,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'code': 'Test',
         })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -603,12 +603,12 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(line.qty_to_deliver, 1)
 
     def test_10_qty_available(self):
-        """create a prescriptions order containing three times the same product. The
+        """create a prescription order containing three times the same product. The
         quantity available should be different for the 3 lines"""
         item1 = self.company_data['product_order_no']
         item1.type = 'product'
         self.env['stock.quant']._update_available_quantity(item1, self.company_data['default_warehouse'].lot_stock_id, 10)
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -619,22 +619,22 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(so.order_line.mapped('free_qty_today'), [10, 5, 0])
 
     def test_11_return_with_refund(self):
-        """ Creates a prescriptions order, valids it and its delivery, then creates a
-        return. The return must refund by default and the prescriptions order delivered
+        """ Creates a prescription order, valids it and its delivery, then creates a
+        return. The return must refund by default and the prescription order delivered
         quantity must be updated.
         """
-        # Creates a prescriptions order for 10 products.
-        prescriptions_order = self._get_new_prescriptions_order()
-        # Valids the prescriptions order, then valids the delivery.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        picking = prescriptions_order.picking_ids
+        # Creates a prescription order for 10 products.
+        prescription_order = self._get_new_prescription_order()
+        # Valids the prescription order, then valids the delivery.
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        picking = prescription_order.picking_ids
         picking.move_ids.write({'quantity': 10, 'picked': True})
         picking.button_validate()
 
         # Checks the delivery amount (must be 10).
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 10)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 10)
         # Creates a return from the delivery picking.
         return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking.ids, active_id=picking.id,
@@ -650,25 +650,25 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
         return_picking.button_validate()
         # Checks the delivery amount (must be 0).
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
 
     def test_12_return_without_refund(self):
         """ Do the exact thing than in `test_11_return_with_refund` except we
-        set on False the refund and checks the prescriptions order delivered quantity
+        set on False the refund and checks the prescription order delivered quantity
         isn't changed.
         """
-        # Creates a prescriptions order for 10 products.
-        prescriptions_order = self._get_new_prescriptions_order()
-        # Valids the prescriptions order, then valids the delivery.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        picking = prescriptions_order.picking_ids
+        # Creates a prescription order for 10 products.
+        prescription_order = self._get_new_prescription_order()
+        # Valids the prescription order, then valids the delivery.
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        picking = prescription_order.picking_ids
         picking.move_ids.write({'quantity': 10, 'picked': True})
         picking.button_validate()
 
         # Checks the delivery amount (must be 10).
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 10)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 10)
         # Creates a return from the delivery picking.
         return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking.ids, active_id=picking.id,
@@ -684,12 +684,12 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
         return_picking.button_validate()
         # Checks the delivery amount (must still be 10).
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 10)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 10)
 
     def test_13_delivered_qty(self):
-        """ Creates a prescriptions order, valids it and adds a new move line in the delivery for a
+        """ Creates a prescription order, valids it and adds a new move line in the delivery for a
         product with an invoicing policy on 'order', then checks a new SO line was created.
-        After that, creates a second prescriptions order and does the same thing but with a product
+        After that, creates a second prescription order and does the same thing but with a product
         with and invoicing policy on 'ordered'.
         """
         product_inv_on_delivered = self.company_data['product_delivery_no']
@@ -700,16 +700,16 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'invoice_policy': 'order',
             'list_price': 55.0,
         })
-        # Creates a prescriptions order for 3 products invoiced on qty. delivered.
-        prescriptions_order = self._get_new_prescriptions_order(amount=3)
-        # Confirms the prescriptions order, then increases the delivered qty., adds a new
+        # Creates a prescription order for 3 products invoiced on qty. delivered.
+        prescription_order = self._get_new_prescription_order(amount=3)
+        # Confirms the prescription order, then increases the delivered qty., adds a new
         # line and valids the delivery.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(len(prescriptions_order.order_line), 1)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        picking = prescriptions_order.picking_ids
-        initial_product = prescriptions_order.order_line.product_id
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(len(prescription_order.order_line), 1)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        picking = prescription_order.picking_ids
+        initial_product = prescription_order.order_line.product_id
 
         picking_form = Form(picking)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -721,10 +721,10 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         picking.move_ids.picked = True
         picking.button_validate()
 
-        # Check a new prescriptions order line was correctly created.
-        self.assertEqual(len(prescriptions_order.order_line), 2)
-        so_line_1 = prescriptions_order.order_line[0]
-        so_line_2 = prescriptions_order.order_line[1]
+        # Check a new prescription order line was correctly created.
+        self.assertEqual(len(prescription_order.order_line), 2)
+        so_line_1 = prescription_order.order_line[0]
+        so_line_2 = prescription_order.order_line[1]
         self.assertEqual(so_line_1.product_id.id, product_inv_on_delivered.id)
         self.assertEqual(so_line_1.product_uom_qty, 3)
         self.assertEqual(so_line_1.qty_delivered, 5)
@@ -737,20 +737,20 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             "Shouldn't get the product price as the invoice policy is on qty. ordered")
 
         # Check the picking didn't change
-        self.assertRecordValues(prescriptions_order.picking_ids.move_ids, [
+        self.assertRecordValues(prescription_order.picking_ids.move_ids, [
             {'product_id': initial_product.id, 'quantity': 5},
             {'product_id': product_inv_on_order.id, 'quantity': 5},
         ])
 
-        # Creates a second prescriptions order for 3 product invoiced on qty. ordered.
-        prescriptions_order = self._get_new_prescriptions_order(product=product_inv_on_order, amount=3)
-        # Confirms the prescriptions order, then increases the delivered qty., adds a new
+        # Creates a second prescription order for 3 product invoiced on qty. ordered.
+        prescription_order = self._get_new_prescription_order(product=product_inv_on_order, amount=3)
+        # Confirms the prescription order, then increases the delivered qty., adds a new
         # line and valids the delivery.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(len(prescriptions_order.order_line), 1)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        picking = prescriptions_order.picking_ids
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(len(prescription_order.order_line), 1)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        picking = prescription_order.picking_ids
 
         picking_form = Form(picking)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -762,10 +762,10 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         picking.move_ids.picked = True
         picking.button_validate()
 
-        # Check a new prescriptions order line was correctly created.
-        self.assertEqual(len(prescriptions_order.order_line), 2)
-        so_line_1 = prescriptions_order.order_line[0]
-        so_line_2 = prescriptions_order.order_line[1]
+        # Check a new prescription order line was correctly created.
+        self.assertEqual(len(prescription_order.order_line), 2)
+        so_line_1 = prescription_order.order_line[0]
+        so_line_2 = prescription_order.order_line[1]
         self.assertEqual(so_line_1.product_id.id, product_inv_on_order.id)
         self.assertEqual(so_line_1.product_uom_qty, 3)
         self.assertEqual(so_line_1.qty_delivered, 5)
@@ -778,7 +778,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             "Should get the product price as the invoice policy is on qty. delivered")
 
     def test_14_delivered_qty_in_multistep(self):
-        """ Creates a prescriptions order with delivery in two-step. Process the pick &
+        """ Creates a prescription order with delivery in two-step. Process the pick &
         ship and check we don't have extra SO line. Then, do the same but with
         adding a extra move and check only one extra SO line was created.
         """
@@ -792,15 +792,15 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'invoice_policy': 'order',
             'list_price': 55.0,
         })
-        # Create a prescriptions order.
-        prescriptions_order = self._get_new_prescriptions_order()
-        # Confirms the prescriptions order, then valids pick and delivery.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(len(prescriptions_order.order_line), 1)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        pick = prescriptions_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
-        delivery = prescriptions_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+        # Create a prescription order.
+        prescription_order = self._get_new_prescription_order()
+        # Confirms the prescription order, then valids pick and delivery.
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(len(prescription_order.order_line), 1)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        pick = prescription_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
+        delivery = prescription_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
 
         picking_form = Form(pick)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -816,21 +816,21 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         delivery.move_ids.picked = True
         delivery.button_validate()
 
-        # Check no new prescriptions order line was created.
-        self.assertEqual(len(prescriptions_order.order_line), 1)
-        self.assertEqual(prescriptions_order.order_line.product_uom_qty, 10)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 10)
-        self.assertEqual(prescriptions_order.order_line.price_unit, 70.0)
+        # Check no new prescription order line was created.
+        self.assertEqual(len(prescription_order.order_line), 1)
+        self.assertEqual(prescription_order.order_line.product_uom_qty, 10)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 10)
+        self.assertEqual(prescription_order.order_line.price_unit, 70.0)
 
-        # Creates a second prescriptions order.
-        prescriptions_order = self._get_new_prescriptions_order()
-        # Confirms the prescriptions order then add a new line for an another product in the pick/out.
-        prescriptions_order.action_confirm()
-        self.assertTrue(prescriptions_order.picking_ids)
-        self.assertEqual(len(prescriptions_order.order_line), 1)
-        self.assertEqual(prescriptions_order.order_line.qty_delivered, 0)
-        pick = prescriptions_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
-        delivery = prescriptions_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+        # Creates a second prescription order.
+        prescription_order = self._get_new_prescription_order()
+        # Confirms the prescription order then add a new line for an another product in the pick/out.
+        prescription_order.action_confirm()
+        self.assertTrue(prescription_order.picking_ids)
+        self.assertEqual(len(prescription_order.order_line), 1)
+        self.assertEqual(prescription_order.order_line.qty_delivered, 0)
+        pick = prescription_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
+        delivery = prescription_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
 
         picking_form = Form(pick)
         with picking_form.move_line_ids_without_package.edit(0) as move:
@@ -852,10 +852,10 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         delivery.move_ids.picked = True
         delivery.button_validate()
 
-        # Check a new prescriptions order line was correctly created.
-        self.assertEqual(len(prescriptions_order.order_line), 2)
-        so_line_1 = prescriptions_order.order_line[0]
-        so_line_2 = prescriptions_order.order_line[1]
+        # Check a new prescription order line was correctly created.
+        self.assertEqual(len(prescription_order.order_line), 2)
+        so_line_1 = prescription_order.order_line[0]
+        so_line_2 = prescription_order.order_line[1]
         self.assertEqual(so_line_1.product_id.id, self.company_data['product_delivery_no'].id)
         self.assertEqual(so_line_1.product_uom_qty, 10)
         self.assertEqual(so_line_1.qty_delivered, 10)
@@ -865,7 +865,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(so_line_2.qty_delivered, 10)
         self.assertEqual(so_line_2.price_unit, 0)
 
-    def test_08_prescriptions_return_qty_and_cancel(self):
+    def test_08_prescription_return_qty_and_cancel(self):
         """
         Test a SO with a product on delivery with a 5 quantity.
         Create two invoices: one for 3 quantity and one for 2 quantity
@@ -885,7 +885,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
-        so = self.env['prescriptions.order'].create(so_vals)
+        so = self.env['prescription.order'].create(so_vals)
 
         # confirm the so
         so.action_confirm()
@@ -913,7 +913,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
         # check the status of invoices after cancelling the order
         so._action_cancel()
-        wizard = self.env['prescriptions.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
+        wizard = self.env['prescription.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
@@ -926,20 +926,20 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         product.type = 'product'
         self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 20)
 
-        prescriptions_order1 = self._get_new_prescriptions_order(amount=10.0)
-        # Validate the prescriptions order, picking should automatically assign stock
-        prescriptions_order1.action_confirm()
-        picking1 = prescriptions_order1.picking_ids
+        prescription_order1 = self._get_new_prescription_order(amount=10.0)
+        # Validate the prescription order, picking should automatically assign stock
+        prescription_order1.action_confirm()
+        picking1 = prescription_order1.picking_ids
         self.assertTrue(picking1)
         self.assertEqual(picking1.state, 'assigned')
         picking1.unlink()
 
         # make sure generated picking will does not auto-assign
         picking_type_out.reservation_method = 'manual'
-        prescriptions_order2 = self._get_new_prescriptions_order(amount=10.0)
-        # Validate the prescriptions order, picking should not automatically assign stock
-        prescriptions_order2.action_confirm()
-        picking2 = prescriptions_order2.picking_ids
+        prescription_order2 = self._get_new_prescription_order(amount=10.0)
+        # Validate the prescription order, picking should not automatically assign stock
+        prescription_order2.action_confirm()
+        picking2 = prescription_order2.picking_ids
         self.assertTrue(picking2)
         self.assertEqual(picking2.state, 'confirmed')
         picking2.unlink()
@@ -948,19 +948,19 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         picking_type_out.reservation_method = 'by_date'
         picking_type_out.reservation_days_before = 2
         # too early for scheduled date => don't auto-assign
-        prescriptions_order3 = self._get_new_prescriptions_order(amount=10.0)
-        prescriptions_order3.commitment_date = datetime.now() + timedelta(days=10)
-        prescriptions_order3.action_confirm()
-        picking3 = prescriptions_order3.picking_ids
+        prescription_order3 = self._get_new_prescription_order(amount=10.0)
+        prescription_order3.commitment_date = datetime.now() + timedelta(days=10)
+        prescription_order3.action_confirm()
+        picking3 = prescription_order3.picking_ids
         self.assertTrue(picking3)
         self.assertEqual(picking3.state, 'confirmed')
         picking3.unlink()
         # within scheduled date + reservation days before => auto-assign
-        prescriptions_order4 = self._get_new_prescriptions_order(amount=10.0)
-        prescriptions_order4.commitment_date = datetime.now() + timedelta(days=1)
-        prescriptions_order4.action_confirm()
-        self.assertTrue(prescriptions_order4.picking_ids)
-        self.assertEqual(prescriptions_order4.picking_ids.state, 'assigned')
+        prescription_order4 = self._get_new_prescription_order(amount=10.0)
+        prescription_order4.commitment_date = datetime.now() + timedelta(days=1)
+        prescription_order4.action_confirm()
+        self.assertTrue(prescription_order4.picking_ids)
+        self.assertEqual(prescription_order4.picking_ids.state, 'assigned')
 
     def test_packaging_propagation(self):
         """Create a SO with lines using packaging, check the packaging propagate
@@ -985,7 +985,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'qty': 20
         })
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1018,17 +1018,17 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertFalse(ship.product_packaging_id)
 
     def test_15_cancel_delivery(self):
-        """ Suppose the option "Lock Confirmed Prescriptions" enabled and a product with the invoicing
+        """ Suppose the option "Lock Confirmed Prescription" enabled and a product with the invoicing
         policy set to "Delivered quantities". When cancelling the delivery of such a product, the
         invoice status of the associated SO should be 'Nothing to Invoice'
         """
-        group_auto_done = self.env.ref('pod_prescriptions.group_auto_done_setting')
+        group_auto_done = self.env.ref('pod_prescription.group_auto_done_setting')
         self.env.user.groups_id = [(4, group_auto_done.id)]
 
         product = self.product_a
         product.invoice_policy = 'delivery'
         partner = self.partner_a
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
@@ -1041,7 +1041,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'prescriptions')
+        self.assertEqual(so.state, 'prescription')
         self.assertTrue(so.locked)
         so.picking_ids.action_cancel()
 
@@ -1058,7 +1058,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'uom_id': self.env.ref('uom.product_uom_meter').id,
             'uom_po_id': yards_uom.id,
         })
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1077,7 +1077,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Prescription: no conversion error on delivery in different uom"')
 
     def test_17_qty_update_propagation(self):
-        """ Creates a prescriptions order, then modifies the prescriptions order lines qty and verifies
+        """ Creates a prescription order, then modifies the prescription order lines qty and verifies
         that quantity changes are correctly propagated to the picking and delivery picking.
         """
         # Set the delivery in two steps.
@@ -1088,40 +1088,40 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         product.type = 'product'    # storable
 
         self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 50)
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 50, 'product_uom': product.uom_id.id, 'price_unit': product.list_price}),
             ],
         })
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
         # Check picking created
-        self.assertEqual(len(prescriptions_order.picking_ids), 2, 'A picking and a delivery picking should have been created.')
+        self.assertEqual(len(prescription_order.picking_ids), 2, 'A picking and a delivery picking should have been created.')
         customer_location = self.env.ref('stock.stock_location_customers')
-        move_pick = prescriptions_order.picking_ids.filtered(lambda p: p.location_dest_id.id != customer_location.id).move_ids
-        move_out = prescriptions_order.picking_ids.filtered(lambda p: p.location_dest_id.id == customer_location.id).move_ids
+        move_pick = prescription_order.picking_ids.filtered(lambda p: p.location_dest_id.id != customer_location.id).move_ids
+        move_out = prescription_order.picking_ids.filtered(lambda p: p.location_dest_id.id == customer_location.id).move_ids
         self.assertEqual(len(move_out), 1, 'Only one move should be created for a single product.')
         self.assertEqual(move_out.product_uom_qty, 50, 'The move quantity should be the same as the quantity sold.')
 
-        # Decrease the quantity in the prescriptions order and check the move has been updated.
-        prescriptions_order.write({
+        # Decrease the quantity in the prescription order and check the move has been updated.
+        prescription_order.write({
             'order_line': [
-                (1, prescriptions_order.order_line.id, {'product_uom_qty': 30}),
+                (1, prescription_order.order_line.id, {'product_uom_qty': 30}),
             ]
         })
-        self.assertEqual(move_pick.product_uom_qty, 30, 'The move quantity should have been decreased as the prescriptions order line was.')
-        self.assertEqual(move_out.product_uom_qty, 30, 'The move quantity should have been decreased as the prescriptions order line and the pick line were.')
-        self.assertEqual(len(prescriptions_order.picking_ids), 2, 'No additionnal picking should have been created.')
+        self.assertEqual(move_pick.product_uom_qty, 30, 'The move quantity should have been decreased as the prescription order line was.')
+        self.assertEqual(move_out.product_uom_qty, 30, 'The move quantity should have been decreased as the prescription order line and the pick line were.')
+        self.assertEqual(len(prescription_order.picking_ids), 2, 'No additionnal picking should have been created.')
 
-        # Increase the quantity in the prescriptions order and check the move has been updated.
-        prescriptions_order.write({
+        # Increase the quantity in the prescription order and check the move has been updated.
+        prescription_order.write({
             'order_line': [
-                (1, prescriptions_order.order_line.id, {'product_uom_qty': 40})
+                (1, prescription_order.order_line.id, {'product_uom_qty': 40})
             ]
         })
-        self.assertEqual(move_pick.product_uom_qty, 40, 'The move quantity should have been increased as the prescriptions order line was.')
-        self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the prescriptions order line and the pick line were.')
+        self.assertEqual(move_pick.product_uom_qty, 40, 'The move quantity should have been increased as the prescription order line was.')
+        self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the prescription order line and the pick line were.')
 
     def test_18_deliver_more_and_multi_uom(self):
         """
@@ -1135,7 +1135,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'uom_po_id': uom_m_id,
         })
 
-        so = self._get_new_prescriptions_order(product=self.product_a)
+        so = self._get_new_prescription_order(product=self.product_a)
         so.action_confirm()
 
         picking = so.picking_ids
@@ -1157,36 +1157,36 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
     def test_19_deliver_update_so_line_qty(self):
         """
-        Creates a prescriptions order, then validates the delivery
-        modifying the prescriptions order lines qty via import and ensures
+        Creates a prescription order, then validates the delivery
+        modifying the prescription order lines qty via import and ensures
         a new delivery is created.
         """
         self.product_a.type = 'product'
         self.env['stock.quant']._update_available_quantity(
             self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10)
 
-        # Create prescriptions order
-        prescriptions_order = self._get_new_prescriptions_order()
-        prescriptions_order.action_confirm()
+        # Create prescription order
+        prescription_order = self._get_new_prescription_order()
+        prescription_order.action_confirm()
 
         # Validate delivery
-        picking = prescriptions_order.picking_ids
+        picking = prescription_order.picking_ids
         picking.move_ids.write({'quantity': 10, 'picked': True})
         picking.button_validate()
 
         # Update the line and check a new delivery is created
-        with Form(prescriptions_order.with_context(import_file=True)) as so_form:
+        with Form(prescription_order.with_context(import_file=True)) as so_form:
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 777
 
-        self.assertEqual(len(prescriptions_order.picking_ids), 2)
+        self.assertEqual(len(prescription_order.picking_ids), 2)
 
     def test_multiple_returns(self):
-        # Creates a prescriptions order for 10 products.
-        prescriptions_order = self._get_new_prescriptions_order()
-        # Valids the prescriptions order, then valids the delivery.
-        prescriptions_order.action_confirm()
-        picking = prescriptions_order.picking_ids
+        # Creates a prescription order for 10 products.
+        prescription_order = self._get_new_prescription_order()
+        # Valids the prescription order, then valids the delivery.
+        prescription_order.action_confirm()
+        picking = prescription_order.picking_ids
         picking.move_ids.write({'quantity': 10, 'picked': True})
         picking.button_validate()
 
@@ -1234,7 +1234,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
         self.env['stock.quant']._update_available_quantity(product, stock_location, 5)
 
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner_a
         with so_form.order_line.new() as line:
             line.product_id = product
@@ -1279,7 +1279,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         self.product_a.type = 'product'
         self.env['stock.quant']._update_available_quantity(self.product_a, warehouse.lot_stock_id, 10)
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'warehouse_id': warehouse.id,
             'order_line': [(0, 0, {
@@ -1305,7 +1305,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'qty': 10.0,
         })
 
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner_a
         with so_form.order_line.new() as line:
             line.product_id = self.product_a
@@ -1335,7 +1335,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         out_location = warehouse.wh_output_stock_loc_id
         customer_location = self.env.ref('stock.stock_location_customers')
 
-        so = self._get_new_prescriptions_order()
+        so = self._get_new_prescription_order()
         so.action_confirm()
         pick01, ship01 = so.picking_ids
 
@@ -1367,7 +1367,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'code': 'TEST',
         })
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'incoterm': incoterm.id,
             'order_line': [(0, 0, {
@@ -1386,7 +1386,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'invoice_policy': 'order',
         })
 
-        adv_wiz = self.env['prescriptions.advance.payment.inv'].with_context(active_ids=[so.id]).create({
+        adv_wiz = self.env['prescription.advance.payment.inv'].with_context(active_ids=[so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
             'product_id': advance_product.id,
@@ -1402,13 +1402,13 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         When a backorder is cancelled for a picking in multi-picking,
         the related SO should have an exception logged
         """
-        #Create 2 prescriptions orders
-        so_1 = self._get_new_prescriptions_order()
+        #Create 2 prescription orders
+        so_1 = self._get_new_prescription_order()
         so_1.action_confirm()
         picking_1 = so_1.picking_ids
         picking_1.move_ids.write({'quantity': 1, 'picked': True})
 
-        so_2 = self._get_new_prescriptions_order()
+        so_2 = self._get_new_prescription_order()
         so_2.action_confirm()
         picking_2 = so_2.picking_ids
         picking_2.move_ids.write({'quantity': 2, 'picked': True})
@@ -1421,7 +1421,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         wizard.process()
 
         #Check Exception error is logged on so_2
-        activity = self.env['mail.activity'].search([('res_id', '=', so_2.id), ('res_model', '=', 'prescriptions.order')])
+        activity = self.env['mail.activity'].search([('res_id', '=', so_2.id), ('res_model', '=', 'prescription.order')])
         self.assertEqual(len(activity), 1, 'When no backorder is created for a partial delivery, a warning error should be logged in its origin SO')
 
     def test_3_steps_and_unpack(self):
@@ -1447,7 +1447,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         warehouse.delivery_steps = 'pick_pack_ship'
         self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 10)
 
-        so_1 = self._get_new_prescriptions_order(product=self.test_product_delivery)
+        so_1 = self._get_new_prescription_order(product=self.test_product_delivery)
         so_1.action_confirm()
         pick_picking = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
         pack_picking = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pack_type_id)
@@ -1490,10 +1490,10 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
 
         self.assertRecordValues(out_picking.move_line_ids, [{'result_package_id': False}, {'result_package_id': package_2.id}])
 
-    def test_inventory_admin_no_backorder_not_own_prescriptions_order(self):
-        prescriptions_order = self._get_new_prescriptions_order()
-        prescriptions_order.action_confirm()
-        pick = prescriptions_order.picking_ids
+    def test_inventory_admin_no_backorder_not_own_prescription_order(self):
+        prescription_order = self._get_new_prescription_order()
+        prescription_order.action_confirm()
+        pick = prescription_order.picking_ids
         inventory_admin_user = self.env['res.users'].create({
             'name': "documents test basic user",
             'login': "dtbu",
@@ -1501,7 +1501,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
             'groups_id': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('stock.group_stock_manager'),
-                self.ref('pod_prescriptions_team.group_prescriptions_personnel')])]
+                self.ref('pod_prescription_team.group_prescription_personnel')])]
         })
         pick.with_user(inventory_admin_user).move_ids.write(
             {'quantity': 1, 'picked': True})
@@ -1516,7 +1516,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         to match the quantity delivered, make sure that no additional picking is created.
         """
 
-        so_1 = self._get_new_prescriptions_order(amount=3, product=self.test_product_delivery)
+        so_1 = self._get_new_prescription_order(amount=3, product=self.test_product_delivery)
         so_1.action_confirm()
         self.assertEqual(so_1.order_line.product_uom_qty, 3)
         self.assertEqual(len(so_1.picking_ids), 1)
@@ -1545,7 +1545,7 @@ class TestPrescriptionStock(TestPrescriptionCommon, ValuationReconciliationTestC
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_ship'
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': p.name,

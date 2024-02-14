@@ -16,12 +16,12 @@ from odoo.release import version
 class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
-    _description = "Prescriptions Team"
+    _description = "Prescription Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=False, domain=False):
-        """ Compute default team id for prescriptions related documents. Note that this
+        """ Compute default team id for prescription related documents. Note that this
         method is not called by default_get as it takes some additional
         parameters and is meant to be called by other default methods.
 
@@ -41,7 +41,7 @@ class CrmTeam(models.Model):
         Think notably: team not in responsible teams, team company not matching
         responsible or lead company, asked domain not matching, ...
 
-        :param user_id: prescriptionsperson to target, fallback on env.uid;
+        :param user_id: prescriptionperson to target, fallback on env.uid;
         :domain: optional domain to filter teams (like use_lead = True);
         """
         if not user_id:
@@ -93,9 +93,9 @@ class CrmTeam(models.Model):
         return [(6, 0, [self.env.uid])]
 
     # description
-    name = fields.Char('Prescriptions Team', required=True, translate=True)
+    name = fields.Char('Prescription Team', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
-    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Prescriptions Team without removing it.")
+    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Prescription Team without removing it.")
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
         default=lambda self: self.env.company)
@@ -106,9 +106,9 @@ class CrmTeam(models.Model):
     # memberships
     is_membership_multi = fields.Boolean(
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
-        help='If True, users may belong to several prescriptions teams. Otherwise membership is limited to a single prescriptions team.')
+        help='If True, users may belong to several prescription teams. Otherwise membership is limited to a single prescription team.')
     member_ids = fields.Many2many(
-        'res.users', string='Prescriptions Person',
+        'res.users', string='Prescription Person',
         domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
         compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
         help="Users assigned to this team.")
@@ -117,11 +117,11 @@ class CrmTeam(models.Model):
         help='UX: Limit to team company or all if no company')
     member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
     crm_team_member_ids = fields.One2many(
-        'crm.team.member', 'crm_team_id', string='Prescriptions Team Members',
+        'crm.team.member', 'crm_team_id', string='Prescription Team Members',
         context={'active_test': True},
-        help="Add members to automatically assign their documents to this prescriptions team.")
+        help="Add members to automatically assign their documents to this prescription team.")
     crm_team_member_all_ids = fields.One2many(
-        'crm.team.member', 'crm_team_id', string='Prescriptions Team Members (incl. inactive)',
+        'crm.team.member', 'crm_team_id', string='Prescription Team Members (incl. inactive)',
         context={'active_test': False})
     # UX options
     color = fields.Integer(string='Color Index', help="The color of the channel")
@@ -136,7 +136,7 @@ class CrmTeam(models.Model):
 
     @api.depends('sequence')  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
-        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('pod_prescriptions_team.membership_multi', False)
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('pod_prescription_team.membership_multi', False)
         self.is_membership_multi = multi_enabled
 
     @api.depends('crm_team_member_ids.active')
@@ -186,7 +186,7 @@ class CrmTeam(models.Model):
                                    team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
                                   )
             if member_warning:
-                team.member_warning = member_warning + " " + _("To add a Prescriptionsperson into multiple Teams, activate the Multi-Team option in settings.")
+                team.member_warning = member_warning + " " + _("To add a Prescriptionperson into multiple Teams, activate the Multi-Team option in settings.")
 
     def _search_member_ids(self, operator, value):
         return [('crm_team_member_ids.user_id', operator, value)]
@@ -213,7 +213,7 @@ class CrmTeam(models.Model):
         return True
 
     def _compute_dashboard_button_name(self):
-        """ Sets the adequate dashboard button name depending on the Prescriptions Team's options
+        """ Sets the adequate dashboard button name depending on the Prescription Team's options
         """
         for team in self:
             team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
@@ -245,9 +245,9 @@ class CrmTeam(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default(self):
         default_teams = [
-            self.env.ref('pod_prescriptions_team.prescriptions_team_website_prescriptions'),
-            self.env.ref('pod_prescriptions_team.pos_prescriptions_team'),
-            self.env.ref('pod_prescriptions_team.ebay_prescriptions_team')
+            self.env.ref('pod_prescription_team.prescription_team_website_prescription'),
+            self.env.ref('pod_prescription_team.pos_prescription_team'),
+            self.env.ref('pod_prescription_team.ebay_prescription_team')
         ]
         for team in self:
             if team in default_teams:
@@ -259,7 +259,7 @@ class CrmTeam(models.Model):
 
     def action_primary_channel_button(self):
         """ Skeleton function to be overloaded It will return the adequate action
-        depending on the Prescriptions Team's options. """
+        depending on the Prescription Team's options. """
         return False
 
     # ------------------------------------------------------------
@@ -275,9 +275,9 @@ class CrmTeam(models.Model):
     # ------------------------------------------------------------
 
     def _graph_get_model(self):
-        """ skeleton function defined here because it'll be called by crm and/or prescriptions
+        """ skeleton function defined here because it'll be called by crm and/or prescription
         """
-        raise UserError(_('Undefined graph model for Prescriptions Team: %s', self.name))
+        raise UserError(_('Undefined graph model for Prescription Team: %s', self.name))
 
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph covering a month period grouped by week.
@@ -298,7 +298,7 @@ class CrmTeam(models.Model):
         return 'EXTRACT(WEEK FROM %s)' % self._graph_date_column()
 
     def _graph_y_query(self):
-        raise UserError(_('Undefined graph model for Prescriptions Team: %s', self.name))
+        raise UserError(_('Undefined graph model for Prescription Team: %s', self.name))
 
     def _extra_sql_conditions(self):
         return ''

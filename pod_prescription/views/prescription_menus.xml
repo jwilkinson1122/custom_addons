@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- <menuitem id="prescriptions_menu_root" name="Prescriptions" sequence="25">
+    <!-- <menuitem id="prescription_menu_root" name="Prescription" sequence="25">
 
-        <menuitem id="prescriptions_order_menu" name="Orders" sequence="10">
+        <menuitem id="prescription_order_menu" name="Orders" sequence="10">
 
-            <menuitem id="menu_prescriptions_quotations" action="action_quotations_with_onboarding" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="10"/>
+            <menuitem id="menu_prescription_quotations" action="action_quotations_with_onboarding" groups="pod_prescription_team.group_prescription_personnel" sequence="10"/>
 
-            <menuitem id="menu_prescriptions_order" name="Orders" action="action_prescriptions" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="20"/>
+            <menuitem id="menu_prescription_order" name="Orders" action="action_prescription" groups="pod_prescription_team.group_prescription_personnel" sequence="20"/>
 
-            <menuitem id="report_prescriptions_team" name="Prescriptions Teams" action="pod_prescriptions_team.crm_team_action_prescriptions" groups="pod_prescriptions_team.group_prescriptions_manager" sequence="30"/>
+            <menuitem id="report_prescription_team" name="Prescription Teams" action="pod_prescription_team.crm_team_action_prescription" groups="pod_prescription_team.group_prescription_manager" sequence="30"/>
 
-            <menuitem id="res_partner_menu" action="account.res_partner_action_customer" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="40"/>
+            <menuitem id="res_partner_menu" action="account.res_partner_action_customer" groups="pod_prescription_team.group_prescription_personnel" sequence="40"/>
 
         </menuitem>
 
-        <menuitem id="product_menu_catalog" name="Products" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="30">
+        <menuitem id="product_menu_catalog" name="Products" groups="pod_prescription_team.group_prescription_personnel" sequence="30">
 
             <menuitem id="menu_product_template_action" action="product_template_action" sequence="10"/>
 
@@ -25,15 +25,15 @@
 
         </menuitem>
 
-        <menuitem id="menu_prescription_config" name="Configuration" groups="pod_prescriptions_team.group_prescriptions_manager" sequence="50">
+        <menuitem id="menu_prescription_config" name="Configuration" groups="pod_prescription_team.group_prescription_manager" sequence="50">
 
-            <menuitem id="menu_prescriptions_general_settings" name="Settings" sequence="10" action="action_prescriptions_config_settings" groups="base.group_system"/>
+            <menuitem id="menu_prescription_general_settings" name="Settings" sequence="10" action="action_prescription_config_settings" groups="base.group_system"/>
 
-            <menuitem id="prescriptions_team_config" name="Prescriptions Teams" action="pod_prescriptions_team.crm_team_action_config" sequence="20"/>
+            <menuitem id="prescription_team_config" name="Prescription Teams" action="pod_prescription_team.crm_team_action_config" sequence="20"/>
 
-            <menuitem id="menu_prescriptions_config" sequence="30" name="Prescriptions Orders">
+            <menuitem id="menu_prescription_config" sequence="30" name="Prescription Orders">
 
-                <menuitem id="menu_tag_config" name="Tags" action="pod_prescriptions_team.prescriptions_team_crm_tag_action" sequence="10"/>
+                <menuitem id="menu_tag_config" name="Tags" action="pod_prescription_team.prescription_team_crm_tag_action" sequence="10"/>
 
             </menuitem>
 
@@ -53,9 +53,9 @@
 
             </menuitem>
 
-            <menuitem id="prescriptions_menu_config_activity_type" action="mail_activity_type_action_config_prescription" groups="base.group_no_one" sequence="60" />
+            <menuitem id="prescription_menu_config_activity_type" action="mail_activity_type_action_config_prescription" groups="base.group_no_one" sequence="60" />
 
-            <menuitem id="prescriptions_menu_config_activity_plan" name="Activity Plans" action="mail_activity_plan_action_prescriptions_order" groups="pod_prescriptions_team.group_prescriptions_manager" sequence="70" />
+            <menuitem id="prescription_menu_config_activity_plan" name="Activity Plans" action="mail_activity_plan_action_prescription_order" groups="pod_prescription_team.group_prescription_manager" sequence="70" />
 
         </menuitem>
 
@@ -63,13 +63,13 @@
 
 
     <!-- sale_menu_root - sale_order_menu -->
-    <menuitem id="menu_prescription_order" name="Prescriptions" parent="sale.sale_order_menu" action="action_prescriptions" groups="pod_prescriptions_team.group_prescriptions_personnel" sequence="15" />
+    <menuitem id="menu_prescription_order" name="Prescription" parent="sale.sale_order_menu" action="action_prescription" groups="pod_prescription_team.group_prescription_personnel" sequence="15" />
 
-    <menuitem id="prescriptions_team_config" name="Prescriptions Team" parent="sale.menu_sale_config" action="pod_prescriptions_team.crm_team_action_config" sequence="15"/>
+    <menuitem id="prescription_team_config" name="Prescription Team" parent="sale.menu_sale_config" action="pod_prescription_team.crm_team_action_config" sequence="15"/>
 
-    <menuitem id="menu_prescriptions_config" name="Prescriptions" parent="sale.menu_sale_config" sequence="18">
+    <menuitem id="menu_prescription_config" name="Prescription" parent="sale.menu_sale_config" sequence="18">
 
-        <menuitem id="menu_prescription_tag_config" name="Prescription Tags" action="pod_prescriptions_team.prescriptions_team_crm_tag_action" sequence="1"/>
+        <menuitem id="menu_prescription_tag_config" name="Prescription Tags" action="pod_prescription_team.prescription_team_crm_tag_action" sequence="1"/>
 
     </menuitem>
 

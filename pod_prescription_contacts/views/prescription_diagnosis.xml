@@ -4,9 +4,9 @@
     <!--
     Form
     -->
-    <record id="view_prescriptions_diagnosis_form" model="ir.ui.view">
-        <field name="name">prescriptions.diagnosis.form</field>
-        <field name="model">prescriptions.diagnosis</field>
+    <record id="view_prescription_diagnosis_form" model="ir.ui.view">
+        <field name="name">prescription.diagnosis.form</field>
+        <field name="model">prescription.diagnosis</field>
         <field name="arch" type="xml">
             <form string="Diagnosis">
                 <field name="active" invisible="1"/>
@@ -33,9 +33,9 @@
         </field>
     </record>
 
-    <record id="view_prescriptions_diagnosis_tree" model="ir.ui.view">
-        <field name="name">prescriptions.diagnosis.tree</field>
-        <field name="model">prescriptions.diagnosis</field>
+    <record id="view_prescription_diagnosis_tree" model="ir.ui.view">
+        <field name="name">prescription.diagnosis.tree</field>
+        <field name="model">prescription.diagnosis</field>
         <field name="arch" type="xml">
             <tree string="Diagnosis" editable="top" decoration-muted="not active">
                 <field name="sequence" widget="handle"/>
@@ -47,9 +47,9 @@
         </field>
     </record>
 
-    <record id="view_prescriptions_diagnosis_search" model="ir.ui.view">
-        <field name="name">prescriptions.diagnosis.search</field>
-        <field name="model">prescriptions.diagnosis</field>
+    <record id="view_prescription_diagnosis_search" model="ir.ui.view">
+        <field name="name">prescription.diagnosis.search</field>
+        <field name="model">prescription.diagnosis</field>
         <field name="arch" type="xml">
             <search string="Diagnosis">
                 <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
@@ -59,11 +59,11 @@
         </field>
     </record>
 
-    <record id="prescriptions_diagnosis_action" model="ir.actions.act_window">
+    <record id="prescription_diagnosis_action" model="ir.actions.act_window">
         <field name="name">Diagnosis</field>
-        <field name="res_model">prescriptions.diagnosis</field>
+        <field name="res_model">prescription.diagnosis</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_prescriptions_diagnosis_search"/>
+        <field name="search_view_id" ref="view_prescription_diagnosis_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new diagnosis
@@ -74,7 +74,7 @@
         </field>
     </record>
 
-    <!-- <menuitem id="menu_prescriptions_diagnosis" name="Diagnosis" action="prescriptions_diagnosis_action" groups="group_manager" parent="pod_prescriptions_contacts.menu_pod_prescriptions_contacts_root" sequence="2" /> -->
+    <!-- <menuitem id="menu_prescription_diagnosis" name="Diagnosis" action="prescription_diagnosis_action" groups="group_manager" parent="pod_prescription_contacts.menu_pod_prescription_contacts_root" sequence="2" /> -->
 
 
 </odoo>

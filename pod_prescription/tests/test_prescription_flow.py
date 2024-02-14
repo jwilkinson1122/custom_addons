@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommonBase
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommonBase
 
 
 class TestPrescriptionFlow(TestPrescriptionCommonBase):
-    ''' Test running at-install to test flows independently to other modules, e.g. 'pod_prescriptions_stock'. '''
+    ''' Test running at-install to test flows independently to other modules, e.g. 'pod_prescription_stock'. '''
 
     @classmethod
     def setUpClass(cls):
@@ -24,7 +24,7 @@ class TestPrescriptionFlow(TestPrescriptionCommonBase):
             'name': 'Test Company',
             'currency_id': cls.env.ref('base.USD').id,
         })
-        cls.company_data = cls.setup_prescriptions_configuration_for_company(cls.company)
+        cls.company_data = cls.setup_prescription_configuration_for_company(cls.company)
 
         cls.partner_a = cls.env['res.partner'].create({
             'name': 'partner_a',
@@ -47,9 +47,9 @@ class TestPrescriptionFlow(TestPrescriptionCommonBase):
         user.company_id = cls.company
 
     def test_qty_delivered(self):
-        ''' Test 'qty_delivered' at-install to avoid a change in the behavior when 'pod_prescriptions_stock' is installed. '''
+        ''' Test 'qty_delivered' at-install to avoid a change in the behavior when 'pod_prescription_stock' is installed. '''
 
-        prescriptions_order = self.env['prescriptions.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        prescription_order = self.env['prescription.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -75,9 +75,9 @@ class TestPrescriptionFlow(TestPrescriptionCommonBase):
             ],
         })
 
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
 
-        self.assertRecordValues(prescriptions_order.order_line, [
+        self.assertRecordValues(prescription_order.order_line, [
             {'qty_delivered': 1.0},
             {'qty_delivered': 1.0},
         ])

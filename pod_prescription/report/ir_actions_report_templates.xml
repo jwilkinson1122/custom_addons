@@ -60,7 +60,7 @@
                     <span class="m-0" t-field="doc.validity_date">2023-12-31</span>
                 </div>
                 <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Prescriptions Person:</strong><br/>
+                    <strong>Prescription Person:</strong><br/>
                     <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="prescriptions_tbody">
+                <tbody class="prescription_tbody">
 
                     <t t-set="current_subtotal" t-value="0"/>
 
@@ -153,7 +153,7 @@
                         <table class="table table-sm table-borderless">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                            <t t-call="pod_prescriptions.document_tax_totals"/>
+                            <t t-call="pod_prescription.document_tax_totals"/>
                         </table>
                     </div>
                 </div>
@@ -190,13 +190,13 @@
 <template id="report_prescription_order_raw">
     <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
-            <t t-call="pod_prescriptions.report_prescription_order_document" t-lang="doc.partner_id.lang"/>
+            <t t-call="pod_prescription.report_prescription_order_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>
 
 <template id="report_prescription_order">
-    <t t-call="pod_prescriptions.report_prescription_order_raw"/>
+    <t t-call="pod_prescription.report_prescription_order_raw"/>
 </template>
 
 <template id="report_prescription_order_pro_forma">
@@ -204,7 +204,7 @@
         <t t-set="is_pro_forma" t-value="True"/>
         <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
         <t t-foreach="docs" t-as="doc">
-            <t t-call="pod_prescriptions.report_prescription_order_document" t-lang="doc.partner_id.lang"/>
+            <t t-call="pod_prescription.report_prescription_order_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>

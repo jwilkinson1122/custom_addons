@@ -3,7 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.PrescriptionUpdateLineButton = publicWidget.Widget.extend({
-    selector: '.o_portal_prescriptions_sidebar',
+    selector: '.o_portal_prescription_sidebar',
     events: {
         'click a.js_update_line_json': '_onClickOptionQuantityButton',
         'click a.js_add_optional_products': '_onClickAddOptionalProduct',
@@ -20,7 +20,7 @@ publicWidget.registry.PrescriptionUpdateLineButton = publicWidget.Widget.extend(
      */
     async start() {
         await this._super(...arguments);
-        this.orderDetail = this.$el.find('table#prescriptions_order_table').data();
+        this.orderDetail = this.$el.find('table#prescription_order_table').data();
     },
 
     /**

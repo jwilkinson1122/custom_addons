@@ -1,4 +1,4 @@
-odoo.define('pod_prescriptions_contacts.ListRenderer', function (require) {
+odoo.define('pod_prescription_contacts.ListRenderer', function (require) {
     "use strict";
         var ajax = require('web.ajax');
         var ListRenderer = require('web.ListRenderer');

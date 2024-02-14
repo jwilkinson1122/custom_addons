@@ -8,17 +8,17 @@
     'category': 'Hidden',
     'summary': "Configure your products",
     'description': """Configure products in the Rx form.""",
-    'depends': ['pod_prescriptions'],
+    'depends': ['pod_prescription'],
     'data': [
         'views/product_template_views.xml',
-        'views/prescriptions_order_views.xml',
+        'views/prescription_order_views.xml',
     ],
     'demo': [
-        'data/prescriptions_demo.xml',
+        'data/prescription_demo.xml',
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescriptions_product_configurator/static/src/**/*',
+            'pod_prescription_product_configurator/static/src/**/*',
         ],
     },
     'auto_install': True,

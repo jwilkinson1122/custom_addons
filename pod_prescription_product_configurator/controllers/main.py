@@ -7,7 +7,7 @@ from odoo.http import Controller, request, route
 
 class ProductConfiguratorController(Controller):
 
-    @route('/pod_prescriptions_product_configurator/get_values', type='json', auth='user')
+    @route('/pod_prescription_product_configurator/get_values', type='json', auth='user')
     def get_product_configurator_values(
         self,
         product_template_id,
@@ -26,7 +26,7 @@ class ProductConfiguratorController(Controller):
                                         `product.template` id.
         :param int quantity: The quantity of the product.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescriptions.order`, to compute the price at the right rate.
+        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
@@ -82,8 +82,8 @@ class ProductConfiguratorController(Controller):
             ] if not only_main_product else []
         )
 
-    @route('/pod_prescriptions_product_configurator/create_product', type='json', auth='user')
-    def prescriptions_product_configurator_create_product(self, product_template_id, combination):
+    @route('/pod_prescription_product_configurator/create_product', type='json', auth='user')
+    def prescription_product_configurator_create_product(self, product_template_id, combination):
         """ Create the product when there is a dynamic attribute in the combination.
 
         :param int product_template_id: The product for which to seek information, as a
@@ -98,8 +98,8 @@ class ProductConfiguratorController(Controller):
         product = product_template._create_product_variant(combination)
         return product.id
 
-    @route('/pod_prescriptions_product_configurator/update_combination', type='json', auth='user')
-    def prescriptions_product_configurator_update_combination(
+    @route('/pod_prescription_product_configurator/update_combination', type='json', auth='user')
+    def prescription_product_configurator_update_combination(
         self,
         product_template_id,
         combination,
@@ -117,7 +117,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescriptions.order`, to compute the price at the right rate.
+        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
@@ -145,8 +145,8 @@ class ProductConfiguratorController(Controller):
             date=datetime.fromisoformat(so_date),
         )
 
-    @route('/pod_prescriptions_product_configurator/get_optional_products', type='json', auth='user')
-    def prescriptions_product_configurator_get_optional_products(
+    @route('/pod_prescription_product_configurator/get_optional_products', type='json', auth='user')
+    def prescription_product_configurator_get_optional_products(
         self,
         product_template_id,
         combination,
@@ -165,7 +165,7 @@ class ProductConfiguratorController(Controller):
         :param recordset parent_combination: The combination of the parent product, as a
                                              `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescriptions.order`, to compute the price at the right rate.
+        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
         :rtype: [dict]
@@ -212,7 +212,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescriptions.order`, to compute the price at the right rate.
+        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.

@@ -3,8 +3,8 @@
     <!--
         crm.tag views
     -->
-    <record id="prescriptions_team_crm_tag_view_form" model="ir.ui.view">
-        <field name="name">prescriptions.team.crm.tag.view.form</field>
+    <record id="prescription_team_crm_tag_view_form" model="ir.ui.view">
+        <field name="name">prescription.team.crm.tag.view.form</field>
         <field name="model">crm.tag</field>
         <field name="arch" type="xml">
             <form string="Tags">
@@ -25,8 +25,8 @@
         </field>
     </record>
 
-    <record id="prescriptions_team_crm_tag_view_tree" model="ir.ui.view">
-        <field name="name">prescriptions.team.crm.tag.view.tree</field>
+    <record id="prescription_team_crm_tag_view_tree" model="ir.ui.view">
+        <field name="name">prescription.team.crm.tag.view.tree</field>
         <field name="model">crm.tag</field>
         <field name="arch" type="xml">
             <tree string="Tags" editable="bottom" sample="1">
@@ -37,15 +37,15 @@
     </record>
 
     <!-- Tags Configuration -->
-    <record id="prescriptions_team_crm_tag_action" model="ir.actions.act_window">
+    <record id="prescription_team_crm_tag_action" model="ir.actions.act_window">
         <field name="name">Tags</field>
         <field name="res_model">crm.tag</field>
-        <field name="view_id" ref="prescriptions_team_crm_tag_view_tree"/>
+        <field name="view_id" ref="prescription_team_crm_tag_view_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create CRM Tags
             </p><p>
-            Use Tags to manage and track your Opportunities (product structure, prescriptions type, ...)
+            Use Tags to manage and track your Opportunities (product structure, prescription type, ...)
             </p>
         </field>
     </record>

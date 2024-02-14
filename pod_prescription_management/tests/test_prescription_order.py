@@ -4,7 +4,7 @@
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
-from odoo.addons.pod_prescriptions_management.tests.common import PrescriptionManagementCommon
+from odoo.addons.pod_prescription_management.tests.common import PrescriptionManagementCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -39,14 +39,14 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
         ])
 
         # create some quotation templates
-        cls.quotation_template_no_discount = cls.env['prescriptions.order.template'].create({
+        cls.quotation_template_no_discount = cls.env['prescription.order.template'].create({
             'name': 'A quotation template',
-            'prescriptions_order_template_line_ids': [
+            'prescription_order_template_line_ids': [
                 Command.create({
                     'product_id': cls.product_1.id,
                 }),
             ],
-            'prescriptions_order_template_option_ids': [
+            'prescription_order_template_option_ids': [
                 Command.create({
                     'product_id': cls.optional_product.id,
                 }),
@@ -87,72 +87,72 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
         ])
 
         # variable kept to reduce code diff
-        cls.prescriptions_order = cls.empty_order
+        cls.prescription_order = cls.empty_order
 
     def test_01_template_without_pricelist(self):
         """
         This test checks that without any rule in the pricelist, the public price
-        of the product is used in the prescriptions order after selecting a
+        of the product is used in the prescription order after selecting a
         quotation template.
         """
         # first case, without discount in the quotation template
-        self.prescriptions_order.write({
-            'prescriptions_order_template_id': self.quotation_template_no_discount.id
+        self.prescription_order.write({
+            'prescription_order_template_id': self.quotation_template_no_discount.id
         })
-        self.prescriptions_order._onchange_prescriptions_order_template_id()
+        self.prescription_order._onchange_prescription_order_template_id()
 
         self.assertEqual(
-            len(self.prescriptions_order.order_line),
+            len(self.prescription_order.order_line),
             1,
-            "The prescriptions order shall contains the same number of products as"
+            "The prescription order shall contains the same number of products as"
             "the quotation template.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].product_id.id,
+            self.prescription_order.order_line[0].product_id.id,
             self.product_1.id,
-            "The prescriptions order shall contains the same products as the"
+            "The prescription order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].price_unit,
+            self.prescription_order.order_line[0].price_unit,
             self.pub_product_price,
             "Without any price list and discount, the public price of"
             "the product shall be used.")
 
         self.assertEqual(
-            len(self.prescriptions_order.prescriptions_order_option_ids),
+            len(self.prescription_order.prescription_order_option_ids),
             1,
-            "The prescriptions order shall contains the same number of optional products as"
+            "The prescription order shall contains the same number of optional products as"
             "the quotation template.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].product_id.id,
+            self.prescription_order.prescription_order_option_ids[0].product_id.id,
             self.optional_product.id,
-            "The prescriptions order shall contains the same optional products as the"
+            "The prescription order shall contains the same optional products as the"
             "quotation template.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pub_option_price,
             "Without any price list and discount, the public price of"
             "the optional product shall be used.")
 
         # add the option to the order
-        self.prescriptions_order.prescriptions_order_option_ids[0].button_add_to_order()
+        self.prescription_order.prescription_order_option_ids[0].button_add_to_order()
 
         self.assertEqual(
-            len(self.prescriptions_order.order_line),
+            len(self.prescription_order.order_line),
             2,
             "When an option is added, a new order line is created")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].product_id.id,
+            self.prescription_order.order_line[1].product_id.id,
             self.optional_product.id,
-            "The prescriptions order shall contains the same products as the"
+            "The prescription order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].price_unit,
+            self.prescription_order.order_line[1].price_unit,
             self.pub_option_price,
             "Without any price list and discount, the public price of"
             "the optional product shall be used.")
@@ -160,34 +160,34 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
     def test_02_template_with_discount_included_pricelist(self):
         """
         This test checks that with a 'discount included' price list,
-        the price used in the prescriptions order is computed according to the
+        the price used in the prescription order is computed according to the
         price list.
         """
 
         # first case, without discount in the quotation template
-        self.prescriptions_order.write({
+        self.prescription_order.write({
             'pricelist_id': self.discount_included_price_list.id,
-            'prescriptions_order_template_id': self.quotation_template_no_discount.id
+            'prescription_order_template_id': self.quotation_template_no_discount.id
         })
-        self.prescriptions_order._onchange_prescriptions_order_template_id()
+        self.prescription_order._onchange_prescription_order_template_id()
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].price_unit,
+            self.prescription_order.order_line[0].price_unit,
             self.pl_product_price,
             "If a pricelist is set, the product price shall be computed"
             "according to it.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pl_option_price,
             "If a pricelist is set, the optional product price shall"
             "be computed according to it.")
 
         # add the option to the order
-        self.prescriptions_order.prescriptions_order_option_ids[0].button_add_to_order()
+        self.prescription_order.prescription_order_option_ids[0].button_add_to_order()
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].price_unit,
+            self.prescription_order.order_line[1].price_unit,
             self.pl_option_price,
             "If a pricelist is set, the optional product price shall"
             "be computed according to it.")
@@ -195,64 +195,64 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
     def test_03_template_with_discount_excluded_pricelist(self):
         """
         This test checks that with a 'discount excluded' price list,
-        the price used in the prescriptions order is the product public price and
+        the price used in the prescription order is the product public price and
         the discount is computed according to the price list.
         """
-        self.prescriptions_order.write({
+        self.prescription_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
-            'prescriptions_order_template_id': self.quotation_template_no_discount.id
+            'prescription_order_template_id': self.quotation_template_no_discount.id
         })
-        self.prescriptions_order._onchange_prescriptions_order_template_id()
+        self.prescription_order._onchange_prescription_order_template_id()
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].price_unit,
+            self.prescription_order.order_line[0].price_unit,
             self.pub_product_price,
             "If a pricelist is set without discount included, the unit "
             "price shall be the public product price.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].price_subtotal,
+            self.prescription_order.order_line[0].price_subtotal,
             self.pl_product_price,
             "If a pricelist is set without discount included, the subtotal "
             "price shall be the price computed according to the price list.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[0].discount,
+            self.prescription_order.order_line[0].discount,
             self.pl_discount,
             "If a pricelist is set without discount included, the discount "
             "shall be computed according to the price unit and the subtotal."
             "price")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pub_option_price,
             "If a pricelist is set without discount included, the unit "
             "price shall be the public optional product price.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].discount,
+            self.prescription_order.prescription_order_option_ids[0].discount,
             self.pl_option_discount,
             "If a pricelist is set without discount included, the discount "
             "shall be computed according to the optional price unit and"
             "the subtotal price.")
 
         # add the option to the order
-        self.prescriptions_order.prescriptions_order_option_ids[0].button_add_to_order()
+        self.prescription_order.prescription_order_option_ids[0].button_add_to_order()
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].price_unit,
+            self.prescription_order.order_line[1].price_unit,
             self.pub_option_price,
             "If a pricelist is set without discount included, the unit "
             "price shall be the public optional product price.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].price_subtotal,
+            self.prescription_order.order_line[1].price_subtotal,
             self.pl_option_price,
             "If a pricelist is set without discount included, the subtotal "
             "price shall be the price computed according to the price list.")
 
         self.assertEqual(
-            self.prescriptions_order.order_line[1].discount,
+            self.prescription_order.order_line[1].discount,
             self.pl_option_discount,
             "If a pricelist is set without discount included, the discount "
             "shall be computed according to the price unit and the subtotal."
@@ -263,60 +263,60 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
         This test checks that option line's values are correctly
         updated after a pricelist update
         """
-        self.prescriptions_order.write({
-            'prescriptions_order_template_id': self.quotation_template_no_discount.id
+        self.prescription_order.write({
+            'prescription_order_template_id': self.quotation_template_no_discount.id
         })
-        self.prescriptions_order._onchange_prescriptions_order_template_id()
+        self.prescription_order._onchange_prescription_order_template_id()
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pub_option_price,
             "If no pricelist is set, the unit price shall be the option's product price.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].discount, 0,
+            self.prescription_order.prescription_order_option_ids[0].discount, 0,
             "If no pricelist is set, the discount should be 0.")
 
-        self.prescriptions_order.write({
+        self.prescription_order.write({
             'pricelist_id': self.discount_included_price_list.id,
         })
-        self.prescriptions_order._recompute_prices()
+        self.prescription_order._recompute_prices()
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pl_option_price,
             "If a pricelist is set with discount included,"
             " the unit price shall be the option's product discounted price.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].discount, 0,
+            self.prescription_order.prescription_order_option_ids[0].discount, 0,
             "If a pricelist is set with discount included,"
             " the discount should be 0.")
 
-        self.prescriptions_order.write({
+        self.prescription_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
         })
-        self.prescriptions_order._recompute_prices()
+        self.prescription_order._recompute_prices()
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].price_unit,
+            self.prescription_order.prescription_order_option_ids[0].price_unit,
             self.pub_option_price,
             "If a pricelist is set without discount included,"
-            " the unit price shall be the option's product prescriptions price.")
+            " the unit price shall be the option's product prescription price.")
 
         self.assertEqual(
-            self.prescriptions_order.prescriptions_order_option_ids[0].discount,
+            self.prescription_order.prescription_order_option_ids[0].discount,
             self.pl_option_discount,
             "If a pricelist is set without discount included,"
             " the discount should be correctly computed.")
 
     def test_option_creation(self):
         """Make sure the product uom is automatically added to the option when the product is specified"""
-        order_form = Form(self.prescriptions_order)
-        with order_form.prescriptions_order_option_ids.new() as option:
+        order_form = Form(self.prescription_order)
+        with order_form.prescription_order_option_ids.new() as option:
             option.product_id = self.product_1
         order = order_form.save()
-        self.assertTrue(bool(order.prescriptions_order_option_ids.uom_id))
+        self.assertTrue(bool(order.prescription_order_option_ids.uom_id))
 
     def test_option_price_unit_is_not_recomputed(self):
         """
@@ -324,15 +324,15 @@ class TestPrescriptionOrder(PrescriptionManagementCommon):
         update of quantities.
         """
 
-        prescriptions_order_with_option = self.env['prescriptions.order'].create({
+        prescription_order_with_option = self.env['prescription.order'].create({
             'partner_id': self.partner.id,
-            'prescriptions_order_option_ids': [Command.create({
+            'prescription_order_option_ids': [Command.create({
                 'product_id': self.optional_product.id,
                 'price_unit': 10,
             })],
         })
-        prescriptions_order_with_option.prescriptions_order_option_ids.add_option_to_order()
+        prescription_order_with_option.prescription_order_option_ids.add_option_to_order()
 
         # after changing the quantity of the product, the price unit should not be recomputed
-        prescriptions_order_with_option.order_line.product_uom_qty = 10
-        self.assertEqual(prescriptions_order_with_option.prescriptions_order_option_ids.price_unit, 10)
+        prescription_order_with_option.order_line.product_uom_qty = 10
+        self.assertEqual(prescription_order_with_option.prescription_order_option_ids.price_unit, 10)

@@ -2,12 +2,12 @@
 <odoo noupdate="0">
 
     <record id="default_confirmation_template" model="ir.config_parameter">
-        <field name="key">pod_prescriptions.default_confirmation_template</field>
-        <field name="value" ref="pod_prescriptions.mail_template_prescriptions_confirmation"/>
+        <field name="key">pod_prescription.default_confirmation_template</field>
+        <field name="value" ref="pod_prescription.mail_template_prescription_confirmation"/>
     </record>
 
     <record id="default_invoice_email_template" model="ir.config_parameter">
-        <field name="key">pod_prescriptions.default_invoice_email_template</field>
+        <field name="key">pod_prescription.default_invoice_email_template</field>
         <field name="value" ref="account.email_template_edi_invoice"/>
     </record>
 

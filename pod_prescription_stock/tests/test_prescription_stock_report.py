@@ -6,12 +6,12 @@ from odoo.tools import html2plaintext
 
 from odoo.tests.common import Form, tagged
 from odoo.addons.stock.tests.test_report import TestReportsCommon
-from odoo.addons.pod_prescriptions.tests.common import TestPrescriptionCommon
+from odoo.addons.pod_prescription.tests.common import TestPrescriptionCommon
 
 
 class TestPrescriptionStockReports(TestReportsCommon):
-    def test_report_forecast_1_prescriptions_order_replenishment(self):
-        """ Create and confirm two prescriptions orders: one for the next week and one
+    def test_report_forecast_1_prescription_order_replenishment(self):
+        """ Create and confirm two prescription orders: one for the next week and one
         for tomorrow. Then check in the report it's the most urgent who is
         linked to the qty. on stock.
         """
@@ -29,7 +29,7 @@ class TestPrescriptionStockReports(TestReportsCommon):
         }
         self.env['stock.quant'].create(quant_vals)
         # Create a first SO for the next week.
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner
         # so_form.validity_date = today + timedelta(days=7)
         with so_form.order_line.new() as so_line:
@@ -40,7 +40,7 @@ class TestPrescriptionStockReports(TestReportsCommon):
         so_1.picking_ids.scheduled_date = today + timedelta(days=7)
 
         # Create a second SO for tomorrow.
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner
         # so_form.validity_date = today + timedelta(days=1)
         with so_form.order_line.new() as so_line:
@@ -65,7 +65,7 @@ class TestPrescriptionStockReports(TestReportsCommon):
         """ When accessing the report from a SO line, checks if the correct SO line is highlighted in the report
         """
         # We create 2 identical SO
-        so_form = Form(self.env['prescriptions.order'])
+        so_form = Form(self.env['prescription.order'])
         so_form.partner_id = self.partner
         with so_form.order_line.new() as line:
             line.product_id = self.product
@@ -133,7 +133,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 5}),
@@ -169,7 +169,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
 
         self.product_by_lot.invoice_policy = "order"
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 4}),
@@ -200,7 +200,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
@@ -278,7 +278,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 8, lot_id=lot02)
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 2, lot_id=lot03)
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 10}),
@@ -373,7 +373,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
@@ -437,7 +437,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescriptions.order'].create({
+        so = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),

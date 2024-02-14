@@ -35,7 +35,7 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
         self.partner_a.credit_limit = 1000.0
 
         # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
-        prescriptions_order = self.env['prescriptions.order'].create({
+        prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -55,16 +55,16 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
         self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
 
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SO.
-        prescriptions_order.action_confirm()
+        prescription_order.action_confirm()
         self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
         self.assertEqual(self.partner_a.credit, 0.0)
         self.assertEqual(self.partner_a.credit_to_invoice, 1000.0)
 
         # Create a 50% down payment invoice.
-        self.env['prescriptions.advance.payment.inv'].with_context({
-            'active_model': 'prescriptions.order',
-            'active_ids': [prescriptions_order.id],
-            'active_id': prescriptions_order.id,
+        self.env['prescription.advance.payment.inv'].with_context({
+            'active_model': 'prescription.order',
+            'active_ids': [prescription_order.id],
+            'active_id': prescription_order.id,
             'default_journal_id': self.company_data['default_journal_prescription'].id,
         }).create({
             'advance_payment_method': 'percentage',
@@ -72,7 +72,7 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
             'deposit_account_id': self.company_data['default_account_revenue'].id,
         }).create_invoices()
 
-        invoice = prescriptions_order.invoice_ids
+        invoice = prescription_order.invoice_ids
 
         # Check that the warning does not appear even though we are creating an invoice
         # that should bring partner_a's credit above its limit.
@@ -100,16 +100,16 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
             }
         ).reverse_moves()
 
-        credit_note = prescriptions_order.invoice_ids[1]
+        credit_note = prescription_order.invoice_ids[1]
         credit_note.action_post()
 
         # Check that the credit note is accounted for correctly for the amount_to_invoice
-        self.assertEqual(prescriptions_order.amount_to_invoice, prescriptions_order.amount_total)
+        self.assertEqual(prescription_order.amount_to_invoice, prescription_order.amount_total)
 
     def test_credit_limit_multicurrency(self):
         self.partner_a.credit_limit = 50
 
-        order = self.env['prescriptions.order'].create({
+        order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'pricelist_id': self.buck_pricelist.id,
             'order_line': [

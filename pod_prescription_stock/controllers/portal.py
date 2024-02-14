@@ -3,7 +3,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import exceptions, SUPERUSER_ID
-from odoo.addons.pod_prescriptions.controllers.portal import CustomerPortal
+from odoo.addons.pod_prescription.controllers.portal import CustomerPortal
 from odoo.http import request, route
 from odoo.tools import consteq
 
@@ -17,7 +17,7 @@ class PrescriptionStockPortal(CustomerPortal):
             picking.check_access_rights('read')
             picking.check_access_rule('read')
         except exceptions.AccessError:
-            if not access_token or not consteq(picking_sudo.prescriptions_id.access_token, access_token):
+            if not access_token or not consteq(picking_sudo.prescription_id.access_token, access_token):
                 raise
         return picking_sudo
 
