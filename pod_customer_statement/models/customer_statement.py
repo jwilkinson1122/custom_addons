@@ -12,14 +12,13 @@ class CustomerStatementConfig(models.Model):
     _name = 'customer.statement.config'
 
     name=fields.Char('Title')
-    partner_ids=fields.Many2many('res.partner',string="Customer")
-
+    partner_ids=fields.Many2many('res.partner',string="Customer", domain=[('is_company','=', True)])
     customer_statement_auto_send = fields.Boolean(
-        'Customer Statement Auto Send',readonly=False)
+        'Account Statement Auto Send',readonly=False)
     filter_only_unpaid_and_send_that = fields.Boolean(string = "Filter Only Unpaid, Send nothing if all invoices are paid")
     customer_statement_action = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), (
         'monthly', 'Monthly'), ('yearly', 'Yearly')],
-    string='Customer Statement Action')
+    string='Statement Interval')
     cus_daily_statement_template_id = fields.Many2one(
         'mail.template', string='  Daily Mail Template')
     cust_week_day = fields.Selection([('0', 'Monday'), ('1', 'Tuesday'), ('2', 'Wednesday'), (
@@ -53,13 +52,13 @@ class CustomerStatementConfig(models.Model):
     cust_yearly_template_id = fields.Many2one(
         'mail.template', string='  Yearly Mail Template', readonly=False)
     cust_create_log_history = fields.Boolean(
-        'Customer Statement Mail Log History',readonly=False)
+        'Account Statement Mail Log History',readonly=False)
 
     
     customer_due_statement_auto_send = fields.Boolean(
-        'Customer Overdue Statement Auto Send')
+        'Account Overdue Statement Auto Send')
     customer_due_statement_action = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), (
-        'monthly', 'Monthly'), ('yearly', 'Yearly')], string='Customer Overdue Statement Action', readonly=False)
+        'monthly', 'Monthly'), ('yearly', 'Yearly')], string='Account Overdue Statement Action', readonly=False)
     cus_due_daily_statement_template_id = fields.Many2one(
         'mail.template', string=' Daily Mail Template',readonly=False)
     cust_due_week_day = fields.Selection([('0', 'Monday'), ('1', 'Tuesday'), ('2', 'Wednesday'), (
@@ -93,7 +92,7 @@ class CustomerStatementConfig(models.Model):
     cust_due_yearly_template_id = fields.Many2one(
         'mail.template', string=' Yearly Mail Template',readonly=False)
     cust_due_create_log_history = fields.Boolean(
-        'Customer Overdue Statement Mail Log History',readonly=False)
+        'Account Overdue Statement Mail Log History',readonly=False)
 
     @api.onchange('customer_statement_auto_send')
     def onchange_customer_statement_auto_send(self):
@@ -183,7 +182,7 @@ class CustomerStatementConfig(models.Model):
                                         mail_id = self.env['mail.mail'].sudo().browse(mail)
                                         if mail_id and statement.cust_create_log_history:
                                             self.env['customer.mail.history'].sudo().create({
-                                                'name': 'Customer Account Statement',
+                                                'name': 'Account Statement',
                                                 'statement_type': 'customer_statement',
                                                 'current_date': fields.Datetime.now(),
                                                 'partner_id': partner.id,
@@ -199,7 +198,7 @@ class CustomerStatementConfig(models.Model):
                                                 mail)
                                             if mail_id and statement.cust_create_log_history:
                                                 self.env['customer.mail.history'].sudo().create({
-                                                    'name': 'Customer Account Statement',
+                                                    'name': 'Account Statement',
                                                     'statement_type': 'customer_statement',
                                                     'current_date': fields.Datetime.now(),
                                                     'partner_id': partner.id,
@@ -221,7 +220,7 @@ class CustomerStatementConfig(models.Model):
                                                     mail)
                                                 if mail_id and statement.cust_create_log_history:
                                                     self.env['customer.mail.history'].sudo().create({
-                                                        'name': 'Customer Account Statement',
+                                                        'name': 'Account Statement',
                                                         'statement_type': 'customer_statement',
                                                         'current_date': fields.Datetime.now(),
                                                         'partner_id': partner.id,
@@ -237,7 +236,7 @@ class CustomerStatementConfig(models.Model):
                                                     mail)
                                                 if mail_id and statement.cust_create_log_history:
                                                     self.env['customer.mail.history'].sudo().create({
-                                                        'name': 'Customer Account Statement',
+                                                        'name': 'Account Statement',
                                                         'statement_type': 'customer_statement',
                                                         'current_date': fields.Datetime.now(),
                                                         'partner_id': partner.id,
@@ -256,7 +255,7 @@ class CustomerStatementConfig(models.Model):
                                                 mail)
                                             if mail_id and statement.cust_create_log_history:
                                                 self.env['customer.mail.history'].sudo().create({
-                                                    'name': 'Customer Account Statement',
+                                                    'name': 'Account Statement',
                                                     'statement_type': 'customer_statement',
                                                     'current_date': fields.Datetime.now(),
                                                     'partner_id': partner.id,
@@ -278,7 +277,7 @@ class CustomerStatementConfig(models.Model):
                                                 mail)
                                             if mail_id and statement.cust_due_create_log_history:
                                                 self.env['customer.mail.history'].sudo().create({
-                                                    'name': 'Customer Account Overdue Statement',
+                                                    'name': 'Account Overdue Statement',
                                                     'statement_type': 'customer_overdue_statement',
                                                     'current_date': fields.Datetime.now(),
                                                     'partner_id': partner.id,
@@ -295,7 +294,7 @@ class CustomerStatementConfig(models.Model):
                                                     mail)
                                                 if mail_id and statement.cust_due_create_log_history:
                                                     self.env['customer.mail.history'].sudo().create({
-                                                        'name': 'Customer Account Overdue Statement',
+                                                        'name': 'Account Overdue Statement',
                                                         'statement_type': 'customer_overdue_statement',
                                                         'current_date': fields.Datetime.now(),
                                                         'partner_id': partner.id,
@@ -317,7 +316,7 @@ class CustomerStatementConfig(models.Model):
                                                         mail)
                                                     if mail_id and statement.cust_due_create_log_history:
                                                         self.env['customer.mail.history'].sudo().create({
-                                                            'name': 'Customer Account Overdue Statement',
+                                                            'name': 'Account Overdue Statement',
                                                             'statement_type': 'customer_overdue_statement',
                                                             'current_date': fields.Datetime.now(),
                                                             'partner_id': partner.id,
@@ -333,7 +332,7 @@ class CustomerStatementConfig(models.Model):
                                                         mail)
                                                     if mail_id and statement.cust_due_create_log_history:
                                                         self.env['customer.mail.history'].sudo().create({
-                                                            'name': 'Customer Account Overdue Statement',
+                                                            'name': 'Account Overdue Statement',
                                                             'statement_type': 'customer_overdue_statement',
                                                             'current_date': fields.Datetime.now(),
                                                             'partner_id': partner.id,
@@ -353,7 +352,7 @@ class CustomerStatementConfig(models.Model):
                                                     mail)
                                                 if mail_id and statement.cust_due_create_log_history:
                                                     self.env['customer.mail.history'].sudo().create({
-                                                        'name': 'Customer Account Overdue Statement',
+                                                        'name': 'Account Overdue Statement',
                                                         'statement_type': 'customer_overdue_statement',
                                                         'current_date': fields.Datetime.now(),
                                                         'partner_id': partner.id,

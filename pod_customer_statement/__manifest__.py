@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    "name": "NWPL Statement MGMT",
+    "name": "NWPL - Account Statements",
     "author": "NWPL",
     "website": "https://www.nwpodiatric.com",
     "version": "17.0.0.0.0",

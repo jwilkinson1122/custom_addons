@@ -37,8 +37,10 @@ class ResCompany(models.Model):
         ('november', 'November'),
         ('december', 'December')
     ], string='Month')
+    
     cust_yearly_template_id = fields.Many2one(
         'mail.template', string='  Yearly Mail Template')
+    
     cust_create_log_history = fields.Boolean(
         'Customer Statement Mail Log History')
 
@@ -71,17 +73,21 @@ class ResCompany(models.Model):
         ('november', 'November'),
         ('december', 'December')
     ], string=' Month')
+
     cust_due_yearly_template_id = fields.Many2one(
         'mail.template', string=' Yearly Mail Template')
+    
     cust_due_create_log_history = fields.Boolean(
         'Customer Overdue Statement Mail Log History')
 
     display_customer_statement = fields.Boolean('Show Customer Statement Menu in portal ?')
+
     display_due_statement = fields.Selection([
         ('due','Only Due'),
         ('overdue','Only Overdue'),
         ('both','Both')
         ],string='Display Due/Overdue Statements',default='both',required=True)
+    
     statement_signature = fields.Boolean("Signature?", default=True)
     display_message_in_chatter = fields.Boolean(
         "Display in Chatter Message?", default=True)
@@ -95,62 +101,111 @@ class ResConfigSetting(models.TransientModel):
 
     customer_statement_auto_send = fields.Boolean(
         'Customer Statement Auto Send', related='company_id.customer_statement_auto_send', readonly=False)
+    
     filter_only_unpaid_and_send_that = fields.Boolean(string = "Filter Only Unpaid, Send nothing if all invoices are paid",
     related='company_id.filter_only_unpaid_and_send_that',readonly=False)
 
     customer_statement_action = fields.Selection(
         related='company_id.customer_statement_action', string='Customer Statement Action', readonly=False)
+    
     cus_daily_statement_template_id = fields.Many2one(
         'mail.template', string='  Daily Mail Template', related='company_id.cus_daily_statement_template_id', readonly=False)
+    
     cust_week_day = fields.Selection(
         string='Week Day', related='company_id.cust_week_day', readonly=False)
+    
     cust_weekly_statement_template_id = fields.Many2one(
         'mail.template', string='Weekly Mail Template   ', related='company_id.cust_weekly_statement_template_id', readonly=False)
+    
     cust_monthly_date = fields.Integer(
         'Monthly  Day', related='company_id.cust_monthly_date', readonly=False, default=1)
+    
     cust_monthly_template_id = fields.Many2one(
         'mail.template', string='Monthly Mail Template', related='company_id.cust_monthly_template_id', readonly=False)
+    
     cust_yearly_date = fields.Integer(
         ' Yearly day ', related='company_id.cust_yearly_date', readonly=False, default=1)
+    
     cust_monthly_end = fields.Boolean(
         'End of  month', related='company_id.cust_monthly_end', readonly=False)
+    
     cust_yearly_month = fields.Selection(
         string='  Month', related='company_id.cust_yearly_month', readonly=False)
+    
     cust_yearly_template_id = fields.Many2one(
         'mail.template', string='  Yearly Mail Template', related='company_id.cust_yearly_template_id', readonly=False)
+    
     cust_create_log_history = fields.Boolean(
         'Customer Statement Mail Log History', related='company_id.cust_create_log_history', readonly=False)
 
-    customer_due_statement_auto_send = fields.Boolean(
-        'Customer Overdue Statement Auto Send', related='company_id.customer_due_statement_auto_send', readonly=False)
-    customer_due_statement_action = fields.Selection(
-        related='company_id.customer_due_statement_action', string='Customer Overdue Statement Action', readonly=False)
-    cus_due_daily_statement_template_id = fields.Many2one(
-        'mail.template', string=' Daily Mail Template', related='company_id.cus_due_daily_statement_template_id', readonly=False)
-    cust_due_week_day = fields.Selection(
-        string='Week Day ', related='company_id.cust_due_week_day', readonly=False)
-    cust_due_weekly_statement_template_id = fields.Many2one(
-        'mail.template', string='   Weekly Mail Template', related='company_id.cust_due_weekly_statement_template_id', readonly=False)
-    cust_due_monthly_date = fields.Integer(
-        'Monthly Day    ', related='company_id.cust_due_monthly_date', readonly=False, default=1)
-    cust_due_monthly_end = fields.Boolean(
-        'End of month', related='company_id.cust_due_monthly_end', readonly=False)
-    cust_due_monthly_template_id = fields.Many2one(
-        'mail.template', string='Monthly  Mail Template', related='company_id.cust_due_monthly_template_id', readonly=False)
-    cust_due_yearly_date = fields.Integer(
-        '  Yearly Day     ', related='company_id.cust_due_yearly_date', readonly=False, default=1)
-    cust_due_yearly_month = fields.Selection(
-        string='Month', related='company_id.cust_due_yearly_month', readonly=False)
-    cust_due_yearly_template_id = fields.Many2one(
-        'mail.template', string=' Yearly Mail Template', related='company_id.cust_due_yearly_template_id', readonly=False)
     cust_due_create_log_history = fields.Boolean(
         'Customer Overdue Statement Mail Log History', related='company_id.cust_due_create_log_history', readonly=False)
+    
+    # mail_log_history_type = fields.Selection([
+    #     ('opt1', 'Statement History'),
+    #     ('opt2', 'Overdue Statement History'),
+    #     ('opt3', 'Both')
+    # ], string='Selection Field')
+
+    # @api.onchange('mail_log_history_type')
+    # def _onchange_mail_log_history_type(self):
+    #     if self.mail_log_history_type == 'opt1':
+    #         self.cust_create_log_history = True
+    #         self.cust_due_create_log_history = False
+    #     elif self.mail_log_history_type == 'opt2':
+    #         self.cust_create_log_history = False
+    #         self.cust_due_create_log_history = True
+    #     elif self.mail_log_history_type == 'opt3':
+    #         self.cust_create_log_history = True
+    #         self.cust_due_create_log_history = True
+
+    customer_due_statement_auto_send = fields.Boolean(
+        'Customer Overdue Statement Auto Send', related='company_id.customer_due_statement_auto_send', readonly=False)
+    
+    customer_due_statement_action = fields.Selection(
+        related='company_id.customer_due_statement_action', string='Customer Overdue Statement Action', readonly=False)
+    
+    cus_due_daily_statement_template_id = fields.Many2one(
+        'mail.template', string=' Daily Mail Template', related='company_id.cus_due_daily_statement_template_id', readonly=False)
+    
+    cust_due_week_day = fields.Selection(
+        string='Week Day ', related='company_id.cust_due_week_day', readonly=False)
+    
+    cust_due_weekly_statement_template_id = fields.Many2one(
+        'mail.template', string='   Weekly Mail Template', related='company_id.cust_due_weekly_statement_template_id', readonly=False)
+    
+    cust_due_monthly_date = fields.Integer(
+        'Monthly Day    ', related='company_id.cust_due_monthly_date', readonly=False, default=1)
+    
+    cust_due_monthly_end = fields.Boolean(
+        'End of month', related='company_id.cust_due_monthly_end', readonly=False)
+    
+    cust_due_monthly_template_id = fields.Many2one(
+        'mail.template', string='Monthly  Mail Template', related='company_id.cust_due_monthly_template_id', readonly=False)
+    
+    cust_due_yearly_date = fields.Integer(
+        '  Yearly Day     ', related='company_id.cust_due_yearly_date', readonly=False, default=1)
+    
+    cust_due_yearly_month = fields.Selection(
+        string='Month', related='company_id.cust_due_yearly_month', readonly=False)
+    
+    cust_due_yearly_template_id = fields.Many2one(
+        'mail.template', string=' Yearly Mail Template', related='company_id.cust_due_yearly_template_id', readonly=False)
+    
+    # cust_due_create_log_history = fields.Boolean(
+    #     'Customer Overdue Statement Mail Log History', related='company_id.cust_due_create_log_history', readonly=False)
 
     display_customer_statement = fields.Boolean('Show Customer Statement Menu in portal ?',
         readonly=False,
         related='company_id.display_customer_statement'
     )
-    display_due_statement = fields.Selection(string='Display Due/Overdue Statements',required=True,related='company_id.display_due_statement',readonly=False)
+
+    display_due_statement = fields.Selection(
+        string='Display Due/Overdue Statements',
+        required=True,
+        related='company_id.display_due_statement',
+        readonly=False
+        )
     statement_signature = fields.Boolean("Signature?",related='company_id.statement_signature',readonly=False)
     display_message_in_chatter = fields.Boolean(
         "Display in Chatter Message?",related='company_id.display_message_in_chatter',readonly=False)
