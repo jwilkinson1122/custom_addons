@@ -589,12 +589,12 @@
                             </group>
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">FOREFOOT VALUES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">FOREFOOT VALUES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'lt_single'">RIGHT</td>
                                 </tr>
                                 <tr name="varus_forefoot_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VARUS</td>
+                                    <td style="padding:4px; text-align:center;">VARUS</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_varus_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -603,7 +603,7 @@
                                     </td>
                                 </tr>
                                 <tr name="valgus_forefoot_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS</td>
+                                    <td style="padding:4px; text-align:center;">VALGUS</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_valgus_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -617,12 +617,12 @@
 
                             <table name="forefoot_corrections_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">FOREFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">FOREFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'lt_single'">RIGHT</td>
                                 </tr>
                                 <tr name="forefoot_varus_intrinsic_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VARUS INTRINSIC</td>
+                                    <td style="padding:4px; text-align:center;">VARUS INTRINSIC</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_varus_intrinsic_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -631,7 +631,7 @@
                                     </td>
                                 </tr>
                                 <tr name="forefoot_valgus_intrinsic_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS INTRINSIC</td>
+                                    <td style="padding:4px; text-align:center;">VALGUS INTRINSIC</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_valgus_intrinsic_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -640,7 +640,7 @@
                                     </td>
                                 </tr>
                                 <tr name="forefoot_varus_extrinsic_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VARUS EXTRINSIC</td>
+                                    <td style="padding:4px; text-align:center;">VARUS EXTRINSIC</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_varus_extrinsic_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -649,7 +649,7 @@
                                     </td>
                                 </tr>
                                 <tr name="forefoot_valgus_extrinsic_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS EXTRINSIC</td>
+                                    <td style="padding:4px; text-align:center;">VALGUS EXTRINSIC</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_valgus_extrinsic_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -663,12 +663,12 @@
 
                             <table name="rearfoot_corrections_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">REARFOOT CORRECTIONS</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">REARFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'lt_single'">RIGHT</td>
                                 </tr>
                                 <tr name="rearfoot_varus_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VARUS</td>
+                                    <td style="padding:4px; text-align:center;">VARUS</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="rf_varus_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -678,7 +678,7 @@
                                 </tr>
 
                                 <tr name="rearfoot_valgus_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS</td>
+                                    <td style="padding:4px; text-align:center;">VALGUS</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="rf_valgus_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -688,7 +688,7 @@
                                 </tr>
 
                                 <tr name="rearfoot_neutral_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">NEUTRAL</td>
+                                    <td style="padding:4px; text-align:center;">NEUTRAL</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="rf_neutral_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -703,12 +703,12 @@
 
                             <table name="orthotic_measure_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
-                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">ORTHOTIC MEASURES</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
-                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">ORTHOTIC MEASURES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;" invisible="laterality == 'lt_single'">RIGHT</td>
                                 </tr>
                                 <tr name="forefoot_length_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">FOREFOOT LENGTH</td>
+                                    <td style="padding:4px; text-align:center">FOREFOOT LENGTH</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="ff_length_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -718,7 +718,7 @@
                                 </tr>
 
                                 <tr name="heel_depth_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">HEEL DEPTH</td>
+                                    <td style="padding:4px; text-align:center;">HEEL DEPTH</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="heel_depth_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -728,7 +728,7 @@
                                 </tr>
 
                                 <tr name="length_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">LENGTH</td>
+                                    <td style="padding:4px; text-align:center;">LENGTH</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="orthotic_length_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
@@ -738,7 +738,7 @@
                                 </tr>
 
                                 <tr name="cap_size_values">
-                                    <td style="padding:4px; text-align:center; fw-bold">CAP SIZE</td>
+                                    <td style="padding:4px; text-align:center;">CAP SIZE</td>
                                     <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
                                         <field name="cap_size_lt" invisible="laterality == 'rt_single'"/>
                                     </td>
