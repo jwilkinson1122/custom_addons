@@ -18,19 +18,24 @@
                 <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
             </field>
             <field name="product_tooltip" position="after">
-                <label for="product_tooltip" string=""
-                    invisible="type not in ('product', 'consu') or invoice_policy != 'order'"/>
-                <div invisible="type not in ('product', 'consu') or invoice_policy != 'order'"
-                    class="fst-italic text-muted">
+                <label for="product_tooltip" string="" invisible="type not in ('product', 'consu') or invoice_policy != 'order'"/>
+                <div invisible="type not in ('product', 'consu') or invoice_policy != 'order'" class="fst-italic text-muted">
                     You can invoice them before they are delivered.
                 </div>
-                <label for="product_tooltip" string=""
-                    invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"/>
-                <div invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"
-                    class="fst-italic text-muted">
+                <label for="product_tooltip" string="" invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"/>
+                <div invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'" class="fst-italic text-muted">
                     Invoice after delivery, based on quantities delivered, not ordered.
                 </div>
             </field>
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name='helpdesk_ticket_product' string='Helpdesk' invisible="not is_helpdesk or product_variant_count &gt; 1">
+                    <group>
+                        <field name='is_helpdesk'/>
+                        <field name='helpdesk_team' invisible="not is_helpdesk"/>
+                        <field name='helpdesk_assigned_to' invisible="not is_helpdesk"/>
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 
@@ -40,6 +45,15 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name='helpdesk_ticket' string='Helpdesk'>
+                    <group>
+                        <field name='is_helpdesk'/>
+                        <field name='helpdesk_team' invisible="not is_helpdesk"/>
+                        <field name='helpdesk_assigned_to' invisible="not is_helpdesk"/>
+                    </group>
+                </page>
+            </xpath>
             <!-- <xpath expr="//page[@name='inventory']" position="after">
                 <page name='prescription' string='Prescription'>
                     <group>
@@ -53,15 +67,9 @@
                     <label for="prescription_ok" string="Show in Prescription"/>
                 </div>
             </xpath>
-       
+
             <div name="button_box" position="inside">
-                <button class="oe_stat_button"
-                    name="action_view_prescription"
-                    type="object"
-                    icon="fa-signal"
-                    help="Sold in the last 365 days"
-                    groups="pod_prescription_team.group_prescription_personnel"
-                    invisible="not prescription_ok">
+                <button class="oe_stat_button" name="action_view_prescription" type="object" icon="fa-signal" help="Sold in the last 365 days" groups="pod_prescription_team.group_prescription_personnel" invisible="not prescription_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="prescription_count" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -75,9 +83,7 @@
                 <t groups="pod_prescription_team.group_prescription_personnel">
                     <group string="Warning when Selling this Product" groups="pod_prescription.group_warning_prescription">
                         <field name="prescription_line_warn" nolabel="1" colspan="2"/>
-                        <field name="prescription_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
-                                readonly="prescription_line_warn == 'no-message'"
-                                required="prescription_line_warn != 'no-message'"/>
+                        <field name="prescription_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..." readonly="prescription_line_warn == 'no-message'" required="prescription_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>
@@ -89,7 +95,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
- 
+
             <xpath expr="//div[@name='options']" position="inside">
                 <div>
                     <field name="prescription_ok" />
@@ -97,12 +103,7 @@
                 </div>
             </xpath>
             <div name="button_box" position="inside">
-                <button class="oe_stat_button"
-                    name="action_view_prescription"
-                    type="object" icon="fa-signal"
-                    help="Sold in the last 365 days"
-                    groups="pod_prescription_team.group_prescription_personnel"
-                    invisible="not prescription_ok">
+                <button class="oe_stat_button" name="action_view_prescription" type="object" icon="fa-signal" help="Sold in the last 365 days" groups="pod_prescription_team.group_prescription_personnel" invisible="not prescription_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="prescription_count" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -116,10 +117,7 @@
                 <t groups="pod_prescription_team.group_prescription_personnel">
                     <group string="Warning when Selling this Product" groups="pod_prescription.group_warning_prescription">
                         <field name="prescription_line_warn" string="Warning"/>
-                        <field name="prescription_line_warn_msg" string="Message" placeholder="Type a message..."
-                                invisible="prescription_line_warn == 'no-message'"
-                                readonly="prescription_line_warn == 'no-message'"
-                                required="prescription_line_warn != 'no-message'"/>
+                        <field name="prescription_line_warn_msg" string="Message" placeholder="Type a message..." invisible="prescription_line_warn == 'no-message'" readonly="prescription_line_warn == 'no-message'" required="prescription_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>
@@ -136,7 +134,8 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
-            </p><p>
+            </p>
+            <p>
                 You must define a product for everything you sell or purchase,
                 whether it's a storable product, a consumable or a service.
             </p>
@@ -160,10 +159,7 @@
         <field name="model">product.product</field>
         <field name="arch" type="xml">
             <filter name="products" position="after">
-                <filter string="In the Order"
-                        invisible="context.get('active_model', '') != 'prescription.order.line'"
-                        name="products_in_order"
-                        domain="[('product_catalog_product_is_in_prescription_order', '=', True)]"/>
+                <filter string="In the Order" invisible="context.get('active_model', '') != 'prescription.order.line'" name="products_in_order" domain="[('product_catalog_product_is_in_prescription_order', '=', True)]"/>
             </filter>
         </field>
     </record>

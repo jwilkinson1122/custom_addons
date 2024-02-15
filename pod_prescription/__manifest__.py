@@ -11,6 +11,14 @@
     'description': """This module contains all the features of Prescription Management.""",
     'website': 'https://www.nwpodiatric.com',
     'depends': [
+        
+        'helpdesk',
+        'website_helpdesk_forum',
+        'website_helpdesk_livechat',
+        'helpdesk_repair',
+        'helpdesk_stock',
+        'helpdesk_mail_plugin',
+        'data_merge_helpdesk',
         'knowledge',
         'pos_sale',
         'purchase_stock',

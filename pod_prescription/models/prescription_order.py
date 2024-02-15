@@ -260,6 +260,8 @@ class PrescriptionOrder(models.Model):
         'attachment_id', string="Attachments"
         )
 
+    helpdesk_tickets_ids = fields.Many2many('helpdesk.ticket', string='Helpdesk Tickets')
+    helpdesk_tickets_count = fields.Integer( string='Tickets Count', compute='_get_helpdesk_tickets_count')
 
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
@@ -398,6 +400,23 @@ class PrescriptionOrder(models.Model):
     @api.model
     def _get_note_url(self):
         return self.env.company.get_base_url()
+
+
+    @api.depends('helpdesk_tickets_ids')
+    def _get_helpdesk_tickets_count(self):
+        for rec in self:
+            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+
+    def helpdesk_ticket(self):
+        action = self.env.ref('helpdesk.helpdesk_ticket_action_main_tree').read()[0]
+        tickets = self.order_line.mapped('helpdesk_description_id')
+        if len(tickets) > 1:
+            action['domain'] = [('id', 'in', tickets.ids)]
+        elif tickets:
+            action['views'] = [(self.env.ref('helpdesk.helpdesk_ticket_view_form').id, 'form')]
+            action['res_id'] = tickets.id
+        return action
+    
 
     @api.depends('partner_id')
     def _compute_partner_invoice_id(self):
@@ -943,14 +962,6 @@ class PrescriptionOrder(models.Model):
         self.write({'state': 'sent'})
 
     def action_confirm(self):
-        """ Confirm the given quotation(s) and set their confirmation date.
-
-        If the corresponding setting is enabled, also locks the Prescription Order.
-
-        :return: True
-        :rtype: bool
-        :raise: UserError if trying to confirm cancelled SO's
-        """
         if not all(order._can_be_confirmed() for order in self):
             raise UserError(_(
                 "The following orders are not in a state requiring confirmation: %s",
@@ -966,15 +977,32 @@ class PrescriptionOrder(models.Model):
             order.message_subscribe([order.partner_id.id])
 
         self.write(self._prepare_confirmation_values())
-
-        # Context key 'default_name' is sometimes propagated up to here.
-        # We don't need it and it creates issues in the creation of linked records.
+        
         context = self._context.copy()
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
         if self.env.user.has_group('pod_prescription.group_auto_done_setting'):
             self.action_lock()
+        helpdesk_ticket_dict = {}
+        helpdesk_ticket_list = []
+        for line in self.order_line:
+            if line:
+                if line.product_id.is_helpdesk:
+                    helpdesk_ticket_dict = {
+                                            'name' : line.product_id.name,
+                                            'team_id' : line.product_id.helpdesk_team.id,
+                                            'user_id' : line.product_id.helpdesk_assigned_to.id,
+                                            'partner_id' : self.partner_id.id,
+                                            'partner_name' : self.partner_id.name,
+                                            'partner_email' : self.partner_id.email,
+                                            'description' : line.name  
+                                           }
+                    helpdesk_ticket_id = self.env['helpdesk.ticket'].create(helpdesk_ticket_dict)
+                    if helpdesk_ticket_id:
+                        line.helpdesk_description_id = helpdesk_ticket_id.id
+                        helpdesk_ticket_list.append(helpdesk_ticket_id.id)
+                        self.helpdesk_tickets_ids = helpdesk_ticket_list
 
         return True
 

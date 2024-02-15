@@ -11,7 +11,10 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
     
     # prescription_ok = fields.Boolean(string="Can be Configured")
-
+    is_helpdesk = fields.Boolean("Helpdesk Ticket?")
+    helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
+    helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
+    
     prescription_count = fields.Float(compute='_compute_prescription_count', string='Sold', digits='Product Unit of Measure')
 
     # Catalog related fields

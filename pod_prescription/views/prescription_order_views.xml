@@ -313,6 +313,9 @@
                         <button name="action_view_sale_order" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="order_count == 0">
                             <field name="order_count" widget="statinfo" string="Sale Orders"/>
                         </button>
+                        <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
+                            <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
+                        </button>
                     </div>
                     <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0" invisible="not locked">
                         <i class="fa fa-lock"/>
@@ -360,7 +363,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Order Lines" name="order_lines">
+                        <page string="Prescription Lines" name="order_lines">
                             <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban" readonly="state == 'cancel' or locked">
                                 <form>
                                     <field name="display_type" invisible="1"/>
@@ -580,6 +583,202 @@
                                 <div class="clearfix"/>
                             </group>
                         </page>
+                        <page string="Values">
+                            <group invisible="1">
+                                <field name="laterality" invisible="1"/>
+                            </group>
+                            <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
+                                <tr>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">FOREFOOT VALUES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                </tr>
+                                <tr name="varus_forefoot_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VARUS</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_varus_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_varus_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                                <tr name="valgus_forefoot_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_valgus_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_valgus_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+
+                            <table name="forefoot_corrections_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
+                                <tr>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">FOREFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                </tr>
+                                <tr name="forefoot_varus_intrinsic_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VARUS INTRINSIC</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_varus_intrinsic_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_varus_intrinsic_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                                <tr name="forefoot_valgus_intrinsic_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS INTRINSIC</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_valgus_intrinsic_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_valgus_intrinsic_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                                <tr name="forefoot_varus_extrinsic_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VARUS EXTRINSIC</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_varus_extrinsic_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_varus_extrinsic_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                                <tr name="forefoot_valgus_extrinsic_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS EXTRINSIC</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_valgus_extrinsic_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_valgus_extrinsic_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+
+                            <table name="rearfoot_corrections_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
+                                <tr>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">REARFOOT CORRECTIONS</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                </tr>
+                                <tr name="rearfoot_varus_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VARUS</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="rf_varus_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="rf_varus_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                                <tr name="rearfoot_valgus_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">VALGUS</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="rf_valgus_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="rf_valgus_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                                <tr name="rearfoot_neutral_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">NEUTRAL</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="rf_neutral_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="rf_neutral_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <br/>
+                            <br/>
+
+                            <table name="orthotic_measure_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
+                                <tr>
+                                    <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold">ORTHOTIC MEASURES</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'rt_single'">LEFT</td>
+                                    <td style="width: 15%; padding-left:8px; padding-right:8px; text-align:center; background-color:#CCE5FF; fw-bold" invisible="laterality == 'lt_single'">RIGHT</td>
+                                </tr>
+                                <tr name="forefoot_length_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">FOREFOOT LENGTH</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="ff_length_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="ff_length_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                                <tr name="heel_depth_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">HEEL DEPTH</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="heel_depth_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="heel_depth_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                                <tr name="length_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">LENGTH</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="orthotic_length_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="orthotic_length_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+
+                                <tr name="cap_size_values">
+                                    <td style="padding:4px; text-align:center; fw-bold">CAP SIZE</td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'rt_single'">
+                                        <field name="cap_size_lt" invisible="laterality == 'rt_single'"/>
+                                    </td>
+                                    <td style="padding:4px; text-align:center" invisible="laterality == 'lt_single'">
+                                        <field name="cap_size_rt" invisible="laterality == 'lt_single'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                        </page>
+
+                        <page string="Documents Test">
+                            <field name="test_file" widget="pdf_viewer"/>
+                        </page>
+                        <page string="Documents">
+                            <!-- <group name="photo_group_tlOo2">
+                                <group name="photo_group_tlOo2_left">
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
+                                </group>
+                                <group name="photo_group_tlOo2_right">
+                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image" />
+                                </group>
+                            </group>
+                            <group name="obj_group_DPydw">
+                                <group name="obj_group_DPydw_left">
+                                    <field name="left_obj_model" string="Left Scan" />
+
+                                </group>
+                                <group name="obj_group_DPydw_right">
+                                    <field name="right_obj_model" string="Right Scan" />
+                                </group>
+                            </group> -->
+                            <group string="Attachements">
+                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                            </group>
+                        </page>
+                        <page string="Special Instructions">
+
+                        </page>
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="prescription_person" string="Prescription">
@@ -622,12 +821,15 @@
                                 </group>
                             </group>
                         </page>
-                        <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
+                        <page string="Customer Signature" name="customer_signature" groups="base.group_no_one" invisible="not require_signature and not signed_by and not signature and not signed_on">
                             <group>
                                 <field name="signed_by" readonly="signature"/>
                                 <field name="signed_on" readonly="signature"/>
                                 <field name="signature" widget="image"/>
                             </group>
+                        </page>
+                        <page string='Helpdesk Tickets' name='helpdesk_ticket'>
+                            <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
                         </page>
                     </notebook>
                 </sheet>
