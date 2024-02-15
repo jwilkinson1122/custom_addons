@@ -13,14 +13,14 @@ class PrescriptionAbstract(models.AbstractModel):
         name="Identifier",
         help="Internal identifier used to identify this record",
         readonly=True,
-        default="/",
+        default="New",
         copy=False,
     )  # FHIR Field: identifier
 
     @api.model
     def create(self, vals):
         vals_upd = vals.copy()
-        if vals_upd.get("internal_identifier", "/") == "/":
+        if vals_upd.get("internal_identifier", "New") == "New":
             vals_upd["internal_identifier"] = self._get_internal_identifier(
                 vals_upd
             )

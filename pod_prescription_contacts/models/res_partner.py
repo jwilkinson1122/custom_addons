@@ -18,6 +18,10 @@ class Partner(models.Model):
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
     is_parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    # internal_code = fields.Char('Internal Code', copy=False)
+
+    internal_code = fields.Char("Internal Code", readonly=True, default=lambda self: _("New"))
+    
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
     location_text = fields.Char(compute="_compute_location_text")
@@ -27,9 +31,8 @@ class Partner(models.Model):
          ('hospital', 'Hospital'),
          ('military_va', 'Military/VA'),
          ('other', 'Other'),
-        ], string='Practice Type',
-        default='clinic')
-    
+        ], string='Practice Type', default='clinic')
+    fax_number = fields.Char(string="Fax")
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
     parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
@@ -208,13 +211,59 @@ class Partner(models.Model):
         """
         return []
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        partners = super().create(vals_list)
-        for partner in partners:
-            if partner.is_partner or partner.patient_ids:
-                partner.check_prescription("create")
-        return partners
+ 
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get("internal_code", _("New")) == _("New"):
+    #         vals["internal_code"] = self.env["ir.sequence"].next_by_code("partner.internal.code") or _("New")
+    #     return super(Partner, self).create(vals)
+    
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     partners = super().create(vals_list)
+    #     for partner in partners:
+    #         if partner.is_partner or partner.patient_ids:
+    #             partner.check_prescription("create")
+    #         if not partner.internal_code and partner.parent_id:
+    #             parent_partner = partner.parent_id
+    #             if parent_partner.internal_code:
+    #                 internal_code = parent_partner.internal_code + '1' 
+    #                 partner.write({'internal_code': internal_code})
+    #         elif not partner.internal_code:
+    #             partner.write({'internal_code': self.env['ir.sequence'].next_by_code('partner.internal.code')})
+
+    #     return partners
+    
+
+    @api.model
+    def create(self, vals):
+        # If internal_code is not provided or set to "New", generate a new code
+        if not vals.get("internal_code") or vals.get("internal_code") == _("New"):
+            vals["internal_code"] = self.env["ir.sequence"].next_by_code("partner.internal.code") or _("New")
+        # Call the original create method to create the partner
+        partner = super().create(vals)
+        
+        # Check if the partner is a partner or has patient_ids
+        if partner.is_partner or partner.patient_ids:
+            partner.check_prescription("create")
+
+        # If internal code is not provided, generate it based on the parent's internal code
+        if not partner.internal_code and partner.parent_id:
+            parent_partner = partner.parent_id
+            if parent_partner.internal_code:
+                # Append a digit to the parent's internal code
+                internal_code = parent_partner.internal_code + '1'  # Modify this as needed
+                partner.write({'internal_code': internal_code})
+        elif not partner.internal_code:
+            # If no parent, generate a new internal code
+            partner.write({'internal_code': self.env['ir.sequence'].next_by_code('partner.internal.code')})
+
+        return partner
+
+    
+
+    _sql_constraints = {('internal_code_uniq', 'unique(internal_code)', 'Internal Code must be unique!')}
+
 
     def write(self, vals):
         result = super().write(vals)
@@ -263,8 +312,7 @@ class Partner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
 
         # Iterate over child partners and recursively synchronize commercial fields
-        for child in sync_children:
-            child._commercial_sync_to_children(visited=visited)
+        for child in sync_children: child._commercial_sync_to_children(visited=visited)
 
         # Update commercial fields for child partners
         res = sync_children.write(sync_vals)

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <odoo>
+    <record id="seq_prescription_partner" model="ir.sequence">
+        <field name="name">Partner sequence</field>
+        <field name="code">partner.internal.code</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+    </record>
     <record id="seq_prescription_practice" model="ir.sequence">
         <field name="name">Practice sequence</field>
         <field name="code">prescription.practice</field>
