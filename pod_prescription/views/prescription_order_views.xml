@@ -906,15 +906,6 @@
 
     <!-- ACTIONS (WINDOW) -->
 
-    <!-- Sale Order Action -->
-    <record model="ir.actions.act_window" id="action_prescription_to_so">
-        <field name="name">Create Sales Order</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('prescription_so_id','=',active_id)]</field>
-    </record>
-
     <record id="action_prescription" model="ir.actions.act_window">
         <field name="name">Prescription Orders</field>
         <field name="res_model">prescription.order</field>
@@ -1067,6 +1058,15 @@
             or check every order and invoice them one by one.
             </p>
         </field>
+    </record>
+
+        <!-- Sale Order Action -->
+    <record model="ir.actions.act_window" id="action_prescription_to_so">
+        <field name="name">Create Sales Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('prescription_so_id','=',active_id)]</field>
     </record>
 
     <record id="action_prescription_upselling" model="ir.actions.act_window">

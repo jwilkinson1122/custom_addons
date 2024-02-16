@@ -67,8 +67,73 @@ class PrescriptionPatient(models.Model):
                     fields.Date.today(), record.birth_date
                 ).years
             record.patient_age = age
+
+
+    # Prescriptions
+    # patient_prescription_ids = fields.One2many("prescription.order", inverse_name="patient_id")
+    patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
             
-            
+    # @api.depends("patient_prescription_ids")
+    # def _compute_patient_prescription_count(self):
+    #     for rec in self:
+    #         rec.patient_prescription_count = len(rec.patient_prescription_ids.ids)
+
+    # def action_view_patient_prescriptions(self):
+    #     self.ensure_one()
+    #     result = self.env["ir.actions.act_window"]._for_xml_id("pod_prescription.action_prescription")
+    #     result["context"] = {"default_patient_id": self.id}
+    #     result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
+    #     if len(self.patient_prescription_ids) == 1:
+    #         res = self.env.ref("prescription.order.form", False)
+    #         result["views"] = [(res and res.id or False, "form")]
+    #         result["res_id"] = self.patient_prescription_ids.id
+    #     return result
+
+    def action_view_patient_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Patient Prescription'),
+                'view_type': 'form',
+                'domain': [('patient_id', '=', records.id)],
+                'res_model': 'prescription.order',
+                'view_id': False,
+                'view_mode': 'kanban,tree,form',
+                'context': {'default_patient_id': self.id},
+                'type': 'ir.actions.act_window',
+            }
+
+    def _compute_patient_prescription_count(self):
+        for records in self:
+            count = self.env['prescription.order'].search_count([('patient_id', '=', records.id)])
+            records.patient_prescription_count = count
+
+    # def action_open_prescription(self):
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Prescription',
+    #         'res_model': 'prescription.order',
+    #         'domain': [('patient_id', '=', self.id)],
+    #         'context': {'default_patient_id': self.id},
+    #         'view_mode': 'kanban,tree,form',
+    #         'target': 'current',
+    #     }
+
+    def open_doctor_prescriptions(self):
+        for records in self:
+            return {
+                'name': _('Doctor Prescription'),
+                'view_type': 'form',
+                'domain': [('dr', '=', records.id)],
+                'res_model': 'dr.prescription',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'context': {'default_dr': self.id},
+                'type': 'ir.actions.act_window',
+            }
+
+
+
+    # Flags           
     patient_flag_ids = fields.One2many("prescription.flag", inverse_name="patient_id")
     patient_flag_count = fields.Integer(compute="_compute_patient_flag_count")
             
@@ -88,6 +153,11 @@ class PrescriptionPatient(models.Model):
             result["res_id"] = self.patient_flag_ids.id
         return result
 
+
+
+
+
+
     @api.model
     def _get_internal_identifier(self, vals):
         return (
@@ -102,7 +172,6 @@ class PrescriptionPatient(models.Model):
             record.apply_practitioner_logic()
         return records
     
-    
     def apply_practitioner_logic(self):
         """Automatically assign a practitioner based on the parent_id."""
         if self.parent_id:
@@ -114,7 +183,6 @@ class PrescriptionPatient(models.Model):
             # If any practitioners are found, assign the first one to the patient
             if practitioners:
                 self.practitioner_id = practitioners[0]
-
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
@@ -151,16 +219,8 @@ class PrescriptionPatient(models.Model):
             "flags": {"form": {"action_buttons": True}},
         }
         
-    def action_open_prescription(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Prescription',
-            'res_model': 'prescription.prescription',
-            'domain': [('patient_id', '=', self.id)],
-            'context': {'default_patient_id': self.id},
-            'view_mode': 'kanban,tree,form',
-            'target': 'current',
-        }
+
+    
         
     def unlink(self):
         # Trying to delete the records in the current recordset

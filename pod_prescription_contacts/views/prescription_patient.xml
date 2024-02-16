@@ -35,7 +35,14 @@
             <form string="Partners">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_patient_flags" type="object" class="oe_stat_button" icon="fa-flag">
+                        <!-- <button name="action_view_patient_prescriptions" type="object" class="oe_stat_button" icon="fa fa-prescription" invisible="patient_prescription_count == 0">
+                            <field name="patient_prescription_count" widget="statinfo" string="Prescriptions" />
+                            <field name='patient_prescription_ids' invisible="1" />
+                        </button> -->
+                        <button name="action_view_patient_prescriptions" class="oe_stat_button" type="object" icon="fa fa-prescription" invisible="patient_prescription_count == 0">
+                            <field name="patient_prescription_count" string="Prescription" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_patient_flags" type="object" class="oe_stat_button" icon="fa-flag" invisible="patient_flag_count == 0">
                             <field name="patient_flag_count" widget="statinfo" string="Flags" />
                             <field name='patient_flag_ids' invisible="1" />
                         </button>
@@ -73,7 +80,9 @@
                                 <b></b>
                             </span>
                             <div class="o_address_format">
-                                <field name="practitioner_id" class="o_address_street fw-bold" placeholder="Search Contact" required="1"/>
+                                <field name="practitioner_id" class="o_address_street fw-bold" domain="[('is_practitioner', '=', True), ('parent_id', '=', parent_id)]" placeholder="Search Contact" required="1"/>
+                                <!-- <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'prescription']"/> -->
+
                             </div>
                         </group>
                     </group>
@@ -92,7 +101,7 @@
                                 <div name="partner_address_country" class="d-flex justify-content-between">
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
-                                <button name="open_parent" type="object" string="Edit" class="oe_link" invisible="not parent_id or type != 'contact'" />
+                                <!-- <button name="open_parent" type="object" string="Edit" class="oe_link" invisible="not parent_id or type != 'contact'" icon="fa-pencil-square-o"/> -->
                             </div>
                         </group>
                         <group string="Contact">
@@ -113,7 +122,7 @@
                         </group>
                     </group>
 
-             
+
                     <br></br>
 
                     <notebook colspan="4">
