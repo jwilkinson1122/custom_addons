@@ -12,7 +12,8 @@ class ProductTemplate(models.Model):
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
-    
+    available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
+
     prescription_ok = fields.Boolean(default=True, string="Can be Configured")
     
     description_prescription = fields.Text(
