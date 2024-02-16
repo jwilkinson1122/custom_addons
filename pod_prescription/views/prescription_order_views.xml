@@ -328,7 +328,9 @@
                     </div>
                     <group name="prescription_header">
                         <group name="account_details">
-                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
+                            <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..." domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}" invisible="((is_company and not parent_id) or company_name) and company_name != ''"/> -->
+                            <!-- <field name="name" readonly="1"/> -->
+                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('parent_id', '=', active_id), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
                             <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
                         </group>
@@ -583,10 +585,12 @@
                                 <div class="clearfix"/>
                             </group>
                         </page>
+
                         <page string="Values">
                             <group invisible="1">
                                 <field name="laterality" invisible="1"/>
                             </group>
+                            <separator name="forefoot_values" string="Forefoot Values" />
                             <table name="forefoot_values_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
                                     <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">FOREFOOT VALUES</td>
@@ -614,7 +618,7 @@
                             </table>
                             <br/>
                             <br/>
-
+                            <separator name="forefoot_corrections" string="Forefoot Corrections" />
                             <table name="forefoot_corrections_table" border="1" bordercolor="gray" style="width:100%" readonly="state == 'done'">
                                 <tr>
                                     <td style="width: 19%; padding-left:8px; padding-right:8px; text-align:center;; font-weight: bold;">FOREFOOT CORRECTIONS</td>

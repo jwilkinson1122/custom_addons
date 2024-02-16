@@ -18,13 +18,13 @@ class PrescriptionPatient(models.Model):
     partner_id = fields.Many2one("res.partner", required=True, ondelete="restrict")
     is_patient = fields.Boolean()
     practice_id = fields.Many2one(
-        string="Practice",
+        string="Account",
         comodel_name="res.partner",
         domain=[("is_company", "=", True)],
     )
 
     practitioner_id = fields.Many2one(
-        string="Primary Practitioner",
+        string="Practitioner",
         comodel_name="res.partner",
         domain=[("is_practitioner", "=", True)],
     )
@@ -42,36 +42,20 @@ class PrescriptionPatient(models.Model):
     photo = fields.Binary(string="Picture")
     image1 = fields.Binary("Right photo")
     image2 = fields.Binary("Left photo")
-
     left_obj_model = fields.Binary("Left Obj")
     left_obj_file_name = fields.Char(string="Left Obj File Name")
     right_obj_model = fields.Binary("Right Obj")
     right_obj_file_name = fields.Char(string="Right Obj File Name")
-    
-    # patient_prescription_ids = fields.One2many("prescription.prescription", inverse_name="patient_id")
-    # patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
-            
-    # @api.depends("patient_prescription_ids")
-    # def _compute_patient_prescription_count(self):
-    #     for rec in self:
-    #         rec.patient_prescription_count = len(rec.patient_prescription_ids.ids)
-
-
-    # def action_view_patient_prescription(self):
-    #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("prescription_mgmt.action_prescription_prescription")
-    #     result["context"] = {"default_patient_id": self.id}
-    #     result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
-    #     if len(self.patient_prescription_ids) == 1:
-    #         res = self.env.ref("prescription_mgmt.view_prescription_prescription_form", False)  # Ensure the XML ID is correct
-    #         result["views"] = [(res and res.id or False, "form")]
-    #         result["res_id"] = self.patient_prescription_ids.ids[0]   
-    #     return result
+    pt_height = fields.Integer("Height", store="True", copy="True")
+    pt_weight = fields.Float("Weight", store="True", copy="True")
+    pt_age = fields.Integer("Age", store="True", copy="True", compute="_compute_age")
+    shoe_size = fields.Float("Shoe Size", store="True", copy="True")
     shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
         'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+    shoe_width = fields.Selection([("wide", "Wide"), ("xwide", "Extra Wide"), ("narrow", "Narrow")]) 
     notes = fields.Text(string="Notes")
     gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])  
-    birth_date = fields.Date(string="Birth date")  # FHIR Field: birthDate
+    birth_date = fields.Date(string="Birth date")  
     patient_age = fields.Integer(compute="_compute_age")
 
     @api.depends("birth_date")
