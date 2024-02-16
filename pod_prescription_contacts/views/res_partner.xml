@@ -135,6 +135,7 @@
                         <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_practitioner" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
                         <field name="phone" placeholder='Phone' widget="phone" />
                         <field name="mobile" placeholder='Mobile' widget="phone" />
+                        <field name="fax_number" placeholder='Fax' widget="phone" />
                         <field name="user_ids" placeholder='User' invisible="1" />
                         <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
                         <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
@@ -459,10 +460,10 @@
 
 
 
-    <record id="contacts.action_contacts" model="ir.actions.act_window">
+    <!-- <record id="contacts.action_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('id', '!=', 1)]</field>
         <field name="search_view_id" ref="res_partner_search_view"/>
         <field name="context">{'default_is_company': True}</field>
@@ -474,14 +475,14 @@
             Odoo helps you track all activities related to your contacts.
             </p>
         </field>
-    </record>
+    </record> -->
 
 
     <record id="prescription_account_action" model="ir.actions.act_window">
         <field name="name">Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
@@ -505,7 +506,7 @@
         <field name="name">Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('is_location', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
@@ -523,11 +524,50 @@
         </field>
     </record>
 
+
+<!-- 
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="domain">[('id', '!=', 1)]</field>
+        <field name="search_view_id" ref="res_partner_search_view"/>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+            </p>
+            <p>
+            Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record> -->
+
+    <!-- <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="domain">[('is_practitioner', '=', True)]</field>
+        <field name="context">{
+            'default_company_type':'person',
+            'default_is_company':False,
+            'default_is_practitioner': True,
+            'default_is_partner': True,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new account contact
+            </p>
+            <p>Contacts include all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+        </field>
+    </record> -->
+
     <record id="prescription_practitioner_action" model="ir.actions.act_window">
         <field name="name">Practitioners</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('is_practitioner', '=', True)]</field>
         <field name="context">{
             'default_company_type':'person',

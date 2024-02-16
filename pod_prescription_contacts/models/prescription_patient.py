@@ -55,7 +55,7 @@ class PrescriptionPatient(models.Model):
     shoe_width = fields.Selection([("wide", "Wide"), ("xwide", "Extra Wide"), ("narrow", "Narrow")]) 
     notes = fields.Text(string="Notes")
     gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])  
-    birth_date = fields.Date(string="Birth date")  
+    birth_date = fields.Date(string="DOB")  
     patient_age = fields.Integer(compute="_compute_age")
 
     @api.depends("birth_date")
