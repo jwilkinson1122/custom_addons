@@ -28,27 +28,27 @@ class TestPrescriptionStockReports(TestReportsCommon):
             'reserved_quantity': 0,
         }
         self.env['stock.quant'].create(quant_vals)
-        # Create a first SO for the next week.
-        so_form = Form(self.env['prescription.order'])
-        so_form.partner_id = self.partner
-        # so_form.validity_date = today + timedelta(days=7)
-        with so_form.order_line.new() as so_line:
-            so_line.product_id = self.product
-            so_line.product_uom_qty = 5
-        so_1 = so_form.save()
-        so_1.action_confirm()
-        so_1.picking_ids.scheduled_date = today + timedelta(days=7)
+        # Create a first RX for the next week.
+        rx_form = Form(self.env['prescription.order'])
+        rx_form.partner_id = self.partner
+        # rx_form.validity_date = today + timedelta(days=7)
+        with rx_form.order_line.new() as rx_line:
+            rx_line.product_id = self.product
+            rx_line.product_uom_qty = 5
+        rx_1 = rx_form.save()
+        rx_1.action_confirm()
+        rx_1.picking_ids.scheduled_date = today + timedelta(days=7)
 
-        # Create a second SO for tomorrow.
-        so_form = Form(self.env['prescription.order'])
-        so_form.partner_id = self.partner
-        # so_form.validity_date = today + timedelta(days=1)
-        with so_form.order_line.new() as so_line:
-            so_line.product_id = self.product
-            so_line.product_uom_qty = 5
-        so_2 = so_form.save()
-        so_2.action_confirm()
-        so_2.picking_ids.scheduled_date = today + timedelta(days=1)
+        # Create a second RX for tomorrow.
+        rx_form = Form(self.env['prescription.order'])
+        rx_form.partner_id = self.partner
+        # rx_form.validity_date = today + timedelta(days=1)
+        with rx_form.order_line.new() as rx_line:
+            rx_line.product_id = self.product
+            rx_line.product_uom_qty = 5
+        rx_2 = rx_form.save()
+        rx_2.action_confirm()
+        rx_2.picking_ids.scheduled_date = today + timedelta(days=1)
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 2)
@@ -56,34 +56,34 @@ class TestPrescriptionStockReports(TestReportsCommon):
         line_2 = lines[1]
         self.assertEqual(line_1['quantity'], 5)
         self.assertTrue(line_1['replenishment_filled'])
-        self.assertEqual(line_1['document_out']['id'], so_2.id)
+        self.assertEqual(line_1['document_out']['id'], rx_2.id)
         self.assertEqual(line_2['quantity'], 5)
         self.assertEqual(line_2['replenishment_filled'], False)
-        self.assertEqual(line_2['document_out']['id'], so_1.id)
+        self.assertEqual(line_2['document_out']['id'], rx_1.id)
 
-    def test_report_forecast_2_report_line_corresponding_to_so_line_highlighted(self):
-        """ When accessing the report from a SO line, checks if the correct SO line is highlighted in the report
+    def test_report_forecast_2_report_line_corresponding_to_rx_line_highlighted(self):
+        """ When accessing the report from a RX line, checks if the correct RX line is highlighted in the report
         """
-        # We create 2 identical SO
-        so_form = Form(self.env['prescription.order'])
-        so_form.partner_id = self.partner
-        with so_form.order_line.new() as line:
+        # We create 2 identical RX
+        rx_form = Form(self.env['prescription.order'])
+        rx_form.partner_id = self.partner
+        with rx_form.order_line.new() as line:
             line.product_id = self.product
             line.product_uom_qty = 5
-        so1 = so_form.save()
-        so1.action_confirm()
-        so2 = so1.copy()
-        so2.action_confirm()
+        rx1 = rx_form.save()
+        rx1.action_confirm()
+        rx2 = rx1.copy()
+        rx2.action_confirm()
 
-        # Check for both SO if the highlight (is_matched) corresponds to the correct SO
-        for so in [so1, so2]:
-            context = {"move_to_match_ids": so.order_line.move_ids.ids}
+        # Check for both RX if the highlight (is_matched) corresponds to the correct RX
+        for rx in [rx1, rx2]:
+            context = {"move_to_match_ids": rx.order_line.move_ids.ids}
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
-                if line['document_out']['id'] == so.id:
-                    self.assertTrue(line['is_matched'], "The corresponding SO line should be matched in the forecast report.")
+                if line['document_out']['id'] == rx.id:
+                    self.assertTrue(line['is_matched'], "The corresponding RX line should be matched in the forecast report.")
                 else:
-                    self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the SO shoud not be matched.")
+                    self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the RX shoud not be matched.")
 
 
 @tagged('post_install', '-at_install')
@@ -133,19 +133,19 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 5}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.write({'quantity': 5, 'picked': True})
         picking.button_validate()
 
-        invoice = so._create_invoices()
+        invoice = rx._create_invoices()
         with Form(invoice) as form:
             with form.invoice_line_ids.edit(0) as line:
                 line.quantity = 2
@@ -169,18 +169,18 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
 
         self.product_by_lot.invoice_policy = "order"
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 4}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        invoice = so._create_invoices()
+        invoice = rx._create_invoices()
         invoice.action_post()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.write({'quantity': 4, 'picked': True})
         picking.button_validate()
 
@@ -200,19 +200,19 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.move_line_ids[0].quantity = 1
         picking.button_validate()
 
-        invoice01 = so._create_invoices()
+        invoice01 = rx._create_invoices()
         with Form(invoice01) as form:
             with form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1
@@ -228,7 +228,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
         self.assertNotIn('USN0002', text)
 
-        invoice02 = so._create_invoices()
+        invoice02 = rx._create_invoices()
         invoice02.action_post()
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
         text = html2plaintext(html)
@@ -257,7 +257,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         """
         Mix of returns and partial invoice
         - Product P tracked by lot
-        - SO with 10 x P
+        - RX with 10 x P
         - Deliver 10 x Lot01
         - Return 10 x Lot01
         - Deliver 03 x Lot02
@@ -278,16 +278,16 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 8, lot_id=lot02)
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 2, lot_id=lot03)
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 10}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
         # Deliver 10 x LOT0001
-        delivery01 = so.picking_ids
+        delivery01 = rx.picking_ids
         delivery01.move_ids.write({'quantity': 10, 'picked': True})
         delivery01.button_validate()
         self.assertEqual(delivery01.move_line_ids.lot_id.name, 'LOT0001')
@@ -325,7 +325,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         wizard.process()
 
         # Invoice 2 x P
-        invoice01 = so._create_invoices()
+        invoice01 = rx._create_invoices()
         with Form(invoice01) as form:
             with form.invoice_line_ids.edit(0) as line:
                 line.quantity = 2
@@ -352,7 +352,7 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         delivery03.button_validate()
 
         # Invoice 8 x P
-        invoice02 = so._create_invoices()
+        invoice02 = rx._create_invoices()
         invoice02.action_post()
 
         html = self.env['ir.actions.report']._render_qweb_html(
@@ -373,21 +373,21 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.move_line_ids[0].quantity = 1
         picking.move_ids.move_line_ids[1].quantity = 1
         picking.move_ids.picked = True
         picking.button_validate()
 
-        invoice01 = so._create_invoices()
+        invoice01 = rx._create_invoices()
         invoice01.action_post()
 
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
@@ -437,20 +437,20 @@ class TestPrescriptionStockInvoices(TestPrescriptionCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),
             ],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.move_line_ids[0].quantity = 1
         picking.move_ids.picked = True
         picking.button_validate()
 
-        invoice01 = so._create_invoices()
+        invoice01 = rx._create_invoices()
         invoice01.action_post()
 
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]

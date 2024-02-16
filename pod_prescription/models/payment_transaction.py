@@ -16,10 +16,10 @@ class PaymentTransaction(models.Model):
 
     def _compute_prescription_order_reference(self, order):
         self.ensure_one()
-        if self.provider_id.so_reference_type == 'so_name':
+        if self.provider_id.rx_reference_type == 'rx_name':
             order_reference = order.name
         else:
-            # self.provider_id.so_reference_type == 'partner'
+            # self.provider_id.rx_reference_type == 'partner'
             identification_number = order.partner_id.id
             order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
 
@@ -44,14 +44,14 @@ class PaymentTransaction(models.Model):
         txs_to_process = super()._set_pending(state_message=state_message, **kwargs)
 
         for tx in txs_to_process:  # Consider only transactions that are indeed set pending.
-            prescription_orders = tx.prescription_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+            prescription_orders = tx.prescription_order_ids.filtered(lambda rx: rx.state in ['draft', 'sent'])
             prescription_orders.filtered(
-                lambda so: so.state == 'draft'
+                lambda rx: rx.state == 'draft'
             ).with_context(tracking_disable=True).action_quotation_sent()
 
             if tx.provider_id.code == 'custom':
-                for so in tx.prescription_order_ids:
-                    so.reference = tx._compute_prescription_order_reference(so)
+                for rx in tx.prescription_order_ids:
+                    rx.reference = tx._compute_prescription_order_reference(rx)
             # send payment status mail.
             prescription_orders._send_payment_succeeded_for_order_mail()
 
@@ -72,7 +72,7 @@ class PaymentTransaction(models.Model):
         for tx in self:
             # We only support the flow where exactly one quotation is linked to a transaction.
             if len(tx.prescription_order_ids) == 1:
-                quotation = tx.prescription_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
+                quotation = tx.prescription_order_ids.filtered(lambda rx: rx.state in ('draft', 'sent'))
                 if quotation and quotation._is_confirmation_amount_reached():
                     quotation.with_context(send_email=True).action_confirm()
                     confirmed_orders |= quotation
@@ -161,10 +161,10 @@ class PaymentTransaction(models.Model):
         for tx in self.filtered(lambda tx: tx.prescription_order_ids):
             tx = tx.with_company(tx.company_id)
 
-            confirmed_orders = tx.prescription_order_ids.filtered(lambda so: so.state == 'prescription')
+            confirmed_orders = tx.prescription_order_ids.filtered(lambda rx: rx.state == 'prescription')
             if confirmed_orders:
                 # Filter orders between those fully paid and those partially paid.
-                fully_paid_orders = confirmed_orders.filtered(lambda so: so._is_paid())
+                fully_paid_orders = confirmed_orders.filtered(lambda rx: rx._is_paid())
 
                 # Create a down payment invoice for partially paid orders
                 downpayment_invoices = (

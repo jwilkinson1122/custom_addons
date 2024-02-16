@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
             'default_res_ids': self.ids,
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
+            'mark_rx_as_sent': True,
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,

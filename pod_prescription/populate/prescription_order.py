@@ -56,14 +56,14 @@ class PrescriptionOrderLine(models.Model):
     _populate_dependencies = ["prescription.order", "product.product"]
 
     def _populate(self, size):
-        so_line = super()._populate(size)
-        self.confirm_prescription_order(0.60, so_line)
-        return so_line
+        rx_line = super()._populate(size)
+        self.confirm_prescription_order(0.60, rx_line)
+        return rx_line
 
-    def confirm_prescription_order(self, sample_ratio, so_line):
-        # Confirm sample_ratio * 100 % of so
+    def confirm_prescription_order(self, sample_ratio, rx_line):
+        # Confirm sample_ratio * 100 % of rx
         random = populate.Random('confirm_prescription_order')
-        order_ids = self.filter_confirmable_prescription_orders(so_line.order_id).ids
+        order_ids = self.filter_confirmable_prescription_orders(rx_line.order_id).ids
         orders_to_confirm = self.env['prescription.order'].browse(random.sample(order_ids, int(len(order_ids) * sample_ratio)))
         _logger.info("Confirm %d prescription orders", len(orders_to_confirm))
         orders_to_confirm.action_confirm()

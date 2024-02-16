@@ -25,7 +25,7 @@ class PrescriptionOrder(models.Model):
     #=== COMPUTE METHODS ===#
 
     # Do not make it depend on `company_id` field
-    # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
+    # It is triggered manually by the _onchange_company_id below iff the RX has not been saved.
     def _compute_prescription_order_template_id(self):
         for order in self:
             company_template = order.company_id.prescription_order_template_id

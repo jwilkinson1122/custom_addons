@@ -115,8 +115,8 @@ class TestPrescriptionOrder(PrescriptionCommon):
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Prescription: author should receive mail due to presence in composer recipients')
 
     def test_invoice_state_when_ordered_quantity_is_negative(self):
-        """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
-        this test ensures that the  invoicing status of the SO line is 'invoiced' (and not 'upselling')."""
+        """When you invoice a RX line with a product that is invoiced on ordered quantities and has negative ordered quantity,
+        this test ensures that the  invoicing status of the RX line is 'invoiced' (and not 'upselling')."""
         prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner.id,
             'order_line': [(0, 0, {
@@ -126,43 +126,43 @@ class TestPrescriptionOrder(PrescriptionCommon):
         })
         prescription_order.action_confirm()
         prescription_order._create_invoices(final=True)
-        self.assertTrue(prescription_order.invoice_status == 'invoiced', 'Prescription: The invoicing status of the SO should be "invoiced"')
+        self.assertTrue(prescription_order.invoice_status == 'invoiced', 'Prescription: The invoicing status of the RX should be "invoiced"')
 
     def test_prescription_sequence(self):
         self.env['ir.sequence'].search([
             ('code', '=', 'prescription.order'),
         ]).write({
-            'use_date_range': True, 'prefix': 'SO/%(range_year)s/',
+            'use_date_range': True, 'prefix': 'RX/%(range_year)s/',
         })
         prescription_order = self.prescription_order.copy({'date_order': '2019-01-01'})
-        self.assertTrue(prescription_order.name.startswith('SO/2019/'))
+        self.assertTrue(prescription_order.name.startswith('RX/2019/'))
         prescription_order = self.prescription_order.copy({'date_order': '2020-01-01'})
-        self.assertTrue(prescription_order.name.startswith('SO/2020/'))
+        self.assertTrue(prescription_order.name.startswith('RX/2020/'))
         # In EU/BXL tz, this is actually already 01/01/2020
         prescription_order = self.prescription_order.with_context(tz='Europe/Brussels').copy({'date_order': '2019-12-31 23:30:00'})
-        self.assertTrue(prescription_order.name.startswith('SO/2020/'))
+        self.assertTrue(prescription_order.name.startswith('RX/2020/'))
 
     def test_unlink_cancel(self):
         """ Test deleting and cancelling prescription orders depending on their state and on the user's rights """
-        # SO in state 'draft' can be deleted
-        so_copy = self.prescription_order.copy()
+        # RX in state 'draft' can be deleted
+        rx_copy = self.prescription_order.copy()
         with self.assertRaises(AccessError):
-            so_copy.with_user(self.prescription_user).unlink()
-        self.assertTrue(so_copy.unlink(), 'Prescription: deleting a quotation should be possible')
+            rx_copy.with_user(self.prescription_user).unlink()
+        self.assertTrue(rx_copy.unlink(), 'Prescription: deleting a quotation should be possible')
 
-        # SO in state 'cancel' can be deleted
-        so_copy = self.prescription_order.copy()
-        so_copy.action_confirm()
-        self.assertTrue(so_copy.state == 'prescription', 'Prescription: SO should be in state "prescription"')
-        so_copy._action_cancel()
-        self.assertTrue(so_copy.state == 'cancel', 'Prescription: SO should be in state "cancel"')
+        # RX in state 'cancel' can be deleted
+        rx_copy = self.prescription_order.copy()
+        rx_copy.action_confirm()
+        self.assertTrue(rx_copy.state == 'prescription', 'Prescription: RX should be in state "prescription"')
+        rx_copy._action_cancel()
+        self.assertTrue(rx_copy.state == 'cancel', 'Prescription: RX should be in state "cancel"')
         with self.assertRaises(AccessError):
-            so_copy.with_user(self.prescription_user).unlink()
-        self.assertTrue(so_copy.unlink(), 'Prescription: deleting a cancelled SO should be possible')
+            rx_copy.with_user(self.prescription_user).unlink()
+        self.assertTrue(rx_copy.unlink(), 'Prescription: deleting a cancelled RX should be possible')
 
-        # SO in state 'prescription' cannot be deleted
+        # RX in state 'prescription' cannot be deleted
         self.prescription_order.action_confirm()
-        self.assertTrue(self.prescription_order.state == 'prescription', 'Prescription: SO should be in state "prescription"')
+        self.assertTrue(self.prescription_order.state == 'prescription', 'Prescription: RX should be in state "prescription"')
         with self.assertRaises(UserError):
             self.prescription_order.unlink()
 
@@ -173,7 +173,7 @@ class TestPrescriptionOrder(PrescriptionCommon):
             self.prescription_order.unlink()
 
     def test_compute_packaging_00(self):
-        """Create a SO and use packaging. Check we suggested suitable packaging
+        """Create a RX and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
         """
@@ -189,28 +189,28 @@ class TestPrescriptionOrder(PrescriptionCommon):
             'qty': 12.0,
         }])
 
-        so = self.empty_order
-        so_form = Form(so)
-        with so_form.order_line.new() as line:
+        rx = self.empty_order
+        rx_form = Form(rx)
+        with rx_form.order_line.new() as line:
             line.product_id = self.product
             line.product_uom_qty = 1.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_packaging_id, packaging_single)
-        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
-        with so_form.order_line.edit(0) as line:
+        rx_form.save()
+        self.assertEqual(rx.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(rx.order_line.product_packaging_qty, 1.0)
+        with rx_form.order_line.edit(0) as line:
             line.product_packaging_qty = 2.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 2.0)
+        rx_form.save()
+        self.assertEqual(rx.order_line.product_uom_qty, 2.0)
 
-        with so_form.order_line.edit(0) as line:
+        with rx_form.order_line.edit(0) as line:
             line.product_uom_qty = 24.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_packaging_id, packaging_dozen)
-        self.assertEqual(so.order_line.product_packaging_qty, 2.0)
-        with so_form.order_line.edit(0) as line:
+        rx_form.save()
+        self.assertEqual(rx.order_line.product_packaging_id, packaging_dozen)
+        self.assertEqual(rx.order_line.product_packaging_qty, 2.0)
+        with rx_form.order_line.edit(0) as line:
             line.product_packaging_qty = 1.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 12)
+        rx_form.save()
+        self.assertEqual(rx.order_line.product_uom_qty, 12)
 
         packaging_pack_of_10 = self.env['product.packaging'].create({
             'name': "PackOf10",
@@ -223,39 +223,39 @@ class TestPrescriptionOrder(PrescriptionCommon):
             'qty': 20.0,
         })
 
-        so2 = self.env['prescription.order'].create({
+        rx2 = self.env['prescription.order'].create({
             'partner_id': self.partner.id,
         })
-        so2_form = Form(so2)
-        with so2_form.order_line.new() as line:
+        rx2_form = Form(rx2)
+        with rx2_form.order_line.new() as line:
             line.product_id = self.product
             line.product_uom_qty = 10
-        so2_form.save()
-        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
-        self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
+        rx2_form.save()
+        self.assertEqual(rx2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+        self.assertEqual(rx2.order_line.product_packaging_qty, 1.0)
 
-        with so2_form.order_line.edit(0) as line:
+        with rx2_form.order_line.edit(0) as line:
             line.product_packaging_qty = 2
-        so2_form.save()
-        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        rx2_form.save()
+        self.assertEqual(rx2.order_line.product_uom_qty, 20)
         # we should have 2 pack of 10, as we've set the package_qty manually,
         # we shouldn't recompute the packaging_id, since the package_qty is protected,
         # therefor cannot be recomputed during the same transaction, which could lead
         # to an incorrect line like (qty=20,pack_qty=2,pack_id=PackOf20)
-        self.assertEqual(so2.order_line.product_packaging_qty, 2)
-        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+        self.assertEqual(rx2.order_line.product_packaging_qty, 2)
+        self.assertEqual(rx2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
 
-        with so2_form.order_line.edit(0) as line:
+        with rx2_form.order_line.edit(0) as line:
             line.product_packaging_id = packaging_pack_of_20
-        so2_form.save()
-        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        rx2_form.save()
+        self.assertEqual(rx2.order_line.product_uom_qty, 20)
         # we should have 1 pack of 20, as we've set the package type manually
-        self.assertEqual(so2.order_line.product_packaging_qty, 1)
-        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+        self.assertEqual(rx2.order_line.product_packaging_qty, 1)
+        self.assertEqual(rx2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
 
     def test_compute_packaging_01(self):
-        """Create a SO and use packaging in a multicompany environment.
-        Ensure any suggested packaging matches the SO's.
+        """Create a RX and use packaging in a multicompany environment.
+        Ensure any suggested packaging matches the RX's.
         """
         company2 = self.env['res.company'].create([{'name': 'Company 2'}])
         generic_single_pack = self.env['product.packaging'].create({
@@ -271,25 +271,25 @@ class TestPrescriptionOrder(PrescriptionCommon):
             'company_id': company2.id,
         })
 
-        so1 = self.empty_order
-        so1_form = Form(so1)
-        with so1_form.order_line.new() as line:
+        rx1 = self.empty_order
+        rx1_form = Form(rx1)
+        with rx1_form.order_line.new() as line:
             line.product_id = self.product
             line.product_uom_qty = 10.0
-        so1_form.save()
-        self.assertEqual(so1.order_line.product_packaging_id, generic_single_pack)
-        self.assertEqual(so1.order_line.product_packaging_qty, 10.0)
+        rx1_form.save()
+        self.assertEqual(rx1.order_line.product_packaging_id, generic_single_pack)
+        self.assertEqual(rx1.order_line.product_packaging_qty, 10.0)
 
-        so2 = self.env['prescription.order'].with_company(company2).create({
+        rx2 = self.env['prescription.order'].with_company(company2).create({
             'partner_id': self.partner.id,
         })
-        so2_form = Form(so2)
-        with so2_form.order_line.new() as line:
+        rx2_form = Form(rx2)
+        with rx2_form.order_line.new() as line:
             line.product_id = self.product
             line.product_uom_qty = 10.0
-        so2_form.save()
-        self.assertEqual(so2.order_line.product_packaging_id, company2_pack_of_10)
-        self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
+        rx2_form.save()
+        self.assertEqual(rx2.order_line.product_packaging_id, company2_pack_of_10)
+        self.assertEqual(rx2.order_line.product_packaging_qty, 1.0)
 
     def _create_prescription_order(self):
         """Create dummy prescription order (without lines)"""
@@ -327,7 +327,7 @@ class TestPrescriptionOrder(PrescriptionCommon):
             prescription_order.validity_date,
             "No validity date must be specified if the company validity duration is 0")
 
-    def test_so_names(self):
+    def test_rx_names(self):
         """Test custom context key for display_name & name_search.
 
         Note: this key is used in prescription_expense & prescription_timesheet modules.
@@ -359,13 +359,13 @@ class TestPrescriptionOrder(PrescriptionCommon):
         self.prescription_order.action_unlock()
         self.assertEqual(self.prescription_order.state, 'prescription')
 
-    def test_sol_name_search(self):
+    def test_rxl_name_search(self):
         # Shouldn't raise
         self.env['prescription.order']._search([('order_line', 'ilike', 'product')])
 
         name_search_data = self.env['prescription.order.line'].name_search(name=self.prescription_order.name)
-        sol_ids_found = dict(name_search_data).keys()
-        self.assertEqual(list(sol_ids_found), self.prescription_order.order_line.ids)
+        rxl_ids_found = dict(name_search_data).keys()
+        self.assertEqual(list(rxl_ids_found), self.prescription_order.order_line.ids)
 
     def test_zero_quantity(self):
         """
@@ -540,44 +540,44 @@ class TestPrescriptionTeam(PrescriptionCommon):
         prescription_order = self.env['prescription.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
         })
-        sol = self.env['prescription.order.line'].create({
+        rxl = self.env['prescription.order.line'].create({
             'name': super_product.name,
             'product_id': super_product.id,
             'order_id': prescription_order.id,
         })
 
-        self.assertEqual(sol.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should be set to Super Account")
-        sol.write({'product_id': great_product.id})
-        self.assertEqual(sol.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
+        self.assertEqual(rxl.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should be set to Super Account")
+        rxl.write({'product_id': great_product.id})
+        self.assertEqual(rxl.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
 
-        so_no_analytic_account = self.env['prescription.order'].create({
+        rx_no_analytic_account = self.env['prescription.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
         })
-        sol_no_analytic_account = self.env['prescription.order.line'].create({
+        rxl_no_analytic_account = self.env['prescription.order.line'].create({
             'name': super_product.name,
             'product_id': super_product.id,
-            'order_id': so_no_analytic_account.id,
+            'order_id': rx_no_analytic_account.id,
             'analytic_distribution': False,
         })
-        so_no_analytic_account.action_confirm()
-        self.assertFalse(sol_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")
+        rx_no_analytic_account.action_confirm()
+        self.assertFalse(rxl_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")
 
         prescription_order.action_confirm()
-        sol_on_confirmed_order = self.env['prescription.order.line'].create({
+        rxl_on_confirmed_order = self.env['prescription.order.line'].create({
             'name': super_product.name,
             'product_id': super_product.id,
             'order_id': prescription_order.id,
         })
 
         self.assertEqual(
-            sol_on_confirmed_order.analytic_distribution,
+            rxl_on_confirmed_order.analytic_distribution,
             {str(analytic_account_super.id): 100},
             "The analytic distribution should be set to Super Account, even for confirmed orders"
         )
 
 
     def test_cannot_assign_tax_of_mismatch_company(self):
-        """ Test that sol cannot have assigned tax belonging to a different company from that of the prescription order. """
+        """ Test that rxl cannot have assigned tax belonging to a different company from that of the prescription order. """
         company_a = self.env['res.company'].create({'name': 'A'})
         company_b = self.env['res.company'].create({'name': 'B'})
         tax_group_a = self.env['account.tax.group'].create({'name': 'A', 'company_id': company_a.id})
@@ -606,7 +606,7 @@ class TestPrescriptionTeam(PrescriptionCommon):
         product = self.env['product.product'].create({'name': 'Product'})
 
         # In sudo to simulate an user that have access to both companies.
-        sol = self.env['prescription.order.line'].sudo().create({
+        rxl = self.env['prescription.order.line'].sudo().create({
             'name': product.name,
             'product_id': product.id,
             'order_id': prescription_order.id,
@@ -614,7 +614,7 @@ class TestPrescriptionTeam(PrescriptionCommon):
         })
 
         with self.assertRaises(UserError):
-            sol.tax_id = tax_b
+            rxl.tax_id = tax_b
 
     def test_downpayment_amount_constraints(self):
         """Down payment amounts should be in the interval ]0, 1]."""

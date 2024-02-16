@@ -18,7 +18,7 @@ class TestProductConfiguratorData(HttpCase, ProductVariantsCommon, PrescriptionC
                     'product_template_id': product_template.id,
                     'quantity': 1.0,
                     'currency_id': 1,
-                    'so_date': str(self.env.cr.now()),
+                    'rx_date': str(self.env.cr.now()),
                     'product_uom_id': None,
                     'company_id': None,
                     'pricelist_id': None,

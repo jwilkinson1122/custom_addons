@@ -97,7 +97,9 @@
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="parent_id" placeholder="Parent Company" invisible="not is_location and not is_practitioner" class="fw-bold" />
+                        <!-- <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('parent_id', '=', active_id), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/> -->
+
+                        <field name="parent_id" placeholder="Parent Account" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location and not is_practitioner" class="fw-bold" />
                         <field name="active" invisible="1"/>
                     </div>
                 </div>

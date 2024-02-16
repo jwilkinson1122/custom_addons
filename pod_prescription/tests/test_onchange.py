@@ -8,7 +8,7 @@ from odoo.tests import tagged, TransactionCase
 class TestPrescriptionOnchanges(TransactionCase):
 
     def test_prescription_warnings(self):
-        """Test warnings & SO/SOL updates when partner/products with prescription warnings are used."""
+        """Test warnings & RX/RXL updates when partner/products with prescription warnings are used."""
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test', 'prescription_warn': 'warning', 'prescription_warn_msg': 'Highly infectious disease'})
         partner_with_block_warning = self.env['res.partner'].create({

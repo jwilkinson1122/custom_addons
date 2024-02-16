@@ -175,7 +175,7 @@
         <field name="help">This report performs analysis on your quotations. Analysis check your prescription revenues and sort it by different group criteria (personnel, partner, product, etc.) Use this report to perform analysis on prescription not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
-    <record id="action_order_report_so_prescription_team" model="ir.actions.act_window">
+    <record id="action_order_report_rx_prescription_team" model="ir.actions.act_window">
         <field name="name">Prescription Analysis</field>
         <field name="res_model">prescription.report</field>
         <field name="view_mode">graph</field>

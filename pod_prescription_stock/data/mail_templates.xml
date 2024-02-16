@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="exception_on_so">
+        <template id="exception_on_rx">
             <div>
                 Exception(s) occurred on the prescription order(s):
                 <t t-foreach="prescription_order_ids" t-as="prescription_order">

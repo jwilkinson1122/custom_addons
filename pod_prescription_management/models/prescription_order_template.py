@@ -53,7 +53,7 @@ class PrescriptionOrderTemplate(models.Model):
     journal_id = fields.Many2one(
         'account.journal', string="Invoicing Journal",
         domain=[('type', '=', 'prescription')], company_dependent=True, check_company=True,
-        help="If set, SO with this template will invoice in this journal; "
+        help="If set, RX with this template will invoice in this journal; "
              "otherwise the prescription journal with the lowest sequence is used.")
 
     #=== COMPUTE METHODS ===#

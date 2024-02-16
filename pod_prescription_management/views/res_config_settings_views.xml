@@ -11,8 +11,8 @@
                     <field name="group_prescription_order_template"/>
                     <div class="content-group" invisible="not group_prescription_order_template">
                         <div class="mt16">
-                            <label for="company_so_template_id" class="o_light_label mr8"/>
-                            <field name="company_so_template_id" class="oe_inline"/>
+                            <label for="company_rx_template_id" class="o_light_label mr8"/>
+                            <field name="company_rx_template_id" class="oe_inline"/>
                             <span class="fa fa-lg fa-building-o p-2"
                                title="Values set here are company-specific."
                                groups="base.group_multi_company"/>

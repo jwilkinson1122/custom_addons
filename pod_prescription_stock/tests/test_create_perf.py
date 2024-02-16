@@ -24,7 +24,7 @@ def prepare(func, self):
     func(self)
 
 
-@tagged('so_batch_perf')
+@tagged('rx_batch_perf')
 class TestPERF(common.TransactionCase):
 
     @classmethod
@@ -60,8 +60,8 @@ class TestPERF(common.TransactionCase):
     @warmup
     @prepare
     def test_empty_prescription_orders_batch_creation_perf(self):
-        # + 1 SO insert
-        # + 1 SO sequence fetch
+        # + 1 RX insert
+        # + 1 RX sequence fetch
         # + 1 warehouse fetch
         # + 1 query to get analytic default account
         # + 1 followers queries ?
@@ -75,8 +75,8 @@ class TestPERF(common.TransactionCase):
     @warmup
     @prepare
     def test_dummy_prescription_orders_batch_creation_perf(self):
-        """ Dummy SOlines (notes/sections) should not add any custom queries other than their insert"""
-        # + 2 SOL (batched) insert
+        """ Dummy RXlines (notes/sections) should not add any custom queries other than their insert"""
+        # + 2 RXL (batched) insert
         with self.assertQueryCount(admin=40):
             self.env['prescription.order'].create([{
                 'partner_id': self.partners[0].id,
@@ -166,7 +166,7 @@ class TestPERF(common.TransactionCase):
 
     @users('admin')
     @warmup
-    def __test_randomized_solines_qties(self):
+    def __test_randomized_rxlines_qties(self):
         """Make sure the price and discounts computation are complexified
         and do not gain from any prefetch/batch gains during the price computation
         """

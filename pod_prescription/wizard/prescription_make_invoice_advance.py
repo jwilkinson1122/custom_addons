@@ -100,7 +100,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
             )
 
     # next computed fields are only used for down payments invoices and therefore should only
-    # have a value when 1 unique SO is invoiced through the wizard
+    # have a value when 1 unique RX is invoiced through the wizard
     @api.depends('prescription_order_ids')
     def _compute_currency_id(self):
         self.currency_id = False
@@ -284,7 +284,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
     def _prepare_down_payment_section_values(self, order):
         context = {'lang': order.partner_id.lang}
 
-        so_values = {
+        rx_values = {
             'name': _('Down Payments'),
             'product_uom_qty': 0.0,
             'order_id': order.id,
@@ -294,7 +294,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
         }
 
         del context
-        return so_values
+        return rx_values
 
     def _prepare_down_payment_lines_values(self, order):
         """ Create one down payment line per tax or unique taxes combination.
@@ -367,7 +367,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()
         context = {'lang': order.partner_id.lang}
-        so_values = {
+        rx_values = {
             'name': _(
                 'Down Payment: %(date)s (Draft)', date=format_date(self.env, fields.Date.today())
             ),
@@ -379,9 +379,9 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }
         del context
-        return so_values
+        return rx_values
 
-    def _prepare_invoice_values(self, order, so_lines):
+    def _prepare_invoice_values(self, order, rx_lines):
         self.ensure_one()
         return {
             **order._prepare_invoice(),
@@ -390,7 +390,7 @@ class PrescriptionAdvancePaymentInv(models.TransientModel):
                     name=self._get_down_payment_description(order),
                     quantity=1.0,
                 )
-            ) for line in so_lines],
+            ) for line in rx_lines],
         }
 
     def _get_down_payment_description(self, order):

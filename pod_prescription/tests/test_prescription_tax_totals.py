@@ -10,7 +10,7 @@ class PrescriptionTestTaxTotals(TestTaxTotals):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.so_product = cls.env['product.product'].create({
+        cls.rx_product = cls.env['product.product'].create({
             'name': 'Odoo course',
             'type': 'service',
         })
@@ -22,7 +22,7 @@ class PrescriptionTestTaxTotals(TestTaxTotals):
         lines_vals = [
             (0, 0, {
                 'name': 'test',
-                'product_id': self.so_product.id,
+                'product_id': self.rx_product.id,
                 'price_unit': amount,
                 'product_uom_qty': 1,
                 'tax_id': [(6, 0, taxes.ids)],

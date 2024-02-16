@@ -41,7 +41,7 @@ class SaleOrder(models.Model):
 
     prescription_so_id = fields.Many2one('prescription.order', string="Prescription", readonly=False) 
 
-    # prescription_so_lines = fields.One2many('prescription.order.line', 'order_id', readonly=False)
+    # prescription_rx_lines = fields.One2many('prescription.order.line', 'order_id', readonly=False)
 
 
 class SaleOrderLine(models.Model):

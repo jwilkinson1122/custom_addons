@@ -38,7 +38,7 @@ export class PrescriptionOrderLineProductField extends Many2OneField {
 
     get isProductClickable() {
         // product form should be accessible if the widget field is readonly
-        // or if the line cannot be edited (e.g. locked SO)
+        // or if the line cannot be edited (e.g. locked RX)
         return (
             this.props.readonlyField ||
             (this.props.record.model.root.activeFields.order_line &&
@@ -74,7 +74,7 @@ export class PrescriptionOrderLineProductField extends Many2OneField {
     }
 
     onClick(ev) {
-        // Override to get internal link to products in SOL that cannot be edited
+        // Override to get internal link to products in RXL that cannot be edited
         if (this.props.readonly) {
             ev.stopPropagation();
             this.openAction();

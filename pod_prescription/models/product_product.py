@@ -125,7 +125,7 @@ class ProductAttributeCustomValue(models.Model):
     )
 
     _sql_constraints = [
-        ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, prescription_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Prescription Order Line.")
+        ('rxl_custom_value_unique', 'unique(custom_product_template_attribute_value_id, prescription_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Prescription Order Line.")
     ]
 
 class ProductPackaging(models.Model):

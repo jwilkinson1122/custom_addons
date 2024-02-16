@@ -10,13 +10,13 @@ class CustomerPortal(portal.CustomerPortal):
 
     @route(['/my/orders/<int:order_id>/update_line_dict'], type='json', auth="public", website=True)
     def portal_quote_option_update(self, order_id, line_id, access_token=None, remove=False, unlink=False, input_quantity=False, **kwargs):
-        """ Update the quantity or Remove an optional SOline from a SO.
+        """ Update the quantity or Remove an optional RXline from a RX.
 
         :param int order_id: `prescription.order` id
         :param int line_id: `prescription.order.line` id
         :param str access_token: portal access_token of the specified order
         :param bool remove: if true, 1 unit will be removed from the line
-        :param bool unlink: if true, the option will be removed from the SO
+        :param bool unlink: if true, the option will be removed from the RX
         :param float input_quantity: if specified, will be set as new line qty
         :param dict kwargs: unused parameters
         """

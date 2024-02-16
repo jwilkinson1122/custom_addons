@@ -23,7 +23,7 @@ class AccountMove(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    prescription_order_count = fields.Integer(compute="_compute_origin_so_count", string='Prescription Order Count')
+    prescription_order_count = fields.Integer(compute="_compute_origin_rx_count", string='Prescription Order Count')
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.prescription_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
@@ -42,7 +42,7 @@ class AccountMove(models.Model):
                 domain=[('company_id', '=', move.company_id.id)])
 
     @api.depends('line_ids.prescription_line_ids')
-    def _compute_origin_so_count(self):
+    def _compute_origin_rx_count(self):
         for move in self:
             move.prescription_order_count = len(move.line_ids.prescription_line_ids.order_id)
 
@@ -64,8 +64,8 @@ class AccountMove(models.Model):
         down_payment_lines = self.line_ids.filtered('is_downpayment')
         for line in down_payment_lines:
             if any(order.locked for order in line.prescription_line_ids.order_id):
-                # We cannot change lines content on locked SO, changes on invoices are not
-                # forwarded to the SO if the SO is locked.
+                # We cannot change lines content on locked RX, changes on invoices are not
+                # forwarded to the RX if the RX is locked.
                 continue
 
             if not line.prescription_line_ids.display_type:
@@ -79,7 +79,7 @@ class AccountMove(models.Model):
         res = super().button_draft()
 
         self.line_ids.filtered('is_downpayment').prescription_line_ids.filtered(
-            lambda sol: not sol.display_type)._compute_name()
+            lambda rxl: not rxl.display_type)._compute_name()
 
         return res
 
@@ -87,7 +87,7 @@ class AccountMove(models.Model):
         res = super().button_cancel()
 
         self.line_ids.filtered('is_downpayment').prescription_line_ids.filtered(
-            lambda sol: not sol.display_type)._compute_name()
+            lambda rxl: not rxl.display_type)._compute_name()
 
         return res
 

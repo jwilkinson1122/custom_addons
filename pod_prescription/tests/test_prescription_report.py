@@ -89,7 +89,7 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
                     })
                     prescription_orders |= order
 
-                    expected_so_currency_rate = self.env['res.currency.rate'].search([
+                    expected_rx_currency_rate = self.env['res.currency.rate'].search([
                         ('name', '=', date),
                         ('currency_id', '=', pricelist.currency_id.id),
                         ('company_id', '=', company.id),
@@ -101,22 +101,22 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
                     ]).rate
 
                     # To find the total amount we convert the price of the product from its currency
-                    # to the currency of the so company and then from it to the currency of the so
+                    # to the currency of the rx company and then from it to the currency of the rx
                     # pricelist.
-                    price_for_so_company = self.product.list_price / expected_product_currency_rate
+                    price_for_rx_company = self.product.list_price / expected_product_currency_rate
                     expected_rounded_price = pricelist.currency_id.round(
-                        price_for_so_company * expected_so_currency_rate
+                        price_for_rx_company * expected_rx_currency_rate
                     )
 
                     expected_amount_total = qty * expected_rounded_price
-                    self.assertAlmostEqual(order.currency_rate, expected_so_currency_rate)
+                    self.assertAlmostEqual(order.currency_rate, expected_rx_currency_rate)
                     self.assertAlmostEqual(order.amount_total, expected_amount_total)
 
                     # The amount in the report is converted first to the currency of the company and
                     # then to the currency of the current company (self.env.company).
                     current_company_rate = currency_rates[self.env.company.currency_id.id]
-                    so_company_rate = currency_rates[company.currency_id.id]
-                    conversion_rate = (current_company_rate / so_company_rate)
+                    rx_company_rate = currency_rates[company.currency_id.id]
+                    conversion_rate = (current_company_rate / rx_company_rate)
                     expected_reported_amount += (
                         order.amount_total / order.currency_rate * conversion_rate
                     )
@@ -124,7 +124,7 @@ class TestPrescriptionReportCurrencyRate(PrescriptionCommon):
         # The report should show the amount in the current (in this case usd) company currency.
         report_lines = self.env['prescription.report'].sudo().with_context(
             allow_company_ids=[self.usd_cmp.id, self.eur_cmp.id]
-        ).search([('order_reference', 'in', [f'prescription.order,{so_id}' for so_id in prescription_orders.ids])])
+        ).search([('order_reference', 'in', [f'prescription.order,{rx_id}' for rx_id in prescription_orders.ids])])
 
         price_total = sum(report_lines.mapped('price_total'))
         self.assertAlmostEqual(price_total, expected_reported_amount)

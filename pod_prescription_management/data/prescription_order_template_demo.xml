@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- We want to activate SO template by default for easier demoing. -->
+        <!-- We want to activate RX template by default for easier demoing. -->
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('pod_prescription_management.group_prescription_order_template'))]"/>
         </record>

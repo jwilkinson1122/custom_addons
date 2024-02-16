@@ -30,7 +30,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         rslt.action_confirm()
         return rslt
 
-    def _create_invoice_for_so(self, prescription_order, product, date, quantity=1.0):
+    def _create_invoice_for_rx(self, prescription_order, product, date, quantity=1.0):
         rslt = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
@@ -79,7 +79,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         prescription_order = self._create_prescription(test_product, '2108-01-01')
         self._process_pickings(prescription_order.picking_ids)
 
-        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-12')
+        invoice = self._create_invoice_for_rx(prescription_order, test_product, '2018-02-12')
         invoice.action_post()
         picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)])
         self.check_reconciliation(invoice, picking, operation='prescription')
@@ -95,7 +95,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
 
         prescription_order = self._create_prescription(test_product, '2018-01-01')
 
-        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-03')
+        invoice = self._create_invoice_for_rx(prescription_order, test_product, '2018-02-03')
         invoice.action_post()
 
         self._process_pickings(prescription_order.picking_ids)
@@ -135,11 +135,11 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         self._process_pickings(prescription_order.picking_ids, quantity=2.0)
         picking = self.env['stock.picking'].search([('prescription_id', '=', prescription_order.id)], order="id asc", limit=1)
 
-        invoice = self._create_invoice_for_so(prescription_order, test_product, '2018-02-03', quantity=3)
+        invoice = self._create_invoice_for_rx(prescription_order, test_product, '2018-02-03', quantity=3)
         invoice.action_post()
         self.check_reconciliation(invoice, picking, full_reconcile=False, operation='prescription')
 
-        invoice2 = self._create_invoice_for_so(prescription_order, test_product, '2018-03-12', quantity=2)
+        invoice2 = self._create_invoice_for_rx(prescription_order, test_product, '2018-03-12', quantity=2)
         invoice2.action_post()
         self.check_reconciliation(invoice2, picking, full_reconcile=False, operation='prescription')
 

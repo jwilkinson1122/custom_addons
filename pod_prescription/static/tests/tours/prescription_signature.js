@@ -8,8 +8,8 @@ registry.category("web_tour.tours").add('prescription_signature', {
     url: '/my/quotes',
     steps: () => [
     {
-        content: "open the test SO",
-        trigger: 'a:containsExact("test SO")',
+        content: "open the test RX",
+        trigger: 'a:containsExact("test RX")',
     },
     {
         content: "click sign",

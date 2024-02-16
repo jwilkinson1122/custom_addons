@@ -369,7 +369,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs.update({
             'partner_id': partner_sudo.id,
             'currency_id': order_sudo.currency_id.id,
-            'prescription_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
+            'prescription_order_id': order_id,  # Include the RX to allow Subscriptions tokenizing the tx
         })
         tx_sudo = self._create_transaction(
             custom_create_values={'prescription_order_ids': [Command.set([order_id])]}, **kwargs,

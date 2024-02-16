@@ -34,7 +34,7 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
         self.env.company.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
 
-        # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
+        # Create and confirm a RX to reach (but not exceed) partner_a's credit limit.
         prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -54,7 +54,7 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
         self.assertEqual(self.partner_a.credit, 0.0)
         self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
 
-        # Make sure partner_a's credit_to_invoice includes the newly confirmed SO.
+        # Make sure partner_a's credit_to_invoice includes the newly confirmed RX.
         prescription_order.action_confirm()
         self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
         self.assertEqual(self.partner_a.credit, 0.0)
@@ -81,7 +81,7 @@ class TestPrescriptionOrderCreditLimit(TestPrescriptionCommon):
 
         # Make the down payment invoice amount larger than the Amount to Invoice
         # and check that the warning appears with the correct amounts,
-        # i.e. 1.500 instead of 2.500 (1.000 SO + 1.500 down payment invoice).
+        # i.e. 1.500 instead of 2.500 (1.000 RX + 1.500 down payment invoice).
         invoice.invoice_line_ids.quantity = 3
         self.assertEqual(
             invoice.partner_credit_warning,

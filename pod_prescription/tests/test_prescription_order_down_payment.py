@@ -25,7 +25,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'partner_shipping_id': cls.partner_a.id,
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
-        cls.sol_product_order = cls.env['prescription.order.line'].create({
+        cls.rxl_product_order = cls.env['prescription.order.line'].create({
             'name': cls.company_data['product_order_no'].name,
             'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
@@ -34,7 +34,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'order_id': cls.prescription_order.id,
             'tax_id': False,
         })
-        cls.sol_serv_deliver = cls.env['prescription.order.line'].create({
+        cls.rxl_serv_deliver = cls.env['prescription.order.line'].create({
             'name': cls.company_data['product_service_delivery'].name,
             'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 2,
@@ -43,7 +43,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'order_id': cls.prescription_order.id,
             'tax_id': False,
         })
-        cls.sol_serv_order = cls.env['prescription.order.line'].create({
+        cls.rxl_serv_order = cls.env['prescription.order.line'].create({
             'name': cls.company_data['product_service_order'].name,
             'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 2,
@@ -52,7 +52,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'order_id': cls.prescription_order.id,
             'tax_id': False,
         })
-        cls.sol_product_deliver = cls.env['prescription.order.line'].create({
+        cls.rxl_product_deliver = cls.env['prescription.order.line'].create({
             'name': cls.company_data['product_delivery_no'].name,
             'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
@@ -85,7 +85,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
 
     @classmethod
     def make_downpayment(cls, **kwargs):
-        so_context = {
+        rx_context = {
             'active_model': 'prescription.order',
             'active_ids': [cls.prescription_order.id],
             'active_id': cls.prescription_order.id,
@@ -97,7 +97,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'deposit_account_id': cls.revenue_account.id,
             **kwargs,
         }
-        downpayment = cls.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = cls.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         downpayment.create_invoices()
         cls.prescription_order.action_confirm()
 
@@ -415,7 +415,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
 
     def test_tax_price_include_amount_rounding(self):
         """Test downpayment fixed amount is correctly reported in downpayment invoice product line
-           and in original SO amount invoiced"""
+           and in original RX amount invoiced"""
         tax_21 = self.create_tax(21)
 
         self.prescription_order.order_line[0].price_unit = 900
@@ -433,7 +433,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
         self.prescription_order.order_line[3].unlink()
         self.prescription_order.action_confirm()
 
-        so_context = {
+        rx_context = {
             'active_model': 'prescription.order',
             'active_ids': [self.prescription_order.id],
             'active_id': self.prescription_order.id,
@@ -444,7 +444,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'fixed_amount': 550.0,
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         downpayment.create_invoices()
         invoice = self.prescription_order.invoice_ids
         # pylint: disable=C0326
@@ -460,7 +460,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
         invoice.action_post()
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         self.assertEqual(downpayment.amount_invoiced, 550.0, "Amount invoiced is not equal to downpayment amount")
 
     def test_tax_price_include_negative_amount_rounding_final_invoice(self):
@@ -487,7 +487,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
 
         self.prescription_order.action_confirm()
 
-        so_context = {
+        rx_context = {
             'active_model': 'prescription.order',
             'active_ids': [self.prescription_order.id],
             'active_id': self.prescription_order.id,
@@ -498,7 +498,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'fixed_amount': 200.0,
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -523,7 +523,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'advance_payment_method': 'delivered',
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context({**so_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context({**rx_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -548,7 +548,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
         invoice.unlink()
         self.prescription_order.order_line[0].qty_delivered = 1
         self.prescription_order.order_line[1].qty_delivered = 1
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -595,7 +595,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
 
         self.prescription_order.action_confirm()
 
-        so_context = {
+        rx_context = {
             'active_model': 'prescription.order',
             'active_ids': [self.prescription_order.id],
             'active_id': self.prescription_order.id,
@@ -606,7 +606,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'fixed_amount': 200.0,
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -631,7 +631,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'advance_payment_method': 'delivered',
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context({**so_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context({**rx_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -656,7 +656,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
         invoice.unlink()
         self.prescription_order.order_line[0].qty_delivered = 1
         self.prescription_order.order_line[1].qty_delivered = 1
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -726,7 +726,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
 
         self.prescription_order.action_confirm()
 
-        so_context = {
+        rx_context = {
             'active_model': 'prescription.order',
             'active_ids': [self.prescription_order.id],
             'active_id': self.prescription_order.id,
@@ -737,7 +737,7 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
             'fixed_amount': 500.0,
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326
@@ -761,14 +761,14 @@ class TestPrescriptionOrderDownPayment(TestPrescriptionCommon):
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
         invoice.action_post()
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         self.assertEqual(downpayment.amount_invoiced, 500.0, "Amount invoiced is not equal to downpayment amount")
         # final invoice
         payment_params = {
             'advance_payment_method': 'delivered',
             'deposit_account_id': self.revenue_account.id,
         }
-        downpayment = self.env['prescription.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment = self.env['prescription.advance.payment.inv'].with_context(rx_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
         # pylint: disable=C0326

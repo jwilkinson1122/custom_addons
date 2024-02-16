@@ -140,7 +140,7 @@
 
             <div name="o_team_kanban_report_separator" position="before">
                 <div name="prescription_report">
-                    <a name="%(action_order_report_so_prescription_team)d" type="action">
+                    <a name="%(action_order_report_rx_prescription_team)d" type="action">
                         Prescription
                     </a>
                 </div>

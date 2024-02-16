@@ -13,7 +13,7 @@ class ProductConfiguratorController(Controller):
         product_template_id,
         quantity,
         currency_id,
-        so_date,
+        rx_date,
         product_uom_id=None,
         company_id=None,
         pricelist_id=None,
@@ -26,7 +26,7 @@ class ProductConfiguratorController(Controller):
                                         `product.template` id.
         :param int quantity: The quantity of the product.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
@@ -55,7 +55,7 @@ class ProductConfiguratorController(Controller):
                         product_template,
                         combination,
                         currency_id,
-                        so_date,
+                        rx_date,
                         quantity=quantity,
                         product_uom_id=product_uom_id,
                         pricelist_id=pricelist_id,
@@ -71,7 +71,7 @@ class ProductConfiguratorController(Controller):
                             parent_combination=combination
                         ),
                         currency_id,
-                        so_date,
+                        rx_date,
                         # giving all the ptav of the parent product to get all the exclusions
                         parent_combination=product_template.attribute_line_ids.\
                             product_template_value_ids,
@@ -104,7 +104,7 @@ class ProductConfiguratorController(Controller):
         product_template_id,
         combination,
         currency_id,
-        so_date,
+        rx_date,
         quantity,
         product_uom_id=None,
         company_id=None,
@@ -117,7 +117,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None company_id: The company to use, as a `res.company` id.
@@ -142,7 +142,7 @@ class ProductConfiguratorController(Controller):
             quantity=quantity or 0.0,
             uom=product_uom,
             currency=currency,
-            date=datetime.fromisoformat(so_date),
+            date=datetime.fromisoformat(rx_date),
         )
 
     @route('/pod_prescription_product_configurator/get_optional_products', type='json', auth='user')
@@ -152,7 +152,7 @@ class ProductConfiguratorController(Controller):
         combination,
         parent_combination,
         currency_id,
-        so_date,
+        rx_date,
         company_id=None,
         pricelist_id=None,
     ):
@@ -165,7 +165,7 @@ class ProductConfiguratorController(Controller):
         :param recordset parent_combination: The combination of the parent product, as a
                                              `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int|None company_id: The company to use, as a `res.company` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
         :rtype: [dict]
@@ -186,7 +186,7 @@ class ProductConfiguratorController(Controller):
                         parent_combination=parent_combination
                     ),
                     currency_id,
-                    so_date,
+                    rx_date,
                     parent_combination=parent_combination,
                     pricelist_id=pricelist_id,
                 ),
@@ -199,7 +199,7 @@ class ProductConfiguratorController(Controller):
         product_template,
         combination,
         currency_id,
-        so_date,
+        rx_date,
         quantity=1,
         product_uom_id=None,
         pricelist_id=None,
@@ -212,7 +212,7 @@ class ProductConfiguratorController(Controller):
         :param recordset combination: The combination of the product, as a
                                       `product.template.attribute.value` recordset.
         :param int currency_id: The currency of the transaction, as a `res.currency` id.
-        :param str so_date: The date of the `prescription.order`, to compute the price at the right rate.
+        :param str rx_date: The date of the `prescription.order`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
         :param int|None pricelist_id:  The pricelist to use, as a `product.pricelist` id.
@@ -266,7 +266,7 @@ class ProductConfiguratorController(Controller):
                 quantity=quantity,
                 uom=product_uom,
                 currency=currency,
-                date=datetime.fromisoformat(so_date),
+                date=datetime.fromisoformat(rx_date),
             ),
             quantity=quantity,
             attribute_lines=[dict(
@@ -279,7 +279,7 @@ class ProductConfiguratorController(Controller):
                             ptav.price_extra,
                             currency,
                             request.env.company,
-                            datetime.fromisoformat(so_date).date(),
+                            datetime.fromisoformat(rx_date).date(),
                         ),
                     ) for ptav in ptal.product_template_value_ids
                     if ptav.ptav_active

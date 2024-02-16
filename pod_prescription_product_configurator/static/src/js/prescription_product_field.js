@@ -136,7 +136,7 @@ patch(PrescriptionOrderLineProductField.prototype, {
             companyId: prescriptionOrderRecord.data.company_id[0],
             pricelistId: prescriptionOrderRecord.data.pricelist_id[0],
             currencyId: this.props.record.data.currency_id[0],
-            soDate: serializeDateTime(prescriptionOrderRecord.data.date_order),
+            rxDate: serializeDateTime(prescriptionOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
                 await applyProduct(this.props.record, mainProduct);

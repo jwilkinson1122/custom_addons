@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_production_lot_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
-                <button class="oe_stat_button" name="action_view_so"
+                <button class="oe_stat_button" name="action_view_rx"
                         type="object" icon="fa-pencil-square-o" help="Prescription Orders"
                         invisible="prescription_order_count == 0 or not display_complete">
                     <div class="o_field_widget o_stat_info">

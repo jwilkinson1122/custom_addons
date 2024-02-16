@@ -227,7 +227,7 @@ class PrescriptionOrderLine(models.Model):
         store=True)
 
     analytic_line_ids = fields.One2many(
-        comodel_name='account.analytic.line', inverse_name='so_line',
+        comodel_name='account.analytic.line', inverse_name='rx_line',
         string="Analytic lines")
 
     invoice_lines = fields.Many2many(
@@ -271,12 +271,12 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
-        for so_line in self.sudo():
-            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
-            additional_name = name_per_id.get(so_line.id)
+        for rx_line in self.sudo():
+            name = '{} - {}'.format(rx_line.order_id.name, rx_line.name and rx_line.name.split('\n')[0] or rx_line.product_id.name)
+            additional_name = name_per_id.get(rx_line.id)
             if additional_name:
                 name = f'{name} {additional_name}'
-            so_line.display_name = name
+            rx_line.display_name = name
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
@@ -614,7 +614,7 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
         """
-        Compute the amounts of the SO line.
+        Compute the amounts of the RX line.
         """
         for line in self:
             tax_results = self.env['account.tax']._compute_taxes([
@@ -646,7 +646,7 @@ class PrescriptionOrderLine(models.Model):
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
-            # suggest biggest suitable packaging matching the SO's company
+            # suggest biggest suitable packaging matching the RX's company
             if line.product_id and line.product_uom_qty and line.product_uom:
                 suggested_packaging = line.product_id.packaging_ids\
                         .filtered(lambda p: p.prescription and (p.product_id.company_id <= p.company_id <= line.company_id))\
@@ -671,7 +671,7 @@ class PrescriptionOrderLine(models.Model):
     def _compute_qty_delivered_method(self):
         """ Prescription module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
-                - consu + no expense_policy : manual (set manually on SOL)
+                - consu + no expense_policy : manual (set manually on RXL)
                 - service (+ service_type='manual', the only available option) : manual
 
             This is true when only prescription is installed: pod_prescription_stock redifine the behavior for 'consu' type,
@@ -685,21 +685,21 @@ class PrescriptionOrderLine(models.Model):
 
     @api.depends(
         'qty_delivered_method',
-        'analytic_line_ids.so_line',
+        'analytic_line_ids.rx_line',
         'analytic_line_ids.unit_amount',
         'analytic_line_ids.product_uom_id')
     def _compute_qty_delivered(self):
-        """ This method compute the delivered quantity of the SO lines: it covers the case provide by prescription module, aka
+        """ This method compute the delivered quantity of the RX lines: it covers the case provide by prescription module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
             This method should be overridden to provide other way to automatically compute delivered qty. Overrides should
-            take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
+            take their concerned rx lines, compute and set the `qty_delivered` field, and call super with the remaining
             records.
         """
         # compute for analytic lines
-        lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
+        lines_by_analytic = self.filtered(lambda rxl: rxl.qty_delivered_method == 'analytic')
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
-        for so_line in lines_by_analytic:
-            so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
+        for rx_line in lines_by_analytic:
+            rx_line.qty_delivered = mapping.get(rx_line.id or rx_line._origin.id, 0.0)
 
     def _get_downpayment_state(self):
         self.ensure_one()
@@ -716,26 +716,26 @@ class PrescriptionOrderLine(models.Model):
         return ''
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
-        """ Compute and write the delivered quantity of current SO lines, based on their related
+        """ Compute and write the delivered quantity of current RX lines, based on their related
             analytic lines.
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
         result = defaultdict(float)
 
-        # avoid recomputation if no SO lines concerned
+        # avoid recomputation if no RX lines concerned
         if not self:
             return result
 
-        # group analytic lines by product uom and so line
-        domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
+        # group analytic lines by product uom and rx line
+        domain = expression.AND([[('rx_line', 'in', self.ids)], additional_domain])
         data = self.env['account.analytic.line']._read_group(
             domain,
-            ['product_uom_id', 'so_line'],
+            ['product_uom_id', 'rx_line'],
             ['unit_amount:sum', 'move_line_id:count_distinct', '__count'],
         )
 
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
-        for uom, so_line, unit_amount_sum, move_line_id_count_distinct, count in data:
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of RX lines
+        for uom, rx_line, unit_amount_sum, move_line_id_count_distinct, count in data:
             if not uom:
                 continue
             # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
@@ -743,9 +743,9 @@ class PrescriptionOrderLine(models.Model):
                 qty = unit_amount_sum / count
             else:
                 qty = unit_amount_sum
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(qty, so_line.product_uom, rounding_method='HALF-UP')
-            result[so_line.id] += qty
+            if rx_line.product_uom.category_id == uom.category_id:
+                qty = uom._compute_quantity(qty, rx_line.product_uom, rounding_method='HALF-UP')
+            result[rx_line.id] += qty
 
         return result
 
@@ -753,9 +753,9 @@ class PrescriptionOrderLine(models.Model):
     def _compute_qty_invoiced(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
-        that this is the case only if the refund is generated from the SO and that is intentional: if
+        that this is the case only if the refund is generated from the RX and that is intentional: if
         a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
-        it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
+        it automatically, which may not be wanted at all. That's why the refund has to be created from the RX
         """
         for line in self:
             qty_invoiced = 0.0
@@ -776,7 +776,7 @@ class PrescriptionOrderLine(models.Model):
         else:
             return self.invoice_lines
 
-    # no trigger product_id.invoice_policy to avoid retroactively changing SO
+    # no trigger product_id.invoice_policy to avoid retroactively changing RX
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state')
     def _compute_qty_to_invoice(self):
         """
@@ -795,8 +795,8 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
         """
-        Compute the invoice status of a SO line. Possible statuses:
-        - no: if the SO is not in status 'prescription', we consider that there is nothing to
+        Compute the invoice status of a RX line. Possible statuses:
+        - no: if the RX is not in status 'prescription', we consider that there is nothing to
           invoice. This is also the default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_compute_qty_to_invoice()` for more information on how this quantity is calculated.
@@ -826,11 +826,11 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
         """ Compute the untaxed amount already invoiced from the prescription order line, taking the refund attached
-            the so line into account. This amount is computed as
+            the rx line into account. This amount is computed as
                 SUM(inv_line.price_subtotal) - SUM(ref_line.price_subtotal)
             where
-                `inv_line` is a customer invoice line linked to the SO line
-                `ref_line` is a customer credit note (refund) line linked to the SO line
+                `inv_line` is a customer invoice line linked to the RX line
+                `ref_line` is a customer credit note (refund) line linked to the RX line
         """
         for line in self:
             amount_invoiced = 0.0
@@ -846,11 +846,11 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty', 'price_unit')
     def _compute_untaxed_amount_to_invoice(self):
         """ Total of remaining amount to invoice on the prescription order line (taxes excl.) as
-                total_sol - amount already invoiced
-            where Total_sol depends on the invoice policy of the product.
+                total_rxl - amount already invoiced
+            where Total_rxl depends on the invoice policy of the product.
 
             Note: Draft invoice are ignored on purpose, the 'to invoice' amount should
-            come only from the SO lines.
+            come only from the RX lines.
         """
         for line in self:
             amount_to_invoice = 0.0
@@ -994,7 +994,7 @@ class PrescriptionOrderLine(models.Model):
             self.filtered(
                 lambda r: r.state == 'prescription' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
 
-        # Prevent writing on a locked SO.
+        # Prevent writing on a locked RX.
         protected_fields = self._get_protected_fields()
         if any(self.order_id.mapped('locked')) and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
@@ -1020,7 +1020,7 @@ class PrescriptionOrderLine(models.Model):
         return result
 
     def _get_protected_fields(self):
-        """ Give the fields that should not be modified on a locked SO.
+        """ Give the fields that should not be modified on a locked RX.
 
         :returns: list of field names
         :rtype: list
@@ -1098,7 +1098,7 @@ class PrescriptionOrderLine(models.Model):
         :param int new:   the new line sequence
         :param int old:   the old line sequence
 
-        :return:          the sequence of the SO line, by default the new one.
+        :return:          the sequence of the RX line, by default the new one.
         """
         return new or old
 
@@ -1172,8 +1172,8 @@ class PrescriptionOrderLine(models.Model):
 
     def _additional_name_per_id(self):
         return {
-            so_line.id: so_line._get_partner_display()
-            for so_line in self
+            rx_line.id: rx_line._get_partner_display()
+            for rx_line in self
         }
 
     #=== HOOKS ===#
@@ -1192,7 +1192,7 @@ class PrescriptionOrderLine(models.Model):
         If `self` is empty, this method returns only the default value(s) needed for the product
         catalog. In this case, the quantity that equals 0.
 
-        Otherwise, it returns a quantity and a price based on the product of the SOL(s) and whether
+        Otherwise, it returns a quantity and a price based on the product of the RXL(s) and whether
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
@@ -1245,8 +1245,8 @@ class PrescriptionOrderLine(models.Model):
 
     #=== TOOLING ===#
 
-    def _convert_to_sol_currency(self, amount, currency):
-        """Convert the given amount from the given currency to the SO(L) currency.
+    def _convert_to_rxl_currency(self, amount, currency):
+        """Convert the given amount from the given currency to the RX(L) currency.
 
         :param float amount: the amount to convert
         :param currency: currency in which the given amount is expressed

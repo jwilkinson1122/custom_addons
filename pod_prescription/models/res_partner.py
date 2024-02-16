@@ -50,7 +50,7 @@ class ResPartner(models.Model):
         return bool(prescription_order)
 
     def _can_edit_name(self):
-        """ Can't edit `name` if there is (non draft) issued SO. """
+        """ Can't edit `name` if there is (non draft) issued RX. """
         return super()._can_edit_name() and not self._has_order(
             [
                 ('partner_invoice_id', '=', self.id),
@@ -59,7 +59,7 @@ class ResPartner(models.Model):
         )
 
     def can_edit_vat(self):
-        """ Can't edit `vat` if there is (non draft) issued SO. """
+        """ Can't edit `vat` if there is (non draft) issued RX. """
         return super().can_edit_vat() and not self._has_order(
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
@@ -80,7 +80,7 @@ class ResPartner(models.Model):
 
 
     def unlink(self):
-        # Unlink draft/cancelled SO so that the partner can be removed from database
+        # Unlink draft/cancelled RX so that the partner can be removed from database
         self.env['prescription.order'].sudo().search([
             ('state', 'in', ['draft', 'cancel']),
             '|', '|',

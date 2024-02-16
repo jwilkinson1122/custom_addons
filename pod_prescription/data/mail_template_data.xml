@@ -254,7 +254,7 @@
         Hello,
         <br/><br/>
         A payment with reference
-        <span style="fw-bold;" t-out="transaction_sudo.reference or ''">SOOO49</span>
+        <span style="fw-bold;" t-out="transaction_sudo.reference or ''">RXOO49</span>
         amounting
         <span style="fw-bold;" t-out="format_amount(transaction_sudo.amount, object.currency_id) or ''">$ 10.00</span>
         for your order

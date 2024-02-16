@@ -145,7 +145,7 @@ class CrmTeam(models.Model):
 
     def action_primary_channel_button(self):
         if self._in_prescription_scope():
-            return self.env["ir.actions.actions"]._for_xml_id("pod_prescription.action_order_report_so_prescription_team")
+            return self.env["ir.actions.actions"]._for_xml_id("pod_prescription.action_order_report_rx_prescription_team")
         return super().action_primary_channel_button()
 
     def update_invoiced_target(self, value):
@@ -153,12 +153,12 @@ class CrmTeam(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_for_prescription(self):
-        """ If more than 5 active SOs, we consider this team to be actively used.
+        """ If more than 5 active RXs, we consider this team to be actively used.
         5 is some random guess based on "user testing", aka more than testing
         CRM feature and less than use it in real life use cases. """
-        SO_COUNT_TRIGGER = 5
+        RX_COUNT_TRIGGER = 5
         for team in self:
-            if team.prescription_order_count >= SO_COUNT_TRIGGER:
+            if team.prescription_order_count >= RX_COUNT_TRIGGER:
                 raise UserError(
                     _('Team %(team_name)s has %(prescription_order_count)s active prescription orders. Consider canceling them or archiving the team instead.',
                       team_name=team.name,

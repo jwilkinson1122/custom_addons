@@ -277,7 +277,7 @@ class TestMembership(TestPrescriptionCommon):
 
     def test_prescription_team_member_search(self):
         """ when a search is triggered on the member_ids field in crm.team
-        it is currently returning the archived records also. this test will
+        it is currently returning the archived records alrx. this test will
         ensure that the search wont return archived record.
 
         this is to fix unwanted ORM behavior

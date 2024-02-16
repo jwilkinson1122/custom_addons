@@ -23,7 +23,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
 
         # create prescription order with company A in draft (by default, self.env.user.company_id is company A)
         company_a_order = self._create_prescription(product, '2021-01-01')
-        company_a_invoice = self._create_invoice_for_so(company_a_order, product, '2021-01-10')
+        company_a_invoice = self._create_invoice_for_rx(company_a_order, product, '2021-01-10')
 
         # Post the invoice from company A with company B
         company_a_invoice.with_context(allowed_company_ids=companies_with_b_first.ids).action_post()

@@ -27,12 +27,12 @@ class AccountMoveLine(models.Model):
         """
         values_list = super(AccountMoveLine, self)._prepare_analytic_lines()
 
-        # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
+        # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without RX line but with a product can be reinvoiced
         move_to_reinvoice = self.env['account.move.line']
         if len(values_list) > 0:
             for index, move_line in enumerate(self):
                 values = values_list[index]
-                if 'so_line' not in values:
+                if 'rx_line' not in values:
                     if move_line._prescription_can_be_reinvoice():
                         move_to_reinvoice |= move_line
 
@@ -42,13 +42,13 @@ class AccountMoveLine(models.Model):
             for values in values_list:
                 prescription_line = map_prescription_line_per_move.get(values.get('move_line_id'))
                 if prescription_line:
-                    values['so_line'] = prescription_line.id
+                    values['rx_line'] = prescription_line.id
 
         return values_list
 
     def _prescription_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
-            For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
+            For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the RX on which reinvoice the AAL
         """
         self.ensure_one()
         if self.prescription_line_ids:
@@ -94,7 +94,7 @@ class AccountMoveLine(models.Model):
                 raise UserError(_(
                     "The Prescription Order %(order)s linked to the Analytic Account %(account)s is currently locked."
                     " You cannot register an expense on a locked Prescription Order."
-                    " Please create a new SO linked to this Analytic Account.",
+                    " Please create a new RX linked to this Analytic Account.",
                     order=prescription_order.name,
                     account=prescription_order.analytic_account_id.name,
                 ))
@@ -158,14 +158,14 @@ class AccountMoveLine(models.Model):
                     prescription_order = self.env['prescription.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys()))], order='create_date ASC', limit=1)
                     mapping[move_line.id] = prescription_order
 
-        # map of AAL index with the SO on which it needs to be reinvoiced. Maybe be None if no SO found
+        # map of AAL index with the RX on which it needs to be reinvoiced. Maybe be None if no RX found
         return mapping
 
     def _prescription_prepare_prescription_line_values(self, order, price):
         """ Generate the prescription.line creation value from the current move line """
         self.ensure_one()
-        last_so_line = self.env['prescription.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
-        last_sequence = last_so_line.sequence + 1 if last_so_line else 100
+        last_rx_line = self.env['prescription.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
+        last_sequence = last_rx_line.sequence + 1 if last_rx_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
         product_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == order.company_id)

@@ -47,13 +47,13 @@ class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
             ],
         })
 
-        # if Shipping Policy is set to `direct`(when SO is in draft state) then expected date should be
+        # if Shipping Policy is set to `direct`(when RX is in draft state) then expected date should be
         # current date + shortest lead time from all of it's order lines
         expected_date = fields.Datetime.now() + timedelta(days=5)
         self.assertAlmostEqual(expected_date, prescription_order.expected_date,
             msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
-        # if Shipping Policy is set to `one`(when SO is in draft state) then expected date should be
+        # if Shipping Policy is set to `one`(when RX is in draft state) then expected date should be
         # current date + longest lead time from all of it's order lines
         prescription_order.write({'picking_policy': 'one'})
         expected_date = fields.Datetime.now() + timedelta(days=15)
@@ -62,19 +62,19 @@ class TestPrescriptionExpectedDate(ValuationReconciliationTestCommon):
 
         prescription_order.action_confirm()
 
-        # Setting confirmation date of SO to 5 days from today so that the expected/effective date could be checked
+        # Setting confirmation date of RX to 5 days from today so that the expected/effective date could be checked
         # against real confirmation date
         confirm_date = fields.Datetime.now() + timedelta(days=5)
         prescription_order.write({'date_order': confirm_date})
 
-        # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
-        # SO confirmation date + longest lead time from all of it's order lines
+        # if Shipping Policy is set to `one`(when RX is confirmed) then expected date should be
+        # RX confirmation date + longest lead time from all of it's order lines
         expected_date = confirm_date + timedelta(days=15)
         self.assertAlmostEqual(expected_date, prescription_order.expected_date,
             msg="Wrong expected date on prescription order!", delta=timedelta(seconds=1))
 
-        # if Shipping Policy is set to `direct`(when SO is confirmed) then expected date should be
-        # SO confirmation date + shortest lead time from all of it's order lines
+        # if Shipping Policy is set to `direct`(when RX is confirmed) then expected date should be
+        # RX confirmation date + shortest lead time from all of it's order lines
         prescription_order.write({'picking_policy': 'direct'})
         expected_date = confirm_date + timedelta(days=5)
         self.assertAlmostEqual(expected_date, prescription_order.expected_date,

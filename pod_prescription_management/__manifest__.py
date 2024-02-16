@@ -23,7 +23,7 @@
 
         'report/prescription_report_templates.xml',
 
-        # Define SO template views & actions before their place of use
+        # Define RX template views & actions before their place of use
         'views/prescription_order_template_views.xml',
 
         # 'views/digest_views.xml',

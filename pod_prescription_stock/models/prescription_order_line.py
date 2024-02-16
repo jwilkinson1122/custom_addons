@@ -70,7 +70,7 @@ class PrescriptionOrderLine(models.Model):
 
         qty_processed_per_product = defaultdict(lambda: 0)
         grouped_lines = defaultdict(lambda: self.env['prescription.order.line'])
-        # We first loop over the SO lines to group them by warehouse and schedule
+        # We first loop over the RX lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
             if not (line.product_id and line.display_qty_widget):
@@ -139,7 +139,7 @@ class PrescriptionOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
         """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
-            For SO line coming from expense, no picking should be generate: we don't manage stock for
+            For RX line coming from expense, no picking should be generate: we don't manage stock for
             those lines, even if the product is a storable.
         """
         super(PrescriptionOrderLine, self)._compute_qty_delivered_method()

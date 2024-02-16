@@ -155,7 +155,7 @@ class PrescriptionOrder(models.Model):
         'account.journal', string="Invoicing Journal",
         compute="_compute_journal_id", store=True, readonly=False, precompute=True,
         domain=[('type', '=', 'prescription')], check_company=True,
-        help="If set, the SO will invoice in this journal; "
+        help="If set, the RX will invoice in this journal; "
              "otherwise the prescription journal with the lowest sequence is used.")
 
     # Partner-based computes
@@ -511,7 +511,7 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')
     def _compute_amounts(self):
-        """Compute the total amounts of the SO."""
+        """Compute the total amounts of the RX."""
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
@@ -541,18 +541,18 @@ class PrescriptionOrder(models.Model):
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
             self.env.cr.execute("""
-                SELECT array_agg(so.id)
-                    FROM prescription_order so
-                    JOIN prescription_order_line sol ON sol.order_id = so.id
-                    JOIN prescription_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
-                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
+                SELECT array_agg(rx.id)
+                    FROM prescription_order rx
+                    JOIN prescription_order_line rxl ON rxl.order_id = rx.id
+                    JOIN prescription_order_line_invoice_rel rxli_rel ON rxli_rel.order_line_id = rxl.id
+                    JOIN account_move_line aml ON aml.id = rxli_rel.invoice_line_id
                     JOIN account_move am ON am.id = aml.move_id
                 WHERE
                     am.move_type in ('out_invoice', 'out_refund') AND
                     am.id = ANY(%s)
             """, (list(value),))
-            so_ids = self.env.cr.fetchone()[0] or []
-            return [('id', 'in', so_ids)]
+            rx_ids = self.env.cr.fetchone()[0] or []
+            return [('id', 'in', rx_ids)]
         elif operator == '=' and not value:
             order_ids = self._search([
                 ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
@@ -565,7 +565,7 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):
-        confirmed_orders = self.filtered(lambda so: so.state == 'prescription')
+        confirmed_orders = self.filtered(lambda rx: rx.state == 'prescription')
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
@@ -597,7 +597,7 @@ class PrescriptionOrder(models.Model):
 
     @api.depends('transaction_ids')
     def _compute_amount_paid(self):
-        """ Sum of the amount paid through all transactions for this SO. """
+        """ Sum of the amount paid through all transactions for this RX. """
         for order in self:
             order.amount_paid = sum(
                 tx.amount for tx in order.transaction_ids if tx.state in ('authorized', 'done')
@@ -901,7 +901,7 @@ class PrescriptionOrder(models.Model):
             'default_res_ids': self.ids,
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
+            'mark_rx_as_sent': True,
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
@@ -920,7 +920,7 @@ class PrescriptionOrder(models.Model):
     def _find_mail_template(self):
         """ Get the appropriate mail template for the current prescription order based on its state.
 
-        If the SO is confirmed, we return the mail template for the prescription confirmation.
+        If the RX is confirmed, we return the mail template for the prescription confirmation.
         Otherwise, we return the quotation email template.
 
         :return: The correct mail template based on the current status
@@ -933,7 +933,7 @@ class PrescriptionOrder(models.Model):
             return self._get_confirmation_template()
 
     def _get_confirmation_template(self):
-        """ Get the mail template sent on SO confirmation (or for confirmed SO's).
+        """ Get the mail template sent on RX confirmation (or for confirmed RX's).
 
         :return: `mail.template` record or None if default template wasn't found
         """
@@ -951,7 +951,7 @@ class PrescriptionOrder(models.Model):
     def action_quotation_sent(self):
         """ Mark the given draft quotation(s) as sent.
 
-        :raise: UserError if any given SO is not in draft state.
+        :raise: UserError if any given RX is not in draft state.
         """
         if any(order.state != 'draft' for order in self):
             raise UserError(_("Only draft orders can be marked as sent directly."))
@@ -1026,7 +1026,7 @@ class PrescriptionOrder(models.Model):
     def _action_confirm(self):
         """ Implementation of additional mechanism of Prescription Order confirmation.
             This method should be extended when the confirmation should generated
-            other documents. In this method, the SO are in 'prescription' state (not yet 'done').
+            other documents. In this method, the RX are in 'prescription' state (not yet 'done').
         """
         # create an analytic account if at least an expense product
         for order in self:
@@ -1035,7 +1035,7 @@ class PrescriptionOrder(models.Model):
                     order._create_analytic_account()
 
     def _send_order_confirmation_mail(self):
-        """ Send a mail to the SO customer to inform them that their order has been confirmed.
+        """ Send a mail to the RX customer to inform them that their order has been confirmed.
 
         :return: None
         """
@@ -1044,7 +1044,7 @@ class PrescriptionOrder(models.Model):
             order._send_order_notification_mail(mail_template)
 
     def _send_payment_succeeded_for_order_mail(self):
-        """ Send a mail to the SO customer to inform them that a payment has been initiated.
+        """ Send a mail to the RX customer to inform them that a payment has been initiated.
 
         :return: None
         """
@@ -1110,7 +1110,7 @@ class PrescriptionOrder(models.Model):
             ctx = {
                 'default_template_id': template_id,
                 'default_order_id': self.id,
-                'mark_so_as_canceled': True,
+                'mark_rx_as_canceled': True,
                 'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
                 'model_description': self.with_context(lang=lang).type_name,
             }
@@ -1139,7 +1139,7 @@ class PrescriptionOrder(models.Model):
         """
         if self.env.context.get('disable_cancel_warning'):
             return False
-        return any(so.state != 'draft' for so in self)
+        return any(rx.state != 'draft' for rx in self)
 
     def action_preview_prescription_order(self):
         self.ensure_one()
@@ -1314,7 +1314,7 @@ class PrescriptionOrder(models.Model):
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Prescription Order(s).
 
-        :param bool grouped: if True, invoices are grouped by SO id.
+        :param bool grouped: if True, invoices are grouped by RX id.
             If False, invoices are grouped by keys returned by :meth:`_get_invoice_grouping_keys`
         :param bool final: if True, refunds will be generated if necessary
         :param date: unused parameter
@@ -1400,16 +1400,16 @@ class PrescriptionOrder(models.Model):
 
         # 3) Create invoices.
 
-        # As part of the invoice creation, we make sure the sequence of multiple SO do not interfere
+        # As part of the invoice creation, we make sure the sequence of multiple RX do not interfere
         # in a single invoice. Example:
-        # SO 1:
+        # RX 1:
         # - Section A (sequence: 10)
         # - Product A (sequence: 11)
-        # SO 2:
+        # RX 2:
         # - Section B (sequence: 10)
         # - Product B (sequence: 11)
         #
-        # If SO 1 & 2 are grouped in the same invoice, the result will be:
+        # If RX 1 & 2 are grouped in the same invoice, the result will be:
         # - Section A (sequence: 10)
         # - Section B (sequence: 10)
         # - Product A (sequence: 11)
@@ -1417,7 +1417,7 @@ class PrescriptionOrder(models.Model):
         #
         # Resequencing should be safe, however we resequence only if there are less invoices than
         # orders, meaning a grouping might have been done. This could also mean that only a part
-        # of the selected SO are invoiceable, but resequencing in this case shouldn't be an issue.
+        # of the selected RX are invoiceable, but resequencing in this case shouldn't be an issue.
         if len(invoice_vals_list) < len(self):
             PrescriptionOrderLine = self.env['prescription.order.line']
             for invoice in invoice_vals_list:
@@ -1498,7 +1498,7 @@ class PrescriptionOrder(models.Model):
     # MAIL #
 
     def _track_finalize(self):
-        """ Override of `mail` to prevent logging changes when the SO is in a draft state. """
+        """ Override of `mail` to prevent logging changes when the RX is in a draft state. """
         if (len(self) == 1
             # The method _track_finalize is sometimes called too early or too late and it
             # might cause a desynchronization with the cache, thus this condition is needed.
@@ -1510,12 +1510,12 @@ class PrescriptionOrder(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
-        if self.env.context.get('mark_so_as_sent'):
+        if self.env.context.get('mark_rx_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-        so_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
-        if self.env.context.get('mark_so_as_sent') and 'mail_notify_author' not in kwargs:
+        rx_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
+        if self.env.context.get('mark_rx_as_sent') and 'mail_notify_author' not in kwargs:
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
-        return super(PrescriptionOrder, self.with_context(**so_ctx)).message_post(**kwargs)
+        return super(PrescriptionOrder, self.with_context(**rx_ctx)).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
@@ -1609,7 +1609,7 @@ class PrescriptionOrder(models.Model):
         was set to "Ordered quantities", independently of the product configuration.
 
         This is needed for the automatic invoice logic, as we want to automatically
-        invoice the full SO when it's paid.
+        invoice the full RX when it's paid.
         """
         for line in self.order_line:
             if line.state == 'prescription':
@@ -1757,12 +1757,12 @@ class PrescriptionOrder(models.Model):
             return super()._compute_field_value(field)
 
         filtered_self = self.filtered(
-            lambda so: so.ids
-                and (so.user_id or so.partner_id.user_id)
-                and so._origin.invoice_status != 'upselling')
+            lambda rx: rx.ids
+                and (rx.user_id or rx.partner_id.user_id)
+                and rx._origin.invoice_status != 'upselling')
         super()._compute_field_value(field)
 
-        upselling_orders = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
+        upselling_orders = filtered_self.filtered(lambda rx: rx.invoice_status == 'upselling')
         upselling_orders._create_upsell_activity()
 
     #=== BUSINESS METHODS ===#
@@ -1781,7 +1781,7 @@ class PrescriptionOrder(models.Model):
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_analytic_account_data(self, prefix=None):
-        """ Prepare SO analytic account creation values.
+        """ Prepare RX analytic account creation values.
 
         :param str prefix: The prefix of the to-be-created analytic account name
         :return: `account.analytic.account` creation values
@@ -1807,7 +1807,7 @@ class PrescriptionOrder(models.Model):
     def _create_analytic_account(self, prefix=None):
         """ Create a new analytic account for the given orders.
 
-        :param str prefix: if specified, the account name will be '<prefix>: <so_reference>'.
+        :param str prefix: if specified, the account name will be '<prefix>: <rx_reference>'.
             If not, the account name will be the Prescription Order reference.
         :return: None
         """
@@ -1926,30 +1926,30 @@ class PrescriptionOrder(models.Model):
                  prescription order and the quantity selected.
         :rtype: float
         """
-        sol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
-        if sol:
+        rxl = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        if rxl:
             if quantity != 0:
-                sol.product_uom_qty = quantity
+                rxl.product_uom_qty = quantity
             elif self.state in ['draft', 'sent']:
                 price_unit = self.pricelist_id._get_product_price(
-                    product=sol.product_id,
+                    product=rxl.product_id,
                     quantity=1.0,
                     currency=self.currency_id,
                     date=self.date_order,
                     **kwargs,
                 )
-                sol.unlink()
+                rxl.unlink()
                 return price_unit
             else:
-                sol.product_uom_qty = 0
+                rxl.product_uom_qty = 0
         elif quantity > 0:
-            sol = self.env['prescription.order.line'].create({
+            rxl = self.env['prescription.order.line'].create({
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit
+        return rxl.price_unit
 
     #=== HOOKS ===#
 

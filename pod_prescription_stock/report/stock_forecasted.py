@@ -31,15 +31,15 @@ class StockForecasted(models.AbstractModel):
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         domain = self._product_prescription_domain(product_template_ids, product_ids)
-        so_lines = self.env['prescription.order.line'].search(domain)
+        rx_lines = self.env['prescription.order.line'].search(domain)
         out_sum = 0
-        if so_lines:
-            product_uom = so_lines[0].product_id.uom_id
-            quantities = so_lines.mapped(lambda line: line.product_uom._compute_quantity(line.product_uom_qty, product_uom))
+        if rx_lines:
+            product_uom = rx_lines[0].product_id.uom_id
+            quantities = rx_lines.mapped(lambda line: line.product_uom._compute_quantity(line.product_uom_qty, product_uom))
             out_sum = sum(quantities)
         res['draft_prescription_qty'] = out_sum
-        res['draft_prescription_orders'] = so_lines.mapped("order_id").sorted(key=lambda so: so.name).read(fields=['id', 'name'])
-        res['draft_prescription_orders_matched'] = self.env.context.get('prescription_line_to_match_id') in so_lines.ids
+        res['draft_prescription_orders'] = rx_lines.mapped("order_id").sorted(key=lambda rx: rx.name).read(fields=['id', 'name'])
+        res['draft_prescription_orders_matched'] = self.env.context.get('prescription_line_to_match_id') in rx_lines.ids
         res['qty']['out'] += out_sum
         return res
 

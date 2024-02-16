@@ -155,7 +155,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
 
         self.assertEqual(
             self.empty_order.amount_untaxed,
-            self.product.lst_price * 3.8)  # Discount of 10% on 2 of the 4 sol
+            self.product.lst_price * 3.8)  # Discount of 10% on 2 of the 4 rxl
 
     def test_pricelist_product_context(self):
         """ Verify that the product attributes extra prices are correctly considered """
@@ -420,14 +420,14 @@ class TestPrescriptionPrices(PrescriptionCommon):
             ]
         })
 
-        # Create a SO in the other company
+        # Create a RX in the other company
         ##################################
         # product_currency = main_company.currency_id when no company_id on the product
 
         # CASE 1:
-        # company currency = so currency
-        # product_1.currency != so currency
-        # product_2.cost_currency_id = so currency
+        # company currency = rx currency
+        # product_1.currency != rx currency
+        # product_2.cost_currency_id = rx currency
         prescription_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescription.order'].create({
             'partner_id': self.env.user.partner_id.id,
             'pricelist_id': pricelist.id,
@@ -443,17 +443,17 @@ class TestPrescriptionPrices(PrescriptionCommon):
             ]
         })
 
-        so_line_1 = prescription_order.order_line[0]
-        so_line_2 = prescription_order.order_line[1]
-        self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 50.0)
-        self.assertEqual(so_line_2.discount, 10)
-        self.assertEqual(so_line_2.price_unit, 10)
+        rx_line_1 = prescription_order.order_line[0]
+        rx_line_2 = prescription_order.order_line[1]
+        self.assertEqual(rx_line_1.discount, 20)
+        self.assertEqual(rx_line_1.price_unit, 50.0)
+        self.assertEqual(rx_line_2.discount, 10)
+        self.assertEqual(rx_line_2.price_unit, 10)
 
         # CASE 2
-        # company currency != so currency
-        # product_1.currency == so currency
-        # product_2.cost_currency_id != so currency
+        # company currency != rx currency
+        # product_1.currency == rx currency
+        # product_2.cost_currency_id != rx currency
         pricelist.currency_id = main_curr
         prescription_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env['prescription.order'].create({
             'partner_id': self.env.user.partner_id.id,
@@ -471,26 +471,26 @@ class TestPrescriptionPrices(PrescriptionCommon):
             ]
         })
 
-        so_line_1 = prescription_order.order_line[0]
-        so_line_2 = prescription_order.order_line[1]
-        self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 100.0)
-        self.assertEqual(so_line_2.discount, 10)
-        self.assertEqual(so_line_2.price_unit, 20)
+        rx_line_1 = prescription_order.order_line[0]
+        rx_line_2 = prescription_order.order_line[1]
+        self.assertEqual(rx_line_1.discount, 20)
+        self.assertEqual(rx_line_1.price_unit, 100.0)
+        self.assertEqual(rx_line_2.discount, 10)
+        self.assertEqual(rx_line_2.price_unit, 20)
 
     def test_update_prices(self):
-        """Test prices recomputation on SO's.
+        """Test prices recomputation on RX's.
 
         `_recompute_prices` is shown as a button to update
         prices when the pricelist was changed.
         """
         prescription_order = self.prescription_order
-        so_amount = prescription_order.amount_total
-        start_so_amount = so_amount
+        rx_amount = prescription_order.amount_total
+        start_rx_amount = rx_amount
         prescription_order._recompute_prices()
         self.assertEqual(
-            prescription_order.amount_total, so_amount,
-            "Updating the prices of an unmodified SO shouldn't modify the amounts")
+            prescription_order.amount_total, rx_amount,
+            "Updating the prices of an unmodified RX shouldn't modify the amounts")
 
         pricelist = prescription_order.pricelist_id
         pricelist.item_ids = [
@@ -503,25 +503,25 @@ class TestPrescriptionPrices(PrescriptionCommon):
         prescription_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 5 for line in prescription_order.order_line))
-        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
-        self.assertEqual(prescription_order.amount_total, 0.95*so_amount)
+        self.assertEqual(prescription_order.amount_undiscounted, rx_amount)
+        self.assertEqual(prescription_order.amount_total, 0.95*rx_amount)
 
         pricelist.discount_policy = "with_discount"
         prescription_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in prescription_order.order_line))
-        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
-        self.assertEqual(prescription_order.amount_total, 0.95*so_amount)
+        self.assertEqual(prescription_order.amount_undiscounted, rx_amount)
+        self.assertEqual(prescription_order.amount_total, 0.95*rx_amount)
 
         # Test taking off the pricelist
         prescription_order.pricelist_id = False
         prescription_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in prescription_order.order_line))
-        self.assertEqual(prescription_order.amount_undiscounted, so_amount)
+        self.assertEqual(prescription_order.amount_undiscounted, rx_amount)
         self.assertEqual(
-            prescription_order.amount_total, start_so_amount,
-            "The SO amount without pricelist should be the same than with an empty pricelist"
+            prescription_order.amount_total, start_rx_amount,
+            "The RX amount without pricelist should be the same than with an empty pricelist"
         )
 
     # Taxes tests:
@@ -571,7 +571,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             })]
         })
 
-        # creating SO
+        # creating RX
         self.empty_order.write({
             'fiscal_position_id': fiscal_pos.id,
             'order_line': [Command.create({
@@ -708,7 +708,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             })]
         }])
 
-        # Create the SO with one SO line and apply a pricelist and fiscal position on it
+        # Create the RX with one RX line and apply a pricelist and fiscal position on it
         # Then check if price unit and price subtotal matches the expected values
 
         PrescriptionOrder = self.env['prescription.order']
@@ -785,7 +785,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         prescription_order = order_form.save()
         self.assertRecordValues(prescription_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
-    def test_so_tax_mapping(self):
+    def test_rx_tax_mapping(self):
         order = self.empty_order
 
         tax_include, tax_exclude = self.env['account.tax'].create([{
@@ -820,7 +820,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             })]
         })
 
-        # Check the unit price of SO line
+        # Check the unit price of RX line
         self.assertEqual(
             100, order.order_line[0].price_unit,
             "The included tax must be subtracted to the price")
@@ -864,7 +864,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         }])
 
     def test_prescription_with_taxes(self):
-        """ Test SO with taxes applied on its lines and check subtotal applied on its lines and total applied on the SO """
+        """ Test RX with taxes applied on its lines and check subtotal applied on its lines and total applied on the RX """
         tax_include, tax_exclude = self.env['account.tax'].create([{
             'name': 'Tax with price include',
             'amount': 10,
@@ -892,7 +892,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
             places=2)
 
     def test_discount_and_untaxed_subtotal(self):
-        """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
+        """When adding a discount on a RX line, this test ensures that the untaxed amount to invoice is
         equal to the untaxed subtotal"""
         self.product.invoice_policy = 'delivery'
         order = self.empty_order
@@ -930,7 +930,7 @@ class TestPrescriptionPrices(PrescriptionCommon):
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
     def test_discount_and_amount_undiscounted(self):
-        """When adding a discount on a SO line, this test ensures that amount undiscounted is
+        """When adding a discount on a RX line, this test ensures that amount undiscounted is
         consistent with the used tax"""
         order = self.empty_order
 

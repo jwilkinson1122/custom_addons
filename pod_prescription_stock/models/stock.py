@@ -104,12 +104,12 @@ class StockPicking(models.Model):
         prescription_order_lines_vals = []
         for move in self.move_ids:
             prescription_order = move.picking_id.prescription_id
-            # Creates new SO line only when pickings linked to a prescription order and
-            # for moves with qty. done and not already linked to a SO line.
+            # Creates new RX line only when pickings linked to a prescription order and
+            # for moves with qty. done and not already linked to a RX line.
             if not prescription_order or move.location_dest_id.usage != 'customer' or move.prescription_line_id or not move.picked:
                 continue
             product = move.product_id
-            so_line_vals = {
+            rx_line_vals = {
                 'move_ids': [(4, move.id, 0)],
                 'name': product.display_name,
                 'order_id': prescription_order.id,
@@ -119,15 +119,15 @@ class StockPicking(models.Model):
                 'product_uom': move.product_uom.id,
             }
             if product.invoice_policy == 'delivery':
-                # Check if there is already a SO line for this product to get
+                # Check if there is already a RX line for this product to get
                 # back its unit price (in case it was manually updated).
-                so_line = prescription_order.order_line.filtered(lambda sol: sol.product_id == product)
-                if so_line:
-                    so_line_vals['price_unit'] = so_line[0].price_unit
+                rx_line = prescription_order.order_line.filtered(lambda rxl: rxl.product_id == product)
+                if rx_line:
+                    rx_line_vals['price_unit'] = rx_line[0].price_unit
             elif product.invoice_policy == 'order':
                 # No unit price if the product is invoiced on the ordered qty.
-                so_line_vals['price_unit'] = 0
-            prescription_order_lines_vals.append(so_line_vals)
+                rx_line_vals['price_unit'] = 0
+            prescription_order_lines_vals.append(rx_line_vals)
 
         if prescription_order_lines_vals:
             self.env['prescription.order.line'].with_context(skip_procurement=True).create(prescription_order_lines_vals)
@@ -188,7 +188,7 @@ class StockLot(models.Model):
             lot.prescription_order_ids = prescription_orders[lot.id]
             lot.prescription_order_count = len(lot.prescription_order_ids)
 
-    def action_view_so(self):
+    def action_view_rx(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("pod_prescription.action_prescription")
         action['domain'] = [('id', 'in', self.mapped('prescription_order_ids.id'))]

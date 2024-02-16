@@ -605,7 +605,7 @@
         <field name="date_order" eval="datetime.now() - relativedelta(months=1)"/>
     </record>
 
-    <!-- Mail messages in SO's chatter -->
+    <!-- Mail messages in RX's chatter -->
     <record id="message_prescription_1" model="mail.message">
         <field name="model">prescription.order</field>
         <field name="res_id" ref="prescription_order_2"/>

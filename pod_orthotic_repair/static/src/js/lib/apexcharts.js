@@ -18987,7 +18987,7 @@
           // }
           // fix issue #1215;
           // where all stack bar disappear after collapsing the first series
-          // sol: if only 1 arr in this.prevY(this.prevY.length === 1) and all are NaN
+          // rxl: if only 1 arr in this.prevY(this.prevY.length === 1) and all are NaN
 
           if (_this.prevY.length === 1 && _this.prevY[0].every(function (val) {
             return isNaN(val);

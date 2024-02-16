@@ -19,7 +19,7 @@ class AccountMove(models.Model):
             rslt += invoice.mapped('invoice_line_ids.prescription_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
         for invoice in self.filtered(lambda x: x.move_type == 'out_refund'):
             rslt += invoice.mapped('reversed_entry_id.invoice_line_ids.prescription_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
-            # Add refunds generated from the SO
+            # Add refunds generated from the RX
             rslt += invoice.mapped('invoice_line_ids.prescription_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 
@@ -139,11 +139,11 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
 
-        so_line = self.prescription_line_ids and self.prescription_line_ids[-1] or False
-        if so_line:
+        rx_line = self.prescription_line_ids and self.prescription_line_ids[-1] or False
+        if rx_line:
             is_line_reversing = self.move_id.move_type == 'out_refund'
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
+            account_moves = rx_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
 
             posted_cogs = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
             qty_invoiced = sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in posted_cogs])
@@ -154,6 +154,6 @@ class AccountMoveLine(models.Model):
             value_invoiced -= sum(reversal_cogs.mapped('balance'))
 
             product = self.product_id.with_company(self.company_id).with_context(value_invoiced=value_invoiced)
-            average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids, is_returned=is_line_reversing)
+            average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, rx_line.move_ids, is_returned=is_line_reversing)
             price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
         return price_unit

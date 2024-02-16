@@ -18,7 +18,7 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         );
 
         if (!this.AmountTotalButton) {
-            // Button not available in dom => confirmed SO or partial payment not enabled on this SO
+            // Button not available in dom => confirmed RX or partial payment not enabled on this RX
             // this widget has nothing to manage
             return;
         }

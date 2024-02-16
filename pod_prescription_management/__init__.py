@@ -7,7 +7,7 @@ from odoo.tools import column_exists, create_column
 
 
 def pre_init_hook(env):
-    """Do not compute the prescription_order_template_id field on existing SOs."""
+    """Do not compute the prescription_order_template_id field on existing RXs."""
     if not column_exists(env.cr, "prescription_order", "prescription_order_template_id"):
         create_column(env.cr, "prescription_order", "prescription_order_template_id", "int4")
 

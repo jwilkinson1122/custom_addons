@@ -29,16 +29,16 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         self.assertEqual(discount_line.product_uom_qty, 1.0)
         self.assertFalse(discount_line.tax_id)
 
-    def test_so_discount(self):
-        solines = self.prescription_order.order_line
+    def test_rx_discount(self):
+        rxlines = self.prescription_order.order_line
         amount_before_discount = self.prescription_order.amount_total
-        self.assertEqual(len(solines), 2)
+        self.assertEqual(len(rxlines), 2)
 
         # No taxes
-        solines.tax_id = [Command.clear()]
+        rxlines.tax_id = [Command.clear()]
         self.wizard.write({
             'discount_percentage': 0.5,  # 50%
-            'discount_type': 'so_discount',
+            'discount_type': 'rx_discount',
         })
         self.wizard.action_apply_discount()
 
@@ -50,10 +50,10 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
         # One tax group
         discount_line.unlink()
         dumb_tax = self.env['account.tax'].create({'name': 'test'})
-        solines.tax_id = dumb_tax
+        rxlines.tax_id = dumb_tax
         self.wizard.action_apply_discount()
 
-        discount_line = self.prescription_order.order_line - solines
+        discount_line = self.prescription_order.order_line - rxlines
         discount_line.ensure_one()
         self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
@@ -61,25 +61,25 @@ class TestPrescriptionOrderDiscount(PrescriptionCommon):
 
         # Two tax groups
         discount_line.unlink()
-        solines[0].tax_id = [Command.clear()]
+        rxlines[0].tax_id = [Command.clear()]
         self.wizard.action_apply_discount()
-        discount_lines = self.prescription_order.order_line - solines
+        discount_lines = self.prescription_order.order_line - rxlines
         self.assertEqual(len(discount_lines), 2)
-        self.assertEqual(discount_lines[0].price_unit, -solines[0].price_subtotal * 0.5)
-        self.assertEqual(discount_lines[1].price_unit, -solines[1].price_subtotal * 0.5)
-        self.assertEqual(discount_lines[0].tax_id, solines[0].tax_id)
-        self.assertEqual(discount_lines[1].tax_id, solines[1].tax_id)
+        self.assertEqual(discount_lines[0].price_unit, -rxlines[0].price_subtotal * 0.5)
+        self.assertEqual(discount_lines[1].price_unit, -rxlines[1].price_subtotal * 0.5)
+        self.assertEqual(discount_lines[0].tax_id, rxlines[0].tax_id)
+        self.assertEqual(discount_lines[1].tax_id, rxlines[1].tax_id)
         self.assertTrue(all(line.product_uom_qty == 1.0 for line in discount_lines))
 
-    def test_sol_discount(self):
-        so_amount = self.prescription_order.amount_untaxed
+    def test_rxl_discount(self):
+        rx_amount = self.prescription_order.amount_untaxed
         self.wizard.write({
             'discount_percentage': 0.5,  # 50%
-            'discount_type': 'sol_discount',
+            'discount_type': 'rxl_discount',
         })
         self.wizard.action_apply_discount()
 
         self.assertTrue(
             all(line.discount == 50 for line in self.prescription_order.order_line)
         )
-        self.assertAlmostEqual(self.prescription_order.amount_untaxed, so_amount*0.5)
+        self.assertAlmostEqual(self.prescription_order.amount_untaxed, rx_amount*0.5)

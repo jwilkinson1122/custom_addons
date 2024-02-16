@@ -109,18 +109,18 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
             self.assertTrue(variant)
             self.assertTrue(variant2)
 
-            # Create a dummy SO to prevent the variant from being deleted by
+            # Create a dummy RX to prevent the variant from being deleted by
             # _create_variant_ids() because the variant is a related field that
-            # is required on the SO line
-            so = self.env['prescription.order'].create({'partner_id': 1})
+            # is required on the RX line
+            rx = self.env['prescription.order'].create({'partner_id': 1})
             self.env['prescription.order.line'].create({
-                'order_id': so.id,
+                'order_id': rx.id,
                 'name': "test",
                 'product_id': variant.id
             })
             # additional variant to test correct ignoring when mismatch values
             self.env['prescription.order.line'].create({
-                'order_id': so.id,
+                'order_id': rx.id,
                 'name': "test",
                 'product_id': variant2.id
             })
@@ -156,7 +156,7 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
 
             variant4 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
             self.env['prescription.order.line'].create({
-                'order_id': so.id,
+                'order_id': rx.id,
                 'name': "test",
                 'product_id': variant4.id
             })
@@ -173,7 +173,7 @@ class TestPrescriptionProductAttributeValueConfig(TestPrescriptionProductAttribu
 
             variant5 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
             self.env['prescription.order.line'].create({
-                'order_id': so.id,
+                'order_id': rx.id,
                 'name': "test",
                 'product_id': variant5.id
             })

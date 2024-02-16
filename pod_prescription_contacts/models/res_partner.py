@@ -34,7 +34,7 @@ class Partner(models.Model):
         ], string='Practice Type', default='clinic')
     fax_number = fields.Char(string="Fax")
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
-    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Practice")
+    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Account")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
     practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="prescription.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')

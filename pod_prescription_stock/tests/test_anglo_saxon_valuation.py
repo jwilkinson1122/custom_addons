@@ -28,7 +28,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         }).action_apply_inventory()
 
-    def _so_and_confirm_two_units(self):
+    def _rx_and_confirm_two_units(self):
         prescription_order = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -87,7 +87,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # standard price to 14
         self.product.standard_price = 14.0
@@ -121,10 +121,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.product.standard_price = 10.0
 
         # Put two items in stock.
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -196,7 +196,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -244,7 +244,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Invoice the prescription order.
         # Nothing delivered = nothing to invoice.
@@ -260,10 +260,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.product.standard_price = 10
 
         # Put two items in stock.
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -335,7 +335,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -383,7 +383,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Invoice the prescription order.
         invoice = prescription_order._create_invoices()
@@ -415,7 +415,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -453,7 +453,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
@@ -489,7 +489,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         product.list_price = 100
         product.standard_price = 50
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -500,9 +500,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        pick = so.picking_ids
+        pick = rx.picking_ids
         pick.move_ids.write({'quantity': 5, 'picked': True})
         pick.button_validate()
 
@@ -537,7 +537,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
         picking.button_validate()
 
-        invoice = so._create_invoices()
+        invoice = rx._create_invoices()
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
@@ -554,7 +554,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Invoice the prescription order.
         # Nothing delivered = nothing to invoice.
@@ -571,7 +571,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -609,7 +609,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._inv_adj_two_units()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
         prescription_order.picking_ids.button_validate()
@@ -647,7 +647,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 1)
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
         # Deliver both products (there should be two SML)
         prescription_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
         prescription_order.picking_ids.button_validate()
@@ -687,7 +687,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 2, owner_id=self.partner_b)
 
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
         prescription_order.picking_ids.move_line_ids.write({'quantity': 2, 'picked': True})
         prescription_order.picking_ids.button_validate()
 
@@ -714,7 +714,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Invoice the prescription order.
         invoice = prescription_order._create_invoices()
@@ -745,7 +745,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -788,7 +788,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
@@ -825,7 +825,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Invoice the prescription order.
         # Nothing delivered = nothing to invoice.
@@ -841,7 +841,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
@@ -885,7 +885,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
 
         # Deliver one.
         prescription_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
@@ -1128,8 +1128,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(revalued_cogs_aml.debit, 4, 'Price difference should have correctly reflected in expense account.')
 
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
-        """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
-        Re-deliver returned from SO1. Invoice after delivering everything."""
+        """Receive 2@10. RX1 2@12. Return 1 from RX1. RX2 1@12. Receive 1@20.
+        Re-deliver returned from RX1. Invoice after delivering everything."""
         self.product.categ_id.property_cost_method = 'fifo'
         self.product.invoice_policy = 'delivery'
 
@@ -1147,15 +1147,15 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1.write({'quantity': 2, 'picked': True})
         in_move_1._action_done()
 
-        # Create, confirm and deliver a prescription order for 2@12 (SO1)
-        so_1 = self._so_and_confirm_two_units()
-        so_1.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
-        so_1.picking_ids.button_validate()
+        # Create, confirm and deliver a prescription order for 2@12 (RX1)
+        rx_1 = self._rx_and_confirm_two_units()
+        rx_1.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
+        rx_1.picking_ids.button_validate()
 
-        # Return 1 from SO1
+        # Return 1 from RX1
         stock_return_picking_form = Form(
             self.env['stock.return.picking'].with_context(
-                active_ids=so_1.picking_ids.ids, active_id=so_1.picking_ids.ids[0], active_model='stock.picking')
+                active_ids=rx_1.picking_ids.ids, active_id=rx_1.picking_ids.ids[0], active_model='stock.picking')
         )
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
@@ -1165,8 +1165,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         return_pick.move_ids.write({'quantity': 1, 'picked': True})
         return_pick._action_done()
 
-        # Create, confirm and deliver a prescription order for 1@12 (SO2)
-        so_2 = self.env['prescription.order'].create({
+        # Create, confirm and deliver a prescription order for 1@12 (RX2)
+        rx_2 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1178,9 +1178,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,  # no love taxes amls
                 })],
         })
-        so_2.action_confirm()
-        so_2.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        so_2.picking_ids.button_validate()
+        rx_2.action_confirm()
+        rx_2.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        rx_2.picking_ids.button_validate()
 
         # Receive 1@20
         in_move_2 = self.env['stock.move'].create({
@@ -1196,7 +1196,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_2.write({'quantity': 1, 'picked': True})
         in_move_2._action_done()
 
-        # Re-deliver returned 1 from SO1
+        # Re-deliver returned 1 from RX1
         stock_redeliver_picking_form = Form(
             self.env['stock.return.picking'].with_context(
                 active_ids=return_pick.ids, active_id=return_pick.ids[0], active_model='stock.picking')
@@ -1210,9 +1210,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         redeliver_pick._action_done()
 
         # Invoice the prescription orders
-        invoice_1 = so_1._create_invoices()
+        invoice_1 = rx_1._create_invoices()
         invoice_1.action_post()
-        invoice_2 = so_2._create_invoices()
+        invoice_2 = rx_2._create_invoices()
         invoice_2.action_post()
 
         # Check the resulting accounting entries
@@ -1261,8 +1261,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'rounding': 1,
         })
 
-        # Create, confirm and deliver a prescription order for 12@1.5 without reception with std_price = 2.0 (SO1)
-        so_1 = self.env['prescription.order'].create({
+        # Create, confirm and deliver a prescription order for 12@1.5 without reception with std_price = 2.0 (RX1)
+        rx_1 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1274,12 +1274,12 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,  # no love taxes amls
                 })],
         })
-        so_1.action_confirm()
-        so_1.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
-        so_1.picking_ids.button_validate()
+        rx_1.action_confirm()
+        rx_1.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
+        rx_1.picking_ids.button_validate()
 
         # Invoice the prescription order.
-        invoice_1 = so_1._create_invoices()
+        invoice_1 = rx_1._create_invoices()
         invoice_1.action_post()
 
         # Invoice 1
@@ -1321,8 +1321,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1.write({'quantity': quantity, 'picked': True})
         in_move_1._action_done()
 
-        # Create, confirm and deliver a prescription order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
-        so_2 = self.env['prescription.order'].create({
+        # Create, confirm and deliver a prescription order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(RX2)
+        rx_2 = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1334,12 +1334,12 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,  # no love taxes amls
                 })],
         })
-        so_2.action_confirm()
-        so_2.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
-        so_2.picking_ids.button_validate()
+        rx_2.action_confirm()
+        rx_2.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
+        rx_2.picking_ids.button_validate()
 
         # Invoice the prescription order.
-        invoice_2 = so_2._create_invoices()
+        invoice_2 = rx_2._create_invoices()
         invoice_2.action_post()
 
         # Invoice 2
@@ -1389,7 +1389,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves._action_done()
 
         # Sell 3 units
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1401,11 +1401,11 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,
                 })],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
         # Deliver 1@10, then 1@20 and then 1@60
         pickings = []
-        picking = so.picking_ids
+        picking = rx.picking_ids
         while picking:
             pickings.append(picking)
             picking.move_ids.write({'quantity': 1, 'picked': True})
@@ -1415,7 +1415,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 wizard.process()
             picking = picking.backorder_ids
 
-        invoice = so._create_invoices()
+        invoice = rx._create_invoices()
         invoice.action_post()
 
         # Receive one @100
@@ -1483,7 +1483,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves._action_done()
 
         # Sell 3 units
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1495,11 +1495,11 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,
                 })],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
         # Deliver 1@10, then 1@20 and then 1@60
         pickings = []
-        picking = so.picking_ids
+        picking = rx.picking_ids
         while picking:
             pickings.append(picking)
             picking.move_ids.write({'quantity': 1, 'picked': True})
@@ -1509,7 +1509,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 wizard.process()
             picking = picking.backorder_ids
 
-        invoice = so._create_invoices()
+        invoice = rx._create_invoices()
         invoice.action_post()
 
         # Receive one @100
@@ -1535,10 +1535,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         return_picking.button_validate()
 
         # Create a new invoice for the returned product
-        ctx = {'active_model': 'prescription.order', 'active_ids': so.ids}
+        ctx = {'active_model': 'prescription.order', 'active_ids': rx.ids}
         create_invoice_wizard = self.env['prescription.advance.payment.inv'].with_context(ctx).create({'advance_payment_method': 'delivered'})
         create_invoice_wizard.create_invoices()
-        reverse_invoice = so.invoice_ids[-1]
+        reverse_invoice = rx.invoice_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1
@@ -1571,7 +1571,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1583,12 +1583,12 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,
                 })],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
         # Deliver one by one, so it creates an out-SVL each time.
         # Then invoice the delivered quantity
         invoices = self.env['account.move']
-        picking = so.picking_ids
+        picking = rx.picking_ids
         while picking:
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
@@ -1597,7 +1597,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 wizard.process()
             picking = picking.backorder_ids
 
-            invoice = so._create_invoices()
+            invoice = rx._create_invoices()
             invoice.action_post()
             invoices |= invoice
 
@@ -1661,7 +1661,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
 
-        so = self.env['prescription.order'].create({
+        rx = self.env['prescription.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1673,13 +1673,13 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,
                 })],
         })
-        so.action_confirm()
+        rx.action_confirm()
 
-        picking = so.picking_ids
+        picking = rx.picking_ids
         picking.move_ids.write({'quantity': 1.0, 'picked': True})
         picking.button_validate()
 
-        invoice01 = so._create_invoices()
+        invoice01 = rx._create_invoices()
 
         # Clear the cache to ensure access rights
         self.env.invalidate_all()
@@ -1710,7 +1710,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a prescription order for 2@12
-        prescription_order = self._so_and_confirm_two_units()
+        prescription_order = self._rx_and_confirm_two_units()
         self.assertEqual(len(prescription_order.order_line), 1)
         self.assertEqual(prescription_order.order_line.product_uom_qty, 2.0)
 

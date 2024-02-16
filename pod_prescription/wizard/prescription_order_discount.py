@@ -18,11 +18,11 @@ class PrescriptionOrderDiscount(models.TransientModel):
     discount_percentage = fields.Float(string="Percentage")
     discount_type = fields.Selection(
         selection=[
-            ('sol_discount', "On All Order Lines"),
-            ('so_discount', "Global Discount"),
+            ('rxl_discount', "On All Order Lines"),
+            ('rx_discount', "Global Discount"),
             ('amount', "Fixed Amount"),
         ],
-        default='sol_discount',
+        default='rxl_discount',
     )
 
     # CONSTRAINT METHODS #
@@ -30,7 +30,7 @@ class PrescriptionOrderDiscount(models.TransientModel):
     @api.constrains('discount_type', 'discount_percentage')
     def _check_discount_amount(self):
         for wizard in self:
-            if wizard.discount_type in ('sol_discount', 'so_discount') and (
+            if wizard.discount_type in ('rxl_discount', 'rx_discount') and (
                 wizard.discount_percentage <= 0.0
                 or wizard.discount_percentage > 1.0
             ):
@@ -58,13 +58,13 @@ class PrescriptionOrderDiscount(models.TransientModel):
             'tax_id': [Command.set(taxes.ids)],
         }
         if description:
-            # If not given, name will fallback on the standard SOL logic (cf. _compute_name)
+            # If not given, name will fallback on the standard RXL logic (cf. _compute_name)
             vals['name'] = description
 
         return vals
 
     def _create_discount_lines(self):
-        """Create SOline(s) according to wizard configuration"""
+        """Create RXline(s) according to wizard configuration"""
         self.ensure_one()
 
         discount_product = self.company_id.prescription_discount_product_id
@@ -82,7 +82,7 @@ class PrescriptionOrderDiscount(models.TransientModel):
                     taxes=self.env['account.tax'],
                 )
             ]
-        else: # so_discount
+        else: # rx_discount
             total_price_per_tax_groups = defaultdict(float)
             for line in self.prescription_order_id.order_line:
                 if not line.product_uom_qty or not line.price_unit:
@@ -127,7 +127,7 @@ class PrescriptionOrderDiscount(models.TransientModel):
     def action_apply_discount(self):
         self.ensure_one()
         self = self.with_company(self.company_id)
-        if self.discount_type == 'sol_discount':
+        if self.discount_type == 'rxl_discount':
             self.prescription_order_id.order_line.write({'discount': self.discount_percentage*100})
         else:
             self._create_discount_lines()

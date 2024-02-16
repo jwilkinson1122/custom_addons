@@ -24,7 +24,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         cls.currency = cls.prescription_order.currency_id
         cls.partner = cls.prescription_order.partner_invoice_id
 
-    def test_11_so_payment_link(self):
+    def test_11_rx_payment_link(self):
         # test customized /payment/pay route with prescription_order_id param
         self.amount = self.prescription_order.amount_total
         route_values = self._prepare_pay_values()
@@ -65,7 +65,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         self.assertEqual(tx_sudo.currency_id, self.prescription_order.currency_id)
         self.assertEqual(tx_sudo.reference, self.prescription_order.name)
 
-        # Check validation of transaction correctly confirms the SO
+        # Check validation of transaction correctly confirms the RX
         self.assertEqual(self.prescription_order.state, 'draft')
         self.assertEqual(tx_sudo.prescription_order_ids.transaction_ids, tx_sudo)
         tx_sudo._set_done()
@@ -74,9 +74,9 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         self.assertTrue(tx_sudo.payment_id)
         self.assertEqual(tx_sudo.payment_id.state, 'posted')
 
-    def test_so_payment_link_with_different_partner_invoice(self):
+    def test_rx_payment_link_with_different_partner_invoice(self):
         # test customized /payment/pay route with prescription_order_id param
-        # partner_id and partner_invoice_id different on the so
+        # partner_id and partner_invoice_id different on the rx
         self.prescription_order.partner_invoice_id = self.portal_partner
         self.partner = self.prescription_order.partner_invoice_id
         route_values = self._prepare_pay_values()
@@ -85,7 +85,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         tx_context = self._get_portal_pay_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.prescription_order.partner_invoice_id.id)
 
-    def test_12_so_partial_payment_link(self):
+    def test_12_rx_partial_payment_link(self):
         # test customized /payment/pay route with prescription_order_id param
         # partial amount specified
         self.amount = self.prescription_order.amount_total / 2.0
@@ -163,7 +163,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
 
     def test_13_prescription_automatic_partial_payment_link_delivery(self):
         """Test that with automatic invoice and invoicing policy based on delivered quantity, a transaction for the partial
-        amount does not validate the SO."""
+        amount does not validate the RX."""
         # set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('pod_prescription.automatic_invoice', 'True')
         # invoicing policy is based on delivered quantity
@@ -197,8 +197,8 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
 
         self.assertEqual(self.prescription_order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')
 
-    def test_confirmed_transactions_comfirms_so_with_multiple_transaction(self):
-        """ Test that a confirmed transaction confirms a SO even if one or more non-confirmed
+    def test_confirmed_transactions_comfirms_rx_with_multiple_transaction(self):
+        """ Test that a confirmed transaction confirms a RX even if one or more non-confirmed
         transactions are linked. """
         # Create the payment
         self.amount = self.prescription_order.amount_total
@@ -251,7 +251,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         self.assertTrue(self.prescription_order.invoice_ids)
         self.assertTrue(tx.invoice_ids.is_move_sent)
 
-    def test_so_partial_payment_no_invoice(self):
+    def test_rx_partial_payment_no_invoice(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('pod_prescription.automatic_invoice', 'True')
 
@@ -265,7 +265,7 @@ class TestPrescriptionPayment(AccountPaymentCommon, PrescriptionCommon, PaymentH
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.prescription_order.invoice_ids)
 
-    def test_already_confirmed_so_payment(self):
+    def test_already_confirmed_rx_payment(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('pod_prescription.automatic_invoice', 'True')
 

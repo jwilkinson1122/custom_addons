@@ -109,7 +109,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         # -> Set Delay : 5 days on stock rules
         # -> Set Customer Lead Time on product : 30 days
         # -> Set Prescription Safety Days : 2 days
-        # -> Create an SO and confirm it with confirmation Date : 12/18/2018
+        # -> Create an RX and confirm it with confirmation Date : 12/18/2018
 
         # -> Pickings : OUT -> Scheduled Date : 01/12/2019, Deadline Date: 01/14/2019
         #              PACK -> Scheduled Date : 01/07/2019, Deadline Date: 01/09/2019
@@ -199,7 +199,7 @@ class TestPrescriptionStockLeadTime(TestPrescriptionCommon, ValuationReconciliat
         new_deadline -= timedelta(days=pick.move_ids[0].rule_id.delay)
         self.assertEqual(pick.date_deadline, new_deadline)
 
-        # Removes the SO deadline and checks the delivery deadline is updated accordingly.
+        # Removes the RX deadline and checks the delivery deadline is updated accordingly.
         order.commitment_date = False
         new_deadline = order.expected_date
         self.assertEqual(out.date_deadline, new_deadline)

@@ -235,7 +235,7 @@ class PrescriptionOrder(models.Model):
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
 
-        def _render_note_exception_quantity_so(rendering_context):
+        def _render_note_exception_quantity_rx(rendering_context):
             order_exceptions, visited_moves = rendering_context
             visited_moves = list(visited_moves)
             visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
@@ -248,6 +248,6 @@ class PrescriptionOrder(models.Model):
                 'impacted_pickings': impacted_pickings,
                 'cancel': cancel
             }
-            return self.env['ir.qweb']._render('pod_prescription_stock.exception_on_so', values)
+            return self.env['ir.qweb']._render('pod_prescription_stock.exception_on_rx', values)
 
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+        self.env['stock.picking']._log_activity(_render_note_exception_quantity_rx, documents)

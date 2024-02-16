@@ -16,7 +16,7 @@ class PrescriptionOrder(models.Model):
 
     NOTE: The matrix functionality was done in python, server side, to avoid js
         restriction.  Indeed, the js framework only loads the x first lines displayed
-        in the client, which means in case of big matrices and lots of so_lines,
+        in the client, which means in case of big matrices and lots of rx_lines,
         the js doesn't have access to the 41nth and following lines.
 
         To force the loading, a 'hack' of the js framework would have been needed...
@@ -29,7 +29,7 @@ class PrescriptionOrder(models.Model):
     grid = fields.Char(
         "Matrix local storage", store=False,
         help="Technical local storage of grid. "
-        "\nIf grid_update, will be loaded on the SO."
+        "\nIf grid_update, will be loaded on the RX."
         "\nIf not, represents the matrix to open.")
 
     @api.onchange('grid_product_tmpl_id')
@@ -41,13 +41,13 @@ class PrescriptionOrder(models.Model):
 
     @api.onchange('grid')
     def _apply_grid(self):
-        """Apply the given list of changed matrix cells to the current SO."""
+        """Apply the given list of changed matrix cells to the current RX."""
         if self.grid and self.grid_update:
             grid = json.loads(self.grid)
             product_template = self.env['product.template'].browse(grid['product_template_id'])
             dirty_cells = grid['changes']
             Attrib = self.env['product.template.attribute.value']
-            default_so_line_vals = {}
+            default_rx_line_vals = {}
             new_lines = []
             for cell in dirty_cells:
                 combination = Attrib.browse(cell['ptav_ids'])
@@ -73,7 +73,7 @@ class PrescriptionOrder(models.Model):
                     if qty == 0:
                         if self.state in ['draft', 'sent']:
                             # Remove lines if qty was set to 0 in matrix
-                            # only if SO state = draft/sent
+                            # only if RX state = draft/sent
                             self.order_line -= order_lines
                         else:
                             order_lines.update({'product_uom_qty': 0.0})
@@ -100,24 +100,24 @@ class PrescriptionOrder(models.Model):
                             #     # Remove 1+ lines
                             #     self.order_line -= order_lines[1:]
                 else:
-                    if not default_so_line_vals:
+                    if not default_rx_line_vals:
                         OrderLine = self.env['prescription.order.line']
-                        default_so_line_vals = OrderLine.default_get(OrderLine._fields.keys())
+                        default_rx_line_vals = OrderLine.default_get(OrderLine._fields.keys())
                     last_sequence = self.order_line[-1:].sequence
                     if last_sequence:
-                        default_so_line_vals['sequence'] = last_sequence
+                        default_rx_line_vals['sequence'] = last_sequence
                     new_lines.append((0, 0, dict(
-                        default_so_line_vals,
+                        default_rx_line_vals,
                         product_id=product.id,
                         product_uom_qty=qty,
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
-                # Add new SO lines
+                # Add new RX lines
                 self.update(dict(order_line=new_lines))
 
     def _get_matrix(self, product_template):
-        """Return the matrix of the given product, updated with current SOLines quantities.
+        """Return the matrix of the given product, updated with current RXLines quantities.
 
         :param product.template product_template:
         :return: matrix to display

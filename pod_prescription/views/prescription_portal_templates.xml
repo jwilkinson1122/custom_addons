@@ -410,7 +410,7 @@
 
     <!--
     Prescription Order content : intro, information, order lines, remarks, descriptions ....
-    This template should contain all the printable element of the SO. This is the
+    This template should contain all the printable element of the RX. This is the
     template rendered in PDF with the report engine.
     -->
     <template id="prescription_order_portal_content" name="Prescription Order Portal Content">

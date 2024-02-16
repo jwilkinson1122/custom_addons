@@ -66,7 +66,7 @@ class OnboardingStep(models.Model):
         template = self.env.ref('pod_prescription.email_template_edi_prescription', False)
 
         self.env['mail.compose.message'].with_context(
-            mark_so_as_sent=True,
+            mark_rx_as_sent=True,
             default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
         ).create({

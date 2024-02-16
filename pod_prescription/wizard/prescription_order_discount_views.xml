@@ -17,9 +17,9 @@
                                 <field name="discount_amount" invisible="discount_type != 'amount'" nolabel="1"/>
                                 <label for="discount_percentage"
                                        string="Discount"
-                                       invisible="discount_type not in ('so_discount', 'sol_discount')"/>
+                                       invisible="discount_type not in ('rx_discount', 'rxl_discount')"/>
                                 <field name="discount_percentage"
-                                       invisible="discount_type not in ('so_discount', 'sol_discount')"
+                                       invisible="discount_type not in ('rx_discount', 'rxl_discount')"
                                        widget="percentage" nolabel="1"/>
                             </group>
                         </div>
