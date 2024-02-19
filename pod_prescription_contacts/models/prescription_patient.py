@@ -71,8 +71,24 @@ class PrescriptionPatient(models.Model):
                 ).years
             record.patient_age = age
 
-
     # Prescriptions
+    prescription_count = fields.Integer(string='Prescription Count', compute='_compute_prescription_count')
+    
+    def _compute_prescription_count(self):
+        for rec in self:
+            prescription_count = self.env['prescription.order'].search_count([('patient_id', '=', rec.id)])
+            rec.prescription_count = prescription_count
+
+    def action_open_prescriptions(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prescriptions',
+            'res_model': 'prescription.order',
+            'domain': [('patient_id', '=', self.id)],
+            'context': {'default_patient_id': self.id},
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }
 
     # Flags           
     patient_flag_ids = fields.One2many("prescription.flag", inverse_name="patient_id")
@@ -94,7 +110,6 @@ class PrescriptionPatient(models.Model):
             result["res_id"] = self.patient_flag_ids.id
         return result
 
-
     # This Fuction is used for the Cancel Button =========================== item_cancel
     def btn_customer_cancel(self):
         self.ensure_one()
@@ -108,10 +123,6 @@ class PrescriptionPatient(models.Model):
         pass
     def btn_view_prescriptions(self):
         pass
-
-
-
-
 
 
     @api.model

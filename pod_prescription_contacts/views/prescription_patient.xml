@@ -35,10 +35,12 @@
             <form string="Partners">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <!-- <button name="action_view_patient_prescriptions" class="oe_stat_button" type="object" icon="fa fa-prescription" invisible="prescription_count == 0">
-                            <field name="prescription_count" string="Prescription" widget="statinfo"/>
-                            <field name='prescription_ids' invisible="1" />
-                        </button> -->
+                        <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-files-o" invisible="prescription_count == 0">
+                            <div class="o_stat_info">
+                                <field name="prescription_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Prescriptions</span>
+                            </div>
+                        </button>
                         <button name="action_view_patient_flags" type="object" class="oe_stat_button" icon="fa-flag" invisible="patient_flag_count == 0">
                             <field name="patient_flag_count" widget="statinfo" string="Flags" />
                             <field name='patient_flag_ids' invisible="1" />
