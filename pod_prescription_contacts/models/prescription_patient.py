@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PrescriptionPatient(models.Model):
-    # FHIR Entity: Patient (http://hl7.org/fhir/patient.html)
     _name = "prescription.patient"
     _description = "Prescription Patient"
     _inherit = ["prescription.abstract", "mail.thread", "mail.activity.mixin"]
@@ -36,6 +35,10 @@ class PrescriptionPatient(models.Model):
     )
     
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Responsible:', readonly=True)
+    
+    
+    user_id = fields.Many2one('res.users', 'Created By:', default=lambda self: self.env.user.id)
+    barcode = fields.Char(string='Barcode')
     attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
                                       'manager_id', 'attachment_id', string="Attachments",
                                       help="Patient Image / File Attachments")
@@ -70,68 +73,6 @@ class PrescriptionPatient(models.Model):
 
 
     # Prescriptions
-    # patient_prescription_ids = fields.One2many("prescription.order", inverse_name="patient_id")
-    patient_prescription_count = fields.Integer(compute="_compute_patient_prescription_count")
-            
-    # @api.depends("patient_prescription_ids")
-    # def _compute_patient_prescription_count(self):
-    #     for rec in self:
-    #         rec.patient_prescription_count = len(rec.patient_prescription_ids.ids)
-
-    # def action_view_patient_prescriptions(self):
-    #     self.ensure_one()
-    #     result = self.env["ir.actions.act_window"]._for_xml_id("pod_prescription.action_prescription")
-    #     result["context"] = {"default_patient_id": self.id}
-    #     result["domain"] = "[('patient_id', '=', " + str(self.id) + ")]"
-    #     if len(self.patient_prescription_ids) == 1:
-    #         res = self.env.ref("prescription.order.form", False)
-    #         result["views"] = [(res and res.id or False, "form")]
-    #         result["res_id"] = self.patient_prescription_ids.id
-    #     return result
-
-    def action_view_patient_prescriptions(self):
-        for records in self:
-            return {
-                'name': _('Patient Prescription'),
-                'view_type': 'form',
-                'domain': [('patient_id', '=', records.id)],
-                'res_model': 'prescription.order',
-                'view_id': False,
-                'view_mode': 'kanban,tree,form',
-                'context': {'default_patient_id': self.id},
-                'type': 'ir.actions.act_window',
-            }
-
-    def _compute_patient_prescription_count(self):
-        for records in self:
-            count = self.env['prescription.order'].search_count([('patient_id', '=', records.id)])
-            records.patient_prescription_count = count
-
-    # def action_open_prescription(self):
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Prescription',
-    #         'res_model': 'prescription.order',
-    #         'domain': [('patient_id', '=', self.id)],
-    #         'context': {'default_patient_id': self.id},
-    #         'view_mode': 'kanban,tree,form',
-    #         'target': 'current',
-    #     }
-
-    def open_doctor_prescriptions(self):
-        for records in self:
-            return {
-                'name': _('Doctor Prescription'),
-                'view_type': 'form',
-                'domain': [('dr', '=', records.id)],
-                'res_model': 'dr.prescription',
-                'view_id': False,
-                'view_mode': 'tree,form',
-                'context': {'default_dr': self.id},
-                'type': 'ir.actions.act_window',
-            }
-
-
 
     # Flags           
     patient_flag_ids = fields.One2many("prescription.flag", inverse_name="patient_id")
@@ -152,6 +93,21 @@ class PrescriptionPatient(models.Model):
             result["views"] = [(res and res.id or False, "form")]
             result["res_id"] = self.patient_flag_ids.id
         return result
+
+
+    # This Fuction is used for the Cancel Button =========================== item_cancel
+    def btn_customer_cancel(self):
+        self.ensure_one()
+        self.state = 'cancelled'
+
+    def btn_customer_confirm(self):
+        self.ensure_one()
+        self.state = 'confirmed'
+
+    def btn_view_device(self):
+        pass
+    def btn_view_prescriptions(self):
+        pass
 
 
 

@@ -13,6 +13,7 @@
     'depends': [
         'account',
         'account_accountant',
+        'account_edi',
         'l10n_us',
         'account_payment',  
         'helpdesk',

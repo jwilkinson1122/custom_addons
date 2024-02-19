@@ -80,7 +80,8 @@ class PrescriptionOrderLine(models.Model):
         string="Is expense",
         help="Is true if the prescription order line comes from an expense or a vendor bills")
 
-    # Generic configuration fields
+    barcode = fields.Char('barcode', related='product_id.barcode')
+
     product_id = fields.Many2one(
         comodel_name='product.product',
         string="Product",

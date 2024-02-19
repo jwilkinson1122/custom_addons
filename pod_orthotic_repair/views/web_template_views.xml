@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--Create New Record-->
-    <template id="repair_request_order_page" name="Repair Request Order">
+    <template id="repair_request_order_page" name="Repair Order">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
@@ -13,7 +13,7 @@
                                 </strong>
                             </div>
                         </t>
-                        <h2 class="repair-request-order">Repair Request Order</h2>
+                        <h2 class="repair-request-order">Repair Order</h2>
                         <form role="form" action="/create/repair-order" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <h5 class="mb0">Orthotic Details</h5>

@@ -47,6 +47,8 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    barcode = fields.Char('barcode', related='product_id.barcode')
+
     @api.onchange('product_id')
     def product_id_change(self):
         if self.order_id.prescription_so_id:

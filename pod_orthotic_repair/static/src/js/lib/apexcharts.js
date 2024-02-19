@@ -22412,33 +22412,7 @@
     return Line;
   }();
 
-  /*
-   * treemap-squarify.js - open source implementation of squarified treemaps
-   *
-   * Treemap Squared 0.5 - Treemap Charting library
-   *
-   * https://github.com/imranghory/treemap-squared/
-   *
-   * Copyright (c) 2012 Imran Ghory (imranghory@gmail.com)
-   * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
-   *
-   *
-   * Implementation of the squarify treemap algorithm described in:
-   *
-   * Bruls, Mark; Huizing, Kees; van Wijk, Jarke J. (2000), "Squarified treemaps"
-   * in de Leeuw, W.; van Liere, R., Data Visualization 2000:
-   * Proc. Joint Eurographics and IEEE TCVG Symp. on Visualization, Springer-Verlag, pp. 33–42.
-   *
-   * Paper is available online at: http://www.win.tue.nl/~vanwijk/stm.pdf
-   *
-   * The code in this file is completeley decoupled from the drawing code so it should be trivial
-   * to port it to any other vector drawing library. Given an array of datapoints this library returns
-   * an array of cartesian coordinates that represent the rectangles that make up the treemap.
-   *
-   * The library also supports multidimensional data (nested treemaps) and performs normalization on the data.
-   *
-   * See the README file for more details.
-   */
+
   window.TreemapSquared = {};
 
   (function () {
@@ -28105,9 +28079,6 @@
     return SVG;
   });
 
-  /*! svg.filter.js - v2.0.2 - 2016-02-24
-  * https://github.com/wout/svg.filter.js
-  * Copyright (c) 2016 Wout Fierens; Licensed MIT */
   (function() {
 
     // Main filter class
@@ -29136,9 +29107,6 @@
   }
   }());
 
-  /*! svg.draggable.js - v2.2.2 - 2019-01-08
-  * https://github.com/svgdotjs/svg.draggable.js
-  * Copyright (c) 2019 Wout Fierens; Licensed MIT */
   (function() {
 
     // creates handler, saves it

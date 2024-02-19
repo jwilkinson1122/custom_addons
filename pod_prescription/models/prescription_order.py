@@ -95,6 +95,8 @@ class PrescriptionOrder(models.Model):
         # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
 
+    # patient_id = fields.Many2one('prescription.patient', string='Patient')
+
     state = fields.Selection(
         selection=SALE_ORDER_STATE,
         string="Status",

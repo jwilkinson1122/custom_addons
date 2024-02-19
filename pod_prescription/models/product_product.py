@@ -15,6 +15,9 @@ class ProductProduct(models.Model):
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
     
+    warranty_months = fields.Integer("Warranty (months)")
+
+
     prescription_count = fields.Float(compute='_compute_prescription_count', string='Sold', digits='Product Unit of Measure')
 
     # Catalog related fields

@@ -446,7 +446,7 @@
                                     'company_id': parent.company_id,
                                     'default_lst_price': price_unit,
                                     'default_description_prescription': name}" options="{'no_open': True}" domain="[('prescription_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="rxl_product_many2one"/>
-
+                                    <field name="barcode" string="Barcode"/>
                                     <field name="product_template_id" string="Product" column_invisible="True" readonly="not product_updatable" required="not display_type" context="{
                                         'partner_id': parent.partner_id,
                                         'quantity': product_uom_qty,
@@ -852,6 +852,10 @@
             <search string="Search Prescription Order">
                 <field name="name" string="Order" filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                 <field name="partner_id" operator="child_of"/>
+                <field name="partner_id" string="E-mail" filter_domain="[('partner_id.email', 'ilike', self)]" />
+                <field name="partner_id" string="Phone" filter_domain="[('partner_id.phone', 'ilike', self)]" />
+                <field name="partner_id" string="Mobile" filter_domain="[('partner_id.mobile', 'ilike', self)]" />
+
                 <field name="user_id"/>
                 <field name="team_id" string="Prescription Team"/>
                 <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>

@@ -16,6 +16,7 @@
         'mail',
         'contacts',
         'pod_custom_theme',
+        # 'pod_prescription',
         ],
     'data': [
         'security/contacts_security.xml',
