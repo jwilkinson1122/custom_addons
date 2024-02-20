@@ -8,9 +8,11 @@
 
     <menuitem id="menu_prescription_config" name="Prescriptions" parent="sale.menu_sale_config" sequence="18">
 
-        <menuitem id="prescription_team_config" name="Prescription Team" action="pod_prescription_team.crm_team_action_config" sequence="1"/>
+        <menuitem id="menu_device_config" name="Devices" action="pod_prescription.action_device_tree" sequence="1" />
 
-        <menuitem id="menu_prescription_tag_config" name="Prescription Tags" action="pod_prescription_team.prescription_team_crm_tag_action" sequence="2"/>
+        <menuitem id="prescription_team_config" name="Prescription Team" action="pod_prescription_team.crm_team_action_config" sequence="2"/>
+
+        <menuitem id="menu_prescription_tag_config" name="Prescription Tags" action="pod_prescription_team.prescription_team_crm_tag_action" sequence="3"/>
 
     </menuitem>
 

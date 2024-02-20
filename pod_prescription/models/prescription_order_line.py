@@ -82,6 +82,8 @@ class PrescriptionOrderLine(models.Model):
 
     barcode = fields.Char('barcode', related='product_id.barcode')
 
+    device_id = fields.Many2one('prescription.device', string='Device')
+
     product_id = fields.Many2one(
         comodel_name='product.product',
         string="Product",

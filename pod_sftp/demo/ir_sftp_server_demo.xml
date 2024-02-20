@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2023 brain-tec AG (https://braintec.com)
+All Rights Reserved
+Licensed under the Odoo Proprietary License v1.0 (OPL).
+See LICENSE file for full licensing details.
+-->
+<odoo>
+    <record id="ir_sftp_server_demo" model="ir.sftp_server">
+        <field name="name">Income SFTP Test Server</field>
+        <field name="url">127.0.0.1</field>
+        <field name="port">22</field>
+        <field name="username">user</field>
+        <field name="password">pw</field>
+        <field name="server_type">in</field>
+        <field name="path_for_connection_test">/</field>
+    </record>
+</odoo>

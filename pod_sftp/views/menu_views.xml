@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2021 brain-tec AG (https://braintec.com)
+All Rights Reserved
+Licensed under the Odoo Proprietary License v1.0 (OPL).
+See LICENSE file for full licensing details.
+-->
+<odoo>
+    <menuitem id="menu_sftp" name="SFTP" parent="base.menu_custom"/>
+    <menuitem id="menu_outgoing_sftp_server" parent="menu_sftp" action="ir_sftp_server_action_outgoing"
+              sequence='1'
+              groups="base.group_no_one"/>
+    <menuitem id="menu_incoming_sftp_server" parent="menu_sftp" action="ir_sftp_server_action_incoming"
+              sequence='10'
+              groups="base.group_no_one"/>
+</odoo>

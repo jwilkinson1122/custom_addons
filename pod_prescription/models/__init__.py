@@ -14,6 +14,7 @@ from . import product_product
 from . import product_template
 from . import res_company
 from . import res_partner
+# from . import prescription_device
 from . import prescription_order
 from . import prescription_order_line
 from . import prescription_values
