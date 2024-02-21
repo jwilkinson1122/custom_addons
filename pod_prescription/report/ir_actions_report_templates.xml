@@ -49,7 +49,7 @@
                     <span class="m-0" t-field="doc.client_order_ref">RX0000</span>
                 </div>
                 <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
-                    <strong t-if="doc.state in ['draft', 'sent']">Draft Rx Date:</strong>
+                    <strong t-if="doc.state in ['draft', 'sent']">Draft Date:</strong>
                     <strong t-else="">Order Date:</strong><br/>
                     <span class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</span>
                 </div>

@@ -57,7 +57,7 @@
                 <thead>
                     <tr class="active">
                         <th>Draft Rx #</th>
-                        <th class="text-end">Draft Rx Date</th>
+                        <th class="text-end">Draft Date</th>
                         <th class="text-end">Valid Until</th>
                         <th class="text-center"/>
                         <th class="text-end">Total</th>
@@ -445,7 +445,7 @@
                         <tbody style="white-space:nowrap" id="prescription_info_table">
                             <tr>
                                 <th t-if="prescription_order.state in ['prescription', 'cancel']" class="text-end pb-0">Order Date:</th>
-                                <th t-else="" class="text-end pb-0">Draft Rx Date:</th>
+                                <th t-else="" class="text-end pb-0">Draft Date:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="prescription_order.date_order" t-options='{"widget": "date"}'/></td>
                             </tr>
                             <tr t-if="prescription_order.validity_date">

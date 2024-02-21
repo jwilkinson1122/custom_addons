@@ -18,7 +18,7 @@
                                groups="base.group_multi_company"/>
                         </div>
                         <div class="mt8">
-                            <button name="%(pod_prescription_management.prescription_order_template_action)d" icon="oi-arrow-right" type="action" string="Draft RX Templates" class="btn-link"/>
+                            <button name="%(pod_prescription_management.prescription_order_template_action)d" icon="oi-arrow-right" type="action" string="Draft Templates" class="btn-link"/>
                         </div>
                     </div>
                 </setting>

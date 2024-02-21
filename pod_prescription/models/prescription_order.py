@@ -216,7 +216,7 @@ class PrescriptionOrder(models.Model):
         store=True, precompute=True)
     user_id = fields.Many2one(
         comodel_name='res.users',
-        string="Prescriptionperson",
+        string="User",
         compute='_compute_user_id',
         store=True, readonly=False, precompute=True, index=True,
         tracking=2,

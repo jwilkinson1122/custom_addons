@@ -458,7 +458,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="prescription_patient_his_window_action">
-        <field name="name">Historys</field>
+        <field name="name">History</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">prescription.patient</field>
         <field name="view_mode">tree,form</field>

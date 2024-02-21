@@ -7,14 +7,14 @@ from odoo.exceptions import ValidationError
 
 class PrescriptionOrderTemplate(models.Model):
     _name = "prescription.order.template"
-    _description = "Draft Rx Template"
+    _description = "Draft Template"
 
     active = fields.Boolean(
         default=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.")
     company_id = fields.Many2one(comodel_name='res.company')
 
-    name = fields.Char(string="Draft Rx Template", required=True)
+    name = fields.Char(string="Draft Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
 
     mail_template_id = fields.Many2one(

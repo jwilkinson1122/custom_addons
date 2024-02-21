@@ -63,7 +63,7 @@
                                 </t>
                             </templates>
                         </kanban>
-                        <tree string="Prescription Draft Rx Template Lines" editable="bottom" decoration-success="is_present == True">
+                        <tree string="Prescription Draft Template Lines" editable="bottom" decoration-success="is_present == True">
                             <control>
                                 <create name="add_product_control" string="Add a product"/>
                             </control>

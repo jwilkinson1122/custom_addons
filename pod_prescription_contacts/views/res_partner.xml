@@ -294,13 +294,12 @@
                 </page>
             </xpath>
 
-            <xpath expr='//page[@name="contact_addresses"]' position="after">
+            <!-- <xpath expr='//page[@name="contact_addresses"]' position="after">
                 <page string="Test" name="test_test">
                     <group name="test_group_6uh">
                         <group name="test_group_6uh_left">
                             <label for="type" string="Type" />
                             <field name="type" readonly="user_ids" required="1" class="fw-bold" />
-                            <!-- <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/> -->
                             <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
                             <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id" />
                             <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id" />
@@ -312,8 +311,6 @@
                             <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1" />
                             <div class="oe_edit_only">
                                 <button name="open_parent" type="object" string="Edit Address" class="oe_link" />
-
-                                <!-- <button name="open_parent" type="object" string="Edit Address" class="oe_link" invisible="type == 'contact' and parent_id" /> -->
                             </div>
                         </group>
                         <group name="test_group_6uh_right">
@@ -331,7 +328,7 @@
                         </group>
                     </group>
                 </page>
-            </xpath>
+            </xpath> -->
 
             <!-- Modify the contact_addresses page attributes -->
             <xpath expr="//page[@name='contact_addresses']" position="attributes">

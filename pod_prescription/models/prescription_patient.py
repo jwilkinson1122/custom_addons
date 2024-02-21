@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-
-
-# -*- coding: utf-8 -*-
 import logging
 
 from odoo import _, api, fields, models, tools
@@ -29,10 +24,10 @@ class PrescriptionPatient(models.Model):
         # domain=[("active", "=", True)],
     )
     
-    prescription_lines = fields.One2many(
-        'prescription.order.line', 
-        'order_id', 
-        'Prescription Line')
+    # prescription_lines = fields.One2many(
+    #     'prescription.order.line', 
+    #     'order_id', 
+    #     'Prescription Line')
 
     prescription_count = fields.Integer(
         string="Prescription Count",

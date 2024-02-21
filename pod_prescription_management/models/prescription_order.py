@@ -13,7 +13,7 @@ class PrescriptionOrder(models.Model):
 
     prescription_order_template_id = fields.Many2one(
         comodel_name='prescription.order.template',
-        string="Draft Rx Template",
+        string="Draft Template",
         compute='_compute_prescription_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")

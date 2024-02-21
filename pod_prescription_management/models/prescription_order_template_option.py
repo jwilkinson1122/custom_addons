@@ -6,12 +6,12 @@ from odoo import api, fields, models
 
 class PrescriptionOrderTemplateOption(models.Model):
     _name = "prescription.order.template.option"
-    _description = "Draft Rx Template Option"
+    _description = "Draft Template Option"
     _check_company_auto = True
 
     prescription_order_template_id = fields.Many2one(
         comodel_name='prescription.order.template',
-        string="Draft Rx Template Reference",
+        string="Draft Template Reference",
         index=True, required=True,
         ondelete='cascade')
 

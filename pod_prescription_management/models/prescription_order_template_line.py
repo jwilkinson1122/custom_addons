@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class PrescriptionOrderTemplateLine(models.Model):
     _name = "prescription.order.template.line"
-    _description = "Draft Rx Template Line"
+    _description = "Draft Template Line"
     _order = 'prescription_order_template_id, sequence, id'
 
     _sql_constraints = [
@@ -22,7 +22,7 @@ class PrescriptionOrderTemplateLine(models.Model):
 
     prescription_order_template_id = fields.Many2one(
         comodel_name='prescription.order.template',
-        string='Draft Rx Template Reference',
+        string='Draft Template Reference',
         index=True, required=True,
         ondelete='cascade')
     sequence = fields.Integer(
