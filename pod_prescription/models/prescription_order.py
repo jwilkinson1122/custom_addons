@@ -105,7 +105,7 @@ class PrescriptionOrder(models.Model):
         tracking=3,
         default='draft')
     locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
-
+    # active = fields.Boolean(default=True)
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
     create_date = fields.Datetime(  # Override of default create_date field from ORM
         string="Creation Date", index=True, readonly=True)

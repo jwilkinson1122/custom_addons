@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Place the app menu item after the `Sale` app (sequence 7) -->
-    <menuitem id="menu_warranty" name="Warranties" sequence="8" web_icon="pod_warranty,static/description/app_icon.png" />
+    <menuitem id="menu_warranty" name="Warranties" sequence="8" web_icon="pod_warranty,static/description/icon.png" />
 
     <menuitem id="menu_warranty_warranty" name="Warranties" parent="menu_warranty" sequence="1" />
 

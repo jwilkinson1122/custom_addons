@@ -406,8 +406,7 @@
                                             <t groups="product.group_discount_per_so_line">
                                                 <label for="discount"/>
                                                 <div name="discount">
-                                                    <field name="discount" class="oe_inline"/>
-%
+                                                    <field name="discount" class="oe_inline"/>%
                                                 </div>
                                             </t>
                                             <field name="sequence" invisible="1"/>
@@ -415,8 +414,7 @@
                                         <group invisible="display_type">
                                             <label for="customer_lead"/>
                                             <div name="lead">
-                                                <field name="customer_lead" class="oe_inline"/>
-days
+                                                <field name="customer_lead" class="oe_inline"/>days
                                             </div>
                                             <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id', 'business_domain': 'prescription_order'}"/>
                                         </group>
@@ -557,8 +555,7 @@ days
                                                                 <div class="row">
                                                                     <div class="col-12 text-muted">
                                                                     Discount:
-                                                                        <t t-out="record.discount.value"/>
-%
+                                                                        <t t-out="record.discount.value"/>%
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -917,6 +914,14 @@ days
     </record>
 
     <!-- ACTIONS (WINDOW) -->
+
+    <!-- <record model="ir.actions.act_window" id="patient_prescription_action">
+        <field name="name">Prescriptions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">prescription.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{}</field>
+    </record> -->
 
     <record id="action_prescription" model="ir.actions.act_window">
         <field name="name">Prescription Orders</field>

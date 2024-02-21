@@ -25,5 +25,7 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
-        res['kpi_all_prescription_total'] = 'pod_prescription.report_all_channels_prescription_action&menu_id=%s' % self.env.ref('pod_prescription.prescription_menu_root').id
+        res['kpi_all_prescription_total'] = 'pod_prescription.report_all_channels_prescription_action&menu_id=%s' % self.env.ref('sale.sale_menu_root').id
+
+        # res['kpi_all_prescription_total'] = 'pod_prescription.report_all_channels_prescription_action&menu_id=%s' % self.env.ref('pod_prescription.prescription_menu_root').id
         return res

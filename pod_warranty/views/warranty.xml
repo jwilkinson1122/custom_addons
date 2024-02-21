@@ -24,9 +24,9 @@
         <field name="arch" type="xml">
             <form string="Warranty">
                 <header>
-                    <button name="action_activate" type="object" string="Activate" class="oe_highlight" invisible="state not in 'pending'" groups="pod_warranty.group_user" />
-                    <button name="action_set_to_pending" type="object" string="Set To Pending" invisible="state not in ('pending', 'cancelled')" groups="pod_warranty.group_user" />
-                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('pending', 'active')" groups="pod_warranty.group_user" />
+                    <button name="action_activate" type="object" string="Activate" class="oe_highlight" invisible="state not in 'pending'"  />
+                    <button name="action_set_to_pending" type="object" string="Set To Pending" invisible="state not in ('pending', 'cancelled')" />
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('pending', 'active')" />
                     <field name="state" widget="statusbar" statusbar_visible="pending,active,expired"/>
                 </header>
                 <sheet>

@@ -1,11 +1,11 @@
 {
-    "name": "Sales Warranty",
+    "name": "NWPL - Product Warranty",
     'version': '17.0.0.0.0',
     'author': 'NWPL',
     'website': 'https://www.nwpodiatric.com',
     'license': 'LGPL-3',
-    "category": "Sales",
-    "summary": "Manage warranties on sales",
+    "category": "Prescriptions/Sales",
+    "summary": "Manage warranties on products",
     "depends": ['sale_stock'],
     "data": [
         'security/groups.xml',

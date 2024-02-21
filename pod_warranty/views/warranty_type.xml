@@ -26,7 +26,7 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="company_id"/>
                         <field name="duration_in_months"/>
                         <field name="active"/>
                         <field name="description"/>

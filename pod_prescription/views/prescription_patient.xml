@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_prescription_patient_form" model="ir.ui.view">
+        <field name="name">inherit.prescription.patient.form</field>
+        <field name="model">prescription.patient</field>
+        <field name="inherit_id" ref="pod_prescription_contacts.prescription_patient_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_open_patient_prescriptions" type="object" class="oe_stat_button" icon="fa-files-o" invisible="prescription_count == 0">
+                    <div class="o_stat_info">
+                        <field name="prescription_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Prescriptions</span>
+                    </div>
+                    <!-- <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="prescription_count"/>
+                        </span>
+                        <span class="o_stat_text">Prescriptions</span>
+                    </div> -->
+                </button>
+            </xpath>
+            <xpath expr='//page[@name="patient_measures"]' position="before">
+                <page name="patient_perscriptions" string="Prescriptions">
+                    <separator name="prescriptions" string="Prescription List"/>
+                    <div name="alert_no_prescriptions" class="oe_read_only alert alert-info mb8" role="alert" invisible="prescription_ids == 0 or prescription_ids !=[]">
+                        No Prescriptions Available
+                    </div>
+                    <field name="prescription_ids" mode="kanban"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

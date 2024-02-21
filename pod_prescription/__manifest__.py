@@ -22,7 +22,8 @@
         'data_merge_helpdesk',
         'website_helpdesk_forum',
         'website_helpdesk_livechat',
-        'knowledge',
+        # 'website_helpdesk_knowledge',
+        # 'knowledge',
         'mrp',
         'product',
         'uom',
@@ -79,7 +80,7 @@
         'wizard/prescription_order_discount_views.xml',
 
         # Define prescription order views before their references
-        'views/prescription_device_views.xml',
+        # 'views/prescription_device_views.xml',
         'views/prescription_order_views.xml',
         'views/sale_order_view.xml',
         'views/account_views.xml',
@@ -90,6 +91,7 @@
         'views/product_document_views.xml',
         'views/product_packaging_views.xml',
         'views/product_views.xml',
+        'views/prescription_patient.xml',
         'views/res_partner_views.xml',
         'views/prescription_order_line_views.xml',
         'views/prescription_portal_templates.xml',

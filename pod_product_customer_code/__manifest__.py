@@ -8,7 +8,10 @@
     "summary": "Manage Partner Product Code",
     "description": """Manage specific product codes for customers.""",
     "version": "17.0.0.0.0",
-    'depends': ['sale_management'],
+    'depends': [
+        'prescription_management',
+        'sale_management',
+        ],
     'data': [
         'security/ir.model.access.csv',
         'security/product_customer_info_groups.xml',

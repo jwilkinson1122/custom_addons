@@ -1,8 +1,7 @@
 Sales Warranty
 ==============
-This module allows to manage warranties on sold products.
+This module enables managing warranties on sold products.
 
-.. contents:: Table of Contents
 
 Types of Warranty
 -----------------
@@ -10,21 +9,17 @@ As member of the group `Warranties / Manager`, you may edit / create new types o
 
 Go to `Warranties / Configuration / Warranty Types`.
 
-.. image:: static/description/warranty_type_list.png
 
 Products
 --------
 As member of the group `Sales / Manager`, you may select warranties on a product.
 
-.. image:: static/description/product_form.png
 
 Non-serialized Products
 ~~~~~~~~~~~~~~~~~~~~~~~
 By default, warranties are only selectable on products with unique serial numbers.
 
 Non-serialized products can be enabled per warranty type.
-
-.. image:: static/description/warranty_type_enable_non_serialized.png
 
 In that case, no serial number will be attributed to the warranty when activating it.
 
@@ -42,17 +37,10 @@ Sale Order
 As member of the group `Sales / User`, when you validate a sales order,
 warranties are created automatically for each product if required.
 
-.. image:: static/description/sale_order_validate.png
-
 After validating the order, a smart button `Warranties` appears.
 If you click on that button, the warranties related to the sold products appears.
 
-.. image:: static/description/sale_order_waranty_button.png
-.. image:: static/description/sale_order_waranty_list.png
-
 Each warranty inherits the details from the sale order.
-
-.. image:: static/description/sale_order_waranty_form.png
 
 Note that some information are not filled on the warranty.
 
@@ -66,22 +54,14 @@ Lot/Serial Number
 -----------------
 As a user with access to the Inventory app, I go to `Inventory > Items > Lot/Serial Numbers`.
 
-I open a lot/serial number in form view and see that a new smart button called `Warranties` is available.
+Open a lot/serial number in form view and see that a new smart button called `Warranties` is available.
 
-.. image:: static/description/lot_serial_number_warranties.png
-
-When I click on the `Warranties` smart button, I get a list view of warranties related to that lot/serial number.
-
-.. image:: static/description/lot_warranties_list.png
+Click on the `Warranties` smart button, a list view of warranties related to that lot/serial number.
 
 Delivery Order
 --------------
 As member of the group `Inventory / User`, when validating a delivery order,
 the warranties related to the delivered products are activated.
-
-.. image:: static/description/delivery_order_form_validate.png
-
-.. image:: static/description/sale_order_waranty_activated.png
 
 * The `Serial Number` selected on the picking is propagated to the warranty.
 * The `Activation Date` is set to the current date.
@@ -93,8 +73,6 @@ A cron job is executed every day to update the status of warranties.
 
 If the current date is greater than the `Warranty End Date` on a warranty, it is changed to `Expired`.
 
-.. image:: static/description/warranty_form_expired.png
-
 Creating Warranties Manually
 ----------------------------
 As member of the group `Warranties / User`, you may create a warranty manually.
@@ -105,13 +83,7 @@ Because the warranty is created manually, you must manually fill the serial numb
 
 When all the fields are filled, click on Save.
 
-.. image:: static/description/warranty_form.png
-
 Then click on the button `Activate`.
-
-.. image:: static/description/warranty_form_activate_button.png
-
-.. image:: static/description/warranty_form_activated.png
 
 When the expiry date is reached, the state will be set to `Expired` by the cron.
 This is the same behavior as for a warranty generated from a sale order.
@@ -119,10 +91,6 @@ This is the same behavior as for a warranty generated from a sale order.
 Cancelling A Sale Order
 -----------------------
 When cancelling a sale order, the warranties attached to the order are cancelled.
-
-.. image:: static/description/sale_order_cancel.png
-
-.. image:: static/description/sale_order_warranties_cancelled.png
 
 If the sale order is reconfirmed after the cancellation, new warranties are generated.
 The warranties previously cancelled are ignored.

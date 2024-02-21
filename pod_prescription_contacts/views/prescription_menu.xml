@@ -24,7 +24,7 @@
  -->
 
 
-     <menuitem id="menu_orders_customers" name="Find partners" action="pod_prescription_contacts.res_partner_find" parent="base.menu_administration" />
+     <!-- <menuitem id="menu_orders_customers" name="Find partners" action="pod_prescription_contacts.res_partner_find" parent="base.menu_administration" /> -->
 
 
     <menuitem id="prescription_accounts_menu" name="Accounts" parent="contacts.menu_contacts" action="pod_prescription_contacts.prescription_account_action" sequence="1" />
@@ -43,6 +43,9 @@
         <menuitem id="prescription_patient_diagnosis_menu" name="Diagnosis" action="pod_prescription_contacts.prescription_diagnosis_action" sequence="30" />
 
     </menuitem>
+
+    <menuitem id="menu_orders_customers" name="Scan" parent="contacts.menu_contacts" action="pod_prescription_contacts.res_partner_find" sequence="5"/>
+
 
     <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
 

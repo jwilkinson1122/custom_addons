@@ -32,5 +32,5 @@ class PaymentWizard(models.TransientModel):
 
     def _start_stripe_onboarding(self):
         """ Override of payment to set the prescription menu as start menu of the payment onboarding. """
-        menu_id = self.env.ref('pod_prescription.prescription_menu_root').id
+        menu_id = self.env.ref('sale.sale_menu_root').id
         return self.env.company._run_payment_onboarding_step(menu_id)

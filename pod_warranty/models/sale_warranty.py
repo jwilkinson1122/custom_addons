@@ -1,6 +1,3 @@
-# © 2023 Numigi (tm) and all its contributors (https://bit.ly/numigiens)
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
@@ -71,7 +68,7 @@ class Warranty(models.Model):
         tracking=True,
     )
     lot_id = fields.Many2one(
-        "stock.production.lot",
+        "stock.lot",
         "Serial Number",
         index=True,
         ondelete="restrict",

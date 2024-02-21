@@ -10,12 +10,12 @@ registry.category("web_tour.tours").add("prescription_tour", {
     rainbowMan: false,
     sequence: 20,
     steps: () => [stepUtils.showAppsMenuItem(), {
-    trigger: ".o_app[data-menu-xmlid='pod_prescription.prescription_menu_root']",
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     content: _t("Open Prescription app to send your first quotation in a few clicks."),
     position: "right",
     edition: "community"
 }, {
-    trigger: ".o_app[data-menu-xmlid='pod_prescription.prescription_menu_root']",
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     content: _t("Open Prescription app to send your first quotation in a few clicks."),
     position: "bottom",
     edition: "enterprise"
@@ -37,12 +37,12 @@ registry.category("web_tour.tours").add("prescription_tour", {
     skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
 }, stepUtils.showAppsMenuItem(),
 {
-    trigger: ".o_app[data-menu-xmlid='pod_prescription.prescription_menu_root']",
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
     edition: "community",
     auto: true,
 }, {
-    trigger: ".o_app[data-menu-xmlid='pod_prescription.prescription_menu_root']",
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
     edition: "enterprise",
     auto: true,
