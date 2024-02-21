@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="presale_order_lines_list_action" model="ir.actions.act_window">
+        <field name="name">Presale order lines</field>
+        <field name="res_model">presale.order.line</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="presale_line_tree" model="ir.ui.view">
+        <field name="name">Presale line</field>
+        <field name="model">presale.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Presale order lines" editable="bottom">
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="presale_line_view_form" model="ir.ui.view">
+        <field name="name">Presale Line</field>
+        <field name="model">presale.order.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="product_id"/>
+                        <field name="quantity"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

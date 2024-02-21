@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_attribute_width" model="product.attribute">
+        <field name="name">Largeur Tableau</field>
+        <field name="sequence">10</field>
+        <field name="display_type">select</field>
+    </record>
+    <record id="product_attribute_height" model="product.attribute">
+        <field name="name">Hauteur Tableau</field>
+        <field name="sequence">20</field>
+        <field name="display_type">select</field>
+
+    </record>
+    <record id="product_attribute_lintel" model="product.attribute">
+        <field name="name">Linteau</field>
+        <field name="sequence">30</field>
+        <field name="display_type">select</field>
+
+    </record>
+    <record id="product_attribute_left_spandrel" model="product.attribute">
+        <field name="name">Ecoinçon Gauche</field>
+        <field name="sequence">40</field>
+        <field name="display_type">select</field>
+
+    </record>
+    <record id="product_attribute_right_spandrel" model="product.attribute">
+        <field name="name">Ecoinçon Droit</field>
+        <field name="sequence">50</field>
+        <field name="display_type">select</field>
+
+    </record>
+    <record id="product_attribute_refoulement" model="product.attribute">
+        <field name="name">Refoulement</field>
+        <field name="sequence">60</field>
+        <field name="display_type">select</field>
+
+    </record>
+</odoo>

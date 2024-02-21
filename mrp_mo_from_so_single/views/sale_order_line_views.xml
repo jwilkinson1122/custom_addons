@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.discount</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='preview_sale_order']" position="after">
+                <button class="oe_stat_button" name="action_view_mrp_production_customes" type="object"
+                        icon="fa-wrench">
+                    <div class="o_field_widget o_stat_info">
+
+                        <span class="o_stat_text">MO</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="delivery_date" string="Delivery Date"/>
+                <field name="related_mo_ids" string="Related" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <button name="create_mo_from_boms" type="object" string="MO" icon="fa-list"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+                <field name="index_number" string="Index" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <field name="area_type" string="Area Select" invisible="1"/>
+                <field name="desc_ids" string=" التوصيف" force_save="1" widget="many2many_tags"/>
+                <field name="area_type" string="النوع"/>
+                <field name="product_width" string="العرض سم"/>
+                <field name="product_length" string="الطول سم"/>
+                <field name="product_area" string="المساحة" attrs="{'invisible': [('area_type','!=','area')]}"/>
+                <field name="product_area" string="المساحة الخطية" attrs="{'invisible': [('area_type','!=','linear')]}"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']/group[@name='note_group']" position="inside">
+                <p>Total Area</p>
+                <field name="total_areas" string="Total Area" placeholder="Total Area"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+

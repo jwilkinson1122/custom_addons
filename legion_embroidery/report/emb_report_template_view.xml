@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="emb_report_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <style>
+                        table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        font-size: 12px;
+                        }
+                        th{
+                            border: 1px solid black;
+                            background-color:#2D68C4;
+                            color: white;
+                        }
+
+                        th, td {
+                        text-align: left;
+                        padding: 5px;
+                        border: 1px solid black;
+                        }
+
+                        .box {
+                        float: left;
+                        width: 20%;
+                        padding: 2px;
+                        font-weight: bold;
+                        font-size: 13px;
+                        }
+
+                         .information {
+                        float: left;
+                        width: 30%;
+                        padding: 2px;
+                        font-size: 13px;
+                        }
+                        .information1 {
+                        float: left;
+                        width: 30%;
+                        padding: 2px;
+                        font-size: 13px;
+                        }
+
+                        .clearfix::after {
+                        content: "";
+                        clear: both;
+                        display: table;
+                        }
+
+                    </style>
+                    <div style="width: 100%; padding:10px;"
+                         class="text-center">
+                        <span class="block">
+                            <u>EMBROIDERY MANUFACTURING REPORT</u>
+                        </span>
+                        <br/>
+                    </div>
+
+                    <!-- this part for information left right div -->
+                    <div class="clearfix">
+                        <div class="box" style="">
+                            <span>Customer</span>
+                            <br/>
+                            <span>Bill of Material</span>
+                            <br/>
+                            <span>Fabric Width</span>
+                            <br/>
+                            <span>Design Width</span>
+                        </div>
+
+                         <div class="information1" style="">
+                            <span t-field="o.partner_id.name"/>
+                             <br/>
+                            <span t-field="o.bom_id"/>
+                             <br/>
+                            <span t-field="o.fabric_height"/>
+                             <br/>
+                            <span t-field="o.design_height"/>
+                        </div>
+
+                        <div class="box" style="">
+                            <span>Planned Date</span>
+                            <br/>
+                            <span>Date Deadline</span>
+                            <br/>
+                            <span>Machine Number</span>
+                        </div>
+
+                        <div class="information" style="">
+                            <span t-field="o.date_planned"/>
+                            <br/>
+                            <span t-field="o.date_deadline"/>
+                            <br/>
+                            <span t-field="o.machine"/>
+                        </div>
+                    </div>
+                    <p>&#160;</p>
+                    <!-- end -->
+
+
+                    <!-- table part -->
+                    <span><strong>PRODUCTION STAGE</strong></span>
+                    <div style="overflow-x: auto;" class="page">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Operator Name</th>
+                                <th>Total Stitches</th>
+                                <th>Total Repeats</th>
+                                <th>Shift</th>
+                                <th>No.of Repeats Closed</th>
+                                <th>Pending Repeats</th>
+                                <th>No.of Stitches Closed</th>
+                                <th>Pending Stitches</th>
+                                <th>Total Commission</th>
+                            </tr>
+                            </thead>
+                            <t t-set="sum_closed_repeats" t-value="0"/>
+                            <t t-set="sum_closed_stitches" t-value="0"/>
+                            <t t-set="sum_pending_repeats" t-value="0"/>
+                            <t t-set="sum_pending_stitches" t-value="0"/>
+                            <t t-set="total_commission" t-value="0"/>
+                            <tr t-foreach="o.production_employee_ids" t-as="line">
+                                <t t-set="pending_repeats" t-value="0"/>
+                                <t t-set="pending_stitches" t-value="0"/>
+                                <td><span t-field="line.employee_id.name"/></td>
+                                <td><span t-field="o.total_stitches"/></td>
+                                <td><span t-field="o.product_qty"/></td>
+                                <td><span t-field="line.shift"/></td>
+                                <td><span t-field="line.closed_repeats"/><t t-set="sum_closed_repeats" t-value="sum_closed_repeats + line.closed_repeats"/></td>
+                                <td><t t-set="pending_repeats" t-value="o.product_qty - sum_closed_repeats"/><span t-esc="pending_repeats"/></td>
+                                <td><span t-field="line.closed_stitches"/><t t-set="sum_closed_stitches" t-value="sum_closed_stitches + line.closed_stitches"/></td>
+                                <td><t t-set="pending_stitches" t-value="o.total_stitches - sum_closed_stitches"/><span t-esc="pending_stitches"/></td>
+                                <td><span t-field="line.rate"/><t t-set="total_commission" t-value="total_commission + line.rate"/></td>
+
+                            </tr>
+                            <!-- total part -->
+                            <tr>
+                                <th>Total</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th><span t-esc="sum_closed_repeats"/></th>
+                                <th></th>
+                                <th><span t-esc="sum_closed_stitches"/></th>
+                                <th></th>
+                                <th><span t-esc="total_commission"/></th>
+                            </tr>
+                            <!-- End -->
+                        </table>
+                    </div>
+                    <br/>
+                    <table style="width: 70%">
+                        <tr>
+                            <th>Stages</th>
+                            <th>M.Orders</th>
+                            <th>Total Stitches</th>
+                            <th>Total Repeats</th>
+                            <th>No.of Repeats Closed</th>
+                            <th>Pending Repeats</th>
+                        </tr>
+                        <tr>
+                            <t t-set="total_production_orders" t-value="0"/>
+                            <t t-set="total_production_stitches" t-value="0"/>
+                            <t t-set="total_production_repeats" t-value="0"/>
+                            <t t-set="total_production_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-set="total_production_orders" t-value="total_production_orders + 1 "/>
+                                <t t-set="total_production_stitches" t-value="total_production_stitches + line.total_stitches "/>
+                                <t t-set="total_production_repeats" t-value="total_production_repeats + line.product_qty "/>
+                                <tr t-foreach="line.production_employee_ids" t-as="stage_line">
+                                    <t t-if="stage_line">
+                                        <t t-set="total_production_closed_repeats" t-value="total_production_closed_repeats + stage_line.closed_repeats "/>
+                                    </t>
+                                </tr>
+                            </tr>
+                            <td>Production</td>
+                            <td><span t-esc="total_production_orders"/></td>
+                            <td><span t-esc="total_production_stitches"/></td>
+                            <td><span t-esc="total_production_repeats"/></td>
+                            <td><span t-esc="total_production_closed_repeats"/></td>
+                            <td><span t-esc="total_production_repeats - total_production_closed_repeats"/></td>
+                        </tr>
+                        <tr>
+                            <t t-set="total_handwork_orders" t-value="0"/>
+                            <t t-set="total_handwork_stitches" t-value="0"/>
+                            <t t-set="total_handwork_repeats" t-value="0"/>
+                            <t t-set="total_handwork_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-set="total_handwork_orders" t-value="total_handwork_orders + 1 "/>
+                                <t t-set="total_handwork_stitches" t-value="total_handwork_stitches + line.total_stitches "/>
+                                <t t-set="total_handwork_repeats" t-value="total_handwork_repeats + line.product_qty "/>
+                                <tr t-foreach="line.handwork_employee_ids" t-as="stage_line">
+                                    <t t-if="stage_line">
+                                        <t t-set="total_handwork_closed_repeats" t-value="total_handwork_closed_repeats + stage_line.closed_repeats "/>
+                                    </t>
+                                </tr>
+                            </tr>
+                            <td>Handwork</td>
+                            <td><span t-esc="total_handwork_orders"/></td>
+                            <td><span t-esc="total_handwork_stitches"/></td>
+                            <td><span t-esc="total_handwork_repeats"/></td>
+                            <td><span t-esc="total_handwork_closed_repeats"/></td>
+                            <td><span t-esc="total_handwork_repeats - total_handwork_closed_repeats"/></td>
+                        </tr>
+                         <tr>
+                             <t t-set="total_finishing_orders" t-value="0"/>
+                            <t t-set="total_finishing_stitches" t-value="0"/>
+                            <t t-set="total_finishing_repeats" t-value="0"/>
+                            <t t-set="total_finishing_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-set="total_finishing_orders" t-value="total_finishing_orders + 1 "/>
+                                <t t-set="total_finishing_stitches" t-value="total_finishing_stitches + line.total_stitches "/>
+                                <t t-set="total_finishing_repeats" t-value="total_finishing_repeats + line.product_qty "/>
+                                <tr t-foreach="line.finishing_employee_ids" t-as="stage_line">
+                                    <t t-if="stage_line">
+                                        <t t-set="total_finishing_closed_repeats" t-value="total_finishing_closed_repeats + stage_line.closed_repeats "/>
+                                    </t>
+                                </tr>
+                            </tr>
+
+                            <td>Finishing</td>
+                            <td><span t-esc="total_finishing_orders"/></td>
+                            <td><span t-esc="total_finishing_stitches"/></td>
+                            <td><span t-esc="total_finishing_repeats"/></td>
+                            <td><span t-esc="total_finishing_closed_repeats"/></td>
+                            <td><span t-esc="total_finishing_repeats - total_finishing_closed_repeats"/></td>
+                        </tr>
+                        <tr>
+                            <t t-set="total_internal_orders" t-value="0"/>
+                            <t t-set="total_internal_stitches" t-value="0"/>
+                            <t t-set="total_internal_repeats" t-value="0"/>
+                            <t t-set="total_internal_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-set="total_internal_orders" t-value="total_internal_orders + 1 "/>
+                                <t t-set="total_internal_stitches" t-value="total_internal_stitches + line.total_stitches "/>
+                                <t t-set="total_internal_repeats" t-value="total_internal_repeats + line.product_qty "/>
+                                <tr t-foreach="line.audit_employee_ids" t-as="stage_line">
+                                    <t t-if="stage_line">
+                                        <t t-set="total_internal_closed_repeats" t-value="total_internal_closed_repeats + stage_line.closed_repeats "/>
+                                    </t>
+                                </tr>
+                            </tr>
+                            <td>Internal Audit</td>
+                            <td><span t-esc="total_internal_orders"/></td>
+                            <td><span t-esc="total_internal_stitches"/></td>
+                            <td><span t-esc="total_internal_repeats"/></td>
+                            <td><span t-esc="total_internal_closed_repeats"/></td>
+                            <td><span t-esc="total_internal_repeats - total_internal_closed_repeats"/></td>
+                        </tr>
+                         <tr>
+                              <t t-set="total_external_orders" t-value="0"/>
+                            <t t-set="total_external_stitches" t-value="0"/>
+                            <t t-set="total_external_repeats" t-value="0"/>
+                            <t t-set="total_external_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-if="line.flow == 'flow_one' ">
+                                    <t t-set="total_external_orders" t-value="total_external_orders + 1 "/>
+                                    <t t-set="total_external_stitches" t-value="total_external_stitches + line.total_stitches "/>
+                                    <t t-set="total_external_repeats" t-value="total_external_repeats + line.product_qty "/>
+                                    <tr t-foreach="line.ex_audit_employee_ids" t-as="stage_line">
+                                        <t t-if="stage_line">
+                                            <t t-set="total_external_closed_repeats" t-value="total_external_closed_repeats + stage_line.closed_repeats "/>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tr>
+                            <td>External Audit</td>
+                             <td><span t-esc="total_external_orders"/></td>
+                            <td><span t-esc="total_external_stitches"/></td>
+                            <td><span t-esc="total_external_repeats"/></td>
+                            <td><span t-esc="total_external_closed_repeats"/></td>
+                            <td><span t-esc="total_external_repeats - total_external_closed_repeats"/></td>
+                        </tr>
+                         <tr>
+                              <t t-set="total_dispatch_orders" t-value="0"/>
+                            <t t-set="total_dispatch_stitches" t-value="0"/>
+                            <t t-set="total_dispatch_repeats" t-value="0"/>
+                            <t t-set="total_dispatch_closed_repeats" t-value="0"/>
+                            <tr t-foreach="request.env['embroidery.embroidery'].search([])" t-as="line">
+                                <t t-set="total_dispatch_orders" t-value="total_dispatch_orders + 1 "/>
+                                <t t-set="total_dispatch_stitches" t-value="total_dispatch_stitches + line.total_stitches "/>
+                                <t t-set="total_dispatch_repeats" t-value="total_dispatch_repeats + line.product_qty "/>
+                                <tr t-foreach="line.disp_audit_employee_ids" t-as="stage_line">
+                                    <t t-if="stage_line">
+                                        <t t-set="total_dispatch_closed_repeats" t-value="total_dispatch_closed_repeats + stage_line.closed_repeats "/>
+                                    </t>
+                                </tr>
+                            </tr>
+                            <td>Dispatch</td>
+                             <td><span t-esc="total_dispatch_orders"/></td>
+                            <td><span t-esc="total_dispatch_stitches"/></td>
+                            <td><span t-esc="total_dispatch_repeats"/></td>
+                            <td><span t-esc="total_dispatch_closed_repeats"/></td>
+                            <td><span t-esc="total_dispatch_repeats - total_dispatch_closed_repeats"/></td>
+                        </tr>
+
+                    </table>
+                    <br/>
+
+<!--                    <div class="clearfix">-->
+<!--                        <div id="total" class="row justify-content-end">-->
+<!--                            <div class="col-4">-->
+<!--                                <table class="table table-sm">-->
+<!--                                    <tr class="border-black o_subtotal" style="">-->
+<!--                                        <th>Total</th>-->
+<!--                                        <th><span t-esc="total_commission"/></th>-->
+<!--                                    </tr>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="width: 25%;float:left; padding:10px;">
+                        <tr>
+                            <td>
+                                <strong>___________________</strong>
+                                <br/>
+                                <span>
+                                    <i>
+                                        &#160;&#160;&#160;&#160;&#160;<strong>Operator</strong>
+                                    </i>
+                                    <br/>
+                                </span>
+                            </td>
+                        </tr>
+                    </div>
+                    <div style="width: 25%;float:left; padding:10px;">
+                        <tr>
+                            <td>
+                                <strong>___________________</strong>
+                                <br/>
+                                <span>
+                                    <i>
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;<strong>Master</strong>
+                                    </i>
+                                    <br/>
+                                </span>
+                            </td>
+                        </tr>
+                    </div>
+                    <div style="width: 25%;float:left; padding:10px;">
+                        <tr>
+                            <td>
+
+                                <strong>_____________________________</strong>
+                                <br/>
+                                <span>
+                                    <i>
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;<strong>Embroidery Manager</strong>
+                                    </i>
+                                    <br/>
+                                </span>
+                            </td>
+                        </tr>
+                    </div>
+                    <div style="width: 25%;float:left; padding:10px;">
+                        <tr>
+                            <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<strong>___________________</strong>
+                                <br/>
+                                <span>
+                                    <i>
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<strong>Director</strong>
+                                    </i>
+                                    <br/>
+                                </span>
+                            </td>
+                        </tr>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="presale_order_list_action" model="ir.actions.act_window">
+        <field name="name">Presale</field>
+        <field name="res_model">presale.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="presale_order_form_action" model="ir.actions.act_window">
+        <field name="name">New Presale</field>
+        <field name="res_model">presale.order</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="presale_model_tree" model="ir.ui.view">
+        <field name="name">Presale orders</field>
+        <field name="model">presale.order</field>
+        <field name="arch" type="xml">
+            <tree string="Presale orders list">
+                <field name="name"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="presale_model_view_form" model="ir.ui.view">
+        <field name="name">Presale Form</field>
+        <field name="model">presale.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_validate_preorder" type="object" string="Validate" states="new"/>
+                    <button name="action_cancel_preorder" type="object" string="Cancel" states="new"/>
+                    <field name="state" string="Status" widget="statusbar" statusbar_visible="new,validated"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Order lines">
+                            <field name="order_line_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

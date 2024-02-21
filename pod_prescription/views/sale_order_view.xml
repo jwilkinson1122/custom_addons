@@ -2,8 +2,8 @@
 <odoo>
     <data>
 
-        <record id="view_order_form_inherit_prescription" model="ir.ui.view">
-            <field name="name">sale.order.form.inherit.prescription</field>
+        <record id="inherit_view_order_form" model="ir.ui.view">
+            <field name="name">inherit.view.order.form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
@@ -30,7 +30,9 @@
                     <field string="Patient" name="patient_id" domain="[('partner_id', '=', parent.partner_id)]"/> -->
                 </xpath>
 
-
+                <xpath expr="//field[@name='partner_invoice_id']" position="before">
+                    <field name="customer_number" />
+                </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
                     <field name="barcode" string="Barcode"/>
                 </xpath>
@@ -38,6 +40,25 @@
             </field>
         </record>
 
-
+        <record id="inherit_view_order_tree" model="ir.ui.view">
+            <field name="name">inherit.view.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="customer_number" />
+                </xpath>
+            </field>
+        </record>
+        <record id="inherit_view_order_filter" model="ir.ui.view">
+            <field name="name">inherit.view.order.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="customer_number" filter_domain="[('customer_number','ilike',self)]" />
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

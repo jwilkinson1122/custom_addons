@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="sale_order_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    t-if="presale_order"
+                    groups="presale.presale_group_user"
+                    string="PreSale Order"
+                    attrs="{'readonly': True}"
+                >
+                    <group>
+                        <field name="presale_name"/>
+                        <field name="presale_partner_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Order lines">
+                            <field name="presale_order_line_ids"/>
+                        </page>
+                    </notebook>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='validity_date']" position="after">
+                <field name="presale_order"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                <attribute name="groups" add="presale.presale_group_user" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

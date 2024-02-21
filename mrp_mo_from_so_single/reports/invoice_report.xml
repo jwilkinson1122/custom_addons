@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <template inherit_id="account.report_invoice_document" id="inherit_account_report_template">
+
+            <xpath expr="//t/div[hasclass('page')]/table/thead/tr[1]/th[2]" position="after">
+                <th name="th_width" class="text-right"><span>Width</span></th>
+                <th name="th_length" class="text-right"><span>Length</span></th>
+                <th name="th_area" class="text-right"><span>Area</span></th>
+
+            </xpath>
+
+            <xpath expr="//t/div[hasclass('page')]/table/tbody/t[3]/tr[1]/t[1]/td[2]" position="after">
+                <td class="text-right">
+                    <span class="text-nowrap" t-field="line.product_width"/>
+                </td>
+                <td class="text-right">
+                    <span class="text-nowrap" t-field="line.product_length"/>
+                </td>
+                <td class="text-right">
+                    <span class="text-nowrap" t-field="line.product_area"/>
+                </td>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
+
+

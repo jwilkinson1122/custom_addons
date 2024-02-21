@@ -1,0 +1,153 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record id="embroidery_form_view" model="ir.ui.view">
+            <field name="name">legion_embroidery.legion_embroidery.form</field>
+            <field name="model">legion_embroidery.legion_embroidery</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_embroidery" model="ir.actions.act_window">
+            <field name="name">Embroidery</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">legion_embroidery.legion_embroidery</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+        <!-- Top menu item -->
+
+
+        <record id="view_order_embroidery_pivot" model="ir.ui.view">
+            <field name="name">embroidery.embroidery.pivot</field>
+            <field name="model">embroidery.embroidery</field>
+            <field name="arch" type="xml">
+                <pivot string="Embroidery Analysis" disable_linking="True">
+                    <!--                <field name="partner_id" type="col"/>-->
+                    <!--                <field name="date_planned" interval="month" type="row"/>-->
+                    <field name="state" type="row"/>
+                    <field name="product_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_order_embroidery_graph" model="ir.ui.view">
+            <field name="name">embroidery.embroidery.graph</field>
+            <field name="model">embroidery.embroidery</field>
+            <field name="arch" type="xml">
+                <graph string="Embroidery Analysis" type="line">
+                    <field name="date_planned" type="row" interval="day"/>
+                    <field name="product_qty" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_order_embroidery_search" model="ir.ui.view">
+            <field name="name">embroidery.embroidery.search</field>
+            <field name="model">embroidery.embroidery</field>
+            <field name="arch" type="xml">
+                <search string="Embroidery Analysis">
+                    <!--                <field name="date_planned"/>-->
+                    <!--                <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>-->
+                    <!--                <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>-->
+                    <!--                <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>-->
+                    <separator/>
+                    <field name="user_id"/>
+
+                    <field name="bom_id" string="BOM New"
+                           filter_domain="[('bom_id', 'ilike', self), ('product_tmpl_id', 'ilike', self)]"/>
+
+                    <field name="product_tmpl_id"/>
+                    <field name="partner_id"/>
+                    <field name="flow"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Responsible" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Bill of Material" name="bom_id" context="{'group_by':'bom_id'}"/>
+                        <filter string="Flow" name="flow" context="{'group_by':'flow'}"/>
+                        <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Company" name="company" groups="base.group_multi_company"
+                                context="{'group_by':'company_id'}"/>
+                        <separator/>
+                        <filter string="Order Date" name="date_planned"
+                                context="{'group_by':'date_planned'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_order_embroidery_all" model="ir.actions.act_window">
+            <field name="name">Embroidery Analysis</field>
+            <field name="res_model">embroidery.embroidery</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="view_id"></field>  <!-- force empty -->
+            <field name="search_view_id" ref="view_order_embroidery_search"/>
+
+            <!--        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>-->
+
+        </record>
+
+        <menuitem id="menu_embroidery_root"
+                  name="Embroidery"
+                  web_icon="legion_embroidery,static/description/emb2.jpg"
+                  sequence="1"/>
+
+        <menuitem id="menu_embroidery_operations"
+                  name="Operations"
+                  parent="menu_embroidery_root"
+                  sequence="2"/>
+
+        <menuitem id="menu_master_data"
+                  name="Master Data"
+                  parent="menu_embroidery_root"
+                  sequence="3"/>
+
+        <menuitem id="menu_embroidery_reporting"
+                  name="Reporting"
+                  parent="menu_embroidery_root"
+                  sequence="4"/>
+
+        <menuitem id="sub_menu_embroidery_reporting"
+                  name="Reporting"
+                  parent="menu_embroidery_reporting"
+                  action="action_order_embroidery_all"
+                  sequence="1"/>
+
+        <menuitem id="menu_embroidery_configuration"
+                  name="Configuration"
+                  parent="menu_embroidery_root"
+                  sequence="5"/>
+
+
+        <menuitem id="menu_embroidery_something"
+                  name="Something"
+                  parent="menu_embroidery_configuration"
+                  action="action_embroidery"
+                  sequence="1"/>
+
+    </data>
+</odoo>
+
+        <!--access_embroidery_scrap,embroidery.scrap,model_embroidery_scrap,base.group_user,1,1,1,1-->
+        <!--access_embroidery_bom,embroidery.bom,model_embroidery_bom,base.group_user,1,1,1,1-->
+        <!--access_embroidery_bom_line,embroidery.bom.line,model_embroidery_bom_line,base.group_user,1,1,1,1-->
+        <!--access_embroidery_embroidery,embroidery.embroidery,model_embroidery_embroidery,base.group_user,1,1,1,1-->
+        <!--access_embroidery_lines,embroidery.lines,model_embroidery_lines,base.group_user,1,1,1,1-->

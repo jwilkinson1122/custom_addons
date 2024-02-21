@@ -1,0 +1,74 @@
+<odoo>
+    <data>
+
+        <record id="scrap_embroidery_tree_view" model="ir.ui.view">
+            <field name="name">embroidery.scrap.tree</field>
+            <field name="model">embroidery.scrap</field>
+            <field name="arch" type="xml">
+                <tree string="Scrap">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="scrap_qty"/>
+                    <field name="origin"/>
+                    <field name="company_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_scrap_form_view" model="ir.ui.view">
+            <field name="name">embroidery.scrap.form</field>
+            <field name="model">embroidery.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <header>
+                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id"/>
+                                <field name="scrap_qty"/>
+                            </group>
+                            <group>
+                                <field name="origin"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_embroidery_scrap" model="ir.actions.act_window">
+            <field name="name">Embroidery Scrap</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">embroidery.scrap</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK -->
+              </p>
+            </field>
+        </record>
+
+
+            <menuitem id="menu_embroidery"
+              name="Scarp Orders"
+              parent="menu_embroidery_operations"
+              action="action_embroidery_scrap"
+              sequence="2"/>
+    </data>
+</odoo>

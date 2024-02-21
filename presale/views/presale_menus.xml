@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="presale_menu_root" name="Presale management">
+        <menuitem id="presale_first_level_menu" name="Presale">
+            <menuitem id="presale_order_menu" action="presale_order_list_action"/>
+            <menuitem id="presale_order_form" action="presale_order_form_action"/>
+            <menuitem id="presale_order_lines_form" action="presale_order_lines_list_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>

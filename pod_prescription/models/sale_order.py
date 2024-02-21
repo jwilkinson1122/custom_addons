@@ -39,6 +39,7 @@ class SaleOrder(models.Model):
         # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
 
+    customer_number = fields.Char(related="partner_id.ref")
     prescription_so_id = fields.Many2one('prescription.order', string="Prescription", readonly=False) 
 
     # prescription_rx_lines = fields.One2many('prescription.order.line', 'order_id', readonly=False)

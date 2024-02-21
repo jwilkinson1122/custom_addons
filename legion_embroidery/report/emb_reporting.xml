@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_embroidery_pivot" model="ir.ui.view">
+        <field name="name">embroidery.embroidery.pivot</field>
+        <field name="model">embroidery.embroidery</field>
+        <field name="arch" type="xml">
+            <pivot string="Embroidery Analysis" disable_linking="True">
+                <!--                <field name="partner_id" type="col"/>-->
+                <!--                <field name="date_planned" interval="month" type="row"/>-->
+                <field name="state" type="row"/>
+                <field name="product_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_order_embroidery_graph" model="ir.ui.view">
+        <field name="name">embroidery.embroidery.graph</field>
+        <field name="model">embroidery.embroidery</field>
+        <field name="arch" type="xml">
+            <graph string="Embroidery Analysis" type="line">
+                <field name="date_planned" type="row" interval="day"/>
+                <field name="product_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+<!--    <record id="view_order_embroidery_search" model="ir.ui.view">-->
+<!--        <field name="name">embroidery.embroidery.search</field>-->
+<!--        <field name="model">embroidery.embroidery</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Embroidery Analysis">-->
+<!--                &lt;!&ndash;                <field name="date_planned"/>&ndash;&gt;-->
+<!--                &lt;!&ndash;                <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>&ndash;&gt;-->
+<!--                &lt;!&ndash;                <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>&ndash;&gt;-->
+<!--                &lt;!&ndash;                <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>&ndash;&gt;-->
+<!--                <separator/>-->
+<!--                <field name="user_id"/>-->
+<!--                &lt;!&ndash;                <field name="bom_id"/>&ndash;&gt;-->
+
+<!--                <field name="bom_id" string="BOM"-->
+<!--                       filter_domain="['|', ('code', 'ilike', self)]"/>-->
+
+<!--                <field name="product_tmpl_id"-->
+<!--                       filter_domain="['|', ('product_tmpl_id', 'ilike', self)]"/>-->
+
+<!--                &lt;!&ndash;                <field name="product_id"/>&ndash;&gt;-->
+<!--                <field name="partner_id" string="PRO"/>-->
+<!--                <field name="flow"/>-->
+<!--                <group expand="1" string="Group By">-->
+<!--                    <filter string="Responsible 1111111" name="User" context="{'group_by':'user_id'}"/>-->
+<!--                    <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>-->
+<!--                    <filter string="Bill of Material" name="bom_id" context="{'group_by':'bom_id'}"/>-->
+<!--                    <filter string="Flow" name="flow" context="{'group_by':'flow'}"/>-->
+<!--                    <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>-->
+<!--                    <filter name="status" string="Status" context="{'group_by':'state'}"/>-->
+<!--                    <filter string="Company" name="company" groups="base.group_multi_company"-->
+<!--                            context="{'group_by':'company_id'}"/>-->
+<!--                    <separator/>-->
+<!--                    <filter string="Order Date" name="date_planned"-->
+<!--                            context="{'group_by':'date_planned'}"/>-->
+
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <!--    <menuitem id="menu_embroidery_reporting"-->
+    <!--              name="Reporting"-->
+    <!--              parent="menu_embroidery_root"-->
+    <!--              sequence="4"/>-->
+
+    <!--    <menuitem id="menu_embroidery_reporting"-->
+    <!--              name="Reporting"-->
+    <!--              parent="menu_embroidery_reporting"-->
+    <!--              action="action_order_embroidery_all"-->
+    <!--              sequence="1"/>-->
+
+</odoo>

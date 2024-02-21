@@ -95,6 +95,7 @@ class PrescriptionOrder(models.Model):
         # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
 
+    customer_number = fields.Char(related="partner_id.ref")
     # patient_id = fields.Many2one('prescription.patient', string='Patient')
 
     state = fields.Selection(
@@ -344,6 +345,28 @@ class PrescriptionOrder(models.Model):
         create_index(self._cr, 'prescription_order_date_order_id_idx', 'prescription_order', ["date_order desc", "id desc"])
 
     #=== COMPUTE METHODS ===#
+        
+    # @api.depends('state', 'order_line.invoicing_progress')
+    # def _compute_invoicing_progress(self):
+    #     for order in self:
+    #         tot_amount = order.amount_untaxed
+    #         inv_progress = 0.0
+    #         for line in order.order_line:
+    #             if line.state in ('sale', 'done'):
+    #                 if tot_amount:
+    #                     inv_progress += line.invoicing_progress * (line.price_subtotal / tot_amount)
+    #         if inv_progress < 0:
+    #             inv_progress = -inv_progress
+    #         if inv_progress and inv_progress < 3.0:
+    #             inv_progress = 3.0
+    #         order.invoicing_progress = inv_progress
+
+    # invoicing_progress = fields.Float(
+    #     string='To Invoice',
+    #     compute='_compute_invoicing_progress',
+    #     store=True,
+    #     readonly=True
+    # )
 
     @api.depends('partner_id')
     @api.depends_context('prescription_show_partner_name')

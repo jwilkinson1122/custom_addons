@@ -1,11 +1,14 @@
-import base64
 import logging
+import base64
+import json
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, models, fields, tools, api
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.module import get_module_resource
 from odoo.tools import config
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -18,8 +21,9 @@ class Partner(models.Model):
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
     is_parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    
+    ref = fields.Char(string="Customer Number", index=True)
     # internal_code = fields.Char('Internal Code', copy=False)
-
     internal_code = fields.Char("Internal Code", readonly=True, default=lambda self: _("New"))
     
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
@@ -65,7 +69,50 @@ class Partner(models.Model):
             return "base/static/img/company_image.png"
         else:
             return super()._avatar_get_placeholder_path()
+        
 
+    def find_res_partner_by_ref_using_barcode(self, barcode):
+        partner = self.search([("ref", "=", barcode)], limit=1)
+        if not partner:
+            xmlid = "barcode_action.res_partner_find"
+            action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+            context = safe_eval(action["context"])
+            context.update(
+                {
+                    "default_state": "warning",
+                    "default_status": _(
+                        "Partner with Internal Reference " "%s cannot be found"
+                    )
+                    % barcode,
+                }
+            )
+            action["context"] = json.dumps(context)
+            return action
+        xmlid = "base.action_partner_form"
+        action = self.env["ir.actions.act_window"]._for_xml_id(xmlid)
+        res = self.env.ref("base.view_partner_form", False)
+        action["views"] = [(res and res.id or False, "form")]
+        action["res_id"] = partner.id
+        return action
+
+        
+
+    root_ancestor = fields.Many2one(comodel_name='res.partner',
+                                    string='Root Ancestor',
+                                    compute='_compute_root_ancestor',
+                                    store=True,
+                                    recursive=True)
+
+    @api.depends('parent_id', 'parent_id.root_ancestor')
+    def _compute_root_ancestor(self):
+        for rec in self:
+            rec.root_ancestor = rec.parent_id and rec.parent_id.root_ancestor or rec
+
+    child_count = fields.Integer(compute='_compute_child_count', string='# of Child')
+
+    def _compute_child_count(self):
+        for partner in self:
+            partner.child_count = len(partner.child_ids)
     
     @api.depends('parent_id', 'is_company', 'active')
     def _compute_locations(self):
@@ -384,6 +431,44 @@ class Partner(models.Model):
     #         else:
     #             new_res.append(record)
     #     return new_res
+
+
+    def _get_name(self):
+        """Utility method to allow name_get to be overrided without re-browse the partner"""
+        partner = self
+        name = partner.name or ""
+
+        if partner.company_name or partner.parent_id:
+            if not name and partner.type in ["invoice", "delivery", "other"]:
+                name = dict(self.fields_get(["type"])["type"]["selection"])[
+                    partner.type
+                ]
+            if not partner.is_company:
+                name = self._get_contact_name(partner, name)
+        if self._context.get("show_address_only"):
+            name = partner._display_address(without_company=True)
+        if self._context.get("show_address"):
+            name = name + "\n" + partner._display_address(without_company=True)
+        name = name.replace("\n\n", "\n")
+        name = name.replace("\n\n", "\n")
+        if self._context.get("address_inline"):
+            splitted_names = name.split("\n")
+            name = ", ".join([n for n in splitted_names if n.strip()])
+        if self._context.get("show_email") and partner.email:
+            name = "%s <%s>" % (name, partner.email)
+        if self._context.get("html_format"):
+            name = name.replace("\n", "<br/>")
+        if self._context.get("show_vat") and partner.vat:
+            name = "%s ‒ %s" % (name, partner.vat)
+
+        if (
+            not self._context.get("show_address_only")
+            and not self._context.get("show_address")
+            and not self._context.get("address_inline")
+        ):
+            name = "%s ‒ %s" % (name, partner.id)
+        return name
+
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner

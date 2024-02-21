@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from . import barcode_action
 from . import base_partner_merge
 from . import prescription_abstract
 from . import prescription_patient

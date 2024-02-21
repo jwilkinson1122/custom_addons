@@ -3,6 +3,17 @@
 <odoo>
     <data noupdate="1">        <!-- noupdate="1" means this data won't be overwritten by module updates -->
 
+        <!-- <record id="res_partner_find" model="ir.actions.act_window">
+            <field name="name">Find Partner</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">barcode.action</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_model': 'res.partner', 'default_method': 'find_res_partner_by_ref_using_barcode'}
+            </field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_orders_customers" name="Find partners" action="res_partner_find" parent="base.menu_administration" /> -->
+
         <!-- Accounts -->
         <record id="parent_account_1" model="res.partner">
             <field name="name">Fab Foot Clinic</field>

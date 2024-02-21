@@ -12,7 +12,8 @@
     'description': """Manage contacts directory""",
     'depends': [
         'base',
-        'base_setup', 
+        'base_setup',
+        'barcodes', 
         'mail',
         'contacts',
         'pod_custom_theme',
@@ -25,6 +26,7 @@
         'data/ir_sequence_data.xml',
         'data/prescription_practice_type.xml',
         'data/prescription_role.xml',
+        'views/barcode_action_view.xml',
         'views/prescription_role.xml',
         'views/prescription_diagnosis.xml',
         'views/res_partner.xml',
@@ -35,13 +37,16 @@
         'views/prescription_flag_category_views.xml',
         'views/res_config_settings_views.xml',
         'views/prescription_menu.xml',
+        # 'wizard/barcode_action_view.xml',
     ],
     'assets': {
         'web.assets_backend': [
-            'pod_prescription_contacts/static/src/css/custom.css',
+            'pod_prescription_contacts/static/css/custom.css',
             'pod_prescription_contacts/static/scss/custom_form.scss',
             # 'pod_prescription_contacts/static/src/css/custom.css',
             # 'pod_prescription_contacts/static/src/js/partner_hierarchy.js',
+            'pod_prescription_contacts/static/js/action_barcode_form.js',
+            'pod_prescription_contacts/static/js/action_barcode_widget.js',
         ],
     },
     'demo': [

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.view.form</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="arch" type="xml">
+            <field name="image" position="attributes">
+                <attribute name="column_invisible">parent.display_type not in ['color','select']</attribute>
+            </field>
+            <field name="display_type" position="after">
+                <field name="do_display_image" invisible="display_type!='select'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

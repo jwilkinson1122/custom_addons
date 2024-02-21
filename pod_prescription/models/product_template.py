@@ -1,5 +1,3 @@
-
-
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.exceptions import ValidationError
@@ -9,50 +7,35 @@ from odoo.tools.float_utils import float_round
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    default_code = fields.Char( index=True, compute=False, inverse=False, store=True, required=True
+        )
+
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
     helpdesk_assigned_to = fields.Many2one('res.users', string='Assigned to')
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
-
     prescription_ok = fields.Boolean(default=True, string="Can be Configured")
     
     description_prescription = fields.Text(
-        'Prescription Description', translate=True,
-        help="A description of the Product that you want to communicate to your customers. "
+        'Prescription Description', translate=True, help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Prescription Order")
-
-    service_type = fields.Selection(
-        selection=[('manual', "Manually set quantities on order")],
-        string="Track Service",
-        compute='_compute_service_type', store=True, readonly=False, precompute=True,
-        help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+    service_type = fields.Selection( selection=[('manual', "Manually set quantities on order")], string="Track Service", compute='_compute_service_type', store=True, readonly=False, precompute=True, help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the prescription order validation and track the work hours.")
     prescription_line_warn = fields.Selection(
-        WARNING_MESSAGE, string="Prescription Order Line",
-        help=WARNING_HELP, required=True, default="no-message")
+        WARNING_MESSAGE, string="Prescription Order Line", help=WARNING_HELP, required=True, default="no-message")
     prescription_line_warn_msg = fields.Text(string="Message for Prescription Order Line")
-    expense_policy = fields.Selection(
-        selection=[
+    expense_policy = fields.Selection( selection=[
             ('no', "No"),
             ('cost', "At cost"),
             ('prescription_price', "Prescription price"),
-        ],
-        string="Re-Invoice Expenses", default='no',
-        compute='_compute_expense_policy', store=True, readonly=False,
-        help="Validated expenses and vendor bills can be re-invoiced to a customer at its cost or prescription price.")
-    visible_expense_policy = fields.Boolean(
-        string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
-    prescription_count = fields.Float(
-        string="Sold", compute='_compute_prescription_count', digits='Product Unit of Measure')
-    invoice_policy = fields.Selection(
-        selection=[
+        ], string="Re-Invoice Expenses", default='no', compute='_compute_expense_policy', store=True, readonly=False, help="Validated expenses and vendor bills can be re-invoiced to a customer at its cost or prescription price.")
+    visible_expense_policy = fields.Boolean( string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
+    prescription_count = fields.Float( string="Sold", compute='_compute_prescription_count', digits='Product Unit of Measure')
+    invoice_policy = fields.Selection( selection=[
             ('order', "Ordered quantities"),
             ('delivery', "Delivered quantities"),
-        ],
-        string="Invoicing Policy",
-        compute='_compute_invoice_policy', store=True, readonly=False, precompute=True,
-        help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
+        ], string="Invoicing Policy", compute='_compute_invoice_policy', store=True, readonly=False, precompute=True, help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
              "Delivered Quantity: Invoice quantities delivered to the customer.")
 
     @api.depends('name')
@@ -78,8 +61,7 @@ class ProductTemplate(models.Model):
         if target_company:  # don't prevent writing `False`, should always work
             subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', self.ids)])
             rx_lines = self.env['prescription.order.line'].sudo().search_read(
-                [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.root_id.id)],
-                fields=['id', 'product_id'],
+                [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.root_id.id)], fields=['id', 'product_id'],
             )
             used_products = list(map(lambda rxl: rxl['product_id'][1], rx_lines))
             if rx_lines:
@@ -135,8 +117,36 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
+
+    @api.depends('product_variant_ids.default_code')
+    def _compute_default_code(self):
+        return True
+    
+    def _set_default_code(self):
+        return True
+    
+    def _create_variant_ids(self):
+        if self.env.context.get('import_ex_thread', False):
+            return True
+        
+        return super(ProductTemplate,self)._create_variant_ids()
+
+
+    # @api.model
+    # def create(self,vals):
+    #     if not vals.get('default_code',False):
+    #         tmp_d_code = self.env.context.get('product_template_code',False)
+    #         if tmp_d_code:
+    #             vals['default_code'] = tmp_d_code
+    #     return super(ProductTemplate,self.with_context(import_ex_thread=False)).create(vals)
+
+
     @api.model
     def create(self, vals):
+        if not vals.get('default_code',False):
+            tmp_d_code = self.env.context.get('product_template_code',False)
+            if tmp_d_code:
+                vals['default_code'] = tmp_d_code
         templates = super (ProductTemplate,self).create(vals)
         if templates.product_variant_count<= 1:
             if templates.product_variant_id:

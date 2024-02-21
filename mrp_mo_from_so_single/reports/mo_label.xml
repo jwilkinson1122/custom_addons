@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- TODO: Delete this file -->
+    <!-- Reception Report Labels -->
+    <template id="report_reception_qty_report_label_mrp">
+        <t t-if="quantity" t-set="qtys" t-value="[int(q) for q in quantity.split(',')]"/>
+        <t t-else="" t-set="qtys" t-value="[1 for q in range(len(docs))]"/>
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="range(len(docs))" t-as="index">
+                    <t t-set="mo" t-value="docs[index]"/>
+                    <t t-set="x" t-value="0"/>
+                    <t t-set="qty" t-value="qtys[index]"/>
+                    <t t-foreach="range(qty)" t-as="j">
+                        <t t-foreach="range(mo.product_quantity)" t-as="q">
+                            <t t-set="x" t-value="x + 1"/>
+                            <div class="o_label_page">
+                                <div>
+                                    <div class="o_label_full" cellpadding="0" cellspacing="0"
+                                         style="font-family:Verdana, Arial,sans-serif; width: 100%;">
+                                        <span align="left" t-esc="mo.company_id.name"/>
+                                        <img align="right"
+                                             style="padding: 1px; margin: 1px; height: 40px; width: 40px;"
+                                             t-if="mo.company_id.logo"
+                                             t-att-src="image_data_uri(mo.company_id.logo)"
+                                             alt="Logo"/>
+                                    </div>
+                                    <div class="small">
+                                        <div class="small">
+                                            Date: <span class="font-italic" t-esc="mo.date"/> / Delivery : <span class="font-italic" t-esc="mo.delivery_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="small">--------------------------------------------------------------</div>
+                                <div class="small">
+                                    <div>
+                                        <div>
+                                            <div align="center" class="font-weight-bold"
+                                                 t-esc="mo.product_id.display_name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="small">
+                                    <div>
+                                        <div class="small">
+                                            <div>
+                                                <span align="left" class="medium" t-esc="mo.sale_order_id.name"/>
+                                                <img align="right" t-att-src="'/report/barcode/Codabar/'+mo.sale_order_id.name" width="140px"
+                                                height="40px"/>
+                                            </div>
+                                            <div align="left">
+                                                    Batch:
+                                                    <span t-esc="mo.order_index"/>
+                                                     -
+                                                    <span t-esc="x"/>
+                                                    /
+                                                    <span t-esc="mo.product_qty"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="small">------------------------------------------------------------</div>
+                                    <div  align="left">
+                                        Width:
+                                        <span t-esc="mo.product_width"/> cm| Length:<span t-esc="mo.product_length"/> cm
+                                        | Area:<span t-esc="mo.product_area"/> m2
+                                        <img align="right" t-att-src="'/report/barcode/Codabar/'+mo.name" width="140px"
+                                         height="40px"/>
+                                        <span align="left" t-esc="mo.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+
+    <record id="paperformat_label_mo_custom" model="report.paperformat">
+        <field name="name">CustomLabelMO</field>
+        <field name="format">custom</field>
+        <field name="page_height">50</field>
+        <field name="page_width">100</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="label_production_order_custom" model="ir.actions.report">
+        <field name="name">Quantity Order Label</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mrp_mo_from_so_single.report_reception_qty_report_label_mrp</field>
+        <field name="report_file">mrp_mo_from_so_single.report_reception_qty_report_label_mrp</field>
+        <field name="paperformat_id" ref="mrp_mo_from_so_single.paperformat_label_mo_custom"/>
+        <field name="binding_model_id" ref="mrp_mo_from_so_single.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

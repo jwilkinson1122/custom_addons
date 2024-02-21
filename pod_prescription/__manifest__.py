@@ -25,6 +25,7 @@
         'knowledge',
         'mrp',
         'product',
+        'uom',
         'stock',
         'stock_barcode',
         'purchase_stock',
@@ -78,6 +79,7 @@
         'wizard/prescription_order_discount_views.xml',
 
         # Define prescription order views before their references
+        'views/prescription_device_views.xml',
         'views/prescription_order_views.xml',
         'views/sale_order_view.xml',
         'views/account_views.xml',

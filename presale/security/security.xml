@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+<data>
+    <record id="presale_group_user" model="res.groups">
+        <field name="name">Presale Users Group</field>
+        <field name="category_id" ref="base.module_category_pressale_management"/>
+    </record>
+
+</data>
+</odoo>
