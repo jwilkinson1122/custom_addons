@@ -331,19 +331,16 @@
                     <group name="prescription_header">
                         <group name="account_details">
                             <field name="customer_number" invisible="1"/>
-                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('parent_id', '=', active_id), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
-                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/>
-                            <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'prescription']"/>
-                            <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <!-- <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="practitioner_id" options="{'no_create': True}"/>
+                            <field name="patient_id" options="{'no_create': True}"/> -->
 
-                            <!-- <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
-                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/> -->
+                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/> 
+                            <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" readonly="state in ['cancel', 'prescription']"/>
                         </group>
-                        <!-- <group name="partner_details">
-                            <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
-                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
-                        
-                        </group> -->
                         <group name="order_details">
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>
                             <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" domain="[('parent_id', '=', partner_id)]" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'cancel' or locked"/>

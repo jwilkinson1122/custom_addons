@@ -11,6 +11,7 @@
 
 
     <!-- products -->
+    <!-- <menuitem id="sale_product_category" name="Product Categories" action="product.product_category_action_form" parent="sale.prod_config_main" /> -->
     <menuitem id="menu_main" sequence="22" name="Products" web_icon="pod_prescription,static/description/icon.png" groups="base.group_user">
         <menuitem id="menu_product_template" sequence="5" name="Products" action="product.product_template_action_all" />
         <menuitem id="menu_product_product" sequence="10" name="Variants" action="product.product_normal_action" groups="product.group_product_variant" />

@@ -2,7 +2,7 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
 	'name': "Customer Products Code | Sale Product Code",
-	'version': "17.0.0.0",
+	'version': "17.0.0.0.0",
 	'category': "Sales",
 	'summary': 'Create Sale Product Code Manage Partner Product Code SO Client Product Code Sale Quotation Customer Code Sale Order Procdut Customer Code on Sales Order Apply Customer Code on Sales Unique Product Code Quotation Customer Product Internal Reference on Sale',
     'description' :"""

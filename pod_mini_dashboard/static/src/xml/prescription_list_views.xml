@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Displaying dashboard in list view-->
+<templates>
+    <t t-name="pod_mini_dashboard.PrescriptionListView"
+       t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
+            <PrescriptionDashBoard/>
+        </xpath>
+    </t>
+</templates>

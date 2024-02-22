@@ -60,14 +60,16 @@ class PrescriptionOrder(models.Model):
         comodel_name='res.company',
         required=True, index=True,
         default=lambda self: self.env.company)
-    
+
+    # parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Account")
+
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Account",
         required=True, change_default=True, index=True,
         tracking=1,
-        domain=[('is_company','=',True)], 
-        # domain="[('company_id', 'in', (False, company_id))]"
+        # domain=[('is_company','=',True)], 
+        domain="[('company_id', 'in', (False, company_id))]"
         )
     
     location_id = fields.Many2one(
@@ -77,7 +79,11 @@ class PrescriptionOrder(models.Model):
         domain=[('is_location','=',True)], 
         string="Location"
         )
-    
+
+    # Store the dynamic domain for location_id
+    # location_id_domain = fields.Char(compute='_compute_location_id_domain')
+
+
     practitioner_id = fields.Many2one(
         'res.partner', 
         required=True, 
@@ -777,6 +783,41 @@ class PrescriptionOrder(models.Model):
             or (self.fiscal_position_id and self._origin.fiscal_position_id != self.fiscal_position_id)
         ):
             self.show_update_fpos = True
+
+
+    # @api.onchange('partner_id')
+    # def _onchange_partner_id(self):
+    #     if not self.partner_id:
+    #         self.location_id = False 
+    #         return
+        
+    #     all_descendant_ids = []
+    #     def get_descendant_ids(partner):
+    #         children = self.env['res.partner'].search([('parent_id', '=', partner.id), ('is_location', '=', True)])
+    #         for child in children:
+    #             all_descendant_ids.append(child.id)
+    #             get_descendant_ids(child) 
+    #     get_descendant_ids(self.partner_id)
+    #     domain = [('id', 'in', all_descendant_ids)]
+    #     return {'domain': {'location_id': domain}}
+
+    # @api.depends('partner_id')
+    # def _compute_location_id_domain(self):
+    #     for record in self:
+    #         if record.partner_id:
+    #             all_descendant_ids = []
+    #             def get_descendant_ids(partner):
+    #                 children = self.env['res.partner'].search([('parent_id', '=', partner.id), ('is_location', '=', True)])
+    #                 for child in children:
+    #                     all_descendant_ids.append(child.id)
+    #                     get_descendant_ids(child)
+    #             get_descendant_ids(record.partner_id)
+    #             domain = [('id', 'in', all_descendant_ids)]
+    #             record.location_id_domain = str(domain)
+    #         else:
+    #             record.location_id_domain = str([])
+
+
 
     @api.onchange('partner_id')
     def _onchange_partner_id_warning(self):

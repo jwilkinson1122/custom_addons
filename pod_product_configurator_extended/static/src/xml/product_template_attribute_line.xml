@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="sale_product_configurator.saleProductConfigurator.ptav-select" t-inherit-mode="extension">
+        <xpath expr="//select" position="after">
+            <img t-if="this.props.selected_attribute_value_ids" t-att-src="'/web/image/product.template.attribute.value/'+this.props.selected_attribute_value_ids+'/image'" alt="Product Image" style="width:70px;width:70px"/>
+        </xpath>
+    </t>
+
+</templates>
+

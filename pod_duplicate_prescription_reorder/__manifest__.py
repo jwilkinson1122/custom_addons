@@ -1,13 +1,13 @@
 # -*- coding : utf-8 -*-
 
 {
-	'name': 'Prescription Order History | Customer Reorder Prescription',
-	'version': '17.0.0.0',
-	'category': 'Prescriptions',
-	'summary': 'Repeat Prescription Order Reordering Previous Order',
-	'description': """ Customer Reorder Prescription.""",
+	'name': 'NWPL - Reorder Prescription',
+	'version': '17.0.0.0.0',
+	'category': 'Prescriptions/Sales',
+	'summary': 'Reordering Previous Prescription',
+	'description': """Customer Reorder Prescription.""",
 	'author': 'NWPL',
-    'website': 'https://www.nwpodiatric',
+    'website': 'https://www.nwpodiatric.com',
 	'depends': [
         'base',
         'pod_prescription',

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Adding the dashboard in list view-->
+    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+        <field name="name">prescription.order.view.tree.inherit.prescription.mini.dashboard</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id"
+               ref="pod_prescription.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">prescription_dashboard_list</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!--Adding the dashboard in kanban view-->
+    <record id="view_prescription_order_kanban" model="ir.ui.view">
+        <field name="name">prescription.order.view.kanban.inherit.prescription.mini.dashboard</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id" ref="pod_prescription.view_prescription_order_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">prescription_dashboard_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!--Adding additional filters used in mini dashboard-->
+    <record id="prescription_order_view_search_inherit_quotation" model="ir.ui.view">
+        <field name="name">prescription.order.view.search.inherit.prescription.mini.dashboard</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id"
+               ref="pod_prescription.prescription_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <filter name="my_quotation" position="replace">
+                <filter string="My Total Prescriptions" name="my_quotation"
+                        domain="[('user_id', '=', uid)]"/>
+                <filter string="My Quotations" name="my_draft"
+                        domain="[('user_id', '=', uid),('state', 'in', ['draft','sent'])]"/>
+                <filter string="My Prescriptions" name="my_prescription_orders"
+                        domain="[('user_id', '=', uid),('state','in',('prescription','done'))]"/>
+                <separator/>
+            </filter>
+            <filter name="prescription" position="after">
+                <filter string="Total Orders" name="total"
+                        domain="[]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+</odoo>

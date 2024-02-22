@@ -1,13 +1,13 @@
 # -*- coding : utf-8 -*-
 
 {
-	'name': 'Sale Order History | Customer Reorder Sale',
-	'version': '17.0.0.0',
+	'name': 'NWPL - Customer Reorder Sale',
+	'version': '17.0.0.0.0',
 	'category': 'Sales',
-	'summary': 'Repeat Sale Order Reordering Previous Order',
+	'summary': 'Reordering Previous Order',
 	'description': """ Customer Reorder Sale.""",
 	'author': 'NWPL',
-    'website': 'https://www.nwpodiatric',
+    'website': 'https://www.nwpodiatric.com',
 	'depends': ['base','sale','sale_management'],
 	'data': ['views/res_partner.xml'],
 	'license': 'LGPL-3',
