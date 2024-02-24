@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<templates xml:space="preserve">
-    <!-- Attributes line template -->
-    <!-- Attributes value templates -->
-    <t t-name="saleProductConfigurator.ptav-dimension">
-        <input type="number" class="o_input w-50 flex-grow-1" t-on-change="updateSelectedPTAV" t-att-name="'ptal-' + this.props.id">
-        </input>
-    </t>
-</templates>

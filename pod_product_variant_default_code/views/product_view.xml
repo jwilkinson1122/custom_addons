@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <field name="default_code" position="after">
                 <field name="code_prefix" invisible="attribute_line_ids == []" />
-                <field name="reference_mask" placeholder="[attribute3]-[attribute1]" invisible="attribute_line_ids == []" groups="product_variant_default_code.group_product_default_code_manual_mask" />
+                <field name="reference_mask" placeholder="[attribute3]-[attribute1]" invisible="attribute_line_ids == []" groups="pod_product_variant_default_code.group_product_default_code_manual_mask" />
             </field>
             <xpath expr="//page/field[@name='attribute_line_ids']" position="before">
                 <field name="variant_default_code_error" class="alert alert-danger alert-dismissable" role="alert" invisible="not variant_default_code_error"/>

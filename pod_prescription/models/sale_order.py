@@ -40,7 +40,7 @@ class SaleOrder(models.Model):
     )
 
     customer_number = fields.Char(related="partner_id.ref")
-    prescription_so_id = fields.Many2one('prescription.order', string="Prescription", readonly=False) 
+    prescription_rx_id = fields.Many2one('prescription.order', string="Prescription", readonly=False) 
 
     # prescription_rx_lines = fields.One2many('prescription.order.line', 'order_id', readonly=False)
 
@@ -52,8 +52,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
-        if self.order_id.prescription_so_id:
-            for line in self.order_id.prescription_so_id.order_line.filtered(lambda l: l.product_id == self.product_id):
+        if self.order_id.prescription_rx_id:
+            for line in self.order_id.prescription_rx_id.order_line.filtered(lambda l: l.product_id == self.product_id):
                 if line.product_uom != self.product_uom:
                     self.price_unit = line.product_uom._compute_price(
                         line.price_unit, self.product_uom)
@@ -63,8 +63,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        if self.order_id.prescription_so_id:
-            for line in self.order_id.prescription_so_id.order_line.filtered(lambda l: l.product_id == self.product_id):
+        if self.order_id.prescription_rx_id:
+            for line in self.order_id.prescription_rx_id.order_line.filtered(lambda l: l.product_id == self.product_id):
                 if line.product_uom != self.product_uom:
                     self.price_unit = line.product_uom._compute_price(
                         line.price_unit, self.product_uom)

@@ -100,6 +100,38 @@ class PrescriptionOrder(models.Model):
         index=True, 
         # states={"draft": [("readonly", False)], "done": [("readonly", True)]}
     )
+ 
+    photo = fields.Binary(related="patient_id.photo", string="Picture")
+    image1 = fields.Binary(related="patient_id.image1", string="Right photo")
+    image2 = fields.Binary(related="patient_id.image2", string="Left photo")
+    left_obj_model = fields.Binary(related="patient_id.left_obj_model", string="Left Obj")
+    left_obj_file_name = fields.Char(related="patient_id.left_obj_file_name", string="Left Obj File Name")
+    right_obj_model = fields.Binary(related="patient_id.right_obj_model", string="Right Obj")
+    right_obj_file_name = fields.Char(related="patient_id.right_obj_file_name", string="Right Obj File Name")
+    pt_height = fields.Integer(related="patient_id.pt_height", string="Height")
+    pt_weight = fields.Float(related="patient_id.pt_weight", string="Weight")
+    pt_age = fields.Integer(related="patient_id.pt_age", string="Age")
+    shoe_size = fields.Float(related="patient_id.shoe_size", string="Shoe Size")
+    shoe_width = fields.Selection(related="patient_id.shoe_width", string="Shoe Width") 
+    shoe_type = fields.Selection(related="patient_id.shoe_type", string="Shoe Type")
+    notes = fields.Text(related="patient_id.notes", string="Notes")
+    gender = fields.Selection(related="patient_id.gender", string="Gender")  
+    birth_date = fields.Date(related="patient_id.birth_date", string="DOB")  
+    patient_age = fields.Integer(related="patient_id.patient_age", string="Age")
+
+
+    # pt_height = fields.Integer("Height", store="True", copy="True")
+    # pt_weight = fields.Float("Weight", store="True", copy="True")
+    # pt_age = fields.Integer("Age", store="True", copy="True", compute="_compute_age")
+    # shoe_size = fields.Float("Shoe Size", store="True", copy="True")
+    # shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
+    #     'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+    # shoe_width = fields.Selection([("wide", "Wide"), ("xwide", "Extra Wide"), ("narrow", "Narrow")]) 
+    # notes = fields.Text(string="Notes")
+    # gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])  
+    # birth_date = fields.Date(string="DOB")  
+    # patient_age = fields.Integer(compute="_compute_age")
+
 
     customer_number = fields.Char(related="partner_id.ref")
     # patient_id = fields.Many2one('prescription.patient', string='Patient')

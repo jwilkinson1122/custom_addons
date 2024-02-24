@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='description_sale']" position="after">
                 <separator string="Variant description for quotations" colspan="2" />
+                <field name="variant_description_prescription" colspan="2" nolabel="1" />
                 <field name="variant_description_sale" colspan="2" nolabel="1" />
             </xpath>
         </field>
@@ -20,6 +21,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet/group[2]" position="after">
                 <group string="Notes">
+                    <field name="variant_description_prescription" string="Prescription Description" />
                     <field name="variant_description_sale" string="Sale Description" />
                 </group>
             </xpath>

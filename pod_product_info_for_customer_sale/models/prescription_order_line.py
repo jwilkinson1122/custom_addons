@@ -24,8 +24,8 @@ class PrescriptionOrderLine(models.Model):
     def _onchange_product_id_warning(self):
         result = super(PrescriptionOrderLine, self)._onchange_product_id_warning()
         for line in self.filtered(
-            lambda sol: sol.product_id.product_tmpl_id.customer_ids
-            and sol.order_id.pricelist_id.item_ids
+            lambda rxl: rxl.product_id.product_tmpl_id.customer_ids
+            and rxl.order_id.pricelist_id.item_ids
         ):
             product = line.product_id
             items = self.env["product.pricelist.item"].search(

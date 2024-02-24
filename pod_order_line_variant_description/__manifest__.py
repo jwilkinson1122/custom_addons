@@ -1,11 +1,12 @@
 {
-    "name": "NWPL - Order line variant description",
+    "name": "NWPL - Prescriptions/Sales Order line variant description",
     "version": "17.0.0.0.0",
-    "category": "Sales Management",
+    "category": "Prescriptions/Sales Management",
     "author": "NWPL",
     "website": "https://www.nwpodiatric.com",
     "license": "LGPL-3",
     "depends": [
+        "pod_prescription",
         "sale",
     ],
     "data": [

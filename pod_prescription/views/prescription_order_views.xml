@@ -410,8 +410,7 @@
                                             <t groups="product.group_discount_per_so_line">
                                                 <label for="discount"/>
                                                 <div name="discount">
-                                                    <field name="discount" class="oe_inline"/>
-%
+                                                    <field name="discount" class="oe_inline"/>%
                                                 </div>
                                             </t>
                                             <field name="sequence" invisible="1"/>
@@ -419,8 +418,7 @@
                                         <group invisible="display_type">
                                             <label for="customer_lead"/>
                                             <div name="lead">
-                                                <field name="customer_lead" class="oe_inline"/>
-days
+                                                <field name="customer_lead" class="oe_inline"/>days
                                             </div>
                                             <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" options="{'product_field': 'product_id', 'business_domain': 'prescription_order'}"/>
                                         </group>
@@ -561,8 +559,7 @@ days
                                                                 <div class="row">
                                                                     <div class="col-12 text-muted">
                                                                     Discount:
-                                                                        <t t-out="record.discount.value"/>
-%
+                                                                        <t t-out="record.discount.value"/>%
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -764,30 +761,29 @@ days
                             <br/>
                         </page>
 
-                        <page string="Documents Test">
+                        <page string="Documents">
                             <field name="test_file" widget="pdf_viewer"/>
                         </page>
-                        <page string="Documents">
-                            <!-- <group name="photo_group_tlOo2">
+                        <page string="Images">
+                            <group name="photo_group_tlOo2">
                                 <group name="photo_group_tlOo2_left">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image1" string="Left Image" />
+                                    <field name="image1" widget="image" options='{"size": [0, 150]}' string="Left Image" />
                                 </group>
                                 <group name="photo_group_tlOo2_right">
-                                    <field widget="image" options='{"size": [0, 150]}' name="foot_image2" string="Right Image" />
+                                    <field name="image2" widget="image" options='{"size": [0, 150]}' string="Right Image" />
                                 </group>
                             </group>
                             <group name="obj_group_DPydw">
                                 <group name="obj_group_DPydw_left">
                                     <field name="left_obj_model" string="Left Scan" />
-
                                 </group>
                                 <group name="obj_group_DPydw_right">
                                     <field name="right_obj_model" string="Right Scan" />
                                 </group>
-                            </group> -->
-                            <group string="Attachements">
-                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
                             </group>
+                            <!-- <group string="Attachements">
+                                <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                            </group> -->
                         </page>
                         <page string="Special Instructions">
 

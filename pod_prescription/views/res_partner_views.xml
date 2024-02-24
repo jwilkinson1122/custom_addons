@@ -43,7 +43,6 @@
                 <a t-if="record.prescription_order_count.value>0" data-type="object" data-name="action_view_prescription_order" groups="pod_prescription_team.group_prescription_personnel" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
                     <span class="badge rounded-pill">
                         <i class="fa-file-o" role="img" aria-label="Prescription orders" title="Prescription orders"/>
-                        <!-- <i class="fa fa-fw fa-usd" role="img" aria-label="Prescription orders" title="Prescription orders"/> -->
                         <t t-out="record.prescription_order_count.value"/>
                     </span>
                 </a>

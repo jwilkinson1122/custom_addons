@@ -42,6 +42,7 @@ class PrescriptionPatient(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'patient_ir_attachments_rel',
                                       'manager_id', 'attachment_id', string="Attachments",
                                       help="Patient Image / File Attachments")
+    
     photo = fields.Binary(string="Picture")
     image1 = fields.Binary("Right photo")
     image2 = fields.Binary("Left photo")
@@ -53,8 +54,7 @@ class PrescriptionPatient(models.Model):
     pt_weight = fields.Float("Weight", store="True", copy="True")
     pt_age = fields.Integer("Age", store="True", copy="True", compute="_compute_age")
     shoe_size = fields.Float("Shoe Size", store="True", copy="True")
-    shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), (
-        'athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
+    shoe_type = fields.Selection([('dress', 'Dress'), ('casual', 'Casual'), ('athletic', 'Athletic'), ('other', 'Other')], string='Shoe Type')
     shoe_width = fields.Selection([("wide", "Wide"), ("xwide", "Extra Wide"), ("narrow", "Narrow")]) 
     notes = fields.Text(string="Notes")
     gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])  
@@ -70,45 +70,6 @@ class PrescriptionPatient(models.Model):
                     fields.Date.today(), record.birth_date
                 ).years
             record.patient_age = age
-
-    # Prescriptions
-            
-    # prescription_ids = fields.One2many(
-    #     "prescription.order",
-    #     "patient_id",
-    #     string="Prescriptions",
-    #     domain=[("active", "=", True)],
-    # )
-
-    # prescription_count = fields.Integer(
-    #     string="Prescription Count",
-    #     compute="_compute_prescription_count",
-    #     store=True,
-    # )
-
-    # @api.depends('prescription_ids')
-    # def _compute_prescription_count(self):
-    #     for record in self:
-    #         record.prescription_count = len(record.prescription_ids)
-
-
-    # prescription_count = fields.Integer(string='Prescription Count', compute='_compute_prescription_count')
-    
-    # def _compute_prescription_count(self):
-    #     for rec in self:
-    #         prescription_count = self.env['prescription.order'].search_count([('patient_id', '=', rec.id)])
-    #         rec.prescription_count = prescription_count
-
-    # def action_open_prescriptions(self):
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Prescriptions',
-    #         'res_model': 'prescription.order',
-    #         'domain': [('patient_id', '=', self.id)],
-    #         'context': {'default_patient_id': self.id},
-    #         'view_mode': 'tree,form',
-    #         'target': 'current',
-    #     }
 
     # Flags           
     patient_flag_ids = fields.One2many("prescription.flag", inverse_name="patient_id")

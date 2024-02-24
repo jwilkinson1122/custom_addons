@@ -32,15 +32,9 @@
         <field name="model">prescription.patient</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Partners">
+            <form string="Patients">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <!-- <button name="action_open_prescriptions" type="object" class="oe_stat_button" icon="fa-files-o" invisible="prescription_count == 0">
-                            <div class="o_stat_info">
-                                <field name="prescription_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Prescriptions</span>
-                            </div>
-                        </button> -->
                         <button name="action_view_patient_flags" type="object" class="oe_stat_button" icon="fa-flag" invisible="patient_flag_count == 0">
                             <field name="patient_flag_count" widget="statinfo" string="Flags" />
                             <field name='patient_flag_ids' invisible="1" />

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo noupdate="0">
-    <record id="product_attribute_value_1" model="product.attribute.value">
+    <!-- <record id="product_attribute_value_1" model="product.attribute.value">
         <field name="name">Wine Red</field>
         <field name="attribute_id" ref="product_attribute_arch_height" />
         <field name="html_color">#751a1a</field>
@@ -53,7 +53,7 @@
         <field name="attribute_id" ref="product_attribute_arch_height" />
         <field name="html_color">#e1c823</field>
         <field name="color">6</field>
-    </record>
+    </record> -->
 
     <!-- Laterality -->
     <record id="product_attribute_value_lt" model="product.attribute.value">

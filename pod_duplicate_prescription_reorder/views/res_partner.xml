@@ -18,6 +18,7 @@
                                 <field name="name" readonly = "True"/>
                                 <field name="date_order" readonly = "True"/>
                                 <field name="partner_id" readonly = "True"/>
+                                <field name="patient_id" readonly = "True"/>
                                 <button string="Reorder" name="def_reorder_prescription" type="object" class="oe_highlight"/>
                             </tree>
                         </field>

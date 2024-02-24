@@ -76,11 +76,11 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
         )
 
     def test_pod_product_info_for_customer_prescription(self):
-        so = self.env["prescription.order"].create(
+        rx = self.env["prescription.order"].create(
             {"partner_id": self.customer.id, "pricelist_id": self.pricelist.id}
         )
         line = self.env["prescription.order.line"].create(
-            {"product_id": self.product.id, "order_id": so.id}
+            {"product_id": self.product.id, "order_id": rx.id}
         )
         line._onchange_product_id_warning()
         self.assertEqual(
@@ -95,11 +95,11 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
         )
 
     def test_pod_product_info_for_customer_prescription_variant(self):
-        so = self.env["prescription.order"].create(
+        rx = self.env["prescription.order"].create(
             {"partner_id": self.customer.id, "pricelist_id": self.pricelist.id}
         )
         line = self.env["prescription.order.line"].create(
-            {"product_id": self.product_variant_1.id, "order_id": so.id}
+            {"product_id": self.product_variant_1.id, "order_id": rx.id}
         )
         line._onchange_product_id_warning()
         self.assertEqual(
@@ -112,11 +112,11 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
         customerinfo = self._create_partnerinfo(
             "customer", self.customer, self.product_variant_2
         )
-        so = self.env["prescription.order"].create(
+        rx = self.env["prescription.order"].create(
             {"partner_id": self.customer.id, "pricelist_id": self.pricelist.id}
         )
         line = self.env["prescription.order.line"].create(
-            {"product_id": self.product_variant_2.id, "order_id": so.id}
+            {"product_id": self.product_variant_2.id, "order_id": rx.id}
         )
         line._onchange_product_id_warning()
         self.assertEqual(
@@ -125,7 +125,7 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
             "Error: Customer product code was not passed to prescription order line",
         )
         # Test with product without variants
-        so2 = self.env["prescription.order"].create(
+        rx2 = self.env["prescription.order"].create(
             {
                 "partner_id": self.customer.id,
                 "pricelist_id": self.pricelist_template.id,
@@ -134,7 +134,7 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
         line2 = self.env["prescription.order.line"].create(
             {
                 "product_id": self.product_template.product_variant_ids.id,
-                "order_id": so2.id,
+                "order_id": rx2.id,
             }
         )
         line2._onchange_product_id_warning()
@@ -148,11 +148,11 @@ class TestProductSupplierinfoForCustomerPrescription(TransactionCase):
         customerinfo = self._create_partnerinfo(
             "customer", self.customer, self.product_variant_2, empty_variant=True
         )
-        so = self.env["prescription.order"].create(
+        rx = self.env["prescription.order"].create(
             {"partner_id": self.customer.id, "pricelist_id": self.pricelist.id}
         )
         line = self.env["prescription.order.line"].create(
-            {"product_id": self.product_variant_2.id, "order_id": so.id}
+            {"product_id": self.product_variant_2.id, "order_id": rx.id}
         )
         line._onchange_product_id_warning()
         self.assertEqual(

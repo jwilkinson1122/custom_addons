@@ -12,7 +12,11 @@
         'base',
         'pod_prescription',
         'pod_prescription_management'],
-	'data': ['views/res_partner.xml'],
+	'data': [
+        'views/res_partner.xml',
+        'views/prescription_patient.xml',
+        'views/prescription_order_views.xml',
+        ],
 	'license': 'LGPL-3',
 	'installable': True,
     'auto_install': False,

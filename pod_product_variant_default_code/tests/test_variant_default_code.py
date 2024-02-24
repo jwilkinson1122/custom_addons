@@ -7,7 +7,7 @@ class TestVariantDefaultCode(TransactionCase):
     def setUpClass(cls):
         super(TestVariantDefaultCode, cls).setUpClass()
         cls.group_default_code = cls.env.ref(
-            "product_variant_default_code.group_product_default_code_manual_mask"
+            "pod_product_variant_default_code.group_product_default_code_manual_mask"
         )
         cls.attr1 = cls.env["product.attribute"].create(
             {

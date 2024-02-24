@@ -5,15 +5,15 @@ class ProductSupplierInfo(models.Model):
     _inherit = "product.supplierinfo"
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        res = super().search(args, offset=offset, limit=limit, order=order, count=count)
+    def search(self, args, offset=0, limit=None, order=None):
+        res = super().search(args, offset=offset, limit=limit, order=order)
         if (
             self.env.context.get("customerinfo")
             and self._name == "product.supplierinfo"
         ):
             limit2 = limit - len(res) if limit else limit
             res2 = self.env["product.customerinfo"].search(
-                args, offset=offset, limit=limit2, order=order, count=count
+                args, offset=offset, limit=limit2, order=order
             )
             res2 = res2.read(list(self.env["product.supplierinfo"]._fields.keys()))
             for result in res2:

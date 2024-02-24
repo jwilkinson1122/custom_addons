@@ -9,7 +9,7 @@ import {
 import { useEffect } from "@odoo/owl";
 
 /**
- * A custom Component for the view of prescription teams on the kanban view in the CRM app.
+ * A custom Component for the view of prescription teams on the kanban view in the prescription app.
  *
  * The wanted behavior is to show a progress bar when an invoicing target is defined or show
  * a link redirecting to the record's form view otherwise.
