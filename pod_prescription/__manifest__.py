@@ -14,6 +14,8 @@
         'account',
         'account_accountant',
         'account_edi',
+        'account_avatax',
+        # 'account_avatax',
         'l10n_us',
         'account_payment',  
         'helpdesk',

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!--Adding the dashboard in list view-->
-    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+    <record id="view_prescription_order_tree" model="ir.ui.view">
         <field name="name">prescription.order.view.tree.inherit.prescription.mini.dashboard</field>
         <field name="model">prescription.order</field>
         <field name="inherit_id"
-               ref="pod_prescription.view_quotation_tree_with_onboarding"/>
+               ref="pod_prescription.view_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="js_class">prescription_dashboard_list</attribute>

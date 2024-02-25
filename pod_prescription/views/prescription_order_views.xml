@@ -1065,7 +1065,7 @@
     <record id="action_prescription_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders to Invoice</field>
         <field name="res_model">prescription.order</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph,pivot,activity</field>
         <field name="context">{'create': False}</field>
         <field name="domain">[('invoice_status','=','to invoice')]</field>
         <field name="search_view_id" ref="view_prescription_order_filter"/>

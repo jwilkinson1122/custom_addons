@@ -4,14 +4,14 @@ from odoo import models
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
-    def _compute_price_rule(self, products, qty, uom=None, date=False, **kwargs):
+    def _compute_price_rule(self, products, quantity, uom=None, date=False, **kwargs):
         """Overwrite for covering the case where templates are passed and a
         different uom is used."""
         if products[0]._name != "product.template":
             # Standard use case - Nothing to do
             return super(ProductPricelist, self)._compute_price_rule(
                 products,
-                qty,
+                quantity,
                 date=date,
                 uom=uom,
             )
@@ -25,18 +25,18 @@ class ProductPricelist(models.Model):
 
         return super(ProductPricelist, pricelist_obj)._compute_price_rule(
             products,
-            qty,
+            quantity,
             date=date,
             uom=False,
         )
 
-    def template_price_get(self, prod_id, qty, partner=None):
+    def template_price_get(self, prod_id, quantity, partner=None):
         return {
             key: price[0]
             for key, price in self.template_price_rule_get(
-                prod_id, qty, partner=partner
+                prod_id, quantity, partner=partner
             ).items()
         }
 
-    def template_price_rule_get(self, prod_id, qty, partner=None):
-        return self._compute_price_rule_multi(prod_id, qty)[prod_id.id]
+    def template_price_rule_get(self, prod_id, quantity, partner=None):
+        return self._compute_price_rule_multi(prod_id, quantity)[prod_id.id]
