@@ -37,6 +37,7 @@
         'sale_product_matrix',
         'sale_product_configurator',
         'sale_purchase',
+        'website_sale',
         'website_sale_product_configurator',
         'website_sale_stock',
         'pod_prescription_contacts',

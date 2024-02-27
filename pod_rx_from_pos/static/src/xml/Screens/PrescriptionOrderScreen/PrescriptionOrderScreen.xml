@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pod_create_rx_from_pos.PrescriptionOrderScreenWidget" owl="1">
+        <div class="order-management-screen screen" t-ref="root">
+            <div class="rightpane">
+                <div class="flex-container">
+                        <PrescriptionOrderManagementControlPanel
+                            onSearch.bind="onSearch"
+                            onPrevPage.bind="onPrevPage"
+                            onNextPage.bind="onNextPage" />
+                        <PrescriptionOrderList
+                        onClickPrescriptionOrder.bind="_onClickPrescriptionOrder"
+                        orders="orders"
+                        initHighlightedOrder="pos.orderManagement.selectedOrder" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

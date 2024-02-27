@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//td[@name='account_invoice_line_name']" position="inside">
+            <t t-set="pos_orders" t-value="o.sudo().pos_order_ids"/>
+            <t t-if="pos_orders">
+                <div style="margin-left:15px; font-style: italic">
+                    <t t-set="down_payment_product" t-value="pos_orders[0].config_id.down_payment_product_id"/>
+                    <t t-if="line.product_id == down_payment_product">
+                        <t t-set="prescription_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('prescription_order_origin_id')"/>
+                        <t t-if="prescription_orders">
+                            <t t-set="prescription_order" t-value="prescription_orders[0]"/>
+                            <t t-foreach="prescription_order.order_line" t-as="prescription_order_line">
+                                <t t-if="prescription_order_line.product_id != down_payment_product">
+                                    <div>
+                                        <span style="margin-right: 5px;"><t t-esc="int(prescription_order_line.product_uom_qty)"/>x</span>
+                                        <span t-esc="prescription_order_line.name" />
+                                        <span style="margin: 0px 5px;">:</span>
+                                        <t t-esc="prescription_order_line.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </t>
+                            </t>
+                            <div style="font-weight: bold">From <t t-esc="prescription_order.name"/> </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

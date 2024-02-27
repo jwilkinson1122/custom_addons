@@ -52,6 +52,8 @@ access_prescription_order_line_accountant,prescription.order.line accountant,mod
 access_prescription_order_line,prescription.order.line,model_prescription_order_line,pod_prescription_team.group_prescription_personnel,1,1,1,1
 access_prescription_report_personnel,prescription.report,model_prescription_report,pod_prescription_team.group_prescription_personnel,1,0,0,0
 
+access_customer_product_preferences,customer.product.preferences,model_customer_product_preference,pod_prescription_team.group_prescription_personnel,1,1,1,1
+
 access_prescription_barcode,prescription.barcode,model_prescription_order_line,pod_prescription_team.group_prescription_personnel,1,1,1,1
 access_sales_barcode,sales.barcode,model_sale_order_line,,1,1,1,1
 

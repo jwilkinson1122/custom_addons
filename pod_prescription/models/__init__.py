@@ -12,6 +12,7 @@ from . import payment_transaction
 from . import product_document
 from . import product_product
 from . import product_template
+from . import customer_product_preferences
 from . import res_company
 from . import res_partner
 # from . import prescription_device

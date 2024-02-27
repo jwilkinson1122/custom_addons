@@ -13,6 +13,8 @@ class ResPartner(models.Model):
     prescription_warn = fields.Selection(WARNING_MESSAGE, 'Prescription Warnings', default='no-message', help=WARNING_HELP)
     prescription_warn_msg = fields.Text('Message for Prescription Order')
 
+    product_preference_ids = fields.One2many('customer.product.preference', 'customer_id', string='Product Preferences')
+
     @api.model
     def _get_prescription_order_domain_count(self):
         return []

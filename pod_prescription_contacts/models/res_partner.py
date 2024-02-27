@@ -20,9 +20,10 @@ class Partner(models.Model):
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
-    is_parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
     
     ref = fields.Char(string="Customer Number", index=True)
+    # ref = fields.Char("Customer Number", readonly=True, default=lambda self: _("New"))
     # internal_code = fields.Char('Internal Code', copy=False)
     internal_code = fields.Char("Internal Code", readonly=True, default=lambda self: _("New"))
     

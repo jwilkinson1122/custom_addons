@@ -273,25 +273,43 @@ class PrescriptionOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+
+    # @api.onchange('product_id')
+    # def _onchange_product_id_set_preferences(self):
+    #     if not self.product_id or not self.order_id.partner_id:
+    #         return
+    #     preferences = self.env['customer.product.preference'].search([
+    #         ('customer_id', '=', self.order_id.partner_id.id),
+    #         ('product_template_id', '=', self.product_id.product_tmpl_id.id)
+    #     ])
+    #     for pref in preferences:
+    #         if pref.preference_type == 'arch_height':
+    #             pass
+
+
+
+
     # @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
-    # def _compute_invoicing_progress(self):
+    # def _compute_prescription_progress(self):
     #     precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
     #     for line in self:
     #         if line.state not in ('sale', 'done'):
-    #             line.invoicing_progress = 0.0
+    #             line.prescription_progress = 0.0
     #         elif not float_is_zero(line.product_uom_qty, precision_digits=precision) and not float_is_zero(line.qty_to_invoice, precision_digits=precision):
     #             if float_compare(line.product_uom_qty, line.qty_to_invoice, precision_digits=precision) >= 0:
-    #                 line.invoicing_progress = 100 * (line.qty_to_invoice / line.product_uom_qty)
+    #                 line.prescription_progress = 100 * (line.qty_to_invoice / line.product_uom_qty)
     #             else:
-    #                 line.invoicing_progress = 0.0
+    #                 line.prescription_progress = 0.0
     #         else:
-    #             line.invoicing_progress = 0.0
+    #             line.prescription_progress = 0.0
 
-    # invoicing_progress = fields.Float(
+    # prescription_progress = fields.Float(
     #     string='To Invoice',
-    #     compute='_compute_invoicing_progress',
+    #     compute='_compute_prescription_progress',
     #     store=True, readonly=True
     # )
+
+    
 
     @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):

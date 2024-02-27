@@ -61,6 +61,24 @@
                     <field string="Prescription" name="prescription_order_count" widget="statinfo"/>
                 </button>
             </div>
+            <!-- <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Product Preferences">
+                    <field name="product_preference_ids">
+                        <tree editable="bottom">
+                            <field name="product_template_id"/>
+                            <field name="preference_type"/>
+                            <field name="preference_value"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="product_template_id"/>
+                                <field name="preference_type"/>
+                                <field name="preference_value"/>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath> -->
             <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="after">
                 <group groups="pod_prescription_team.group_prescription_personnel">
                     <group groups="pod_prescription.group_warning_prescription" col="2">
