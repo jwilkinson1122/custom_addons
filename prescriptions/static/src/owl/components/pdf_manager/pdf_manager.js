@@ -608,7 +608,8 @@ export class PdfManager extends Component {
      *        pdf.numPages {number}
      */
     async _getPdf(url) {
-        return window.pdfjsLib.getPrescription(url).promise;
+        return window.pdfjsLib.getDocument(url).promise;
+        // return window.pdfjsLib.getDocument(url).promise;
     }
     /**
      * To be overwritten in tests.

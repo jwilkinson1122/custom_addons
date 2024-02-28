@@ -8,6 +8,8 @@
     'description': """
 Adds the ability to set workspace templates on products.
 """,
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions_project', 'sale_project'],
     'data': [
         'views/product_views.xml',
@@ -17,5 +19,6 @@ Adds the ability to set workspace templates on products.
         'data/project_sale_demo.xml',
     ],
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
 }

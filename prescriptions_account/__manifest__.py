@@ -12,7 +12,8 @@ the creation invoices from the Prescriptions module, and adds a
 button on Accounting's reports allowing to save the report into the
 Prescriptions app in the desired format(s).
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'account_reports'],
     'data': [
         'security/ir.model.access.csv',
@@ -27,6 +28,7 @@ Prescriptions app in the desired format(s).
     ],
     'installable': True,
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [

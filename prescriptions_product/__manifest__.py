@@ -10,7 +10,8 @@
 Adds the ability to create products from the prescription module and adds the
 option to send products' attachments to the prescriptions app.
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'product'],
     'data': [
         'data/prescriptions_folder_data.xml',
@@ -22,5 +23,6 @@ option to send products' attachments to the prescriptions app.
     ],
     'installable': True,
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
 }

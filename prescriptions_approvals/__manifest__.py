@@ -8,7 +8,8 @@
     'description': """
 Adds approvals data to prescriptions
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'approvals'],
     'data': [
         "views/res_config_settings_views.xml",
@@ -19,5 +20,6 @@ Adds approvals data to prescriptions
     ],
     'installable': True,
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
 }

@@ -39,7 +39,7 @@ const TEST_TEMPLATES = [
     { id: 12, name: "Template 12", spreadsheet_data: "{}" },
 ];
 
-async function getPrescriptionBasicData(views = {}) {
+async function getDocumentBasicData(views = {}) {
     const pyEnv = await startServer();
     const prescriptionsFolderId1 = pyEnv["prescriptions.folder"].create({
         name: "Workspace1",
@@ -78,7 +78,7 @@ async function getPrescriptionBasicData(views = {}) {
 async function initTestEnvWithKanban(args = {}) {
     const data =
         args.serverData ||
-        (await getPrescriptionBasicData({
+        (await getDocumentBasicData({
             "spreadsheet.template,false,search": `<search><field name="name"/></search>`,
         }));
     data.models["spreadsheet.template"].records = data.models[
@@ -170,7 +170,7 @@ QUnit.module(
         });
 
         QUnit.test("Create spreadsheet from list view opens a modal", async function (assert) {
-            const serverData = await getPrescriptionBasicData({
+            const serverData = await getDocumentBasicData({
                 "prescriptions.prescription,false,list": `<tree js_class="prescriptions_list"></tree>`,
                 "prescriptions.prescription,false,search": getEnrichedSearchArch(),
             });
@@ -304,7 +304,7 @@ QUnit.module(
             assert.verifySteps(["action_open_new_spreadsheet", "redirect"]);
         });
         QUnit.test("Context is transmitted when creating spreadsheet", async function (assert) {
-            const serverData = await getPrescriptionBasicData({
+            const serverData = await getDocumentBasicData({
                 "prescriptions.prescription,false,kanban": `
                 <kanban js_class="prescriptions_kanban"><templates><t t-name="kanban-box">
                 <div><field name="name"/></div>

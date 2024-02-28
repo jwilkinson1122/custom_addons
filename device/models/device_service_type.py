@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields, models
+
+
+class DeviceServiceType(models.Model):
+    _name = 'device.service.type'
+    _description = 'Device Service Type'
+    _order = 'name'
+
+    name = fields.Char(required=True, translate=True)
+    category = fields.Selection([
+        ('contract', 'Contract'),
+        ('service', 'Service')
+        ], 'Category', required=True, help='Choose whether the service refer to contracts, custom services or both')

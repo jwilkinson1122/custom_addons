@@ -113,11 +113,11 @@ export class PrescriptionsKanbanRenderer extends KanbanRenderer {
         }
     }
 
-    getPrescriptionsAttachmentViewerProps() {
+    getDocumentsAttachmentViewerProps() {
         return { previewStore: this.props.previewStore };
     }
 
-    getPrescriptionsInspectorProps() {
+    getDocumentsInspectorProps() {
         return {
             prescriptions: this.props.inspectedPrescriptions.length
                 ? this.props.inspectedPrescriptions

@@ -10,7 +10,8 @@
 Add the ability to create signatures from the prescription module.
 The first element of the selection (in DRM) will be used as the signature attachment.
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'sign'],
 
     'data': [
@@ -25,5 +26,6 @@ The first element of the selection (in DRM) will be used as the signature attach
 
     'installable': True,
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
 }

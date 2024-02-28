@@ -7,11 +7,11 @@
             <attribute name="t-on-click">onGlobalClick</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_list_renderer')]" position="after">
-            <PrescriptionsInspector t-props="getPrescriptionsInspectorProps()"/>
+            <PrescriptionsInspector t-props="getDocumentsInspectorProps()"/>
         </xpath>
         <table position="before">
             <PrescriptionsDropZone parentRoot="root"/>
-            <PrescriptionsFileViewer parentRoot="root" t-props="getPrescriptionsAttachmentViewerProps()"/>
+            <PrescriptionsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
             <FileUploadProgressContainer fileUploads="this.prescriptionUploads" Component="constructor.components.FileUploadProgressDataRow" shouldDisplay="(upload) => !upload.data.get('prescription_id')"/>
         </table>
         <t t-call="web.ActionHelper" position="replace">

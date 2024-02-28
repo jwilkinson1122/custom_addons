@@ -25,14 +25,14 @@ export class PrescriptionsActivityRenderer extends ActivityRenderer {
         this.root = useRef("root");
     }
 
-    getPrescriptionsAttachmentViewerProps() {
+    getDocumentsAttachmentViewerProps() {
         return { previewStore: this.props.previewStore };
     }
 
     /**
      * Props for prescriptionsInspector
      */
-    getPrescriptionsInspectorProps() {
+    getDocumentsInspectorProps() {
         return {
             prescriptions: this.props.records.filter((rec) => rec.selected),
             count: 0,

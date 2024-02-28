@@ -9,12 +9,13 @@
         <record id="group_prescriptions_user" model="res.groups">
             <field name="name">User</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="category_id" ref="base.module_category_productivity_prescriptions"/>
+            <!-- <field name="category_id" ref="base.module_category_hidden" /> -->
+            <field name="category_id" ref="module_category_prescriptions_management"/>
         </record>
 
         <record id="group_prescriptions_manager" model="res.groups">
             <field name="name">Administrator</field>
-            <field name="category_id" ref="base.module_category_productivity_prescriptions"/>
+            <field name="category_id" ref="module_category_prescriptions_management"/>
             <field name="implied_ids" eval="[(4, ref('group_prescriptions_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>

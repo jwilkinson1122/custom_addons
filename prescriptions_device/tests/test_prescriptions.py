@@ -32,7 +32,7 @@ class TestCasePrescriptionsBridgeDevice(TransactionCase):
         cls.device_custom = cls.env["device.custom"].create({
             "model_id": model.id,
             "driver_id": cls.prescriptions_user.partner_id.id,
-            "plan_to_change_car": False
+            "plan_to_change_orthotic": False
         })
 
     def test_device_attachment(self):

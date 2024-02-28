@@ -10,7 +10,7 @@ import {
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 
-const getPrescriptionTags = (component, superTags) => {
+const getDocumentTags = (component, superTags) => {
     if (!component.env.searchModel.getTags) {
         return superTags;
     }
@@ -40,7 +40,7 @@ const getPrescriptionTags = (component, superTags) => {
 // This widget only displays the tags that are currently in the search panel
 export class PrescriptionsKanbanMany2ManyTagsField extends KanbanMany2ManyTagsField {
     get tags() {
-        return getPrescriptionTags(this, super.tags);
+        return getDocumentTags(this, super.tags);
     }
 }
 export const prescriptionsKanbanMany2ManyTagsField = {
@@ -51,7 +51,7 @@ registry.category("fields").add("kanban.prescriptions_many2many_tags", prescript
 
 export class PrescriptionsMany2ManyTagsField extends Many2ManyTagsField {
     get tags() {
-        return getPrescriptionTags(this, super.tags);
+        return getDocumentTags(this, super.tags);
     }
 }
 export const prescriptionsMany2ManyTagsField = {

@@ -7,7 +7,8 @@
     'category': 'Medical/Prescriptions',
     'summary': 'Device from prescriptions',
     'description': """Adds device data to prescriptions""",
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'device'],
     'data': [
         'data/prescriptions_folder_data.xml',
@@ -19,6 +20,7 @@
         'views/res_config_settings_views.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    # # 'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }

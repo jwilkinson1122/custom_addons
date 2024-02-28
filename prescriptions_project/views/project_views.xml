@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="priority">33</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_prescriptions_analytics']" position="attributes">
+            <xpath expr="//group[@name='group_documents_analytics']" position="attributes">
                 <attribute name="string">Prescriptions &amp; Analytics</attribute>
                 <attribute name="invisible">False</attribute>
             </xpath>

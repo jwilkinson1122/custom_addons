@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "NWPL - Prescriptions",
-    'summary': "Prescription management",
+    'summary': "Prescriptions Management",
     'description': """App to upload and manage prescriptions.""",
     'author': "NWPL",
     'category': 'Medical/Prescriptions',

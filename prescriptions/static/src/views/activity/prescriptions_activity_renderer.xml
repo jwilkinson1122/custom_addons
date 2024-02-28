@@ -9,9 +9,9 @@
                     <t t-call="mail.ActivityViewBody"/>
                     <t t-call="mail.ActivityViewFooter"/>
                 </table>
-                <PrescriptionsFileViewer parentRoot="root" t-props="getPrescriptionsAttachmentViewerProps()"/>
+                <PrescriptionsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
             </div>
-            <PrescriptionsInspector t-props="getPrescriptionsInspectorProps()"/>
+            <PrescriptionsInspector t-props="getDocumentsInspectorProps()"/>
         </div>
     </t>
 </templates>

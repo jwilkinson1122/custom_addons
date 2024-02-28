@@ -9,7 +9,8 @@
     'description': """
 Add the ability to create invoices from the prescription module.
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'project'],
     'data': [
         'data/prescriptions_folder_data.xml',
@@ -28,6 +29,7 @@ Add the ability to create invoices from the prescription module.
         'data/prescriptions_project_demo.xml',
     ],
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
     'post_init_hook': '_prescriptions_project_post_init',
 }

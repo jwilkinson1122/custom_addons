@@ -1,1 +1,1 @@
-from . import fleet_report
+from . import device_report

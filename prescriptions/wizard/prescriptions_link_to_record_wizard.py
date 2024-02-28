@@ -14,7 +14,13 @@ class LinkToRecordWizard(models.TransientModel):
         return [(model.model, model.name)
                 for model in self.env['ir.model'].sudo().search([('model', '!=', 'prescriptions.prescription'), ('is_mail_thread', '=', 'True')])]
 
-    prescription_ids = fields.Many2many('prescriptions.prescription', string='Prescriptions', readonly=True)
+    # prescription_ids = fields.Many2many('prescriptions.prescription', string='Prescriptions', readonly=True)
+    prescription_ids = fields.Many2many(
+    'prescriptions.prescription',
+    string='Prescriptions',
+    readonly=True,
+    relation='prescription_record_rel')
+
     model_id = fields.Many2one('ir.model', string='Model', domain=_get_model_domain)
     is_readonly_model = fields.Boolean('is_readonly_model', default=True)
     resource_ref = fields.Reference(string='Record', selection='_selection_target_model')

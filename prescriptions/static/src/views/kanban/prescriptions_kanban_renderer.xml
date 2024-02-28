@@ -6,11 +6,11 @@
             <attribute name="t-on-click">onGlobalClick</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="after">
-            <PrescriptionsInspector t-props="getPrescriptionsInspectorProps()"/>
+            <PrescriptionsInspector t-props="getDocumentsInspectorProps()"/>
         </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="inside">
             <PrescriptionsDropZone parentRoot="root"/>
-            <PrescriptionsFileViewer parentRoot="root" t-props="getPrescriptionsAttachmentViewerProps()"/>
+            <PrescriptionsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
         </xpath>
         <t t-foreach="getGroupsOrRecords()" position="before">
             <FileUploadProgressContainer fileUploads="this.prescriptionUploads" Component="constructor.components.FileUploadProgressKanbanRecord" shouldDisplay="(upload) => !upload.data.get('prescription_id')"/>

@@ -62,7 +62,8 @@ export class PrescriptionsKanbanCompiler extends KanbanCompiler {
             `,
             "application/xml"
         );
-        elem.prepend(...content.prescriptionElement.children);
+        elem.prepend(...content.documentElement.children);
+        // elem.prepend(...content.prescriptionElement.children);
         return elem;
     }
 

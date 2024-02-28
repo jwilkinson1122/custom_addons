@@ -43,7 +43,10 @@ export const prescriptionsPdfThumbnailService = {
             }
             const writeData = {};
             try {
-                const pdf = await window.pdfjsLib.getPrescription(
+                // const pdf = await window.pdfjsLib.getDocument(
+                //     `/prescriptions/pdf_content/${record.resId}`
+                // ).promise;
+                const pdf = await window.pdfjsLib.getDocument(
                     `/prescriptions/pdf_content/${record.resId}`
                 ).promise;
                 const page = await pdf.getPage(1);

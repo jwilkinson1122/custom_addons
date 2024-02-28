@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <record id="res_config_settings_view_form" model="ir.ui.view">
-            <field name="name">res.config.settings.view.form.inherit.hr.fleet</field>
+            <field name="name">res.config.settings.view.form.inherit.hr.device</field>
             <field name="model">res.config.settings</field>
             <field name="priority" eval="90"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
-                    <app data-string="Fleet" id="fleet" string="Fleet" name="fleet" groups="fleet.fleet_group_manager">
-                        <block title="Fleet Management" id="end_contract_setting">
+                    <app data-string="Device" id="device" string="Device" name="device" groups="device.device_group_manager">
+                        <block title="Device Management" id="end_contract_setting">
                             <setting string="End Date Contract Alert">
                                 <div class="text-muted content-group mt16">
                                     <span>Send an alert </span>
@@ -23,16 +23,16 @@
             </field>
         </record>
 
-        <record id="fleet_config_settings_action" model="ir.actions.act_window">
+        <record id="device_config_settings_action" model="ir.actions.act_window">
             <field name="name">Settings</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'fleet', 'bin_size': False}</field>
+            <field name="context">{'module' : 'device', 'bin_size': False}</field>
         </record>
 
-        <menuitem id="fleet_config_settings_menu" name="Settings"
-            parent="fleet.fleet_configuration" sequence="0" action="fleet_config_settings_action"
+        <menuitem id="device_config_settings_menu" name="Settings"
+            parent="device.device_configuration" sequence="0" action="device_config_settings_action"
             groups="base.group_system"/>
     </data>
 </odoo>

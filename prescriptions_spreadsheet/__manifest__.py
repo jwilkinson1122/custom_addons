@@ -6,6 +6,8 @@
     'category': 'Medical/Prescriptions',
     'summary': 'Prescriptions Spreadsheet',
     'description': 'Prescriptions Spreadsheet',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions', 'spreadsheet_edition'],
     'data': [
         'data/prescriptions_folder_data.xml',

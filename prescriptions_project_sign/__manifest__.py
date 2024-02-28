@@ -9,12 +9,14 @@
     'description': """
 Adds an action to sign prescriptions attached to tasks.
 """,
-    'website': ' ',
+    'author': "NWPL",
+    'website': 'https://www.nwpodiatric.com',
     'depends': ['prescriptions_project', 'prescriptions_sign'],
     'data': [
         'data/prescriptions_workflow_rule_data.xml',
     ],
     'installable': True,
     'auto_install': True,
+    # 'auto_install': False,
     'license': 'LGPL-3',
 }
