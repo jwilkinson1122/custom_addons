@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="prescriptions_folder" model="prescriptions.folder">
+            <field name="name">Renovation Projects</field>
+        </record>
+
+        <record id="prescriptions_folder_facet_1" model="prescriptions.facet">
+            <field name="name">Status</field>
+            <field name="sequence">1</field>
+            <field name="folder_id" ref="prescriptions_folder"/>
+        </record>
+        <record id="prescriptions_folder_facet_1_tag_1" model="prescriptions.tag">
+            <field name="name">New/Unsorted</field>
+            <field name="sequence">1</field>
+            <field name="facet_id" ref="prescriptions_folder_facet_1"/>
+        </record>
+        <record id="prescriptions_folder_facet_1_tag_2" model="prescriptions.tag">
+            <field name="name">In Use</field>
+            <field name="sequence">2</field>
+            <field name="facet_id" ref="prescriptions_folder_facet_1"/>
+        </record>
+        <record id="prescriptions_folder_facet_1_tag_3" model="prescriptions.tag">
+            <field name="name">Done/Archived</field>
+            <field name="sequence">3</field>
+            <field name="facet_id" ref="prescriptions_folder_facet_1"/>
+        </record>
+    
+        <record id="prescriptions_folder_template" model="prescriptions.folder">
+            <field name="name">Template</field>
+            <field name="parent_folder_id" ref="prescriptions_folder"/>
+        </record>
+    
+        <record id="prescriptions_folder_template_child_1" model="prescriptions.folder">
+            <field name="name">Plans</field>
+            <field name="parent_folder_id" ref="prescriptions_folder_template"/>
+        </record>
+    
+        <record id="prescriptions_folder_template_child_2" model="prescriptions.folder">
+            <field name="name">Photos</field>
+            <field name="parent_folder_id" ref="prescriptions_folder_template"/>
+        </record>
+    
+        <record id="prescriptions_folder_template_child_3" model="prescriptions.folder">
+            <field name="name">Miscellaneous</field>
+            <field name="parent_folder_id" ref="prescriptions_folder_template"/>
+        </record>
+    </data>
+</odoo>

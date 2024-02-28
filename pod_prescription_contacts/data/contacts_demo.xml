@@ -17,6 +17,7 @@
         <!-- Accounts -->
         <record id="parent_account_1" model="res.partner">
             <field name="name">Fab Foot Clinic</field>
+            <field name="is_parent_account" eval="True"/>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="practice_type_id" ref="clinic"/>

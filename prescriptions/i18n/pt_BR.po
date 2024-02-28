@@ -1,0 +1,3784 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions
+# 
+# Translators:
+# Layna Nascimento, 2023
+# Maitê Dietze, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid " + Add a tag"
+msgstr " + Adicionar um marcador"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "%s Prescriptions"
+msgstr "%s Prescriptionos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "%s Prescriptions (%s locked)"
+msgstr "%s prescriptionos (%s travados)"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "%s file(s) not moved because they are locked by another user"
+msgstr "%s arquivos não movidos porque foram travados por outro usuário"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s new prescription(s) created"
+msgstr "%s novos prescriptionos criados"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s page(s) deleted"
+msgstr "%s páginas excluídas"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "(Remaining pages"
+msgstr "(Páginas restantes"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid ", expired on"
+msgstr ", expirado em"
+
+#. module: prescriptions
+#: model_terms:digest.tip,tip_description:prescriptions.digest_tip_prescriptions_0
+msgid ""
+". Scanned files will appear automatically in your workspace. Then, process "
+"your prescriptions in bulk with the split tool: launch user defined actions, "
+"request a signature, convert to vendor bills with AI, etc."
+msgstr ""
+". Os arquivos digitalizados aparecerão automaticamente em seu espaço de "
+"trabalho. Em seguida, processe seus prescriptionos em massa com a ferramenta de "
+"divisão: inicie ações definidas pelo usuário, solicite uma assinatura, "
+"converta em faturas de fornecedores com IA etc."
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_fiscal_year_2017
+msgid "2022"
+msgstr "2022"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_fiscal_year_2018
+msgid "2023"
+msgstr "2023"
+
+#. module: prescriptions
+#: model_terms:digest.tip,tip_description:prescriptions.digest_tip_prescriptions_0
+msgid "<b class=\"tip_title\">Tip: Become a paperless company</b>"
+msgstr "<b class=\"tip_title\">Dica: torne-se uma empresa informatizada</b>"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "<b>Deselect this page</b> as we plan to process all bills first."
+msgstr ""
+"<b>Desmarque esta página</b> já que planejamos processar todas as faturas "
+"primeiro."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+msgid ""
+"<br/>\n"
+"                    is sharing content with you"
+msgstr ""
+"<br/>\n"
+"                    está compartilhando conteúdo com você"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "<br/>Powered by"
+msgstr "<br/> Desenvolvido por"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "<i class=\"fa fa fa-folder text-primary me-2\" title=\"Workspace\"/>"
+msgstr "<i class=\"fa fa fa-folder text-primary me-2\" title=\"Workspace\"/>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "<i class=\"fa fa-download fa-fw\"/>  Download All"
+msgstr "<i class=\"fa fa-download fa-fw\"/> Download de tudo"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "<i class=\"fa fa-lock oe_inline\" title=\"Locked\" invisible=\"not lock_uid\"/>"
+msgstr "<i class=\"fa fa-lock oe_inline\" title=\"Locked\" invisible=\"not lock_uid\"/>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid ""
+"<i class=\"fa fa-tag o_prescriptions_tag_color ms-2\" invisible=\"not tag_ids\" "
+"title=\"Tags\"/>"
+msgstr ""
+"<i class=\"fa fa-tag o_prescriptions_tag_color ms-2\" invisible=\"not tag_ids\" "
+"title=\"Tags\"/>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "<i class=\"fa fa-upload\"/>  Upload"
+msgstr "<i class=\"fa fa-upload\"/> Carregar"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "<span class=\"o_stat_text\">Actions</span>"
+msgstr "<span class=\"o_stat_text\">Ações</span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_prescription_res_partner_view
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "<span class=\"o_stat_text\">Prescriptions</span>"
+msgstr "<span class=\"o_stat_text\">Prescriptionos</span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "<span class=\"o_stat_text\">Related <br/> Record</span>"
+msgstr "<span class=\"o_stat_text\">Registro <br/> relacionado</span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "<span title=\"Requested Prescription\">Requested Prescription</span>"
+msgstr "<span title=\"Requested Prescription\">Prescriptiono solicitado</span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "<span>&amp;nbsp;Prescriptions.</span>"
+msgstr "<span>e Prescriptionos.</span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_kanban
+msgid "<span><b> Request</b></span>"
+msgstr "<span><b> Solicitar</b></span>"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_kanban
+msgid "<span><b>Requested Prescription</b></span>"
+msgstr "<span><b>Prescriptiono solicitado</b></span>"
+
+#. module: prescriptions
+#: model:mail.template,body_html:prescriptions.mail_template_prescription_request_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Prescription Request: <br>\n"
+"                                            <t t-if=\"object.create_share_id.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.create_share_id.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.create_share_id.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            This is a friendly reminder to upload your requested prescription:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.name\">\n"
+"                                                        <b t-out=\"object.create_share_id.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.activity_note\">\n"
+"                                                        <i t-out=\"object.create_share_id.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.create_share_id.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested prescription\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing prescription before the link expires (planned on <t t-out=\"object.create_share_id.date_deadline or ''\">2021-05-17</t>).\n"
+"                                            <br><br>\n"
+"                                            Thank you,\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-att-href=\"object.create_uid.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.create_share_id.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.create_share_id.date_deadline\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.nwpodiatric.com\" style=\"color: #875A7B;\">NWPL Prescriptions</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- CABEÇALHO -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Solicitação de prescriptiono: <br>\n"
+"                                            <t t-if=\"object.create_share_id.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.create_share_id.name or ''\">Caixa de entrada financeira</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTEÚDO -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Olá <t t-out=\"object.create_share_id.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            Este é um lembrete para fazer o upload do prescriptiono solicitado:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.name\">\n"
+"                                                        <b t-out=\"object.create_share_id.name or ''\">Caixa de entrada financeira</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.activity_note\">\n"
+"                                                        <i t-out=\"object.create_share_id.activity_note or ''\">Exemplo de uma nota interna.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.create_share_id.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Faça o upload do prescriptiono solicitado\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Forneça-nos o prescriptiono que falta antes que o link expire (previsto para <t t-out=\"object.create_share_id.date_deadline or ''\">17-05-2021 </t>).\n"
+"                                            <br><br>\n"
+"                                            Obrigado,\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature\">--<br>Michel Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- RODAPÉ -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">SuaEmpresa</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+55 3535-3535</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email\">info@suaempresa.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-att-href=\"object.create_uid.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website\">http://www.exemplo.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- DESENVOLVIDO POR -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.create_share_id.date_deadline\">\n"
+"                                Este link expira em <b t-out=\"object.create_share_id.date_deadline\">17-05-2021</b>.<br>\n"
+"                            </t>\n"
+"                            Distribuído por <a target=\"_blank\" href=\"https://www.nwpodiatric.com\" style=\"color: #875A7B;\">Odoo Prescriptionos</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+
+#. module: prescriptions
+#: model:mail.template,body_html:prescriptions.mail_template_prescription_request
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Prescription Request: <br>\n"
+"                                            <t t-if=\"object.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\" t-if=\"not object.create_uid.company_id.uses_default_logo\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            <t t-out=\"object.create_uid.name or ''\">OdooBot</t> (<t t-out=\"object.create_uid.email or ''\">odoobot@example.com</t>) asks you to provide the following prescription:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.name\">\n"
+"                                                        <b t-out=\"object.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.activity_note\">\n"
+"                                                        <i t-out=\"object.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested prescription\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing prescription<t t-if=\"object.date_deadline\"> before the link expires (planned on <t t-out=\"object.date_deadline\">2021-05-17</t>)</t>.\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-attf-href=\"'%s' % {{ object.create_uid.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website or ''\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.date_deadline or ''\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.nwpodiatric.com\" style=\"color: #875A7B;\">NWPL Prescriptions</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- CABEÇALHO -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Solicitação de prescriptiono: <br>\n"
+"                                            <t t-if=\"object.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Caixa de entrada financeira</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\" t-if=\"not object.create_uid.company_id.uses_default_logo\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTEÚDO -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Olá <t t-out=\"object.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            <t t-out=\"object.create_uid.name or ''\">OdooBot</t> (<t t-out=\"object.create_uid.email or ''\">odoobot@exemplo.com</t>) pede que você forneça o seguinte prescriptiono:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.name\">\n"
+"                                                        <b t-out=\"object.name or ''\">Caixa de entrada financeira</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.activity_note\">\n"
+"                                                        <i t-out=\"object.activity_note or ''\">Exemplo de uma nota interna.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Faça o upload do prescriptiono solicitado\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Solicitamos que forneça o prescriptiono necessário<t t-if=\"object.date_deadline\"> antes que o link expire (planejado em <t t-out=\"object.date_deadline\">17-05-2021</t>)</t>.\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- RODAPÉ -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">Sua Empresa</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+55 11 2020-2020</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email or ''\">info@suaempresa.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-attf-href=\"'%s' % {{ object.create_uid.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website or ''\">http://www.exemplo.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- DISTRIBUÍDO POR -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.date_deadline\">\n"
+"-                                Esse link expira em <b t-out=\"object.date_deadline or ''\">17-05-2021 </b>.<br>\n"
+"                            </t>\n"
+"                            Distribuído por <a target=\"_blank\" href=\"https://www.nwpodiatric.com\" style=\"color: #875A7B;\">Odoo Prescriptionos</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Um dicionário python que será avaliado para fornecer valores padrões ao "
+"criar novos registros para este alias."
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"Um conjunto de condições e ações que estarão disponíveis para todos os "
+"anexos que correspondem às condições."
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_folder.py:0
+#, python-format
+msgid ""
+"A workspace cannot have one of his child defined as Parent Workspace in "
+"order to avoid a recursion issue."
+msgstr ""
+"Um espaço de trabalho não pode ter um de seus secundários definido como "
+"espaço de trabalho principal para evitar um problema de recursão."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__parent_folder_id
+msgid "A workspace will inherit the tags of its parent workspace"
+msgstr ""
+"Um espaço de trabalho herdará os marcadores de seu espaço de trabalho "
+"principal"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "Access"
+msgstr "Acesso"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "Access Error"
+msgstr "Erro de acesso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__group_ids
+msgid "Access Groups"
+msgstr "Grupos de acesso"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "Access Rights"
+msgstr "Permissões de acesso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__access_token
+msgid "Access Token"
+msgstr "Token de acesso"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__action
+#, python-format
+msgid "Action"
+msgstr "Ação"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__name
+msgid "Action Button Name"
+msgstr "Nome do botão de ação"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__action_count
+msgid "Action Count"
+msgstr "Contagem de ações"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Action Name"
+msgstr "Nome da ação"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_needaction
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_needaction
+msgid "Action Needed"
+msgstr "Requer ação"
+
+#. module: prescriptions
+#. odoo-javascript
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_folder.py:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model:ir.ui.menu,name:prescriptions.workflow_rules_menu
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+#, python-format
+msgid "Actions"
+msgstr "Ações"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__active
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__active
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_tree
+msgid "Active"
+msgstr "Ativo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_ids
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Activities"
+msgstr "Atividades"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_mail_activity
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Activity"
+msgstr "Atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoração de atividade excepcional"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_note
+msgid "Activity Note"
+msgstr "Nota de atividade"
+
+#. module: prescriptions
+#: model:ir.ui.menu,name:prescriptions.mail_activity_plan_menu
+msgid "Activity Plans"
+msgstr "Plano de atividades"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_state
+msgid "Activity State"
+msgstr "Status da atividade"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipo de atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ícone do tipo de atividade"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.mail_activity_type_action_prescription
+#: model:ir.ui.menu,name:prescriptions.mail_activity_type_menu
+msgid "Activity Types"
+msgstr "Tipos de atividades"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__activity_type_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_type_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_type_id
+msgid "Activity type"
+msgstr "Tipo de atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_action__action__add
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_upload_url_view
+msgid "Add"
+msgstr "Adicionar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add File"
+msgstr "Adicionar um arquivo"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.action_url_form
+msgid "Add Url"
+msgstr "Adicionar URL"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#, python-format
+msgid "Add a Link"
+msgstr "Adicionar um link"
+
+#. module: prescriptions
+#: model_terms:ir.actions.act_window,help:prescriptions.mail_activity_plan_action_prescription
+msgid "Add a new plan"
+msgstr "Adicionar novo plano"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add new file"
+msgstr "Adicionar um novo arquivo"
+
+#. module: prescriptions
+#: model:res.groups,name:prescriptions.group_prescriptions_manager
+msgid "Administrator"
+msgstr "Administrador"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_marketing_assets_ads
+msgid "Ads"
+msgstr "Propaganda"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_contact
+msgid "Alias Contact Security"
+msgstr "Segurança de contato do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_domain_id
+msgid "Alias Domain"
+msgstr "Domínio do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_domain
+msgid "Alias Domain Name"
+msgstr "Nome de domínio do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_full_name
+msgid "Alias Email"
+msgstr "E-mail do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_name
+msgid "Alias Name"
+msgstr "Nome do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_status
+msgid "Alias Status"
+msgstr "Status do alias"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Status do alias avaliado na última mensagem recebida."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_model_id
+msgid "Aliased Model"
+msgstr "Modelo de alias"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/controllers/prescriptions.py:0
+#, python-format
+msgid "All files uploaded"
+msgstr "Todos os arquivos carregados"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__action
+msgid "Allows to"
+msgstr "Permite"
+
+#. module: prescriptions
+#: model:ir.module.category,description:prescriptions.module_category_prescriptions_management
+msgid "Allows you to manage your prescriptions."
+msgstr "Permite a você gerenciar seus prescriptionos."
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "Already linked Prescriptions"
+msgstr "Prescriptionos já vinculados"
+
+#. module: prescriptions
+#: model_terms:digest.tip,tip_description:prescriptions.digest_tip_prescriptions_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to"
+msgstr ""
+"Uma maneira fácil de processar os e-mails recebidos é configurar o scanner "
+"para enviar PDFs para"
+
+#. module: prescriptions
+#: model_terms:digest.tip,tip_description:prescriptions.digest_tip_prescriptions_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to your workspace email. Scanned files will appear automatically in "
+"your workspace. Then, process your prescriptions in bulk with the split tool: "
+"launch user defined actions, request a signature, convert to vendor bills "
+"with AI, etc."
+msgstr ""
+"Uma maneira fácil de processar os e-mails recebidos é configurar o scanner "
+"para enviar PDFs para o e-mail do espaço de trabalho. Os arquivos "
+"digitalizados aparecerão automaticamente em seu espaço de trabalho. Em "
+"seguida, processe seus prescriptionos em massa com a ferramenta de divisão: "
+"inicie ações definidas pelo usuário, solicite uma assinatura, converta em "
+"faturas de fornecedores com IA etc."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#, python-format
+msgid "An error occured while uploading."
+msgstr "Houve um erro ao fazer o upload."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "Archive"
+msgstr "Arquivar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Archive original file(s)"
+msgstr "Arquivar arquivos originais"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "Archived"
+msgstr "Arquivado"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_search
+msgid "Archived Workspace"
+msgstr "Espaço de trabalho arquivado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the focused page ?"
+msgstr "Tem certeza de que deseja excluir a página em foco?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the selected page(s)"
+msgstr "Tem certeza de que deseja excluir as páginas selecionadas?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete this page ?"
+msgstr "Tem certeza de que deseja excluir esta página?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the prescription?"
+msgstr "Tem certeza de que deseja excluir o prescriptiono permanentemente?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the prescriptions?"
+msgstr "Tem certeza de que deseja excluir os prescriptionos permanentemente?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"As this PDF contains multiple prescriptions, let's split and process in bulk."
+msgstr ""
+"Como esse PDF contém múltiplos prescriptionos, vamos dividi-los e processá-los "
+"em massa."
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_finance_afv
+msgid "Ask for Validation"
+msgstr "Pedir validação"
+
+#. module: prescriptions
+#: model:prescriptions.facet,name:prescriptions.prescriptions_marketing_assets
+msgid "Assets"
+msgstr "Recursos"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Attached To"
+msgstr "Anexado a"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_ir_attachment
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__attachment_id
+msgid "Attachment"
+msgstr "Anexo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_attachment_count
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_attachment_count
+msgid "Attachment Count"
+msgstr "Contagem de anexos"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__description
+msgid "Attachment Description"
+msgstr "Descrição do anexo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__attachment_name
+msgid "Attachment Name"
+msgstr "Nome do anexo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__attachment_type
+msgid "Attachment Type"
+msgstr "Tipo de anexo"
+
+#. module: prescriptions
+#: model_terms:prescriptions.folder,description:prescriptions.prescriptions_finance_folder
+msgid ""
+"Automate your inbox using scanned prescriptions or emails sent to <span "
+"class=\"o_folder_description_alias\"><strong>inbox-financial</strong> email "
+"alias</span>."
+msgstr ""
+"Automatize sua caixa de entrada usando prescriptionos escaneados ou e-mails "
+"enviados para o alias de e-mail <span "
+"class=\"o_folder_description_alias\"><strong>inbox-"
+"financial</strong></span>."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__available_rule_ids
+msgid "Available Rules"
+msgstr "Regras disponíveis"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_bill
+msgid "Bill"
+msgstr "Conta"
+
+#. module: prescriptions
+#: model:prescriptions.folder,name:prescriptions.prescriptions_marketing_brand1_folder
+msgid "Brand 1"
+msgstr "Marca 1"
+
+#. module: prescriptions
+#: model:prescriptions.folder,name:prescriptions.prescriptions_marketing_brand2_folder
+msgid "Brand 2"
+msgstr "Marca 2"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_marketing_assets_brochures
+msgid "Brochures"
+msgstr "Folhetos"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_mail_activity_type__folder_id
+msgid "By defining a folder, the upload activities will generate a prescription"
+msgstr "Ao definir uma pasta, as atividades de upload gerarão um prescriptiono"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.format_file_size
+msgid "Bytes"
+msgstr "Bytes"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__can_upload
+msgid "Can Upload"
+msgstr "Pode enviar arquivo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#, python-format
+msgid "Can't share prescriptions of different workspaces."
+msgstr ""
+"Não é possível compartilhar prescriptionos de diferentes espaços de trabalho."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_link_to_record_form_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_folder.py:0
+#, python-format
+msgid ""
+"Cannot move folder under the given parent as this would create a recursive "
+"hierarchy"
+msgstr ""
+"Não é possível mover a pasta abaixo desta principal, pois isso criaria uma "
+"hierarquia recursiva"
+
+#. module: prescriptions
+#: model_terms:prescriptions.folder,description:prescriptions.prescriptions_internal_folder
+msgid "Categorize, share and keep track of all your internal prescriptions."
+msgstr "Categorize, compartilhe e monitore todos os seus prescriptionos internos."
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_facet
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__facet_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__facet_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_form
+msgid "Category"
+msgstr "Categoria"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__checksum
+msgid "Checksum/SHA1"
+msgstr "Checksum/SHA1"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "Choose a record to link"
+msgstr "Escolha um registro para vincular"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Choose or Configure Email Servers"
+msgstr "Escolha ou configure servidores de e-mail"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "Click on a card to <b>select the prescription</b>."
+msgstr "Clique em um cartão para <b>selecionar o prescriptiono</b>."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "Click on a thumbnail to <b>preview the prescription</b>."
+msgstr "Clique em uma miniatura para <b>pré-visualizar o prescriptiono</b>."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"Click on the <b>page separator</b>: we don't want to split these two pages "
+"as they belong to the same prescription."
+msgstr ""
+"Clique no <b>separador de páginas</b>: não queremos dividir essas duas "
+"páginas já que elas pertencem ao mesmo prescriptiono."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close"
+msgstr "Fechar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close split tools"
+msgstr "Fechar ferramentas de divisão"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__company_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__condition_type
+msgid "Condition type"
+msgstr "Tipo de condição"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Conditions"
+msgstr "Condições"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: prescriptions
+#: model:ir.ui.menu,name:prescriptions.Config
+msgid "Configuration"
+msgstr "Configuração"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_res_partner
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__partner_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__partner_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__partner_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__criteria_partner_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Contact"
+msgstr "Contato"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Contains"
+msgstr "Contém"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_Contracts
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_template_contracts
+msgid "Contracts"
+msgstr "Contratos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "Botões do painel de controle"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "Criar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__create_share_id
+msgid "Create Share"
+msgstr "Criar um compartilhamento"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_internal_mark
+msgid "Create Vendor Bill"
+msgstr "Criar uma fatura de fornecedor"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_option
+msgid "Create a new activity"
+msgstr "Criar uma nova atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__create_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__create_uid
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__create_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Creation Date"
+msgstr "Data de criação"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__condition_type__criteria
+msgid "Criteria"
+msgstr "Critério"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Mensagem de devolução personalizada"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_request_wizard__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__activity_date_deadline_range_type__days
+msgid "Days"
+msgstr "Dias"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_defaults
+msgid "Default Values"
+msgstr "Valores padrões"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Default values for uploaded prescriptions"
+msgstr "Valores padrões para prescriptionos enviados"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__deletion_delay
+#: model:ir.model.fields,help:prescriptions.field_res_config_settings__deletion_delay
+msgid "Delay after permanent deletion of the prescription in the trash (days)"
+msgstr "Atraso após a exclusão permanente do prescriptiono na lixeira (dias)"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/list/prescriptions_list_controller.js:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_tree
+#, python-format
+msgid "Delete"
+msgstr "Excluir"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Delete focused or selected pages"
+msgstr "Excluir páginas em foco ou selecionadas"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "Delete permanently"
+msgstr "Excluir permanentemente"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_res_config_settings__deletion_delay
+msgid "Deletion Delay"
+msgstr "Atraso de exclusão"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__deletion_delay
+msgid "Deletion delay"
+msgstr "Atraso de exclusão"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.res_config_settings_view_form
+msgid "Deletion delay (days)"
+msgstr "Atraso de exclusão (dias)"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_internal_deprecate
+msgid "Deprecate"
+msgstr "Depreciar"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_status_deprecated
+msgid "Deprecated"
+msgstr "Depreciado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__description
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "Description"
+msgstr "Descrição"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_request_form_view
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_upload_url_view
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_deletion_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_form
+#, python-format
+msgid "Discard"
+msgstr "Cancelar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__display_name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid "Do you really want to unlink this record?"
+msgstr "Tem certeza de que deseja desvincular esse registro?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Do you want to exit without saving or gather pages into one prescription ?"
+msgstr "Deseja sair sem salvar ou reunir as páginas em um único prescriptiono?"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_prescription
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_kanban
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_view_list
+msgid "Prescription"
+msgstr "Prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__prescription_count
+#: model:ir.model.fields,field_description:prescriptions.field_res_partner__prescription_count
+msgid "Prescription Count"
+msgstr "Contagem de prescriptionos"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_request_form_view
+msgid "Prescription Name"
+msgstr "Nome do prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__owner_id
+msgid "Prescription Owner"
+msgstr "Proprietário do prescriptiono"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.mail_activity_plan_action_prescription
+msgid "Prescription Plans"
+msgstr ""
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_request_wizard
+msgid "Prescription Request"
+msgstr "Solicitação de prescriptiono"
+
+#. module: prescriptions
+#: model:mail.template,subject:prescriptions.mail_template_prescription_request
+msgid ""
+"Prescription Request {{ object.name != False and ': '+ object.name or '' }}"
+msgstr ""
+"Solicitação de prescriptiono {{ object.name != False and ': '+ object.name or ''"
+" }}"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#: code:addons/prescriptions/models/mail_activity.py:0
+#, python-format
+msgid "Prescription Request: %s Uploaded by: %s"
+msgstr "Solicitação de prescriptiono: %s Enviado por: %s"
+
+#. module: prescriptions
+#: model:mail.template,name:prescriptions.mail_template_prescription_request_reminder
+msgid "Prescription Request: Reminder"
+msgstr "Solicitação de prescriptiono: lembrete"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__has_write_access
+msgid "Prescription User Upload Rights"
+msgstr "Direitos de upload de prescriptionos do usuário"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_workflow_action
+msgid "Prescription Workflow Tag Action"
+msgstr "Ação de marcador para fluxo de prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__type__ids
+msgid "Prescription list"
+msgstr "Lista de prescriptiono"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_kanban
+msgid "Prescription preview"
+msgstr "Pré-visualizar prescriptiono"
+
+#. module: prescriptions
+#: model:mail.template,name:prescriptions.mail_template_prescription_request
+msgid "Prescription: Prescription Request"
+msgstr "Prescriptiono: solicitação de prescriptiono"
+
+#. module: prescriptions
+#. odoo-javascript
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_folder.py:0
+#: code:addons/prescriptions/models/res_partner.py:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model:prescriptions.facet,name:prescriptions.prescriptions_finance_prescriptions
+#: model:ir.actions.act_window,name:prescriptions.prescription_action
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__prescription_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__prescription_ids
+#: model:ir.model.fields,field_description:prescriptions.field_res_users__prescription_count
+#: model:ir.module.category,name:prescriptions.module_category_prescriptions_management
+#: model:ir.ui.menu,name:prescriptions.dashboard
+#: model:ir.ui.menu,name:prescriptions.menu_root
+#: model_terms:ir.ui.view,arch_db:prescriptions.action_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_view_activity
+#: model_terms:ir.ui.view,arch_db:prescriptions.res_config_settings_view_form
+#, python-format
+msgid "Prescriptions"
+msgstr "Prescriptionos"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_link_to_record_wizard
+msgid "Prescriptions Link to Record"
+msgstr "Prescriptionos vinculados ao registro"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_share
+msgid "Prescriptions Share"
+msgstr "Compartilhar prescriptionos"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_folder
+msgid "Prescriptions Workspace"
+msgstr "Área de trabalho de prescriptionos "
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_mixin
+msgid "Prescriptions creation mixin"
+msgstr "Mixin de criação de prescriptionos"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Does not contain"
+msgstr "Não contém"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__domain
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__domain
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__type__domain
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__condition_type__domain
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Domain"
+msgstr "Domínio"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__action__download
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+#, python-format
+msgid "Download"
+msgstr "Baixar"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "Download #{prescription.name}"
+msgstr "Baixar #{prescription.name}"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "Download all files"
+msgstr "Baixar todos os arquivos"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__action__downloadupload
+msgid "Download and Upload"
+msgstr "Download e Upload"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+msgid "Download file"
+msgstr "Baixar arquivo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/helper/prescriptions_drop_zone.xml:0
+#, python-format
+msgid "Drop files here to upload"
+msgstr "Solte os arquivos aqui para enviar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__activity_date_deadline_range
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_date_deadline_range
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_date_deadline_range
+msgid "Due Date In"
+msgstr "Vencimento em"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_date_deadline_range_type
+msgid "Due type"
+msgstr "Tipo de vencimento"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#, python-format
+msgid "Duplicate"
+msgstr "Duplicar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.xml:0
+#, python-format
+msgid "Edit"
+msgstr "Editar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid "Edit the linked record"
+msgstr "Editar o registro associado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_email
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Email Alias"
+msgstr "Alias de e-mail"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__email_cc
+msgid "Email cc"
+msgstr "E-mail cc"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_prescription__thumbnail_status__error
+#, python-format
+msgid "Error"
+msgstr "Erro"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Escape Preview/Deselect/Exit"
+msgstr "Escape Visualização/Desmarcar/Sair"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__excluded_tag_ids
+msgid "Excluded Tags"
+msgstr "Marcadores excluídos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.js:0
+#, python-format
+msgid "Exit Split Tools"
+msgstr "Sair das ferramentas de divisão"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Exit without saving"
+msgstr "Sair sem salvar"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_expense
+msgid "Expense"
+msgstr "Despesa"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__state__expired
+msgid "Expired"
+msgstr "Expirado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/list/prescriptions_list_controller.js:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Export"
+msgstr "Exportar"
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_prescriptions_facet_name_unique
+msgid "Facet already exists in this folder"
+msgstr "Faceta já existe nesta pasta"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__favorited_ids
+msgid "Favorite of"
+msgstr "Favorito de"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_prescription__type__binary
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "File"
+msgstr "Arquivo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__datas
+msgid "File Content (base64)"
+msgstr "Conteúdo do arquivo (base64)"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__raw
+msgid "File Content (raw)"
+msgstr "Conteúdo do arquivo (raw)"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__file_extension
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "File Extension"
+msgstr "Extensão de arquivo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__file_size
+msgid "File Size"
+msgstr "Tamanho do arquivo"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr "Modelo auxiliar de streaming de arquivo para controladores"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/controllers/prescriptions.py:0
+#, python-format
+msgid "File uploaded by:"
+msgstr "Arquivo carregado por:"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.res_config_settings_view_form
+msgid "Files Centralization"
+msgstr "Centralização de arquivos"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_deletion_form
+msgid "Files will be sent to trash and deleted forever after"
+msgstr "Os arquivos serão enviados para a lixeira e excluídos para sempre"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Files will be sent to trash and deleted forever after %s days."
+msgstr ""
+"Os arquivos serão enviados para a lixeira e excluídos para sempre após %s "
+"dias."
+
+#. module: prescriptions
+#: model:prescriptions.folder,name:prescriptions.prescriptions_finance_folder
+msgid "Finance"
+msgstr "Finanças"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_financial
+msgid "Financial"
+msgstr "Financeiro"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_fiscal
+msgid "Fiscal"
+msgstr "Fiscal"
+
+#. module: prescriptions
+#: model:prescriptions.facet,name:prescriptions.prescriptions_finance_fiscal_year
+msgid "Fiscal years"
+msgstr "Anos fiscais"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of next group"
+msgstr "Foco na primeira página do próximo grupo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of previous group"
+msgstr "Foco na primeira página do grupo anterior"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus next page"
+msgstr "Foco na próxima página"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus previous page"
+msgstr "Foco na página anterior"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_mail_activity_type__folder_id
+msgid "Folder"
+msgstr "Pasta"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_follower_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_partner_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (usuários)"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ícone do Font Awesome. Ex.: fa-tasks"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Future Activities"
+msgstr "Atividades futuras"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Gather in one prescription"
+msgstr "Reunir em um único prescriptiono"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.format_file_size
+msgid "Gb"
+msgstr "GB"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__read_group_ids
+msgid ""
+"Groups able to see the workspace and read its prescriptions without create/edit "
+"rights."
+msgstr ""
+"Grupos que podem ver o espaço de trabalho e ler seus prescriptionos sem direitos"
+" de criação/edição."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__group_ids
+msgid "Groups able to see the workspace and read/create/edit its prescriptions."
+msgstr ""
+"Grupos que podem ver o espaço de trabalho e ler/criar/editar seus "
+"prescriptionos."
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_knowledge_hr
+msgid "HR"
+msgstr "RH"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__has_message
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__has_message
+msgid "Has Message"
+msgstr "Tem uma mensagem"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__previous_attachment_ids
+#, python-format
+msgid "History"
+msgstr "Histórico"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID do registro primário que detém o alias (exemplo: projeto detém o alias da"
+" criação de tarefa)"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_exception_icon
+msgid "Icon"
+msgstr "Ícone"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ícone para indicar uma atividade excepcional."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__message_needaction
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Se marcado, há novas mensagens precisando de sua atenção."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__message_has_error
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__message_has_sms_error
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__message_has_error
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Se marcado, há mensagens com erros de entrega."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Se definido, esse conteúdo será enviado automaticamente para usuários não "
+"autorizados em vez da mensagem padrão."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Image/Video"
+msgstr "Imagem/vídeo"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_marketing_assets_images
+msgid "Images"
+msgstr "Imagens"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_status_inbox
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_status_inbox
+#: model:mail.activity.type,name:prescriptions.mail_prescriptions_activity_data_Inbox
+msgid "Inbox"
+msgstr "Caixa de entrada"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__include_sub_folders
+msgid "Include Sub Folders"
+msgstr "Incluir subpastas"
+
+#. module: prescriptions
+#: model_terms:prescriptions.folder,description:prescriptions.prescriptions_internal_folder
+msgid ""
+"Incoming letters sent to <span class=\"o_folder_description_alias\">inbox "
+"email alias</span> will be added to your inbox automatically."
+msgstr ""
+"As cartas recebidas enviadas para o <span "
+"class=\"o_folder_description_alias\">alias de e-mail da caixa de "
+"entrada</span> serão adicionadas automaticamente à sua caixa de entrada."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__index_content
+msgid "Indexed Content"
+msgstr "Conteúdo indexado"
+
+#. module: prescriptions
+#: model:prescriptions.folder,name:prescriptions.prescriptions_internal_folder
+msgid "Internal"
+msgstr "Interno"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__is_editable_attachment
+msgid "Is Editable Attachment"
+msgstr "O anexo é editável?"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__is_favorited
+msgid "Is Favorited"
+msgstr "Foi favoritado?"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_is_follower
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_is_follower
+msgid "Is Follower"
+msgstr "É um seguidor"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__is_shared
+msgid "Is Shared"
+msgstr "Foi compartilhado?"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__is_multipage
+msgid "Is considered multipage"
+msgstr "É considerado multipágina? "
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_model.js:0
+#, python-format
+msgid "Items in trash will be deleted forever after %s days."
+msgstr "Os itens na lixeira serão excluídos para sempre após %s dias."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "Items moved to the trash will be deleted forever after %s days."
+msgstr ""
+"Os itens movidos para a lixeira serão excluídos para sempre após %s dias."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.format_file_size
+msgid "Kb"
+msgstr "KB"
+
+#. module: prescriptions
+#: model:prescriptions.facet,name:prescriptions.prescriptions_internal_knowledge
+msgid "Knowledge"
+msgstr "Conhecimento"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__write_uid
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__write_date
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Late Activities"
+msgstr "Atividades atrasadas"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_knowledge_legal
+msgid "Legal"
+msgstr "Jurídico"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"Let's process prescriptions in your Inbox.<br/><i>Tip: Use Tags to filter "
+"prescriptions and structure your process.</i>"
+msgstr ""
+"Vamos processar prescriptionos em sua caixa de entrada.<br/><i> Dica: use "
+"marcadores para filtrar prescriptionos e estruturar seu processo.</i>"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "Let's process these bills: send to Finance workspace."
+msgstr ""
+"Vamos processar essas faturas: envie para o espaço de trabalho do "
+"financeiro."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "Let's process this prescription, coming from our scanner."
+msgstr "Vamos processar esse prescriptiono que vem do nosso scanner."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"Let's tag this mail as legal<br/> <i>Tips: actions can be tailored to your "
+"process, according to the workspace.</i>"
+msgstr ""
+"Vamos marcar esse e-mail como jurídico <br/> <i> Dicas: as ações podem ser "
+"adaptadas ao seu processo, de acordo com o espaço de trabalho. </i>"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__user_specific
+msgid "Limit Read Groups to the prescriptions of which they are owner."
+msgstr ""
+"Limite os grupos de leitura aos prescriptionos dos quais são proprietários."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__user_specific_write
+msgid "Limit Write Groups to the prescriptions of which they are owner."
+msgstr ""
+"Limitar os grupos de edição aos prescriptionos dos quais eles são proprietários."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_link_to_record_form_view
+msgid "Link"
+msgstr "Link"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/controllers/prescriptions.py:0
+#, python-format
+msgid "Link created by:"
+msgstr "Link criado por:"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__create_model__link_to_record
+msgid "Link to record"
+msgstr "Link para o registro"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Links cannot be shared and therefore will be excluded."
+msgstr "Os links não podem ser compartilhados e, portanto, serão excluídos."
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__state__live
+msgid "Live"
+msgstr "Ao vivo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Detecção de entrada baseada na parte local"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+#, python-format
+msgid "Lock"
+msgstr "Travar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__is_locked
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Locked"
+msgstr "Travado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__lock_uid
+msgid "Locked by"
+msgstr "Travado por"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Log a note..."
+msgstr "Registrar uma nota..."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "Login"
+msgstr "Entrar"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "Logout"
+msgstr "Sair"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_internal_mad
+msgid "Mark As Draft"
+msgstr "Marcar como rascunho"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__remove_activities
+msgid "Mark all as Done"
+msgstr "Marcar tudo como concluído"
+
+#. module: prescriptions
+#: model:prescriptions.folder,name:prescriptions.prescriptions_marketing_folder
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.format_file_size
+msgid "Mb"
+msgstr "MB"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__activity_note
+msgid "Message"
+msgstr "Mensagem"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_has_error
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_has_error
+msgid "Message Delivery error"
+msgstr "Erro na entrega da mensagem"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_ids
+msgid "Messages"
+msgstr "Mensagens"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__mimetype
+msgid "Mime Type"
+msgstr "Tipo Mime"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Miscellaneous"
+msgstr "Diversos"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__model_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Model"
+msgstr "Modelo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__accessible_model_ids
+msgid "Models"
+msgstr "Modelos"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_request_wizard__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__activity_date_deadline_range_type__months
+msgid "Months"
+msgstr "Meses"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_finance_mti
+msgid "Move To Inbox"
+msgstr "Mover para caixa de entrada"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Move this page to trash"
+msgstr "Mover esta página para a lixeira"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__folder_id
+msgid "Move to Workspace"
+msgstr "Mover para o espaço de trabalho"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_deletion_form
+#, python-format
+msgid "Move to trash"
+msgstr "Mover para a lixeira"
+
+#. module: prescriptions
+#. odoo-javascript
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_folder.py:0
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Move to trash?"
+msgstr "Mover para a lixeira?"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector_field.js:0
+#, python-format
+msgid "Multiple values"
+msgstr "Múltiplos valores"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "My Activities"
+msgstr "Minhas atividades"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Prazo da minha atividade"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "My Prescriptions"
+msgstr "Meus prescriptionos"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "My Favorites"
+msgstr "Meus favoritos"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__name
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__name
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "Name"
+msgstr "Nome"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Name of the share link"
+msgstr "Nome do link de compartilhamento"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.xml:0
+#, python-format
+msgid "New"
+msgstr "Novo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New File"
+msgstr "Novo arquivo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New Group"
+msgstr "Novo grupo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "New Tag"
+msgstr "Novo marcador"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "New Workspace"
+msgstr "Novo espaço de trabalho"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Evento no calendário para a próxima atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Prazo da próxima atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumo da próxima atividade"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo da próxima atividade"
+
+#. module: prescriptions
+#: model_terms:ir.actions.act_window,help:prescriptions.mail_activity_type_action_prescription
+msgid "No activity types found. Let's create one!"
+msgstr "Nenhum tipo de atividade foi encontrado. Vamos criá-los!"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/helper/prescriptions_action_helper.xml:0
+#, python-format
+msgid "No alias configured"
+msgstr "Nenhum alias configurado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "No prescription has been selected"
+msgstr "Nenhum prescriptiono foi selecionado"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "No limit"
+msgstr "Sem limite"
+
+#. module: prescriptions
+#: model_terms:ir.actions.act_window,help:prescriptions.share_action
+msgid "No shared links"
+msgstr "Nenhum link compartilhado"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid "Not a file"
+msgstr "Não é um arquivo"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid "Not attached"
+msgstr "Não anexado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_note
+msgid "Note"
+msgstr "Nota"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_needaction_counter
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de ações"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__links_count
+msgid "Number of Links"
+msgstr "Número de links"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_has_error_counter
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de erros"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__message_needaction_counter
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__message_has_error_counter
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensagens com erro de entrega"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "Odoo Logo"
+msgstr "Logo da Odoo"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+msgid "Odoo Website"
+msgstr "Site da Odoo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__limited_to_single_record
+msgid "One record limit"
+msgstr "Limite de um registro"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Open chatter"
+msgstr "Abrir chat"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"ID opcional de uma thread (registro) à qual todas as mensagens recebidas "
+"serão anexadas, até mesmo quando não sejam respostas à thread. Se definido, "
+"isso desabilitará totalmente a criação de novos registros."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/helper/prescriptions_action_helper.xml:0
+#, python-format
+msgid "Or send emails to"
+msgstr "Ou enviar e-mails para"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_knowledge_other
+msgid "Other"
+msgstr "Outro"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__user_specific
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "Own Prescriptions Only"
+msgstr "Somente prescriptionos próprios"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__user_specific_write
+msgid "Own Prescriptions Only (Write)"
+msgstr "Somente prescriptionos próprios (edição)"
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_prescriptions_folder_check_user_specific
+msgid ""
+"Own Prescriptions Only may not be enabled for write groups if it is not enabled "
+"for read groups."
+msgstr ""
+"A opção somente prescriptionos próprios não poderá ser ativada para grupos de "
+"edição se não estiver ativada para grupos de leitura."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__owner_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__requestee_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__criteria_owner_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Owner"
+msgstr "Proprietário"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "Owner: #{prescription.owner_id.name}"
+msgstr "Proprietário: #{prescription.owner_id.name}"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "PDF/Prescription"
+msgstr "PDF/Prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Modelo principal"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__parent_path
+msgid "Parent Path"
+msgstr "Caminho principal"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "ID da thread do registro primário"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__parent_folder_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_search
+msgid "Parent Workspace"
+msgstr "Espaço de trabalho primário"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Modelo primário que contém o alias. O modelo que contém a referência de "
+"alias não é necessariamente o modelo dado por alias_model_id (exemplo: "
+"projeto (parent_model) e tarefa (model))"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "Partial transfer"
+msgstr "Transferência parcial"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.not_available
+msgid "Please contact the person that shared this link for more information."
+msgstr ""
+"Entre em contato com a pessoa que compartilhou este link para obter mais "
+"informações."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_contact
+msgid ""
+"Policy to post a message on the prescription using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related prescription or members of following channels\n"
+msgstr ""
+"Política para publicar uma mensagem no prescriptiono usando o MailGateway.\n"
+"– Todos: qualquer um pode escrever\n"
+"– Usuários: somente usuários autenticados\n"
+"– Seguidores: apenas seguidores do prescriptiono relacionado ou membros dos seguintes canais\n"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_prescription__thumbnail_status__present
+msgid "Present"
+msgstr "Presente"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_template_presentations
+msgid "Presentations"
+msgstr "Apresentações"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_template_project
+msgid "Project"
+msgstr "Projeto"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__rating_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__rating_ids
+msgid "Ratings"
+msgstr "Avaliações"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "Read Access"
+msgstr "Leitura"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__read_group_ids
+msgid "Read Groups"
+msgstr "Grupos de leitura"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__resource_ref
+msgid "Record"
+msgstr "Registro"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID da thread do registro"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__domain_folder_id
+msgid "Related Workspace"
+msgstr "Espaço de trabalho relacionado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Remaining Pages"
+msgstr "Páginas restantes"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/activity/prescriptions_activity_controller.js:0
+#, python-format
+msgid "Reminder emails have been sent."
+msgstr "Os e-mails de lembrete foram enviados."
+
+#. module: prescriptions
+#: model:mail.template,subject:prescriptions.mail_template_prescription_request_reminder
+msgid ""
+"Reminder to upload your prescription{{ object.name and ' : ' + object.name or ''"
+" }}"
+msgstr ""
+"Lembrete para carregar seu prescriptiono {{ object.name and ' : ' + object.name "
+"or '' }}"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_action__action__remove
+msgid "Remove"
+msgstr "Remover"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Replace"
+msgstr "Substituir"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_action__action__replace
+msgid "Replace by"
+msgstr "Substituir por"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_prescription__type__empty
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_request_form_view
+#, python-format
+msgid "Request"
+msgstr "Solicitação"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__request_activity_id
+msgid "Request Activity"
+msgstr "Atividade de solicitação"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_request_form_view
+msgid "Request To"
+msgstr "Solicitação para"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/web/activity/activity_menu_patch.xml:0
+#, python-format
+msgid "Request a Prescription"
+msgstr "Solicitar um prescriptiono"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.action_request_form
+msgid "Request a file"
+msgstr "Solicitar um arquivo"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Requested"
+msgstr "Solicitado"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_request_page
+msgid ""
+"Requested\n"
+"                                ∙"
+msgstr ""
+"Solicitado\n"
+"                                ∙"
+
+#. module: prescriptions
+#: model:mail.activity.type,name:prescriptions.mail_prescriptions_activity_data_md
+msgid "Requested Prescription"
+msgstr "Prescriptiono solicitado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__required_tag_ids
+msgid "Required Tags"
+msgstr "Marcadores obrigatórios"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__res_model_name
+msgid "Res Model Name"
+msgstr "Nome do modelo do recurso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__res_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__res_id
+msgid "Resource ID"
+msgstr "ID do recurso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__res_model
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__res_model
+msgid "Resource Model"
+msgstr "Modelo do recurso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__res_name
+msgid "Resource Name"
+msgstr "Nome do recurso"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_user_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_user_id
+msgid "Responsible"
+msgstr "Responsável"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__activity_user_id
+msgid "Responsible User"
+msgstr "Usuário responsável"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/form/folder_form_controller.js:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+#, python-format
+msgid "Restore"
+msgstr "Restaurar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__message_has_sms_error
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erro no envio de SMS"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_knowledge_sales
+msgid "Sales"
+msgstr "Vendas"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_form
+msgid "Save"
+msgstr "Salvar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_option
+msgid "Schedule Activity"
+msgstr "Agendar atividade"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/kanban/prescriptions_kanban_renderer.js:0
+#: code:addons/prescriptions/static/src/views/list/prescriptions_list_renderer.js:0
+#, python-format
+msgid "Select all"
+msgstr "Selecionar todos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select focused page"
+msgstr "Selecionar a página em foco"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next page"
+msgstr "Selecionar a próxima página"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next pages of the group"
+msgstr "Selecionar as próximas páginas do grupo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous page"
+msgstr "Selecionar a página anterior"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous pages of the group"
+msgstr "Selecionar as páginas anteriores do grupo"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select/Deselect all pages"
+msgstr "Selecionar/desmarcar todas as páginas"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid "Send this letter to the legal department, by assigning the right tags."
+msgstr ""
+"Envie essa carta ao departamento jurídico, atribuindo os marcadores "
+"corretos."
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_internal_legal
+msgid "Send to Legal"
+msgstr "Enviar para o jurídico "
+
+#. module: prescriptions
+#: model:mail.template,description:prescriptions.mail_template_prescription_request
+msgid "Sent to partner when requesting a prescription from them"
+msgstr "Enviado ao usuário ao solicitar um prescriptiono a ele"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__sequence
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__sequence
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__sequence
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__sequence
+msgid "Sequence"
+msgstr "Sequência"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_finance_2018contracts
+msgid "Set As 2023 Contracts"
+msgstr "Definidos como contratos de 2023"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__partner_id
+msgid "Set Contact"
+msgstr "Definir contato"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__user_id
+msgid "Set Owner"
+msgstr "Definir proprietário"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__tag_action_ids
+msgid "Set Tags"
+msgstr "Definir marcadores"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.res_config_settings_view_form
+msgid "Set deletion delay for prescriptions in the Trash"
+msgstr "Definir o atraso de exclusão de prescriptionos na Lixeira"
+
+#. module: prescriptions
+#: model:mail.template,description:prescriptions.mail_template_prescription_request_reminder
+msgid ""
+"Set reminders in activities to notify users who didn't upload their "
+"requested prescription"
+msgstr ""
+"Defina lembretes nas atividades para notificar os usuários que não fizeram o"
+" upload do prescriptiono solicitado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__has_owner_activity
+msgid "Set the activity on the prescription owner"
+msgstr "Definir a atividade no proprietário do prescriptiono"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.configuration_action
+#: model:ir.actions.act_window,name:prescriptions.settings_action
+#: model:ir.ui.menu,name:prescriptions.settings_menu
+msgid "Settings"
+msgstr "Definições"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+#, python-format
+msgid "Share"
+msgstr "Compartilhar"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__share_link_ids
+msgid "Share Links"
+msgstr "Compartilhar links"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/controllers/prescriptions.py:0
+#, python-format
+msgid "Share link"
+msgstr "Compartilhar link"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.share_action
+msgid "Share links"
+msgstr "Compartilhar links"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_share.py:0
+#, python-format
+msgid "Share selected files"
+msgstr "Compartilhar arquivos selecionados"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_share.py:0
+#, python-format
+msgid "Share selected workspace"
+msgstr "Compartilhar o espaço de trabalho selecionado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#, python-format
+msgid "Share this domain"
+msgstr "Compartilhar esse domínio"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Share this selection"
+msgstr "Compartilhar essa seleção"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__type
+msgid "Share type"
+msgstr "Tipo de compartilhamento"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__create_share_id
+msgid "Share used to create this prescription"
+msgstr "Compartilhamento usado para criar este prescriptiono"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Shared"
+msgstr "Compartilhado"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__prescription_ids
+msgid "Shared Prescriptions"
+msgstr "Prescriptionos compartilhados"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__tag_ids
+msgid "Shared Tags"
+msgstr "Marcadores compartilhados"
+
+#. module: prescriptions
+#: model:ir.ui.menu,name:prescriptions.share_menu
+msgid "Shares & Emails"
+msgstr "Compartilhamentos e e-mails"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mostrar todos os registros em que a próxima data de ação seja antes de hoje"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Size"
+msgstr "Tamanho"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+msgid "Size:"
+msgstr "Tamanho:"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#, python-format
+msgid "Some files could not be uploaded (max size: %s)."
+msgstr ""
+"Não foi possível fazer o upload de alguns arquivos (tamanho máximo: %s)."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.not_available
+msgid "Sorry, this link is no longer valid."
+msgstr "Este link não é mais válido."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__link_model
+msgid "Specific Model Linked"
+msgstr "Modelo específico vinculado"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Split"
+msgstr "Dividir"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/attachments/prescription_file_viewer.xml:0
+#: code:addons/prescriptions/static/src/attachments/prescription_file_viewer.xml:0
+#, python-format
+msgid "Split PDF"
+msgstr "Separar PDF"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Split selected pages"
+msgstr "Dividir páginas selecionadas"
+
+#. module: prescriptions
+#: model:prescriptions.facet,name:prescriptions.prescriptions_finance_status
+#: model:prescriptions.facet,name:prescriptions.prescriptions_internal_status
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__state
+msgid "Status"
+msgstr "Status"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baseado em atividades\n"
+"Atrasado: data de vencimento já passou\n"
+"Hoje: data da atividade é hoje\n"
+"Planejado: atividades futuras."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Stay here"
+msgstr "Permanecer aqui"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__children_folder_ids
+msgid "Sub workspaces"
+msgstr "Subespaços de trabalho"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__activity_summary
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__activity_summary
+msgid "Summary"
+msgstr "Resumo"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_prescriptions_tag
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__tag_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__tag_id
+#: model:ir.model.fields,field_description:prescriptions.field_mail_activity_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_search
+msgid "Tag"
+msgstr "Marcador"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__facet_ids
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_tree
+msgid "Tag Categories"
+msgstr "Categorias de marcadores"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_form
+msgid "Tag Category"
+msgstr "Categoria de marcador"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_form
+msgid "Tag Name"
+msgstr "Nome do marcador"
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_prescriptions_tag_facet_name_unique
+msgid "Tag already exists for this facet"
+msgstr "Marcador já existe para esta faceta"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__facet_ids
+msgid "Tag categories defined for this workspace"
+msgstr "Categorias de marcadores definidas para este espaço de trabalho"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model:ir.actions.act_window,name:prescriptions.facet_action
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__tag_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__tag_ids
+#: model:ir.ui.menu,name:prescriptions.category_menu
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+#, python-format
+msgid "Tags"
+msgstr "Marcadores"
+
+#. module: prescriptions
+#: model:prescriptions.facet,name:prescriptions.prescriptions_internal_template
+msgid "Templates"
+msgstr "Modelos"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_template_text
+msgid "Text"
+msgstr "Texto"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_facet__tooltip
+msgid "Text shown when hovering on this tag category or its tags"
+msgstr ""
+"Texto exibido ao passar o mouse sobre essa categoria de marcador ou seus "
+"marcadores"
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_res_config_settings_check_deletion_delay
+msgid "The deletion delay should be positive."
+msgstr "O atraso da exclusão deve ser positivo."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#, python-format
+msgid "The links and requested prescriptions are not shareable."
+msgstr "Os links e os prescriptionos solicitados não podem ser compartilhados."
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_model_id
+msgid ""
+"The model (Odoo Prescription Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"O modelo (tipo de prescriptiono do Odoo) ao qual esse alias corresponde. "
+"Qualquer e-mail recebido que não responda a um registro existente causará a "
+"criação de um novo registro desse modelo (ex.: uma tarefa de projeto)"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"O nome do alias de e-mail, por exemplo, 'empregos', se desejar receber "
+"e-mails enviados a <empregos@suaempresa.com.br>"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard."
+msgstr "O URL de compartilhamento foi copiado para sua área de transferência."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard. Links were excluded."
+msgstr ""
+"O URL de compartilhamento foi copiado para sua área de transferência. Os "
+"links foram excluídos."
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_prescriptions_share_share_unique
+msgid "This access token already exists"
+msgstr "Esse token de acesso já existe"
+
+#. module: prescriptions
+#: model:ir.model.constraint,message:prescriptions.constraint_prescriptions_prescription_attachment_unique
+msgid "This attachment is already a prescription"
+msgstr "Esse anexo já é um prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__group_ids
+msgid "This attachment will only be available for the selected user groups"
+msgstr ""
+"Esse anexo estará disponível apenas para os grupos de usuários selecionados"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_request_page
+msgid ""
+"This prescription has been requested.\n"
+"                <b onclick=\"prescription.querySelector('.o_request_upload').click()\" style=\"cursor:pointer;\">Upload it</b>."
+msgstr ""
+"Este prescriptiono foi solicitado.\n"
+"                <b onclick=\"prescription.querySelector('.o_request_upload').click()\" style=\"cursor:pointer;\">Carregue ele</b>."
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid "This file has been restored"
+msgstr "Esse arquivo foi restaurado"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid ""
+"This file has been sent to the trash and will be deleted forever on the %s"
+msgstr ""
+"Esse arquivo foi enviado para a lixeira e será excluído para sempre em %s"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__company_id
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_folder__company_id
+msgid "This workspace will only be available to the selected company"
+msgstr ""
+"Esse espaço de trabalho estará disponível apenas para a empresa selecionada"
+
+#. module: prescriptions
+#: model_terms:ir.actions.act_window,help:prescriptions.mail_activity_type_action_prescription
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Send email\")."
+msgstr ""
+"Representam as diferentes categorias de coisas que você precisa fazer ( ex.:"
+" \"ligar\" ou \"enviar e-mail\")."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__thumbnail
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__thumbnail_status
+msgid "Thumbnail Status"
+msgstr "Status da miniatura"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/helper/prescriptions_action_helper.xml:0
+#, python-format
+msgid "Tip: configure your scanner to send all prescriptions to this address."
+msgstr ""
+"Dica: configure o scanner para enviar todos os prescriptionos para esse "
+"endereço."
+
+#. module: prescriptions
+#: model:digest.tip,name:prescriptions.digest_tip_prescriptions_0
+msgid "Tip: Become a paperless company"
+msgstr "Dica: torne-se uma empresa informatizada"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_status_tc
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_status_tc
+msgid "To Validate"
+msgstr "A validar"
+
+#. module: prescriptions
+#: model:mail.activity.type,name:prescriptions.mail_prescriptions_activity_data_tv
+msgid "To validate"
+msgstr "A validar"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Today Activities"
+msgstr "Atividades de hoje"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#, python-format
+msgid "Toggle Dropdown"
+msgstr "Alternar o menu suspenso"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/kanban/prescriptions_kanban_renderer.js:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "Alternar favoritos"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__tooltip
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_rule__note
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_form
+msgid "Tooltip"
+msgstr "Dica"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_model.js:0
+#, python-format
+msgid "Trash"
+msgstr "Lixeira"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__is_editable_attachment
+msgid "True if we can edit the link attachment."
+msgstr "Verdadeiro se for possível editar o anexo do link."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__type
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+msgid "Type"
+msgstr "Tipo"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de atividade de exceção registrada."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__url
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__full_url
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_prescription__type__url
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_upload_url_view
+msgid "URL"
+msgstr "URL"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid ""
+"URL %s does not seem complete, as it does not begin with http(s):// or "
+"ftp://"
+msgstr ""
+"O URL %s não parece completo, pois não começa com http(s):// ou ftp://"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__url_preview_image
+msgid "URL Preview Image"
+msgstr "Imagem de pré-visualização do URL"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescription_view_form
+msgid "Unlock"
+msgstr "Destravar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_model_mixin.js:0
+#, python-format
+msgid "Unnamed"
+msgstr "Sem nome"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+#, python-format
+msgid "Upload"
+msgstr "Enviar"
+
+#. module: prescriptions
+#: model_terms:ir.actions.act_window,help:prescriptions.prescription_action
+msgid ""
+"Upload <span class=\"fw-normal\">a file or</span> drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+"Carregue <span class=\"fw-normal\">um arquivo</span> ou arraste-o <span "
+"class=\"fw-normal\">para cá</span>."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Upload Prescription"
+msgstr "Carregar prescriptiono"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__email_drop
+msgid "Upload by Email"
+msgstr "Carregar via e-mail"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "Upload by email"
+msgstr "Enviar por e-mail"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/mail_activity.py:0
+#, python-format
+msgid "Upload file request"
+msgstr "Solicitar envio de arquivo"
+
+#. module: prescriptions
+#: model:ir.model,name:prescriptions.model_res_users
+#: model:res.groups,name:prescriptions.group_prescriptions_user
+msgid "User"
+msgstr "Usuário"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_prescriptions_vat
+msgid "VAT"
+msgstr "Imposto"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__date_deadline
+msgid "Valid Until"
+msgstr "Válido até"
+
+#. module: prescriptions
+#: model:prescriptions.workflow.rule,name:prescriptions.prescriptions_rule_finance_validate
+msgid "Validate"
+msgstr "Validar"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_finance_status_validated
+#: model:prescriptions.tag,name:prescriptions.prescriptions_internal_status_validated
+msgid "Validated"
+msgstr "Validado"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+msgid "Validity date:"
+msgstr "Data de validade:"
+
+#. module: prescriptions
+#: model:prescriptions.tag,name:prescriptions.prescriptions_marketing_assets_Videos
+msgid "Videos"
+msgstr "Vídeos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"Want to become a <b>paperless company</b>? Let's discover NWPL Prescriptions."
+msgstr ""
+"Quer se tornar uma <b>empresa informatizada</b>? Vamos descobrir o Odoo "
+"Prescriptionos."
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__website_message_ids
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__website_message_ids
+msgid "Website Messages"
+msgstr "Mensagens do site"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__website_message_ids
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_share__website_message_ids
+msgid "Website communication history"
+msgstr "Histórico de comunicação do site"
+
+#. module: prescriptions
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_request_wizard__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_share__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:prescriptions.selection__prescriptions_workflow_rule__activity_date_deadline_range_type__weeks
+msgid "Weeks"
+msgstr "Semanas"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "What do you want to do with the remaining pages ?"
+msgstr "O que você deseja fazer com as páginas restantes?"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.workflow_rule_action
+msgid "Workflow Actions"
+msgstr "Ações em fluxos de trabalho"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_workflow_action__workflow_rule_id
+msgid "Workflow Rule"
+msgstr "Regra de fluxo"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_prescription__folder_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_facet__folder_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_request_wizard__folder_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_share__folder_id
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_tag__folder_id
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_search
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_tree
+msgid "Workspace"
+msgstr "Espaço de trabalho"
+
+#. module: prescriptions
+#: model:ir.actions.act_window,name:prescriptions.folder_action
+#: model:ir.ui.menu,name:prescriptions.folder_menu
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_tree
+msgid "Workspaces"
+msgstr "Espaços de trabalho"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/js/tours/prescriptions.js:0
+#, python-format
+msgid ""
+"Wow... 6 prescriptions processed in a few seconds, You're good.<br/>The tour is "
+"complete. Try uploading your own prescriptions now."
+msgstr ""
+"Uau... 6 prescriptionos processados em poucos segundos, Você é bom nisso. <br/> "
+"O tour foi concluído. Tente fazer o upload de seus próprios prescriptionos "
+"agora."
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "Write Access"
+msgstr "Gravação"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_folder__group_ids
+msgid "Write Groups"
+msgstr "Grupos de escrita"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "Write a tooltip for the action here"
+msgstr "Escreva uma dica para a ação aqui"
+
+#. module: prescriptions
+#: model:ir.model.fields,help:prescriptions.field_prescriptions_prescription__attachment_type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Você pode enviar um arquivo diretamente de seu computador ou dispositivo ou "
+"pode copiar e colar o link para seu arquivo na internet."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/prescriptions_controller_mixin.xml:0
+#, python-format
+msgid "You cannot upload content in this workspace"
+msgstr "Não é possível fazer upload de conteúdo neste espaço de trabalho"
+
+#. module: prescriptions
+#. odoo-python
+#: code:addons/prescriptions/models/prescriptions_prescription.py:0
+#, python-format
+msgid "You don't have the right to move prescriptions to that workspace."
+msgstr ""
+"Você não tem o direito de mover prescriptionos para esse espaço de trabalho."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/search/prescriptions_search_panel.js:0
+#, python-format
+msgid "You don't have the rights to move prescriptions to that workspace"
+msgstr ""
+"Você não tem o direito de mover prescriptionos para esse espaço de trabalho"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/helper/prescriptions_drop_zone.xml:0
+#, python-format
+msgid "You must be in a specific workspace to upload files"
+msgstr ""
+"Você deve estar em um espaço de trabalho específico para fazer upload de "
+"arquivos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "Youtube Video"
+msgstr "Vídeo do YouTube"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_deletion_form
+msgid "days."
+msgstr "dias."
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "delete"
+msgstr "excluir"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "prescription"
+msgstr "prescriptiono"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+#, python-format
+msgid "prescriptions"
+msgstr "prescriptionos"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "prescriptions selected"
+msgstr "prescriptionos selecionados"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "download"
+msgstr "download"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "e.g. Discuss proposal"
+msgstr "por exemplo, Discutir proposta"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.folder_view_form
+msgid "e.g. Finance"
+msgstr "ex., finanças"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_request_form_view
+msgid "e.g. Missing Expense"
+msgstr "ex.: Despesas ausentes"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.facet_view_form
+msgid "e.g. Status"
+msgstr "ex.: Status"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.tag_view_form
+msgid "e.g. To Validate"
+msgstr "ex.: Validar"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.workflow_rule_form_view
+msgid "e.g. Validate prescription"
+msgstr "ex.: Validar prescriptiono"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_view_form_popup
+msgid "e.g. domain.com"
+msgstr "ex.: dominio.com"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.prescriptions_upload_url_view
+msgid "e.g. https://www.youtube.com/watch?v=CP96yVnXNrY"
+msgstr "ex.: https://www.youtube.com/watch?v=CP96yVnXNrY"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "file_extension"
+msgstr "file_extension"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_files_page
+msgid "files"
+msgstr "arquivos"
+
+#. module: prescriptions
+#: model:ir.model.fields,field_description:prescriptions.field_prescriptions_link_to_record_wizard__is_readonly_model
+msgid "is_readonly_model"
+msgstr "is_readonly_model"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "restore"
+msgstr "restaurar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_page/pdf_page.xml:0
+#: code:addons/prescriptions/static/src/owl/components/pdf_page/pdf_page.xml:0
+#, python-format
+msgid "select"
+msgstr "selecionar"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/inspector/prescriptions_inspector.xml:0
+#, python-format
+msgid "selected"
+msgstr "selecionado"
+
+#. module: prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions.public_page_layout
+#: model_terms:ir.ui.view,arch_db:prescriptions.share_workspace_page
+msgid "shared by"
+msgstr "compartilhado por"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/views/hooks.js:0
+#, python-format
+msgid "status code: %s, message: %s"
+msgstr "código de status: %s, mensagem: %s"
+
+#. module: prescriptions
+#. odoo-javascript
+#: code:addons/prescriptions/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "unnamed"
+msgstr "sem nome"

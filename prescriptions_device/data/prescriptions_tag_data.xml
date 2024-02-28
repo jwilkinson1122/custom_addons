@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="prescriptions_custom" model="prescriptions.tag" forcecreate="0">
+            <field name="name">Custom Prescriptions</field>
+            <field name="facet_id" ref="prescriptions_device"/>
+            <field name="sequence">14</field>
+        </record>
+
+        <record id="prescriptions_fine" model="prescriptions.tag" forcecreate="0">
+            <field name="name">Fine</field>
+            <field name="facet_id" ref="prescriptions_device"/>
+            <field name="sequence">15</field>
+        </record>
+    </data>
+</odoo>

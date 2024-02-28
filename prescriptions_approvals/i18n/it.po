@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_approvals
+# 
+# Translators:
+# Wil Odoo, 2023
+# Marianna Ciofani, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: prescriptions_approvals
+#: model:ir.model,name:prescriptions_approvals.model_approval_request
+msgid "Approval Request"
+msgstr "Richiesta approvazione"
+
+#. module: prescriptions_approvals
+#: model:prescriptions.facet,name:prescriptions_approvals.prescriptions_approvals
+#: model:prescriptions.folder,name:prescriptions_approvals.prescriptions_approvals_folder
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_config_settings__prescriptions_approvals_settings
+msgid "Approvals"
+msgstr "Approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_company__approvals_tag_ids
+msgid "Approvals Tag"
+msgstr "Tag approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_config_settings__approvals_tag_ids
+msgid "Approvals Tags"
+msgstr "Tag approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_company__approvals_folder_id
+msgid "Approvals Workspace"
+msgstr "Spazio di lavoro approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_config_settings__approvals_folder_id
+msgid "Approvals default workspace"
+msgstr "Spazio di lavoro predefinito approvazioni"
+
+#. module: prescriptions_approvals
+#: model_terms:ir.ui.view,arch_db:prescriptions_approvals.res_config_settings_view_form
+msgid "Centralize files attached to Approvals"
+msgstr "Centralizza i file allegati alle approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model,name:prescriptions_approvals.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: prescriptions_approvals
+#: model:ir.model,name:prescriptions_approvals.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: prescriptions_approvals
+#: model_terms:ir.ui.view,arch_db:prescriptions_approvals.res_config_settings_view_form
+msgid "Default Tags"
+msgstr "Default Tag"
+
+#. module: prescriptions_approvals
+#. odoo-python
+#: code:addons/prescriptions_approvals/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:prescriptions_approvals.approval_request_view_form
+#, python-format
+msgid "Prescriptions"
+msgstr "Prescriptioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_approval_request__prescriptions_enabled
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_res_company__prescriptions_approvals_settings
+msgid "Prescriptions Approvals Settings"
+msgstr "Impostazioni prescriptioni approvazioni"
+
+#. module: prescriptions_approvals
+#: model:ir.model.fields,field_description:prescriptions_approvals.field_approval_request__prescriptions_count
+msgid "Prescriptions Count"
+msgstr "Numero prescriptioni"
+
+#. module: prescriptions_approvals
+#: model_terms:ir.ui.view,arch_db:prescriptions_approvals.res_config_settings_view_form
+msgid "Workspace"
+msgstr "Spazio di lavoro"

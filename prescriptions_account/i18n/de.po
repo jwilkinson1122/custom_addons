@@ -1,0 +1,411 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_account
+# 
+# Translators:
+# Wil Odoo, 2023
+# Larissa Manderfeld, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "<b>Deselect this page</b> as we plan to process all bills first."
+msgstr ""
+"<b>Wählen Sie diese Seite ab</b>, da wir zunächst alle Eingangsrechnungen "
+"bearbeiten wollen."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_prescriptions_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"Eine Reihe an Bedingungen und Aktionen, die für alle Anhänge verfügbar sind,"
+" die den Bedingungen entprechen"
+
+#. module: prescriptions_account
+#: model:ir.model.constraint,message:prescriptions_account.constraint_prescriptions_account_folder_setting_journal_unique
+msgid "A setting already exists for this journal"
+msgstr "Es existiert bereits eine Einstellung für dieses Journal"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_config_settings__prescriptions_account_settings
+msgid "Accounting "
+msgstr "Buchhaltung"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_company__account_folder
+msgid "Accounting Workspace"
+msgstr "Buchhaltungsarbeitsbereich"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"As this PDF contains multiple prescriptions, let's split and process in bulk."
+msgstr ""
+"Da diese PDF-Datei mehrere Dokumente enthält, sollten wir sie aufteilen und "
+"im Ganzen verarbeiten."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_ir_attachment
+msgid "Attachment"
+msgstr "Dateianhang"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_bank_statement
+msgid "Bank Statement"
+msgstr "Bankauszug"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Centralize accounting files and prescriptions"
+msgstr "Zentralisieren sie Dateien, die in der Buchhaltung angehängt wurden"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "Check them"
+msgstr "Prüfen Sie diese"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Click on a card to <b>select the prescription</b>."
+msgstr "<b>Wählen Sie ein Dokument aus</b>, indem Sie auf eine Karte klicken."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Click on a thumbnail to <b>preview the prescription</b>."
+msgstr ""
+"Klicken Sie auf eine Miniaturansicht, um eine <b>Vorschau des Dokuments</b> "
+"anzuzeigen."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"Click on the <b>page separator</b>: we don't want to split these two pages "
+"as they belong to the same prescription."
+msgstr ""
+"Klicken Sie auf den <b>Seitentrenner</b>: Diese beiden Seiten sollen nicht "
+"getrennt werden, da sie zum selben Dokument gehören."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen "
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "Erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.credit_note_rule
+msgid "Create Customer Credit Note"
+msgstr "Kundengutschrift erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.customer_invoice_rule
+msgid "Create Customer Invoice"
+msgstr "Kundenrechnung erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.misc_entry_rule
+msgid "Create Miscellaneous Operations"
+msgstr "Sonstiges erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.vendor_bill_rule_financial
+msgid "Create Vendor Bill"
+msgstr "Lieferantenrechnung erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.prescriptions_vendor_receipt_rule
+msgid "Create Vendor Receipt"
+msgstr "Lieferantenbeleg erstellen"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.vendor_refund_rule
+msgid "Create Vendor Refund"
+msgstr "Lieferantenerstattung erstellen"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_out_refund
+msgid "Credit note"
+msgstr "Gutschrift"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_out_invoice
+msgid "Customer invoice"
+msgstr "Kundenrechnung"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__display_journal_id
+msgid "Display Journal"
+msgstr "Journal anzeigen"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_company__prescriptions_account_settings
+msgid "Prescriptions Account Settings"
+msgstr "Dokumente Kontoeinstellungen"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_reports_export_wizard_format
+msgid "Export format for accounting's reports"
+msgstr "Exportformat für Buchhaltungsberichte"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_reports_export_wizard
+msgid "Export wizard for accounting's reports"
+msgstr "Export-Assistent für Buchhaltungsberichte"
+
+#. module: prescriptions_account
+#: model:mail.activity.type,name:prescriptions_account.mail_prescriptions_activity_data_fs
+msgid "Financial Statement"
+msgstr "Finanzbericht"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_reports_export_wizard__folder_id
+msgid "Folder"
+msgstr "Ordner"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,help:prescriptions_account.field_account_reports_export_wizard__folder_id
+msgid "Folder where to save the generated file"
+msgstr "Ordner, in dem die generierte Datei gespeichert werden soll"
+
+#. module: prescriptions_account
+#. odoo-python
+#: code:addons/prescriptions_account/wizard/account_reports_export_wizard.py:0
+#, python-format
+msgid "Generated Prescriptions"
+msgstr "Generierte Dokumente"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__id
+msgid "ID"
+msgstr "ID"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.bank_statement_rule
+msgid "Import Bank Statement"
+msgstr "Bankauszug importieren"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__journal_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__journal_id
+msgid "Journal"
+msgstr "Journal"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_move
+msgid "Journal Entry"
+msgstr "Journalbuchung"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_prescriptions_account_folder_setting
+msgid "Journal and Folder settings"
+msgstr "Journal- und Ordnereinstellungen"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Journals"
+msgstr "Journale"
+
+#. module: prescriptions_account
+#: model:ir.actions.act_window,name:prescriptions_account.action_folder_settings_installer
+msgid "Journals to synchronize"
+msgstr "Zu synchronisierende Journale"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"Let's process prescriptions in your Inbox.<br/><i>Tip: Use Tags to filter "
+"prescriptions and structure your process.</i>"
+msgstr ""
+"Verarbeiten Sie Dokumente in Ihrem Posteingang.<br/><i>Tipp: Verwenden Sie "
+"Stichwörter, um Dokumente zu filtern und Ihre Prozesse zu strukturieren.</i>"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's process these bills: turn them into vendor bills."
+msgstr ""
+"Verarbeiten Sie diese Rechnungen: Verwandeln Sie sie in "
+"Lieferantenrechnungen."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's process this prescription, coming from our scanner."
+msgstr "Verarbeiten wir dieses Dokument, das vom Scanner kommt."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"Let's tag this mail as legal<br/> <i>Tips: actions can be tailored to your "
+"process, according to the workspace.</i>"
+msgstr ""
+"Kennzeichnen Sie diese E-Mail als „rechtlich“<br/><i>Hinweis: Aktionen "
+"können je nach Arbeitsbereich auf Ihren Prozess zugeschnitten werden.</i>"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_entry
+msgid "Miscellaneous Operations"
+msgstr "Sonstiges"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__move_type
+msgid "Move Type"
+msgstr "Umzugstyp"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_in_receipt
+msgid "Purchase Receipt"
+msgstr "Einkaufsbeleg"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_bank_statement_line__suspense_statement_line_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_move__suspense_statement_line_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_payment__suspense_statement_line_id
+msgid "Request prescription from a bank statement line"
+msgstr "Dokument aus Kontoauszugszeile anfragen"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Send this letter to the legal department, by assigning the right tags."
+msgstr ""
+"Senden Sie dieses Schreiben an die Rechtsabteilung, indem Sie die richtigen "
+"Stichwörter zuweisen."
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__suitable_journal_ids
+msgid "Suitable Journal"
+msgstr "Geeignetes Journal"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_reports_export_wizard__tag_ids
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__tag_ids
+msgid "Tags"
+msgstr "Stichwörter"
+
+#. module: prescriptions_account
+#: model:mail.activity.type,name:prescriptions_account.mail_prescriptions_activity_data_vat
+msgid "Tax Statement"
+msgstr "Steuerbilanz"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "This invoice has been initiated by a bank transaction."
+msgstr "Diese Rechnung ist durch eine Banktransaktion ausgelöst worden."
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_in_refund
+msgid "Vendor Credit Note"
+msgstr "Lieferantengutschrift"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_in_invoice
+msgid "Vendor bill"
+msgstr "Lieferantenrechnung"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"Want to become a <b>paperless company</b>? Let's discover NWPL Prescriptions."
+msgstr ""
+"Möchten Sie ein<b>papierloses Unternehmen</b> werden? Entdecken Sie Odoo "
+"Dokumente."
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__folder_id
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Workspace"
+msgstr "Arbeitsbereich"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid ""
+"Wow... 6 prescriptions processed in a few seconds, You're good.<br/>The tour is "
+"complete. Try uploading your own prescriptions now."
+msgstr ""
+"Wow ... Sie haben 6 Dokumente in wenigen Sekunden verarbeitet, super. <br/> "
+"Versuchen Sie jetzt, Ihre eigenen Dokumente hochzuladen."
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_config_settings__account_folder
+msgid "account default folder"
+msgstr "Standard-Benutzerordner"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "to mark this invoice as paid."
+msgstr ", um diese Rechnung als bezahlt zu kennzeichnen."

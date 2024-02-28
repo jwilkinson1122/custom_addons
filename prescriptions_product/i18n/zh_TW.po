@@ -1,0 +1,143 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_product
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr "一組條件和操作，可用於與條件匹配的所有附件"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Centralize files attached to products"
+msgstr "集中附加到產品的文件"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "建立"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_sheet_tag
+msgid "DataSheets"
+msgstr "數據表"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Default Tags"
+msgstr "預設標籤"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_prescription
+msgid "Prescription"
+msgstr "文件"
+
+#. module: prescriptions_product
+#: model:prescriptions.facet,name:prescriptions_product.prescriptions_product_prescriptions_facet
+msgid "Prescriptions"
+msgstr "文件"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__prescriptions_product_settings
+msgid "Prescriptions Product Settings"
+msgstr "文件產品設置"
+
+#. module: prescriptions_product
+#. odoo-python
+#: code:addons/prescriptions_product/models/prescription.py:0
+#, python-format
+msgid "Invalid %s search"
+msgstr "無效的 %s 查詢"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_msds_tag
+msgid "MSDS"
+msgstr "MSDS"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_new_tag
+msgid "New"
+msgstr "新增"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_plans_tag
+msgid "Plans"
+msgstr "計劃"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_template
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_prescription__product_template_id
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__prescriptions_product_settings
+msgid "Product"
+msgstr "商品"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_tags
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_tags
+msgid "Product Tags"
+msgstr "產品標籤"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_prescription__product_id
+msgid "Product Variant"
+msgstr "產品款式"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_folder
+msgid "Product Workspace"
+msgstr "產品工作區"
+
+#. module: prescriptions_product
+#: model:ir.model.fields.selection,name:prescriptions_product.selection__prescriptions_workflow_rule__create_model__product_template
+msgid "Product template"
+msgstr "產品範本"
+
+#. module: prescriptions_product
+#: model:prescriptions.folder,name:prescriptions_product.prescriptions_product_folder
+msgid "Products"
+msgstr "產品"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_specs_tag
+msgid "Specs"
+msgstr "規格"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Workspace"
+msgstr "工作空間"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_folder
+msgid "product default workspace"
+msgstr "產品預設工作區"

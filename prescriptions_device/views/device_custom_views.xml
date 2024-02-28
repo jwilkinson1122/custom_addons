@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='device_custom_view_form_inherit_prescriptions_device' model='ir.ui.view'>
+        <field name="name">device.custom.form.inherit.prescriptions.device</field>
+        <field name="model">device.custom</field>
+        <field name="inherit_id" ref="device.device_custom_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="prescriptions_device_settings" invisible="1"/>
+                <button class="oe_stat_button" name="action_open_attachments" groups="prescriptions.group_prescriptions_user"
+                    type="object" icon="fa-file-text-o" invisible="not prescriptions_device_settings">
+                    <field string="Prescriptions" name="prescription_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

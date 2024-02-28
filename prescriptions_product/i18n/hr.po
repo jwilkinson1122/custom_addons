@@ -1,0 +1,129 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_product
+#
+# Translators:
+# Milan Tribuson <one.mile.code@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-17 10:16+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_workflow_rule
+msgid "A set of condition and actions which will be available to all attachments matching the conditions"
+msgstr "Set uvjeta i radnji koje će biti raspoložive za sve priloge koji odgovaraju kriterijima"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Centralize files attached to products"
+msgstr "Centralizirani dokumenti pridruženi proizvodima"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_company
+msgid "Companies"
+msgstr "Tvrtke"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_config_settings
+msgid "Config Settings"
+msgstr "Postavke"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "Kreiraj"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_sheet_tag
+msgid "DataSheets"
+msgstr "Podaci"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Default Tags"
+msgstr "Zadane oznake"
+
+#. module: prescriptions_product
+#: model:prescriptions.facet,name:prescriptions_product.prescriptions_product_prescriptions_facet
+msgid "Prescriptions"
+msgstr "Dokumenti"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__prescriptions_product_settings
+msgid "Prescriptions Product Settings"
+msgstr "Postavke dokumentacije proizvoda"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_msds_tag
+msgid "MSDS"
+msgstr "MSDS"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_new_tag
+msgid "New"
+msgstr "Novi"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_plans_tag
+msgid "Plans"
+msgstr "Planovi"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_template
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__prescriptions_product_settings
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_tags
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_tags
+msgid "Product Tags"
+msgstr "Oznake proizvoda"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_product
+msgid "Product Variant"
+msgstr "Varijanta proizvoda"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_folder
+msgid "Product Workspace"
+msgstr "Radni prostor proizvoda"
+
+#. module: prescriptions_product
+#: model:ir.model.fields.selection,name:prescriptions_product.selection__prescriptions_workflow_rule__create_model__product_template
+msgid "Product template"
+msgstr "Predložak proizvoda"
+
+#. module: prescriptions_product
+#: model:prescriptions.folder,name:prescriptions_product.prescriptions_product_folder
+msgid "Products"
+msgstr "Proizvodi"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_specs_tag
+msgid "Specs"
+msgstr "Specifikacije"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Workspace"
+msgstr "Radni prostor"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_folder
+msgid "product default workspace"
+msgstr "zadani radni prostor proizvoda"

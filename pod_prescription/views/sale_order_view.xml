@@ -15,7 +15,7 @@
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="string">Account</attribute>
-                    <attribute name="domain">[('is_company', '=', True)]</attribute>
+                    <attribute name="domain">[('is_parent_account', '=', True), ('is_company', '=', True)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'sale']"/>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Workflow Rules -->
+
+        <!-- create vendor bill -->
+
+        <record id="vendor_bill_rule_financial" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">10</field>
+            <field name="name">Create Vendor Bill</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.in_invoice</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_validated" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="vendor_bill_rule_financial"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <record id="prescriptions_replace_prescriptions_vendor_bill" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="vendor_bill_rule_financial"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_prescriptions"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_prescriptions_bill"/>
+        </record>
+
+        <record id="prescriptions_replace_vendor_bill_year" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="vendor_bill_rule_financial"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_fiscal_year"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_fiscal_year_2018"/>
+        </record>
+
+        <!-- Create bill -->
+
+        <record id="prescriptions.prescriptions_rule_internal_mark" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="name">Create Vendor Bill</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.in_invoice</field>
+        </record>
+        <!-- create vendor refund -->
+
+        <record id="vendor_refund_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">11</field>
+            <field name="name">Create Vendor Refund</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.in_refund</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_inbox_vendor_refund" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="vendor_refund_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <record id="prescriptions_replace_prescriptions_vendor_refund" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="vendor_refund_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_prescriptions"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_prescriptions_bill"/>
+        </record>
+
+        <!-- create customer invoice -->
+
+        <record id="customer_invoice_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">11</field>
+            <field name="name">Create Customer Invoice</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.out_invoice</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_inbox_customer_invoice" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="customer_invoice_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <record id="prescriptions_replace_prescriptions_customer_invoice" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="customer_invoice_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_prescriptions"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_prescriptions_bill"/>
+        </record>
+
+        <!-- create credit note -->
+
+        <record id="credit_note_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">11</field>
+            <field name="name">Create Customer Credit Note</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.out_refund</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_inbox_credit_note" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="credit_note_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <record id="prescriptions_replace_prescriptions_credit_note" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="credit_note_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_prescriptions"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_prescriptions_bill"/>
+        </record>
+
+        <!-- import misc entry -->
+
+        <record id="misc_entry_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">12</field>
+            <field name="name">Create Miscellaneous Operations</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.move.entry</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_inbox_misc_entry" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="misc_entry_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <!-- import bank statement -->
+
+        <record id="bank_statement_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">15</field>
+            <field name="name">Import Bank Statement</field>
+            <field name="remove_activities">True</field>
+            <field name="create_model">account.bank.statement</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+
+        <record id="prescriptions_replace_inbox_bank_statement" model="prescriptions.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="bank_statement_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="prescriptions.prescriptions_finance_status"/>
+            <field name="tag_id" ref="prescriptions.prescriptions_finance_status_validated"/>
+        </record>
+
+        <!-- create a vendor receipt -->
+        <record id="prescriptions_vendor_receipt_rule" model="prescriptions.workflow.rule" forcecreate="0">
+            <field name="sequence">11</field>
+            <field name="name">Create Vendor Receipt</field>
+            <field name="create_model">account.move.in_receipt</field>
+            <field name="domain_folder_id" ref="prescriptions.prescriptions_finance_folder"/>
+        </record>
+    </data>
+</odoo>

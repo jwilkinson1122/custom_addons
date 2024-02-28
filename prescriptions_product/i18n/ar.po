@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_product
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"مجموعة الشروط والإجراءات التي سوف تكون متُاحة لكافة المرفقات التي تستوفي "
+"الشروط "
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Centralize files attached to products"
+msgstr "قم بمركزة الملفات المرفقة بالمنتجات "
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "إنشاء"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_sheet_tag
+msgid "DataSheets"
+msgstr "جداول البيانات"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Default Tags"
+msgstr "علامات التصنيف الافتراضية "
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_prescription
+msgid "Prescription"
+msgstr "المستند"
+
+#. module: prescriptions_product
+#: model:prescriptions.facet,name:prescriptions_product.prescriptions_product_prescriptions_facet
+msgid "Prescriptions"
+msgstr "المستندات"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__prescriptions_product_settings
+msgid "Prescriptions Product Settings"
+msgstr "إعدادات المنتج للمستندات "
+
+#. module: prescriptions_product
+#. odoo-python
+#: code:addons/prescriptions_product/models/prescription.py:0
+#, python-format
+msgid "Invalid %s search"
+msgstr "البحث %s غير صحيح "
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_msds_tag
+msgid "MSDS"
+msgstr "MSDS"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_new_tag
+msgid "New"
+msgstr "جديد"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_plans_tag
+msgid "Plans"
+msgstr "الخطط "
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_template
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_prescription__product_template_id
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__prescriptions_product_settings
+msgid "Product"
+msgstr "المنتج"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_tags
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_tags
+msgid "Product Tags"
+msgstr "علامات تصنيف المنتج "
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_prescription__product_id
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_folder
+msgid "Product Workspace"
+msgstr "مساحة عمل المنتج "
+
+#. module: prescriptions_product
+#: model:ir.model.fields.selection,name:prescriptions_product.selection__prescriptions_workflow_rule__create_model__product_template
+msgid "Product template"
+msgstr "قالب المنتج"
+
+#. module: prescriptions_product
+#: model:prescriptions.folder,name:prescriptions_product.prescriptions_product_folder
+msgid "Products"
+msgstr "المنتجات"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_specs_tag
+msgid "Specs"
+msgstr "المواصفات "
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Workspace"
+msgstr "مساحة العمل"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_folder
+msgid "product default workspace"
+msgstr "مساحة العمل الافتراضية للمنتج "

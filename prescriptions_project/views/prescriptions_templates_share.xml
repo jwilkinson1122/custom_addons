@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="prescriptions_project.public_page_layout" inherit_id="prescriptions.public_page_layout" primary="True">
+        <xpath expr="//t[@t-set='share_redirect_URL']" position="replace"/>
+    </template>
+    <template id="prescriptions_project.share_page" inherit_id="prescriptions.share_workspace_page" primary="True">
+        <xpath expr="//t[@t-call='prescriptions.public_page_layout']" position="attributes">
+            <attribute name="t-call">prescriptions_project.public_page_layout</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='zip_URL']" position="attributes">
+            <attribute name="t-value">base_url + 'download?' + (('access_token=' + access_token) if access_token else '')</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='download_URL']" position="attributes">
+            <attribute name="t-value">base_url + str(prescription.id) + '/download' + (('?access_token=' + access_token) if access_token else '')</attribute>
+        </xpath>
+        <xpath expr="//section[hasclass('o_docs_share_multible_bar')]/div[hasclass('mb16')]" position="replace">
+            <div class="col-sm-6 mb16">
+                <b class="text-white h2"><t t-esc="len(prescription_ids)"></t></b> prescriptions shared
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('col-lg-3')]/article/figure" position="replace">
+            <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                <div class="o_image" t-att-data-mimetype="prescription.mimetype" t-attf-style="{{ prescription.mimetype and 'image/' in prescription.mimetype and 'background-image:None;' '' }}"/>
+                <div t-if="prescription.mimetype and'image/' in prescription.mimetype" class="o_image_preview" t-attf-style="background-image:url({{ base_url }}{{ prescription.id }}/thumbnail?{{ keep_query() }})"/>
+            </figure>
+        </xpath>
+        <xpath expr="//article/div[hasclass('o_card_right')]/img" position="attributes">
+            <attribute name="t-attf-src">{{ base_url }}{{ prescription.id }}/avatar?{{ keep_query() }}</attribute>
+        </xpath>
+        <xpath expr="//form" position="attributes">
+            <attribute name="t-attf-action">{{ base_url }}upload?{{ keep_query() }}</attribute>
+        </xpath>
+    </template>
+    <template id="prescriptions_project.portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@id='task-nav']/ul" position="inside">
+            <li class="nav-item" id="nav-chat" t-if="task.project_use_prescriptions and task.shared_prescription_ids">
+                <a class="nav-link p-0" target="_blank" t-attf-href="/{{ 'my/projects/' + str(project_id) + '/task' if project_id else 'my/tasks' }}/{{ task.id }}/prescriptions?{{ keep_query() }}">
+                    Prescriptions
+                </a>
+            </li>
+        </xpath>
+    </template>
+</odoo>

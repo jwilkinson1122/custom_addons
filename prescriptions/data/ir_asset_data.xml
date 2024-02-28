@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="prescriptions.prescriptions_kanban_view_mobile_scss" model="ir.asset">
+            <field name="name">Prescriptions kanban view mobile SCSS</field>
+            <field name="bundle">web.assets_backend</field>
+            <field name="path">prescriptions/static/src/scss/prescriptions_kanban_view_mobile.scss</field>
+            <field name="sequence" eval="17"/>
+        </record>
+    </data>
+</odoo>

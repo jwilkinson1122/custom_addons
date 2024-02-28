@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
+        <xpath expr="//*[@name='activityGroups']" position="after">
+            <div t-if="store.hasPrescriptionsUserGroup" class="o_sys_prescriptions_request d-grid" t-on-click="onClickRequestPrescription">
+                <a role="button" class="btn text-center">Request a Prescription</a>
+            </div>
+        </xpath>
+    </t>
+</templates>

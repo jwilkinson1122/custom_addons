@@ -12,6 +12,7 @@
     'description': """Manage contacts directory""",
     'depends': [
         'base',
+        'account',
         'base_setup',
         'barcodes', 
         'mail',

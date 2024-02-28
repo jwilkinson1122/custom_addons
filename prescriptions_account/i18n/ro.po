@@ -1,0 +1,370 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_account
+#
+# Translators:
+# Martin Trigaux, 2022
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 16:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "<b>Deselect this page</b> as we plan to process all bills first."
+msgstr "<b>Deselectați această pagină</b> deoarece intenționăm să procesăm mai întâi toate facturile."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_prescriptions_workflow_rule
+msgid "A set of condition and actions which will be available to all attachments matching the conditions"
+msgstr "Un set de condiții și acțiuni care vor fi disponibile tuturor atașamentelor care corespund condițiilor"
+
+#. module: prescriptions_account
+#: model:ir.model.constraint,message:prescriptions_account.constraint_prescriptions_account_folder_setting_journal_unique
+msgid "A setting already exists for this journal"
+msgstr "Există deja o setare pentru acest jurnal"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_config_settings__prescriptions_account_settings
+msgid "Accounting "
+msgstr "Contabilitate"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_company__account_folder
+msgid "Accounting Workspace"
+msgstr "Spațiu de lucru Contabilitate"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "As this PDF contains multiple prescriptions, let's split and process in bulk."
+msgstr "Deoarece acest PDF conține mai multe prescriptione, să împărțim și să procesăm în bulk."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_ir_attachment
+msgid "Attachment"
+msgstr "Atașament"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_bank_statement
+msgid "Bank Statement"
+msgstr ""
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Centralize accounting files and prescriptions"
+msgstr "Centralizați fișierele și prescriptionele contabile"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "Check them"
+msgstr "Verificați-le"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Click on a card to <b>select the prescription</b>."
+msgstr "Faceți clic pe un card pentru <b> a selecta prescriptionul</b>."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Click on a thumbnail to <b>preview the prescription</b>."
+msgstr "Click pe un thumbnail pentru<b>a previzualiza prescriptionul</b>."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Click on the <b>page separator</b>: we don't want to split these two pages as they belong to the same prescription."
+msgstr "Click pe <b>separator pagină</b>:nu vrem să împărțim aceste două pagini deoarece aparțin aceluiași prescription."
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__company_id
+msgid "Company"
+msgstr "Companie"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "Creează"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.credit_note_rule
+msgid "Create Customer Credit Note"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.customer_invoice_rule
+msgid "Create Customer Invoice"
+msgstr "Creați Factură Client"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.misc_entry_rule
+msgid "Create Miscellaneous Operations"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.vendor_bill_rule_financial
+msgid "Create Vendor Bill"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.vendor_refund_rule
+msgid "Create Vendor Refund"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_out_refund
+msgid "Credit note"
+msgstr "Notă de credit"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_out_invoice
+msgid "Customer invoice"
+msgstr "Factură Client"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__display_journal_id
+msgid "Display Journal"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_company__prescriptions_account_settings
+msgid "Prescriptions Account Settings"
+msgstr "Setări Prescriptione Cont"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_reports_export_wizard_format
+msgid "Export format for accounting's reports"
+msgstr "Format export pentru rapoarte contabile"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_reports_export_wizard
+msgid "Export wizard for accounting's reports"
+msgstr "Expert de export pentru rapoarte contabile"
+
+#. module: prescriptions_account
+#: model:mail.activity.type,name:prescriptions_account.mail_prescriptions_activity_data_fs
+msgid "Financial Statement"
+msgstr "Extras financiar"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_reports_export_wizard__folder_id
+msgid "Folder"
+msgstr "Folder"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,help:prescriptions_account.field_account_reports_export_wizard__folder_id
+msgid "Folder where to save the generated file"
+msgstr "Folderul în care se salvează fișierul general"
+
+#. module: prescriptions_account
+#. odoo-python
+#: code:addons/prescriptions_account/wizard/account_reports_export_wizard.py:0
+#, python-format
+msgid "Generated Prescriptions"
+msgstr "Prescriptione Generate"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__id
+msgid "ID"
+msgstr "ID"
+
+#. module: prescriptions_account
+#: model:prescriptions.workflow.rule,name:prescriptions_account.bank_statement_rule
+msgid "Import Bank Statement"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__journal_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__journal_id
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_account_move
+msgid "Journal Entry"
+msgstr "Notă contabilă"
+
+#. module: prescriptions_account
+#: model:ir.model,name:prescriptions_account.model_prescriptions_account_folder_setting
+msgid "Journal and Folder settings"
+msgstr "Setări jurnal și folder"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Journals"
+msgstr "Jurnale"
+
+#. module: prescriptions_account
+#: model:ir.actions.act_window,name:prescriptions_account.action_folder_settings_installer
+msgid "Journals to synchronize"
+msgstr "Jurnale de sincronizat"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's process prescriptions in your Inbox.<br/><i>Tip: Use Tags to filter prescriptions and structure your process.</i>"
+msgstr "Să procesăm prescriptionele din Mesaje primite.<br/><i>Sfat: utilizați etichete pentru a filtra prescriptionele și a vă structura procesul.</i>"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's process these bills: turn them into vendor bills."
+msgstr "Să procesăm aceste facturi: transformați-le în facturi ale furnizorilor."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's process this prescription, coming from our scanner."
+msgstr "Să procesăm acest prescription, provenind de la scanerul nostru."
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Let's tag this mail as legal<br/> <i>Tips: actions can be tailored to your process, according to the workspace.</i>"
+msgstr "Să etichetăm acest e-mail ca legal<br/> <i>Sfaturi: acțiunile pot fi adaptate procesului dvs., în funcție de spațiul de lucru.</i>"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_entry
+msgid "Miscellaneous Operations"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__move_type
+msgid "Move Type"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_bank_statement_line__suspense_statement_line_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_move__suspense_statement_line_id
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_payment__suspense_statement_line_id
+msgid "Request prescription from a bank statement line"
+msgstr ""
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Send this letter to the legal department, by assigning the right tags."
+msgstr "Trimiteți această scrisoare departamentului juridic, atribuind etichetele potrivite."
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_workflow_rule__suitable_journal_ids
+msgid "Suitable Journal"
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_account_reports_export_wizard__tag_ids
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__tag_ids
+msgid "Tags"
+msgstr "Etichete"
+
+#. module: prescriptions_account
+#: model:mail.activity.type,name:prescriptions_account.mail_prescriptions_activity_data_vat
+msgid "Tax Statement"
+msgstr "Extras Taxă"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "This invoice has been initiated by a bank transaction."
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_in_refund
+msgid "Vendor Credit Note"
+msgstr "Notă credit furnizor"
+
+#. module: prescriptions_account
+#: model:ir.model.fields.selection,name:prescriptions_account.selection__prescriptions_workflow_rule__create_model__account_move_in_invoice
+msgid "Vendor bill"
+msgstr "Factură furnizor"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Want to become a <b>paperless company</b>? Let's discover NWPL Prescriptions."
+msgstr ""
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_prescriptions_account_folder_setting__folder_id
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.res_config_settings_view_form
+msgid "Workspace"
+msgstr "Spațiu de lucru"
+
+#. module: prescriptions_account
+#. odoo-javascript
+#: code:addons/prescriptions_account/static/src/js/tour.js:0
+#, python-format
+msgid "Wow... 6 prescriptions processed in a few seconds, You're good.<br/>The tour is complete. Try uploading your own prescriptions now."
+msgstr "Uau ... 6 prescriptione procesate în câteva secunde, ești bun. <br/>Turul este complet. Încercați să încărcați propriile prescriptione acum."
+
+#. module: prescriptions_account
+#: model:ir.model.fields,field_description:prescriptions_account.field_res_config_settings__account_folder
+msgid "account default folder"
+msgstr "folder implicit cont"
+
+#. module: prescriptions_account
+#: model_terms:ir.ui.view,arch_db:prescriptions_account.view_account_move_form_inherit_prescriptions_account
+msgid "to mark this invoice as paid."
+msgstr "să marcați factura ca fiind plătită complet"

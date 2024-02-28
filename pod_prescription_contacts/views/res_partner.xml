@@ -21,8 +21,7 @@
         <field name="name">Locations</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_location", "=", True), ("patient_ids", "=", False), ('parent_id',
-            'child_of', active_id)]</field>
+        <field name="domain">[("is_location", "=", True), ("patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new location
@@ -92,6 +91,7 @@
                 </button>
             </div>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
+                <field name="is_parent_account" invisible="1" />
                 <field name="is_company" invisible="1" />
                 <field name="is_location" invisible="1" />
                 <field name="is_practitioner" invisible="1" />
@@ -100,21 +100,22 @@
                 <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
-                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
+                <attribute name="domain">[('is_company', '=', True), ('is_parent_account', '=', True), ('id', '!=', 1)]</attribute>
             </xpath>
-            <xpath expr="//field[@name='parent_id']" position="after">
-                <field name="parent_account" invisible="1" />
-            </xpath>
+            <!-- <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="is_parent_account" invisible="1" />
+            </xpath> -->
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <h2>
                     <field name="ref" readonly="1"/>
                     <!-- <field name="internal_code"/> -->
                 </h2>
                 <div class="oe_title mb24">
+                    <field name="is_parent_account" invisible="1" />
                     <field name="is_company" invisible="1" />
                     <field name="is_location" invisible="1" />
                     <field name="is_practitioner" invisible="1" />
-                    <!-- <field name="parent_account"/> -->
+                    <!-- <field name="is_parent_account"/> -->
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
@@ -122,8 +123,8 @@
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                         <!-- <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('parent_id', '=', active_id), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/> -->
 
-                        <field name="parent_id" placeholder="Parent Account" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location and not is_practitioner" class="fw-bold" />
-                        <field name="parent_account" invisible="not is_company"/>
+                        <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_parent_account" class="fw-bold" />
+                        <!-- <field name="is_parent_account" invisible="not is_company"/> -->
                         <field name="active" invisible="1"/>
                     </div>
                 </div>
@@ -393,14 +394,11 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="display_name" position="before">
-                <field name="is_location" column_invisible="1"/>
-                <field name="is_practitioner" column_invisible="1"/>
                 <field name="ref"/>
-                <field name="parent_id" readonly="1" column_invisible="1"/>
+                <field name="parent_id" readonly="1"/>
             </field>
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="internal_code"/>
-                <!-- <field name="ref" /> -->
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
@@ -410,7 +408,6 @@
             </xpath>
         </field>
     </record>
-
 
 
     <record id="res_partner_search_view" model="ir.ui.view">
@@ -429,8 +426,8 @@
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
                     <separator />
                     <group name="group_by" string="Group By">
-                        <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}" />
-                        <filter string="Locations" name="is_location" domain="[('is_location', '=', True)]" />
+                        <filter string="Accounts" name="parent_id" domain="[('is_company', '=', True), ('is_parent_account', '=', True)]" context="{'group_by': 'parent_id'}" />
+                        <filter string="Locations" name="is_location" domain="[('is_company', '=', True), ('is_location', '=', True)]" />
                         <filter string="Country" name="country_id" context="{'group_by': 'country_id'}" />
                         <filter string="State" name="state_id" context="{'group_by': 'state_id'}" />
                     </group>
@@ -443,93 +440,16 @@
         </field>
     </record>
 
-
-    <!-- <record id="res_partner_search_view" model="ir.ui.view">
-        <field name="name">res.partner.search.view</field>
-        <field name="model">res.partner</field>
-        <field name="arch" type="xml">
-            <search string="Contacts">
-                <field name="name" filter_domain="['|','|','|',('display_name','ilike',self),('ref','=',self), ('email','ilike',self), ('internal_code','=',self)]" string="Account"/>
-                <field name="internal_code"/>
-                <separator />
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" />
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
-                <separator />
-                <group name="group_by" string="Group By">
-                    <filter string="Practice" name="parent_id" context="{'group_by': 'parent_id'}" />
-                    <filter string="Locations" name="is_location" domain="[('is_location', '=', True)]" />
-                    <filter string="Country" name="country_id" context="{'group_by': 'country_id'}" />
-                    <filter string="State" name="state_id" context="{'group_by': 'state_id'}" />
-                </group>
-                <searchpanel>
-                    <field name="parent_id" icon="fa-building-o" enable_counters="1" />
-                    <field name="country_id" icon="fa-globe" enable_counters="1" />
-                </searchpanel>
-            </search>
-        </field>
-    </record> -->
-
-
-    <!-- <record id="res_partner_search_view" model="ir.ui.view">
-        <field name="name">partner.user.search</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <field name="name" position="attributes">
-                <attribute name="filter_domain">['|','|','|',('display_name','ilike',self),('ref','=',self), ('email','ilike',self), ('internal_code','=',self)]</attribute>
-            </field>
-            <field name="name" position="after">
-                <field name="internal_code"/>
-            </field>
-        </field>
-    </record> -->
-
-    <!-- <record id="hr_expense_sheet_view_search_with_panel" model="ir.ui.view">
-        <field name="name">hr.expense.sheet.view.search.with.panel</field>
-        <field name="model">hr.expense.sheet</field>
-        <field name="inherit_id" ref="hr_expense_sheet_view_search"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_filters']" position='after'>
-                <searchpanel>
-                    <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
-                    <field name="employee_id" limit="20" hierarchize="0" select="one" icon="fa-users"/>
-                    <field name="company_id" expand="1" icon="fa-building" groups="base.group_multi_company"/>
-                </searchpanel>
-            </xpath>
-        </field>
-    </record> -->
-
-
-
-
-    <!-- <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
-        <field name="domain">[('id', '!=', 1)]</field>
-        <field name="search_view_id" ref="res_partner_search_view"/>
-        <field name="context">{'default_is_company': True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a Contact in your address book
-            </p>
-            <p>
-            Odoo helps you track all activities related to your contacts.
-            </p>
-        </field>
-    </record> -->
-
-
     <record id="prescription_account_action" model="ir.actions.act_window">
         <field name="name">Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">tree,kanban,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_account', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True,
+            'default_is_parent_account':True,
             'default_is_partner': True,
             'default_type': '',
             'default_practice_type': '',
@@ -550,7 +470,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">tree,kanban,form,activity</field>
-        <field name="domain">[('is_location', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_account', '=', False), ('is_location', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True,

@@ -336,8 +336,8 @@
                             <field name="practitioner_id" options="{'no_create': True}"/>
                             <field name="patient_id" options="{'no_create': True}"/> -->
 
-                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
-                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/> 
+                            <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/>
+                            <field name="location_id" class="fw-bold" placeholder="Location Name" domain="[('is_company', '=', True), ('is_location', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/> 
                             <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', partner_id)]" readonly="state in ['cancel', 'prescription']"/>
                             <field name="patient_id" class="fw-bold" placeholder="Patient Name" domain="[('practitioner_id', '=', practitioner_id)]" readonly="state in ['cancel', 'prescription']"/>
                         </group>

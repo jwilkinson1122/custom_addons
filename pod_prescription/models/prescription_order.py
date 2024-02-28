@@ -68,15 +68,16 @@ class PrescriptionOrder(models.Model):
         string="Account",
         required=True, change_default=True, index=True,
         tracking=1,
+        domain=[('is_company','=',True), ('is_parent_account','=',True)], 
         # domain=[('is_company','=',True)], 
-        domain="[('company_id', 'in', (False, company_id))]"
+        # domain="[('company_id', 'in', (False, company_id))]"
         )
     
     location_id = fields.Many2one(
         'res.partner', 
         required=True, 
         index=True, 
-        domain=[('is_location','=',True)], 
+        domain=[('is_company','=',True), ('is_location','=',True)], 
         string="Location"
         )
 

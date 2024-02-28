@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_device
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_device_custom__prescriptions_device_settings
+msgid "Centralize Device Prescriptions"
+msgstr "قم بمركزة مستندات الأسطول "
+
+#. module: prescriptions_device
+#: model_terms:ir.ui.view,arch_db:prescriptions_device.res_config_settings_view_form_inherit_prescriptions_device
+msgid "Centralize your Device' prescriptions (fines, etc.)"
+msgstr "قم بمركزة مستندات الأسطول (الغرامات، وما إلى ذلك.) "
+
+#. module: prescriptions_device
+#: model:ir.model,name:prescriptions_device.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: prescriptions_device
+#: model:ir.model,name:prescriptions_device.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: prescriptions_device
+#: model_terms:ir.ui.view,arch_db:prescriptions_device.res_config_settings_view_form_inherit_prescriptions_device
+msgid "Default Tags"
+msgstr "علامات التصنيف الافتراضية "
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_device_custom__prescription_count
+#: model_terms:ir.ui.view,arch_db:prescriptions_device.device_custom_view_form_inherit_prescriptions_device
+msgid "Prescriptions"
+msgstr "المستندات"
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_company__prescriptions_device_settings
+msgid "Prescriptions Device Settings"
+msgstr "إعدادات مستندات الأسطول "
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_company__prescriptions_device_tags
+msgid "Prescriptions Device Tags"
+msgstr "علامات تصنيف مستندات الأسطول "
+
+#. module: prescriptions_device
+#: model:prescriptions.tag,name:prescriptions_device.prescriptions_fine
+msgid "Fine"
+msgstr "مخالفة "
+
+#. module: prescriptions_device
+#: model:prescriptions.facet,name:prescriptions_device.prescriptions_device
+#: model:prescriptions.folder,name:prescriptions_device.prescriptions_device_folder
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_config_settings__prescriptions_device_settings
+msgid "Device"
+msgstr "الأسطول"
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_config_settings__prescriptions_device_tags
+msgid "Device Default Tags"
+msgstr "علامات تصنيف الأسطول الافتراضية "
+
+#. module: prescriptions_device
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_company__prescriptions_device_folder
+#: model:ir.model.fields,field_description:prescriptions_device.field_res_config_settings__prescriptions_device_folder
+msgid "Device Workspace"
+msgstr "مساحة عمل الأسطول "
+
+#. module: prescriptions_device
+#: model:prescriptions.workflow.rule,name:prescriptions_device.prescriptions_device_rule
+msgid "Link to a custom device"
+msgstr "ربط بمركبة "
+
+#. module: prescriptions_device
+#: model:ir.model,name:prescriptions_device.model_device_custom
+msgid "Custom"
+msgstr "المركبة"
+
+#. module: prescriptions_device
+#: model:prescriptions.tag,name:prescriptions_device.prescriptions_custom
+msgid "Custom Prescriptions"
+msgstr "مستندات المركبات "
+
+#. module: prescriptions_device
+#: model_terms:ir.ui.view,arch_db:prescriptions_device.res_config_settings_view_form_inherit_prescriptions_device
+msgid "Workspace"
+msgstr "مساحة العمل"

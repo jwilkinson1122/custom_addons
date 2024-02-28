@@ -16,16 +16,29 @@ class Partner(models.Model):
     _inherit = "res.partner"
     
     is_partner = fields.Boolean(string='Prescription', default=False)
+    is_parent_account = fields.Boolean(string='Location', default=False)
     is_company = fields.Boolean(string='Company', default=False)
     is_location = fields.Boolean(string='Location', default=False)
     is_practitioner = fields.Boolean(string='Practitioner', default=False)
     is_role_required = fields.Boolean(compute='_compute_is_role_required', inverse='_inverse_is_role_required', string="Is Role Required", store=False)
-    parent_account = fields.Boolean( string='Parent Practice', related='parent_id.is_company', readonly=True, store=False)
+    # is_parent_account = fields.Boolean( string='Parent Account', related='parent_id.is_company', readonly=True, store=False)
     
     ref = fields.Char(string="Customer Number", index=True)
     # ref = fields.Char("Customer Number", readonly=True, default=lambda self: _("New"))
     # internal_code = fields.Char('Internal Code', copy=False)
     internal_code = fields.Char("Internal Code", readonly=True, default=lambda self: _("New"))
+    
+    # account_code = fields.Char('Account code')
+    # _sql_constraints = [
+    #     ('account_coder_unique', 
+    #     'unique(account_code)',
+    #     'Choose another value of account code - it has to be unique!')
+    # ]
+
+    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_parent_account','=',True), ('is_company','=',True)], string="Account", groups="base.group_no_one")
+    
+    # parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
+
     
     location_ids = fields.One2many("res.partner", compute="_compute_locations", string="Locations", readonly=True)
     location_count = fields.Integer(string='Location Count', compute='_compute_location_and_practitioner_counts')
@@ -39,7 +52,6 @@ class Partner(models.Model):
         ], string='Practice Type', default='clinic')
     fax_number = fields.Char(string="Fax")
     partner_relation_label = fields.Char('Partner relation label', translate=True, default='Attached To:', readonly=True)
-    parent_id = fields.Many2one('res.partner', index=True, domain=[('is_company','=',True)], string="Account")
     child_ids = fields.One2many("res.partner", compute="_compute_practitioners", string="Practitioners", readonly=True)
     practitioner_role_ids = fields.Many2many(string="Roles", comodel_name="prescription.role")
     practitioner_count = fields.Integer(string='Practitioner Count', compute='_compute_location_and_practitioner_counts')
@@ -66,7 +78,7 @@ class Partner(models.Model):
             return "base/static/img/truck.png"
         elif self.type == 'invoice':
             return "base/static/img/money.png"
-        elif self.is_company or self.is_location:
+        elif self.is_parent_account or self.is_company or self.is_location:
             return "base/static/img/company_image.png"
         else:
             return super()._avatar_get_placeholder_path()
@@ -115,19 +127,37 @@ class Partner(models.Model):
         for partner in self:
             partner.child_count = len(partner.child_ids)
     
-    @api.depends('parent_id', 'is_company', 'active')
+    @api.depends('parent_id', 'is_parent_account', 'is_company', 'is_location', 'active')
     def _compute_locations(self):
         for record in self:
             if not isinstance(record.id, models.NewId):
                 all_locations = self.env['res.partner'].search([
-                    ('id', 'child_of', record.id), 
+                    ('id', 'child_of', record.id),
+                    ("is_parent_account", "=", False),  
                     ("is_company", "=", True), 
-                    ("patient_ids", "=", False),  # Exclude records that have associated patients
+                    ("is_location", "=", True), 
+                    ("patient_ids", "=", False),  
                     ("active", "=", True)
                 ])
                 record.location_ids = all_locations - record
             else:
-                record.location_ids = self.env['res.partner']  # Empty recordset
+                record.location_ids = self.env['res.partner'] 
+
+    # @api.depends('parent_id', 'is_company', 'is_location', 'is_practitioner', 'active')
+    # def _compute_locations(self):
+    #     for record in self:
+    #         if not isinstance(record.id, models.NewId):
+    #             all_locations = self.env['res.partner'].search([
+    #                 ('id', 'child_of', record.id), 
+    #                 ("is_company", "=", False),
+    #                 ("is_location", "=", True),
+    #                 ("is_practitioner", "=", False),  
+    #                 ("patient_ids", "=", False),  
+    #                 ("active", "=", True)
+    #             ])
+    #             record.location_ids = all_locations - record
+    #         else:
+    #             record.location_ids = self.env['res.partner']
   
     @api.depends('location_count')
     def _compute_location_text(self):
@@ -139,20 +169,35 @@ class Partner(models.Model):
             else:
                 record.location_text = _("(%s Locations)" % record.location_count)
 
+
+    # @api.depends('child_ids', 'child_ids.is_company')
+    # def _compute_practitioners(self):
+    #     for record in self:
+    #         if not isinstance(record.id, models.NewId):
+    #             all_partners = self.env['res.partner'].search([('parent_id', 'child_of', record.id)])
+    #             all_partners -= record
+
+    #             practitioners = all_partners.filtered(lambda p: not p.is_company and not p.patient_ids)
+    #             record.child_ids = practitioners
+    #         else:
+    #             record.child_ids = self.env['res.partner']
+
     @api.depends('parent_id', 'is_company', 'is_practitioner', 'active')
     def _compute_practitioners(self):
         for record in self:
             if not isinstance(record.id, models.NewId):
                 all_practitioners = self.env['res.partner'].search([
-                    ('id', 'child_of', record.id), 
+                    ('id', 'child_of', record.id),
+                    # ("is_parent_account", "=", False), 
                     ("is_company", "=", False),
+                    # ("is_location", "=", False),
                     ("is_practitioner", "=", True),  
-                    ("patient_ids", "=", False),  # Exclude records that have associated patients
+                    ("patient_ids", "=", False),  
                     ("active", "=", True)
                 ])
                 record.child_ids = all_practitioners
             else:
-                record.child_ids = self.env['res.partner']  # Empty recordset 
+                record.child_ids = self.env['res.partner']   
         
     @api.depends('practitioner_count')
     def _compute_practitioner_text(self):
@@ -370,7 +415,7 @@ class Partner(models.Model):
     
     @api.model
     def default_prescription_fields(self):
-        fields = ["is_partner", "is_company", "is_location", "is_practitioner"]
+        fields = ["is_partner", "is_parent_company", "is_company", "is_location", "is_practitioner"]
         # If there's a need to add more fields from parent or other inheriting models, you can do rx here.
         return fields
 

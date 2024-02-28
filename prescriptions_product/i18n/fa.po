@@ -1,0 +1,133 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_product
+#
+# Translators:
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Maziar Niaki <maziarmn@gmail.com>, 2023
+# Zahed Alfak <tamass4116@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Hanna Kheradroosta, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-17 10:16+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_prescriptions_workflow_rule
+msgid "A set of condition and actions which will be available to all attachments matching the conditions"
+msgstr "مجموعه ای از شرایط و اقداماتی که برای همه پیوست های منطبق با شرایط در دسترس خواهد بود"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Centralize files attached to products"
+msgstr "فایل های پیوست شده به محصولات را متمرکز کنید"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_company
+msgid "Companies"
+msgstr "شرکت"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_res_config_settings
+msgid "Config Settings"
+msgstr "تنظیمات پیکربندی"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "ایجاد"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_sheet_tag
+msgid "DataSheets"
+msgstr "برگه داده"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Default Tags"
+msgstr "برچسپ‌های پیش‌فرض"
+
+#. module: prescriptions_product
+#: model:prescriptions.facet,name:prescriptions_product.prescriptions_product_prescriptions_facet
+msgid "Prescriptions"
+msgstr "اسناد"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__prescriptions_product_settings
+msgid "Prescriptions Product Settings"
+msgstr "تنضیمات سند محصول"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_msds_tag
+msgid "MSDS"
+msgstr "MSDS"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_new_tag
+msgid "New"
+msgstr "جدید"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_plans_tag
+msgid "Plans"
+msgstr "برنامه‌ها"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_template
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__prescriptions_product_settings
+msgid "Product"
+msgstr "محصول"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_tags
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_tags
+msgid "Product Tags"
+msgstr "برچسپ محصول"
+
+#. module: prescriptions_product
+#: model:ir.model,name:prescriptions_product.model_product_product
+msgid "Product Variant"
+msgstr "گونه محصول"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_company__product_folder
+msgid "Product Workspace"
+msgstr "فضای کار محصول"
+
+#. module: prescriptions_product
+#: model:ir.model.fields.selection,name:prescriptions_product.selection__prescriptions_workflow_rule__create_model__product_template
+msgid "Product template"
+msgstr "قالب محصول"
+
+#. module: prescriptions_product
+#: model:prescriptions.folder,name:prescriptions_product.prescriptions_product_folder
+msgid "Products"
+msgstr "محصولات"
+
+#. module: prescriptions_product
+#: model:prescriptions.tag,name:prescriptions_product.prescriptions_product_specs_tag
+msgid "Specs"
+msgstr "فضاها"
+
+#. module: prescriptions_product
+#: model_terms:ir.ui.view,arch_db:prescriptions_product.res_config_settings_view_form
+msgid "Workspace"
+msgstr "فضای کار"
+
+#. module: prescriptions_product
+#: model:ir.model.fields,field_description:prescriptions_product.field_res_config_settings__product_folder
+msgid "product default workspace"
+msgstr "فضای کار پیش‌فرض محصول"

@@ -1,0 +1,167 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_project_sale
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: prescriptions_project_sale
+#: model_terms:ir.ui.view,arch_db:prescriptions_project_sale.product_template_form_view_inherit_prescriptions_project_sale
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" "
+"title=\"ค่าที่ตั้งไว้ที่นี่เป็นค่าเฉพาะของบริษัท\" "
+"groups=\"base.group_multi_company\"/>"
+
+#. module: prescriptions_project_sale
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_product__prescriptions_allowed_company_id
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_template__prescriptions_allowed_company_id
+msgid "Prescriptions Allowed Company"
+msgstr "เอกสารบริษัทที่อนุญาต"
+
+#. module: prescriptions_project_sale
+#: model:ir.model,name:prescriptions_project_sale.model_prescriptions_folder
+msgid "Prescriptions Workspace"
+msgstr "เวิร์กสเปซของเอกสาร"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.tag,name:prescriptions_project_sale.prescriptions_folder_facet_1_tag_3
+msgid "Done/Archived"
+msgstr "เสร็จสิ้น/เก็บถาวรแล้ว"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.tag,name:prescriptions_project_sale.prescriptions_folder_facet_1_tag_2
+msgid "In Use"
+msgstr "อยู่ในการใช้งาน"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.folder,name:prescriptions_project_sale.prescriptions_folder_template_child_3
+msgid "Miscellaneous"
+msgstr "เบ็ดเตล็ด"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.tag,name:prescriptions_project_sale.prescriptions_folder_facet_1_tag_1
+msgid "New/Unsorted"
+msgstr "ใหม่/ไม่เรียงลำดับ"
+
+#. module: prescriptions_project_sale
+#: model:ir.model.fields,help:prescriptions_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,help:prescriptions_project_sale.field_product_template__template_folder_id
+msgid ""
+"On sales order confirmation, a workspace will be automatically generated for"
+" the project based on this template."
+msgstr ""
+"ในการยืนยันใบสั่งขาย "
+"เวิร์กสเปซจะถูกสร้างขึ้นโดยอัตโนมัติสำหรับโปรเจ็กต์ตามเทมเพลตนี้"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.folder,name:prescriptions_project_sale.prescriptions_folder_template_child_2
+msgid "Photos"
+msgstr "รูปภาพ"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.folder,name:prescriptions_project_sale.prescriptions_folder_template_child_1
+msgid "Plans"
+msgstr "แผน"
+
+#. module: prescriptions_project_sale
+#: model:ir.model,name:prescriptions_project_sale.model_product_template
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: prescriptions_project_sale
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_prescriptions_folder__product_template_ids
+msgid "Product Template"
+msgstr "เทมเพลตสินค้า"
+
+#. module: prescriptions_project_sale
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_product__project_template_use_prescriptions
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_template__project_template_use_prescriptions
+msgid "Project Template - Prescriptions"
+msgstr ""
+
+#. module: prescriptions_project_sale
+#: model:product.template,name:prescriptions_project_sale.product_1
+msgid "Renovation Architect (Workspace Template)"
+msgstr "สถาปนิกการปรับปรุง (เทมเพลตเวิร์กสเปซ)"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.folder,name:prescriptions_project_sale.prescriptions_folder
+msgid "Renovation Projects"
+msgstr "โปรเจ็กต์ปรับปรุง"
+
+#. module: prescriptions_project_sale
+#: model:ir.model,name:prescriptions_project_sale.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.facet,name:prescriptions_project_sale.prescriptions_folder_facet_1
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: prescriptions_project_sale
+#: model:prescriptions.folder,name:prescriptions_project_sale.prescriptions_folder_template
+msgid "Template"
+msgstr "เทมเพลต"
+
+#. module: prescriptions_project_sale
+#. odoo-python
+#: code:addons/prescriptions_project_sale/models/product_template.py:0
+#, python-format
+msgid ""
+"The \"%s\" workspace template should either be in the \"%s\" company like "
+"this product or be open to all companies."
+msgstr ""
+"เทมเพลตเวิร์กสเปซ \"%s\" ควรอยู่ในบริษัท \"%s\" เช่นเดียวกับสินค้านี้ "
+"หรือเปิดให้กับทุกบริษัท"
+
+#. module: prescriptions_project_sale
+#. odoo-python
+#: code:addons/prescriptions_project_sale/models/prescriptions_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the \"%s\" product for "
+"which it is a template. Please update the company of the \"%s\" product, or "
+"leave the company of this workspace empty."
+msgstr ""
+"เวิร์กสเปซนี้ควรยังคงอยู่ในบริษัทเดียวกันกับสินค้า \"%s\" ซึ่งเป็นเทมเพลต "
+"โปรดอัปเดตบริษัทของสินค้า \"%s\" หรือเว้นว่างบริษัทของเวิร์กสเปซนี้ไว้"
+
+#. module: prescriptions_project_sale
+#. odoo-python
+#: code:addons/prescriptions_project_sale/models/prescriptions_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following products for which it is a template:\n"
+"%s\n"
+"\n"
+"Please update the company of those products, or leave the company of this workspace empty."
+msgstr ""
+"เวิร์กสเปซนี้ควรคงอยู่ในบริษัทเดียวกันกับสินค้าต่อไปนี้ซึ่งเป็นเทมเพลต:\n"
+"%s\n"
+"\n"
+"โปรดอัปเดตบริษัทของสินค้าเหล่านั้น หรือเว้นว่างบริษัทของเวิร์คสเปซนี้ไว้"
+
+#. module: prescriptions_project_sale
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,field_description:prescriptions_project_sale.field_product_template__template_folder_id
+msgid "Workspace Template"
+msgstr "เทมเพลตเวิร์กสเปซ"

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="project.project_project_3" model="project.project">
+            <field name="use_prescriptions">False</field>
+        </record>
+    </data>
+
+    <!-- Demo data seems to be installed before post init hooks are executed,
+        so we need to generate the project folders here -->
+    <function model="project.project" name="_create_missing_folders">
+        <value model="project.project" search="[('use_prescriptions', '=', True)]"/>
+    </function>
+
+    <record id="project_1_prescription_1" model="prescriptions.prescription">
+        <field name="name">Daily Meeting Notes (today)</field>
+        <field name="datas" type="base64" file="prescriptions_project/data/files/daily_meeting_notes_today.txt"/>
+        <field name="folder_id" model="prescriptions.folder" eval="obj().env.ref('project.project_project_1').prescriptions_folder_id.id"/>
+        <field name="res_model">project.task</field>
+        <field name="res_id" ref="project.project_1_task_13"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_prescription_2" model="prescriptions.prescription">
+        <field name="name">Daily Meeting Notes (yesterday)</field>
+        <field name="datas" type="base64" file="prescriptions_project/data/files/daily_meeting_notes_yesterday.txt"/>
+        <field name="folder_id" model="prescriptions.folder" eval="obj().env.ref('project.project_project_1').prescriptions_folder_id.id"/>
+        <field name="res_model">project.task</field>
+        <field name="res_id" ref="project.project_1_task_13"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_prescription_3" model="prescriptions.prescription">
+        <field name="name">First Floor Plan</field>
+        <field name="datas" type="base64" file="prescriptions_project/data/files/first_floor_plan.jpeg"/>
+        <field name="folder_id" model="prescriptions.folder" eval="obj().env.ref('project.project_project_1').prescriptions_folder_id.id"/>
+        <field name="res_model">project.project</field>
+        <field name="res_id" ref="project.project_project_1"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_prescription_4" model="prescriptions.prescription">
+        <field name="name">Important Customer Letter</field>
+        <field name="datas" type="base64" file="prescriptions_project/data/files/important_customer_letter.pdf"/>
+        <field name="folder_id" model="prescriptions.folder" eval="obj().env.ref('project.project_project_1').prescriptions_folder_id.id"/>
+        <field name="res_model">project.project</field>
+        <field name="res_id" ref="project.project_project_1"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <!-- Share link for some prescriptions to make them accessible in the portal -->
+    <record id="project_1_prescriptions_share_link" model="prescriptions.share">
+        <field name="name">Daily Meeting Notes Share Link</field>
+        <field name="folder_id" model="prescriptions.folder" eval="obj().env.ref('project.project_project_1').prescriptions_folder_id.id"/>
+        <field name="type">ids</field>
+        <field name="action">download</field>
+        <field name="prescription_ids" eval="[
+            Command.link(ref('project_1_prescription_1')),
+            Command.link(ref('project_1_prescription_2')),
+        ]"/>
+    </record>
+</odoo>

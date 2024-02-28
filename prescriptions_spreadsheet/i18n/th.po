@@ -1,0 +1,572 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_spreadsheet
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/wizard/save_spreadsheet_template.py:0
+#, python-format
+msgid "\"%s\" saved as template"
+msgstr "บันทึก \"%s\" เป็นเทมเพลตแล้ว"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.share_page
+msgid "#{'Download '}#{prescription.name}"
+msgstr "#{'Download '}#{prescription.name}"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/spreadsheet_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (สำเนา)"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#, python-format
+msgid "%s - Template"
+msgstr "%s - เทมเพลต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.constraint,message:prescriptions_spreadsheet.constraint_spreadsheet_contributor_spreadsheet_user_unique
+msgid "A combination of the spreadsheet and the user already exist"
+msgstr "มีสเปรดชีตและผู้ใช้ผสมกันอยู่แล้ว"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.save_spreadsheet_template_view_form
+msgid ""
+"Any user will be able to create a new spreadsheet based on this template."
+msgstr "ผู้ใช้จะสามารถสร้างสเปรดชีตใหม่โดยใช้เทมเพลตนี้ได้"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid ""
+"Ask an admin to configure the workspace to be accessible to the users you "
+"want."
+msgstr ""
+"ขอให้ผู้ดูแลระบบกำหนดค่าของเวิร์กสเปซเพื่อให้ผู้ใช้ที่คุณต้องการสามารถเข้าถึงได้"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Blank spreadsheet"
+msgstr "สเปรดชีตเปล่า"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid ""
+"By default, the spreadsheets in this workspace will only be seen and updated"
+" by their <strong>creator</strong>."
+msgstr ""
+"ตามค่าเริ่มต้น สเปรดชีตในเวิร์กสเปซนี้จะเห็นและอัปเดตโดย "
+"<strong>ผู้สร้าง</strong> เท่านั้น"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.save_spreadsheet_template_view_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.res_config_settings_view_form_inherit_prescriptions_spreadsheet
+msgid "Centralize your spreadsheets"
+msgstr "รวมศูนย์สเปรดชีตของคุณ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.save_spreadsheet_template_view_form
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.actions.act_window,name:prescriptions_spreadsheet.spreadsheet_contributor_action
+#: model:ir.ui.menu,name:prescriptions_spreadsheet.menu_technical_spreadsheet_contributor
+msgid "Contributors"
+msgstr "ผู้ให้ข้อมูล"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_prescriptions_shared_spreadsheet
+msgid "Copy of a shared spreadsheet"
+msgstr "สำเนาของสเปรดชีตที่แชร์"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Create"
+msgstr "สร้าง"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "Create a Spreadsheet or select a Template"
+msgstr "สร้างสเปรดชีตหรือเลือกเทมเพลต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__create_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__create_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__create_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__create_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__create_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__create_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "ละทิ้ง"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__display_name
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__display_name
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__display_name
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_prescriptions_prescription
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__prescription_id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__prescription_id
+msgid "Prescription"
+msgstr "เอกสาร"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_prescriptions_share
+msgid "Prescriptions Share"
+msgstr "แชร์เอกสาร"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_res_company__prescriptions_spreadsheet_folder_id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_res_config_settings__prescriptions_spreadsheet_folder_id
+msgid "Prescriptions Spreadsheet Folder"
+msgstr "โฟลเดอร์สเปรดชีตเอกสาร"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.spreadsheet_template_view_tree
+msgid "Edit"
+msgstr "แก้ไข"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid "Enjoy collaborative work on your spreadsheets."
+msgstr "เพลิดเพลินกับการทำงานร่วมกันบนสเปรดชีตของคุณ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__excel_export
+msgid "Excel Export"
+msgstr "ส่งออก Excel"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Format issue"
+msgstr "ปัญหารูปแบบ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_share__freezed_spreadsheet_ids
+msgid "Freezed Spreadsheet"
+msgstr "สเปรดชีตที่ตรึงไว้"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__handler
+msgid "Handler"
+msgstr "ตัวจัดการ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid "If you want to work together on those spreadsheets :"
+msgstr "หากคุณต้องการทำงานร่วมกันบนสเปรดชีตเหล่านั้น ให้ทำตามนี้:"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__write_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__write_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__write_uid
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__write_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__write_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__write_date
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__last_update_date
+msgid "Last update date"
+msgstr "วันที่อัปเดตล่าสุด"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.spreadsheet_template_view_tree
+msgid "Make a copy"
+msgstr "ทำสำเนา"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid ""
+"Manage and work with all the <strong>spreadsheets</strong> created in other "
+"applications."
+msgstr ""
+"จัดการและทำงานกับ<strong>สเปรดชีต</strong>ทั้งหมดที่สร้างขึ้นในแอปพลิเคชันอื่น"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:prescriptions.folder,description:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+msgid "Move them to another workspace"
+msgstr "ย้ายไปยังเวิร์กสเปซอื่น"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.spreadsheet_template_view_search
+msgid "My Templates"
+msgstr "เทมเพลตของฉัน"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.xml:0
+#, python-format
+msgid "New Spreadsheet"
+msgstr "สเปรดชีตใหม่"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "New sheet saved in Prescriptions"
+msgstr "แผ่นงานใหม่ที่บันทึกไว้ในเอกสาร"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.spreadsheet_template_view_tree
+msgid "New spreadsheet"
+msgstr "สเปรดชีตใหม่"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_selector_dialog/prescription_selector_panel.js:0
+#, python-format
+msgid "New spreadsheet created in Prescriptions"
+msgstr "สเปรดชีตใหม่ที่สร้างในเอกสาร"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/models/spreadsheet_template.py:0
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "New spreadsheet template created"
+msgstr "สร้างเทมเพลตสเปรดชีตใหม่แล้ว"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.constraint,message:prescriptions_spreadsheet.constraint_prescriptions_shared_spreadsheet__unique
+msgid "Only one freezed spreadsheet per prescription share"
+msgstr "สเปรดชีตที่ตรึงไว้เพียงหนึ่งรายการต่อการแชร์ของเอกสาร"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Open with Odoo Spreadsheet"
+msgstr "เปิดด้วยสเปรดชีต Odoo"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore"
+msgstr "คืนค่า"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore file?"
+msgstr "ต้องการกู้คืนไฟล์ใช่ไหม?"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.actions.act_window,name:prescriptions_spreadsheet.save_spreadsheet_template_action
+msgid "Save as template"
+msgstr "บันทึกเป็นเทมเพลต"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid "Send source file to trash"
+msgstr "ส่งไฟล์ต้นฉบับไปที่ถังขยะ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__server_revision_id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__server_revision_id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__server_revision_id
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__server_revision_id
+msgid "Server Revision"
+msgstr ""
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__share_id
+msgid "Share"
+msgstr "แชร์"
+
+#. module: prescriptions_spreadsheet
+#: model:prescriptions.folder,name:prescriptions_spreadsheet.prescriptions_spreadsheet_folder
+#: model:ir.model.fields.selection,name:prescriptions_spreadsheet.selection__prescriptions_prescription__handler__spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.prescription_view_search_spreadsheet
+msgid "Spreadsheet"
+msgstr "สเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_spreadsheet_contributor
+msgid "Spreadsheet Contributor"
+msgstr "ผู้ร่วมให้ข้อมูลสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__spreadsheet_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__spreadsheet_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__spreadsheet_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__spreadsheet_data
+msgid "Spreadsheet Data"
+msgstr "ข้อมูลสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.spreadsheet_prescription_view_kanban
+msgid "Spreadsheet Preview"
+msgstr "ดูตัวอย่างสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__spreadsheet_revision_ids
+msgid "Spreadsheet Revision"
+msgstr "การแก้ไขสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__spreadsheet_snapshot
+msgid "Spreadsheet Snapshot"
+msgstr "ภาพรวมสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_spreadsheet_template
+msgid "Spreadsheet Template"
+msgstr "เทมเพลตสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model,name:prescriptions_spreadsheet.model_save_spreadsheet_template
+msgid "Spreadsheet Template Save Wizard"
+msgstr "โปรแกรมบันทึกเทมเพลตสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.actions.act_window,name:prescriptions_spreadsheet.spreadsheet_template_action
+#: model:ir.ui.menu,name:prescriptions_spreadsheet.menu_technical_spreadsheet_template
+msgid "Spreadsheet Templates"
+msgstr "เทมเพลตสเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__spreadsheet_binary_data
+msgid "Spreadsheet file"
+msgstr "ไฟล์สเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/prescriptions_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be handled from the Trash. Would you like to "
+"restore this prescription?"
+msgstr ""
+"ไฟล์สเปรดชีตไม่สามารถจัดการจากถังขยะได้ คุณต้องการกู้คืนเอกสารนี้หรือไม่"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be previewed or edited in Odoo. Opening your file "
+"with Odoo Spreadsheet will allow you to do so."
+msgstr ""
+"ไฟล์สเปรดชีตไม่สามารถดูตัวอย่างหรือแก้ไขใน Odoo ได้ การเปิดไฟล์ด้วยสเปรดชีต "
+"Odoo จะช่วยให้คุณดำเนินการได้"
+
+#. module: prescriptions_spreadsheet
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.res_config_settings_view_form_inherit_prescriptions_spreadsheet
+msgid "Spreadsheets"
+msgstr "สเปรดชีต"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/prescriptions_view/inspector/prescriptions_inspector.js:0
+#, python-format
+msgid ""
+"Spreadsheets mass download not yet supported.\n"
+" Download spreadsheets individually instead."
+msgstr ""
+"ยังไม่รองรับการดาวน์โหลดสเปรดชีตจำนวนมาก\n"
+"ดาวน์โหลดสเปรดชีตทีละรายการแทน"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__template_name
+msgid "Template Name"
+msgstr "ชื่อแม่แบบ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "The file is not a xlsx file"
+msgstr "ไฟล์นี้ไม่ใช่ไฟล์ xlsx"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "The spreadsheet you are trying to access does not exist."
+msgstr "ไม่มีสเปรดชีตที่คุณกำลังพยายามเข้าถึง"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "The xlsx file is corrupted"
+msgstr "ไฟล์ xlsx เสียหาย"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "The xlsx file is too big"
+msgstr "ไฟล์ xlsx มีขนาดใหญ่เกินไป"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_prescription__thumbnail
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_prescriptions_shared_spreadsheet__thumbnail
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_save_spreadsheet_template__thumbnail
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_template__thumbnail
+msgid "Thumbnail"
+msgstr "ภาพขนาดย่อ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "สลับรายการโปรด"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "Untitled spreadsheet"
+msgstr "สเปรดชีตที่ไม่มีชื่อ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "Untitled spreadsheet template"
+msgstr "เทมเพลตสเปรดชีตที่ไม่มีชื่อ"
+
+#. module: prescriptions_spreadsheet
+#: model:ir.model.fields,field_description:prescriptions_spreadsheet.field_spreadsheet_contributor__user_id
+msgid "User"
+msgstr "ผู้ใช้"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:prescriptions_spreadsheet.res_config_settings_view_form_inherit_prescriptions_spreadsheet
+#, python-format
+msgid "Workspace"
+msgstr "เวิร์กสเปซ"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/controllers/prescriptions.py:0
+#, python-format
+msgid "You cannot upload spreadsheets in a shared folder"
+msgstr "คุณไม่สามารถอัปโหลดสเปรดชีตในโฟลเดอร์ที่ใช้ร่วมกันได้"
+
+#. module: prescriptions_spreadsheet
+#. odoo-python
+#: code:addons/prescriptions_spreadsheet/controllers/share.py:0
+#: code:addons/prescriptions_spreadsheet/controllers/share.py:0
+#: code:addons/prescriptions_spreadsheet/controllers/share.py:0
+#: code:addons/prescriptions_spreadsheet/models/prescriptions_prescription.py:0
+#, python-format
+msgid "You don't have access to this prescription"
+msgstr "คุณไม่มีสิทธิ์เข้าถึงเอกสารนี้"
+
+#. module: prescriptions_spreadsheet
+#. odoo-javascript
+#: code:addons/prescriptions_spreadsheet/static/src/spreadsheet_selector_dialog/prescription_selector_panel.xml:0
+#, python-format
+msgid "getPageTitle('SPREADSHEET')"
+msgstr "getPageTitle('SPREADSHEET')"

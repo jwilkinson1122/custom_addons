@@ -1,0 +1,324 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prescriptions_project
+#
+# Translators:
+# ExcaliberX <excaliberx@gmail.com>, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 16:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/project_project.py:0
+#, python-format
+msgid "%(project_name)s's Prescriptions"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_prescriptions_workflow_rule
+msgid "A set of condition and actions which will be available to all attachments matching the conditions"
+msgstr "תנאים ופעולות שיהיו זמינות לכל הקבצים המצורפים התואמים את התנאים"
+
+#. module: prescriptions_project
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule_ask_for_validation
+msgid "Ask for Validation"
+msgstr "לבקש אימות"
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_ir_attachment
+msgid "Attachment"
+msgstr "קובץ מצורף"
+
+#. module: prescriptions_project
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.edit_project_prescription_form_inherit
+msgid "Categorize and share your prescriptions with your customers"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_prescriptions_facet
+msgid "Category"
+msgstr "קטגוריה"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_prescriptions_workflow_rule__create_model
+msgid "Create"
+msgstr "צור"
+
+#. module: prescriptions_project
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule_task
+msgid "Create a Task"
+msgstr "צור משימה"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__prescriptions_tag_ids
+msgid "Default Tags"
+msgstr "תגיות ברירת מחדל"
+
+#. module: prescriptions_project
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule_deprecate
+msgid "Deprecate"
+msgstr "הוצא משימוש"
+
+#. module: prescriptions_project
+#: model:prescriptions.tag,name:prescriptions_project.prescriptions_project_status_deprecated
+msgid "Deprecated"
+msgstr "יצא משימוש"
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_prescriptions_prescription
+#: model:ir.model.fields,field_description:prescriptions_project.field_ir_attachment__prescription_ids
+msgid "Prescription"
+msgstr "מסמך"
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/project_project.py:0
+#: model:ir.actions.act_window,name:prescriptions_project.action_view_prescriptions_project_task
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__use_prescriptions
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__prescription_ids
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.project_sharing_project_task_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.project_view_kanban_inherit_prescriptions
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.view_task_form2_prescription_inherit
+#, python-format
+msgid "Prescriptions"
+msgstr "מסמכים"
+
+#. module: prescriptions_project
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.edit_project_prescription_form_inherit
+msgid "Prescriptions &amp; Analytics"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_prescriptions_folder
+msgid "Prescriptions Workspace"
+msgstr "סביבת עבודה של מסמכים"
+
+#. module: prescriptions_project
+#: model:prescriptions.tag,name:prescriptions_project.prescriptions_project_status_draft
+msgid "Draft"
+msgstr "טיוטה"
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_prescription.py:0
+#, python-format
+msgid "Invalid project search"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_prescription.py:0
+#, python-format
+msgid "Invalid task search"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_prescriptions_prescription__is_shared
+msgid "Is Shared"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule_mark_as_draft
+msgid "Mark As Draft"
+msgstr "סמן כטיוטה"
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_folder.py:0
+#, python-format
+msgid "Merged Workspace"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "New task from Prescriptions"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__prescription_count
+msgid "Number of prescriptions in Project"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__prescription_count
+msgid "Number of prescriptions in Task"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_project_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_prescriptions_prescription__project_id
+#: model:ir.model.fields,field_description:prescriptions_project.field_prescriptions_folder__project_ids
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.prescription_view_search_inherit
+msgid "Project"
+msgstr "פרויקט"
+
+#. module: prescriptions_project
+#: model:prescriptions.folder,name:prescriptions_project.prescriptions_project_folder
+msgid "Projects"
+msgstr "פרויקטים"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__shared_prescription_ids
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__shared_prescription_ids
+msgid "Shared Prescriptions"
+msgstr "מסמכים משותפים"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__shared_prescription_count
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__shared_prescription_count
+msgid "Shared Prescriptions Count"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:prescriptions.facet,name:prescriptions_project.prescriptions_project_status
+msgid "Status"
+msgstr "סטטוס"
+
+#. module: prescriptions_project
+#: model:ir.model,name:prescriptions_project.model_project_task
+#: model:ir.model.fields,field_description:prescriptions_project.field_prescriptions_prescription__task_id
+#: model:ir.model.fields.selection,name:prescriptions_project.selection__prescriptions_workflow_rule__create_model__project_task
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.prescription_view_search_inherit
+msgid "Task"
+msgstr "משימה"
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "Task created from prescription %s"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "Task created from prescriptions %s"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/project_task.py:0
+#, python-format
+msgid "Task's Prescriptions"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_folder.py:0
+#, python-format
+msgid "The \"%s\" workspace is required by the Project application and cannot be deleted."
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/project_project.py:0
+#, python-format
+msgid "The \"%s\" workspace should either be in the \"%s\" company like this project or be open to all companies."
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_folder.py:0
+#, python-format
+msgid "This workspace should remain in the same company as the \"%s\" project to which it is linked. Please update the company of the \"%s\" project, or leave the company of this workspace empty."
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following projects to which it is linked:\n"
+"%s\n"
+"\n"
+"Please update the company of those projects, or leave the company of this workspace empty."
+msgstr ""
+
+#. module: prescriptions_project
+#: model:prescriptions.tag,name:prescriptions_project.prescriptions_project_status_to_validate
+msgid "To Validate"
+msgstr "לאישור"
+
+#. module: prescriptions_project
+#: model_terms:ir.actions.act_window,help:prescriptions_project.action_view_prescriptions_project_task
+msgid "Upload <span class=\"fw-normal\">a file or </span>drag <span class=\"fw-normal\">it here.</span>"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__project_use_prescriptions
+msgid "Use Prescriptions"
+msgstr ""
+
+#. module: prescriptions_project
+#: model:prescriptions.workflow.rule,name:prescriptions_project.prescriptions_project_rule_validate
+msgid "Validate"
+msgstr "אשר"
+
+#. module: prescriptions_project
+#: model:prescriptions.tag,name:prescriptions_project.prescriptions_project_status_validated
+msgid "Validated"
+msgstr "אושרה"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_project__prescriptions_folder_id
+#: model:ir.model.fields,field_description:prescriptions_project.field_project_task__prescriptions_folder_id
+msgid "Workspace"
+msgstr "סביבת עבודה"
+
+#. module: prescriptions_project
+#: model:ir.model.fields,help:prescriptions_project.field_project_project__prescriptions_folder_id
+#: model:ir.model.fields,help:prescriptions_project.field_project_task__prescriptions_folder_id
+msgid "Workspace in which all of the prescriptions of this project will be categorized. All of the attachments of your tasks will be automatically added as prescriptions in this workspace as well."
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/project_project.py:0
+#, python-format
+msgid ""
+"You cannot change the company of this project, because its workspace is linked to the other following projects that are still in the \"%s\" company:\n"
+"%s\n"
+"\n"
+"Please update the company of all projects so that they remain in the same company as their workspace, or leave the company of the \"%s\" workspace blank."
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_folder.py:0
+#, python-format
+msgid "You cannot set a company on the %s workspace."
+msgstr ""
+
+#. module: prescriptions_project
+#: model_terms:ir.ui.view,arch_db:prescriptions_project.share_page
+msgid "prescriptions shared"
+msgstr ""
+
+#. module: prescriptions_project
+#. odoo-python
+#: code:addons/prescriptions_project/models/prescriptions_workflow_rule.py:0
+#, python-format
+msgid "new %s from %s"
+msgstr ""
