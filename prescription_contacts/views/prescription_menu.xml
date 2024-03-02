@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Define root menu for contacts -->
+    <menuitem id="prescription_accounts_menu" name="Accounts" parent="contacts.menu_contacts" action="prescription_contacts.prescription_account_action" sequence="1" />
+
+    <menuitem id="prescription_locations_menu" name="Locations" parent="contacts.menu_contacts" action="prescription_contacts.prescription_location_action" sequence="2"/>
+
+    <!-- <menuitem id="prescription_practitioners_menu" name="Practitioners" parent="contacts.res_partner_menu_contacts" sequence="5" action="prescription_contacts.prescription_practitioner_action"/> -->
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="prescription_contacts.prescription_practitioner_action" sequence="3"/>
+
+    <menuitem id="prescription_patient_root_menu" name="Patients" parent="contacts.menu_contacts" sequence="4">
+
+        <menuitem id="prescription_patient_menu" name="Patients" action="prescription_contacts.prescription_patient_window_action" sequence="10"/>
+
+        <menuitem id="prescription_patient_his_menu" name="History" action="prescription_contacts.prescription_patient_his_window_action" sequence="20"/>
+
+        <menuitem id="prescription_patient_diagnosis_menu" name="Diagnosis" action="prescription_contacts.prescription_diagnosis_action" sequence="30" />
+
+    </menuitem>
+
+    <menuitem id="menu_orders_customers" name="Scan" parent="contacts.menu_contacts" action="prescription_contacts.res_partner_find" sequence="5"/>
+
+
+    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
+
+    <menuitem id="prescription_roles_menu" name="Roles" parent="contacts.res_partner_menu_config" sequence="0" action="prescription_contacts.prescription_role_action" />
+
+</odoo>

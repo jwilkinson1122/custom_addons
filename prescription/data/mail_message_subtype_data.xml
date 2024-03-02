@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mt_prescription_practitioner_updated" model="mail.message.subtype">
+            <field name="name">Changed Practitioner</field>
+            <field name="sequence">0</field>
+            <field name="res_model">prescription.type</field>
+            <field name="default" eval="True"/>
+            <field name="description">Changed Practitioner</field>
+        </record>
+    </data>
+</odoo>

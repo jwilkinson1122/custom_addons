@@ -1,1 +1,0 @@
-from . import test_prescriptions_and_folder_deletion

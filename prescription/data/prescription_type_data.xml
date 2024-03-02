@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="model_line_superglass" model="prescription.type.model.line">
+        <field name="name">Superglass</field>
+        <field name="image_128" type="base64" file="prescription/static/img/custom_superglass.png"/>
+    </record>
+    <record id="model_superglass_flex" model="prescription.type.model">
+        <field name="name">Flex</field>
+        <field name="line_id" ref="model_line_superglass" />
+        <field name="prescription_type">custom</field>
+    </record>
+    <record id="model_superglass_everyday" model="prescription.type.model">
+        <field name="name">Everyday</field>
+        <field name="line_id" ref="model_line_superglass" />
+        <field name="prescription_type">custom</field>
+    </record>
+    <record id="model_superglass_proformance" model="prescription.type.model">
+        <field name="name">Proformance</field>
+        <field name="line_id" ref="model_line_superglass" />
+        <field name="prescription_type">custom</field>
+    </record>
+
+
+
+</odoo>
