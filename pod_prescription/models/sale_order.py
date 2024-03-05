@@ -71,3 +71,5 @@ class SaleOrderLine(models.Model):
                 else:
                     self.price_unit = line.price_unit
                 break
+
+   

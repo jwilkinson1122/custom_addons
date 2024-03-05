@@ -7,8 +7,8 @@ from odoo.tools.float_utils import float_round
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    default_code = fields.Char( index=True, compute=False, inverse=False, store=True, required=True
-        )
+    # default_code = fields.Char( index=True, compute=False, inverse=False, store=True, required=True
+    #     )
 
     is_helpdesk = fields.Boolean("Helpdesk Ticket?")
     helpdesk_team = fields.Many2one('helpdesk.team', string='Helpdesk Team')
@@ -118,18 +118,18 @@ class ProductTemplate(models.Model):
         return res
 
 
-    @api.depends('product_variant_ids.default_code')
-    def _compute_default_code(self):
-        return True
+    # @api.depends('product_variant_ids.default_code')
+    # def _compute_default_code(self):
+    #     return True
     
-    def _set_default_code(self):
-        return True
+    # def _set_default_code(self):
+    #     return True
     
-    def _create_variant_ids(self):
-        if self.env.context.get('import_ex_thread', False):
-            return True
+    # def _create_variant_ids(self):
+    #     if self.env.context.get('import_ex_thread', False):
+    #         return True
         
-        return super(ProductTemplate,self)._create_variant_ids()
+    #     return super(ProductTemplate,self)._create_variant_ids()
 
 
     # @api.model
@@ -143,10 +143,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('default_code',False):
-            tmp_d_code = self.env.context.get('product_template_code',False)
-            if tmp_d_code:
-                vals['default_code'] = tmp_d_code
+        # if not vals.get('default_code',False):
+        #     tmp_d_code = self.env.context.get('product_template_code',False)
+        #     if tmp_d_code:
+        #         vals['default_code'] = tmp_d_code
         templates = super (ProductTemplate,self).create(vals)
         if templates.product_variant_count<= 1:
             if templates.product_variant_id:

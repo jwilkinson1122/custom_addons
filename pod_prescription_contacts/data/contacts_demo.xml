@@ -156,6 +156,7 @@
             <field name="name">Vinnie Boombotz</field>
             <field name="country_id" ref="base.us"/>
             <field name="parent_id" ref="parent_account_1"/>
+            <!-- <field name="practitioner_id" ref="practitioner_01_partner"/> -->
             <field name="email">vinnieBoombotz@example.com</field>
             <field name="phone">(870)-931-8585</field>
         </record>
@@ -163,6 +164,7 @@
         <record id="patient_01" model="prescription.patient">
             <field name="partner_id" ref="patient_01_partner"/>
             <field name="parent_id" ref="parent_account_1"/>
+            <field name="practitioner_id" ref="practitioner_01_partner"/>
         </record>
 
         <record id="patient_02_partner" model="res.partner">
@@ -176,6 +178,7 @@
         <record id="patient_02" model="prescription.patient">
             <field name="partner_id" ref="patient_02_partner"/>
             <field name="parent_id" ref="child_location_1"/>
+            <field name="practitioner_id" ref="practitioner_02_partner"/>
         </record>
 
         <record id="patient_03_partner" model="res.partner">
@@ -189,6 +192,7 @@
         <record id="patient_03" model="prescription.patient">
             <field name="partner_id" ref="patient_03_partner"/>
             <field name="parent_id" ref="grand_child_location_1"/>
+            <field name="practitioner_id" ref="practitioner_04_partner"/>
         </record>
 
     </data>
