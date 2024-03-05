@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<data>
+		<record id="product_template_form_view_multi_cat" model="ir.ui.view">
+			<field name="name">product.template.form.inherit.multi.cat</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view"/>
+			<field name="arch" type="xml">
+				<div name="options" position="inside">
+					<div>
+						<field name="modifier_ok"/>
+						<label for="modifier_ok"/>
+					</div>
+					<div>
+						<field name="pizza_pieces"/>
+						<label for="pizza_pieces"/>
+					</div>
+					<div>
+						<field name="bom_product"/>
+						<label for="bom_product"/>
+					</div>
+				</div>
+
+				<xpath expr="//page[@name='inventory']" position="after">
+					<page string='Modifier' invisible="not pizza_pieces">
+						<group>
+							<group>
+								<field name="modifier_groups_ids" widget="many2many_tags" required="pizza_pieces"/>
+							</group>
+							<group>
+								<button name="get_modifiers" type="object" string="Get Modifier" class="oe_highlight"/>
+							</group>
+						</group>
+						<group>
+							<field name="modifier_attribute_product_id" readonly="1">
+	                            <tree editable="bottom">
+	                                <control>
+	                                    <create string="Add a product"/>
+	                                </control>
+	                                <field name="product_id"/>
+	                                <field name="product_temp_id" invisible="1"/>
+	                                <field name="name"/>
+	                                <field name="price"/>
+	                            </tree>
+	                        </field>
+						</group>
+					</page>
+					<page string='Sub Product' invisible="not pizza_pieces">
+						<group>
+							<group>
+								<field name="sub_products_ids" widget="many2many_tags"/>
+							</group>
+							
+						</group>
+					</page>	
+				</xpath>
+			</field>
+		</record>
+
+		<!-- pos config -->
+		<record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='pos_interface_section']" position="before">
+                    <h2 name="pos_custom">Pos Modify Pizza Configuration</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div id="product_configure" class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="product_configure"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="product_configure" string='Allow variant product in pos.'/>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</odoo>

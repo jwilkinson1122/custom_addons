@@ -1,0 +1,36 @@
+<templates id="bi_pos_modify_own_pizza" inherit_id="point_of_sale.template" xml:space="preserve">
+
+	<t t-name="bi_pos_modify_own_pizza.ModifierProductPopup" owl="1">
+		<div class="popup popup-import">
+            <div class="modal-header">
+                <li id="cols4" style="text-align:right;margin-right: 8px;margin-top: 5px;">
+	                <i class="oe_link_icon cancel fa fa-window-close" aria-hidden="true" t-on-click="back"/>
+	            </li>
+            </div>
+            <main class="body modal-body">
+                <t t-if="props.modifier_prod">
+                    <t t-foreach="props.modifier_prod" t-as="product" t-key="product.id">
+				        <article t-attf-class="{{product.class}} product position-relative btn btn-light align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base" class="product-list gap-1 p-1" tabindex="0" t-on-keypress="spaceClickProduct"
+                 			t-on-click="click_on_modifier_product"
+                 			t-att-data-product-id="product.id"
+                 			t-attf-aria-labelledby="article_product_{{product.id}}" style="margin-left: 41px;margin-top: 15px; margin-right: 35px;">
+
+                 			<div t-if="product.image_url" class="product-img">
+				                <img class="w-100" t-att-src="product.image_url" t-att-alt="product.display_name" />
+				            </div>
+				            <div class="product-content d-flex flex-column justify-content-between h-100 mx-2 py-1">
+				                <div class="overflow-hidden lh-sm fw-bolder product-name"
+				                    
+				                    t-esc="product.display_name" />
+				                <span class="price-tag text-primary py-1 fw-bolder">
+		                	 		<t t-esc="env.utils.formatCurrency(product.lst_price,'Product Price')+'/'+product.uom_id[1]"/>
+				                </span>
+				            </div>
+				        </article>
+                    </t>
+                </t>
+            </main>
+        </div>
+    </t>
+
+</templates>
