@@ -22,6 +22,8 @@
                         <field name="checkbox_input" invisible="input_type != 'checkbox'" domain="[('custom_option_id', '=', custom_option_id)]"/>
                     </group>
                     <group>
+                    <!-- <group string="Laterality Option" invisible="input_type not in ('radio', 'drop_down', 'multiple', 'checkbox')"> -->
+                        <field name="laterality"/>
                     </group>
                 </group>
                 <footer>

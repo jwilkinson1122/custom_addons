@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-  'name': 'Product Custom Options',
-  'summary': """Product Custom Options allows you to set manage variants products without making their variants.""",
+  'name': 'NWPL - Product Custom Options',
+  'summary': """Manage variant products without making their variants.""",
   'category': 'Prescriptions/Sales',
   'description':  """Product Custom Options""",
   'version':  '17.0.0.0.0',

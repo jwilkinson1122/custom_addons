@@ -14,6 +14,13 @@ class OptionSelectionWizard(models.TransientModel):
     _name = "option.selection.wizard"
     _description = "Custom Option Selection"
 
+    laterality = fields.Selection([
+            ('lt_single', 'Left'),
+            ('rt_single', 'Right'),
+            ('bl_pair', 'Bilateral')
+        ], string='Laterality', required=True, default='bl_pair', help="Select which side the product is for.")
+    
+
     def _get_input_type(self):
         return [
             ('field', 'Text Field'),
@@ -28,14 +35,10 @@ class OptionSelectionWizard(models.TransientModel):
             ('file', 'File'),
         ]
 
-    custom_option_id = fields.Many2one(
-        'product.custom.options', string="Custom Option")
-    order_line_id = fields.Many2one(
-        'prescription.order.line', string="Order Line")
-    prod_tmpl_id = fields.Many2one(
-        'product.template',related="order_line_id.product_id.product_tmpl_id", string='Product Template')
-    input_type = fields.Selection(_get_input_type, related="custom_option_id.input_type",
-        string="Input Type", help="Input type for the custom option.")
+    custom_option_id = fields.Many2one('product.custom.options', string="Custom Option")
+    order_line_id = fields.Many2one('prescription.order.line', string="Order Line")
+    prod_tmpl_id = fields.Many2one('product.template',related="order_line_id.product_id.product_tmpl_id", string='Product Template')
+    input_type = fields.Selection(_get_input_type, related="custom_option_id.input_type", string="Input Type", help="Input type for the custom option.")
 
     text_input = fields.Char(string="Input (Text)")
     area_input = fields.Text(string="Input (Area)")
@@ -51,12 +54,12 @@ class OptionSelectionWizard(models.TransientModel):
     price = fields.Float(string="Price", digits=dp.get_precision('Product Price'),
         help="Price for the custom option.")
 
-
     def add_option(self):
         optionObj = self.custom_option_id
         optionType = self.input_type
         price = 0.00
         inputData = ''
+        laterality = self.laterality or 'bl_pair'  
         if optionType == 'field':
             inputData = str(self.text_input)
             price = optionObj.price
@@ -70,10 +73,10 @@ class OptionSelectionWizard(models.TransientModel):
             inputData =str(datetime.timedelta(hours=self.time))
             price = optionObj.price
         elif optionType == 'date_time':
-            user_tz = self.env.user.tz or self.env.context.get('tz')                #get timezone
-            user_pytz = pytz.timezone(user_tz) if user_tz else pytz.utc             #calculate timezone using py lib
-            now_dt = self.datetime_input.astimezone(user_pytz).replace(tzinfo=None) #remove timezone info
-            inputData = str(now_dt)                                                 #convert into string
+            user_tz = self.env.user.tz or self.env.context.get('tz')                
+            user_pytz = pytz.timezone(user_tz) if user_tz else pytz.utc            
+            now_dt = self.datetime_input.astimezone(user_pytz).replace(tzinfo=None) 
+            inputData = str(now_dt)                                                 
             price = optionObj.price
         elif optionType == 'radio':
             inputData = self.radio_input.name
@@ -90,19 +93,21 @@ class OptionSelectionWizard(models.TransientModel):
         elif optionType == 'file':
             inputData = "File Input"
             price = optionObj.price
-            # mimetype = guess_mimetype(base64.b64decode(self.file_input))
-            # allowed_file_extention = optionObj.allowed_file_extention
-            # if mimetype not in allowed_file_extention.split(','):
-            #     raise UserError("File is not valid...!!! \nOnly files with extension {} are allowed.".format(allowed_file_extention))
 
-        description_ids = self.order_line_id.prescription_options_ids.filtered(
-            lambda r: r.custom_option_id == optionObj)
+        description_ids = self.order_line_id.prescription_options_ids.filtered(lambda r: r.custom_option_id == optionObj)
+        if laterality == 'bl_pair':
+            price *= 2 
+        
+        laterality_data = f" (Side: {laterality.capitalize()})"
+        inputData += laterality_data
+
         if description_ids:
             description_id = description_ids[0]
             description_id.update({
                 'input_data': inputData,
                 'file_data': self.file_input,
                 'price': price,
+                'laterality': laterality
             })
         else:
             newId = self.order_line_id.prescription_options_ids.new({
@@ -111,6 +116,7 @@ class OptionSelectionWizard(models.TransientModel):
                 'input_data': inputData,
                 'price': price,
                 'file_data': self.file_input,
+                'laterality': laterality,
             })
             self.order_line_id.prescription_options_ids += newId
 

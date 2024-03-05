@@ -8,6 +8,12 @@ _logger = logging.getLogger(__name__)
 class PrescriptionOrderLine(models.Model):
     _inherit = "prescription.order.line"
 
+    laterality = fields.Selection([
+            ('lt_single', 'Left'),
+            ('rt_single', 'Right'),
+            ('bl_pair', 'Bilateral')
+        ], string='Laterality', required=True, default='bl_pair', help="Select which side the product is for.")
+    
     is_custom_product = fields.Boolean("Have custom options")
 
     prescription_options_ids = fields.One2many(
@@ -67,9 +73,7 @@ class PrescriptionOrderLine(models.Model):
                 'target': 'new',
             }
 
-
     def save_option(self):
-        price_unit = 0.00
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
             partner=self.order_id.partner_id.id,
@@ -82,17 +86,19 @@ class PrescriptionOrderLine(models.Model):
         if product.description_prescription:
             name += '\n' + product.description_prescription
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            price_unit = product.price
-        if self.prescription_options_ids:
-            from_currency = self.order_id.company_id.currency_id
-            prescription_options_price = self.prescription_options_price
-            prescription_options_price = from_currency.compute(
-            prescription_options_price, self.order_id.pricelist_id.currency_id)
-            price_unit += prescription_options_price
-            description = self.prescription_options_ids.mapped(
-                lambda option: option.custom_option_id.name+': '+option.input_data if option.custom_option_id and option.input_data else '')
-            if description :
-                name +='\n'+'\n'.join(description)
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                self.order_id.pricelist_id._get_product_price(
+                    product, self.product_uom_qty, self.order_id.partner_id),
+                product.taxes_id, self.tax_id, self.company_id
+            )
+        prescription_options_price = self.prescription_options_price
+        if self.laterality == 'bl_pair':
+            price_unit *= 2 
+
+        price_unit += prescription_options_price
+        description = self.prescription_options_ids.mapped(lambda option: option.custom_option_id.name+': '+option.input_data if option.custom_option_id and option.input_data else '')
+        if description:
+            name += '\n' + '\n'.join(description)
         self.name = name
         self.price_unit = price_unit
         if self.discount:
@@ -102,3 +108,6 @@ class PrescriptionOrderLine(models.Model):
                 self.non_discount_option_price = taxes['total_included'] / self.product_uom_qty
             else:
                 self.non_discount_option_price = price_unit
+
+
+
