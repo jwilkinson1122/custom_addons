@@ -44,7 +44,7 @@
 		</div>
 	</t>
 
-	<t t-name="ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
+	<t t-name="ProductCard" t-inherit="pod_point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
 		<xpath expr="//div[hasclass('product-content')]" position="replace">
 			<t t-set="product_val" t-value="pos.db.product_by_id[props.productId]"/>
 			<div class="product-content d-flex flex-column justify-content-between h-100 mx-2 py-1">
@@ -81,7 +81,7 @@
 
 
 
-	<t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+	<t t-name="Orderline" t-inherit="pod_point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
 		<xpath expr="//ul[hasclass('info-list')]" position="after">
 			<ul>
 				<li class="package_info" style="margin-left: 20px;font-size: 14px;">
@@ -147,7 +147,7 @@
 	</t>
 
 
-	<t t-name="ProductsWidget" t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension" owl="1">
+	<t t-name="ProductsWidget" t-inherit="pod_point_of_sale.ProductsWidget" t-inherit-mode="extension" owl="1">
 		<xpath expr="//div[hasclass('product-list-empty')]" position="after">
 			<div class="modifiers-list" style="display:none;">
 				<div class="partnerlist-screen screen h-100 d-flex flex-column bg-100">

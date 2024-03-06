@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']" position="before">
                 <button string="Add Product Matrix" type="action" class="oe_highlight"
-                        name="%(bi_product_size_matrix.matrix_wizard_action)d"
-                        groups="bi_product_size_matrix.group_size_matrix_product"/>
+                        name="%(pod_product_matrix.matrix_wizard_action)d"
+                        groups="pod_product_matrix.group_size_matrix_product"/>
             </xpath>
         </field>
     </record>

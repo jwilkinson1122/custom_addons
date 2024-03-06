@@ -11,12 +11,14 @@
     "website" : "https://www.nwpodiatric.com",
     "depends" : [
         'base',
-        'point_of_sale',
+        'pod_point_of_sale',
+        'pod_prescription',
+        'pod_prescription_management',
         'sale',
         'sale_management',
         'stock',
         'account',
-        'pos_restaurant'
+        # 'pos_restaurant'
         ],
     "data": [
         'security/ir.model.access.csv',
@@ -25,7 +27,7 @@
         'views/modifier_product_product_view.xml',
     ],
     'assets': {
-        'point_of_sale._assets_pos': [
+        'pod_point_of_sale._assets_pos': [
             "pod_product_modifier/static/src/css/modifier.css",
             "pod_product_modifier/static/src/js/ModifierProductPopup.js",
             "pod_product_modifier/static/src/js/ProductTemplatePopupWidget.js",

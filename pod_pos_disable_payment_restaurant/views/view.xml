@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="pos_disable_payment.res_users_form_view" />
+        <field name="priority" eval="32" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allow_delete_order_line']" position="after">
+                <field name="allow_remove_kitchen_order_line" invisible="not allow_delete_order_line"/>
+                <field name="allow_decrease_kitchen" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

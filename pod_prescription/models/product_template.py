@@ -157,16 +157,15 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         res = super(ProductTemplate, self).write(vals)
-        if not self.product_variant_count > 1:
-            if self.product_variant_id:
-                self.product_variant_id.is_helpdesk = self.is_helpdesk
-                self.product_variant_id.helpdesk_team = self.helpdesk_team
-                self.product_variant_id.helpdesk_assigned_to = self.helpdesk_assigned_to
-        else:
-            if self.product_variant_id:
-                self.product_variant_id.is_helpdesk = False
-                self.product_variant_id.helpdesk_team.unlink()
-                self.product_variant_id.helpdesk_assigned_to.unlink()
-
+        for record in self:
+            if not record.product_variant_count > 1:
+                if record.product_variant_id:
+                    record.product_variant_id.is_helpdesk = record.is_helpdesk
+                    record.product_variant_id.helpdesk_team = record.helpdesk_team
+                    record.product_variant_id.helpdesk_assigned_to = record.helpdesk_assigned_to
+            else:
+                if record.product_variant_id:
+                    record.product_variant_id.is_helpdesk = False
+                    record.product_variant_id.helpdesk_team.unlink()
+                    record.product_variant_id.helpdesk_assigned_to.unlink()
         return res
- 

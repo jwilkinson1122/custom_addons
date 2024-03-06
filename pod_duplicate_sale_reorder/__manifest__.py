@@ -1,7 +1,7 @@
 # -*- coding : utf-8 -*-
 
 {
-	'name': 'NWPL - Customer Reorder Sale',
+	'name': 'NWPL - Reorder Sale',
 	'version': '17.0.0.0.0',
 	'category': 'Sales',
 	'summary': 'Reordering Previous Order',

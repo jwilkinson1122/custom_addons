@@ -1,4 +1,4 @@
-<templates id="pod_product_modifier" inherit_id="point_of_sale.template" xml:space="preserve">
+<templates id="pod_product_modifier" inherit_id="pod_point_of_sale.template" xml:space="preserve">
 
 	<t t-name="pod_product_modifier.ModifierProductPopup" owl="1">
 		<div class="popup popup-import">

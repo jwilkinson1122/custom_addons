@@ -59,7 +59,7 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem id="bom_product_menu" name="BOM Product" action="action_bom_product" parent="point_of_sale.pos_config_menu_catalog" sequence="25"/>
+		<menuitem id="bom_product_menu" name="BOM Product" action="action_bom_product" parent="pod_point_of_sale.pos_config_menu_catalog" sequence="25"/>
 
 	</data>
 </odoo>

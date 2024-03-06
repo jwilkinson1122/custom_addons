@@ -7,12 +7,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
                 <div>
-                    <field name="is_textile_size" groups="bi_product_size_matrix.group_size_matrix_product"/>
-                    <label for="is_textile_size" groups="bi_product_size_matrix.group_size_matrix_product"/>
+                    <field name="is_textile_size" groups="pod_product_matrix.group_size_matrix_product"/>
+                    <label for="is_textile_size" groups="pod_product_matrix.group_size_matrix_product"/>
                 </div>
                 <div>
-                    <field name="is_clothing_size" groups="bi_product_size_matrix.group_size_matrix_product"/>
-                    <label for="is_clothing_size" groups="bi_product_size_matrix.group_size_matrix_product"/>
+                    <field name="is_clothing_size" groups="pod_product_matrix.group_size_matrix_product"/>
+                    <label for="is_clothing_size" groups="pod_product_matrix.group_size_matrix_product"/>
                 </div>
             </xpath>
         </field>

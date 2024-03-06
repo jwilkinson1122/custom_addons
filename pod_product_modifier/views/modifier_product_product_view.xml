@@ -40,7 +40,7 @@
 			</field>
 		</record>
 
-		<menuitem name="Modifier" id="menu_modifier" parent="point_of_sale.menu_point_root" sequence="9" />
+		<menuitem name="Modifier" id="menu_modifier" parent="pod_point_of_sale.menu_point_root" sequence="9" />
 
 		<menuitem name="Modifier Product" id="menu_modifier_product" action="product_normal_action_modifier" parent="menu_modifier" sequence="10" />
 
