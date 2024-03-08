@@ -4,7 +4,7 @@ NWPL Point of Sale
 Interface / Experience:
 -----------------------
 User-friendly for operators and managers on the production floor.
-Touchscreen-Friendly: The POS interface is designed for touchscreen devices, making it suitable for use in manufacturing settings where quick and easy access to information is essential.
+Touchscreen-Friendly: The PoS interface is designed for touchscreen devices, making it suitable for use in manufacturing settings where quick and easy access to information is essential.
 
 Devices / Peripherals:
 ----------------------
@@ -32,6 +32,7 @@ sales, and production materials in real-time. Track work-in-progress items and m
 Work Orders / Production:
 ---------------------------
 This module is integrated with manufacturing orders, enabling you to launch production directly from the interface.
+This module enables to create automatic MRP orders after selling through PoS.
 
 Sales / Distributions:
 ----------------------
