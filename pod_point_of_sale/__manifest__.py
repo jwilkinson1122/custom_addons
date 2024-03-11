@@ -14,7 +14,6 @@
         'pod_prescription_contacts',
         'account',
         'point_of_sale',
-        # 'pos_restaurant',
         'sale', 
         'sale_management',
         'pod_prescription',
@@ -30,11 +29,11 @@
         'views/product_product.xml',
         'views/bom_product_product_view.xml',
         'views/modifier_product_product_view.xml',
-        # 'views/res_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'pod_point_of_sale/static/src/css/pos.css',
+            'pod_point_of_sale/static/src/scss/pos.scss',
             'pod_point_of_sale/static/src/js/ModifierProductPopup.js',
             'pod_point_of_sale/static/src/js/ProductTemplatePopupWidget.js',
             'pod_point_of_sale/static/src/js/ProductScreen.js',
@@ -69,6 +68,9 @@
             # 'pod_point_of_sale/static/src/xml/ReceiptScreen.xml',
             # 'pod_point_of_sale/static/src/xml/ReorderButton.xml',
             # 'pod_point_of_sale/static/src/xml/TicketScreen.xml',
+        ],
+        'web.assets_backend': [
+            'pod_point_of_sale/static/src/scss/pos_dashboard.scss',
         ],
         'web.assets_tests': [
             # 'pod_point_of_sale/tests/tours/PosOrderToSaleOrderTour.tour.js',

@@ -106,9 +106,6 @@ hr.separator {
     width: 100%;
 }
 
-/* Legal dimensions inch - 8.5 x 14 */
-/* Legal dimensions mm - 215.9 x 355.6 */
-
 .pos-receipt.a4 {
     width: 210mm !important;
     /*height: 297mm;*/
@@ -173,7 +170,6 @@ hr.separator {
 @media print {
     .pos .pos-receipt.a4 {
         width: 201mm !important;
-        /*height: 297mm;*/
     }
 }
 
