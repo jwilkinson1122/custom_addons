@@ -22,13 +22,13 @@ class ResConfigSettings(models.TransientModel):
     pos_allow_reorder = fields.Boolean(related="pos_config_id.allow_reorder", readonly=False)
     pos_configure_product = fields.Boolean(related='pos_config_id.product_configure', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
-    pos_module_pos_shop = fields.Boolean(related='pos_config_id.module_pos_shop', readonly=False)
+    pos_module_pos_manufacturing = fields.Boolean(related='pos_config_id.module_pos_manufacturing', readonly=False)
     pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
 
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
 
-    @api.depends('pos_module_pos_shop', 'pos_config_id')
+    @api.depends('pos_module_pos_manufacturing', 'pos_config_id')
     def _compute_pos_printer(self):
         for res_config in self:
             res_config.update({

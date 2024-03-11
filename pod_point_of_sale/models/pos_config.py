@@ -17,8 +17,8 @@ class PosConfig(models.Model):
     tracking = fields.Selection([('barcode', 'Barcode'), ('qrcode', 'Qrcode')], string="Tracking", default='qrcode')
     show_taxes = fields.Boolean("Taxes", default=False)
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
-    module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant", default=False)
-    module_pos_shop = fields.Boolean("Is a Manufacturing Shop")
+    module_pos_restaurant = fields.Boolean("Restaurant", default=False)
+    module_pos_manufacturing = fields.Boolean("Manufacturing")
 
     create_sale_order = fields.Boolean(
         string="Create Sale Orders",
