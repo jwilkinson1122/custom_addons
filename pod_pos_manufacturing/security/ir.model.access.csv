@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_manufacturing_floor,manufacturing.floor.user,model_manufacturing_floor,point_of_sale.group_pos_user,1,0,0,0
-access_manufacturing_floor_manager,manufacturing.floor.manager,model_manufacturing_floor,point_of_sale.group_pos_manager,1,1,1,1
-access_manufacturing_section,manufacturing.section.user,model_manufacturing_section,point_of_sale.group_pos_user,1,0,0,0
-access_manufacturing_section_manager,manufacturing.section.manager,model_manufacturing_section,point_of_sale.group_pos_manager,1,1,1,1

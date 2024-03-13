@@ -1,0 +1,12 @@
+.suggestion-list {
+    position: relative;
+    height: 26.1%;
+    bottom: 15px;
+    border: thin solid $pod_pos_primary_color;
+    overflow-y: auto;
+    background:   $pod_pos_secondary_color;
+    z-index: 1000;
+    .product-list {
+        justify-content: center !important;
+    }
+}
