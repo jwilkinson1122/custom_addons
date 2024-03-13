@@ -28,10 +28,13 @@
         'pod_base_order_type/security/ir.model.access.csv',
         'pod_pos_order_type/views/pod_order_type_views.xml',
         'pod_pos_order_type/views/pos_order_views.xml',
+        'pod_pos_multi_shop/security/ir.model.access.csv',
+        'pod_pos_multi_shop/views/pos_shop_view.xml',
         'pod_product_multi_barcode/security/ir.model.access.csv',
         'pod_product_multi_barcode/views/product_product_views.xml',
         'pod_product_multi_barcode/views/product_template_views.xml',
         'pod_product_multi_barcode/views/res_config_settings.xml',
+        
     ],
     'assets': {'point_of_sale._assets_pos': [
             'nwpl_pod_pos_custom/static/pod_pos_theme_responsive/static/src/overrides/pos_theme_variables.scss',
@@ -65,6 +68,8 @@
             'nwpl_pod_pos_custom/static/pod_pos_product_options/static/src/overrides/orderline/orderline.scss',
             'nwpl_pod_pos_custom/static/pod_pos_product_options/static/src/overrides/orderline/orderline.xml',
             'nwpl_pod_pos_custom/static/pod_pos_order_type/static/**/*',
+            'nwpl_pod_pos_custom/static/pod_pos_multi_shop/static/src/overrides/components/ProductsWidget.js',
+            'nwpl_pod_pos_custom/static/pod_pos_multi_shop/static/src/overrides/models/models.js',
             'nwpl_pod_pos_custom/static/pod_pos_multi_barcode/static/src/overrides/**/*'
         ]
     },
