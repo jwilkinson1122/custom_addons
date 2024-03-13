@@ -4,7 +4,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class ShProductBarcode(models.Model):
+class ProductBarcode(models.Model):
     _name = 'product.template.barcode'
     _description = "Product Barcode"
 

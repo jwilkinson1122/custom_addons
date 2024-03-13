@@ -6,7 +6,7 @@
     import { Component } from "@odoo/owl";
     import { usePos } from "@point_of_sale/app/store/pos_hook";
     import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-    import { ShPOConfirmPopup } from "@nwpl_pod_pos_custom/static/pod_pos_create_po/app/Popups/pod_po_confirm_popup/pod_po_confirm_popup";
+    import { POConfirmPopup } from "@nwpl_pod_pos_custom/static/pod_pos_create_po/app/Popups/pod_po_confirm_popup/pod_po_confirm_popup";
 
     export class CreatePoButton extends Component {
         static template = "pod_pos_create_po.CreatePoButton";
@@ -40,7 +40,7 @@
 
                         var Orders = await self.pos.create_purchase_order()
                         if (Orders && Orders.length > 0) {
-                            self.popup.add(ShPOConfirmPopup, {
+                            self.popup.add(POConfirmPopup, {
                                 title: 'Purchase Order Reference',
                                 body: " Purchase Order Created.",
                                 PurhcaseOrderId: Orders[0].id,

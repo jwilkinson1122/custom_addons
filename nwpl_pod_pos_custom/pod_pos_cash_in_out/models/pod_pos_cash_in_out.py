@@ -3,7 +3,7 @@
 from odoo import fields, models, api
 
 
-class ShCashInOut(models.Model):
+class CashInOut(models.Model):
     _name = 'pod.cash.in.out'
     _description = "Cash In Out"
 

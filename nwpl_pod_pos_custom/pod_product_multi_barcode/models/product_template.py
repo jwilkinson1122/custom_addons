@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class ShProductTemplate(models.Model):
+class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     barcode_line_ids = fields.One2many(
@@ -23,7 +23,7 @@ class ShProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
-        templates = super(ShProductTemplate, self).create(vals_list)
+        templates = super(ProductTemplate, self).create(vals_list)
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
             related_vals = {}

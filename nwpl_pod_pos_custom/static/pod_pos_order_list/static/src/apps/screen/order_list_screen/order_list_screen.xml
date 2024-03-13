@@ -11,7 +11,7 @@
                             <t t-else=""> Discard</t>
                         </div>
                         <div>
-                            <select class='pod_pos_order_filter form-select btn-secondary   ' t-on-change="ShApplyFilter">
+                            <select class='pod_pos_order_filter form-select btn-secondary   ' t-on-change="ApplyFilter">
                                 <option value="all">All Orders</option>
                                 <option value="paid">Paid</option>
                                 <option value="done">Posted</option>

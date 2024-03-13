@@ -65,7 +65,7 @@ export class OrderListScreen extends Component {
                 }
             }
 
-            this.pos.showScreen("ShReceiptScreen", {
+            this.pos.showScreen("ReceiptScreen", {
                 'order': newOrder,
                 'selected_order': order[0]
             });
@@ -175,7 +175,7 @@ export class OrderListScreen extends Component {
             this.fetch()
         }
     }
-    async ShApplyFilter(ev) {
+    async ApplyFilter(ev) {
         let search = ev.target.value;
         if (search == "all") {
             this.isSearch = false

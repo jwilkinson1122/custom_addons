@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ShSOConfirmPopup } from "@nwpl_pod_pos_custom/static/pod_pos_create_so/app/Popups/pod_so_confirm_popup/pod_so_confirm_popup";
+import { SOConfirmPopup } from "@nwpl_pod_pos_custom/static/pod_pos_create_so/app/Popups/pod_so_confirm_popup/pod_so_confirm_popup";
 
 
 export class CreateSoButton extends Component {
@@ -41,7 +41,7 @@ export class CreateSoButton extends Component {
 
                     var Orders = await this.pos.create_sale_order()
                     if (Orders && Orders.length > 0) { 
-                        self.popup.add(ShSOConfirmPopup, {
+                        self.popup.add(SOConfirmPopup, {
                             title: 'Sale Order Reference',
                             body: " Sale Order Created.",
                             SaleOrderId: Orders[0].id,

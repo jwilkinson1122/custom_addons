@@ -3,7 +3,7 @@
 from odoo import fields, models
 
 
-class ShOederType(models.Model):
+class OederType(models.Model):
     _name = 'pod.order.type'
     _description = 'Base order type'
 

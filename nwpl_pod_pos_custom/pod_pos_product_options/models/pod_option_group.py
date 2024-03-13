@@ -4,7 +4,7 @@
 from pkg_resources import require
 from odoo import models, fields, api, _
 
-class ShOptionGroup(models.Model):
+class OptionGroup(models.Model):
     _name = 'pod.option.group'
     _description = "Define Options products"
 

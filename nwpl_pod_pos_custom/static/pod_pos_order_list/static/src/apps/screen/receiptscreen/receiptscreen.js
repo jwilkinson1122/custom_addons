@@ -4,8 +4,8 @@ import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { registry } from "@web/core/registry";
 
-export class ShReceiptScreen extends ReceiptScreen {
-    static template = "ShReceiptScreen";
+export class ReceiptScreen extends ReceiptScreen {
+    static template = "ReceiptScreen";
     static components = { OrderReceipt };
     setup(){
         super.setup(...arguments);
@@ -61,4 +61,4 @@ export class ShReceiptScreen extends ReceiptScreen {
     }
 }
 
-registry.category("pos_screens").add("ShReceiptScreen", ShReceiptScreen);
+registry.category("pos_screens").add("ReceiptScreen", ReceiptScreen);

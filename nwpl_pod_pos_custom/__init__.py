@@ -13,5 +13,6 @@ from . import pod_pos_order_discount
 from . import pod_pos_product_suggestion
 from . import pod_pos_product_code
 from . import pod_pos_cash_in_out
+from . import pod_pos_multi_shop
 from . import pod_base_order_type, pod_pos_order_type
 from . import pod_product_multi_barcode, pod_pos_multi_barcode

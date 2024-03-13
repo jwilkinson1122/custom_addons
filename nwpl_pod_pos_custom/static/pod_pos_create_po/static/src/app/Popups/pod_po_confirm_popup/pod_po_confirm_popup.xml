@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pod_pos_create_po.ShPOConfirmPopup">
+    <t t-name="pod_pos_create_po.POConfirmPopup">
         <div class="popup pod_purchase_order_ref_popup">
             <div class="modal-header">
                 <t t-esc="props.title" />

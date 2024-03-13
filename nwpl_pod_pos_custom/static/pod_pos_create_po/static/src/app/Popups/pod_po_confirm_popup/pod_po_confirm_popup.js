@@ -5,8 +5,8 @@ import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 // formerly ConfirmPopupWidget
-export class ShPOConfirmPopup extends AbstractAwaitablePopup {
-    static template = "pod_pos_create_po.ShPOConfirmPopup";
+export class POConfirmPopup extends AbstractAwaitablePopup {
+    static template = "pod_pos_create_po.POConfirmPopup";
     static defaultProps = {
         confirmText: _t("Confirm"),
         cancelText: _t("Discard"),

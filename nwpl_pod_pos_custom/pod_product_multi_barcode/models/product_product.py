@@ -4,7 +4,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class ShProduct(models.Model):
+class Product(models.Model):
     _inherit = 'product.product'
 
     barcode_line_ids = fields.One2many(
@@ -13,7 +13,7 @@ class ShProduct(models.Model):
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
-        res = super(ShProduct, self)._name_search(name, domain, operator, limit, order)
+        res = super(Product, self)._name_search(name, domain, operator, limit, order)
         mutli_barcode_search = list(self._search(
             [('barcode_line_ids', '=', name)] + domain, limit=limit))
         if mutli_barcode_search:

@@ -34,7 +34,6 @@
         'pod_product_multi_barcode/views/product_product_views.xml',
         'pod_product_multi_barcode/views/product_template_views.xml',
         'pod_product_multi_barcode/views/res_config_settings.xml',
-        
     ],
     'assets': {'point_of_sale._assets_pos': [
             'nwpl_pod_pos_custom/static/pod_pos_theme_responsive/static/src/overrides/pos_theme_variables.scss',

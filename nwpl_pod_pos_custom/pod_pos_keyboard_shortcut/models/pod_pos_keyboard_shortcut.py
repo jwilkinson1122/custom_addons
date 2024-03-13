@@ -2,14 +2,14 @@
 from odoo import fields, models, api
 
 
-class ShKeyboardKey(models.Model):
+class KeyboardKey(models.Model):
     _name = "pod.keyboard.key"
     _description = "keyboard Key"
 
     name = fields.Char(string="Key")
 
 
-class ShKeyboardKeyTemp(models.Model):
+class KeyboardKeyTemp(models.Model):
     _name = "pod.keyboard.key.temp"
     _description = "keyboard Key Temp"
 
@@ -32,7 +32,7 @@ class ShKeyboardKeyTemp(models.Model):
         return res
 
 
-class ShPosKeyboardShortcut(models.Model):
+class PosKeyboardShortcut(models.Model):
     _name = "pod.pos.keyboard.shortcut"
     _description = "keyboard Key Shortcut"
 

@@ -3,7 +3,7 @@
 from odoo import models, fields,api
 
 
-class ShPosConfig(models.Model):
+class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     enable_order_type = fields.Boolean(string='Enable Order Type')

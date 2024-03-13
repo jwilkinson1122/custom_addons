@@ -3,7 +3,7 @@
 from odoo import models, fields, api
 
 
-class ShResConfig(models.TransientModel):
+class ResConfig(models.TransientModel):
     _inherit = "res.config.settings"
 
     enable_order_type = fields.Boolean(

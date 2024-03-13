@@ -11,7 +11,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     assigned_config = fields.Many2many(
-        "pos.config", string=" Sh Assigned Config")
+        "pos.config", string="Assigned Config")
     sequence_number = fields.Integer(
         string='Sequence Number ', help='A session-unique sequence number for the order', default=1)
     pod_uid = fields.Char(string='Number')
