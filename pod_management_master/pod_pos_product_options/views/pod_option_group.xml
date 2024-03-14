@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- options group form view -->
+    <record id="pod_pos_product_options_group_form_view" model="ir.ui.view">
+        <field name="name">pod.pos.product.option.group.form</field>
+        <field name="model">pod.option.group</field>
+        <field name="arch" type="xml">
+            <form string="Option Group">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"></field>
+                            <field name="option_ids" widget="many2many_tags"></field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- options group tree view -->
+    <record model="ir.ui.view" id="pod_pos_product_optiond_group_tree_view">
+        <field name="name">pod.product.options.group.tree.view</field>
+        <field name="model">pod.option.group</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- server action for options group -->
+    <record id="pod_pos_options_group_action" model="ir.actions.act_window">
+        <field name="name">Option Groups</field>
+        <field name="res_model">pod.option.group</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="search_view_id" ref="view_account_type_search"/> -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new Option Group
+            </p>
+        </field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Option Groups" id="options_groups_menu" action="pod_pos_options_group_action" parent="point_of_sale.pos_config_menu_catalog" />
+
+</odoo>

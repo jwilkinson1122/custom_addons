@@ -101,6 +101,7 @@
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', True), ('is_parent_account', '=', True), ('id', '!=', 1)]</attribute>
+                <!-- <attribute name="invisible">is_parent_account</attribute> -->
             </xpath>
             <!-- <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="is_parent_account" invisible="1" />
@@ -123,7 +124,7 @@
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                         <!-- <field name="partner_id" class="fw-bold" placeholder="Account Name" widget="res_partner_many2one" domain="[('is_company', '=', True), ('parent_id', '=', active_id), ('id', '!=', 1)]" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" readonly="state in ['cancel', 'prescription']"/> -->
 
-                        <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_parent_account" class="fw-bold" />
+                        <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="is_parent_account" class="fw-bold" />
                         <!-- <field name="is_parent_account" invisible="not is_company"/> -->
                         <field name="active" invisible="1"/>
                     </div>
@@ -444,7 +445,7 @@
         <field name="name">Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="domain">[('is_company', '=', True), ('is_parent_account', '=', True), ('is_location', '=', False), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
@@ -469,7 +470,7 @@
         <field name="name">Locations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="domain">[('is_company', '=', True), ('is_parent_account', '=', False), ('is_location', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
@@ -530,7 +531,7 @@
         <field name="name">Practitioners</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="domain">[('is_practitioner', '=', True)]</field>
         <field name="context">{
             'default_company_type':'person',

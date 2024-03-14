@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pod_pos_order_list</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//form" position="inside">
+                <t groups="point_of_sale.group_pos_manager">
+                    <field name="is_kiosk_mode" invisible="1"/>
+                    <field name="pos_selectable_categ_ids" invisible="1"/>
+                    <field name="pos_has_active_session" invisible="1"/>
+                    <field name="pos_allowed_pricelist_ids" invisible="1"/>
+                    <field name="pos_cash_control"/>
+                    <field name="pos_iface_print_via_proxy" invisible="1"/>
+                    <field name="pos_company_has_template" invisible="1"/>
+                    <field name="group_cash_rounding" invisible="1"/>
+                </t>
+                <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
+                </app>
+            </xpath> -->
+            <block id="pos_interface_section" position="before">
+                <block title="Multi Section Configuration">
+                    <setting id="multi_shop_pos">
+                        <field name="shop_id" />
+                    </setting>
+                </block>
+            </block>
+            <block id="pos_payment_section" position="after">
+                <block title="PoS Cash Control">
+                    <setting id="cash_control">
+                        <field name="pos_cash_control" />
+                    </setting>
+                </block>
+            </block>
+            <block id="pos_inventory_section" position="after">
+                <block title="Retail Configurations">
+                    <!-- Counter Config  -->
+                    <div style="font-size: 15px; font-weight: 600;">PoS Counter</div>
+                    <setting>
+                        <field name="pos_enable_pos_item_counter"/>
+                        <div class="mt16" invisible="not pos_enable_pos_item_counter">
+                            <field name="pos_enable_pos_item_report" />
+                            <label for="pos_enable_pos_item_report"/>
+                        </div>
+                    </setting>
+                    <setting>
+                        <field name="pos_enable_pos_qty_counter" />
+                        <div class="mt16" invisible="not pos_enable_pos_qty_counter">
+                            <field name="pos_enable_pos_qty_report" />
+                            <label for="pos_enable_pos_qty_report"/>
+                        </div>
+                    </setting>
+                    <!-- Create Sale order -->
+                    <div style="font-size: 15px; font-weight: 600;"> Create Sale order </div>
+                    <setting string="Create Sale Order">
+                        <field name="pod_pos_display_sale_btn" />
+                        <div class="text-muted">
+                            Create sale order from point of sale
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_display_sale_btn">
+                            <field name="pos_select_order_state" invisible="not pod_pos_display_sale_btn" widget="radio" />
+                        </div>
+                    </setting>
+                    <!-- Create Purchase from pos -->
+                    <div style="font-size: 15px; font-weight: 600;"> Create Purchase Order </div>
+                    <setting string="Create Purchase Order">
+                        <field name="pod_pos_dispaly_purchase_btn" />
+                        <div class="text-muted">
+                            Create purchase order from point of sale
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_dispaly_purchase_btn">
+                            <field name="pos_select_purchase_state" invisible="not pod_pos_display_sale_btn" widget="radio" />
+                        </div>
+                    </setting>
+
+                    <div style="font-size: 15px; font-weight: 600;"> Order Line Label Configuration </div>
+                    <setting string="Enable Order Line Label">
+                        <field name="enable_order_line_label" />
+                        <div class="mt16" invisible="not enable_order_line_label">
+                            <field name="enable_order_line_label_in_receipt" />
+                            <label for="enable_order_line_label_in_receipt"/>
+                        </div>
+                        <div class="mt16" invisible="not enable_order_line_label">
+                            <field name="enabel_delete_label_with_product" />
+                            <label for="enabel_delete_label_with_product"/>
+                        </div>
+                    </setting>
+                    <setting>
+                        <!-- created for blank dir -->
+                    </setting>
+                    <div style="font-size: 15px; font-weight: 600;"> Order List Configuration </div>
+                    <setting>
+                        <field name="pod_pos_enable_order_list"/>
+                        <div class="mt16">
+                            <div class="text-muted">
+                                Use to show pos ordes in Point of sale
+                            </div>
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_enable_order_list">
+                            <label for="pod_pos_load_order_by" class="o_light_label"/>
+                            <field name="pod_pos_load_order_by" required="pod_pos_enable_order_list" />
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'session_wise'" help="Load Order of Current Session or Last No Of Session">
+                            <label for="pod_pos_session_wise_option" class="o_light_label"/>
+                            <field name="pod_pos_session_wise_option" widget="radio" required="pod_pos_enable_order_list" />
+                            <div invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'session_wise' or pod_pos_session_wise_option == 'current_session'">
+                                <label for="pod_pos_last_no_session" class="o_light_label"/>
+                                <field name="pod_pos_last_no_session" invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'session_wise' or pod_pos_session_wise_option == 'current_session'" required="pod_pos_enable_order_list" />
+                            </div>
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'day_wise'" help="Load Order of Current Day or Last No Of Days">
+                            <label for="pod_pos_day_wise_option" class="o_light_label"/>
+                            <field name="pod_pos_day_wise_option" widget="radio" required="pod_pos_enable_order_list" />
+                            <div invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'day_wise' or pod_pos_day_wise_option == 'current_day'">
+                                <label for="pod_pos_last_no_days" class="o_light_label"/>
+                                <field name="pod_pos_last_no_days" invisible="not pod_pos_enable_order_list or pod_pos_load_order_by != 'day_wise' or pod_pos_day_wise_option == 'current_day'" required="pod_pos_enable_order_list" />
+                            </div>
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_enable_order_list">
+                            <label for="pod_pos_how_many_order_per_page" class="o_light_label"/>
+                            <field name="pod_pos_how_many_order_per_page" required="pod_pos_enable_order_list" />
+                        </div>
+                    </setting>
+
+                    <setting id="pod_pos_order_re_order" invisible="not pod_pos_enable_order_list">
+                        <div class="mt16" invisible="not pod_pos_enable_order_list">
+                            <field name="pod_pos_enable_re_order"/>
+                            <label for="pod_pos_enable_re_order" />
+                            <div class="text-muted">
+                                ReOrder PoS Order From Order Screen
+                            </div>
+                        </div>
+                        <div class="mt16" invisible="not pod_pos_enable_order_list">
+                            <field name="pod_pos_enable_order_reprint"/>
+                            <label for="pod_pos_enable_order_reprint" />
+                            <div class="text-muted">
+                                Print Order Receipt From Order Screen
+                            </div>
+                        </div>
+                    </setting>
+
+                    <!-- receipt extend -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Extended Receipt </div>
+                    <setting help=" Display Barcode / QrCode in Receipt">
+                        <field name="pod_pos_receipt_bacode_qr" />
+                        <div class="content-group mt16" invisible="not pod_pos_receipt_bacode_qr">
+                            <div>
+                                <field name="pod_pos_receipt_barcode_qr_selection" widget="radio" invisible="not pod_pos_receipt_bacode_qr" />
+                            </div>
+                        </div>
+                    </setting>
+                    <setting help="Display Invoice Number in Receipt">
+                        <field name="pod_pos_receipt_invoice" />
+                    </setting>
+                    <setting help="Display Order Number in Receipt">
+                        <field name="pod_pos_order_number" />
+                    </setting>
+                    <setting help="Display Customer Detail in Receipt">
+                        <field name="pod_pos_receipt_customer_detail" />
+                        <div class="content-group mt16" invisible="not pod_pos_receipt_customer_detail">
+                            <div>
+                                <field name="pod_pos_receipt_customer_name" style="width: 4%;" />
+                                <label for="pod_pos_receipt_customer_name" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_receipt_customer_address" style="width: 4%;" />
+                                <label for="pod_pos_receipt_customer_address" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_receipt_customer_mobile" style="width: 4%;" />
+                                <label for="pod_pos_receipt_customer_mobile" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_receipt_customer_phone" style="width: 4%;" />
+                                <label for="pod_pos_receipt_customer_phone" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_receipt_customer_email" style="width: 4%;" />
+                                <label for="pod_pos_receipt_customer_email" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_vat" style="width: 4%;" />
+                                <label for="pod_pos_vat" style="font-weight: normal;" />
+                                <br />
+                                <field name="pod_pos_vat_name" style='width: 20%;' invisible='not pod_pos_vat' placeholder="Vat" />
+                            </div>
+                        </div>
+                    </setting>
+                    <setting help="Enable A3 recipts inside PoS interface">
+                        <field name="pod_pos_enable_a3_receipt" />
+                    </setting>
+                    <setting help=" Enable A4 recipts inside PoS interface">
+                        <field name="pod_pos_enable_a4_receipt" />
+                    </setting>
+                    <setting help=" Enable A5 recipts inside PoS interface">
+                        <field name="pod_pos_enable_a5_receipt" />
+                    </setting>
+                    <setting string="Default Receipt">
+                        <field name="pod_pos_default_receipt" widget="radio"/>
+                    </setting>
+
+                    <!-- variant cusnfiguratio  -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS product variant </div>
+
+                    <setting>
+                        <field name="pod_pos_enable_product_variants" />
+                        <setting invisible="not pod_pos_enable_product_variants">
+                            <field name="pod_pos_variants_group_by_attribute" />
+                        </setting>
+                    </setting>
+                    <setting invisible="not pod_pos_enable_product_variants">
+                        <field name="pod_pos_close_popup_after_single_selection" />
+                    </setting>
+                    <setting invisible="not pod_pos_enable_product_variants">
+                        <field name="pod_pos_display_alternative_products" />
+                    </setting>
+
+                    <!-- wh stock -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Stock Information </div>
+
+                    <setting help="Display Warehouse wise Product Quantity">
+                        <field name="pod_pos_display_stock" />
+                        <div class="content-group mt16" invisible="not pod_pos_display_stock">
+                            <div class="row mt16">
+                                <field name="pod_pos_display_by" widget="radio"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting invisible="not pod_pos_display_stock" help="Select precific location to display qty in pos">
+                        <field name="pod_pos_show_qty_location" />
+                        <div class="content-group mt16" invisible="not pod_pos_show_qty_location">
+                            <div class="row mt16">
+                                <field name="pod_pos_location" required="pod_pos_show_qty_location" />
+                            </div>
+                        </div>
+                        <div class="content-group mt16" invisible="not pod_pos_show_qty_location">
+                            <div class="row mt16">
+                                <label for="pod_pos_min_qty" />
+                                <field name="pod_pos_min_qty" help="Deny order when available quantity lower than" />
+                                <div class="text-muted">
+                                    Deny order when available quantity lower than
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+
+                    <!-- remove cart item  -->
+                    <div style="font-size: 15px; font-weight: 600;"> Remove All Item From Cart </div>
+                    <setting string="Remove All Item From Cart" help="Allow to remove all product from cart">
+                        <field name="pod_pos_remove_all_item" />
+                        <div class="row mt16" invisible='not pod_pos_remove_all_item'>
+                            <div class="col">
+                                <field name="pod_validation_to_remove_all_item" />
+                                <label for="pod_validation_to_remove_all_item" class=" o_light_label" />
+                            </div>
+                        </div>
+                    </setting>
+
+                    <!-- Keyabotad shortcut -->
+
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Shortcut </div>
+                    <setting >
+                        <field name="pod_pos_enable_shortcut" />
+                    </setting>
+                    <div class="content-group" invisible='not pod_pos_enable_shortcut'>
+                        <div class="mt16">
+                            <field name="pod_pos_shortcut_keys_screen">
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="pod_shortcut_screen" required="1" />
+                                        </group>
+                                        <group>
+                                            <field name="pod_shortcut_screen_type" required="1" />
+                                        </group>
+                                    </group>
+                                    <field name="pod_key_ids">
+                                        <tree editable="bottom">
+                                            <field name="pod_key_ids" options="{'no_create': True, 'no_create_edit':True}" />
+                                        </tree>
+                                    </field>
+                                </form>
+                                <tree>
+                                    <field name="pod_shortcut_screen" required="1" />
+                                    <field name="pod_shortcut_screen_type" required="1" />
+                                </tree>
+                            </field>
+                            <field name="pod_pos_payment_shortcut_keys_screen">
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="payment_method_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />
+                                        </group>
+                                        <group>
+                                            <field name="pod_payment_shortcut_screen_type" required="1" />
+                                        </group>
+                                    </group>
+                                    <field name="pod_key_ids">
+                                        <tree editable="bottom">
+                                            <field name="pod_key_ids" options="{'no_create': True, 'no_create_edit':True}" />
+                                        </tree>
+                                    </field>
+                                </form>
+                                <tree>
+                                    <field name="payment_method_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />
+                                    <field name="pod_payment_shortcut_screen_type" required="1" />
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+
+                    <!-- pos discount -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Discount </div>
+
+                    <setting>
+                        <field name="pod_pos_allow_order_line_discount" />
+                    </setting>
+                    <setting>
+                        <field name="pod_pos_allow_global_discount" />
+                    </setting>
+
+                    <!-- Product Suggestion -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Product Suggetion </div>
+                    <setting>
+                        <field name="pos_enable_product_suggestion" />
+                    </setting>
+
+                    <div style="font-size: 15px; font-weight: 600;"> Product Internal Reference </div>
+                    <setting>
+                        <field name="pod_pos_enable_prduct_code" />
+                    </setting>
+                    <setting>
+                        <field name="pod_pos_enable_product_code_in_cart" />
+                    </setting>
+                    <setting>
+                        <field name="pod_pos_enable_product_code_in_receipt" />
+                    </setting>
+
+                    <!-- PoS Cash Control -->
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Cash Control </div>
+                    <setting>
+                        <field name="pod_pos_enable_cash_in_out_statement" />
+                    </setting>
+                    <setting>
+                        <field name="pod_pos_enable_payment" />
+                    </setting>
+
+                    <div style="font-size: 15px; font-weight: 600;"> PoS Product Modifier </div>
+                    <setting>
+                        <field name="pod_pos_enable_options" />
+                    </setting>
+                    <setting invisible="not pod_pos_enable_options">
+                        <field name="pod_pos_add_options_on_click_product"/>
+                    </setting>
+                    <setting invisible="not pod_pos_enable_options">
+                        <field name="pod_pos_allow_same_product_different_qty"/>
+                    </setting>
+
+                    <div style="font-size: 15px; font-weight: 600;"> Order Types </div>
+
+                    <setting>
+                        <field name="enable_order_type" />
+                    </setting>
+                    <setting invisible="not enable_order_type" required="1">
+                        <field name="order_type_mode" widget="radio" required="enable_order_type"/>
+                    </setting>
+                    <setting invisible="order_type_mode != 'multi'">
+                        <field name="order_types_ids" widget="many2many_tags" invisible="order_type_mode != 'multi'"/>
+                    </setting>
+                    <setting invisible="not enable_order_type">
+                        <field name="order_type_id" required="order_type_mode != 'multi' and enable_order_type"/>
+                    </setting>
+
+                    <div style="font-size: 15px; font-weight: 600;">PoS Multi Barcode</div>
+
+                    <setting string="Enable Multi Barcode">
+                        <field name="pod_pos_enable_multi_barcode" />
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>
