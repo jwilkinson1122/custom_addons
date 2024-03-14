@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="custom_pos_config_extended_form_view">
+            <field name="name">pos.config.form.extended.view</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='iface_orderline_customer_notes']" position="before">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="create_sale_order"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="create_sale_order"/>
+                            <div class="text-muted">
+                                Create Sale Order From POS Screen
+                            </div>
+                        </div>
+                    </div>
+                </xpath>    
+            </field>
+        </record>
+		<record id="sale_order_view" model="ir.ui.view">
+            <field name="name">sale.order.view.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+					<field name="create_from_pos"/>
+					<field name="pos_session_id"/>
+				</xpath>
+			</field>
+		</record>
+
+
+		<record id="pos_session_view" model="ir.ui.view">
+            <field name="name">pos.session.view.form.inherit</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+					<button name="action_view_sale_order"
+						class="oe_stat_button"
+						icon="fa-usd"
+						type="object">
+						<field name="sale_order_count" widget="statinfo" string="Sale Orders"/>
+					</button>
+				</xpath>
+			</field>
+		</record>
+		<record id="sale_search_inherit" model="ir.ui.view">
+			<field name="name">sale.search.inherit</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+			<field name="arch" type="xml">
+				<filter name="sales" position="after">
+					<filter string="Create From POS" name="create_from_pos" domain="[('create_from_pos', '=', True)]"/>
+					<group expand="0" string="Group By">
+                        <filter string="POS Session" name="pos_session_id" domain="[]" context="{'group_by': 'pos_session_id'}"/>
+                    </group>
+				</filter>
+			</field>
+		</record>		
+	</data>
+</odoo>

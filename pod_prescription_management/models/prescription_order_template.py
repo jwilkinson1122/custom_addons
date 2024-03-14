@@ -23,7 +23,7 @@ class PrescriptionOrderTemplate(models.Model):
         domain=[('model', '=', 'prescription.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     number_of_days = fields.Integer(
-        string="Draft Rx Duration",
+        string="Draft Duration",
         help="Number of days for the validity date computation of the quotation")
 
     require_signature = fields.Boolean(

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <record id="mo_wizard_view_form" model="ir.ui.view">
+            <field name="name">mo.wizard.form.view</field>
+            <field name="model">mo.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Components">
+                                <field name="component_ids">
+                                    <tree>
+                                        <field name="product_tmpl_id" string="Name"/>
+                                        <field name="type" string="Type"/>
+                                        <field name="code" string="Code"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Products">
+                                <field name="product_ids">
+                                    <tree>
+                                        <field name="name" string="Name"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                        </notebook>
+                        <footer>
+                            <button type="object" name="create_bom" string="Create Bom"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

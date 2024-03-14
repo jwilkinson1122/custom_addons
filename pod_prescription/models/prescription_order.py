@@ -1,4 +1,5 @@
 
+import logging
 from collections import defaultdict
 from datetime import timedelta
 import time
@@ -22,11 +23,13 @@ INVOICE_STATUS = [
 ]
 
 SALE_ORDER_STATE = [
-    ('draft', "Draft Rx"),
-    ('sent', "Draft Rx Confirmed"),
+    ('draft', "Draft"),
+    ('sent', "Draft Confirmed"),
     ('prescription', "Prescription Order"),
     ('cancel', "Cancelled"),
 ]
+
+_logger = logging.getLogger(__name__)
 
 
 class PrescriptionOrder(models.Model):
@@ -752,7 +755,7 @@ class PrescriptionOrder(models.Model):
     def _compute_type_name(self):
         for record in self:
             if record.state in ('draft', 'sent', 'cancel'):
-                record.type_name = _("Draft Rx")
+                record.type_name = _("Draft")
             else:
                 record.type_name = _("Prescription Order")
 
@@ -1643,13 +1646,13 @@ class PrescriptionOrder(models.Model):
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
             if self._has_to_be_signed():
                 if self._has_to_be_paid():
-                    access_opt['title'] = _("View Draft Rx") if is_tx_pending else _("Sign & Pay Draft Rx")
+                    access_opt['title'] = _("View Draft") if is_tx_pending else _("Sign & Pay Draft")
                 else:
-                    access_opt['title'] = _("Accept & Sign Draft Rx")
+                    access_opt['title'] = _("Accept & Sign Draft")
             elif self._has_to_be_paid() and not is_tx_pending:
-                access_opt['title'] = _("Accept & Pay Draft Rx")
+                access_opt['title'] = _("Accept & Pay Draft")
             elif self.state in ('draft', 'sent'):
-                access_opt['title'] = _("View Draft Rx")
+                access_opt['title'] = _("View Draft")
 
         # enable followers that have access through portal
         follower_group = next(group for group in groups if group[0] == 'follower')
@@ -1657,7 +1660,7 @@ class PrescriptionOrder(models.Model):
         follower_group[2]['has_button_access'] = True
         access_opt = follower_group[2].setdefault('button_access', {})
         if self.state in ('draft', 'sent'):
-            access_opt['title'] = _("View Draft Rx")
+            access_opt['title'] = _("View Draft")
         else:
             access_opt['title'] = _("View Order")
         access_opt['url'] = self._notify_get_action_link('view', **local_msg_vals)

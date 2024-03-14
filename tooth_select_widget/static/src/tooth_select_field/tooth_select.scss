@@ -1,0 +1,112 @@
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  70% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.tooth {
+    text-align: center;
+    padding: 4px;
+    text-align: -webkit-center;
+    width: 100%;
+}
+.tooth img.tooth-img{
+    width: 100%;
+    cursor: pointer;
+     animation: fadeIn 2s;
+      filter: brightness(0.7);
+}
+.tooth.muli-select-list:before {
+   content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 3px;
+    right: 0;
+    background: #aaedd07a;
+    border-radius: 25px;
+    width: 93%;
+}
+
+.tooth.muli-select-list {
+  position:relative
+}
+.toothControl label.form-check-label {
+line-height: 1.7;
+font-size: 16px;
+font-weight: 600;
+color: #8b639e;
+}
+.multi-select {
+    font-size: 16px;
+    margin-left: 1rem;
+}
+
+.multi-select i.fa {
+    padding-right: 5px;
+}
+
+input#multiSelect {
+    font-size: 27px;
+    margin-left: 0;
+    margin-top: 0;
+}
+
+.form-check.form-switch {
+    padding-left: 0;
+    align-self: center;
+}
+.tooth-span{
+animation: fadeIn 3s;
+}
+.selected img.tooth-img{
+	filter:brightness(1);
+}
+.muli-select-list img.tooth-img {
+    filter: brightness(1);
+}
+
+
+.button-check {
+    width: 31%;
+}
+.button-checkbox {
+	height:100%;
+    flex-direction: column;
+    border: 1px solid #4ca596e0;
+    background: #4ca5964f;
+    color: #3c3a3a;
+    padding: 2rem 1rem;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+}
+.button-checkbox.checked {
+	background: #1f524ade;
+    color: #fff;
+}
+.button-checkbox:hover {
+    background: #327d71de;
+    color: #fff;
+}
+
+.empty-img, .tooth-img-implant {
+    height: 52px;
+}
+.button-checkbox i{
+	font-size: 23px;
+	margin-bottom: 10px
+}
+.row-traitement{
+	justify-content: center;
+    flex-wrap: wrap;
+}
+@media only screen and (max-width: 600px) {
+  .button-check {
+    width: 35%;
+   
+}
+}

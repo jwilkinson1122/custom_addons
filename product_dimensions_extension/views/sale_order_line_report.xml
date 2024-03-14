@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_report_tree" model="ir.ui.view">
+        <field name="name">sale.order.report.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_name" string="Customer"/>
+                <field name="source_order" string="SO Name"/>
+                <field name="person_sale" string="Sales Person"/>
+                <field name="name" string="Product Description" optional="hide"/>
+                <field name="product_uom_qty"/>
+                <field name="qty_delivered" string="Delivered Qty" optional="hide"/>
+                <field name="qty_invoiced" string="Invoiced Qty" optional="hide"/>
+                <field name="product_width"/>
+                <field name="product_height"/>
+                <field name="product_area"/>
+                <field name="order_date" string="Order Date"/>
+                <field name="price_unit" string="Unit Price"/>
+                <field name="price_subtotal"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_soline_tree" model="ir.actions.act_window">
+        <field name="name">SO Line Order Report</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree</field>
+
+    </record>
+
+
+    <menuitem id="sale_order_tree_report"
+              name="SaleOrder line report"
+              sequence="9999"
+              parent="sale.sale_order_menu"
+              action="action_soline_tree"/>
+
+</odoo>

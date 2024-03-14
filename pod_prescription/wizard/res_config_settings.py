@@ -110,7 +110,7 @@ class ResConfigSettings(models.TransientModel):
             return {
                 'warning': {
                     'title': _("Warning"),
-                    'message': _("Draft Rx Validity is required and must be greater or equal to 0."),
+                    'message': _("Draft Validity is required and must be greater or equal to 0."),
                 },
             }
 

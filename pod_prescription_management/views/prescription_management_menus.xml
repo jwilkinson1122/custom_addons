@@ -7,6 +7,6 @@
         <field name="active" eval="True"/>
     </record>
 
-    <menuitem id="prescription_order_template_menu" name="Draft Prescription Templates" action="prescription_order_template_action" parent="pod_prescription.menu_prescription_config" groups="pod_prescription_management.group_prescription_order_template" sequence="1"/>
+    <menuitem id="prescription_order_template_menu" name="Prescription Templates" action="prescription_order_template_action" parent="pod_prescription.menu_prescription_config" groups="pod_prescription_management.group_prescription_order_template" sequence="1"/>
 
 </odoo>

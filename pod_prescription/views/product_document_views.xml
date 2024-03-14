@@ -47,7 +47,7 @@
             <search position="inside">
                 <separator/>
                 <filter name="quotation"
-                    string="Draft Rx"
+                    string="Draft"
                     domain="[('attached_on', '=', 'quotation')]"/>
                 <filter name="prescription_order"
                     string="Prescription Order"

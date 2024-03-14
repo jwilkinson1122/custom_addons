@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Sequences for sh.patho.request -->
+    <record id="lab_test_appointment_seq" model="ir.sequence">
+        <field name="name">Appointment sequence</field>
+        <field name="code">appointment.entry</field>
+        <field name="prefix">PR/%(year)s/</field>
+        <field eval="1" name="number_next" />
+        <field name="padding">5</field>        
+        <field eval="False" name="company_id" />
+    </record>
+
+    <!-- Sequences for sh.patho.request.line(diagnosis) -->
+    <record id="lab_test_diagnosis_seq" model="ir.sequence">
+        <field name="name">Diagnosis sequence</field>
+        <field name="code">diagnosis.entry</field>
+        <field name="prefix">DIAG/%(year)s/</field>
+        <field eval="1" name="number_next" />
+        <field eval="1" name="number_increment" />
+        <field name="padding">5</field>        
+        <field eval="False" name="company_id" />
+    </record>
+</odoo>

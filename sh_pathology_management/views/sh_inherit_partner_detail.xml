@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_partner_patient_info_inherit_form" model="ir.ui.view">
+        <field name="name">sh_partner_patient_info_inherit_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="personal_information" string="Personal Information" attrs="{'invisible': [('sh_patho_is_patient', '=', False),('sh_patho_is_pathologist', '=', False),('sh_patho_is_technician', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="sh_patho_gender_type" />
+                            <field name="sh_patho_birthdate" />
+                            <field name="sh_patho_age" />
+                            <field name="sh_patho_is_patient" invisible="1" />
+                            <field name="sh_patho_is_pathologist" invisible="1" />
+                            <field name="sh_patho_is_technician" invisible="1" />
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="replace">
+                <field name="email" widget="email" attrs="{'required': ['|',('sh_patho_is_pathologist', '=', True),('sh_patho_is_technician', '=', True)]}" context="{'gravatar_image': True}" on_change="1" modifiers="{&quot;required&quot;: [[&quot;user_ids&quot;, &quot;!=&quot;, []]]}"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button o_res_partner_tip_opp" type="object" name="def_open_tests" icon="fa-user" attrs="{'invisible': ['|',('sh_patho_is_patient', '=', False),('sh_patho_total_tests','=',0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sh_patho_total_tests" />
+                        </span>
+                        <span class="o_stat_text">Test</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="sh_patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">res.partner</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('sh_patho_is_patient','=',True)]</field>
+        <field name="context">{'default_sh_patho_is_patient':True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Patient</p>
+        </field>
+    </record>
+
+    <record id="sh_pathologist_action" model="ir.actions.act_window">
+        <field name="name">Pathologists</field>
+        <field name="res_model">res.partner</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('sh_patho_is_pathologist','=',True)]</field>
+        <field name="context">{'default_sh_patho_is_pathologist':True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Pathologist</p>
+        </field>
+    </record>
+
+    <record id="sh_technicians_action" model="ir.actions.act_window">
+        <field name="name">Technicicans</field>
+        <field name="res_model">res.partner</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('sh_patho_is_technician','=',True)]</field>
+        <field name="context">{'default_sh_patho_is_technician':True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Technicican</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_create_sales_order_template" inherit_id="point_of_sale.template" xml:space="preserve">
+
+    <t t-name="CreateSalesOrderButton"  owl="1">
+        <div class="control-button button confirm odoo-theme-color" id="create_sales_order">
+            <i class='fa fa-shopping-cart' />
+            Create Sales Order
+        </div>
+    </t>
+
+    <t t-name="SaleCreatePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+               <div class="popup" style="text-align:center;">
+                    <header class="title drag-handle">
+                        Create Sale Order
+                    </header>
+                    <div class="main-body touch-scrollable scrollable-y">
+                       <div class="main_div_pos_session">
+                            <div class="full_bottom" style="margin-top: 30px;">
+								<span class="label">State: </span>
+								<select class="oredr_state" id="ord_state" style="height:30px;">
+									<option value="draft">Draft</option>
+									<option value="confirm">Confirm</option>
+								</select>
+							</div>
+                            <br/>
+                            <div id="tab-content3" class="content" style="min-width: 98%;margin-left: -30px;padding-right: 0px;">
+                                <textarea id="terms" rows="8" cols="35" style="margin-left: 50px;" placeholder="Terms and Conditions..."/>
+                            </div>
+                       </div>
+                   </div>
+                    <footer class="footer">
+                        <div class="button odoo-theme-button" t-on-click="create_order">
+                            Create
+                        </div>
+                        <div class="button cancel odoo-theme-button" t-on-click="cancel">
+                            Close
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+    <t t-name="SaleOrderPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+               <div class="popup" style="text-align:center;">
+                    <header class="title drag-handle">
+                        Sale Order
+                    </header>
+                    <div class="main-body touch-scrollable scrollable-y">
+                        <div class="main_div_pos_session">
+                            <div class="full_bottom" style="margin-top: 30px;">
+								<span class="label">Sale Order: </span>
+                                <span class="label"> <a t-att-href="saleLink" target="_blank"><strong style="color: crimson;"><t t-esc="props.sale_ref[1]"/></strong></a></span>
+							</div>
+                        </div>
+                        <br/>
+                   </div>
+                    <footer class="footer">
+                        <div class="button cancel odoo-theme-button" t-on-click="cancel">
+                            Ok
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+    
+</templates>
+  	
+  	

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--    Inherit Product Template to add addons fields.-->
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view.inherit.pos.product.addons</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']/span[2]" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_addons"/>
+                    <label for="is_addons"/>
+                </span>
+            </xpath>
+            <field name="available_in_pos" position="after">
+                <field name="has_addons"/>
+                <field name="addon_ids" widget="many2many_tags"
+                       attrs="{'invisible':[('has_addons','=',False)]}"/>
+            </field>
+        </field>
+    </record>
+
+<!--    Inherit POS Order view.-->
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">view.pos.pos.form.inherit.pos.product.addons</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page/field[@name='lines']/ tree/field[@name='full_product_name']"
+                   position="after">
+                <field name="total_without_including" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -56,7 +56,7 @@
             <t t-if="quotations" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
-                        <th>Draft Rx #</th>
+                        <th>Draft #</th>
                         <th class="text-end">Draft Date</th>
                         <th class="text-end">Valid Until</th>
                         <th class="text-center"/>
@@ -316,7 +316,7 @@
                             <form id="decline" method="POST" t-attf-action="/my/orders/#{prescription_order.id}/decline?access_token=#{prescription_order.access_token}" class="modal-content">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
-                                    <h4 class="modal-title">Reject This Draft Rx</h4>
+                                    <h4 class="modal-title">Reject This Draft</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </header>
                                 <main class="modal-body">

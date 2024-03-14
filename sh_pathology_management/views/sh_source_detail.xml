@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_source_detail_form" model="ir.ui.view">
+        <field name="name">sh.source.detail.form</field>
+        <field name="model">sh.patho.source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible':[('active','=',True)]}" />
+                    <group>
+                        <field name="name" />
+                        <field name="active" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_source_detail_tree" model="ir.ui.view">
+        <field name="name">sh.source.detail.tree</field>
+        <field name="model">sh.patho.source</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sh_source_action" model="ir.actions.act_window">
+        <field name="name">Sources</field>
+        <field name="res_model">sh.patho.source</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Source</p>
+        </field>
+    </record>
+
+    <record id="view_sh_source_filter" model="ir.ui.view">
+        <field name="name">sh.source.select</field>
+        <field name="model">sh.patho.source</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="active" />
+                <filter string="Archieved" name="filter" domain="[('active', '!=', True)]" />
+                <filter string="Unarchieved" name="filter" domain="[('active', '=', True)]" />
+            </search>
+        </field>
+    </record>
+
+    <menuitem name="Pathology" id="sh_pathology_menu" web_icon="sh_pathology_management,static/description/pathology.png" />
+    <menuitem name="Lab Test" id="sh_lab_test444_detail_menu" parent="sh_pathology_menu" sequence="4" groups="sh_pathology_management.sh_pathology_pathologist" />
+    <menuitem name="Configuration" id="sh_configuration_detail_menu" parent="sh_pathology_menu" sequence="5" groups="sh_pathology_management.sh_pathology_pathologist" />
+    <menuitem name="Appointment" action="sh_request_action" id="sh_patho_request_menu" parent="sh_pathology_menu" sequence="1" groups="sh_pathology_management.sh_pathology_pathologist" />
+    <menuitem name="Diagnosis" action="sh_patho_request_line_action" id="sh_patho_request_line_menu" parent="sh_pathology_menu" sequence="2" />
+
+    <menuitem name="Tests" action="sh_lab_test_action" id="sh_lab_test_detail_menu" parent="sh_lab_test444_detail_menu" sequence="1" />
+    <menuitem name="Source" action="sh_source_action" id="sh_source_detail_menu" parent="sh_configuration_detail_menu" sequence="1" />
+
+    <menuitem name="Pathology" id="sh_second_pathology_menu" parent="sh_pathology_menu" sequence="3" groups="sh_pathology_management.sh_pathology_pathologist" />
+    <menuitem name="Patient" id="sh_patient_menu" action="sh_patient_action" parent="sh_second_pathology_menu" sequence="1" />
+    <menuitem name="Pathologist" id="sh_pathologist_menu" action="sh_pathologist_action" parent="sh_second_pathology_menu" sequence="2" />
+    <menuitem name="Technicians" id="sh_technicicans_menu" action="sh_technicians_action" parent="sh_second_pathology_menu" sequence="3" />
+</odoo>

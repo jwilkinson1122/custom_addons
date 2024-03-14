@@ -3,21 +3,21 @@
     <data noupdate="0">
         <!-- Prescription-related subtypes for messaging / Chatter -->
         <record id="mt_order_sent" model="mail.message.subtype">
-            <field name="name">Draft Rx sent</field>
+            <field name="name">Prescription Sent</field>
             <field name="res_model">prescription.order</field>
             <field name="default" eval="False"/>
-            <field name="description">Draft Rx sent</field>
+            <field name="description">Prescription Sent</field>
         </record>
         <record id="mt_order_confirmed" model="mail.message.subtype">
-            <field name="name">Prescription Order Confirmed</field>
+            <field name="name">Prescription Confirmed</field>
             <field name="res_model">prescription.order</field>
             <field name="default" eval="False"/>
-            <field name="description">Draft Rx confirmed</field>
+            <field name="description">Prescription Confirmed</field>
         </record>
 
         <!-- Prescriptionteam-related subtypes for messaging / Chatter -->
         <record id="mt_prescription_team_order_sent" model="mail.message.subtype">
-            <field name="name">Draft Rx sent</field>
+            <field name="name">Prescription Sent</field>
             <field name="sequence">20</field>
             <field name="res_model">crm.team</field>
             <field name="default" eval="True"/>
@@ -25,7 +25,7 @@
             <field name="relation_field">team_id</field>
         </record>
         <record id="mt_prescription_team_order_confirmed" model="mail.message.subtype">
-            <field name="name">Prescription Order Confirmed</field>
+            <field name="name">Prescription Confirmed</field>
             <field name="sequence">21</field>
             <field name="res_model">crm.team</field>
             <field name="default" eval="True"/>

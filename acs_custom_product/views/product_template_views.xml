@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_form_view_acs" model="ir.ui.view">
+            <field name="name">product.template.form.view.acs</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_information']" position="attributes">
+                    <attribute name="string">Información del medicamento</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='taxes_id']" position="after">
+                    <field name="health_register"/>
+                    <field name="digemit_code"/>
+                </xpath>
+
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span class="d-inline-block">
+                        <field name="is_prescription"/>
+                        <label for="is_prescription"/>
+                    </span>
+                </xpath>
+
+                <xpath expr="//field[@name='categ_id']" position="after">
+                    <field name="laboratory_id"/>
+                    <field name="therapeutic_ids" widget="many2many_tags" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <!-- <field name="pathology_ids" widget="many2many_tags" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/> -->
+                    <field name="active_principle_ids" widget="many2many_tags" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                </xpath>
+
+                <xpath expr="//group[@name='sale']" position="before">
+                    <group>
+                        <group>                          
+                                <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                                <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
+                                    <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                                    <span groups="uom.group_uom" class="oe_read_only">per
+                                        <field name="uom_name"/>
+                                    </span>
+                                </div>                            
+                                <field name="utility" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+
+                                <field name="margin" string="Margen en %"/>
+                                
+                                <field name="is_incentive"/>
+                                <field name="incentive" class="oe_inline" attrs="{'invisible': [('is_incentive', '=', False)]}" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        </group>
+                        <group name="sale_product_custom_product">
+                            
+                            <label for="list_price"  string="Precio #1" class="mt-1"/>
+                            <div name="pricing">
+                                <field name="list_price" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            </div>
+                            <field name="uom_id" string="Udm #1"/>
+
+                            <label for="unit_box"  string="Precio #2" />
+                            <div name="pricing">
+                            <field name="unit_box" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            </div>                            
+                            <field name="udm_unit_box" string="Udm #2"/>                     
+                            
+                            <label for="blister_box"  string="Precio #3" />
+                            <div name="pricing">
+                                <field name="blister_box" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            </div>                                                        
+                            <field name="udm_blister_box" string="Udm #3"/>   
+                             
+                        </group>
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='categ_id']" position="replace">
+                </xpath>
+                
+                <xpath expr="//field[@name='uom_po_id']" position="before">
+                    <field name="categ_id"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='uom_id']" position="replace">
+                </xpath>
+
+                <xpath expr="//label[@for='list_price']" position="replace">
+                </xpath>
+                <xpath expr="//div[@name='pricing']" position="replace">
+                </xpath>
+
+                <xpath expr="//label[@for='standard_price']" position="replace">
+                </xpath>
+                <xpath expr="//div[@name='standard_price_uom']" position="replace">
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

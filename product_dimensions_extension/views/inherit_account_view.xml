@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="view_account_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="after">
+                <field name="product_area" groups="base.group_no_one" optional="show" string="Area"/>
+<!--                <field name="product_dimension" groups="base.group_no_one" optional="show" string="Dimension"/>-->
+                <field name="product_width" groups="base.group_no_one" optional="show" string="Width cm"/>
+                <field name="product_height" groups="base.group_no_one" optional="show" string="Length cm"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

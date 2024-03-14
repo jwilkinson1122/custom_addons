@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         default=1.0,
         help="The percentage of the amount needed to be paid to confirm quotations.")
     quotation_validity_days = fields.Integer(
-        string="Default Draft Rx Validity",
+        string="Default Draft Validity",
         default=30,
         help="Days between quotation proposal and expiration."
             " 0 days means automatic expiration is disabled",

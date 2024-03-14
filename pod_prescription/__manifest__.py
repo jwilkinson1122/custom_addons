@@ -34,6 +34,7 @@
         'sale_management',
         'sale_product_matrix',
         'sale_product_configurator',
+        # 'pod_prescription_template_notes',
         # 'sale_purchase',
         'website_sale',
         'website_sale_product_configurator',

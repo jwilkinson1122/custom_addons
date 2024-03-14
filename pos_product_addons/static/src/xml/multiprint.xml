@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="pos_restaurant.OrderChangeReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-order-receipt-cancel')]"
+               position="replace">
+            <div class="pos-order-receipt-cancel">
+                    <div class="pos-receipt-title">
+                        CANCELLED
+                        <t t-esc='changes.time.hours'/>:
+                        <t t-esc='changes.time.minutes'/>
+                    </div>
+                <br/>
+                <br/>
+                <t t-foreach="changes.cancelled" t-as="change">
+                        <div class="multiprint-flex">
+                            <t t-esc="change.qty"/>
+                            <span t-esc="change.name_wrapped[0]"/>
+                            <span t-esc="change"/>
+                        </div>
+                    <div t-if="change.addons.length > 0"
+                         class="multiprint-flex">
+                        ADDONS
+                        <div>
+                            <t t-foreach="change.addons" t-as="addons">
+                                <span><t t-esc="addons.addon_name"/>
+                                    :
+                                    <t t-esc="addons.quantity"/>
+                                </span>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-call="NameWrapped"/>
+                    <t t-if="change.note">
+                            <div>
+                                NOTE
+                                <span class="pos-receipt-right-align">...</span>
+                            </div>
+                        <div><span class="pos-receipt-left-padding">--- <t
+                                t-esc="change.note"/></span></div>
+                        <br/>
+                        </t>
+                    </t>
+                <br/>
+                <br/>
+            </div>
+        </xpath>
+
+        <xpath expr="//t[@t-if='changes.new.length > 0']"
+               position="replace">
+
+            <t t-if="changes.new.length > 0">
+                <div class="pos-receipt-title">
+                    NEW
+                    <t t-esc='changes.time.hours'/>:
+                    <t t-esc='changes.time.minutes'/>
+                </div>
+                <br/>
+                <br/>
+                <t t-foreach="changes.new" t-as="change">
+                    <div class="multiprint-flex">
+                        <t t-esc="change.qty"/>
+                        <span t-esc="change.name_wrapped[0]"/>
+                    </div>
+                    <div t-if="change.addons.length > 0"
+                         class="multiprint-flex">
+                        ADDONS
+                        <div>
+                            <t t-foreach="change.addons" t-as="addons">
+                                <span><t t-esc="addons.addon_name"/>
+                                    :
+                                    <t t-esc="addons.quantity"/>
+                                </span>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-call="NameWrapped"/>
+                    <t t-if="change.note">
+                        <div>
+                            NOTE
+                            <span class="pos-receipt-right-align">...</span>
+                        </div>
+                        <div>
+                            <span class="pos-receipt-left-padding"> ---<t t-esc="change.note"/></span></div>
+                        <br/>
+                    </t>
+                </t>
+                <br/>
+                <br/>
+            </t>
+
+
+        </xpath>
+
+    </t>
+
+</templates>

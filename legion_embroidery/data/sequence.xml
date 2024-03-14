@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_hr_expense_invoice" model="ir.sequence">
+            <field name="name">Scarp Embroidery</field>
+            <field name="code">embroidery.scrap</field>
+            <field name="padding">2</field>
+            <field name="prefix">SP</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_embroidery" model="ir.sequence">
+            <field name="name">Embroidery</field>
+            <field name="code">embroidery.embroidery</field>
+            <field name="padding">2</field>
+            <field name="prefix">EMB</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+<!--        <record id="seq_embroidery_bom" model="ir.sequence">-->
+<!--            <field name="name">Embroidery Bill of material</field>-->
+<!--            <field name="code">embroidery.bom</field>-->
+<!--            <field name="padding">2</field>-->
+<!--            <field name="prefix">SP</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+
+    </data>
+</odoo>

@@ -7,7 +7,9 @@
     "website": "https://www.nwpodiatric.com",
     "depends": [
         "sale", 
-        "sale_management", 
+        "sale_management",
+        "pod_prescription", 
+        "pod_prescription_management",  
         "pod_product_set"
         ],
     "data": [

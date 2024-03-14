@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit account invoice Form View for discount addition -->
+        <record id="product_template_only_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='barcode']" position="after">
+                    <field name="batch_number" string="Batch Number"/>
+                    <field name="mfg_date" string="Manufacturing Date"/>
+                    <field name="exp_date" string="Expiry Date"/>
+                    <field name="pack_size" string="Pack Size"/>
+                    <field name="mrp" string="MRP"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="product_template_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="after">
+                    <field name="batch_number"/>
+                    <field name="mfg_date"/>
+                    <field name="exp_date"/>
+                    <field name="pack_size"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

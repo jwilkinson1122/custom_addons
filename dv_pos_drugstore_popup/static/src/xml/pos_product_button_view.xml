@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="product_info" inherit_id="point_of_sale.template" xml:space="preserve">
+    <t t-name="ProductInfoButton" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-img')]/img" position="before">
+            <i role="img" aria-label="Info" title="Info" class="fa fa-info-circle" style="position: absolute;
+            top: 2px;
+            left: 5px;
+            font-size: 13px;
+            border-radius: 2px;
+            background-color: #7f82ac;
+            color: white;
+            padding: 1px;
+            width: 15px;
+            height: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;"
+                t-on-click.stop="onProductInfoClick()"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+acs_custom_product.access_product_therapeutic_action,access_product_therapeutic_action,acs_custom_product.model_product_therapeutic_action,base.group_user,1,1,1,1
+acs_custom_product.access_product_pathology,access_product_pathology,acs_custom_product.model_product_pathology,base.group_user,1,1,1,1
+acs_custom_product.access_product_active_principle,access_product_active_principle,acs_custom_product.model_product_active_principle,base.group_user,1,1,1,1
+acs_custom_product.access_product_laboratory,access_product_laboratory,acs_custom_product.model_product_laboratory,base.group_user,1,1,1,1

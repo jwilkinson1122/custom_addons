@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="group_prescription_order_template" model="res.groups">
-        <field name="name">Draft Templates</field>
+        <field name="name">Prescription Templates</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

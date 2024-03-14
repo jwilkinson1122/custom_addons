@@ -1,0 +1,9 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="pos_extend_assets" inherit_id="point_of_sale.assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/dv_pos_product_info_popup/static/src/js/pos_product_button.js"/>
+      <script type="text/javascript" src="/dv_pos_product_info_popup/static/src/js/ProductInfoPopup.js"/>
+    </xpath>
+  </template>
+</odoo> -->

@@ -1,0 +1,197 @@
+<odoo>
+    <data>
+
+        <record id="embroidery_bom_tree_view" model="ir.ui.view">
+            <field name="name">embroidery.bom.tree</field>
+            <field name="model">embroidery.bom</field>
+            <field name="arch" type="xml">
+                <tree string="Bill of Materials">
+                    <field name="active" invisible="1"/>
+                    <field name="code"/>
+                    <field name="partner_id"/>
+                    <!--                    <field name="product_id"/>-->
+                    <field name="default_code"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="product_qty" optional="show"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="embroider_bom_form_view" model="ir.ui.view">
+            <field name="name">embroidery.bom.form</field>
+            <field name="model">embroidery.bom</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <header>
+                        <!--                        <button name="action_to_purchase_order" type="object" string="Purchase order"/>-->
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <!--                                <field name="code"/>-->
+                            </h1>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="display_name" invisible="1"/>
+                                <field name="partner_id"/>
+                                <field name="po_bol" invisible="1"/>
+                                <field name="complete_po" invisible="1"/>
+                                <field name="product_tmpl_id"/>
+                                <field name="product_id" invisible="1"/>
+                                <!--                                <field name="product_qty"/>-->
+
+                                <field name="default_code" invisible="1"/>
+
+                                <field name="total_repeats"/>
+                                <field name="total_head"/>
+                                <field name="plotters_stitch"/>
+                                <field name="total_fabric" force_save="1"/>
+                                <field name="total_cones" invisible="1"/>
+                                <field name="production_stitches"/>
+                                <field name="total_stitch"/>
+                            </group>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="code"/>
+                                <field name="type" widget="radio"/>
+                                <p colspan="2" class="oe_grey oe_edit_only"
+                                   attrs="{'invisible': [('type','!=','phantom')]}">
+                                    <ul>
+                                        A BoM of type kit is used to split the product into its components.
+                                        <li>
+                                            At the creation of a Manufacturing Order.
+                                        </li>
+                                        <li>
+                                            At the creation of a Stock Transfer.
+                                        </li>
+                                    </ul>
+                                </p>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_create': True}"/>
+                                <field name="fabric_height"/>
+                                <field name="design_height"/>
+
+<!--                                <field name="test_001"/>-->
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="COMPONENTS">
+                                <field name="bom_line_ids" widget="one2many"
+                                       context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id}">
+                                    <tree string="Components" editable="bottom">
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="product_id" context="{'default_type': 'product'}"/>
+                                        <field name="stitches"/>
+                                        <field name="attach"/>
+                                        <field name="consumption" force_save="1"/>
+                                        <field name="total_stitches" force_save="1"/>
+                                        <field name="total_yard" force_save="1"/>
+                                        <field name="total_cones" force_save="1"/>
+                                        <field name="available_stock" force_save="1" invisible="1"/>
+                                        <field name="net_cones" force_save="1" invisible="1"/>
+                                        <field name="lot_size" force_save="1" invisible="1"/>
+                                        <field name="factor" force_save="1" invisible="1"/>
+                                        <field name="real_factor" force_save="1" invisible="1"/>
+                                        <field name="net_ordering" force_save="1" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="ORDERING">
+                                <header>
+                                    <button name="action_to_purchase_order" type="object"
+                                            string="CREATE PURCHASE ORDER"/>
+                                </header>
+                                <field name="net_ordering_lines" widget="one2many">
+                                    <tree string="ORDERING" editable="bottom">
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="product_id" context="{'default_type': 'product'}"/>
+                                        <field name="stitches"/>
+                                        <field name="attach"/>
+                                        <field name="consumption" force_save="1"/>
+                                        <field name="total_stitches" force_save="1"/>
+                                        <field name="total_yard" force_save="1"/>
+                                        <field name="total_cones" force_save="1"/>
+                                        <field name="available_stock" force_save="1" invisible="0"/>
+                                        <field name="net_cones" force_save="1" invisible="0"/>
+                                        <field name="lot_size" force_save="1" invisible="0"/>
+                                        <field name="factor" force_save="1" invisible="0"/>
+                                        <field name="real_factor" force_save="1" invisible="0"/>
+                                        <field name="net_ordering" force_save="1" invisible="0"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="MISCELLANEOUS">
+                                <group>
+                                    <group>
+                                        <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}"
+                                               string="Manufacturing Readiness" groups="mrp.group_mrp_routings"/>
+                                        <field name="consumption"
+                                               attrs="{'invisible': [('type','=','phantom')], 'required': [('type','!=','phantom')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="picking_type_id" attrs="{'invisible': [('type','=','phantom')]}"
+                                               string="Operation" groups="stock.group_adv_location"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_embroidery_bom_filter" model="ir.ui.view">
+            <field name="name">embroidery.bom.select</field>
+            <field name="model">embroidery.bom</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Of Material">
+                    <field name="code" string="Bill of Materials"
+                           filter_domain="['|', ('code', 'ilike', self), ('product_tmpl_id', 'ilike', self)]"/>
+                    <field name="product_tmpl_id" string="Product"/>
+                    <filter string="Manufacturing" name="normal" domain="[('type', '=', 'normal')]"/>
+                    <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                        <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_embroidery_bom" model="ir.actions.act_window">
+            <field name="name">Bill of Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">embroidery.bom</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_embroidery_bom"
+                  name="Bill of Material"
+                  parent="menu_master_data"
+                  action="action_embroidery_bom"
+                  sequence="3"/>
+    </data>
+</odoo>

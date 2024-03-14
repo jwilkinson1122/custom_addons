@@ -25,13 +25,13 @@
                     <div class="oe_title" name="prescription_order_template_title">
                         <label for="name" id="prescription_order_template_title"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Standard Consultancy Package" class="d-block"/>
+                            <field name="name" placeholder="e.g. Plantar Fasciitis" class="d-block"/>
                         </h1>
                     </div>
                     <group>
                         <group name="prescription_info">
                             <field name="active" invisible="1"/>
-                            <label for="number_of_days" string="Draft Rx expires after"/>
+                            <label for="number_of_days" string="Expires after"/>
                             <div id="number_of_days">
                                 <field name="number_of_days" style="width: 3rem;"/>
                                 <div class="d-inline-block">days</div>
@@ -136,7 +136,7 @@
     </record>
 
     <record id="prescription_order_template_action" model="ir.actions.act_window">
-        <field name="name">Draft Templates</field>
+        <field name="name">Prescription Templates</field>
         <field name="res_model">prescription.order.template</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">

@@ -56,7 +56,7 @@ class PrescriptionOrderOption(models.Model):
         store=True, readonly=False, precompute=True)
 
     is_present = fields.Boolean(
-        string="Present on Draft Rx",
+        string="Present on Draft",
         compute='_compute_is_present',
         search='_search_is_present',
         help="This field will be checked if the option line's product is "
