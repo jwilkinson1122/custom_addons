@@ -1,0 +1,48 @@
+<templates id="template" xml:space="preserve">
+  
+    <!-- added this code in wh stock module -->
+    <!-- <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <t t-if="line.is_has_option">
+                <div class='option-item' t-if='line.Options'>
+                    <t t-foreach="line.Options" t-as="option" t-key="option.id">
+                        <div class="pod_option_line_content">
+                            <div class="pod_options_description">
+                                <div style="padding: 0px 5px" class="fa fa-trash" t-att-data-line="option.id" t-on-click.stop="() => this._clickRemoveLine(option.id)"></div>
+                                <t t-if="option">
+                                    <div class="pod_product_name">
+                                        <t t-esc='option.full_product_name' />
+                                    </div>
+
+                                    <em style="margin-left: 5px;">
+                                        <t t-esc="option.quantityStr" />
+                                    </em>
+
+                                    <div style="margin-left: 5px;">
+                                        <t t-esc="option.unit" />
+                                    </div>
+                                    <span style="padding: 0px 5px"> at </span>
+                                    <div class="addon-orderline-price">
+                                        <t t-esc="env.utils.formatCurrency(option.price_unit)" />
+                                    </div>
+                                    <span style="padding: 0px 5px"> / </span>
+                                    <t t-esc="option.unit" />
+                                </t>
+                            </div>
+                            <div style="margin-left: 15px; float: right;">
+                                <t t-esc="env.utils.formatCurrency(option.price_subtotal_incl)" />
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t> -->
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="attributes">
+            <attribute name="t-if" >!line.is_option</attribute>
+        </xpath>
+    </t>
+
+</templates>

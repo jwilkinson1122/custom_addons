@@ -65,7 +65,7 @@ export class OrderListScreen extends Component {
                 }
             }
 
-            this.pos.showScreen("ReceiptScreen", {
+            this.pos.showScreen("PodReceiptScreen", {
                 'order': newOrder,
                 'selected_order': order[0]
             });

@@ -19,6 +19,13 @@
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
                 </app>
             </xpath> -->
+            <block id="pos_interface_section" position="inside">
+                <block title="Enable Opening Cash Control">
+                    <setting id="cash_control">
+                        <field name="pos_cash_control" />
+                    </setting>
+                </block>
+            </block>
             <block id="pos_interface_section" position="before">
                 <block title="Multi Section Configuration">
                     <setting id="multi_shop_pos">

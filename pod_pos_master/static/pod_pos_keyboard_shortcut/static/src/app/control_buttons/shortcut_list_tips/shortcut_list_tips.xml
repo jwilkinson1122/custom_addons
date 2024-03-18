@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pod_pos_master.ShortcutListTips">
+        <button class="control-button btn btn-light rounded-0 fw-bolder pod_ctrl_btn" t-on-click="() => this.onClick()">
+            <span class="fa fa-info-circle me-2 pod_ctrl_btn_icon" aria-hidden="true"></span>
+            <span class="pod_ctrl_btn_text">Shortcut Tips</span>
+        </button>
+    </t>
+</templates>
