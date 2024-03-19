@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_order_lines,sale.order.line,model_sale_order_line,base.group_user,1,1,1,0
-access_sale_order,sale.order,model_sale_order,base.group_user,1,1,1,0
-access_mo_wizard_user,mo.wizard,model_mo_wizard,base.group_user,1,1,1,0
