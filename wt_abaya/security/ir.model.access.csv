@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_measurment_type,measurment.type,model_measurment_type,base.group_user,1,1,1,1
+access_measurment_measurment,measurment.measurment,model_measurment_measurment,base.group_user,1,1,1,1
+access_measurment_measurment_category,measurment.measurment.category,model_measurment_measurment_category,base.group_user,1,1,1,1

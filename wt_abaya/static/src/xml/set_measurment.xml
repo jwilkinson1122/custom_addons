@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="SetMeasurmentButton" owl="1">
+		<div class="control-button o_sale_order_button" t-on-click="() => this.click()">
+			<i class="fa fa-arrows" role="img" aria-label="Set Measurment"
+			   title="Set Measurment" /> Set Measurment
+		</div>
+	</t>
+	<t t-name="SetMeasurmentPopupWidget" owl="1">
+		<div role="dialog" class="modal-dialog">
+			<div class="popup popup-lg set_measurment_popup" style="">
+				<header class="title drag-handle">
+					<div style="display: inline-flex;">
+						<h3 style="font-weight: bold; width: 100%; margin: 0px;">Set Measurment</h>
+					</div>
+				</header>
+				<main>
+					<div class="body">
+						<div class="payment-methods-overview add_measurment_class" style="overflow : auto; min-height: 200px;">
+							<div class="measurment_selection_main_cl">
+								<table class="measurment_selection_ap" style="width:100%">
+			                        <thead>
+			                        	<tr style="width:100%">
+				                            <th width="7%">#</th>
+				                            <th width="17%">Date</th>
+				                            <th width="25%">Type</th>
+				                            <th width="33%">Measurment</th>
+				                            <th width="17%">M-unit</th>
+				                        </tr>
+			                        </thead>
+			                        <tbody class="js_measurment_set">
+			                        	<t t-foreach="pos.globalState.db.get_measurment_category_by_id(props.partner.measurment_ids)" t-as="measurment_cat" t-key="measurment_cat.id">
+				                        	<tr>
+					                            <td>
+					                            	<input style="box-shadow: none; min-height: 22px;" type="radio" class="input_measurment_cl" name="measurment_category" t-att-value="measurment_cat.id" checked="checked"/>
+					                            </td>
+					                            <td>
+					                            	<t t-esc="measurment_cat.date"/>
+					                            </td>
+					                            <td>
+					                            	<t t-esc="measurment_cat.category_id[1]"/>
+					                            </td>
+					                            <td>
+					                            	<t t-foreach="pos.globalState.db.get_measurment_by_id(measurment_cat.measurment_ids)" t-as="measurment" t-key="measurment.id">
+														<div class="measurment_box">
+															<t t-esc="measurment.name"/>
+														</div>
+													</t>
+												</td>
+					                            <td>
+					                            	<t t-esc="measurment_cat.measurment_unit[1]" />
+					                            </td>
+					                        </tr>
+					                    </t>
+			                        </tbody>
+			                    </table>
+							</div>
+						</div>
+					</div>
+				</main>
+				<footer class="footer footer-flex">
+					<div class="button cancel" t-on-click="cancel">
+						Cancel
+					</div>
+					<div class="button confirm highlight" t-on-click="confirm">
+						Confirm
+					</div>
+				</footer>
+			</div>
+		</div>
+	</t>
+</templates>

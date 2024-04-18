@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	
+	<t t-name="PartnerListScreen" t-inherit="point_of_sale.PartnerListScreen" t-inherit-mode="extension" owl="1">
+		<xpath expr="//tbody" position="replace">
+			<tbody class="partner-list-contents">
+				<t t-foreach="partners" t-as="partner"
+				   t-key="partner.id">
+					<PartnerLine partner="partner"
+						selectedPartner="state.selectedPartner"
+						detailIsShown="state.detailIsShown"
+						isBalanceDisplayed="isBalanceDisplayed"
+						Measurment.bind="Measurment"
+						onClickEdit.bind="editPartner"
+						onClickPartner.bind="clickPartner"/>
+				</t>
+			</tbody>
+		</xpath>
+	</t>
+	<t t-name="PartnerLine" t-inherit="point_of_sale.PartnerLine" t-inherit-mode="extension" owl="1">
+		<xpath expr="//td[@class='edit-partner-button-cell']" position="inside">
+			<button class="edit-partner-button" t-on-click.stop="() => props.Measurment(props.partner)">Measurment</button>
+		</xpath>
+	</t>
+</templates>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<t t-name="MeasurmentTemplatePopupWidget" owl="1">
+		<div role="dialog" class="modal-dialog">
+			<div class="popup popup-lg measurments_popup" style="min-width: 60%;">
+				<header class="title drag-handle">
+					<div style="display: inline-flex;">
+						<h1 style="color: #714b67;font-weight: bold; width: 100%; margin: 0px;">Measurments</h1>
+						<div t-on-click="cancel" class="toggle" title="Dismiss" role="img" aria-label="Dismiss"><i class="fa fa-times"></i></div>
+					</div>
+				</header>
+				<main class="body">
+					<div class="payment-methods-overview" style="overflow : auto; min-height: 200px;">
+						<h3><t t-esc="props.partner.name"/></h3>
+						<input style="width: 100%; padding: 5px 5px 5px 5px; font-size: 12px; min-height: 29px;" type="hidden" t-att-value="props.partner.id" name="partner_id" />
+						<div class="measurment_create_table">
+							<div class="measurment_create_table_left">
+								<table style="width: 100%; border-spacing: 5px;border-collapse: initial;font-size: 13px;">
+									<tr>
+										<td>
+											<strong>Date</strong>
+										</td>
+										<td>
+											<input style="width: 100%; padding: 5px 5px 5px 5px; font-size: 12px; min-height: 29px;" type="date" name="measurment_date" />
+										</td>
+									</tr>
+									<tr>
+										<td>
+		                                    <strong>Category</strong>
+		                                </td>
+		                                <td>
+		                                    <select style="width: 100%; padding: 5px 5px 5px 5px; font-size: 12px; min-height: 29px;" name="category_name" id="category_name" t-on-change="_oncategory">
+		                                        <option value="">select..</option>
+		                                        <t t-foreach="pos.globalState.db.category_by_id" t-as="categorie" t-key="pos.globalState.db.category_by_id[categorie].id">
+		                                            <option t-att-value="pos.globalState.db.category_by_id[categorie].id">
+		                                                <t t-esc="pos.globalState.db.category_by_id[categorie].name" />
+		                                            </option>
+		                                        </t>
+		                                    </select>
+		                                </td>
+									</tr>
+									<tr>
+										<td>
+											<strong>Measurment Unit</strong>
+										</td>
+										<td>
+											<select style="width: 100%; padding: 5px 5px 5px 5px; font-size: 12px; min-height: 29px;" name="Unit_name" id="Unit_name">
+		                                        <option value="">select..</option>
+		                                        <t t-foreach="pos.globalState.units" t-as="unit" t-key="unit.id">
+		                                            <option t-att-value="unit.id">
+		                                                <t t-esc="unit.name" />
+		                                            </option>
+		                                        </t>
+		                                    </select>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="measurment_create_table_right">
+							</div>
+						</div>
+						<div class="button highlight addmeasurmentlinesbtn" t-on-click="_AddMeasurmentlines" style="margin-bottom: 10px;     width: max-content; padding:0px 10px; float:left;     margin: auto;">
+							Show Measurments
+						</div>
+						<div class="button highlight hidemeasurmentlinesbtn" t-on-click="_hideMeasurmentlines" style="margin-bottom: 10px;     width: max-content; padding:0px 10px; float:left; margin: auto; display:none;">
+							hide Measurments
+						</div>
+						<div class="button highlight" t-on-click="confirm" style="margin-bottom: 10px;     width: max-content; padding:0px 10px; float:right;     margin: auto;">
+							Add Measurment
+						</div>
+						<div class="pos_Measurments_table">
+						</div>
+					</div>
+				</main>
+			</div>
+		</div>
+	</t>
+	<t t-name="DisplayMeasurmentTypeInput" owl="1">
+		<t t-if='measurment_types'>
+			<table style="width: 100%; border-spacing: 5px;border-collapse: initial;font-size: 13px;">
+				<t t-foreach="measurment_types" t-as="measurment_type" t-key="measurment_type.id">
+					<tr>
+						<td>
+							<strong><t t-esc="measurment_type.name"/></strong>
+						</td>
+						<td>
+							<input class="measurment_type_input_cl" style="width: 100%; padding: 5px 5px 5px 5px; font-size: 12px; min-height: 29px;" type="number" t-att-name="measurment_type.id" />
+						</td>
+					</tr>
+				</t>
+			</table>
+		</t>
+	</t>
+	<t t-name="DisplayMeasurmentLines" owl="1">
+		<div class="pos_Measurments_table">
+			<!-- <h3 class="title">
+				Measurments
+			</h3> -->
+			<div class="measurment_lines">
+				<t t-if="db.get_measurment_category_by_id(partner_id.measurment_ids).length != 0">
+					<table class="table_measurment_details" style="width: 100%;border-spacing: 5px;border-collapse: initial;font-size: 13px;">
+						<tr style="border-top:2px solid; border-bottom:1px solid;">
+							<th>
+								Date
+							</th>
+							<th>
+								Type
+							</th>
+							<th>
+								Measurments
+							</th>
+							<th>
+								Measurment Unit
+							</th>
+						</tr>
+						<t t-foreach="db.get_measurment_category_by_id(partner_id.measurment_ids)" t-as="measurment_cat" t-key="measurment_cat.id">
+							<tr style="font-weight: 400;font-size: 12px;">
+								<td>
+									<t t-esc="measurment_cat.date" />
+								</td>
+								<td>
+									<t t-esc="measurment_cat.category_id[1]" />
+								</td>
+								<td style="display: inline-flex;">
+									<t t-foreach="db.get_measurment_by_id(measurment_cat.measurment_ids)" t-as="measurment" t-key="measurment.id">
+										<div class="measurment_box">
+											<t t-esc="measurment.name"/>
+										</div>
+									</t>
+								</td>
+								<td>
+									<t t-esc="measurment_cat.measurment_unit[1]" />
+								</td>
+							</tr>
+						</t>
+					</table>
+				</t>
+				<t t-else="">
+					<h5>No measurments Please Add Measurment.</h5>
+				</t>
+			</div>
+		</div>
+		
+	</t>
+</template>
