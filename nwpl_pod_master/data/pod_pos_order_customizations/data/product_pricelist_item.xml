@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <!-- <record id="product_pricelist_item_compressor" model="product.pricelist.item">
+        <field name="fixed_price">8.0</field>
+        <field name="applied_on">1_product</field>
+        <field name="min_quantity">10.0</field>
+        <field name="pricelist_id" ref="product_pricelist_2"/>
+        <field name="product_tmpl_id" ref="product_template_compressor"/>
+    </record> -->
+    <record id="product_pricelist_item_filter" model="product.pricelist.item">
+        <field name="fixed_price">8.0</field>
+        <field name="applied_on">1_product</field>
+        <field name="min_quantity">10.0</field>
+        <field name="pricelist_id" ref="product_pricelist_2"/>
+        <field name="product_tmpl_id" ref="product_template_vinyl_top_cover"/>
+    </record>
+    <!-- <record id="product_pricelist_item_drum_brake" model="product.pricelist.item">
+        <field name="fixed_price">8.0</field>
+        <field name="applied_on">1_product</field>
+        <field name="min_quantity">10.0</field>
+        <field name="pricelist_id" ref="product_pricelist_2"/>
+        <field name="product_tmpl_id" ref="product_template_drum_brake"/>
+    </record>
+    <record id="product_pricelist_item_front_brake_pads" model="product.pricelist.item">
+        <field name="fixed_price">8.0</field>
+        <field name="applied_on">1_product</field>
+        <field name="min_quantity">10.0</field>
+        <field name="pricelist_id" ref="product_pricelist_2"/>
+        <field name="product_tmpl_id" ref="product_template_front_brake_pads"/>
+    </record>
+    <record id="product_pricelist_item_rear_brake" model="product.pricelist.item">
+        <field name="fixed_price">8.0</field>
+        <field name="applied_on">1_product</field>
+        <field name="min_quantity">10.0</field>
+        <field name="pricelist_id" ref="product_pricelist_2"/>
+        <field name="product_tmpl_id" ref="product_template_rear_brake"/>
+    </record> -->
+</odoo>

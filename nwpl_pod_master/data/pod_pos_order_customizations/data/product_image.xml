@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="product_image_1" model="product.image">
+        <field name="name">Superglass Flex</field>
+        <field name="product_tmpl_id" ref="product_template_sg_flex"/>
+        <field name="image_1024" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/product_image/sg_1024.webp"/>
+    </record>
+    <record id="product_image_2" model="product.image">
+        <field name="name">Superglass Everyday</field>
+        <field name="product_tmpl_id" ref="product_template_sg_everyday"/>
+        <field name="image_1024" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/product_image/sg_1024.webp"/>
+    </record>
+    <record id="product_image_3" model="product.image">
+        <field name="name">Superglass Proformance</field>
+        <field name="product_tmpl_id" ref="product_template_sg_proformance"/>
+        <field name="image_1024" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/product_image/sg_1024.webp"/>
+    </record>
+</odoo>

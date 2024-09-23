@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="product_brand_sg" model="product.brand">
+        <field name="name">Superglass</field>
+    </record>
+    <record id="product_template_vinyl_top_cover" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Vinyl Top Cover</field>
+        <field name="categ_id" ref="product_category_top_covers"/>
+        <field name="available_in_pos" eval="True"/>
+        <!-- <field name="allow_measurements" eval="True"/> -->
+        <field name="is_custom_product" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_product_category_top_covers')])]"/>
+        <field name="detailed_type">product</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="standard_price">3.95</field>
+        <field name="list_price">3.95</field>
+        <field name="image_1920" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/top_covers/vinyl.webp"/>
+        <!-- <field name="has_configurable_attributes" eval="True"/> -->
+        <field name="available_in_pos" eval="True"/>
+        <!-- <field name="no_create_variants">yes</field> -->
+    </record>
+
+
+    <!-- <record id="product_template_sg_flex" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Superglass Flex</field>
+        <field name="categ_id" ref="product_category_sg_devices"/>
+        <field name="product_brand_id" ref="product_brand_sg"/>
+        <field name="available_in_pos" eval="True"/>
+        <field name="allow_measurements" eval="True"/>
+        <field name="is_custom_product" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_sg_devices')])]"/>
+        <field name="detailed_type">product</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="standard_price">56.5</field>
+        <field name="list_price">56.5</field>
+        <field name="attribute_line_ids" eval="[]"/>
+        <field name="image_1920" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/product_template/superglass.webp"/>
+    </record> -->
+   
+    <!-- <record id="product_template_sg_flex" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Flex</field>
+        <field name="categ_id" ref="product_category_superglass"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">56.5</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_sg_everyday" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Everyday</field>
+        <field name="categ_id" ref="product_category_superglass"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">59.25</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_sg_proformance" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Proformance</field>
+        <field name="categ_id" ref="product_category_superglass"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">61.75</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_polypro_semi_flexible" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Semi-Flexible</field>
+        <field name="categ_id" ref="product_category_polypropylene"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">42.0</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_polypro_semi_rigid" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Semi-Rigid</field>
+        <field name="categ_id" ref="product_category_polypropylene"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">42.0</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_polypro_rigid" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Rigid</field>
+        <field name="categ_id" ref="product_category_polypropylene"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">42.0</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_ncv_gentle" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Gentle</field>
+        <field name="categ_id" ref="product_category_ncv"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">47.75</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_ncv_firm" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Firm</field>
+        <field name="categ_id" ref="product_category_ncv"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">49.25</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_pc_multi_density" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Multi-Density</field>
+        <field name="categ_id" ref="product_category_prescription_comfort"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">68.0</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_pc_composite" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Composite</field>
+        <field name="categ_id" ref="product_category_prescription_comfort"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">68.0</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record>
+    <record id="product_template_vinyl_top_cover" model="product.template" context="{'create_product_product': False}">
+        <field name="name">Vinyl Top Cover</field>
+        <field name="categ_id" ref="product_category_device_covers"/>
+        <field name="detailed_type">product</field>
+        <field name="list_price">3.95</field>
+        <field name="has_configurable_attributes" eval="True"/>
+        <field name="available_in_pos" eval="True"/>
+    </record> -->
+</odoo>

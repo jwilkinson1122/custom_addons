@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_create_mrp_bom_wizard,access_create_mrp_bom_wizard,nwpl_pod_master.model_create_mrp_bom_wizard,base.group_user,1,1,1,1
+access_create_mrp_bom_wizard_line,access_create_mrp_bom_wizard_line,nwpl_pod_master.model_create_mrp_bom_wizard_line,base.group_user,1,1,1,1
+access_mrp_routing_workcenteer_wizard,access_mrp_routing_workcenteer_wizard,nwpl_pod_master.model_mrp_routing_workcenter_wizard,base.group_user,1,1,1,1

@@ -1,0 +1,10 @@
+<odoo>
+
+    <record id="group_product_configurator_mrp" model="res.groups">
+        <field name="name">Products &amp; BOMS</field>
+        <field name="category_id" ref="nwpl_pod_master.product_config_category" />
+        <field eval="[(4, ref('nwpl_pod_master.group_product_configurator'))]" name="implied_ids" />
+        <field eval="[(4, ref('base.user_root'))]" name="users" />
+    </record>
+
+</odoo>

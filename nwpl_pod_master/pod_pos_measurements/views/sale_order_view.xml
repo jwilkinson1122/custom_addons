@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the sale.order form view to add measurements section -->
+        <record id="view_order_form_inherit_measurements" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.measurements</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <sheet position="inside">
+                    <!-- Adding a new page for Measurements in the notebook -->
+                    <notebook position="inside">
+                        <page string="Measurements">
+                            <group>
+                                <field name="measurement_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </group>
+                            <!-- Optional: Include a button to open a popup to add measurements -->
+                            <!-- <button name="%(measurement_measurement_action)d" string="Add Measurements" type="action" class="btn-primary"/> -->
+                        </page>
+                    </notebook>
+                </sheet>
+            </field>
+        </record>
+
+        <!-- Adding the many2many relation in sale.order model -->
+        <record id="view_sale_order_measurement_tree" model="ir.ui.view">
+            <field name="name">sale.order.measurement.tree</field>
+            <field name="model">measurement.measurement</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="category_id"/>
+                    <field name="measurement_type"/>
+                    <field name="measurement"/>
+                    <field name="measurement_unit"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

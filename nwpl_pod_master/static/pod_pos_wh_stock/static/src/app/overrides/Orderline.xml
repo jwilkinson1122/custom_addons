@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//ul[hasclass('pod_info_list')]" position="inside">
+            <t t-if="line.is_has_option">
+                <div class='option-item' t-if='line.Options'>
+                    <t t-foreach="line.Options" t-as="option" t-key="option.id">
+                    <!-- <t t-foreach="line.Options" t-as="option" t-key="option.id + '_' + index"> -->
+                        <div class="pod_option_line_content" style=" display: flex; align-items:baseline;justify-content: space-between;font-size: 84%;font-weight:500;margin-left: 10px;">
+                            <div class="pod_options_description" style="display: flex; align-items:baseline;">
+                                <div style="padding: 0px 5px" class="fa fa-trash" t-att-data-line="option.id" t-on-click.stop="() => this._clickRemoveLine(option.id)"></div>
+                                <t t-if="option">
+                                    <div class="pod_product_name">
+                                        <t t-esc='option.full_product_name' />
+                                    </div>
+
+                                    <em style="margin-left: 5px;">
+                                        <t t-esc="option.quantityStr" />
+                                    </em>
+
+                                    <div style="margin-left: 5px;">
+                                        <t t-esc="option.unit" />
+                                    </div>
+                                    <span style="padding: 0px 5px"> at </span>
+                                    <div class="addon-orderline-price">
+                                        <t t-esc="env.utils.formatCurrency(option.price_unit)" />
+                                    </div>
+                                    <span style="padding: 0px 5px"> / </span>
+                                    <t t-esc="option.unit" />
+                                </t>
+                            </div>
+                            <div style="margin-left: 15px; float: right;">
+                                <t t-esc="env.utils.formatCurrency(option.price_subtotal_incl)" />
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <t t-if="this.env.services.pos.config.pod_display_stock and props.line.product_type == 'product'">
+                <li class="pod_stock_li_orderline" t-if="env.services.pos.get_order() and !env.services.pos.get_order().finalized">
+                    <span class="product-image-icon pod_orderline_stock_icon me-1 ms-1" t-on-click="() => this.env.services.pos.showStock(props.line.productId)">
+                        <i class="fa fa-building-o" aria-hidden="true"></i>
+                    </span>
+                </li>
+            </t>
+            <li t-if="props.line.orderline and !props.line.orderline.order.finalized and props.line.orderline.product and props.line.orderline.product.customization_group_ids and props.line.orderline.product.customization_group_ids.length" style="margin-left: 20px; width: 100%;">
+                <span class="pod_customization_on_orderline" t-on-click="open_pos_order_customization_popup">
+                    <i class="fa fa-info-circle podorderline fs-5 mx-2"></i>
+                </span>
+            </li>
+            <li t-if="props.line.orderline and !props.line.orderline.order.finalized and props.line.orderline.product and props.line.orderline.product.customization_group_ids and props.line.orderline.product.customization_group_ids.length" class="pod_customization_on_orderline" t-on-click="open_pos_order_customization_popup" style="margin-left: 0px; width: 100%;">
+                <i class="fa fa-info-circle podorderline fs-5 mx-2"></i>
+                <span t-if="props.line.orderline.pod_customization_ids">
+                    <t t-foreach='props.line.orderline.pod_customization_ids' t-as='customization_id' t-key="customization_id">
+                        <t t-if="env and env.services.pos.db and env.services.pos.db.customization_by_id and env.services.pos.db.customization_by_id[customization_id] and env.services.pos.db.customization_by_id[customization_id].name">
+                            <span class="pe-1" t-esc="env.services.pos.db.customization_by_id[customization_id].name"/>
+                        </t>
+                    </t>
+                </span>
+            </li>
+            <li t-if="line.measurement_ids and line.measurement_ids.length > 0" class="pod_measurement_on_orderline w-100 p-2 my-1 rounded text-break text-bg-info text-info bg-opacity-25">
+                <div class="orderline-options">
+                    <t t-foreach="line.measurement_ids" t-as="measurement" t-key="measurement and measurement.id or ''">
+                    <!-- <t t-foreach="line.measurement_ids" t-as="measurement" t-key="measurement ? measurement.id : index"> -->
+                    <!-- <t t-foreach="line.measurement_ids" t-as="measurement" t-key="measurement and measurement.id or ''"> -->
+                        <t t-if="measurement and measurement.name" class="measurement_lines">
+                            <div class="measurement-detail d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fa fa-sticky-note-o podorderline fs-5 mx-2"/>
+                                    <span t-esc="measurement.name"/>
+                                    <span t-esc="line.measurement_unit and line.measurement_unit[1]"/>
+                                </div>
+                                <div t-on-click="() => this.remove_measurement(measurement.id)">
+                                    <i class="fa fa-trash" />
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </li>
+            <!-- <li t-if="props.line.orderline and !props.line.orderline.order.finalized and props.line.orderline.product" style="margin-left: 20px; width: 100%;">
+                <span class="pod_measurement_on_orderline" t-on-click="open_set_measurement_popup">
+                    <i class="fa fa-sticky-note-o podorderline fs-5 mx-2"></i>
+                </span>
+            </li> -->
+            <li t-if="props.line.orderline and !props.line.orderline.order.finalized and props.line.orderline.product" style="margin-left: 20px; width: 100%;">
+                <span class="pod_measurement_on_orderline" t-on-click="open_set_measurement_popup">
+                    <i class="fa fa-sticky-note-o podorderline fs-5 mx-2"></i>
+                </span>
+            </li>
+        </xpath>
+        <xpath expr='//span[hasclass("pod_customization_on_orderline")]' position='replace'>
+            <span></span>
+        </xpath>
+        <xpath expr='//span[hasclass("pod_measurement_on_orderline")]' position='replace'>
+            <span></span>
+        </xpath>
+    </t>
+</templates>

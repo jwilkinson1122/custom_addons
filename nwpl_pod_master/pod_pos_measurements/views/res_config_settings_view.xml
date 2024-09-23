@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="inherit_pos_res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">inherit.pos.res.config.settings.view.form</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <block id="pos_interface_section" position="before">
+                    <block title="Pos Modify Device Configuration">
+                        <setting id="product_configure">
+                            <field name="product_configure" />
+                        </setting>
+                    </block>
+                </block>
+            </field>
+        </record>
+    </data>
+</odoo>

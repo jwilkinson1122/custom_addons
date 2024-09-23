@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-name="pod_pos_measurements.MeasurementPopup" owl="1">
+        <div class="popup popup-lg measurements_popup" style="min-width: 60%;">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Measurements -
+                    <t t-if="props.partner">
+                        <t t-esc="props.partner.name"/>
+                    </t>
+                    <t t-else="">
+                        Unknown Partner
+                    </t>
+                </h4>
+                <div class="btn" t-on-click="cancel">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+            </div>
+            <main class="body modal-body overflow-auto">
+                <div class="measurements_table" style="overflow: auto; min-height: 200px;">
+                    <input style="width: 100%; padding: 5px; font-size: 12px; min-height: 29px;" type="hidden" t-att-value="props.partner ? props.partner.id : ''" name="partner_id" />
+                    <div class="measurement_create_table">
+                        <div class="measurement_create_table_left">
+                            <table style="width: 100%; border-spacing: 5px; border-collapse: initial; font-size: 13px;">
+                                <tr>
+                                    <td><strong>Date</strong></td>
+                                    <td>
+                                        <input style="width: 100%; padding: 5px; font-size: 12px; min-height: 29px;" type="date" t-model="state.measurementDate" name="measurementDate" t-on-click="openDatePicker"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Category</strong></td>
+                                    <td>
+                                        <select style="width: 100%; padding: 5px; font-size: 12px; min-height: 29px;" name="category_name" id="category_name" t-on-change="_oncategory">
+                                            <option value="">select..</option>
+                                            <t t-foreach="state.filtered_categories" t-as="category" t-key="category.id">
+                                                <option t-att-value="category.id"><t t-esc="category.name" /></option>
+                                            </t>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Measurement Unit</strong></td>
+                                    <td>
+                                        <select style="width: 100%; padding: 5px; font-size: 12px; min-height: 29px;" name="Unit_name" id="Unit_name">
+                                            <option value="">select..</option>
+                                            <t t-foreach="pos.units" t-as="unit" t-key="unit.id">
+                                                <option t-att-value="unit.id"><t t-esc="unit.name" /></option>
+                                            </t>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="measurement_create_table_right">
+                            <t t-if="state.selected_measurement_types.length">
+                                <t t-call="pod_pos_measurements.DisplayMeasurementTypeInput" t-props="{measurement_types: state.selected_measurement_types}"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="button highlight btn btn-lg btn-primary addmeasurementlinesbtn" t-on-click="_AddMeasurementlines" style="margin-bottom: 10px; width: max-content; padding: 0px 10px; float: left; margin: auto;">
+                        Show Measurements
+                    </div>
+                    <div class="button highlight btn btn-lg btn-primary hidemeasurementlinesbtn" t-on-click="_hideMeasurementlines" style="margin-bottom: 10px; width: max-content; padding: 0px 10px; float: left; margin: auto; display: none;">
+                        Hide Measurements
+                    </div>
+                    <div class="button highlight btn btn-lg btn-primary" t-on-click="confirm" style="margin-bottom: 10px; width: max-content; padding: 0px 10px; float: right; margin: auto;">
+                        Add Measurements
+                    </div>
+                    <div class="pos_measurements_table">
+                    </div>
+                </div>
+                <footer class="footer modal-footer justify-content-between">
+                    <div class="modal-footer-left d-flex gap-2">
+                        <button class="button btn btn-lg btn-secondary" t-on-click="cancel">Discard</button>
+                        <button class="button highlight btn btn-lg btn-primary" t-on-click="pod_add_measurement">Ok</button>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </t>
+    
+    <t t-name="pod_pos_measurements.DisplayMeasurementTypeInput" owl="1">
+        <t t-if="props.measurement_types">
+            <table style="width: 100%; border-spacing: 5px; border-collapse: initial; font-size: 13px;">
+                <t t-foreach="props.measurement_types" t-as="measurement_type" t-key="measurement_type.id">
+                    <tr>
+                        <td><strong><t t-esc="measurement_type.name"/></strong></td>
+                        <td>
+                            <input class="measurement_type_input_cl" style="width: 100%; padding: 5px; font-size: 12px; min-height: 29px;" type="number" t-att-name="measurement_type.id" />
+                        </td>
+                    </tr>
+                </t>
+            </table>
+        </t>
+    </t>
+
+    <t t-name="pod_pos_measurements.DisplayMeasurementLines" owl="1">
+        <div class="pos_measurements_table">
+            <div class="measurement_lines">
+                <table class="table_measurement_details" style="width: 100%; border-spacing: 5px; border-collapse: initial; font-size: 13px;">
+                    <tr style="border-top: 2px solid; border-bottom: 1px solid;">
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Measurements</th>
+                        <th>Measurement Unit</th>
+                        <th>Actions</th>
+                    </tr>
+                    <t t-if="props.measurements and props.measurements.length">
+                        <t t-foreach="props.measurements" t-as="measurement_cat" t-key="measurement_cat.id">
+                            <tr style="font-weight: 400; font-size: 12px;">
+                                <td><t t-esc="measurement_cat.date" /></td>
+                                <td><t t-esc="measurement_cat.category" /></td>
+                                <td style="display: inline-flex;">
+                                    <t t-foreach="measurement_cat.values" t-as="measurement" t-key="measurement.id">
+                                        <div class="measurement_box">
+                                            <t t-esc="measurement.name" />: <t t-esc="measurement.value" />
+                                        </div>
+                                    </t>
+                                </td>
+                                <td><t t-esc="measurement_cat.unit" /></td>
+                                <td>
+                                    <button class="btn btn-danger" t-on-click="() => props.deleteMeasurement(measurement_cat.id)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <tr>
+                            <td colspan="5">
+                                <h5>No measurements. Please add a measurement.</h5>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </div>
+    </t>
+
+    <!-- <t t-name="pod_pos_measurements.SetMeasurementButton" owl="1">
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <i class="fa fa-arrows" role="img" aria-label="Set Values" title="Set Values"/>
+            Set Values
+        </button>
+    </t> -->
+
+    <t t-name="pod_pos_measurements.SetMeasurementPopup" owl="1">
+        <div class="popup popup-lg set_measurement_popup">
+            <header class="title drag-handle">
+                <div class="header-container">
+                    <h3>Set Measurement</h3>
+                </div>
+            </header>
+            <main>
+                <div class="body">
+                    <div t-if="state.noMeasurementsAvailable">
+                        <p>No measurements available for this partner.</p>
+                    </div>
+                    <div t-else="" class="set_measurements_table add_measurement_class">
+                        <div class="measurement_selection_main_cl">
+                            <table class="measurement_selection_ap">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Measurement</th>
+                                        <th>M-unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js_measurement_set">
+                                    <t t-foreach="state.measurements" t-as="measurement_cat" t-key="measurement_cat.id">
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="input_measurement_cl" name="measurement_category" t-att-value="measurement_cat.id" t-on-change="toggleMeasurementSelection"/>
+                                            </td>
+                                            <td><t t-esc="measurement_cat.date"/></td>
+                                            <td><t t-esc="measurement_cat.category"/></td>
+                                            <td class="measurement-values">
+                                                <t t-foreach="measurement_cat.values" t-as="measurement" t-key="measurement.id">
+                                                    <div t-attf-class="measurement_box #{state.selectedMeasurements.has(measurement.id) ? 'selected' : ''}">
+                                                        <t t-if="measurement.name">
+                                                            <t t-esc="measurement.name"/>: <t t-esc="measurement.value"/>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </td>
+                                            <td><t t-esc="measurement_cat.unit" /></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">Apply</div>
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">Cancel</div>
+                <div class="button skip btn btn-lg btn-secondary" t-on-click="skip">Skip</div>
+            </footer>
+        </div>
+    </t>
+
+</template>
+
+ 
+ 

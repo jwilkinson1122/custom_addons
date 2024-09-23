@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- <record id="product_attribute_brand" model="product.attribute">
+        <field name="name">Brand</field>
+    </record>
+    <record id="product_attribute_type" model="product.attribute">
+        <field name="name">Type</field>
+    </record> -->
+    <record id="product_attribute_laterality" model="product.attribute">
+        <field name="name">Laterality</field>
+        <field name="create_variant">no_variant</field>
+    </record>
+    <!-- <record id="product_attribute_material_length" model="product.attribute">
+        <field name="name">Material Length</field>
+    </record> -->
+    <record id="product_attribute_material_color" model="product.attribute">
+        <field name="name">Material Color</field>
+        <field name="create_variant">no_variant</field>
+    </record>
+    <!-- <record id="product_attribute_material_thickness" model="product.attribute">
+        <field name="name">Material Thickness</field>
+    </record>
+    <record id="product_attribute_material_density" model="product.attribute">
+        <field name="name">Material Density</field>
+    </record> -->
+    <!-- <record id="product_attribute_arch_height" model="product.attribute">
+        <field name="name">Arch Height</field>
+        <field name="create_variant">no_variant</field> 
+    </record> -->
+</odoo>

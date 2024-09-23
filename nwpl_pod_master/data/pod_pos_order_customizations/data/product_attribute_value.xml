@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="pav_laterality_lt" model="product.attribute.value">
+        <field name="name">Left Only</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record>
+    <record id="pav_laterality_rt" model="product.attribute.value">
+        <field name="name">Right Only</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record>
+    <record id="pav_laterality_bl" model="product.attribute.value">
+        <field name="name">Bilateral</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record>
+    
+    <record id="pav_material_color_charcoal" model="product.attribute.value">
+        <field name="name">Charcoal</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_dark_brown" model="product.attribute.value">
+        <field name="name">Dark Brown</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_gray_tan" model="product.attribute.value">
+        <field name="name">Gray-Tan</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_blue_gray" model="product.attribute.value">
+        <field name="name">Blue-Gray</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_black" model="product.attribute.value">
+        <field name="name">Black</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_gray" model="product.attribute.value">
+        <field name="name">Gray</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <!-- Laterality -->
+    <!-- <record id="pav_laterality_lt" model="product.attribute.value">
+        <field name="name">Left Only</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record>
+    <record id="pav_laterality_rt" model="product.attribute.value">
+        <field name="name">Right Only</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record>
+    <record id="pav_laterality_bl" model="product.attribute.value">
+        <field name="name">Bilateral</field>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+    </record> -->
+    <!-- Material Length -->
+    <!-- <record id="pav_material_length_none" model="product.attribute.value">
+        <field name="name">None</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_three_qtr" model="product.attribute.value">
+        <field name="name">3/4</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_to_sulcus" model="product.attribute.value">
+        <field name="name">To Sulcus</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_heel_to_toe" model="product.attribute.value">
+        <field name="name">Heel to Toe</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_standard" model="product.attribute.value">
+        <field name="name">Standard</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_sulcus" model="product.attribute.value">
+        <field name="name">Sulcus</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_full" model="product.attribute.value">
+        <field name="name">Full</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record>
+    <record id="pav_material_length_complete" model="product.attribute.value">
+        <field name="name">Complete</field>
+        <field name="attribute_id" ref="product_attribute_material_length"/>
+    </record> -->
+    <!-- Material Color -->
+    <!-- <record id="pav_material_color_charcoal" model="product.attribute.value">
+        <field name="name">Charcoal</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_dark_brown" model="product.attribute.value">
+        <field name="name">Dark Brown</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_gray_tan" model="product.attribute.value">
+        <field name="name">Gray-Tan</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_blue_gray" model="product.attribute.value">
+        <field name="name">Blue-Gray</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_black" model="product.attribute.value">
+        <field name="name">Black</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record>
+    <record id="pav_material_color_gray" model="product.attribute.value">
+        <field name="name">Gray</field>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+    </record> -->
+    <!-- Material Thickness -->
+    <!-- <record id="pav_material_thickness_1_16" model="product.attribute.value">
+        <field name="name">1/16"</field>
+        <field name="attribute_id" ref="product_attribute_material_thickness"/>
+    </record>
+    <record id="pav_material_thickness_1_8" model="product.attribute.value">
+        <field name="name">1/8"</field>
+        <field name="attribute_id" ref="product_attribute_material_thickness"/>
+    </record> -->
+    <!-- Material Density -->
+    <!-- <record id="pav_material_density_firm" model="product.attribute.value">
+        <field name="name">Firm</field>
+        <field name="attribute_id" ref="product_attribute_material_density"/>
+    </record>
+    <record id="pav_material_density_soft" model="product.attribute.value">
+        <field name="name">Soft</field>
+        <field name="attribute_id" ref="product_attribute_material_density"/>
+    </record> -->
+    <!-- Arch Height Attribute Values -->
+    <!-- <record id="pav_arch_height_very_high" model="product.attribute.value">
+        <field name="name">Very High</field>
+        <field name="attribute_id" ref="product_attribute_arch_height"/>
+    </record>
+    <record id="pav_arch_height_high" model="product.attribute.value">
+        <field name="name">High</field>
+        <field name="attribute_id" ref="product_attribute_arch_height"/>
+    </record>
+    <record id="pav_arch_height_standard" model="product.attribute.value">
+        <field name="name">Standard</field>
+        <field name="attribute_id" ref="product_attribute_arch_height"/>
+    </record>
+    <record id="pav_arch_height_low" model="product.attribute.value">
+        <field name="name">Low</field>
+        <field name="attribute_id" ref="product_attribute_arch_height"/>
+    </record> -->
+</odoo>

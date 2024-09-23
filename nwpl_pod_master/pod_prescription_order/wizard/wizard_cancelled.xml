@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+            <!-- Define the wizard form view -->
+        <record model="ir.ui.view" id="cancelled_form">
+            <field name="name">cancelled.wo.form</field>
+            <field name="model">cancelled.wo</field>
+            <field name="arch" type="xml">
+                <form string="Reason for cancellation">
+                    <group string="Reason for cancellation">
+                        <field name="note"/>
+                    </group>
+                    <footer>
+                        <button name="cancelled" string="Confirm" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Define the action that opens the wizard -->
+        <record id="action_cancel" model="ir.actions.act_window">
+            <field name="name">Cancel Work Order</field>
+            <field name="res_model">cancelled.wo</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <!-- <record model="ir.ui.view" id="cancelled_form">
+            <field name="name">cancelled.wo.form</field>
+            <field name="model">cancelled.wo</field>
+            <field name="arch" type="xml">
+                <form string="Reason for cancellation">
+                    <group string="Reason for cancellation">
+                        <field name="note"/>
+                    </group>
+                    <footer>
+                        <button name="cancelled" string="Confirm" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="cancelled Work Order" id="action_cancel" res_model="cancelled.wo" view_mode="form" target="new"/> -->
+
+    </data>
+</odoo>

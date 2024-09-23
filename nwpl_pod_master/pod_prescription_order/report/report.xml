@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_prescription_order" model="ir.actions.report">
+        <field name="name">Prescription Order</field>
+        <field name="model">prescription.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nwpl_pod_master.report_prescriptionorder</field>
+        <field name="report_file">nwpl_pod_master.report_prescriptionorder</field>
+        <field name="print_report_name">'Prescription Order - %s' % object.name</field>
+        <field name="binding_model_id" ref="nwpl_pod_master.model_prescription_order" />
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<odoo noupdate="0">
-    <!-- <record id="product_image_1" model="product.image">
-        <field name="name">Black Faux Leather High Waisted Wide Leg trouser</field>
-        <field name="product_tmpl_id" ref="pod_prescription.product_template_10"/>
-        <field name="image_1024" type="base64" file="pod_prescription/static/src/binary/product_image/1-image_1024.jpg"/>
-    </record> -->
-
-</odoo>

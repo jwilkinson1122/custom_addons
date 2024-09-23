@@ -1,0 +1,534 @@
+.pod_measurement_tag{
+  color: #FFF;
+  font-size: 12px;
+  line-height: 13px;
+  background: none repeat scroll 0% 0% #8b9ddf;
+  padding: 0px 6px;
+  border-radius: 21px;
+  margin:1px;
+}
+
+
+.pod_measurement_popup {
+  font-family: sans-serif;
+  background-color: white;
+  /* text-align: center; */
+  position: fixed;
+  left: 33%;
+  top: 21%;
+  width: 450px;
+  border-radius: 3px;
+  box-shadow: 0px 4px 15.36px 0.64px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+  animation: jelly 0.5s ease-in-out;
+  z-index: 500;
+}
+
+.local{
+	height: 20px;
+	border: 1px solid;
+}
+
+.measurement_create_table{
+	width:100%;
+	display: inline-flex;
+	margin-bottom: 30px;
+}
+
+.measurement_create_table .measurement_create_table_left{
+	width: 50%;
+}
+
+.measurement_create_table .measurement_create_table_right{
+	width: 50%;
+}
+
+.measurement_create_table_left table{
+	width: 100%; border-spacing: 5px;border-collapse: initial;font-size: 13px;
+}
+
+.measurement_create_table_left table tr td{
+	width: 50%;
+	text-align: start;
+}
+
+/* .measurement_create_table_right table{
+	width: 100%; border-spacing: 5px;border-collapse: initial;font-size: 13px;
+} */
+
+.measurement_create_table_right table{
+	width: 100%; border-spacing: 5px;border-collapse: initial;font-size: 13px;
+}
+
+.measurement_create_table_right table tr td{
+	width: 50%;
+	/* text-align: start; */
+}
+
+.measurement_input{
+	padding: 5px 5px 5px 5px;
+    font-size: 12px;
+    min-height: 29px;
+    width: 50%;
+}
+
+.pos_measurements_table{
+	margin-top: 60px;
+}
+
+.table_measurement_details{
+	width: 100%;
+}
+
+/* .table_measurement_details tr th{
+	border: 1px solid;
+} */
+
+.table_measurement_details tr th{
+	border: 1px solid;
+}
+
+.header-container {
+  display: inline-flex;
+  width: 100%;
+}
+
+.header-container h3 {
+  font-weight: bold;
+  margin: 0;
+}
+
+.set_measurements_table, .measurements_table {
+  overflow: auto;
+  min-height: 200px;
+}
+
+.measurement_selection_ap, .table_measurement_details {
+  width: 100%;
+}
+
+.measurement_selection_ap th, .measurement_selection_ap td, .table_measurement_details th, .table_measurement_details td {
+  padding: 5px;
+}
+
+.measurement-values {
+  display: inline-flex;
+}
+
+.measurement_box{
+	border: 1px solid;
+  display: flex;
+  align-items: center;
+  /* margin-right: 10px; */
+	margin: 3px;
+	border-radius: 3px;
+	padding: 3px;
+}
+
+.measurement_box.selected {
+  background-color: #cce5ff; /* Light blue background */
+  border: 1px solid #004085; /* Darker blue border */
+}
+
+.measurement_selection_main_cl table tr th{
+	border: 1px solid;
+}
+
+.measurement_selection_main_cl table tr td{
+	border: 1px solid;
+	font-size: 14px;
+}
+
+.measurement_selection_main_cl table tr td .measurement_box{
+	border: 1px solid;
+	margin: 3px;
+	border-radius: 3px;
+    max-width: max-content;
+}
+
+.add_measurement_class{
+	overflow: scroll;
+	max-height: 300px;
+}
+
+.input_measurement_cl{
+	box-shadow: none;
+	min-height: 22px;
+}
+
+.measurement_lines{
+	padding-left: 20px !important;
+	/* color: grey; */
+}
+
+.pod_measurement_on_orderline{
+	padding: 5px !important;
+ 
+}
+
+/* .measurement-detail{
+
+
+} */
+
+.order_product_image {
+  animation: image_move 0.75s 0.07s ease-in-out;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  margin: 0 auto;
+}
+
+.text_shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes image_move {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.button.pod_add_measurement:hover {
+  background-color: #6eb692;
+}
+
+.button.pod_add_measurement {
+  background-color: #6ec89b;
+  color: white;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 10px 32px;
+  margin-top: 15px;
+  cursor: pointer;
+  width:123px;
+
+  margin-bottom: 8px;
+}
+
+.button.cancel_measurement:hover {
+  background-color: #868686;
+}
+
+.button.cancel_measurement {
+  background-color: #bcbcbc;
+  color: white;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 10px 32px;
+  margin-top: 15px;
+  cursor: pointer;
+  width:123px;
+
+  margin-bottom: 8px;
+}
+
+@keyframes jelly {
+  0% {
+    transform: translateY(0px) scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(5px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}
+/*toggle switch button css*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.check_box {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.check_box:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .check_box {
+  background-color: #2196F3;
+}
+
+input:focus + .check_box {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .check_box:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded check_boxs */
+.check_box.round {
+  border-radius: 34px;
+}
+
+.check_box.round:before {
+  border-radius: 50%;
+}
+
+.pod-alert {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  position: fixed;
+  left: 33%;
+  top: 21%;
+  width: 40%;
+    box-shadow: 0px 4px 15.36px 0.64px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+  animation: jelly 0.5s ease-in-out;
+  }
+
+.pod-alert button.create_wallet:hover {
+    background-color: #6eb692;
+}
+.pod-alert .pod_warning {
+      border-color: #F8BB86; }
+.pod-alert .pod_warning .mark_line {
+        position: absolute;
+        width: 3px;
+        height: 47px;
+        background-color: #F8BB86;
+        top:14px;
+        margin-left: -2px;
+ }
+.pod-alert .pod_warning .mark_dot {
+        position: absolute;
+        width: 5px;
+        height: 7px;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        margin-left: -2px;
+        background-color: #F8BB86;
+        top:67px;
+}
+
+div.pod_mark {
+    height: 85px;
+    width: 85px;
+    border-radius: 100px;
+    border:3px solid #ff8d8d;
+      animation: image_move 0.75s 0.07s ease-in-out;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.pod-alert h2 {
+  color: #575757;
+  font-size: 21px;
+  margin-top:10px;
+  }
+  .pod-alert p {
+  color: #797979;
+  font-size: 16px;
+  margin-top:0px;
+}
+
+.measurement  {
+    text-align: left;
+    width:100%;
+}
+
+.measurement tr {
+    background: rgb(247,247,247);
+    border: 2px solid #dfdfdf;
+}
+.measurement th{
+  padding: 10px 8px;
+  font-size: initial;
+}
+.measurement td {
+    padding: 10px 8px;
+    font-size: initial;
+    font-weight: normal;
+
+}
+
+/*toggle switch button css*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.check_box {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.check_box:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/* Rounded check_boxs */
+.check_box.round {
+  border-radius: 34px;
+}
+
+.check_box.round:before {
+  border-radius: 50%;
+}
+
+
+.pod-alert button.cancel:hover {
+    background-color: #7ecff4;
+}
+
+.pod-alert button.cancel {
+    background-color: #8CD4F5;
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 10px 32px;
+    margin-top: 26px;
+    cursor: pointer;
+}
+
+.pod_note,
+.extra_fee_value,
+.pod_address {
+    font-size: 21px !important;
+    margin: 6px 10px;
+    font-style: italic;
+    padding: 5px;
+}
+
+
+.podorderline {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  white-space: normal; /* Allow text to wrap to the next line */
+  word-wrap: break-word; /* Break long words to fit within the container */
+  overflow: visible; /* Ensure content is not clipped */
+}
+
+/* .podorderline{
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+} */
+ul.pod_tabs{
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+ul.pod_tabs li{
+  background: none;
+  color: #222;
+  display: inline-block;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+ul.pod_tabs li.current{
+  background: #ededed;
+  color: #222;
+  border:2px solid #ededed;
+  border-bottom: none;
+}
+
+.tab-content{
+  max-height: 227px;
+  overflow-y: scroll;
+  border-top: 3px solid  #ededed;
+  border-bottom: 3px solid  #ededed;
+  display: none;
+  background: #ededed;
+  padding: 15px;
+}
+
+.tab-content.current{
+  display: inherit;
+}
+.fa.fa-info-circle.podorderline{
+  cursor: pointer;
+}
+.fa.fa-info-circle.podorderline:hover{
+  color: #2196F3;
+}
+/* C:\odoo17\server\odoo\odoo_addons\nwpl_pod_master\static\pod_pos_measurements */
+.pod_slice-left{
+  background: url(nwpl_pod_master/static/pod_pos_measurements/static/img/Sprite-Icon-1.png) no-repeat 0 0;
+  width: 20px;
+  height: 20px;
+  top: 5px;
+  position: relative;
+  display: inline-block;
+}

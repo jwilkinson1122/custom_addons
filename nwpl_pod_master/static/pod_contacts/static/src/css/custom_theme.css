@@ -1,0 +1,54 @@
+.o_badge_group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* .o_badge_group .badge {
+    width: 100px;         
+    text-align: center;   
+    display: inline-block; 
+    white-space: nowrap;  
+    overflow: hidden;     
+    text-overflow: ellipsis; 
+} */
+
+.o_badge_group .badge {
+    min-width: 70px;      /* Set a minimum width for badges */
+    text-align: center;    /* Center the text within the badge */
+    display: inline-block; /* To ensure that width and text-alignment are respected */
+    /* padding: 0 5px;       */
+}
+
+.o_kanban_record .o_badge_group {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.o_separator_with_icon {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.o_separator_with_icon i {
+    margin-right: 5px;
+}
+
+
+/* custom_form_layout.css */
+.o_custom_form_label_above .o_form_label {
+    display: block;
+    float: none;
+    clear: both;
+}
+
+.o_custom_form_label_above .o_field_widget {
+    display: block;
+    margin-left: 0;
+}
+
+.oe_button_text_left {
+    text-align: left;
+}

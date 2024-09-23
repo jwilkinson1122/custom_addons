@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <record id="ir_attachment_313" model="ir.attachment">
+        <field name="name">cover.jpg</field>
+        <field name="datas" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/ir_attachment/orthotics_1.webp"/>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<odoo>
+    <record id="sale_order_view" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_template_id']" position="after">
+                <field name="allowed_bom_ids" column_invisible="1"/>
+                <field name="flexible_bom" column_invisible="1"/>
+                <field name="bom_id" optional="show"/>
+                <button name="action_set_bom" string="Set bom" type="object" context="{'default_partner_id': id}" invisible="(not product_id or (product_id and (not flexible_bom))) or bom_id" class="btn-primary"/>
+                <button name="action_edit_bom" string="Edit bom" type="object" context="{'default_partner_id': id}" invisible="not flexible_bom or (flexible_bom and not bom_id)" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,442 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- ref('pav_laterality_lt'),  -->
+    <!-- ref('pav_laterality_rt'),  -->
+    <!-- ref('pav_laterality_bl') -->
+
+    <!-- ptal_vinyl_top_cover_laterality -->
+    <record id="ptav_laterality_lt_vinyl_top_cover" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+    </record>
+    <record id="ptav_laterality_rt_vinyl_top_cover" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+    </record>
+    <record id="ptav_laterality_bl_vinyl_top_cover" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+        <field name="price_extra">3.95</field>
+    </record>
+
+    <!-- ref('pav_material_color_charcoal'), -->
+    <!-- ref('pav_material_color_dark_brown'), -->
+    <!-- ref('pav_material_color_gray_tan'), -->
+    <!-- ref('pav_material_color_blue_gray') -->
+
+    <!-- ptal_vinyl_top_cover_color -->
+    <record id="ptav_vinyl_top_cover_color_charcoal" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_charcoal"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_dark_brown" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_dark_brown"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_gray_tan" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_gray_tan"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_blue_gray" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_blue_gray"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+    </record>
+  
+
+    <!-- SUPERGLASS FLEX	56.5 -->
+    <!-- ptal_sg_flex_laterality  -->
+     <!-- Superglass Flex -->
+     <!-- <record id="ptav_sg_flex_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_flex_laterality"/>
+    </record>
+     <record id="ptav_sg_flex_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_flex_laterality"/>
+    </record>
+    <record id="ptav_sg_flex_laterality_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_sg_flex_laterality"/>
+        <field name="price_extra">56.5</field>
+    </record>
+    <record id="ptav_sg_flex_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_flex_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_flex_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_flex_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_flex_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_sg_flex_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_flex_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_sg_flex_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- SUPERGLASS EVERYDAY	59.25 -->
+    <!-- ptal_sg_everyday_laterality  -->
+    <!-- <record id="ptav_sg_everyday_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_everyday_laterality"/>
+    </record>
+     <record id="ptav_sg_everyday_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_everyday_laterality"/>
+    </record>
+    <record id="ptav_sg_everyday_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_sg_everyday_laterality"/>
+        <field name="price_extra">59.25</field>
+    </record>
+    <record id="ptav_sg_everyday_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_everyday_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_everyday_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_everyday_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_everyday_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_sg_everyday_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_everyday_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_sg_everyday_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- SUPERGLASS PROFORMANCE	61.75 -->
+    <!-- ptal_sg_proformance_laterality  -->
+    <!-- <record id="ptav_sg_proformance_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_proformance_laterality"/>
+    </record>
+     <record id="ptav_sg_proformance_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_sg_proformance_laterality"/>
+    </record>
+    <record id="ptav_sg_proformance_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_sg_proformance_laterality"/>
+        <field name="price_extra">61.75</field>
+    </record>
+    <record id="ptav_sg_proformance_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_proformance_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_proformance_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_sg_proformance_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_proformance_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_sg_proformance_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_sg_proformance_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_sg_proformance_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+    
+    <!-- POLYPROPYLENE SEMI-FLEXIBLE	42 -->
+    <!-- ptal_polypro_semi_flexible_laterality  -->
+    <!-- <record id="ptav_polypro_semi_flexible_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_laterality"/>
+    </record>
+     <record id="ptav_polypro_semi_flexible_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_laterality"/>
+    </record>
+    <record id="ptav_polypro_semi_flexible_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_laterality"/>
+        <field name="price_extra">42.0</field>
+    </record>
+    <record id="ptav_polypro_semi_flexible_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_flexible_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_flexible_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_flexible_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_flexible_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- POLYPROPYLENE SEMI-RIGID	42 -->
+    <!-- ptal_polypro_semi_rigid_laterality  -->
+    <!-- <record id="ptav_polypro_semi_rigid_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_laterality"/>
+    </record>
+     <record id="ptav_polypro_semi_rigid_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_laterality"/>
+    </record>
+    <record id="ptav_polypro_semi_rigid_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_laterality"/>
+        <field name="price_extra">42.0</field>
+    </record>
+    <record id="ptav_polypro_semi_rigid_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_rigid_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_rigid_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_semi_rigid_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_polypro_semi_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- POLYPROPYLENE RIGID	42 -->
+    <!-- ptal_polypro_rigid_laterality  -->
+    <!-- <record id="ptav_polypro_rigid_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_laterality"/>
+    </record>
+     <record id="ptav_polypro_rigid_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_laterality"/>
+    </record>
+    <record id="ptav_polypro_rigid_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_laterality"/>
+        <field name="price_extra">42.0</field>
+    </record>
+    <record id="ptav_polypro_rigid_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_rigid_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_rigid_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_polypro_rigid_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_polypro_rigid_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- NCV GENTLE	47.75 -->
+    <!-- ptal_ncv_gentle_laterality  -->
+    <!-- <record id="ptav_ncv_gentle_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_laterality"/>
+    </record>
+     <record id="ptav_ncv_gentle_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_laterality"/>
+    </record>
+    <record id="ptav_ncv_gentle_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_laterality"/>
+        <field name="price_extra">47.75</field>
+    </record>
+    <record id="ptav_ncv_gentle_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_gentle_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_gentle_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_gentle_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_ncv_gentle_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- NCV FIRM	49.25 -->
+    <!-- ptal_ncv_firm_laterality  -->
+    <!-- <record id="ptav_ncv_firm_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_firm_laterality"/>
+    </record>
+     <record id="ptav_ncv_firm_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_firm_laterality"/>
+    </record>
+    <record id="ptav_ncv_firm_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_ncv_firm_laterality"/>
+        <field name="price_extra">49.25</field>
+    </record>
+    <record id="ptav_ncv_firm_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_ncv_firm_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_firm_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_ncv_firm_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_firm_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_ncv_firm_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_ncv_firm_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_ncv_firm_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- PC MULTIDENSITY	68 -->
+    <!-- ptal_pc_multi_density_laterality  -->
+    <!-- <record id="ptav_pc_multi_density_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_laterality"/>
+    </record>
+     <record id="ptav_pc_multi_density_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_laterality"/>
+    </record>
+    <record id="ptav_pc_multi_density_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_laterality"/>
+        <field name="price_extra">68.0</field>
+    </record>
+    <record id="ptav_pc_multi_density_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_multi_density_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_multi_density_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_multi_density_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_pc_multi_density_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+
+    <!-- PC COMPOSITE	68 -->
+    <!-- ptal_pc_composite_laterality  -->
+    <!-- <record id="ptav_pc_composite_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_pc_composite_laterality"/>
+    </record>
+     <record id="ptav_pc_composite_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_pc_composite_laterality"/>
+    </record>
+    <record id="ptav_pc_composite_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_pc_composite_laterality"/>
+        <field name="price_extra">68.0</field>
+    </record>
+    <record id="ptav_pc_composite_arch_height_very_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_very_high"/>
+        <field name="attribute_line_id" ref="ptal_pc_composite_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_composite_arch_height_high" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_high"/>
+        <field name="attribute_line_id" ref="ptal_pc_composite_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_composite_arch_height_standard" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_standard"/>
+        <field name="attribute_line_id" ref="ptal_pc_composite_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_pc_composite_arch_height_low" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_arch_height_low"/>
+        <field name="attribute_line_id" ref="ptal_pc_composite_arch_height"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+   
+    <!-- ptal_vinyl_top_cover_laterality  -->
+    <!-- Vinyl Top Cover - Bilateral Extra Price -->
+    <!-- <record id="ptav_vinyl_top_cover_laterality_lt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_lt"/> 
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+    </record>
+     <record id="ptav_vinyl_top_cover_laterality_rt" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_rt"/> 
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+    </record>
+    <record id="ptav_vinyl_top_cover_laterality_bilateral" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_laterality_bl"/> 
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_laterality"/>
+        <field name="price_extra">3.95</field>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_charcoal" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_charcoal"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_dark_brown" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_dark_brown"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_gray_tan" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_gray_tan"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+        <field name="price_extra">0.0</field>
+    </record>
+    <record id="ptav_vinyl_top_cover_color_blue_gray" model="product.template.attribute.value">
+        <field name="product_attribute_value_id" ref="pav_material_color_blue_gray"/>
+        <field name="attribute_line_id" ref="ptal_vinyl_top_cover_color"/>
+        <field name="price_extra">0.0</field>
+    </record> -->
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ptal_vinyl_top_cover_laterality" model="product.template.attribute.line" context="{'create_product_product': False}">
+        <field name="product_tmpl_id" ref="product_template_vinyl_top_cover"/>
+        <field name="attribute_id" ref="product_attribute_laterality"/>
+        <field name="value_ids" eval="[(6, 0, [
+            ref('pav_laterality_lt'), 
+            ref('pav_laterality_rt'), 
+            ref('pav_laterality_bl')
+        ])]"/>
+    </record>
+    <record id="ptal_vinyl_top_cover_color" model="product.template.attribute.line" context="{'create_product_product': False}">
+        <field name="product_tmpl_id" ref="product_template_vinyl_top_cover"/>
+        <field name="attribute_id" ref="product_attribute_material_color"/>
+        <field name="value_ids" eval="[(6, 0, [
+            ref('pav_material_color_charcoal'),
+            ref('pav_material_color_dark_brown'),
+            ref('pav_material_color_gray_tan'),
+            ref('pav_material_color_blue_gray')
+        ])]"/>
+    </record>
+</odoo>
+

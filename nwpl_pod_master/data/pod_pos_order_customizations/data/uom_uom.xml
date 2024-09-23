@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- <odoo noupdate="1"> -->
+    <!-- <record id="product_uom_dozen" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Dozens</field>
+        <field name="factor_inv" eval="12"/>
+        <field name="uom_type">bigger</field>
+    </record> -->
+    <!-- UoM for Varus, measured in degrees -->
+    <record id="product_uom_vertical" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_correction"/>
+        <field name="name">Vertical</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">reference</field>
+    </record>
+
+    <record id="uom_uom_varus" model="uom.uom">
+        <field name="name">Varus °</field>
+        <field name="category_id" ref="product_uom_categ_correction"/>
+        <field name="factor_inv">1.0</field>
+        <field name="uom_type">bigger</field>
+        <!-- <field name="rounding">0.01</field> -->
+        <field name="symbol">°</field>
+    </record>
+
+    <!-- UoM for Valgus, measured in degrees -->
+    <record id="uom_uom_valgus" model="uom.uom">
+        <field name="name">Valgus °</field>
+        <field name="category_id" ref="product_uom_categ_correction"/>
+        <field name="factor_inv">1.0</field>
+        <field name="uom_type">bigger</field>
+        <!-- <field name="rounding">0.01</field> -->
+        <field name="symbol">°</field>
+    </record>
+
+    <!-- UoM for Vertical, used as a flag (no real measurement) -->
+    <!-- <record id="uom_uom_vertical" model="uom.uom">
+        <field name="category_id" ref="product_uom_categ_degree"/>
+        <field name="factor_inv">1.0</field>
+        <field name="rounding">1.0</field>
+    </record> -->
+
+    <record id="product_uom_pair" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pairs</field>
+        <field name="factor_inv" eval="2"/>
+        <field name="uom_type">bigger</field>
+    </record>
+
+</odoo>

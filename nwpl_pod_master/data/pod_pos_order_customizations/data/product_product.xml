@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo >
+    <!-- ptav_laterality_lt_vinyl_top_cover -->
+    <!-- ptav_laterality_rt_vinyl_top_cover -->
+    <!-- ptav_laterality_bl_vinyl_top_cover -->
+    <!-- ptav_vinyl_top_cover_color_charcoal -->
+    <!-- ptav_vinyl_top_cover_color_dark_brown -->
+    <!-- ptav_vinyl_top_cover_color_gray_tan -->
+    <!-- ptav_vinyl_top_cover_color_blue_gray -->
+    <record id="product_product_vinyl_top_cover" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_vinyl_top_cover"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [
+        ref('ptav_laterality_lt_vinyl_top_cover'), 
+        ref('ptav_laterality_rt_vinyl_top_cover'),
+        ref('ptav_laterality_bl_vinyl_top_cover'),
+        ref('ptav_vinyl_top_cover_color_charcoal'),
+        ref('ptav_vinyl_top_cover_color_dark_brown'),
+        ref('ptav_vinyl_top_cover_color_gray_tan'),
+        ref('ptav_vinyl_top_cover_color_blue_gray')
+        ])]"/>
+        <!-- <field name="product_template_variant_value_ids" eval="[(6, 0, [
+        ref('ptav_laterality_lt_vinyl_top_cover'), 
+        ref('ptav_laterality_rt_vinyl_top_cover'),
+        ref('ptav_laterality_bl_vinyl_top_cover'),
+        ref('ptav_vinyl_top_cover_color_charcoal'),
+        ref('ptav_vinyl_top_cover_color_dark_brown'),
+        ref('ptav_vinyl_top_cover_color_gray_tan'),
+        ref('ptav_vinyl_top_cover_color_blue_gray')
+        ])]"/> -->
+        <!-- <field name="image_variant_1920" type="base64" file="orthotic/static/src/binary/product_product/20-image_variant_1920.webp"/> -->
+    </record>
+     
+    
+</odoo>

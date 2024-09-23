@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+          <record id="prescription_sale_order_action" model="ir.actions.act_window">
+            <field name="name">Prescription Order</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_prescription', '=', 1)]</field>
+            <field name="context">{'default_is_prescription': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a master shift
+                </p>
+                <p>Klik Tombol Create Untuk Booking Order baru</p>
+            </field>
+        </record>
+        
+        <menuitem name="Prescription" id="prescription_main" parent="sale.sale_menu_root" sequence="5"/>
+        <menuitem name="Prescription Orders" id="prescription_order_main" parent="prescription_main" sequence="1" action="prescription_sale_order_action"/>
+        <menuitem name="Work Order" id="work_order_main" parent="prescription_main" sequence="2" action="work_order_action"/>
+        <menuitem name="Service Team" id="service_team_main" parent="prescription_main" sequence="3" action="service_team_action"/>
+    </data>
+</odoo>

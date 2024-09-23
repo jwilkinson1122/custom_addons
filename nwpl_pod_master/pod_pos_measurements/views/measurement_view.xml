@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Form view for measurement categories -->
+        <record id="measurement_category_form_view" model="ir.ui.view">
+            <field name="name">measurement.measurement.category.form</field>
+            <field name="model">measurement.measurement.category</field>
+            <field name="arch" type="xml">
+                <form string="Measurement Category">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name" style="width:65%"/>
+                            <field name="category_id" style="width:65%"/>
+                            <field name="measurement_unit" style="width:65%"/>
+                        </group>
+                        <notebook>
+                            <page string="Meaurement Types">
+                                <field name="measurement_types" mode="form,tree">
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <field name="name" id="name"/>
+                                                <field name="pos_extra_price" id="pos_extra_price"/>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                    <tree>
+                                        <field name="name" id="name"/>
+                                        <field name="pos_extra_price" id="pos_extra_price"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="measurement_category_tree_view" model="ir.ui.view">
+            <field name="name">measurement.measurement.category.tree</field>
+            <field name="model">measurement.measurement.category</field>
+            <field name="arch" type="xml">
+                <tree string="Measurement Categories">
+                    <field name="name"/>
+                    <field name='measurement_types' widget="many2many_tags" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="measurement_category_action" model="ir.actions.act_window">
+            <field name="name">Measurement Categories</field>
+            <field name="res_model">measurement.measurement.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Define a new measurement category
+                </p>
+            </field>
+        </record>
+
+        <!-- Form view for measurements -->
+        <record id="measurement_form_view" model="ir.ui.view">
+            <field name="name">measurement.measurement.form</field>
+            <field name="model">measurement.measurement</field>
+            <field name="arch" type="xml">
+                <form string="Measurements">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name" style="width:65%" readonly="1"/>
+                            <field name="date"/>
+                            <field name="partner_id"/>
+                            <field name="category_id"/>
+                            <field name="measurement_cat_ids" style="width:65%" widget="many2many_tags"/>
+                            <field name="measurement_type"/>
+                            <field name="measurement"/>
+                            <field name="measurement_unit"/>
+                            <!-- <field name="laterality"/> -->
+                            <!-- <field name="laterality" domain="[('attribute_id', '=', ref('product_attribute_laterality'))]"/> -->
+                            <field name="sequence_number" invisible="True"/>
+                            <field name="currency_id" invisible="true" />
+                            <field name="pos_extra_price" style="width:30%" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="measurement_tree_view" model="ir.ui.view">
+            <field name="name">measurement.measurement.tree</field>
+            <field name="model">measurement.measurement</field>
+            <field name="arch" type="xml">
+                <tree string="Measurements">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="measurement_action" model="ir.actions.act_window">
+            <field name="name">Measurements</field>
+            <field name="res_model">measurement.measurement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Form view for measurement types -->
+        <record id="measurement_type_form_view" model="ir.ui.view">
+            <field name="name">measurement.type.form</field>
+            <field name="model">measurement.type</field>
+            <field name="arch" type="xml">
+                <form string="Meaurement Types">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name" style="width:65%"/>
+                            <field name="measurement_cat_ids" style="width:65%" widget="many2many_tags"/>
+                            <field name="sequence_number" invisible="True"/>
+                            <field name="currency_id" invisible="true" />
+                            <field name="pos_extra_price" style="width:30%" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="measurement_type_tree_view" model="ir.ui.view">
+            <field name="name">measurement.type.tree</field>
+            <field name="model">measurement.type</field>
+            <field name="arch" type="xml">
+                <tree string="Meaurement Types">
+                    <field name="name"/>
+                    <field name="measurement_cat_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="measurement_type_action" model="ir.actions.act_window">
+            <field name="name">Meaurement Types</field>
+            <field name="res_model">measurement.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Define a new measurement type
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="pos_config_measurements" name="Measurements" parent="point_of_sale.menu_point_config_product" sequence="11"/>
+        <menuitem id="pos_config_measurement_categories" name="Measurement Categories" parent="pos_config_measurements" action="measurement_category_action" sequence="30"/>
+        <menuitem id="pos_config_measurement_type" name="Meaurement Types" action="measurement_type_action" parent="pos_config_measurements"/>
+        <!-- <menuitem id="pos_config_measurement_action" name="Measurements" parent="pos_config_measurements" action="measurement_action" sequence="25"/> -->
+    
+    </data>
+</odoo>

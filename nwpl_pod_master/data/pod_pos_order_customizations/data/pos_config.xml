@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+<!-- <odoo noupdate="1"> -->
+    <record id="pos_config_booking_orders" model="pos.config">
+        <field name="name">Booking Orders</field>
+        <field name="iface_tipproduct" eval="False"/>
+        <field name="iface_customer_facing_display_local" eval="False"/>
+        <field name="iface_print_auto" eval="True"/>
+        <field name="iface_customer_facing_display" eval="False"/>
+        <field name="ship_later" eval="True"/>
+        <field name="limit_categories">True</field>
+    </record>
+</odoo>

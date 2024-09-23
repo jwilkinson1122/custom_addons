@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <record id="product_supplierinfo_1" model="product.supplierinfo">
+        <field name="partner_id" ref="res_partner_8"/>
+        <field name="product_tmpl_id" ref="product_template_compressor"/>
+        <field name="price">150.0</field>
+        <field name="min_qty">1.0</field>
+    </record>
+    <record id="product_supplierinfo_2" model="product.supplierinfo">
+        <field name="partner_id" ref="res_partner_8"/>
+        <field name="product_tmpl_id" ref="product_template_drum_brake"/>
+        <field name="price">12.0</field>
+        <field name="min_qty">1.0</field>
+    </record>
+</odoo>

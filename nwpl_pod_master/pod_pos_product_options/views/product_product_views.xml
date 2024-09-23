@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  
+    <record id="pod_pos_product_product_inherit_form_view" model="ir.ui.view">
+        <field name="name">pod.options.product.product.form.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="pod_is_global_option"></field>
+            </xpath>
+            <xpath expr="//sheet//notebook" position="inside">
+                <page id="Options" string="Options">
+                    <group>
+                        <group>
+                            <field name="pod_option_group_ids" widget="many2many_tags" ></field>
+                            <field name="pod_option_ids" widget="many2many_tags"></field>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

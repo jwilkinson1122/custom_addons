@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+    <record model="contact.practice.type" id="clinic">
+        <field name="name">Clinic</field>
+        <field name="description">Clinic</field>
+    </record>
+    <record model="contact.practice.type" id="hospital">
+        <field name="name">Hospital</field>
+        <field name="description">Hospital</field>
+    </record>
+    <record model="contact.practice.type" id="va">
+        <field name="name">Military/VA</field>
+        <field name="description">Military/VA</field>
+    </record>
+    <record model="contact.practice.type" id="other">
+        <field name="name">Other</field>
+        <field name="description">Other</field>
+    </record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.view.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="placeholder">Internal Identifier</attribute>
+            </xpath>
+            <!-- <xpath expr="//div[@id='restaurant_on_create']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+            <xpath expr="//div[@id='restaurant_on_create']" position="replace">
+                <div id="shop_on_create" class="row mt16 o_settings_container" invisible="not context.get('pos_config_create_mode', False)">
+                    <setting>
+                        <field name="product_configure" />
+                    </setting>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

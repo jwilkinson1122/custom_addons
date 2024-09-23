@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="nwpl_pod_master.BoolBadge" owl="1">
+        <span class="badge rounded-pill m-2 p-2" t-att-class="props.value ? 'text-white':'text-black'" t-esc="trueValue" t-attf-style="background-color :{{ props.value ? trueColor : defaultColor }}" t-on-click="() => this.updateValue(true)"/>
+        <span class="badge rounded-pill m-2 p-2" t-att-class="props.value ? 'text-black':'text-white'" t-esc="falseValue" t-attf-style="background-color :{{ props.value ? defaultColor : falseColor }}" t-on-click="() => this.updateValue(false)"/>
+    </t>
+</templates>
+
+<!-- <templates xml:space="preserve">
+    <t t-name="nwpl_pod_master.BooleanButtonField" owl="1">
+        <div t-ref="root" t-on-click="onChange">
+            <CheckBox id="props.id" value="props.value or false" className="'d-inline-block me-2'" disabled="isReadonly" onChange.bind="onChange" />
+        </div>
+    </t>
+</templates> -->

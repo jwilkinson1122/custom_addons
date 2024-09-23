@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-	<menuitem id="menu_measurment_type"
-		name="Measurment Type"
-        action="wt_abaya.measurment_type_action"
-        parent="point_of_sale.pos_menu_products_configuration"/>
-</odoo>

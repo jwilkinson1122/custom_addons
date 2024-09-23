@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- <record id="uom_category_correction" model="uom.category">
+        <field name="name">Correction</field>
+    </record> -->
+    <record id="product_uom_categ_correction" model="uom.category">
+        <field name="name">Correction</field>
+    </record>
+</odoo>
+
+

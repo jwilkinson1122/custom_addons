@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="product_category_bmw" model="product.category">
+        <field name="parent_id" ref="product.product_category_all" />
+        <field name="name">BMW</field>
+    </record>
+    <record id="product_category_device_covers" model="product.category">
+        <field name="name">Device Covers</field>
+        <field name="parent_id" ref="product.product_category_all"/>
+        <field name="removal_strategy_id" ref="stock.removal_fifo"/>
+        <field name="property_cost_method">fifo</field>
+    </record>
+    <record id="product_category_top_covers" model="product.category">
+        <field name="name">Top Covers</field>
+        <field name="parent_id" ref="product_category_device_covers"/>
+        <field name="removal_strategy_id" ref="stock.removal_fifo"/>
+        <field name="property_cost_method">fifo</field>
+        <field name="sequence">1</field>
+    </record>
+    
+</odoo>

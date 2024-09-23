@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<record id="order_customization_group_form_view" model="ir.ui.view">
+			<field name="name">pos.order.customization.group</field>
+			<field name="model">pos.order.customization.group</field>
+			<field name="arch" type="xml">
+				<form string="Customization Group">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+							</button>
+						</div>
+						<group>
+							<field name="name" style="width:65%"/>
+						</group>
+						<notebook>
+							<page string="Order Customizations">
+								<field name="customizations" mode="form,tree">
+									<form>
+										<sheet>
+											<group>
+												<field name="name" id="name"/>
+											</group>
+										</sheet>
+									</form>
+									<tree>
+										<field name="name" id="name"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="order_customization_group_form_view_action" model="ir.actions.act_window">
+			<field name="name">Customization Groups</field>
+			<field name="res_model">pos.order.customization.group</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+ 
+		<record id="order_customization_form_view" model="ir.ui.view">
+			<field name="name">pos.order.customization</field>
+			<field name="model">pos.order.customization</field>
+			<field name="arch" type="xml">
+				<form string="Customizations">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+							</button>
+						</div>
+						<group>
+							<field name="name" style="width:65%"/>
+							<field name="customization_groups" style="width:65%" widget="many2many_tags"/>
+							<field name="sequence_number" invisible="True"/>
+							<field name="currency_id" invisible="true" />
+							<field name="pos_extra_price" style="width:30%" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="order_customization_tree_view" model="ir.ui.view">
+			<field name="name">pos.order.customization.tree</field>
+			<field name="model">pos.order.customization</field>
+			<field name="arch" type="xml">
+				<tree string="Customizations">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="order_customization_value_form_view" model="ir.ui.view">
+			<field name="name">pos.order.customization.value.form</field>
+			<field name="model">pos.order.customization.value</field>
+			<field name="arch" type="xml">
+				<form string="Customization Value">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+							</button>
+						</div>
+						<group>
+							<field name="name" string="Value Name" required="1"/>
+							<field name="customization_id" required="1"/>
+							<field name="sequence"/>
+							<field name="attribute_value_id"/>
+							<field name="pos_extra_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="is_custom"/>
+							<field name="html_color"/>
+							<field name="color"/>
+							<field name="image"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="order_customization_value_tree_view" model="ir.ui.view">
+			<field name="name">pos.order.customization.value.tree</field>
+			<field name="model">pos.order.customization.value</field>
+			<field name="arch" type="xml">
+				<tree string="Customization Values">
+					<field name="name"/>
+					<field name="customization_id"/>
+					<field name="sequence"/>
+					<field name="attribute_value_id"/>
+					<field name="pos_extra_price"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="order_customization_form_view_action" model="ir.actions.act_window">
+			<field name="name">Customizations</field>
+			<field name="res_model">pos.order.customization</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="order_customization_value_form_view_action" model="ir.actions.act_window">
+			<field name="name">Customization Values</field>
+			<field name="res_model">pos.order.customization.value</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="pos_config_order_customization_group" name="Order Customizations" parent="point_of_sale.menu_point_config_product" sequence="11"/>
+		<menuitem id="pos_config_order_customization_group_form_view_action" name="Customization Groups" parent="pos_config_order_customization_group" action="order_customization_group_form_view_action" sequence="30"/>
+		<menuitem id="pos_config_order_customization_form_view_action" name="Customizations" parent="pos_config_order_customization_group" action="order_customization_form_view_action" sequence="35"/>
+		<menuitem id="pos_config_order_customization_value_form_view_action" name="Customization Values" parent="pos_config_order_customization_group" action="order_customization_value_form_view_action" sequence="40"/>
+
+	</data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <!-- Custom Device -->
+    <record id="product_public_category_custom_device" model="product.public.category">
+        <field name="name">Custom Device</field>
+    </record>
+    <record id="product_public_category_superglass" model="product.public.category">
+        <field name="name">Superglass</field>
+        <field name="parent_id" ref="product_public_category_custom_device"/>
+    </record>
+    <record id="product_public_category_polypropylene" model="product.public.category">
+        <field name="name">Polypropylene</field>
+        <field name="parent_id" ref="product_public_category_custom_device"/>
+    </record>
+    <record id="product_public_category_ncv" model="product.public.category">
+        <field name="name">NCV</field>
+        <field name="parent_id" ref="product_public_category_custom_device"/>
+    </record>
+    <record id="product_public_category_prescription_comfort" model="product.public.category">
+        <field name="name">Prescription Comfort</field>
+        <field name="parent_id" ref="product_public_category_custom_device"/>
+    </record>
+    <!-- Top Cover -->
+    <record id="product_public_category_top_cover" model="product.public.category">
+        <field name="name">Top Cover</field>
+    </record>
+    <!-- <record id="product_public_category_top_cover_length" model="product.public.category">
+        <field name="name">Top Cover Length</field>
+        <field name="parent_id" ref="product_public_category_top_cover"/>
+    </record> -->
+    <record id="product_public_category_specifications" model="product.public.category">
+        <field name="name">Specifications</field>
+    </record>
+</odoo>

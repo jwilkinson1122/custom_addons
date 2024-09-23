@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- <record id="pos_product_category_device_covers" model="pos.category">
+        <field name="name">Device Covers</field>
+    </record> -->
+    <record id="pos_product_category_device_covers" model="pos.category">
+        <field name="name">Device Covers</field>
+        <!-- <field name="parent_id" ref="product.product_category_all"/> -->
+    </record>
+    <record id="pos_product_category_top_covers" model="pos.category">
+        <field name="name">Top Covers</field>
+        <field name="parent_id" ref="pos_product_category_device_covers"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- <record id="pos_product_category_device_covers" model="pos.category">
+        <field name="name">Top &amp; Bottom Covers</field>
+        <field name="sequence" eval="4"/>
+    </record>
+    <record id="pos_product_category_topcovers" model="pos.category">
+        <field name="name">Top Cover</field>
+        <field name="parent_id" ref="pos_product_category_device_covers"/>
+        <field name="sequence" eval="10" />
+    </record>
+    <record id="pos_product_category_bottomcovers" model="pos.category">
+        <field name="name">Bottom Cover</field>
+        <field name="parent_id" ref="pos_product_category_device_covers"/>
+        <field name="sequence" eval="20" />
+    </record> -->
+
+    <!-- <record id="pos_category_custom_devices" model="pos.category">
+        <field name="name">Custom Devices</field>
+        <field name="sequence" eval="0" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_sg_devices" model="pos.category">
+        <field name="name">Superglass</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="10" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_polypro_devices" model="pos.category">
+        <field name="name">Polypropylene</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="20" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_ncv_devices" model="pos.category">
+        <field name="name">NCV</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="30" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_pc_devices" model="pos.category">
+        <field name="name">Prescription Comfort</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="40" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_poly_devices" model="pos.category">
+        <field name="name">Poly Devices</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="50" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_pttd_devices" model="pos.category">
+        <field name="name">PTD Devices</field>
+        <field name="parent_id" ref="pos_category_custom_devices"/>
+        <field name="sequence" eval="60" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/orthotic_device.png"/>
+    </record>
+    <record id="pos_category_otc_devices" model="pos.category">
+        <field name="name">OTC Devices</field>
+        <field name="sequence" eval="2" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/otc.png"/>
+    </record>
+    <record id="pos_category_premium_otc_devices" model="pos.category">
+        <field name="name">Premium OTC</field>
+        <field name="parent_id" ref="pos_category_otc_devices"/>
+        <field name="sequence" eval="10" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/otc.png"/>
+    </record>
+    <record id="pos_category_elite_otc_devices" model="pos.category">
+        <field name="name">Elite OTC</field>
+        <field name="parent_id" ref="pos_category_otc_devices"/>
+        <field name="sequence" eval="20" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/otc.png"/>
+    </record>
+    <record id="pos_category_childrens_otc_devices" model="pos.category">
+        <field name="name">Childrens OTC</field>
+        <field name="parent_id" ref="pos_category_otc_devices"/>
+        <field name="sequence" eval="30" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/otc.png"/>
+    </record>
+    <record id="pos_category_life_otc_devices" model="pos.category">
+        <field name="name">Life OTC</field>
+        <field name="parent_id" ref="pos_category_otc_devices"/>
+        <field name="sequence" eval="40" />
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/otc.png"/>
+    </record>
+    <record id="pos_category_brace_devices" model="pos.category">
+        <field name="name">Brace Devices</field>
+        <field name="sequence" eval="3"/>
+    </record>
+    <record id="pos_category_richie_standard_devices" model="pos.category">
+        <field name="name">Richie Standard</field>
+        <field name="parent_id" ref="pos_category_brace_devices"/>
+        <field name="sequence" eval="10" />
+    </record>
+    <record id="pos_category_richie_afo_devices" model="pos.category">
+        <field name="name">Richie AFO</field>
+        <field name="parent_id" ref="pos_category_brace_devices"/>
+        <field name="sequence" eval="20" />
+    </record>
+    <record id="pos_category_richie_aerospring_devices" model="pos.category">
+        <field name="name">Richie Aerospring</field>
+        <field name="parent_id" ref="pos_category_brace_devices"/>
+        <field name="sequence" eval="30" />
+    </record>
+    <record id="pos_category_richie_otc_devices" model="pos.category">
+        <field name="name">Richie OTC</field>
+        <field name="parent_id" ref="pos_category_brace_devices"/>
+        <field name="sequence" eval="40" />
+    </record>
+
+    <record id="pos_category_device_covers" model="pos.category">
+        <field name="name">Top &amp; Bottom Covers</field>
+        <field name="sequence" eval="4"/>
+    </record>
+    <record id="pos_category_top_covers" model="pos.category">
+        <field name="name">Top Cover</field>
+        <field name="parent_id" ref="pos_category_device_covers"/>
+        <field name="sequence" eval="10" />
+    </record>
+  
+    <record id="pos_category_bottomcovers" model="pos.category">
+        <field name="name">Bottom Cover</field>
+        <field name="parent_id" ref="pos_category_device_covers"/>
+        <field name="sequence" eval="20" />
+    </record>
+
+    <record id="pos_category_device_cushions_extensions" model="pos.category">
+        <field name="name">Cushion &amp; Extension</field>
+        <field name="sequence" eval="5"/>
+    </record>
+    <record id="pos_category_cushion" model="pos.category">
+        <field name="name">Cushion</field>
+        <field name="parent_id" ref="pos_category_device_cushions_extensions"/>
+        <field name="sequence" eval="10" />
+    </record>
+    <record id="pos_category_extension" model="pos.category">
+        <field name="name">Extension</field>
+        <field name="parent_id" ref="pos_category_device_cushions_extensions"/>
+        <field name="sequence" eval="20" />
+    </record>
+     
+
+    <record id="pos_category_device_options" model="pos.category">
+        <field name="name">Orthotic Options</field>
+        <field name="sequence" eval="6"/>
+    </record>
+    <record id="pos_category_arch_height" model="pos.category">
+        <field name="name">Arch Height</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="10" />
+    </record>
+    <record id="pos_category_xguard" model="pos.category">
+        <field name="name">X-Guard</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="20" />
+    </record>
+    <record id="pos_category_posting" model="pos.category">
+        <field name="name">Posting</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="30" />
+    </record>
+    <record id="pos_category_heel_post" model="pos.category">
+        <field name="name">Heel Post</field>
+        <field name="parent_id" ref="pos_category_posting"/>
+        <field name="sequence" eval="0" />
+    </record>
+    <record id="pos_category_heel_lift" model="pos.category">
+        <field name="name">Heel Lift</field>
+        <field name="parent_id" ref="pos_category_posting"/>
+        <field name="sequence" eval="1" />
+    </record>
+    <record id="pos_category_forefoot_post" model="pos.category">
+        <field name="name">Forefoot Post</field>
+        <field name="parent_id" ref="pos_category_posting"/>
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record id="pos_category_heel" model="pos.category">
+        <field name="name">Heel</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="40" />
+    </record>
+    <record id="pos_category_arch_midfoot" model="pos.category">
+        <field name="name">Arch / Midfoot</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="50" />
+    </record>
+    <record id="pos_category_metatarsal" model="pos.category">
+        <field name="name">Metatarsal</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="60" />
+    </record>
+    <record id="pos_category_forefoot" model="pos.category">
+        <field name="name">Forefoot</field>
+        <field name="parent_id" ref="pos_category_device_options"/>
+        <field name="sequence" eval="70" />
+    </record>
+
+    <record id="pos_category_other" model="pos.category">
+        <field name="name">Others</field>
+        <field name="sequence" eval="7"/>
+        <field name="image_128" type="base64" file="nwpl_pod_master/static/pod_pos_order_customizations/static/src/img/graphics/others.png"/>
+    </record> -->
+</odoo>

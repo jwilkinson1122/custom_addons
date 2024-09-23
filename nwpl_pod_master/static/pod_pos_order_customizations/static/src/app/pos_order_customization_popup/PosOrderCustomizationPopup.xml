@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="pod_pos_order_customizations.PosOrderCustomizationPopup">
+        <div class="popup close-pos-popup" style="width:35%">
+            <div class="modal-header">
+                <div class="order_product_image">
+                    <t t-if="props and props.image_url">
+                        <img style="width:65px;" t-att-src='props.image_url'/>
+                    </t>
+                </div>
+            </div>
+            <main class="modal-body" style="padding:0;">
+                <t t-if="props and props.groups">
+                    <div id="tabs" style="font-size:12px">
+                        <ul class="pod_tabs">
+                            <t t-foreach='props.groups' t-as='group' t-key="group.id">
+                                <t t-set="podgroup" t-value="pos.db.customization_group_by_id[group]" />
+                                <t t-if="group_index == 0">
+                                    <li  class=" tab-link current" t-on-click="pod_change_tab" t-att-data-id="'#tab'+podgroup.id" style=" font-size: 18px !important;"><b t-att-data-id="'#tab'+podgroup.id"><t t-esc="podgroup.name"/></b></li>
+                                </t>
+                                <t t-if="!(group_index == 0)">
+                                    <li  class="tab-link" t-att-data-id="'#tab'+podgroup.id" t-on-click="pod_change_tab" style=" font-size: 18px !important;"><b t-att-data-id="'#tab'+podgroup.id"><t t-esc="podgroup.name"/></b></li>
+                                </t>
+                            </t>
+                        </ul>
+                    </div>
+                    <t t-foreach='props.groups' t-as='group' t-key="group.id">
+                        <t t-set="podgroup" t-value="pos.db.customization_group_by_id[group]" />
+                        <t t-if="group_index == 0">
+                            <div t-att-id="'tab'+podgroup.id" class="tab-content current">
+                                <table class="customization" >
+                                    <t t-foreach='podgroup.customizations' t-as='customization_id' t-key="customization_id">
+                                        <tr>
+                                            <td class="customization_id" style="width:70%">Q<t t-esc="customization_id_index + 1"/>.&#032; <t t-esc="pos.db.customization_by_id[customization_id].name"/></td>
+                                            <td class="customization_id" style="width:50%">
+                                                <t t-debug="pdb"/>
+                                                <t t-if="env.services.pos.db.customization_by_id[customization_id].pos_extra_price >0">
+                                                    <t t-esc="env.utils.formatCurrency(env.services.pos.db.customization_by_id[customization_id].pos_extra_price,true)"/>
+                                                </t>
+                                                <t t-if="env.services.pos.db.customization_by_id[customization_id].pos_extra_price == 0">
+                                                    No Charge
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <label class='switch'>
+                                                    <t  t-if="props.line and props.line.pod_customization_ids and props.line.pod_customization_ids.indexOf(customization_id) >=0">
+                                                        <input checked='true' t-att-data-id="customization_id" class="pod_checked_customization" type='checkbox'/>
+                                                    </t>
+                                                    <t t-if="props.line and !(props.line.pod_customization_ids and props.line.pod_customization_ids.indexOf(customization_id)>=0)">
+                                                        <input class="pod_checked_customization" t-att-data-id="customization_id" type='checkbox'/>
+                                                    </t>
+                                                    <span class='check_box round'></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </t>
+                        <t t-if="!(group_index == 0)">
+                            <div t-att-id="'tab'+podgroup.id" class="tab-content">
+                                <table class="customization" >
+                                    <t t-foreach='podgroup.customizations' t-as='customization_id' t-key="customization_id">
+                                        <tr>
+                                            <td class="customization_id" style="width:70%">Q<t t-esc="customization_id_index + 1"/>.&#032; <t t-esc="pos.db.customization_by_id[customization_id].name"/></td>
+                                            <td class="customization_id" style="width:50%">
+                                                <t t-debug="pdb"/>
+                                                <t t-if="env.services.pos.db.customization_by_id[customization_id].pos_extra_price >0">
+                                                    <t t-esc="env.utils.formatCurrency(env.services.pos.db.customization_by_id[customization_id].pos_extra_price,true)"/>
+                                                </t>
+                                                <t t-if="env.services.pos.db.customization_by_id[customization_id].pos_extra_price == 0">
+                                                    No Charge
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <label class='switch'>
+                                                    <t t-if="props.line and props.line.pod_customization_ids and props.line.pod_customization_ids.indexOf(customization_id) >=0">
+                                                        <input checked='true' t-att-data-id="customization_id" class="pod_checked_customization" type='checkbox'/>
+                                                    </t>
+                                                    <t t-if="props.line and !(props.line.pod_customization_ids and props.line.pod_customization_ids.indexOf(customization_id) >=0)">
+                                                        <input t-att-data-id="customization_id" class="pod_checked_customization" type='checkbox'/>
+                                                    </t>
+                                                    <span class='check_box round'></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+                <footer class="footer modal-footer justify-content-between">
+                    <div class="modal-footer-left d-flex gap-2">
+                        <button class="button btn btn-lg btn-secondary" t-on-click="cancel">Discard</button>
+                        <button class="button highlight btn btn-lg btn-primary" t-on-click="pod_add_customization">Ok</button>
+                    </div>
+                </footer>
+            </main>
+        </div>
+	</t>
+</templates>

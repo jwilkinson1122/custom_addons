@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="product_brand_sg" model="product.brand">
+        <field name="name">Superglass</field>
+    </record>
+    <!-- <record id="product_brand_sg" model="res.brand">
+        <field name="name">Superglass</field>
+    </record> -->
+</odoo>

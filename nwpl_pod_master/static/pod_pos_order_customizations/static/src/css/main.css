@@ -1,0 +1,387 @@
+.pod_customization_tag{
+  color: #FFF;
+  font-size: 12px;
+  line-height: 13px;
+  background: none repeat scroll 0% 0% #8b9ddf;
+  padding: 0px 6px;
+  border-radius: 21px;
+  margin:1px;
+}
+
+
+.pod_customization_popup {
+  font-family: sans-serif;
+  background-color: white;
+  text-align: center;
+  position: fixed;
+  left: 33%;
+  top: 21%;
+  width: 450px;
+  border-radius: 3px;
+  box-shadow: 0px 4px 15.36px 0.64px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+  animation: jelly 0.5s ease-in-out;
+  z-index: 500;
+}
+
+
+.order_product_image {
+  animation: image_move 0.75s 0.07s ease-in-out;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  margin: 0 auto;
+}
+.text_shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes image_move {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.button.pod_add_customization:hover {
+  background-color: #6eb692;
+}
+
+.button.pod_add_customization {
+  background-color: #6ec89b;
+  color: white;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 10px 32px;
+  margin-top: 15px;
+  cursor: pointer;
+  width:123px;
+
+  margin-bottom: 8px;
+}
+
+.button.cancel_customization:hover {
+  background-color: #868686;
+}
+
+.button.cancel_customization {
+  background-color: #bcbcbc;
+  color: white;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 10px 32px;
+  margin-top: 15px;
+  cursor: pointer;
+  width:123px;
+
+  margin-bottom: 8px;
+}
+
+@keyframes jelly {
+  0% {
+    transform: translateY(0px) scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(5px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}
+/*toggle switch button css*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.check_box {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.check_box:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .check_box {
+  background-color: #2196F3;
+}
+
+input:focus + .check_box {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .check_box:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded check_boxs */
+.check_box.round {
+  border-radius: 34px;
+}
+
+.check_box.round:before {
+  border-radius: 50%;
+}
+
+.pod-alert {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  position: fixed;
+  left: 33%;
+  top: 21%;
+  width: 40%;
+    box-shadow: 0px 4px 15.36px 0.64px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+  animation: jelly 0.5s ease-in-out;
+  }
+
+.pod-alert button.create_wallet:hover {
+    background-color: #6eb692;
+}
+.pod-alert .pod_warning {
+      border-color: #F8BB86; }
+.pod-alert .pod_warning .mark_line {
+        position: absolute;
+        width: 3px;
+        height: 47px;
+        background-color: #F8BB86;
+        top:14px;
+        margin-left: -2px;
+ }
+.pod-alert .pod_warning .mark_dot {
+        position: absolute;
+        width: 5px;
+        height: 7px;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        margin-left: -2px;
+        background-color: #F8BB86;
+        top:67px;
+}
+
+div.pod_mark {
+    height: 85px;
+    width: 85px;
+    border-radius: 100px;
+    border:3px solid #ff8d8d;
+      animation: image_move 0.75s 0.07s ease-in-out;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.pod-alert h2 {
+  color: #575757;
+  font-size: 21px;
+  margin-top:10px;
+  }
+  .pod-alert p {
+  color: #797979;
+  font-size: 16px;
+  margin-top:0px;
+}
+
+.customization  {
+    text-align: left;
+    width:100%;
+}
+
+.customization tr {
+    background: rgb(247,247,247);
+    border: 2px solid #dfdfdf;
+}
+.customization th{
+  padding: 10px 8px;
+  font-size: initial;
+}
+.customization td {
+    padding: 10px 8px;
+    font-size: initial;
+    font-weight: normal;
+
+}
+
+/*toggle switch button css*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.check_box {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.check_box:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/* Rounded check_boxs */
+.check_box.round {
+  border-radius: 34px;
+}
+
+.check_box.round:before {
+  border-radius: 50%;
+}
+
+
+.pod-alert button.cancel:hover {
+    background-color: #7ecff4;
+}
+
+.pod-alert button.cancel {
+    background-color: #8CD4F5;
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 10px 32px;
+    margin-top: 26px;
+    cursor: pointer;
+}
+
+.pod_note,
+.extra_fee_value,
+.pod_address {
+    font-size: 21px !important;
+    margin: 6px 10px;
+    font-style: italic;
+    padding: 5px;
+}
+
+
+.podorderline {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  white-space: normal; /* Allow text to wrap to the next line */
+  word-wrap: break-word; /* Break long words to fit within the container */
+  overflow: visible; /* Ensure content is not clipped */
+}
+
+/* .podorderline{
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+} */
+ul.pod_tabs{
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+ul.pod_tabs li{
+  background: none;
+  color: #222;
+  display: inline-block;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+ul.pod_tabs li.current{
+  background: #ededed;
+  color: #222;
+  border:2px solid #ededed;
+  border-bottom: none;
+}
+
+.tab-content{
+  max-height: 227px;
+  overflow-y: scroll;
+  border-top: 3px solid  #ededed;
+  border-bottom: 3px solid  #ededed;
+  display: none;
+  background: #ededed;
+  padding: 15px;
+}
+
+.tab-content.current{
+  display: inherit;
+}
+.fa.fa-info-circle.podorderline{
+  cursor: pointer;
+}
+.fa.fa-info-circle.podorderline:hover{
+  color: #2196F3;
+}
+/* C:\odoo17\server\odoo\odoo_addons\nwpl_pod_master\static\pod_pos_order_customizations */
+.pod_slice-left{
+  background: url(nwpl_pod_master/static/pod_pos_order_customizations/static/img/Sprite-Icon-1.png) no-repeat 0 0;
+  width: 20px;
+  height: 20px;
+  top: 5px;
+  position: relative;
+  display: inline-block;
+}

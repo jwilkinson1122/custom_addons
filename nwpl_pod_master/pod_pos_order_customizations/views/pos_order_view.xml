@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- <record id="pod_pos_order_customization_inherit_pos_order" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='notice']" position='after'>
+                <field name="order_customizations" />
+            </xpath>
+        </field>
+    </record> -->
+
+ 
+
+    <record id="pos_order_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='notice']" position='after'>
+                <field name="order_customizations" />
+            </xpath>
+            <xpath expr="//page[@name='products']//tree" position="attributes">
+                <attribute name="editable"></attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
