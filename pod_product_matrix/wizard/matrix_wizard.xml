@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="matrix_wizard_view" model="ir.ui.view">
+        <field name="name">matrix_wizard_view</field>
+        <field name="model">product.matrix.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Matrix" delete="false" create="false" edit="false">
+                <group>
+                    <field name="product_tmpl_id" string="Product"/>
+                    <field name="laterality" widget="radio" string="Laterality"/>
+                </group>
+                <field name="matrix_lines" mode="list" nolabel="1">
+                    <list string="Variants Matrix" editable="bottom" create="false">
+                        <field name="active_bool" widget="boolean_toggle" force_save="1" readonly="attribute_type == 'separator'"/>
+                        <field name="product_tmpl_id" force_save="1" readonly="1"/>
+                        <field name="product_id" force_save="1" readonly="1"/>
+                        <field name="name" force_save="1" readonly="1"/>
+                        <field name="uom_id" force_save="1" readonly="1"/>
+                        <field name="quantity" force_save="1" invisible="attribute_type == 'separator'"/>
+                        <field name="list_price" force_save="1" readonly="1"/>
+                        <field name="laterality" readonly="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name='add_variants' string="Add Variants" type="object" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel" class="btn btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="matrix_wizard_action" model="ir.actions.act_window">
+        <field name="name">Matrix Availability</field>
+        <field name="res_model">product.matrix.wiz</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <!-- <record id="matrix_wizard_view" model="ir.ui.view">
+        <field name="name">matrix_wizard_view</field>
+        <field name="model">product.matrix.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Matrix" delete="false" create="false" edit="false">
+                <group>
+                    <field name="product_tmpl_id" string="Product"/>
+                </group>
+                <group>
+                </group>
+                <field name="matrix_lines" mode="list" nolabel="1">
+                    <list string="Variants Matrix" editable="bottom" create="false">
+                        <field name="active_bool" widget="boolean_toggle" force_save="1"/>
+                        <field name="product_tmpl_id" force_save="1" readonly="1"/>
+                        <field name="product_id" force_save="1" readonly="1"/>
+                        <field name="name" force_save="1" readonly="1"/>
+                        <field name="uom_id" force_save="1" readonly="1"/>
+                        <field name="quantity" force_save="1"/>
+                        <field name="list_price" force_save="1" readonly="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name='add_variants' string="Add Variants" type="object" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel" class="btn btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="matrix_wizard_action" model="ir.actions.act_window">
+        <field name="name">Matrix Availability</field>
+        <field name="res_model">product.matrix.wiz</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record> -->
+</odoo>

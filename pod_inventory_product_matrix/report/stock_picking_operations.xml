@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="grid_inventory_inherit" inherit_id="stock.report_picking">
+        <xpath expr="//table[hasclass('table')]" position="before">
+            <t t-call="product_matrix.matrix">
+                <t t-set="order" t-value="o"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="grid_inventory_delivery_inherit" inherit_id="stock.report_delivery_document">
+        <xpath expr="//table[hasclass('table')]" position="before">
+            <t t-call="product_matrix.matrix">
+                <t t-set="order" t-value="o"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

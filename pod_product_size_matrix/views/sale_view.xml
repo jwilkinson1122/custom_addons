@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="sale_order_matrix_view_inherit">
+        <field name="name">sale.order.matrix.view.inherit1</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']" position="before">
+                <button string="Add Product Matrix" type="action" class="oe_highlight" name="%(pod_product_size_matrix.matrix_wizard_action)d" groups="pod_product_size_matrix.group_size_matrix_product"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

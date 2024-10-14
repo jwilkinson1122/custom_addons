@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 {
-    "name": "NWPL Custom Orthotics Manufacturing System",         
+    "name": "NWPL Test",         
     "author": "NWPL",     
     "website": "https://www.nwpodiatric.com",        
     "category": "Sales Management",   
-    "version": "17.0.0.0.0",       
+    "version": "18.0.0.0.0",       
     "summary": """Full Custom Orthotics Manufacturing System""",          
     "description": """ Full Custom Orthotics Manufacturing System """,
-    'external_dependencies': {'python': ['mako']},
     "depends": [
         'account',
         'account_check_printing',
@@ -39,16 +38,14 @@
     "data": [
         'security/pod_security.xml',
         'security/ir.model.access.csv',
-        'data/base_user_role/data/ir_cron.xml',
-        'data/base_user_role/data/ir_module_category.xml',
-        'views/role.xml',
-        'views/user.xml',
-        'views/group.xml',
-        'wizards/create_from_user.xml',
-        'wizards/wizard_groups_into_role.xml',
-        'data/pod_pos_theme_responsive/data/pos_theme_settings_data.xml',
-        'pod_pos_theme_responsive/security/ir.model.access.csv',
-        'pod_pos_theme_responsive/views/pod_pos_theme_settings_views.xml',
+        # 'data/base_user_role/data/ir_cron.xml',
+        # 'data/base_user_role/data/ir_module_category.xml',
+        # 'views/role.xml',
+        # 'views/user.xml',
+        # 'views/group.xml',
+        # 'wizards/create_from_user.xml',
+        # 'wizards/wizard_groups_into_role.xml',
+
         'data/pod_pos_order_label/data/order_label.xml',
         'views/pos_order.xml',
         'views/res_config_settings.xml',
@@ -71,41 +68,6 @@
         'pod_pos_product_suggestion/views/product_view.xml',
         'pod_pos_cash_in_out/views/cash_in_out_menu.xml',
 
-        # product configurator
-        'pod_product_configurator/security/configurator_security.xml',
-        'pod_product_configurator/security/ir.model.access.csv',
-        'pod_product_configurator/views/res_config_settings_view.xml',
-        'data/pod_product_configurator/data/menu_configurable_product.xml',
-        'data/pod_product_configurator/data/product_attribute.xml',
-        'data/pod_product_configurator/data/ir_sequence_data.xml',
-        'data/pod_product_configurator/data/ir_config_parameter_data.xml',
-        'pod_product_configurator/views/product_view.xml',
-        'pod_product_configurator/views/product_attribute_view.xml',
-        'pod_product_configurator/views/product_config_view.xml',
-        'pod_product_configurator/wizard/product_configurator_view.xml',
-        
-        # product configurator sale
-        'pod_product_configurator_sale/security/ir.model.access.csv',
-        'data/pod_product_configurator_sale/data/menu_product.xml',
-        'pod_product_configurator_sale/views/sale_view.xml',
-
-        # product configurator mrp
-        # 'pod_product_configurator_sale/security/ir.model.access.csv',
-        # 'data/pod_product_configurator_sale/data/menu_product.xml',
-        # 'pod_product_configurator_sale/views/sale_view.xml',
-        'pod_product_configurator_mrp/security/configurator_security.xml',
-        'pod_product_configurator_mrp/security/ir.model.access.csv',
-        'data/pod_product_configurator_mrp/data/menu_product.xml',
-        'pod_product_configurator_mrp/views/mrp_view.xml',
-        # 'security/configurator_security.xml',
-        # 'security/ir.model.access.csv',
-
-        # product attribute archive
-        'pod_product_attribute_archive/views/product_attribute.xml',
-        'pod_product_attribute_model_link/security/ir.model.access.csv',
-        'pod_product_attribute_model_link/views/product_attribute_views.xml',
-        'pod_product_attribute_model_link/wizards/linked_record_wizard_view.xml',
-
         # product brand
         'pod_brand/security/res_brand.xml',
         'pod_brand/views/res_config_settings.xml',
@@ -125,35 +87,6 @@
         'pod_pos_order_type/views/pod_order_type_views.xml',
         'pod_pos_order_type/views/pos_order_views.xml',
 
-        # prescription order
-        # 'pod_prescription_order/security/ir.model.access.csv',
-        # 'pod_prescription_order/data/ir_sequence_data.xml',
-        # 'pod_prescription_order/views/pos_config_views.xml',
-        # 'pod_prescription_order/wizard/wizard_cancelled.xml',
-        # 'pod_prescription_order/views/service_team_views.xml',
-        # 'pod_prescription_order/views/work_order_views.xml',
-        # 'pod_prescription_order/views/prescription_order_views.xml',
-        # 'pod_prescription_order/views/pos_order_views.xml',
-        # 'pod_prescription_order/views/menu.xml',
-        # 'pod_prescription_order/report/report_prescription_order.xml',
-        # 'pod_prescription_order/report/report_work_order.xml',
-        # 'pod_prescription_order/report/report.xml',
-        'pod_prescription_order/security/security.xml',
-        'pod_prescription_order/security/ir.model.access.csv',
-        'pod_prescription_order/data/ir_sequence_data.xml',
-        'pod_prescription_order/data/ir_cron.xml',
-        'pod_prescription_order/wizard/create_sale_orders.xml',
-        'pod_prescription_order/views/sale_config_settings.xml',
-        'pod_prescription_order/views/prescription_order_views.xml',
-        'pod_prescription_order/views/prescription_order_line_views.xml',
-        'pod_prescription_order/views/sale_order_views.xml',
-        'pod_prescription_order/report/templates.xml',
-        'pod_prescription_order/report/report.xml',
-
-        # prescription order configurator
-        'pod_product_configurator_prescription_order/security/ir.model.access.csv',
-        'pod_product_configurator_prescription_order/views/prescription_order_view.xml',
-        
         # product multi barcode
         'pod_product_multi_barcode/security/ir.model.access.csv',
         'pod_product_multi_barcode/views/product_product_views.xml',
@@ -223,47 +156,23 @@
       'demo/mail_demo.xml',
       'demo/res_partner.xml',
       'demo/product_brand.xml',
-      'demo/product_template.xml',
-      'demo/product_attribute.xml',
-      'demo/product_config_domain.xml',
-      'demo/product_config_lines.xml',
-      'demo/product_config_step.xml',
-      'demo/config_image_ids.xml',
-
+    #   'demo/product_template.xml',
+    #   'demo/product_attribute.xml',
+    #   'demo/product_config_domain.xml',
+    #   'demo/product_config_lines.xml',
+    #   'demo/product_config_step.xml',
+    #   'demo/config_image_ids.xml',
       'demo/pos_config.xml',
       'demo/pos_session.xml',
-      #   'demo/pos_order_customization.xml',
-      #   'demo/pos_order_customization_extra_prices.xml',
-      #   'demo/product_template.xml',
       ],
 
     'assets': {
 
         'web.assets_backend': [
             'nwpl_pod_master/static/pod_contacts/static/src/css/custom_theme.css',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/scss/form_widget.scss',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/js/form_widgets.esm.js',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/js/boolean_button_widget.esm.js',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/js/boolean_button_widget.xml',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/js/relational_fields.esm.js',
-            'nwpl_pod_master/static/pod_product_configurator/static/src/js/view.js',
-
-            'nwpl_pod_master/static/pod_product_configurator_mrp/static/src/js/list_controller.js',
-            'nwpl_pod_master/static/pod_product_configurator_mrp/static/src/js/kanban_controller.js',
-            'nwpl_pod_master/static/pod_product_configurator_mrp/static/src/js/form_controller.js',
-            'nwpl_pod_master/static/pod_product_configurator_mrp/static/src/scss/mrp_config.scss',
-            'nwpl_pod_master/static/pod_product_configurator_mrp/static/src/xml/mrp_production_views.xml',
         ],
 
         'point_of_sale._assets_pos': [
-            # theme
-            '/nwpl_pod_master/static/pod_pos_theme_responsive/static/src/overrides/pos_theme_variables.scss',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/src/scss/mixin.scss',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/lib/owl.carousel.js',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/lib/owl.carousel.css',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/lib/owl.theme.default.min.css',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/src/overrides/**/*',
-            'nwpl_pod_master/static/pod_pos_theme_responsive/static/src/scss/**/*',
 
             # pos counter
             'nwpl_pod_master/static/pod_pos_counter/**/*',
