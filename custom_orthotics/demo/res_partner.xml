@@ -30,16 +30,6 @@
         <field name="country_id" ref="base.us"/>
         <field name="email">alsa@gmail.example.com</field>
         <field name="mobile">+1 808-661-5546</field>
-        <field name="x_os_add">2.0</field>
-        <field name="x_od_spherical">1.7</field>
-        <field name="x_od_axis">85.0</field>
-        <field name="x_os_pd">35.0</field>
-        <field name="x_od_add_1">2.0</field>
-        <field name="x_od_cylindrical">-0.65</field>
-        <field name="x_od_pd">35.0</field>
-        <field name="x_os_spherical">1.5</field>
-        <field name="x_os_cylindrical_1">-1.0</field>
-        <field name="x_os_axis">175.0</field>
     </record>
     <record id="res_partner_14" model="res.partner">
         <field name="name">Yoda Green</field>
@@ -82,16 +72,6 @@
         <field name="email">ram112@yahoo.test.com</field>
         <field name="phone">+91 01010 0000</field>
         <field name="mobile">+911001001001</field>
-        <field name="x_os_add">1.0</field>
-        <field name="x_od_add_1">2.0</field>
-        <field name="x_od_spherical">2.0</field>
-        <field name="x_od_axis">90.0</field>
-        <field name="x_os_pd">23.0</field>
-        <field name="x_od_cylindrical">-2.5</field>
-        <field name="x_od_pd">25.0</field>
-        <field name="x_os_spherical">2.5</field>
-        <field name="x_os_cylindrical_1">-2.0</field>
-        <field name="x_os_axis">167.0</field>
     </record>
     <record id="res_partner_26" model="res.partner">
         <field name="name">Adrian Luna</field>
@@ -141,14 +121,6 @@
         <field name="name">Isaac John</field>
         <field name="email">isacj@yahoo.com</field>
         <field name="mobile">+919954140000</field>
-        <field name="x_os_add">-0.175</field>
-        <field name="x_od_add_1">-1.5</field>
-        <field name="x_od_spherical">-1.25</field>
-        <field name="x_od_axis">15.0</field>
-        <field name="x_od_cylindrical">-1.55</field>
-        <field name="x_os_spherical">-1.0</field>
-        <field name="x_os_cylindrical_1">-1.5</field>
-        <field name="x_os_axis">20.0</field>
     </record>
     <record id="res_partner_51" model="res.partner">
         <field name="name">UMSH</field>

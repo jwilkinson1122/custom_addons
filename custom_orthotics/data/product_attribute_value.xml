@@ -112,19 +112,19 @@
     </record>
     <record id="product_attribute_value_33" model="product.attribute.value">
         <field name="name">Carrera</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_34" model="product.attribute.value">
         <field name="name">Maui Jim</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_35" model="product.attribute.value">
         <field name="name">Oakley</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_36" model="product.attribute.value">
         <field name="name">Ray-ban</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_37" model="product.attribute.value">
         <field name="name">62-13-150</field>
@@ -132,7 +132,7 @@
     </record>
     <record id="product_attribute_value_38" model="product.attribute.value">
         <field name="name">Dolce &amp; Gabbana</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_39" model="product.attribute.value">
         <field name="name">Plastic</field>
@@ -168,7 +168,7 @@
     </record>
     <record id="product_attribute_value_48" model="product.attribute.value">
         <field name="name">Bausch + Lomb</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_49" model="product.attribute.value">
         <field name="name">8.6 mm</field>
@@ -176,7 +176,7 @@
     </record>
     <record id="product_attribute_value_50" model="product.attribute.value">
         <field name="name">Johnson&amp;Johnson</field>
-        <field name="attribute_id" ref="website_sale.product_attribute_brand"/>
+        <field name="attribute_id" ref="product_attribute_brand"/>
     </record>
     <record id="product_attribute_value_51" model="product.attribute.value">
         <field name="name">Curved</field>

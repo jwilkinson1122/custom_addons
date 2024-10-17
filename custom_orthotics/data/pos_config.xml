@@ -1,13 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo noupdate="1">
     <record id="pos_config_custom_orthotics" model="pos.config">
-        <field name="name">Eyewear Shop</field>
+        <field name="name">Booking Orders</field>
+         <field name="iface_tipproduct" eval="True"/>
+        <field name="use_pricelist" eval="1"/>
+        <field name="iface_print_auto" eval="True"/>
+        <field name="ship_later" eval="True"/>
+        <field name="payment_method_ids" eval="[(6, 0, [
+        ref('pos_payment_method_1'),
+        ref('pos_payment_method_2'),
+        ])]"/>
+        <!-- <field name="iface_available_categ_ids" eval="[Command.link(ref('pos_category_1')), Command.link(ref('pos_category_2')), Command.link(ref('pos_category_3')), Command.link(ref('pos_category_4'))]"/> -->
+
+    </record>
+</odoo>
+
+<!-- <odoo noupdate="1">
+    <record id="pos_config_custom_orthotics" model="pos.config">
+        <field name="name">Test Shop</field>
         <field name="iface_tipproduct" eval="True"/>
         <field name="customer_display_type">local</field>
         <field name="iface_print_auto" eval="True"/>
         <field name="ship_later" eval="True"/>
         <field name="limit_categories">True</field>
-        <field name="down_payment_product_id" ref="pos_sale.default_downpayment_product"/>
     </record>
     <record model="pos.config" id="pos_config_custom_orthotics">
         <field name="payment_method_ids" eval="[
@@ -15,4 +30,6 @@
             Command.link(ref('pos_payment_method_2')),
         ]"/>
     </record>
-</odoo>
+</odoo> -->
+
+ 

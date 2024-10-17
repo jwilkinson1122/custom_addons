@@ -1,1 +1,0 @@
-This module implements core functionality for the optional product quantity multipliers. You can depend on this module to implement further user features.
