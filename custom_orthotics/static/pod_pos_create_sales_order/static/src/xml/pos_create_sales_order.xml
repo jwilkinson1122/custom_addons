@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pod_pos_create_sales_order_template" inherit_id="point_of_sale.template" xml:space="preserve">
+    <!-- <t t-name="pod_pos_create_sales_order.CreateSalesOrderButton">
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.onClick()" id="create_sales_order">
+            <i class="fa fa-shopping-cart" />
+            <span></span>
+            <span>Create Sales Order</span>
+        </button>
+    </t> -->
+    <t t-name="pod_pos_create_sales_order.CreateSalesOrderButton" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
+            <button t-if="this.pos.config.create_sale_order" t-att-class="buttonClass" t-on-click="() => this.pos.onClick()">
+                <i class="fa fa-shopping-cart me-2" />
+                <span>Create Sales Order</span>
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="pod_pos_create_sales_order.SaleCreatePopup">
+        <div class="popup popup-import">
+            <Dialog size="'md'">
+                <t t-set-slot="header">
+                    <h4 class="modal-title text-break">
+                        Create Sale Order
+                    </h4>
+                </t>
+                <main class="body modal-body">
+                    <div class="main_div_pos_session">
+                        <div class="full_bottom">
+                            <span class="label">State: </span>
+                            <select class="oredr_state" id="ord_state" style="height:30px;">
+                                <option value="draft">Draft</option>
+                                <option value="confirm">Confirm</option>
+                            </select>
+                        </div>
+                        <br/>
+                        <div id="tab-content3" class="content">
+                            <textarea id="terms" rows="4" cols="20" placeholder="Terms and Conditions..."/>
+                        </div>
+                    </div>
+                </main>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="create_order">
+                        Confirm
+                    </button>
+                </t>
+            </Dialog>
+        </div>
+    </t>
+    <t t-name="pod_pos_create_sales_order.SaleOrderPopup" owl="1">
+        <div class="popup popup-import">
+            <Dialog size="'md'">
+                <t t-set-slot="header">
+                    <h4 class="modal-title text-break">
+                        Sale Order
+                    </h4>
+                </t>
+                <main class="body modal-body">
+                    <div class="main_div_pos_session">
+                        <div class="full_bottom text-center">
+                            <span class="label">Sale Order: </span>
+                            <span class="label">
+                                <a t-att-href="saleLink" target="_blank">
+                                    <strong class="me-2" style="color: crimson;">
+                                        <t t-esc="props.sale_ref[1]"/>
+                                    </strong>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </main>
+            </Dialog>
+        </div>
+    </t>
+</templates>
+  	
+  	

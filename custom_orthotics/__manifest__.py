@@ -34,7 +34,10 @@
         'data/knowledge_article_favorite.xml',
         'data/mail_message.xml',
         # 'data/knowledge_tour.xml',
-        'views/pos_config.xml',
+        'pod_pos_hide_cash_control/views/pos_config.xml',
+        
+        'pod_pos_create_sales_order/security/ir.model.access.csv',
+        'pod_pos_create_sales_order/views/pos_view.xml',
     ],
     'demo': [
         'demo/res_config_settings.xml',
@@ -52,6 +55,10 @@
         'point_of_sale._assets_pos': [
 
             'custom_orthotics/static/pod_pos_hide_cash_control/static/src/js/pos_store.js',
+            'custom_orthotics/static/pod_pos_create_sales_order/static/src/js/SaleCreatePopup.js',
+            'custom_orthotics/static/pod_pos_create_sales_order/static/src/js/SaleOrderPopup.js',
+            'custom_orthotics/static/pod_pos_create_sales_order/static/src/xml/**/*',
+            'custom_orthotics/static/pod_pos_create_sales_order/static/src/js/pos_store.js',
 
         ]
     

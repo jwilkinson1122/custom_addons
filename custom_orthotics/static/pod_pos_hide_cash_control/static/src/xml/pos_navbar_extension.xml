@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="close_pos_popup_inherit" inherit_id="point_of_sale.Navbar">
+        <!-- <xpath expr="//DropdownItem[onSelected='() => this.pos.closeSession()']" position="replace">
+ 
+        </xpath> -->
+    </template>
+</odoo>
