@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
-import { SaleOrderPopup } from "@custom_orthotics/static/pod_pos_create_sales_order/static/src/js/sale_order_popup";
+import { SaleOrderPopup } from "@custom_orthotics/static/pod_pos_create_sales_order/js/sale_order_popup";
 import { Dialog } from "@web/core/dialog/dialog";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";

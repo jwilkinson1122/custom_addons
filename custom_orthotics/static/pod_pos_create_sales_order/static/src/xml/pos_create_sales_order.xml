@@ -7,7 +7,8 @@
             <span>Create Sales Order</span>
         </button>
     </t> -->
-    <t t-name="pod_pos_create_sales_order.CreateSalesOrderButton" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+
+    <t t-name="pos_create_sales_order.CreateSalesOrderButton" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <button t-if="this.pos.config.create_sale_order" t-att-class="buttonClass" t-on-click="() => this.pos.onClick()">
                 <i class="fa fa-shopping-cart me-2" />
@@ -15,6 +16,7 @@
             </button>
         </xpath>
     </t>
+    
 
     <t t-name="pod_pos_create_sales_order.SaleCreatePopup">
         <div class="popup popup-import">

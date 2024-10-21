@@ -64,7 +64,7 @@ class pod_pos_create_sales_order(models.Model):
 class pos_config(models.Model):
     _inherit = 'pos.config'
     
-    create_sale_order = fields.Boolean('Create Sale Order')
+    create_sale_order = fields.Boolean('Create Sale Order', default=True)
     
 
 class ResConfigSettings(models.TransientModel):
