@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Created the category Podiatry Clinic to set the Groups -->
+    <record id="module_category_podiatry_clinic" model="ir.module.category">
+        <field name="name">Podiatry Clinic</field>
+        <field name="sequence">18</field>
+    </record>
+    <!-- Created the Groups as Own Documents Only and this groups will be only access their own datas -->
+    <record id="group_podiatry_doctor" model="res.groups">
+        <field name="name">User: Own Documents Only</field>
+        <field name="category_id" ref="module_category_podiatry_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will have access to his own data in the podiatry clinic application.</field>
+    </record>
+    <!-- Created the Groups as OManager and this groups can we view all the datas -->
+    <record id="group_podiatry_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="comment">the user will have an access to all the podiatry clinic configuration.</field>
+        <field name="category_id" ref="module_category_podiatry_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('group_podiatry_doctor'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+</odoo>

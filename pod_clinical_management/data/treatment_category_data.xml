@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Data for treatment category -->
+        <record model="treatment.category" id="preventive_podiatry">
+            <field name="name">Preventive Podiatry</field>
+        </record>
+        <record model="treatment.category" id="restorative_podiatry">
+            <field name="name">Restorative Podiatry</field>
+        </record>
+        <record model="treatment.category" id="cosmetic_podiatry">
+            <field name="name">Cosmetic Podiatry</field>
+        </record>
+    </data>
+</odoo>

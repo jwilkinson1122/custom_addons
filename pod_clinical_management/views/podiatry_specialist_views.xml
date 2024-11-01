@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Tree View-->
+    <record id="podiatry_specialist_view_tree" model="ir.ui.view">
+        <field name="name">podiatry.specialist.view.tree</field>
+        <field name="model">podiatry.specialist</field>
+        <field name="arch" type="xml">
+            <tree string="Specialized" editable="bottom">
+                <field name="name" required="True"/>
+                <field name="code" required="True"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

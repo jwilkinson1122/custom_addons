@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Configuration Steps -->
+    <record id="config_step_laterality" model="product.config.step">
+        <field name="name">Laterality</field>
+    </record>
+
+    <record id="config_step_arch_height" model="product.config.step">
+        <field name="name">Arch Height</field>
+    </record>
+    
+    <record id="config_step_top_cover" model="product.config.step">
+        <field name="name">Top Cover</field>
+    </record>
+
+
+    <!-- Configuration Step Lines -->
+    <!-- ptal_superglass_flex_laterality -->
+    <record id="superglass_flex_config_step_laterality" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="product_template_superglass_flex" />
+        <field name="config_step_id" ref="config_step_laterality" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ref('ptal_superglass_flex_laterality')])]" />
+    </record>
+    <!-- ptal_superglass_flex_arch_height -->
+    <record id="superglass_flex_config_step_arch_height" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="product_template_superglass_flex" />
+        <field name="config_step_id" ref="config_step_arch_height" />
+        <field name="attribute_line_ids" eval="[(6, 0, [ref('ptal_superglass_flex_arch_height')])]" />
+    </record>
+
+    <record id="superglass_flex_config_step_top_cover" model="product.config.step.line">
+        <field name="product_tmpl_id" ref="product_template_superglass_flex" />
+        <field name="config_step_id" ref="config_step_top_cover" />
+        <field name="attribute_line_ids" eval="[(6, 0, [
+        ref('ptal_superglass_flex_top_cover_length'),
+        ref('ptal_superglass_flex_top_cover_material'),
+        ref('ptal_superglass_flex_top_cover_color'),
+        ref('ptal_superglass_flex_top_cover_thickness'),
+        ref('ptal_superglass_flex_top_cover_density')
+        ])]" />
+    </record>
+
+  
+</odoo>
