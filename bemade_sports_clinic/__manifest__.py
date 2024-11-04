@@ -17,10 +17,10 @@
 #    DEALINGS IN THE SOFTWARE.
 #
 {
-    'name': 'Sports Clinic Management',
-    'version': '17.0.1.6.2',
-    'summary': 'Manage the patients of a sports medicine clinic.',
-    'description': """
+    "name": "Sports Clinic Management",
+    "version": "17.0.1.6.2",
+    "summary": "Manage the patients of a sports medicine clinic.",
+    "description": """
         Adds the notion of sports teams, players (patients), coaches and treatment
         professionals. The core purpose of this module is to keep track of the treatment
         history of players and to make it appropriately accessible to the various
@@ -38,11 +38,11 @@
     "website": "https://www.bemade.org",
     "license": "OPL-1",
     "depends": ["portal", "contacts"],
-    "external_dependencies": {
-        "python": [
-            "openupgradelib",
-        ],
-    },
+    # "external_dependencies": {
+    #     "python": [
+    #         "openupgradelib",
+    #     ],
+    # },
     "data": [
         "security/sports_clinic_groups.xml",
         "security/ir.model.access.csv",

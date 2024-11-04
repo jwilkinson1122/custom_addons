@@ -52,18 +52,18 @@ class Patient(models.Model):
 
     # Patient fields
     date_of_birth = fields.Date(
-        groups="bemade_sports_clinic.group_sports_clinic_treatment_professional",
+        groups="pod_practice_management.group_sports_clinic_treatment_professional",
         tracking=True,
     )
     age = fields.Integer(
         compute="_compute_age",
-        groups="bemade_sports_clinic.group_sports_clinic_treatment_professional",
+        groups="pod_practice_management.group_sports_clinic_treatment_professional",
     )
     contact_ids = fields.One2many(
         comodel_name="sports.patient.contact",
         inverse_name="patient_id",
         string="Patient Contacts",
-        groups="bemade_sports_clinic.group_sports_clinic_user",
+        groups="pod_practice_management.group_sports_clinic_user",
     )
     team_ids = fields.Many2many(
         comodel_name="sports.team",
@@ -287,12 +287,12 @@ class Patient(models.Model):
             first_external_field = (external_tracking_fields & params).pop()
             res[first_external_field] = (
                 self.env.ref(
-                    "bemade_sports_clinic.mail_template_patient_status_update"
+                    "pod_practice_management.mail_template_patient_status_update"
                 ),
                 {
                     # "auto_delete_message": False,
                     "subtype_id": self.env.ref(
-                        "bemade_sports_clinic.subtype_patient_external_update"
+                        "pod_practice_management.subtype_patient_external_update"
                     ).id,
                     "email_layout_xmlid": "mail.mail_notification_light",
                 },
@@ -300,12 +300,12 @@ class Patient(models.Model):
         if "team_info_notes" in changes:
             res["team_info_notes"] = (
                 self.env.ref(
-                    "bemade_sports_clinic.mail_template_patient_new_internal_note"
+                    "pod_practice_management.mail_template_patient_new_internal_note"
                 ),
                 {
                     # "auto_delete_message": False,
                     "subtype_id": self.env.ref(
-                        "bemade_sports_clinic.subtype_patient_internal_update"
+                        "pod_practice_management.subtype_patient_internal_update"
                     ).id,
                     "email_layout_xmlid": "mail.mail_notification_light",
                 },

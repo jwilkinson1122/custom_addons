@@ -143,12 +143,12 @@ class PatientInjury(models.Model):
             first_external_field = (external_tracking_fields & params).pop()
             res[first_external_field] = (
                 self.env.ref(
-                    "bemade_sports_clinic.mail_template_patient_injury_status_update"
+                    "pod_practice_management.mail_template_patient_injury_status_update"
                 ),
                 {
                     # "auto_delete_message": False,
                     "subtype_id": self.env.ref(
-                        "bemade_sports_clinic.subtype_patient_injury_external_update"
+                        "pod_practice_management.subtype_patient_injury_external_update"
                     ).id,
                     "email_layout_xmlid": "mail.mail_notification_light",
                 },
@@ -156,12 +156,12 @@ class PatientInjury(models.Model):
         if "internal_notes" in changes:
             res["internal_notes"] = (
                 self.env.ref(
-                    "bemade_sports_clinic.mail_template_patient_injury_new_internal_note"
+                    "pod_practice_management.mail_template_patient_injury_new_internal_note"
                 ),
                 {
                     # "auto_delete_message": False,
                     "subtype_id": self.env.ref(
-                        "bemade_sports_clinic.subtype_patient_injury_internal_update"
+                        "pod_practice_management.subtype_patient_injury_internal_update"
                     ).id,
                     "email_layout_xmlid": "mail.mail_notification_light",
                 },
