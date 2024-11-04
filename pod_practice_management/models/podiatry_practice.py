@@ -2,23 +2,23 @@ from odoo import models, fields, api, _, Command
 from odoo.exceptions import ValidationError
 
 
-class SportsTeam(models.Model):
-    _name = "sports.team"
-    _description = "Sports Team"
+class PodiatryPractice(models.Model):
+    _name = "podiatry.practice"
+    _description = "Podiatry Practice"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char()
     patient_ids = fields.Many2many(
-        comodel_name="sports.patient",
-        relation="sports_team_patient_rel",
-        column1="team_id",
+        comodel_name="podiatry.patient",
+        relation="podiatry_practice_patient_rel",
+        column1="practice_id",
         column2="patient_id",
-        string="Players",
+        string="Patients",
         tracking=True,
     )
-    player_count = fields.Integer(compute="_compute_player_counts")
-    injured_count = fields.Integer(compute="_compute_player_counts")
-    healthy_count = fields.Integer(compute="_compute_player_counts")
+    patient_count = fields.Integer(compute="_compute_patient_counts")
+    inactive_count = fields.Integer(compute="_compute_patient_counts")
+    active_count = fields.Integer(compute="_compute_patient_counts")
     parent_id = fields.Many2one(
         comodel_name="res.partner",
         string="Parent Organization",
@@ -26,8 +26,8 @@ class SportsTeam(models.Model):
         tracking=True,
     )
     staff_ids = fields.One2many(
-        comodel_name="sports.team.staff",
-        inverse_name="team_id",
+        comodel_name="podiatry.practice.staff",
+        inverse_name="practice_id",
         tracking=True,
     )
     head_coach_id = fields.Many2one(
@@ -78,12 +78,12 @@ class SportsTeam(models.Model):
         to_recompute.recompute_followers()
         return res
 
-    @api.depends("patient_ids.is_injured")
-    def _compute_player_counts(self):
+    @api.depends("patient_ids.is_active")
+    def _compute_patient_counts(self):
         for rec in self:
-            rec.player_count = len(rec.patient_ids)
-            rec.injured_count = len(rec.patient_ids.filtered(lambda p: p.is_injured))
-            rec.healthy_count = rec.player_count - rec.injured_count
+            rec.patient_count = len(rec.patient_ids)
+            rec.inactive_count = len(rec.patient_ids.filtered(lambda p: p.is_active))
+            rec.active_count = rec.patient_count - rec.inactive_count
 
     @api.depends("staff_ids.role")
     def _compute_head_coach(self):
@@ -108,10 +108,10 @@ class SportsTeam(models.Model):
             )
             added_users = rec.allowed_user_ids - rec.staff_ids.user_ids
             removed_staff.unlink()
-            self.env["sports.team.staff"].create(
+            self.env["podiatry.practice.staff"].create(
                 [
                     {
-                        "team_id": rec.id,
+                        "practice_id": rec.id,
                         "partner_id": user.partner_id.id,
                         "role": "other",
                     }
@@ -123,14 +123,14 @@ class SportsTeam(models.Model):
         self.staff_ids.filtered(lambda staff: user in staff.user_ids).unlink()
 
 
-class TeamStaff(models.Model):
-    _name = "sports.team.staff"
-    _description = "Sports Team Staff"
+class PracticeStaff(models.Model):
+    _name = "podiatry.practice.staff"
+    _description = "Podiatry Practice Staff"
 
     sequence = fields.Integer()
-    team_id = fields.Many2one(
-        comodel_name="sports.team",
-        string="Team",
+    practice_id = fields.Many2one(
+        comodel_name="podiatry.practice",
+        string="Practice",
         required=True,
         ondelete="cascade",
     )
@@ -169,20 +169,23 @@ class TeamStaff(models.Model):
 
     _sql_constraints = [
         (
-            "team_staff_unique",
-            "unique(team_id, partner_id)",
-            "Each partner can only be related to a given team once.",
+            "practice_staff_unique",
+            "unique(practice_id, partner_id)",
+            "Each partner can only be related to a given practice once.",
         )
     ]
 
     @api.constrains("role")
     def _constrain_role(self):
-        teams = self.mapped("team_id")
-        for team in teams:
-            if len(team.staff_ids.filtered(lambda r: r.role == "head_coach")) > 1:
-                raise ValidationError(_("A team can have only one head coach."))
-            if len(team.staff_ids.filtered(lambda r: r.role == "head_therapist")) > 1:
-                raise ValidationError(_("A team can have only one head therapist."))
+        practices = self.mapped("practice_id")
+        for practice in practices:
+            if len(practice.staff_ids.filtered(lambda r: r.role == "head_coach")) > 1:
+                raise ValidationError(_("A practice can have only one head coach."))
+            if (
+                len(practice.staff_ids.filtered(lambda r: r.role == "head_therapist"))
+                > 1
+            ):
+                raise ValidationError(_("A practice can have only one head therapist."))
 
     @api.onchange("mobile")
     def _onchange_mobile_validation(self):
@@ -224,21 +227,21 @@ class TeamStaff(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        res.team_id.mapped("patient_ids").recompute_followers()
+        res.practice_id.mapped("patient_ids").recompute_followers()
         return res
 
     def unlink(self):
-        patients = self.team_id.mapped("patient_ids")
+        patients = self.practice_id.mapped("patient_ids")
         res = super().unlink()
         patients.recompute_followers()
         return res
 
     def write(self, values):
-        if "team_id" in values:
-            to_recompute = self.env["sports.patient"]
+        if "practice_id" in values:
+            to_recompute = self.env["podiatry.patient"]
             for rec in self:
-                if rec.team_id.id != values["team_id"]:
-                    to_recompute |= rec.team_id.patient_ids
+                if rec.practice_id.id != values["practice_id"]:
+                    to_recompute |= rec.practice_id.patient_ids
             res = super().write(values)
             to_recompute.recompute_followers()
             return res

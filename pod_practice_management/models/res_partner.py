@@ -6,25 +6,25 @@ from odoo.exceptions import ValidationError
 class Partner(models.Model):
     _inherit = "res.partner"
 
-    owned_team_ids = fields.One2many(
-        comodel_name="sports.team", inverse_name="parent_id"
+    owned_practice_ids = fields.One2many(
+        comodel_name="podiatry.practice", inverse_name="parent_id"
     )
     staff_ids = fields.One2many(
-        comodel_name="sports.team.staff", inverse_name="team_id"
+        comodel_name="podiatry.practice.staff", inverse_name="practice_id"
     )
-    team_staff_rel_ids = fields.One2many(
-        comodel_name="sports.team.staff",
+    practice_staff_rel_ids = fields.One2many(
+        comodel_name="podiatry.practice.staff",
         inverse_name="partner_id",
         string="Employer(s)",
-        help="The teams this person works for.",
+        help="The practices this person works for.",
     )
-    teams_served_ids = fields.One2many(
-        comodel_name="sports.team",
-        compute="_compute_teams_served",
-        inverse="_inverse_teams_served",
+    practices_served_ids = fields.One2many(
+        comodel_name="podiatry.practice",
+        compute="_compute_practices_served",
+        inverse="_inverse_practices_served",
     )
     patient_ids = fields.One2many(
-        comodel_name="sports.patient", inverse_name="partner_id"
+        comodel_name="podiatry.patient", inverse_name="partner_id"
     )
 
     def write(self, vals):
@@ -38,20 +38,20 @@ class Partner(models.Model):
             )
         return super().write(vals)
 
-    @api.depends("team_staff_rel_ids.team_id")
-    def _compute_teams_served(self):
+    @api.depends("practice_staff_rel_ids.practice_id")
+    def _compute_practices_served(self):
         for rec in self:
-            rec.teams_served_ids = rec.team_staff_rel_ids.mapped("team_id")
+            rec.practices_served_ids = rec.practice_staff_rel_ids.mapped("practice_id")
 
-    @api.depends("team_staff_rel_ids.team_id")
-    def _inverse_teams_served(self):
+    @api.depends("practice_staff_rel_ids.practice_id")
+    def _inverse_practices_served(self):
         for rec in self:
-            for staff in rec.team_staff_rel_ids:
-                if staff.team_id not in rec.teams_served_ids:
+            for staff in rec.practice_staff_rel_ids:
+                if staff.practice_id not in rec.practices_served_ids:
                     staff.unlink()
-            served_teams = rec.team_staff_rel_ids.mapped("team_id")
-            for team in rec.teams_served_ids:
-                if team not in served_teams:
+            served_practices = rec.practice_staff_rel_ids.mapped("practice_id")
+            for practice in rec.practices_served_ids:
+                if practice not in served_practices:
                     raise UserError(
-                        _("To add a staff member to a team, use the team view.")
+                        _("To add a staff member to a practice, use the practice view.")
                     )

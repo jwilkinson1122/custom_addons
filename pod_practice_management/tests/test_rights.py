@@ -17,12 +17,12 @@ class TestRights(TransactionCase):
         cls.admin_user = cls.env["res.users"].create(
             {
                 "name": "Admin User",
-                "login": "sports_admin",
-                "password": "sports_admin",
+                "login": "podiatry_admin",
+                "password": "podiatry_admin",
                 "groups_id": [
                     Command.set(
                         cls.env.ref(
-                            "pod_practice_management.group_sports_clinic_admin"
+                            "pod_practice_management.group_podiatry_practice_admin"
                         ).ids,
                     ),
                 ],
@@ -37,7 +37,7 @@ class TestRights(TransactionCase):
                 "groups_id": [
                     Command.set(
                         cls.env.ref(
-                            "pod_practice_management.group_sports_clinic_treatment_professional"
+                            "pod_practice_management.group_podiatry_practice_treatment_professional"
                         ).ids,
                     ),
                 ],
@@ -48,51 +48,51 @@ class TestRights(TransactionCase):
         #     f"{cls.treatment_professional_user.groups_id.mapped('name')}"
         # )
 
-    def test_treatment_pro_has_access_only_to_staffed_teams(self):
-        """A treatment professional should only have access to teams and,
-        by extension, patients for which they are a team staff member."""
-        team, patients = self._generate_team_with_patient(self.admin_user)
+    def test_treatment_pro_has_access_only_to_staffed_practices(self):
+        """A treatment professional should only have access to practices and,
+        by extension, patients for which they are a practice staff member."""
+        practice, patients = self._generate_practice_with_patient(self.admin_user)
         with self.assertRaises(AccessError):
             Form(
-                self.env["sports.team"]
+                self.env["podiatry.practice"]
                 .with_user(self.treatment_professional_user)
-                .browse(team.id)
+                .browse(practice.id)
             )
         with self.assertRaises(AccessError):
             Form(
-                self.env["sports.patient"]
+                self.env["podiatry.patient"]
                 .with_user(self.treatment_professional_user)
                 .browse(patients[0].id)
             )
 
-    def test_treatment_pro_can_remove_patient_from_team(self):
-        team, patients = self._generate_team_with_patient(self.admin_user)
-        self.env["sports.team.staff"].with_user(self.admin_user).create(
+    def test_treatment_pro_can_remove_patient_from_practice(self):
+        practice, patients = self._generate_practice_with_patient(self.admin_user)
+        self.env["podiatry.practice.staff"].with_user(self.admin_user).create(
             {
-                "team_id": team.id,
+                "practice_id": practice.id,
                 "partner_id": self.treatment_professional_user.partner_id.id,
                 "role": "head_therapist",
             }
         )
-        # Test removing the patient since we are team staff
+        # Test removing the patient since we are practice staff
         # Should not throw an error...
-        with Form(team.with_user(self.treatment_professional_user)) as team:
-            team.patient_ids.remove(index=0)
-        self.assertEqual(len(team.patient_ids), 1)
+        with Form(practice.with_user(self.treatment_professional_user)) as practice:
+            practice.patient_ids.remove(index=0)
+        self.assertEqual(len(practice.patient_ids), 1)
 
-    def _generate_team_with_patient(self, user=None):
+    def _generate_practice_with_patient(self, user=None):
         user = user or self.env.user
-        team = (
-            self.env["sports.team"]
+        practice = (
+            self.env["podiatry.practice"]
             .with_user(user)
             .create(
                 {
-                    "name": "Test Team",
+                    "name": "Test Practice",
                 }
             )
         )
         patients = (
-            self.env["sports.patient"]
+            self.env["podiatry.patient"]
             .with_user(user)
             .create(
                 [
@@ -100,15 +100,15 @@ class TestRights(TransactionCase):
                         "first_name": "Test",
                         "last_name": "Patient One",
                         "date_of_birth": Date.today() - timedelta(days=-365 * 18),
-                        "team_ids": [(6, 0, team.ids)],
+                        "practice_ids": [(6, 0, practice.ids)],
                     },
                     {
                         "first_name": "Test",
                         "last_name": "Patient Two",
                         "date_of_birth": Date.today() - timedelta(days=-365 * 18),
-                        "team_ids": [(6, 0, team.ids)],
+                        "practice_ids": [(6, 0, practice.ids)],
                     },
                 ]
             )
         )
-        return team, patients
+        return practice, patients

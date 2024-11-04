@@ -8,38 +8,42 @@ class User(models.Model):
         compute="_compute_is_treatment_professional", store=True
     )
 
-    accessible_team_ids = fields.Many2many(
-        comodel_name="sports.team",
-        compute="_compute_accessible_team_ids",
-        inverse="_inverse_accessible_team_ids",
+    accessible_practice_ids = fields.Many2many(
+        comodel_name="podiatry.practice",
+        compute="_compute_accessible_practice_ids",
+        inverse="_inverse_accessible_practice_ids",
     )
 
     @api.depends("groups_id")
     def _compute_is_treatment_professional(self):
         for rec in self:
             rec.is_treatment_professional = rec.has_group(
-                "pod_practice_management.group_sports_clinic_treatment_professional"
+                "pod_practice_management.group_podiatry_practice_treatment_professional"
             )
 
-    def _compute_accessible_team_ids(self):
+    def _compute_accessible_practice_ids(self):
         for rec in self:
-            rec.accessible_team_ids = rec.partner_id.teams_served_ids
+            rec.accessible_practice_ids = rec.partner_id.practices_served_ids
 
-    def _inverse_accessible_team_ids(self):
+    def _inverse_accessible_practice_ids(self):
         for rec in self:
-            removed_teams = rec.partner_id.teams_served_ids - rec.accessible_team_ids
-            added_teams = rec.accessible_team_ids - rec.partner_id.teams_served_ids
-            removed_teams = rec.partner_id.teams_served_ids.filtered(
-                lambda team: team in removed_teams
+            removed_practices = (
+                rec.partner_id.practices_served_ids - rec.accessible_practice_ids
             )
-            removed_teams.remove_access(self)
-            self.env["sports.team.staff"].create(
+            added_practices = (
+                rec.accessible_practice_ids - rec.partner_id.practices_served_ids
+            )
+            removed_practices = rec.partner_id.practices_served_ids.filtered(
+                lambda practice: practice in removed_practices
+            )
+            removed_practices.remove_access(self)
+            self.env["podiatry.practice.staff"].create(
                 [
                     {
-                        "team_id": team.id,
+                        "practice_id": practice.id,
                         "partner_id": rec.partner_id.id,
                         "role": "other",
                     }
-                    for team in added_teams
+                    for practice in added_practices
                 ]
             )

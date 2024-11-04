@@ -1,1 +1,1 @@
-from . import team_staff_portal
+from . import practice_staff_portal

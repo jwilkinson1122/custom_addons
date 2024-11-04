@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="1">
-        <!-- Refuse access to patient records that are not part of staff user's teams -->
-        <record id="restrict_staff_access_to_team_players" model="ir.rule">
-            <field name="name">Restrict Team Staff Access to Their Players Only</field>
-            <field name="model_id" ref="model_sports_patient"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+        <!-- Refuse access to patient records that are not part of staff user's practices -->
+        <record id="restrict_staff_access_to_practice_patients" model="ir.rule">
+            <field name="name">Restrict Practice Staff Access to Their Patients Only</field>
+            <field name="model_id" ref="model_podiatry_patient"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_unlink" eval="True"/>
             <field name="domain_force">
-                [('team_ids.staff_ids.user_ids', 'in', user.id)]
+                [('practice_ids.staff_ids.user_ids', 'in', user.id)]
             </field>
         </record>
-        <record id="restrict_staff_access_to_teams" model="ir.rule">
-            <field name="name">Restrict Team Staff Access to Their Teams Only</field>
-            <field name="model_id" ref="model_sports_team"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+        <record id="restrict_staff_access_to_practices" model="ir.rule">
+            <field name="name">Restrict Practice Staff Access to Their Practices Only</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
@@ -28,39 +26,36 @@
                 [('staff_ids.user_ids', 'in', user.id)]
             </field>
         </record>
-        <record id="restrict_staff_access_to_team_injuries" model="ir.rule">
-            <field name="name">Restrict Team Staff Access to Their Teams Only</field>
-            <field name="model_id" ref="model_sports_patient_injury"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+        <record id="restrict_staff_access_to_practice_pathologies" model="ir.rule">
+            <field name="name">Restrict Practice Staff Access to Their Practices Only</field>
+            <field name="model_id" ref="model_podiatry_patient_pathology"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_unlink" eval="True"/>
             <field name="domain_force">
-                [('patient_id.team_ids.staff_ids.user_ids', 'in', user.id)]
+                [('patient_id.practice_ids.staff_ids.user_ids', 'in', user.id)]
             </field>
         </record>
-        <record id="restrict_patient_contact_access_to_allowed_internal_users"
-                model="ir.rule">
+        <record id="restrict_patient_contact_access_to_allowed_internal_users" model="ir.rule">
             <field name="name">Restrict Patient Contact Access to Allowed Internal
                 Users
             </field>
-            <field name="model_id" ref="model_sports_patient_contact"/>
+            <field name="model_id" ref="model_podiatry_patient_contact"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_unlink" eval="True"/>
             <field name="domain_force">
-                [('patient_id.team_ids.staff_ids.user_ids', 'in', user.id)]
+                [('patient_id.practice_ids.staff_ids.user_ids', 'in', user.id)]
             </field>
         </record>
-        <record id="allow_team_access_to_admins" model="ir.rule">
-            <field name="name">Allow Team Access to Administrators</field>
-            <field name="model_id" ref="model_sports_team"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_sports_clinic_admin')])]"/>
+        <record id="allow_practice_access_to_admins" model="ir.rule">
+            <field name="name">Allow Practice Access to Administrators</field>
+            <field name="model_id" ref="model_podiatry_practice"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_podiatry_practice_admin')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
@@ -71,9 +66,8 @@
         </record>
         <record id="allow_patient_access_to_admins" model="ir.rule">
             <field name="name">Allow Patient Access to Administrators</field>
-            <field name="model_id" ref="model_sports_patient"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_sports_clinic_admin')])]"/>
+            <field name="model_id" ref="model_podiatry_patient"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_podiatry_practice_admin')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
@@ -82,11 +76,10 @@
                 [(1, '=', 1)]
             </field>
         </record>
-        <record id="allow_injury_access_to_admins" model="ir.rule">
-            <field name="name">Allow Injury Access to Administrators</field>
-            <field name="model_id" ref="model_sports_patient_injury"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_sports_clinic_admin')])]"/>
+        <record id="allow_pathology_access_to_admins" model="ir.rule">
+            <field name="name">Allow Pathology Access to Administrators</field>
+            <field name="model_id" ref="model_podiatry_patient_pathology"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_podiatry_practice_admin')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>
@@ -96,11 +89,10 @@
             </field>
         </record>
         <record id="allow_patient_contact_access_to_admins" model="ir.rule">
-            <field name="name">Allow Sports Patient Contact Access to Administrators
+            <field name="name">Allow Podiatry Patient Contact Access to Administrators
             </field>
-            <field name="model_id" ref="model_sports_patient_contact"/>
-            <field name="groups"
-                   eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_sports_clinic_admin')])]"/>
+            <field name="model_id" ref="model_podiatry_patient_contact"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_practice_management.group_podiatry_practice_admin')])]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>

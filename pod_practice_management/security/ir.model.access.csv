@@ -1,13 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_patient_user,User Access for Patients,model_sports_patient,group_sports_clinic_user,1,1,1,0
-access_patient_treatment_pro,Treatment Professional Access for Patients,model_sports_patient,group_sports_clinic_treatment_professional,1,1,1,1
-access_patient_admin,Admin Access for Patients,model_sports_patient,group_sports_clinic_admin,1,1,1,1
-access_patient_portal,Portal Access for Patients,model_sports_patient,base.group_portal,1,1,1,0
-access_patient_contact_user,User Access for Patient Contacts,model_sports_patient_contact,group_sports_clinic_user,1,1,1,1
-access_injury_treatment_pro,Treatment Professional Access for Injuries,model_sports_patient_injury,group_sports_clinic_treatment_professional,1,1,1,1
-access_injury_portal,Portal Access for Injuries,model_sports_patient_injury,base.group_portal,1,0,0,0
-access_team_user,User Access for Teams,model_sports_team,group_sports_clinic_user,1,1,1,0
-access_team_admin,Admin Access for Teams,model_sports_team,group_sports_clinic_admin,1,1,1,1
-access_team_portal,Portal Access for Teams,model_sports_team,base.group_portal,1,0,0,0
-access_team_staff_user,User Access for Team Staff,model_sports_team_staff,group_sports_clinic_user,1,1,1,1
-access_team_staff_portal,Portal Access for Team Staff,model_sports_team_staff,base.group_portal,1,0,0,0
+access_patient_user,User Access for Patients,model_podiatry_patient,group_podiatry_practice_user,1,1,1,0
+access_patient_treatment_pro,Treatment Professional Access for Patients,model_podiatry_patient,group_podiatry_practice_treatment_professional,1,1,1,1
+access_patient_admin,Admin Access for Patients,model_podiatry_patient,group_podiatry_practice_admin,1,1,1,1
+access_patient_portal,Portal Access for Patients,model_podiatry_patient,base.group_portal,1,1,1,0
+access_patient_contact_user,User Access for Patient Contacts,model_podiatry_patient_contact,group_podiatry_practice_user,1,1,1,1
+access_pathology_treatment_pro,Treatment Professional Access for Pathologies,model_podiatry_patient_pathology,group_podiatry_practice_treatment_professional,1,1,1,1
+access_pathology_portal,Portal Access for Pathologies,model_podiatry_patient_pathology,base.group_portal,1,0,0,0
+access_practice_user,User Access for Practices,model_podiatry_practice,group_podiatry_practice_user,1,1,1,0
+access_practice_admin,Admin Access for Practices,model_podiatry_practice,group_podiatry_practice_admin,1,1,1,1
+access_practice_portal,Portal Access for Practices,model_podiatry_practice,base.group_portal,1,0,0,0
+access_practice_staff_user,User Access for Practice Staff,model_podiatry_practice_staff,group_podiatry_practice_user,1,1,1,1
+access_practice_staff_portal,Portal Access for Practice Staff,model_podiatry_practice_staff,base.group_portal,1,0,0,0

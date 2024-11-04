@@ -8,7 +8,7 @@ class TestUsers(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-    def test_add_team_access_to_user(self):
+    def test_add_practice_access_to_user(self):
         user = self.env["res.users"].create(
             {
                 "name": "test",
@@ -17,19 +17,19 @@ class TestUsers(TransactionCase):
                 "groups_id": [
                     Command.set(
                         self.env.ref(
-                            "pod_practice_management.group_sports_clinic_treatment_professional"
+                            "pod_practice_management.group_podiatry_practice_treatment_professional"
                         ).ids
                     )
                 ],
             }
         )
-        team = self.env["sports.team"].create(
+        practice = self.env["podiatry.practice"].create(
             {
                 "name": "Test",
             }
         )
 
-        self.assertNotIn(user, team.staff_ids.user_ids)
-        user.write({"accessible_team_ids": [Command.link(team.id)]})
-        # user._inverse_accessible_team_ids()
-        self.assertIn(user, team.staff_ids.user_ids)
+        self.assertNotIn(user, practice.staff_ids.user_ids)
+        user.write({"accessible_practice_ids": [Command.link(practice.id)]})
+        # user._inverse_accessible_practice_ids()
+        self.assertIn(user, practice.staff_ids.user_ids)

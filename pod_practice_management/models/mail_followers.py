@@ -38,12 +38,12 @@ class MailFollowers(models.Model):
     def __subtypes_map(self):
         xml_id_fmt_string = "pod_practice_management.subtype_{0}_{1}_update"
         return {
-            "sports.patient": (
+            "podiatry.patient": (
                 self.env.ref(xml_id_fmt_string.format("patient", "internal")),
                 self.env.ref(xml_id_fmt_string.format("patient", "external")),
             ),
-            "sports.patient.injury": (
-                self.env.ref(xml_id_fmt_string.format("patient_injury", "internal")),
-                self.env.ref(xml_id_fmt_string.format("patient_injury", "external")),
+            "podiatry.patient.pathology": (
+                self.env.ref(xml_id_fmt_string.format("patient_pathology", "internal")),
+                self.env.ref(xml_id_fmt_string.format("patient_pathology", "external")),
             ),
         }
