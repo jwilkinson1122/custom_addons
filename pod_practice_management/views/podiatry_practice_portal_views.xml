@@ -24,7 +24,7 @@
                             <th>Practice Name</th>
                             <th>Parent Organization</th>
                             <th>Total Patients</th>
-                            <th>Not Active</th>
+                            <!-- <th>Not Active</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -41,9 +41,9 @@
                                 <td>
                                     <span t-field="practice.patient_count"/>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <span t-field="practice.inactive_count"/>
-                                </td>
+                                </td> -->
                             </tr>
                         </t>
                     </tbody>
