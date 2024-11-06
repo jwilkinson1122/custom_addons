@@ -1,10 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_patient_user,User Access for Patients,model_podiatry_patient,group_podiatry_practice_user,1,1,1,0
-access_patient_treatment_pro,Treatment Professional Access for Patients,model_podiatry_patient,group_podiatry_practice_treatment_professional,1,1,1,1
+access_patient_treatment_pro,Internal User Access for Patients,model_podiatry_patient,group_podiatry_practice_internal_user,1,1,1,1
 access_patient_admin,Admin Access for Patients,model_podiatry_patient,group_podiatry_practice_admin,1,1,1,1
 access_patient_portal,Portal Access for Patients,model_podiatry_patient,base.group_portal,1,1,1,0
 access_patient_contact_user,User Access for Patient Contacts,model_podiatry_patient_contact,group_podiatry_practice_user,1,1,1,1
-access_pathology_treatment_pro,Treatment Professional Access for Pathologies,model_podiatry_patient_pathology,group_podiatry_practice_treatment_professional,1,1,1,1
+access_pathology_treatment_pro,Internal User Access for Pathologies,model_podiatry_patient_pathology,group_podiatry_practice_internal_user,1,1,1,1
 access_pathology_portal,Portal Access for Pathologies,model_podiatry_patient_pathology,base.group_portal,1,0,0,0
 access_practice_user,User Access for Practices,model_podiatry_practice,group_podiatry_practice_user,1,1,1,0
 access_practice_admin,Admin Access for Practices,model_podiatry_practice,group_podiatry_practice_admin,1,1,1,1

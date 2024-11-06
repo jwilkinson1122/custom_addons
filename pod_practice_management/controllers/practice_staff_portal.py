@@ -140,7 +140,7 @@ class PracticeStaffPortal(CustomerPortal):
         )
         if not patient:
             raise UserError(_("This patient could not be found."))
-        pathologies = patient.pathology_ids.filtered(lambda r: r.stage == "active")
+        pathologies = patient.pathology_ids.filtered(lambda r: r.status == "active")
         return http.request.render(
             template="pod_practice_management.portal_my_patient_pathologies",
             qcontext={

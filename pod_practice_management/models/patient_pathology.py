@@ -31,21 +31,38 @@ class PatientPathology(models.Model):
     pathology_date_na = fields.Boolean(string="N/A", default=False)
     internal_notes = fields.Html(tracking=True)
     external_notes = fields.Html(tracking=True)
+
     treatment_professional_ids = fields.Many2many(
-        comodel_name="res.users",
-        relation="patient_pathology_treatment_pro_rel",
+        comodel_name="res.partner",
+        relation="patient_pathology_treatment_partner_rel",
         column1="patient_pathology_id",
-        column2="treatment_pro_id",
+        column2="partner_id",
         string="Treatment Professionals",
-        domain=[("is_treatment_professional", "=", True)],
+        domain=[("role", "in", ["physician", "primary_physician", "therapist"])],
         tracking=True,
     )
+
+    internal_user_ids = fields.Many2one(
+        comodel_name="res.users",
+        string="Internal Users",
+        domain=[("is_internal_user", "=", True)],
+        tracking=True,
+    )
+
+    patient_id = fields.Many2one(
+        comodel_name="podiatry.patient",
+        string="Patient",
+        readonly=True,
+        required=True,
+        ondelete="cascade",
+    )
+
     resolution_date = fields.Date(
         tracking=True, help="The date when the pathology was actually resolved."
     )
-    stage = fields.Selection(
+    status = fields.Selection(
         selection=[("active", "Active"), ("resolved", "Resolved")],
-        compute="_compute_stage",
+        compute="_compute_status",
         store=True,
     )
 
@@ -68,9 +85,9 @@ class PatientPathology(models.Model):
             self.pathology_date_na = False
 
     @api.depends("resolution_date")
-    def _compute_stage(self):
+    def _compute_status(self):
         for rec in self:
-            rec.stage = (
+            rec.status = (
                 "resolved"
                 if rec.resolution_date and rec.resolution_date <= date.today()
                 else "active"
@@ -80,7 +97,7 @@ class PatientPathology(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         for rec in records:
-            rec.message_subscribe(rec.patient_id.message_partner_ids)
+            rec.message_subscribe(rec.patient_id.message_partner_ids.ids)
             rec.patient_id.message_post(
                 body=_("A new pathology was created: %s" % rec.diagnosis)
             )

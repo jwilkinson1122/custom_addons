@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <data noupdate="1">
+
+        <!-- Record Rules For Practice -->
+        <record id="res_practice_rule_portal" model="ir.rule">
+            <field name="name">practice rule portal</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal')])]"/>
+            <field name="domain_force">[('id','in', user.practice_ids.ids)]</field>
+        </record>
+        <record id="res_practice_rule_employee" model="ir.rule">
+            <field name="name">practice rule employee</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
+            <field name="domain_force">[('id','in', user.practice_ids.ids)]</field>
+        </record>
+        <record id="res_practice_rule_public" model="ir.rule">
+            <field name="name">practice rule public</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_public')])]"/>
+            <field name="domain_force">[('id','in', user.practice_ids.ids)]</field>
+        </record>
+        <record id="res_practice_rule_erp_manager" model="ir.rule">
+            <field name="name">practice rule erp manager</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_erp_manager')])]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <!-- Multi - Practice Rules -->
+
+        <record id="product_practice_rule" model="ir.rule">
+            <field name="name">Product multi-practice</field>
+            <field name="model_id" ref="model_product_template"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="sale_order_practice_rule">
+            <field name="name">Sales Order multi-practice</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="sale_order_line_practice_rule">
+            <field name="name">Sales Order Line multi-practice</field>
+            <field name="model_id" ref="model_sale_order_line"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="purchase_order_practice_rule">
+            <field name="name">Purchase Order multi-practice</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="purchase_order_line_practice_rule">
+            <field name="name">Purchase Order Line multi-practice</field>
+            <field name="model_id" ref="model_purchase_order_line"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="account_practice_rule" model="ir.rule">
+            <field name="name">Account multi-practice</field>
+            <field name="model_id" ref="model_account_account"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="journal_practice_rule" model="ir.rule">
+            <field name="name">Journal multi-practice</field>
+            <field name="model_id" ref="model_account_journal"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="account_move_practice_rule" model="ir.rule">
+            <field name="name">Practice Account Entry</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="account_move_line_comp_rule" model="ir.rule">
+            <field name="name">Entry lines</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="account_payment_practice_rule">
+            <field name="name">Account payment practice rule</field>
+            <field name="model_id" ref="model_account_payment"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_picking_practice_rule">
+            <field name="name">stock_picking multi-practice</field>
+            <field name="model_id" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_picking_type_practice_rule">
+            <field name="name">Stock Operation Type multi-practice</field>
+            <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_warehouse_practice_rule">
+            <field name="name">Warehouse multi-practice</field>
+            <field name="model_id" ref="model_stock_warehouse"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_move_practice_rule">
+            <field name="name">stock_move multi-practice</field>
+            <field name="model_id" search="[('model','=','stock.move')]" model="ir.model"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_move_line_practice_rule">
+            <field name="name">stock_move_line multi-practice</field>
+            <field name="model_id" search="[('model','=','stock.move.line')]" model="ir.model"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_valuation_layer_practice_rule">
+            <field name="name">Stock Valuation Layer Multipractice</field>
+            <field name="model_id" search="[('model','=','stock.valuation.layer')]" model="ir.model"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="invoice_analysis_practice_rule" model="ir.rule">
+            <field name="name">Invoice Analysis multi-practice</field>
+            <field name="model_id" ref="model_account_invoice_report"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="sale_order_report_practice_rule">
+            <field name="name">Sales Order Analysis multi-practice</field>
+            <field name="model_id" ref="model_sale_report"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+
+        <record id="purchase_order_report_practice_rule" model="ir.rule">
+            <field name="name">Purchase Order Report multi-practice</field>
+            <field name="model_id" ref="model_purchase_report"/>
+            <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
+        </record>
+    </data>
+</odoo>

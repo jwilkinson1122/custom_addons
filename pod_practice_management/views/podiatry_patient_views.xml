@@ -21,14 +21,14 @@
             <field name="name">podiatry.patient.view.list</field>
             <field name="model">podiatry.patient</field>
             <field name="arch" type="xml">
-                <tree string="Patients" decoration-danger="stage == 'inactive'" decoration-success="stage == 'active'">
+                <tree string="Patients" decoration-danger="status == 'inactive'" decoration-success="status == 'active'">
                     <field name="first_name"/>
                     <field name="last_name"/>
                     <field name="date_of_birth"/>
                     <field name="age"/>
                     <field name="practice_ids" widget="many2many_tags"/>
                     <field name="active_status" optional="hide"/>
-                    <field name="stage" optional="show"/>
+                    <field name="status" optional="show"/>
                     <field name="active_date" widget="date"/>
                     <field name="activity_ids" widget="list_activity"/>
                 </tree>
@@ -38,14 +38,14 @@
             <field name="name">podiatry.patient.view.list.embedded</field>
             <field name="model">podiatry.patient</field>
             <field name="arch" type="xml">
-                <tree string="Patients" multi_edit="True" editable="bottom" decoration-danger="stage == 'inactive'" decoration-success="stage == 'active'">
+                <tree string="Patients" multi_edit="True" editable="bottom" decoration-danger="status == 'inactive'" decoration-success="status == 'active'">
                     <field name="first_name"/>
                     <field name="last_name"/>
                     <field name="date_of_birth"/>
                     <field name="age"/>
                     <field name="practice_ids" widget="many2many_tags"/>
                     <field name="active_status" optional="hide"/>
-                    <field name="stage" optional="show"/>
+                    <field name="status" optional="show"/>
                     <field name="active_date" widget="date"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <button name="action_view_patient_form" type="object" title="Details" string="Details"/>
@@ -63,22 +63,22 @@
                     <field name="age"/>
                     <field name="practice_ids" widget="many2many_tags"/>
                     <field name="active_status" optional="hide"/>
-                    <field name="stage" optional="show"/>
+                    <field name="status" optional="show"/>
                     <field name="active_date" widget="date"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-set="stage" t-value="record.stage.raw_value"/>
+                            <t t-set="status" t-value="record.status.raw_value"/>
                             <div t-attf-class="oe_kanban_global_click
-                                {{stage === 'inactive' ? 'text-danger' : stage === 'active' ? 'text-success' : ''}}">
+                                {{status === 'inactive' ? 'text-danger' : status === 'active' ? 'text-success' : ''}}">
 
                                 <div>
                                     <div class="o_kanban_record_top mb16">
                                         <div class="o_kanban_record_headings mt-4">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_kanban_card_header_stage">
-                                            Status: <field name="stage"/>
+                                        <div class="oe_kanban_card_header_status">
+                                            Status: <field name="status"/>
                                         </div>
                                     </div>
                                     <div class="o_kanban_record_body">
@@ -99,7 +99,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="stage" widget="statusbar" />
+                    <field name="status" widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_button_box"></div>
@@ -128,10 +128,7 @@
                             <field name="practice_info_notes"/>
                         </group>
                         <notebook>
-                            <page string="Pathologies">
-                                <field name="pathology_ids"/>
-                            </page>
-                            <page string="Contacts">
+                            <page string="Contact Information">
                                 <group>
                                     <group string="Patient Phone &amp; Email">
                                         <field name="phone" widget="phone"/>
@@ -156,6 +153,9 @@
                                         </tree>
                                     </field>
                                 </group>
+                            </page>
+                            <page string="Pathologies">
+                                <field name="pathology_ids"/>
                             </page>
                         </notebook>
                     </group>

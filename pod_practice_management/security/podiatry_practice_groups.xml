@@ -16,15 +16,15 @@
             )
             ]"/>
         </record>
-        <record id="group_podiatry_practice_treatment_professional" model="res.groups">
-            <field name="name">Treatment Professional</field>
+        <record id="group_podiatry_practice_internal_user" model="res.groups">
+            <field name="name">Internal User</field>
             <field name="category_id" ref="module_category_podiatry_practice_management"/>
             <field name="implied_ids" eval="[Command.link(ref('group_podiatry_practice_user'))]"/>
         </record>
         <record id="group_podiatry_practice_admin" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="module_category_podiatry_practice_management"/>
-            <field name="implied_ids" eval="[Command.link(ref('group_podiatry_practice_treatment_professional'))]"/>
+            <field name="implied_ids" eval="[Command.link(ref('group_podiatry_practice_internal_user'))]"/>
         </record>
     </data>
 </odoo>

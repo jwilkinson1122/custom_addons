@@ -7,11 +7,11 @@
             <search>
                 <field name="name"/>
                 <field name="parent_id" string="Parent Organization"/>
-                <field name="head_coach_id"/>
-                <field name="head_therapist_id"/>
+                <field name="manager_id"/>
+                <field name="primary_physician_id"/>
                 <filter context="{'group_by': 'parent_id'}" name="groupby_parent_id"/>
-                <filter context="{'group_by': 'head_coach_id'}" name="groupby_head_coach_id"/>
-                <filter context="{'group_by': 'head_therapist_id'}" name="groupby_head_therapist_id"/>
+                <filter context="{'group_by': 'manager_id'}" name="groupby_manager_id"/>
+                <filter context="{'group_by': 'primary_physician_id'}" name="groupby_primary_physician_id"/>
             </search>
         </field>
     </record>
@@ -22,8 +22,8 @@
             <kanban archivable="false" default_group_by="parent_id" default_order="name" group_create="false" group_delete="false">
                 <field name="name"/>
                 <field name="parent_id"/>
-                <field name="head_coach_name"/>
-                <field name="head_therapist_name"/>
+                <field name="manager_name"/>
+                <field name="primary_physician_name"/>
                 <field name="patient_count"/>
                 <!-- <field name="inactive_count"/>
                 <field name="active_count"/> -->
@@ -44,14 +44,14 @@
                             </div>
                             <div>
                                 <span>
-                                    Head coach:
-                                    <field name="head_coach_name"/>
+                                    Practice Manager:
+                                    <field name="manager_name"/>
                                 </span>
                             </div>
                             <div>
                                 <span>
-                                    Head therapist:
-                                    <field name="head_therapist_name"/>
+                                    Primary Physician:
+                                    <field name="primary_physician_name"/>
                                 </span>
                             </div>
                             <div class="o_kanban_record_bottom">
@@ -87,8 +87,8 @@
             <tree string="Podiatry Practices">
                 <field name="name"/>
                 <field name="parent_id"/>
-                <field name="head_coach_id"/>
-                <field name="head_therapist_id"/>
+                <field name="manager_id"/>
+                <field name="primary_physician_id"/>
                 <field name="patient_count"/>
                 <!-- <field name="inactive_count"/> -->
             </tree>

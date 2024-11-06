@@ -27,6 +27,13 @@ class Partner(models.Model):
         comodel_name="podiatry.patient", inverse_name="partner_id"
     )
 
+    is_manager = fields.Boolean(compute="_compute_is_manager", store=True)
+    is_primary_physician = fields.Boolean(
+        compute="_compute_is_primary_physician", store=True
+    )
+
+    is_manager = fields.Boolean(compute="_compute_is_manager", store=True)
+
     def write(self, vals):
         if (
             self.patient_ids

@@ -4,9 +4,7 @@ from odoo import models, fields, api, _, Command
 class User(models.Model):
     _inherit = "res.users"
 
-    is_treatment_professional = fields.Boolean(
-        compute="_compute_is_treatment_professional", store=True
-    )
+    is_internal_user = fields.Boolean(compute="_compute_is_internal_user", store=True)
 
     accessible_practice_ids = fields.Many2many(
         comodel_name="podiatry.practice",
@@ -15,10 +13,10 @@ class User(models.Model):
     )
 
     @api.depends("groups_id")
-    def _compute_is_treatment_professional(self):
+    def _compute_is_internal_user(self):
         for rec in self:
-            rec.is_treatment_professional = rec.has_group(
-                "pod_practice_management.group_podiatry_practice_treatment_professional"
+            rec.is_internal_user = rec.has_group(
+                "pod_practice_management.group_podiatry_practice_internal_user"
             )
 
     def _compute_accessible_practice_ids(self):

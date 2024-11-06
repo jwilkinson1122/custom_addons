@@ -30,24 +30,24 @@ class PodiatryPractice(models.Model):
         inverse_name="practice_id",
         tracking=True,
     )
-    head_coach_id = fields.Many2one(
+    manager_id = fields.Many2one(
         comodel_name="res.partner",
-        compute="_compute_head_coach",
+        compute="_compute_manager",
         store=True,
     )
-    head_coach_name = fields.Char(
-        related="head_coach_id.name",
-        string="Head Coach Name",
+    manager_name = fields.Char(
+        related="manager_id.name",
+        string="Practice Manager Name",
     )
-    head_therapist_id = fields.Many2one(
+    primary_physician_id = fields.Many2one(
         comodel_name="res.partner",
-        compute="_compute_head_therapist",
+        compute="_compute_primary_physician",
         store=True,
-        string="Head Therapist",
+        string="Primary Physician",
     )
-    head_therapist_name = fields.Char(
-        related="head_therapist_id.name",
-        string="Head Therapist Name",
+    primary_physician_name = fields.Char(
+        related="primary_physician_id.name",
+        string="Primary Physician Name",
     )
     website = fields.Char()
 
@@ -86,16 +86,16 @@ class PodiatryPractice(models.Model):
             rec.active_count = rec.patient_count - rec.inactive_count
 
     @api.depends("staff_ids.role")
-    def _compute_head_coach(self):
+    def _compute_manager(self):
         for rec in self:
-            staff = rec.staff_ids.filtered(lambda r: r.role == "head_coach")
-            rec.head_coach_id = staff.partner_id if staff else False
+            staff = rec.staff_ids.filtered(lambda r: r.role == "manager")
+            rec.manager_id = staff.partner_id if staff else False
 
     @api.depends("staff_ids.role")
-    def _compute_head_therapist(self):
+    def _compute_primary_physician(self):
         for rec in self:
-            staff = rec.staff_ids.filtered(lambda r: r.role == "head_therapist")
-            rec.head_therapist_id = staff.partner_id if staff else False
+            staff = rec.staff_ids.filtered(lambda r: r.role == "primary_physician")
+            rec.primary_physician_id = staff.partner_id if staff else False
 
     def _compute_allowed_user_ids(self):
         for rec in self:
@@ -136,7 +136,7 @@ class PracticeStaff(models.Model):
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Staff Member",
+        string="Contacts",
         required=True,
         domain=[("is_company", "=", False)],
         ondelete="cascade",
@@ -144,15 +144,20 @@ class PracticeStaff(models.Model):
     active = fields.Boolean(related="partner_id.active")
     role = fields.Selection(
         selection=[
-            ("head_coach", "Head Coach"),
-            ("head_therapist", "Head Therapist"),
-            ("coach", "Coach"),
-            ("therapist", "Therapist"),
-            ("doctor", "Doctor"),
+            ("manager", "Practice Manager"),  # Only One
+            ("primary_physician", "Primary Physician"),  # One or more
+            ("assistant", "Assistant"),  # One or more
+            ("physician", "Physician"),  # One or more
+            ("orthotist", "Orthotist"),  # One or more
+            ("therapist", "Physical Therapist"),  # One or more
+            ("nurse", "Nurse"),  # One or more
+            ("receptionist", "Receptionist"),  # One or more
+            ("administrative", "Administrative"),  # One or more
             ("other", "Other"),
         ],
         required=True,
     )
+
     mobile = fields.Char(related="partner_id.mobile", readonly=False)
     name = fields.Char(related="partner_id.name", readonly=False)
     parent_id = fields.Many2one(
@@ -175,17 +180,45 @@ class PracticeStaff(models.Model):
         )
     ]
 
+    # @api.constrains("role")
+    # def _constrain_role(self):
+    #     practices = self.mapped("practice_id")
+    #     for practice in practices:
+    #         if (
+    #             len(practice.staff_ids.filtered(lambda r: r.role == "manager"))
+    #             > 1
+    #         ):
+    #             raise ValidationError(
+    #                 _("A practice can have only one practice assistant.")
+    #             )
+    #         if (
+    #             len(
+    #                 practice.staff_ids.filtered(lambda r: r.role == "primary_physician")
+    #             )
+    #             > 1
+    #         ):
+    #             raise ValidationError(
+    #                 _("A practice can have only one primary physician.")
+    #             )
+
     @api.constrains("role")
     def _constrain_role(self):
+        # Define roles that should only have one instance per practice
+        unique_roles = {
+            "manager": "Practice Manager",
+            # "primary_physician": "Primary Physician"
+        }
+
         practices = self.mapped("practice_id")
         for practice in practices:
-            if len(practice.staff_ids.filtered(lambda r: r.role == "head_coach")) > 1:
-                raise ValidationError(_("A practice can have only one head coach."))
-            if (
-                len(practice.staff_ids.filtered(lambda r: r.role == "head_therapist"))
-                > 1
-            ):
-                raise ValidationError(_("A practice can have only one head therapist."))
+            for role_key, role_name in unique_roles.items():
+                role_count = len(
+                    practice.staff_ids.filtered(lambda r: r.role == role_key)
+                )
+                if role_count > 1:
+                    raise ValidationError(
+                        _("A practice can have only one %s.") % role_name
+                    )
 
     @api.onchange("mobile")
     def _onchange_mobile_validation(self):

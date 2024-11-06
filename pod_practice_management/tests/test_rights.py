@@ -29,15 +29,15 @@ class TestRights(TransactionCase):
             }
         )
         # Create one treatment professional user
-        cls.treatment_professional_user = cls.env["res.users"].create(
+        cls.internal_user_user = cls.env["res.users"].create(
             {
-                "name": "Treatment Professional User",
-                "login": "treatment_professional",
-                "password": "treatment_professional",
+                "name": "Internal User",
+                "login": "internal_user",
+                "password": "internal_user",
                 "groups_id": [
                     Command.set(
                         cls.env.ref(
-                            "pod_practice_management.group_podiatry_practice_treatment_professional"
+                            "pod_practice_management.group_podiatry_practice_internal_user"
                         ).ids,
                     ),
                 ],
@@ -45,7 +45,7 @@ class TestRights(TransactionCase):
         )
         # _logger.info(
         #     f"Treatment Pro Groups: "
-        #     f"{cls.treatment_professional_user.groups_id.mapped('name')}"
+        #     f"{cls.internal_user_user.groups_id.mapped('name')}"
         # )
 
     def test_treatment_pro_has_access_only_to_staffed_practices(self):
@@ -55,13 +55,13 @@ class TestRights(TransactionCase):
         with self.assertRaises(AccessError):
             Form(
                 self.env["podiatry.practice"]
-                .with_user(self.treatment_professional_user)
+                .with_user(self.internal_user_user)
                 .browse(practice.id)
             )
         with self.assertRaises(AccessError):
             Form(
                 self.env["podiatry.patient"]
-                .with_user(self.treatment_professional_user)
+                .with_user(self.internal_user_user)
                 .browse(patients[0].id)
             )
 
@@ -70,13 +70,13 @@ class TestRights(TransactionCase):
         self.env["podiatry.practice.staff"].with_user(self.admin_user).create(
             {
                 "practice_id": practice.id,
-                "partner_id": self.treatment_professional_user.partner_id.id,
-                "role": "head_therapist",
+                "partner_id": self.internal_user_user.partner_id.id,
+                "role": "primary_physician",
             }
         )
         # Test removing the patient since we are practice staff
         # Should not throw an error...
-        with Form(practice.with_user(self.treatment_professional_user)) as practice:
+        with Form(practice.with_user(self.internal_user_user)) as practice:
             practice.patient_ids.remove(index=0)
         self.assertEqual(len(practice.patient_ids), 1)
 

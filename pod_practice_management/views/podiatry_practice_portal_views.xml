@@ -69,10 +69,10 @@
                     </thead>
                     <tbody>
                         <t t-foreach="patients" t-as="patient">
-                            <t t-set="stage" t-value="patient.stage"/>
+                            <t t-set="status" t-value="patient.status"/>
                             <t t-set="url" t-value="'/my/patient?patient_id=' + str(patient.id) + '&amp;practice_id=' + str(practice.id)"/>
-                            <tr t-attf-class="{{ ('text-danger' if stage == 'inactive'
-                                                 else 'text-warning') if stage != 'active'
+                            <tr t-attf-class="{{ ('text-danger' if status == 'inactive'
+                                                 else 'text-warning') if status != 'active'
                                                  else '' }}">
                                 <td>
                                     <strong>
@@ -121,10 +121,10 @@
                     </thead>
                     <tbody>
                         <t t-foreach="patients" t-as="patient">
-                            <t t-set="stage" t-value="patient.stage"/>
+                            <t t-set="status" t-value="patient.status"/>
                             <t t-set="url" t-value="'/my/patient?patient_id=' + str(patient.id)"/>
-                            <tr t-attf-class="{{ ('text-danger' if stage == 'inactive'
-                                                 else 'text-warning') if stage != 'active'
+                            <tr t-attf-class="{{ ('text-danger' if status == 'inactive'
+                                                 else 'text-warning') if status != 'active'
                                                  else '' }}">
                                 <td>
                                     <strong>

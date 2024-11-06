@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+{
+    "name": "Multi Practice Operations",
+    "version": "17.0.1.0.1",
+    "category": "Tools",
+    "depends": [
+        "sale_management",
+        "sale_stock",
+        "purchase_stock",
+        "stock_account",
+        "contacts",
+    ],
+    "data": [
+        "security/practice_security.xml",
+        "security/ir.model.access.csv",
+        "views/res_practice_views.xml",
+        "views/practice_product_template_views.xml",
+        "views/practice_res_partner_views.xml",
+        "views/practice_sale_order_views.xml",
+        "views/practice_purchase_order_views.xml",
+        "views/practice_res_users_views.xml",
+        "views/practice_stock_picking_views.xml",
+        "views/practice_account_move_views.xml",
+        "views/practice_account_payment_views.xml",
+        "views/practice_account_journal.xml",
+        "views/practice_account_views.xml",
+        "views/practice_stock_warehouse_views.xml",
+        "views/practice_report_template.xml",
+    ],
+    "license": "AGPL-3",
+    "installable": True,
+    "application": False,
+}

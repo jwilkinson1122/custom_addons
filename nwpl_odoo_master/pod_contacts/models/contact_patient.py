@@ -14,8 +14,6 @@ class ContactPatient(models.Model):
     _inherit = ["contact.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 
-    # partner_id = fields.Many2one("res.partner", required=True, ondelete="restrict")
-
     partner_id = fields.Many2one(
         "res.partner",
         domain=[("is_patient", "=", True)],
@@ -53,9 +51,7 @@ class ContactPatient(models.Model):
         "res.users", "Created By:", default=lambda self: self.env.user.id
     )
     barcode = fields.Char(string="Barcode")
-    # measurement_ids = fields.One2many(
-    #     "measurement.measurement", "partner_id", string="Measurements"
-    # )
+
     attachment_ids = fields.Many2many(
         "ir.attachment",
         "patient_ir_attachments_rel",

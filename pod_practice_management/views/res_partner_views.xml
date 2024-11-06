@@ -12,10 +12,9 @@
                         <tree editable="bottom" create="False" delete="True">
                             <field name="name"/>
                             <field name="parent_id"/>
-                            <field name="head_coach_id"/>
-                            <field name="head_therapist_id"/>
+                            <field name="manager_id"/>
+                            <field name="primary_physician_id"/>
                             <field name="patient_count"/>
-                            <!-- <field name="inactive_count"/> -->
                         </tree>
                     </field>
                 </page>

@@ -81,30 +81,30 @@ class Patient(models.Model):
     is_active = fields.Boolean(
         compute="_compute_is_active", store=True, tracking=True, default=True
     )
-    stage = fields.Selection(
+    status = fields.Selection(
         selection=[("inactive", "Not Active"), ("active", "Active")],
-        compute="_compute_stage",
+        compute="_compute_status",
         store=True,
     )
     last_consultation_date = fields.Date(tracking=True)
 
-    @api.depends("pathology_ids.stage")
+    @api.depends("pathology_ids.status")
     def _compute_active_pathology_count(self):
         for rec in self:
             rec.active_pathology_count = len(
-                rec.pathology_ids.filtered(lambda r: r.stage == "active")
+                rec.pathology_ids.filtered(lambda r: r.status == "active")
             )
 
     @api.depends("is_active")
-    def _compute_stage(self):
+    def _compute_status(self):
         for rec in self:
-            rec.stage = "active" if rec.is_active else "inactive"
+            rec.status = "active" if rec.is_active else "inactive"
 
-    @api.depends("pathology_ids.stage")
+    @api.depends("pathology_ids.status")
     def _compute_is_active(self):
         for rec in self:
             unresolved_pathologies = rec.pathology_ids.filtered(
-                lambda p: p.stage != "resolved"
+                lambda p: p.status != "resolved"
             )
             rec.is_active = rec.active_status == "yes"
             rec.inactive_since = (

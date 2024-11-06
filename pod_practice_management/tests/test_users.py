@@ -17,7 +17,7 @@ class TestUsers(TransactionCase):
                 "groups_id": [
                     Command.set(
                         self.env.ref(
-                            "pod_practice_management.group_podiatry_practice_treatment_professional"
+                            "pod_practice_management.group_podiatry_practice_internal_user"
                         ).ids
                     )
                 ],

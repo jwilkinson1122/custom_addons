@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="practice_external_layout" inherit_id="web.external_layout">
+
+        <xpath expr="//t[@t-if='company.external_report_layout_id']" position="before">
+            <t t-if="practice_id">
+                <t t-set="practice" t-value="practice_id"/>
+            </t>
+            <t t-elif="o and 'practice_id' in o and o.practice_id.sudo()">
+                <t t-set="practice" t-value="o.practice_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="practice" t-value="res_practice"/>
+            </t>
+        </xpath>
+
+    </template>
+
+    <template id="practice_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <t t-if="practice">
+                <t t-if="practice.street or practice.street2 or practice.city or practice.state_id or practice.zip or practice.country_id">
+                <div class="col-5 offset-1" name="company_address">
+                    <ul class="list-unstyled">
+                        <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                        <li t-if="forced_vat or company.vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-if="forced_vat" t-esc="forced_vat"/>
+                            <span t-else="" t-field="company.vat"/>
+                        </li>
+                        <li t-if="practice.name"><span t-field="practice.name"/></li>
+                        <li t-if="practice.phone">Tel: <span class="o_force_ltr" t-field="practice.phone"/></li>
+                        <li t-if="practice.email"><span t-field="practice.email"/></li>
+                        <li t-if="practice.website"><span t-field="practice.website"/></li>
+                    </ul>
+                </div>
+                </t>
+                <t t-else="else">
+                    <div class="col-5 offset-1" name="company_address">
+                        <ul class="list-unstyled">
+                            <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                            <li t-if="forced_vat or company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-if="forced_vat" t-esc="forced_vat"/>
+                                <span t-else="" t-field="company.vat"/>
+                            </li>
+                            <li t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></li>
+                            <li t-if="company.email"><span t-field="company.email"/></li>
+                            <li t-if="company.website"><span t-field="company.website"/></li>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+            <t t-else="else">
+                <div class="col-5 offset-1" name="company_address">
+                    <ul class="list-unstyled">
+                        <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                        <li t-if="forced_vat or company.vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-if="forced_vat" t-esc="forced_vat"/>
+                            <span t-else="" t-field="company.vat"/>
+                        </li>
+                        <li t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></li>
+                        <li t-if="company.email"><span t-field="company.email"/></li>
+                        <li t-if="company.website"><span t-field="company.website"/></li>
+                    </ul>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//span[@t-field='company.report_footer']" position="replace">
+            <t t-if="practice">
+                <t class="list-inline mb4" t-if="practice.phone or practice.email or practice.website">
+                    <span t-if="practice.phone" t-field="practice.phone"/><br/>
+                    <span t-if="practice.email" t-field="practice.email"/><br/>
+                    <span t-if="practice.website" t-field="practice.website"/>
+                </t>
+                <t t-else="else">
+                    <div t-field="company.report_footer"/>
+                </t>
+            </t>
+            <t t-else="else">
+                    <div t-field="company.report_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="practice_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <t t-if="practice">
+                <t t-if="practice.street or practice.street2 or practice.city or practice.state_id or practice.zip or practice.country_id">
+                <span class="company_address" t-field="company.partner_id"/>,
+                <span class="company_address" t-field="practice.name"/><br/>
+                <span t-if="practice.street" t-field="practice.street"/><br/>
+                <span t-if="practice.street2" t-field="practice.street2"/><br/>
+                <span t-if="practice.city" t-field="practice.city"/>,
+                <span t-if="practice.zip" t-field="practice.zip"/><br/>
+                <span t-if="practice.state_id" t-field="practice.state_id"/><br/>
+                <span t-if="practice.country_id" t-field="practice.country_id"/>
+                </t>
+                <t t-else="else">
+                <div name="company_address" class="float-right mb4">
+                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                </div>
+            </t>
+            </t>
+            <t t-else="else">
+                <div name="company_address" class="float-right mb4">
+                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('text-center')]" position="replace">
+            <t t-if="practice">
+                <t class="list-inline mb4" t-if="practice.phone or practice.email or practice.website">
+                    <span t-if="practice.phone" t-field="practice.phone"/>
+                    <span t-if="practice.email" t-field="practice.email"/>
+                    <span t-if="practice.website" t-field="practice.website"/>
+                </t>
+                <t t-else="else">
+                    <ul class="list-inline mb4">
+                        <div t-field="company.report_footer"/>
+                    </ul>
+                </t>
+            </t>
+            <t t-else="else">
+                <ul class="list-inline mb4">
+                    <div t-field="company.report_footer"/>
+                </ul>
+            </t>
+            <div t-if="report_type == 'pdf'">
+                Page: <span class="page"/> / <span class="topage"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="practice_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[hasclass('company_address')]" position="replace">
+                <t t-if="practice">
+                    <t t-if="practice.street or practice.street2 or practice.city or practice.state_id or practice.zip or practice.country_id">
+                        <div class="float-left company_address"><br/><br/>
+                            <span style="padding-left:0px" t-if="practice.street" t-field="practice.street"/>
+                            <span t-if="practice.street2" t-field="practice.street2"/>
+                            <span t-if="practice.city" t-field="practice.city"/>,
+                            <span t-if="practice.zip" t-field="practice.zip"/>
+                            <span t-if="practice.state_id" t-field="practice.state_id"/>
+                            <span t-if="practice.country_id" t-field="practice.country_id"/>
+                        </div>
+                    </t>
+                    <t t-else="else">
+                        <div class="float-left company_address">
+                            <span t-if="company.company_details" t-field="company.company_details"></span>
+                        </div>
+                    </t>
+                </t>
+            <t t-else="else">
+                <div class="float-left company_address">
+                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//ul[hasclass('list-inline')]" position="replace">
+            <t t-if="practice">
+                <t class="list-inline mb4" t-if="practice.phone or practice.email or practice.website">
+                    <span t-if="practice.phone" t-field="practice.phone"/>
+                    <span t-if="practice.email" t-field="practice.email"/>
+                    <span t-if="practice.website" t-field="practice.website"/>
+                </t>
+                <t t-else="else">
+                    <ul class="list-inline mb4">
+                        <div t-field="company.report_footer"/>
+                    </ul>
+                </t>
+            </t>
+            <t t-else="else">
+                <ul class="list-inline mb4">
+                    <div t-field="company.report_footer"/>
+                </ul>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="practice_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <t t-if="practice">
+                <t t-if="practice.street or practice.street2 or practice.city or practice.state_id or practice.zip or practice.country_id">
+                <div class="col-6" name="company_address">
+                <span class="company_address" t-field="company.partner_id"/>,
+                <span class="company_address" t-field="practice.name"/><br/>
+                <span t-if="practice.street" t-field="practice.street"/><br/>
+                <span t-if="practice.street2" t-field="practice.street2"/><br/>
+                <span t-if="practice.city" t-field="practice.city"/>,
+                <span t-if="practice.zip" t-field="practice.zip"/><br/>
+                <span t-if="practice.state_id" t-field="practice.state_id"/><br/>
+                <span t-if="practice.country_id" t-field="practice.country_id"/>
+                </div>
+                </t>
+                <t t-else="else">
+                <div class="col-6" name="company_address">
+                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                </div>
+                </t>
+
+            </t>
+            <t t-else="else">
+                <div class="col-6" name="company_address">
+                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//ul[hasclass('list-inline')]" position="replace">
+            <t t-if="practice">
+                <t class="list-inline mb4" t-if="practice.phone or practice.email or practice.website">
+                    <span t-if="practice.phone" t-field="practice.phone"/>
+                    <span t-if="practice.email" t-field="practice.email"/>
+                    <span t-if="practice.website" t-field="practice.website"/>
+                </t>
+                <t t-else="else">
+                    <ul class="list-inline mb4">
+                        <div t-field="company.report_footer"/>
+                    </ul>
+                </t>
+            </t>
+            <t t-else="else">
+                <ul class="list-inline mb4">
+                    <div t-field="company.report_footer"/>
+                </ul>
+            </t>
+        </xpath>
+    </template>
+</odoo>
