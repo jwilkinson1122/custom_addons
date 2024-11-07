@@ -43,136 +43,6 @@ def _tz_get(self):
     return _tzs
 
 
-# class Practice(models.Model):
-#     _name = "res.practice"
-#     _inherit = ["format.address.mixin", "avatar.mixin"]
-#     _description = "Company Practices"
-#     _order = "complete_practice_name ASC, id DESC"
-
-#     active = fields.Boolean(default=True)
-#     name = fields.Char(index=True, required=True)
-#     practice_name = fields.Char("Practice Name")
-#     complete_practice_name = fields.Char(
-#         compute="_compute_complete_practice_name", store=True, index=True
-#     )
-#     date = fields.Date(index=True)
-#     partner_id = fields.Many2one(
-#         "res.partner",
-#         string="Customer",
-#         store=True,
-#         domain="[('is_practice_partner', '=', True)]",
-#     )
-#     parent_practice_id = fields.Many2one(
-#         "res.practice",
-#         string="Parent Practice",
-#         store=True,
-#         help="Parent practice, if any.",
-#     )
-#     contact_ids = fields.One2many(
-#         "res.practice.contact", "practice_id", string="Contacts", tracking=True
-#     )
-#     manager_id = fields.Many2one("res.partner", compute="_compute_manager", store=True)
-#     primary_physician_id = fields.Many2one(
-#         "res.partner",
-#         compute="_compute_primary_physician",
-#         store=True,
-#         string="Primary Physician",
-#     )
-#     patient_ids = fields.Many2many(
-#         "res.patient",
-#         relation="res_practice_patient_rel",
-#         column1="practice_id",
-#         column2="patient_id",
-#         tracking=True,
-#         string="Patients",
-#     )
-#     patient_count = fields.Integer(compute="_compute_patient_count")
-
-#     _sql_constraints = [
-#         ("name_uniq", "unique (name)", "The Practice name must be unique!")
-#     ]
-
-#     @api.model_create_multi
-#     def create(self, vals_list):
-#         for vals in vals_list:
-#             vals["partner_id"] = (
-#                 self.env["res.partner"]
-#                 .create(
-#                     {
-#                         "name": vals.get("name"),
-#                         "is_practice_partner": True,
-#                         "is_company": True,
-#                     }
-#                 )
-#                 .id
-#             )
-#         return super().create(vals_list)
-
-#     def write(self, vals):
-#         previous_patient_ids = self.sudo().patient_ids
-#         res = super().write(vals)
-#         if "contact_ids" in vals or "patient_ids" in vals:
-#             (self.sudo().patient_ids | previous_patient_ids).recompute_followers()
-#         return res
-
-#     def unlink(self):
-#         to_recompute = self.patient_ids
-#         res = super().unlink()
-#         to_recompute.recompute_followers()
-#         return res
-
-#     @api.depends("patient_ids.is_active")
-#     def _compute_patient_count(self):
-#         for rec in self:
-#             rec.patient_count = len(rec.patient_ids)
-
-
-# class PracticeContact(models.Model):
-#     _name = "res.practice.contact"
-#     _description = "Practice Contact"
-
-#     sequence = fields.Integer()
-#     practice_id = fields.Many2one("res.practice", required=True, ondelete="cascade")
-#     partner_id = fields.Many2one(
-#         "res.partner",
-#         required=True,
-#         ondelete="cascade",
-#         domain=[("is_company", "=", False)],
-#     )
-#     role = fields.Selection(
-#         selection=[
-#             ("manager", "Practice Manager"),
-#             ("primary_physician", "Primary Physician"),
-#             ("assistant", "Assistant"),
-#             ("physician", "Physician"),
-#             ("orthotist", "Orthotist"),
-#             ("therapist", "Physical Therapist"),
-#             ("nurse", "Nurse"),
-#             ("receptionist", "Receptionist"),
-#             ("administrative", "Administrative"),
-#             ("other", "Other"),
-#         ],
-#         required=True,
-#     )
-
-#     @api.constrains("role")
-#     def _constrain_role(self):
-#         unique_roles = {"manager": "Practice Manager"}
-#         for rec in self:
-#             for role_key, role_name in unique_roles.items():
-#                 if (
-#                     len(
-#                         rec.practice_id.contact_ids.filtered(
-#                             lambda r: r.role == role_key
-#                         )
-#                     )
-#                     > 1
-#                 ):
-#                     raise ValidationError(
-#                         _("A practice can have only one %s.") % role_name
-#                     )
-
-
 class Practice(models.Model):
     _name = "res.practice"
     _inherit = ["format.address.mixin", "avatar.mixin"]
@@ -206,6 +76,14 @@ class Practice(models.Model):
         store=True,
         domain="[('is_practice_partner', '=', True)]",
     )
+
+    parent_account_id = fields.Many2one(
+        "res.partner",
+        string="Parent Account",
+        domain="[('is_company', '=', True)]",
+        help="Select a parent account for this practice.",
+    )
+
     parent_practice_id = fields.Many2one(
         "res.practice",
         string="Parent Practice",
@@ -249,11 +127,21 @@ class Practice(models.Model):
         string="Primary Physician Name",
     )
 
+    patient_ids = fields.Many2many(
+        "res.patient",
+        relation="res_practice_patient_rel",
+        column1="practice_id",
+        column2="patient_id",
+        string="Patients",
+        help="List of patients associated with this practice.",
+    )
+
+    patient_count = fields.Integer(compute="_compute_patient_counts")
+
     user_id = fields.Many2one(
         "res.users",
         string="Internal User",
-        compute="_compute_user_id",
-        precompute=True,
+        # compute="_compute_user_id",
         readonly=False,
         store=True,
         help="Internal system user.",
@@ -306,34 +194,23 @@ class Practice(models.Model):
 
     color = fields.Integer(string="Color Index", default=0)
 
-    patient_ids = fields.Many2many(
-        comodel_name="res.patient",
-        relation="res_practice_patient_rel",
-        column1="practice_id",
-        column2="patient_id",
-        string="Patients",
-        tracking=True,
-    )
-
-    patient_count = fields.Integer(compute="_compute_patient_counts")
-
     _sql_constraints = [
         ("name_uniq", "unique (name)", "The Practice name must be unique!")
     ]
 
     @api.model_create_multi
-    def create(self, vals):
-        partner_vals = {
-            "name": vals.get("name"),
-            "is_practice_partner": True,
-            "is_company": True,
-        }
-        partner = self.env["res.partner"].create(partner_vals)
-        vals["partner_id"] = partner.id
-        for index, rec in enumerate(vals):
-            if "contact_ids" in partner_vals[index]:
-                rec.sudo().patient_ids.recompute_followers()
-        return super(Practice, self).create(vals)
+    def create(self, vals_list):
+        for vals in vals_list:
+            partner_vals = {
+                "name": vals.get("name"),
+                "is_practice_partner": True,
+                "is_company": True,
+            }
+            partner = self.env["res.partner"].create(partner_vals)
+            vals["partner_id"] = partner.id
+
+        # Calling the original create method with the updated vals_list
+        return super(Practice, self).create(vals_list)
 
     def write(self, vals):
         previous_patient_ids = self.sudo().patient_ids
@@ -352,8 +229,8 @@ class Practice(models.Model):
     def _compute_patient_counts(self):
         for rec in self:
             rec.patient_count = len(rec.patient_ids)
-            rec.inactive_count = len(rec.patient_ids.filtered(lambda p: p.is_active))
-            rec.active_count = rec.patient_count - rec.inactive_count
+            # rec.inactive_count = len(rec.patient_ids.filtered(lambda p: p.is_active))
+            # rec.active_count = rec.patient_count - rec.inactive_count
 
     @api.depends("contact_ids.role")
     def _compute_manager(self):

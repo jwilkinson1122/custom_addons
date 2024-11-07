@@ -14,6 +14,8 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="parent_account_id" options="{'no_create': True}" />
+
                             <field name="parent_practice_id" options="{'no_create': True}" />
                         </group>
                         <group string="Practice Information">
@@ -35,6 +37,11 @@
                             </group>
                         </group>
                         <notebook>
+                            <page name="practices" string="Practices">
+                                <field name="child_practice_ids"/>
+
+                                <!-- <field name="child_practice_ids" readonly="1"/> -->
+                            </page>
                             <page name="contacts" string="Contacts">
                                 <field name="contact_ids" nolabel="1">
                                     <tree>
@@ -56,9 +63,9 @@
                         <br></br>
                         <notebook>
                             <!-- <notebook colspan="4"> -->
-                            <page name="practices" string="Practices">
+                            <!-- <page name="practices" string="Practices">
                                 <field name="child_practice_ids" readonly="1"/>
-                            </page>
+                            </page> -->
                             <page name="patients" string="Patients">
                                 <field name="patient_ids" nolabel="1" context="{'tree_view_ref': 'pod_multi_practice.res_patient_view_list_embedded'}"/>
                             </page>
@@ -78,6 +85,8 @@
                 </tree> -->
                 <tree string="Practices">
                     <field name="name"/>
+                    <field name="parent_account_id"/>
+
                     <field name="parent_practice_id"/>
                     <field name="manager_id"/>
                     <field name="primary_physician_id"/>
@@ -89,8 +98,9 @@
             <field name="name">res.practice.view.kanban</field>
             <field name="model">res.practice</field>
             <field name="arch" type="xml">
-                <kanban archivable="false" default_group_by="parent_practice_id" default_order="name" group_create="false" group_delete="false">
+                <kanban archivable="false" default_group_by="parent_account_id" default_order="name" group_create="false" group_delete="false">
                     <field name="name"/>
+                    <field name="parent_account_id"/>
                     <field name="parent_practice_id"/>
                     <field name="manager_name"/>
                     <field name="primary_physician_name"/>
@@ -107,6 +117,8 @@
                                 </div>
                                 <div>
                                     <span class="o_kanban_record_subtitle">
+                                        <field name="parent_account_id"/>
+
                                         <field name="parent_practice_id"/>
                                     </span>
                                 </div>
@@ -142,30 +154,16 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="parent_practice_id" string="Parent Organization"/>
+                    <field name="parent_account_id" string="Parent Account"/>
+                    <field name="parent_practice_id" string="Parent Practice"/>
                     <field name="manager_id"/>
                     <field name="primary_physician_id"/>
-                    <filter context="{'group_by': 'parent_practice_id'}" name="groupby_parent_practice_id"/>
-                    <filter context="{'group_by': 'manager_id'}" name="groupby_manager_id"/>
-                    <filter context="{'group_by': 'primary_physician_id'}" name="groupby_primary_physician_id"/>
+                    <filter name="groupby_parent_account_id" context="{'group_by': 'parent_account_id'}" string="Parent Account"/>
+                    <filter name="groupby_parent_practice_id" context="{'group_by': 'parent_practice_id'}" string="Parent Practice"/>
+                    <filter name="groupby_manager_id" context="{'group_by': 'manager_id'}" string="Manager"/>
+                    <filter name="groupby_primary_physician_id" context="{'group_by': 'primary_physician_id'}" string="Primary Physician"/>
                 </search>
             </field>
         </record>
-        <!-- <record id="action_res_practice_form" model="ir.actions.act_window">
-            <field name="name">Practices</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.practice</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                Create a new Practice
-                </p>
-                <p>
-                Create and manage practices for the companies that will be managed by Odoo from here.
-                </p>
-            </field>
-        </record>
- 
-        <menuitem action="action_res_practice_form" id="menu_action_res_practice_form" parent="contacts.menu_contacts" sequence="1"/> -->
     </data>
 </odoo>

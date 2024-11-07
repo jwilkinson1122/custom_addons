@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-
     <record id="action_view_accounts" model="ir.actions.act_window">
         <field name="name">Accounts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_company', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_practice_partner', '=', False), ('id', '!=', 1)]</field>
+        <field name="context">{
+            'default_company_type':'company',
+            'default_is_company':True,
+            'default_is_practice_partner':False,
+            'default_type': ''
+            }</field>
     </record>
-
     <record id="action_view_practice" model="ir.actions.act_window">
         <field name="name">Podiatry Practices</field>
         <field name="res_model">res.practice</field>
@@ -53,10 +57,5 @@
     <!-- <menuitem id="suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="contact_supplier_action" sequence="5"/> -->
 
     <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
-
-
-
-
-
 
 </odoo>

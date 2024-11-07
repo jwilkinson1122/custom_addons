@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Multi Practice Operations",
-    "version": "17.0.1.0.1",
+    # "version": "17.0.1.0.1",
+    "version": "1.0",
     "category": "Tools",
     "depends": [
         "account",
@@ -17,7 +18,7 @@
         "security/res_practice_groups.xml",
         "security/res_practice_security.xml",
         "security/ir.model.access.csv",
-        # "data/res_practice_data.xml",
+        "data/res_practice_data.xml",
         # "views/contacts_menu.xml",
         "views/res_practice_views.xml",
         "views/res_practice_contact_views.xml",

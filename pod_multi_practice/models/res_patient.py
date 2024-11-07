@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import models, fields, _, api, Command
 from odoo.exceptions import ValidationError
 from datetime import date, datetime
@@ -19,74 +20,6 @@ internal_tracking_fields = {
     "age",
     "date_of_birth",
 }
-
-
-# class Patient(models.Model):
-#     _name = "res.patient"
-#     _description = "Patient"
-#     _inherit = ["mail.thread", "mail.activity.mixin"]
-
-#     partner_id = fields.Many2one("res.partner", ondelete="restrict", compute_sudo=True)
-#     first_name = fields.Char(required=True, tracking=True)
-#     last_name = fields.Char(required=True, tracking=True)
-#     name = fields.Char(related="partner_id.name")
-#     phone = fields.Char(related="partner_id.phone", readonly=False)
-#     date_of_birth = fields.Date(tracking=True)
-#     age = fields.Integer(compute="_compute_age", store=True)
-#     practice_ids = fields.Many2many(
-#         "res.practice",
-#         relation="res_practice_patient_rel",
-#         column1="patient_id",
-#         column2="practice_id",
-#     )
-
-#     @api.depends("date_of_birth")
-#     def _compute_age(self):
-#         for rec in self:
-#             rec.age = (
-#                 relativedelta(datetime.today(), rec.date_of_birth).years
-#                 if rec.date_of_birth
-#                 else 0
-#             )
-
-
-# class PatientPathology(models.Model):
-#     _name = "res.patient.pathology"
-#     _description = "Patient Pathology"
-#     _inherit = ["mail.thread", "mail.activity.mixin"]
-
-#     patient_id = fields.Many2one(
-#         "res.patient", required=True, ondelete="cascade", readonly=True
-#     )
-#     diagnosis = fields.Char(tracking=True)
-#     pathology_date = fields.Date(
-#         default=lambda self: datetime.now(pytz.timezone(self.env.user.tz or "GMT"))
-#     )
-#     pathology_date_na = fields.Boolean(string="N/A", default=False)
-#     status = fields.Selection(
-#         [("active", "Active"), ("resolved", "Resolved")],
-#         compute="_compute_status",
-#         store=True,
-#     )
-#     resolution_date = fields.Date(tracking=True)
-
-#     @api.depends("resolution_date")
-#     def _compute_status(self):
-#         for rec in self:
-#             rec.status = (
-#                 "resolved"
-#                 if rec.resolution_date
-#                 and rec.resolution_date <= datetime.today().date()
-#                 else "active"
-#             )
-
-#     @api.constrains("pathology_date_na", "pathology_date")
-#     def _constrain_pathology_date(self):
-#         for rec in self:
-#             if not rec.pathology_date_na and not rec.pathology_date:
-#                 raise ValidationError(
-#                     _("If pathology date is not set, the N/A box must be checked.")
-#                 )
 
 
 class Patient(models.Model):
@@ -122,6 +55,7 @@ class Patient(models.Model):
         string="Notes",
         tracking=True,
     )
+
     practice_ids = fields.Many2many(
         comodel_name="res.practice",
         relation="res_practice_patient_rel",
@@ -129,6 +63,7 @@ class Patient(models.Model):
         column2="practice_id",
         string="Practices",
     )
+
     active_status = fields.Selection(
         selection=[("yes", "Yes"), ("no", "No")],
         required=True,
@@ -362,3 +297,71 @@ class PatientPathology(models.Model):
             "res_id": self.id,
             "context": self._context,
         }
+
+
+# class Patient(models.Model):
+#     _name = "res.patient"
+#     _description = "Patient"
+#     _inherit = ["mail.thread", "mail.activity.mixin"]
+
+#     partner_id = fields.Many2one("res.partner", ondelete="restrict", compute_sudo=True)
+#     first_name = fields.Char(required=True, tracking=True)
+#     last_name = fields.Char(required=True, tracking=True)
+#     name = fields.Char(related="partner_id.name")
+#     phone = fields.Char(related="partner_id.phone", readonly=False)
+#     date_of_birth = fields.Date(tracking=True)
+#     age = fields.Integer(compute="_compute_age", store=True)
+#     practice_ids = fields.Many2many(
+#         "res.practice",
+#         relation="res_practice_patient_rel",
+#         column1="patient_id",
+#         column2="practice_id",
+#     )
+
+#     @api.depends("date_of_birth")
+#     def _compute_age(self):
+#         for rec in self:
+#             rec.age = (
+#                 relativedelta(datetime.today(), rec.date_of_birth).years
+#                 if rec.date_of_birth
+#                 else 0
+#             )
+
+
+# class PatientPathology(models.Model):
+#     _name = "res.patient.pathology"
+#     _description = "Patient Pathology"
+#     _inherit = ["mail.thread", "mail.activity.mixin"]
+
+#     patient_id = fields.Many2one(
+#         "res.patient", required=True, ondelete="cascade", readonly=True
+#     )
+#     diagnosis = fields.Char(tracking=True)
+#     pathology_date = fields.Date(
+#         default=lambda self: datetime.now(pytz.timezone(self.env.user.tz or "GMT"))
+#     )
+#     pathology_date_na = fields.Boolean(string="N/A", default=False)
+#     status = fields.Selection(
+#         [("active", "Active"), ("resolved", "Resolved")],
+#         compute="_compute_status",
+#         store=True,
+#     )
+#     resolution_date = fields.Date(tracking=True)
+
+#     @api.depends("resolution_date")
+#     def _compute_status(self):
+#         for rec in self:
+#             rec.status = (
+#                 "resolved"
+#                 if rec.resolution_date
+#                 and rec.resolution_date <= datetime.today().date()
+#                 else "active"
+#             )
+
+#     @api.constrains("pathology_date_na", "pathology_date")
+#     def _constrain_pathology_date(self):
+#         for rec in self:
+#             if not rec.pathology_date_na and not rec.pathology_date:
+#                 raise ValidationError(
+#                     _("If pathology date is not set, the N/A box must be checked.")
+#                 )
