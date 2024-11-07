@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_users_form_inherit" model="ir.ui.view">
+        <field name="name">view.users.form.inherit</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <page name="preferences" position="before">
+                <page name="Podiatry Practice Access" groups="base.group_system,pod_practice_management.group_res_practice_admin">
+                    <field name="accessible_practice_ids" widget="many2many_checkboxes"/>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

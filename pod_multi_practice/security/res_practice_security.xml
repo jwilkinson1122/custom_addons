@@ -33,116 +33,198 @@
             <field name="domain_force">[(1,'=',1)]</field>
         </record>
 
-        <!-- Multi - Practice Rules -->
+        <!-- Refuse access to patient records that are not part of contact user's practices -->
+        <record id="restrict_contact_access_to_practice_patients" model="ir.rule">
+            <field name="name">Restrict Practice Contact Access to Their Patients Only</field>
+            <field name="model_id" ref="model_res_patient"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [('practice_ids.contact_ids.user_ids', 'in', user.id)]
+            </field>
+        </record>
+        <record id="restrict_contact_access_to_practices" model="ir.rule">
+            <field name="name">Restrict Practice Contact Access to Their Practices Only</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [('contact_ids.user_ids', 'in', user.id)]
+            </field>
+        </record>
+        <record id="restrict_contact_access_to_practice_pathologies" model="ir.rule">
+            <field name="name">Restrict Practice Contact Access to Their Practices Only</field>
+            <field name="model_id" ref="model_res_patient_pathology"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_portal'), ref('base.group_user')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [('patient_id.practice_ids.contact_ids.user_ids', 'in', user.id)]
+            </field>
+        </record>
+        <!-- <record id="restrict_patient_contact_access_to_allowed_internal_users" model="ir.rule">
+            <field name="name">Restrict Patient Contact Access to Allowed Internal
+                Users
+            </field>
+            <field name="model_id" ref="model_res_practice_contact"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [('patient_id.practice_ids.contact_ids.user_ids', 'in', user.id)]
+            </field>
+        </record> -->
+        <record id="allow_practice_access_to_admins" model="ir.rule">
+            <field name="name">Allow Practice Access to Administrators</field>
+            <field name="model_id" ref="model_res_practice"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_multi_practice.group_res_admin_podiatry')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [(1, '=', 1)]
+            </field>
+        </record>
+        <record id="allow_patient_access_to_admins" model="ir.rule">
+            <field name="name">Allow Patient Access to Administrators</field>
+            <field name="model_id" ref="model_res_patient"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_multi_practice.group_res_admin_podiatry')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [(1, '=', 1)]
+            </field>
+        </record>
+        <record id="allow_pathology_access_to_admins" model="ir.rule">
+            <field name="name">Allow Pathology Access to Administrators</field>
+            <field name="model_id" ref="model_res_patient_pathology"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_multi_practice.group_res_admin_podiatry')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [(1, '=', 1)]
+            </field>
+        </record>
+        <!-- <record id="allow_patient_contact_access_to_admins" model="ir.rule">
+            <field name="name">Allow Podiatry Contact Access to Administrators
+            </field>
+            <field name="model_id" ref="model_res_practice_contact"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system'), ref('pod_multi_practice.group_res_admin_podiatry')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">
+                [(1, '=', 1)]
+            </field>
+        </record> -->
 
+        <!-- Multi - Practice Rules -->
         <record id="product_practice_rule" model="ir.rule">
             <field name="name">Product multi-practice</field>
             <field name="model_id" ref="model_product_template"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="sale_order_practice_rule">
+        <record id="sale_order_practice_rule" model="ir.rule">
             <field name="name">Sales Order multi-practice</field>
             <field name="model_id" ref="model_sale_order"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="sale_order_line_practice_rule">
+        <record id="sale_order_line_practice_rule" model="ir.rule">
             <field name="name">Sales Order Line multi-practice</field>
             <field name="model_id" ref="model_sale_order_line"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="purchase_order_practice_rule">
+        <record id="purchase_order_practice_rule" model="ir.rule">
             <field name="name">Purchase Order multi-practice</field>
             <field name="model_id" ref="model_purchase_order"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="purchase_order_line_practice_rule">
+        <record id="purchase_order_line_practice_rule" model="ir.rule">
             <field name="name">Purchase Order Line multi-practice</field>
             <field name="model_id" ref="model_purchase_order_line"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="account_practice_rule" model="ir.rule">
             <field name="name">Account multi-practice</field>
             <field name="model_id" ref="model_account_account"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="journal_practice_rule" model="ir.rule">
             <field name="name">Journal multi-practice</field>
             <field name="model_id" ref="model_account_journal"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="account_move_practice_rule" model="ir.rule">
             <field name="name">Practice Account Entry</field>
             <field name="model_id" ref="model_account_move"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="account_move_line_comp_rule" model="ir.rule">
             <field name="name">Entry lines</field>
             <field name="model_id" ref="model_account_move_line"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="account_payment_practice_rule">
+        <record id="account_payment_practice_rule" model="ir.rule">
             <field name="name">Account payment practice rule</field>
             <field name="model_id" ref="model_account_payment"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_picking_practice_rule">
+        <record id="stock_picking_practice_rule" model="ir.rule">
             <field name="name">stock_picking multi-practice</field>
             <field name="model_id" search="[('model','=','stock.picking')]" model="ir.model"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_picking_type_practice_rule">
+        <record id="stock_picking_type_practice_rule" model="ir.rule">
             <field name="name">Stock Operation Type multi-practice</field>
             <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_warehouse_practice_rule">
+        <record id="stock_warehouse_practice_rule" model="ir.rule">
             <field name="name">Warehouse multi-practice</field>
             <field name="model_id" ref="model_stock_warehouse"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_move_practice_rule">
+        <record id="stock_move_practice_rule" model="ir.rule">
             <field name="name">stock_move multi-practice</field>
             <field name="model_id" search="[('model','=','stock.move')]" model="ir.model"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_move_line_practice_rule">
+        <record id="stock_move_line_practice_rule" model="ir.rule">
             <field name="name">stock_move_line multi-practice</field>
             <field name="model_id" search="[('model','=','stock.move.line')]" model="ir.model"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="stock_valuation_layer_practice_rule">
+        <record id="stock_valuation_layer_practice_rule" model="ir.rule">
             <field name="name">Stock Valuation Layer Multipractice</field>
             <field name="model_id" search="[('model','=','stock.valuation.layer')]" model="ir.model"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="invoice_analysis_practice_rule" model="ir.rule">
             <field name="name">Invoice Analysis multi-practice</field>
             <field name="model_id" ref="model_account_invoice_report"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
-        <record model="ir.rule" id="sale_order_report_practice_rule">
+        <record id="sale_order_report_practice_rule" model="ir.rule">
             <field name="name">Sales Order Analysis multi-practice</field>
             <field name="model_id" ref="model_sale_report"/>
             <field name="domain_force">['|',('practice_id','=',False),('practice_id', 'in', user.practice_ids.ids)]</field>
         </record>
-
         <record id="purchase_order_report_practice_rule" model="ir.rule">
             <field name="name">Purchase Order Report multi-practice</field>
             <field name="model_id" ref="model_purchase_report"/>

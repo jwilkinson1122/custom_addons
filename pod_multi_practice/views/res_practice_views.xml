@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="view_practice_form" model="ir.ui.view">
-            <field name="name">res.practice.form</field>
+        <record id="res_practice_view_form" model="ir.ui.view">
+            <field name="name">res.practice.view.form</field>
             <field name="model">res.practice</field>
             <field name="arch" type="xml">
                 <form string="Practice">
@@ -15,62 +15,143 @@
                         </div>
                         <group>
                             <field name="parent_practice_id" options="{'no_create': True}" />
-                            <field name="child_practice_ids" readonly="1"/>
                         </group>
-                        <notebook colspan="4">
-                            <page string="Contact Information" name="contact_info">
-                                <group>
-                                    <group>
-                                        <label for="street" string="Address"/>
-                                        <div class="o_address_format">
-                                            <field name="street" placeholder="Street..." class="o_address_street"/>
-                                            <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="city" placeholder="City" class="o_address_city"/>
-                                            <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                                            <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                            <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
-                                        </div>
-                                    </group>
-                                    <group>
-                                        <field name="partner_id" options='{"no_create": True}'/>
-                                        <field name="phone" class="o_force_ltr"/>
-                                        <field name="email"/>
-                                        <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                    </group>
-                                </group>
+                        <group string="Practice Information">
+                            <group>
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="phone" class="o_force_ltr"/>
+                                <field name="email"/>
+                                <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="contacts" string="Contacts">
+                                <field name="contact_ids" nolabel="1">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="role"/>
+                                        <field name="mobile" widget="phone"/>
+                                        <field name="has_portal_access"/>
+                                        <field name="partner_id"/>
+                                        <button class="oe_highlight" groups="pod_multi_practice.group_res_admin_podiatry,base.group_system" icon="fa-user-plus" invisible="has_portal_access == True" name="action_grant_portal_access" title="Grant Portal Access" type="object"/>
+                                        <button class="oe_highlight" groups="pod_multi_practice.group_res_admin_podiatry,base.group_system" icon="fa-ban" invisible="has_portal_access == False" name="action_revoke_portal_access" title="Revoke Portal Access" type="object"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="user_access" string="User Access" groups="pod_multi_practice.group_res_admin_podiatry,base.group_system">
+                                <field name="allowed_user_ids"/>
+                            </page>
+                        </notebook>
+                        <br></br>
+                        <notebook>
+                            <!-- <notebook colspan="4"> -->
+                            <page name="practices" string="Practices">
+                                <field name="child_practice_ids" readonly="1"/>
+                            </page>
+                            <page name="patients" string="Patients">
+                                <field name="patient_ids" nolabel="1" context="{'tree_view_ref': 'pod_multi_practice.res_patient_view_list_embedded'}"/>
                             </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-        <!--        tree view       -->
-        <record id="view_practice_tree" model="ir.ui.view">
-            <field name="name">res.practice.tree</field>
+        <record id="res_practice_view_list" model="ir.ui.view">
+            <field name="name">res.practice.view.list</field>
             <field name="model">res.practice</field>
             <field name="arch" type="xml">
-                <tree string="Practices" sample="1">
+                <!-- <tree string="Practices" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="phone"/>
+                </tree> -->
+                <tree string="Practices">
+                    <field name="name"/>
+                    <field name="parent_practice_id"/>
+                    <field name="manager_id"/>
+                    <field name="primary_physician_id"/>
+                    <field name="patient_count"/>
                 </tree>
             </field>
         </record>
-        <!--        search view     -->
-        <record id="res_practice_search" model="ir.ui.view">
-            <field name="name">res.practice.search</field>
+        <record id="res_practice_view_kanban" model="ir.ui.view">
+            <field name="name">res.practice.view.kanban</field>
             <field name="model">res.practice</field>
             <field name="arch" type="xml">
-                <search string="Practices">
-                    <field name="name" string="Practice"/>
-                    <group expand="1" string="Group By">
-                        <filter string="Company" name="groupby_company" context="{'group_by': 'partner_id'}"/>
-                    </group>
+                <kanban archivable="false" default_group_by="parent_practice_id" default_order="name" group_create="false" group_delete="false">
+                    <field name="name"/>
+                    <field name="parent_practice_id"/>
+                    <field name="manager_name"/>
+                    <field name="primary_physician_name"/>
+                    <field name="patient_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div>
+                                    <strong class="o_kanban_record_title">
+                                        <span>
+                                            <field name="name"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                                <div>
+                                    <span class="o_kanban_record_subtitle">
+                                        <field name="parent_practice_id"/>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                    Practice Manager:
+                                        <field name="manager_name"/>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                    Primary Physician:
+                                        <field name="primary_physician_name"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="text-success">
+                                        Patients:
+                                            <field name="patient_count"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="practices_view_search" model="ir.ui.view">
+            <field name="name">practices.view.search</field>
+            <field name="model">res.practice</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="parent_practice_id" string="Parent Organization"/>
+                    <field name="manager_id"/>
+                    <field name="primary_physician_id"/>
+                    <filter context="{'group_by': 'parent_practice_id'}" name="groupby_parent_practice_id"/>
+                    <filter context="{'group_by': 'manager_id'}" name="groupby_manager_id"/>
+                    <filter context="{'group_by': 'primary_physician_id'}" name="groupby_primary_physician_id"/>
                 </search>
             </field>
         </record>
-        <!--        View action for practice views        -->
-        <record id="action_res_practice_form" model="ir.actions.act_window">
+        <!-- <record id="action_res_practice_form" model="ir.actions.act_window">
             <field name="name">Practices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.practice</field>
@@ -84,7 +165,7 @@
                 </p>
             </field>
         </record>
-        <!--        Menu item       -->
-        <menuitem action="action_res_practice_form" id="menu_action_res_practice_form" parent="contacts.menu_contacts" sequence="1"/>
+ 
+        <menuitem action="action_res_practice_form" id="menu_action_res_practice_form" parent="contacts.menu_contacts" sequence="1"/> -->
     </data>
 </odoo>

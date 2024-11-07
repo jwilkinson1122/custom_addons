@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class AccountMove(models.Model):
+class AccountPayment(models.Model):
     """inherited account payment"""
 
     _inherit = "account.payment"
@@ -105,5 +105,5 @@ class AccountMove(models.Model):
                             )
                             pay.destination_account_id = destination_account
         else:
-            res = super(AccountMove, self)._compute_destination_account_id()
+            res = super(AccountPayment, self)._compute_destination_account_id()
             return res
