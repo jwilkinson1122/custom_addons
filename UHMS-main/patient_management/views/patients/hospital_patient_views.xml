@@ -1,0 +1,59 @@
+<!-- views/hospital_patient_views.xml -->
+<odoo>
+    <record id="view_hospital_patient_form" model="ir.ui.view">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Full Name"/>
+                            <field name="dob" widget="date"/>
+                        </group>
+                        <group>
+                            <field name="gender" widget="radio"/>
+                            <field name="contact_number" placeholder="Contact Number"/>
+                            <field name="email" placeholder="Email Address"/>
+                        </group>
+                        <group>
+                            <field name="address" placeholder="Address" colspan="3" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Medical Histories">
+                            <field name="medical_history_ids" context="{'form_view_initial_mode': 'edit'}" widget="one2many_list"/>
+                        </page>
+                        <page string="Appointments">
+                            <field name="appointment_ids" context="{'form_view_initial_mode': 'edit'}" widget="one2many_list"/>
+                        </page>
+                        <page string="Treatments">
+                            <field name="treatment_ids" context="{'form_view_initial_mode': 'edit'}" widget="one2many_list"/>
+                        </page>
+                        <page string="Surgeries">
+                            <field name="surgery_ids" context="{'form_view_initial_mode': 'edit'}" widget="one2many_list"/>
+                        </page>
+                        <page string="Lab Tests">
+                            <field name="lab_test_ids" context="{'form_view_initial_mode': 'edit'}" widget="one2many_list"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hospital_patient_tree" model="ir.ui.view">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree string="Patients" editable="bottom">
+                <field name="name"/>
+                <field name="dob" widget="date"/>
+                <field name="contact_number"/>
+                <field name="gender" widget="statusbar" statusbar_visible="gender_status"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<!-- views/specialization_views.xml -->
+<odoo>
+    <!-- Specialization Form View -->
+    <record id="view_hospital_specialization_form" model="ir.ui.view">
+        <field name="name">hospital.specialization.form</field>
+        <field name="model">hospital.specialization</field>
+        <field name="arch" type="xml">
+            <form string="Specialization">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Specialization Tree View -->
+    <record id="view_hospital_specialization_tree" model="ir.ui.view">
+        <field name="name">hospital.specialization.tree</field>
+        <field name="model">hospital.specialization</field>
+        <field name="arch" type="xml">
+            <tree string="Specializations">
+                <field name="name"/>
+                <field name="doctor_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

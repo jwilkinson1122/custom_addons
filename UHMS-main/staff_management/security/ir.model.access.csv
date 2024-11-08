@@ -1,0 +1,7 @@
+id,name,model_id,group_id,perm_read,perm_write,perm_create,perm_unlink
+access_staff_management,access_staff_management,model_staff_management,test_04.test_04_group_manager,1,1,1,1
+access_staff_attendance,access_staff_attendance,model_staff_attendance,test_04.test_04_group_manager,1,1,1,1
+access_staff_shift,access_staff_shift,model_staff_shift,test_04.test_04_group_manager,1,1,1,1
+access_staff_nurse,access_staff_nurse,model_staff_nurse,test_04.test_04_group_manager,1,1,1,1
+access_staff_technician,access_staff_technician,model_staff_technician,test_04.test_04_group_manager,1,1,1,1
+access_staff_admin,access_staff_admin,model_staff_admin,test_04.test_04_group_manager,1,1,1,1

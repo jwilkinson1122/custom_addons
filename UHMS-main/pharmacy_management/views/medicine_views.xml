@@ -1,0 +1,53 @@
+<odoo>
+    <record id="view_pharmacy_medicine_tree" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.tree</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <tree string="Medicines">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="quantity_available"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_medicine_form" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.form</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <form string="Medicine">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category"/>
+                        <field name="quantity_available"/>
+                        <field name="price"/>
+                        <field name="prescription_required"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_medicine_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.kanban</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <kanban string="Medicines">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="quantity_available"/>
+                <templates>
+                    <t t="kanban-box">
+                        <div>
+                            <strong><field name="name"/></strong><br/>
+                            <field name="category"/><br/>
+                            <field name="quantity_available"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,67 @@
+<odoo>
+    <!-- Actions for Staff Management -->
+    
+    <!-- Action for Staff -->
+    <record id="action_staff_management" model="ir.actions.act_window">
+        <field name="name">Staff Management</field>
+        <field name="res_model">staff.management</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Action for Attendance -->
+    <record id="action_staff_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance Records</field>
+        <field name="res_model">staff.attendance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action for Shifts -->
+    <record id="action_staff_shift" model="ir.actions.act_window">
+        <field name="name">Shifts</field>
+        <field name="res_model">staff.shift</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action for Nurses -->
+    <record id="action_staff_nurse" model="ir.actions.act_window">
+        <field name="name">Nurses</field>
+        <field name="res_model">staff.nurse</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action for Technicians -->
+    <record id="action_staff_technician" model="ir.actions.act_window">
+        <field name="name">Technicians</field>
+        <field name="res_model">staff.technician</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action for Admins -->
+    <record id="action_staff_admin" model="ir.actions.act_window">
+        <field name="name">Admins</field>
+        <field name="res_model">staff.admin</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menus for Staff Management -->
+    <menuitem id="staff_management_menu" name="Staff Management" sequence="10"/>
+
+    <!-- Staff Menu -->
+    <menuitem id="menu_staff" name="Staff" parent="staff_management_menu" sequence="10" action="action_staff_management"/>
+
+    <!-- Attendance Menu -->
+    <menuitem id="menu_attendance" name="Attendance" parent="staff_management_menu" sequence="20" action="action_staff_attendance"/>
+
+    <!-- Shifts Menu -->
+    <menuitem id="menu_shifts" name="Shifts" parent="staff_management_menu" sequence="30" action="action_staff_shift"/>
+
+    <!-- Nurses Menu -->
+    <menuitem id="menu_nurses" name="Nurses" parent="staff_management_menu" sequence="40" action="action_staff_nurse"/>
+
+    <!-- Technicians Menu -->
+    <menuitem id="menu_technicians" name="Technicians" parent="staff_management_menu" sequence="50" action="action_staff_technician"/>
+
+    <!-- Admins Menu -->
+    <menuitem id="menu_admins" name="Admins" parent="staff_management_menu" sequence="60" action="action_staff_admin"/>
+</odoo>

@@ -1,0 +1,11 @@
+<odoo>
+    <record id="ir_cron_check_stock_levels" model="ir.cron">
+        <field name="name">Check Stock Levels</field>
+        <field name="model_id" ref="model_pharmacy_medicine"/>
+        <field name="state">code</field>
+        <field name="code">model.check_stock_levels()</field>
+        <field name="active" eval="True"/>
+        <field name="frequency" eval="86400"/>  <!-- Check daily -->
+        <field name="nextcall" eval="time.time() + 86400"/> <!-- First run in 24 hours -->
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<odoo>
+    <template id="email_template_low_stock">
+        <subject>Low Stock Alert for Medicine</subject>
+        <body>
+            <p>Dear Pharmacy Manager,</p>
+            <p>The following medicine is running low on stock:</p>
+            <p><strong>Name:</strong> ${object.name}</p>
+            <p><strong>Available Quantity:</strong> ${object.quantity_available}</p>
+            <p>Please replenish the stock at your earliest convenience.</p>
+            <p>Best regards,</p>
+            <p>Your Pharmacy Management System</p>
+        </body>
+    </template>
+</odoo>

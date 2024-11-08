@@ -1,0 +1,33 @@
+<!-- views/hospital_treatment_views.xml -->
+<odoo>
+    <record id="view_hospital_treatment_form" model="ir.ui.view">
+        <field name="name">hospital.treatment.form</field>
+        <field name="model">hospital.treatment</field>
+        <field name="arch" type="xml">
+            <form string="Treatment">
+                <sheet>
+                    <group>
+                        <field name="patient_id"/>
+                        <field name="medical_history_id"/>
+                        <field name="date"/>
+                        <field name="description"/>
+                        <field name="medication_ids" widget="many2many_tags"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hospital_treatment_tree" model="ir.ui.view">
+        <field name="name">hospital.treatment.tree</field>
+        <field name="model">hospital.treatment</field>
+        <field name="arch" type="xml">
+            <tree string="Treatments">
+                <field name="date"/>
+                <field name="patient_id"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

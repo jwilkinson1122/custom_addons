@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="menu_sale_order_inherit"
+              name="Booking Order"
+              parent="sale.sale_order_menu"
+              sequence="6"
+              action="action_booking_order"
+        />
+    <!--menu history booking order-->
+    <menuitem id="menu_history_sale_order_inherit"
+              name="History Booking Order"
+              parent="sale.sale_order_menu"
+              sequence="10"
+              action="action_history_booking_order"/>
+
+        <!--    configuration-->
+    <menuitem id="sale_order_booking_config_menu"
+            name="Booking Configuration"
+            parent="sale.menu_sale_config"
+            sequence="10"
+        />
+    <menuitem id="sale_order_booking_submenu_config"
+            name="Booking Configuration"
+            parent="sale_order_booking_config_menu"
+            action="booking_order_config_action"
+            sequence="20"
+        />
+
+    <!--wizard menu payment xlsx-->
+    <menuitem id="menu_payment_booking_order_report_xlsx"
+              name="Payment Order Report Xlsx"
+              parent="sale.menu_sale_report"
+              sequence="99"
+              />
+
+    <!-- Sales Reporting Menu -->
+    <menuitem id="sale.menu_sale_report"
+            name="Reporting"
+            sequence="31"
+            parent="sale.sale_menu_root"
+            groups="final_exam_hashmicro.group_sale_order_inherit_admin,final_exam_hashmicro.group_sale_order_inherit_manager"/>
+            />
+
+    <menuitem id="sub_menu_sale_order_report"
+              parent="sale.menu_sale_report"
+              action="action_sale_report_wizard"
+              groups="final_exam_hashmicro.group_sale_order_inherit_admin,final_exam_hashmicro.group_sale_order_inherit_manager"
+              sequence="99"/>
+
+    override menu sale order
+        <menuitem id="sale.menu_sale_config"
+            name="Configuration"
+            parent="sale.sale_menu_root"
+            sequence="6"
+            groups="sales_team.group_sale_salesman,final_exam_hashmicro.group_sale_order_inherit_admin,final_exam_hashmicro.group_sale_order_inherit_manager"/>
+
+        <menuitem id="sale.product_menu_catalog"
+            name="Products"
+            parent="sale.sale_menu_root"
+            sequence="4"
+            groups="sales_team.group_sale_salesman,final_exam_hashmicro.group_sale_order_inherit_admin,final_exam_hashmicro.group_sale_order_inherit_manager"/>
+
+        <menuitem id="sale.menu_sale_invoicing"
+            name="To Invoice"
+            parent="sale.sale_menu_root"
+            sequence="3"
+            groups="sales_team.group_sale_salesman,final_exam_hashmicro.group_sale_order_inherit_admin,final_exam_hashmicro.group_sale_order_inherit_manager"/>
+
+</odoo>

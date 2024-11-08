@@ -1,0 +1,32 @@
+<!-- views/hospital_surgery_views.xml -->
+<odoo>
+    <record id="view_hospital_surgery_form" model="ir.ui.view">
+        <field name="name">hospital.surgery.form</field>
+        <field name="model">hospital.surgery</field>
+        <field name="arch" type="xml">
+            <form string="Surgery">
+                <sheet>
+                    <group>
+                        <field name="patient_id"/>
+                        <field name="date"/>
+                        <field name="description"/>
+                        <field name="surgeon_id"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hospital_surgery_tree" model="ir.ui.view">
+        <field name="name">hospital.surgery.tree</field>
+        <field name="model">hospital.surgery</field>
+        <field name="arch" type="xml">
+            <tree string="Surgeries">
+                <field name="date"/>
+                <field name="patient_id"/>
+                <field name="surgeon_id"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

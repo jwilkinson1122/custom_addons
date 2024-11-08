@@ -1,0 +1,22 @@
+{
+    'name': "Staff Management",
+    'version': '1.0',
+    'summary': "Manage staff members, attendance, shifts, nurses, technicians, and admins",
+    'author': "Your Name",
+    'category': 'Human Resources',
+    'license': 'LGPL-3',
+    'depends': ['base'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/staff_views.xml',
+        'views/attendance_views.xml',
+        'views/shift_views.xml',
+        'views/nurse_views.xml',
+        'views/technician_views.xml',
+        'views/admin_views.xml',
+        'views/staff_menus.xml',
+        'data/staff_data.xml',
+    ],
+    'installable': True,
+    'application': True,
+}

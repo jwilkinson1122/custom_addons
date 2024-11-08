@@ -1,0 +1,37 @@
+<!-- views/doctor_menus.xml -->
+<odoo>
+    <!-- Actions -->
+    <record id="action_hospital_doctor" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="res_model">hospital.doctor</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_doctor_tree"/>
+    </record>
+
+    <record id="action_hospital_specialization" model="ir.actions.act_window">
+        <field name="name">Specializations</field>
+        <field name="res_model">hospital.specialization</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_specialization_tree"/>
+    </record>
+
+    <record id="action_hospital_schedule" model="ir.actions.act_window">
+        <field name="name">Schedules</field>
+        <field name="res_model">hospital.schedule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_schedule_tree"/>
+    </record>
+
+    <!-- Main Hospital Management Menu -->
+    <menuitem id="hospital_management_menu" name="Hospital Management" sequence="10"/>
+
+    <!-- Doctor Menu -->
+    <menuitem id="menu_hospital_doctor" name="Doctors" parent="hospital_management_menu" sequence="10"/>
+    <menuitem id="menu_all_doctors" name="All Doctors" parent="menu_hospital_doctor" action="action_hospital_doctor" sequence="10"/>
+
+    <!-- Specialization Menu -->
+    <menuitem id="menu_hospital_specialization" name="Specializations" parent="hospital_management_menu" action="action_hospital_specialization" sequence="20"/>
+
+    <!-- Schedule Menu -->
+    <menuitem id="menu_hospital_schedule" name="Schedules" parent="hospital_management_menu" action="action_hospital_schedule" sequence="30"/>
+</odoo>

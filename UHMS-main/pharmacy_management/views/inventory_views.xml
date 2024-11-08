@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_inventory_tree" model="ir.ui.view">
+        <field name="name">pharmacy.inventory.tree</field>
+        <field name="model">pharmacy.inventory</field>
+        <field name="arch" type="xml">
+            <tree string="Inventory">
+                <field name="medicine_id"/>
+                <field name="stock_in"/>
+                <field name="stock_out"/>
+                <field name="current_stock"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_inventory_form" model="ir.ui.view">
+        <field name="name">pharmacy.inventory.form</field>
+        <field name="model">pharmacy.inventory</field>
+        <field name="arch" type="xml">
+            <form string="Inventory">
+                <sheet>
+                    <group>
+                        <field name="medicine_id"/>
+                        <field name="stock_in"/>
+                        <field name="stock_out"/>
+                        <field name="current_stock" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

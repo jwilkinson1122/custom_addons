@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_prescription_tree" model="ir.ui.view">
+        <field name="name">pharmacy.prescription.tree</field>
+        <field name="model">pharmacy.prescription</field>
+        <field name="arch" type="xml">
+            <tree string="Prescriptions">
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="date_prescribed"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_prescription_form" model="ir.ui.view">
+        <field name="name">pharmacy.prescription.form</field>
+        <field name="model">pharmacy.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <sheet>
+                    <group>
+                        <field name="patient_id"/>
+                        <field name="doctor_id"/>
+                        <field name="medicine_ids" widget="many2many_tags"/>
+                        <field name="date_prescribed"/>
+                        <field name="dosage"/>
+                        <field name="frequency"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

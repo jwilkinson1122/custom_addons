@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_technician_form" model="ir.ui.view">
+        <field name="name">technician.form</field>
+        <field name="model">staff.technician</field>
+        <field name="arch" type="xml">
+            <form string="Technician">
+                <sheet>
+                    <group>
+                        <field name="staff_id"/>
+                        <field name="expertise"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_technician_tree" model="ir.ui.view">
+        <field name="name">technician.tree</field>
+        <field name="model">staff.technician</field>
+        <field name="arch" type="xml">
+            <tree string="Technicians">
+                <field name="staff_id"/>
+                <field name="expertise"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

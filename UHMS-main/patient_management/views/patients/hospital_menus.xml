@@ -1,0 +1,69 @@
+<!-- views/hospital_menus.xml -->
+<odoo>
+    <!-- Actions -->
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_patient_tree"/>
+    </record>
+
+    <record id="action_hospital_medical_history" model="ir.actions.act_window">
+        <field name="name">Medical Histories</field>
+        <field name="res_model">hospital.medical.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_medical_history_tree"/>
+    </record>
+
+    <record id="action_hospital_appointment" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_appointment_tree"/>
+    </record>
+
+    <record id="action_hospital_treatment" model="ir.actions.act_window">
+        <field name="name">Treatments</field>
+        <field name="res_model">hospital.treatment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_treatment_tree"/>
+    </record>
+
+    <record id="action_hospital_surgery" model="ir.actions.act_window">
+        <field name="name">Surgeries</field>
+        <field name="res_model">hospital.surgery</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_surgery_tree"/>
+    </record>
+
+    <record id="action_hospital_lab_test" model="ir.actions.act_window">
+        <field name="name">Lab Tests</field>
+        <field name="res_model">hospital.lab.test</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hospital_lab_test_tree"/>
+    </record>
+
+    <!-- Main Hospital Management Menu -->
+    <menuitem id="hospital_management_menu" name="Hospital Management" sequence="10"/>
+
+    <!-- Patient Menu -->
+    <menuitem id="menu_hospital_patient" name="Patients" parent="hospital_management_menu" sequence="10"/>
+
+    <!-- Submenu for All Patients under Patients Menu -->
+    <menuitem id="menu_all_patients" name="All Patients" parent="menu_hospital_patient" action="action_hospital_patient" sequence="10"/>
+
+    <!-- Medical History Menu -->
+    <menuitem id="menu_hospital_medical_history" name="Medical Histories" parent="hospital_management_menu" action="action_hospital_medical_history" sequence="20"/>
+
+    <!-- Appointments Menu -->
+    <menuitem id="menu_hospital_appointment" name="Appointments" parent="hospital_management_menu" action="action_hospital_appointment" sequence="30"/>
+
+    <!-- Treatments Menu -->
+    <menuitem id="menu_hospital_treatment" name="Treatments" parent="hospital_management_menu" action="action_hospital_treatment" sequence="40"/>
+
+    <!-- Surgeries Menu -->
+    <menuitem id="menu_hospital_surgery" name="Surgeries" parent="hospital_management_menu" action="action_hospital_surgery" sequence="50"/>
+
+    <!-- Lab Tests Menu -->
+    <menuitem id="menu_hospital_lab_test" name="Lab Tests" parent="hospital_management_menu" action="action_hospital_lab_test" sequence="60"/>
+</odoo>

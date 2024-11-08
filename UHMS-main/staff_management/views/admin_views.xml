@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_admin_form" model="ir.ui.view">
+        <field name="name">admin.form</field>
+        <field name="model">staff.admin</field>
+        <field name="arch" type="xml">
+            <form string="Admin">
+                <sheet>
+                    <group>
+                        <field name="staff_id"/>
+                        <field name="role"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_admin_tree" model="ir.ui.view">
+        <field name="name">admin.tree</field>
+        <field name="model">staff.admin</field>
+        <field name="arch" type="xml">
+            <tree string="Admins">
+                <field name="staff_id"/>
+                <field name="role"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

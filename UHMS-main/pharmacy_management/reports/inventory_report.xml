@@ -1,0 +1,10 @@
+<odoo>
+    <report
+        id="action_inventory_report"
+        model="pharmacy.inventory"
+        string="Inventory Report"
+        report_type="qweb-pdf"
+        name="pharmacy_management.inventory_report_template"
+        file="pharmacy_management.inventory_report_template"
+        />
+</odoo>

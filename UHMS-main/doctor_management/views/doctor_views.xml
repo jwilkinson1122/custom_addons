@@ -1,0 +1,41 @@
+<!-- views/doctor_views.xml -->
+<odoo>
+    <!-- Doctor Form View -->
+    <record id="view_hospital_doctor_form" model="ir.ui.view">
+        <field name="name">hospital.doctor.form</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <form string="Doctor">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="gender"/>
+                        <field name="contact_number"/>
+                        <field name="email"/>
+                        <field name="specialization_id" required="1"/>
+                        <field name="availability"/>
+                    </group>
+                    <notebook>
+                        <page string="Schedules">
+                            <field name="schedule_ids" context="{'default_doctor_id': id}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Doctor Tree View -->
+    <record id="view_hospital_doctor_tree" model="ir.ui.view">
+        <field name="name">hospital.doctor.tree</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <tree string="Doctors">
+                <field name="name"/>
+                <field name="specialization_id"/>
+                <field name="availability"/>
+                <field name="schedule_count" string="Schedule Count" widget="statinfo"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

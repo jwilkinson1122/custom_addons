@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Kategori Produk Elektronik -->
+    <record id="product_category_electronics" model="product.category">
+        <field name="name">Electronics</field>
+    </record>
+
+    <!-- Produk Elektronik -->
+    <record id="product_product_iphone_13" model="product.product">
+        <field name="name">iPhone 13</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">999.99</field>
+        <field name="standard_price">799.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_macbook_pro" model="product.product">
+        <field name="name">MacBook Pro</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">1999.99</field>
+        <field name="standard_price">1499.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_airpods" model="product.product">
+        <field name="name">AirPods</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">199.99</field>
+        <field name="standard_price">159.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_galaxy_s21" model="product.product">
+        <field name="name">Samsung Galaxy S21</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">799.99</field>
+        <field name="standard_price">699.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_surface_pro" model="product.product">
+        <field name="name">Microsoft Surface Pro</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">1199.99</field>
+        <field name="standard_price">999.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_bose_headphones" model="product.product">
+        <field name="name">Bose Headphones</field>
+        <field name="categ_id" ref="product_category_electronics"/>
+        <field name="type">product</field>
+        <field name="list_price">299.99</field>
+        <field name="standard_price">249.99</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+</odoo>

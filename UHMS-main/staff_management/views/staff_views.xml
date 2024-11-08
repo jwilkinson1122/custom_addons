@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_staff_form" model="ir.ui.view">
+        <field name="name">staff.form</field>
+        <field name="model">staff.management</field>
+        <field name="arch" type="xml">
+            <form string="Staff">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="job_title"/>
+                        <field name="email"/>
+                        <field name="contact_number"/>
+                        <field name="active"/>
+                    </group>
+                    <notebook>
+                        <page string="Attendance Records">
+                            <field name="attendance_ids" widget="one2many_list"/>
+                        </page>
+                        <page string="Shifts">
+                            <field name="shift_ids" widget="one2many_list"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_staff_tree" model="ir.ui.view">
+        <field name="name">staff.tree</field>
+        <field name="model">staff.management</field>
+        <field name="arch" type="xml">
+            <tree string="Staff">
+                <field name="name"/>
+                <field name="job_title"/>
+                <field name="email"/>
+                <field name="contact_number"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

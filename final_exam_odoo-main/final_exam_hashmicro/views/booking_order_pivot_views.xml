@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_booking_order_pivot" model="ir.ui.view">
+        <field name="name">booking.order.pivot</field>
+        <field name="model">booking.order.pivot</field>
+        <field name="arch" type="xml">
+            <pivot string="Booking Order Pivot">
+                <field name="date_order" type="row"/>
+                <field name="partner_id" type="col"/>
+                <field name="amount_total" type="measure"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_booking_order_pivot" model="ir.actions.act_window">
+        <field name="name">Booking Order Pivot</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">booking.order.pivot</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_booking_order_pivot"/>
+    </record>
+
+    <menuitem id="menu_booking_order_pivot"
+              name="Booking Order Pivot"
+              parent="sale.menu_sale_report"
+              action="action_booking_order_pivot"/>
+</odoo>

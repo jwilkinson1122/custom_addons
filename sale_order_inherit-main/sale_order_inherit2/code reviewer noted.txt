@@ -1,0 +1,2 @@
+- Farhan utk code ny jangan di bawa code dari hari sblm ny, tapi di depend di manifest ny ke module hari sblm nya, 
+jadi yang module di buat utk hari tsb kusus utk point yang di send di hari itu juga.

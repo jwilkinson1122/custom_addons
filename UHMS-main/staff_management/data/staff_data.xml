@@ -1,0 +1,8 @@
+<odoo>
+    <record id="staff_1" model="staff.management">
+        <field name="name">John Doe</field>
+        <field name="job_title">nurse</field>
+        <field name="email">john.doe@example.com</field>
+        <field name="contact_number">1234567890</field>
+    </record>
+</odoo>

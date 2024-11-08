@@ -1,0 +1,43 @@
+<odoo>
+    <!-- Define actions for the views -->
+    <record id="action_pharmacy_medicine" model="ir.actions.act_window">
+        <field name="name">Medicines</field>
+        <field name="res_model">pharmacy.medicine</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p>
+                Manage your medicines efficiently. Track quantities, categories, and pricing.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">pharmacy.prescription</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Create and manage prescriptions for patients.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_inventory" model="ir.actions.act_window">
+        <field name="name">Inventory</field>
+        <field name="res_model">pharmacy.inventory</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Keep track of the inventory for all medicines in the pharmacy.
+            </p>
+        </field>
+    </record>
+
+    <!-- Main menu for Pharmacy Management -->
+    <menuitem id="pharmacy_management_menu" name="Pharmacy Management" sequence="10"/>
+
+    <!-- Submenus for actions -->
+    <menuitem id="menu_pharmacy_medicine" name="Medicines" parent="pharmacy_management_menu" sequence="1" action="action_pharmacy_medicine"/>
+    <menuitem id="menu_pharmacy_prescription" name="Prescriptions" parent="pharmacy_management_menu" sequence="2" action="action_pharmacy_prescription"/>
+    <menuitem id="menu_pharmacy_inventory" name="Inventory" parent="pharmacy_management_menu" sequence="3" action="action_pharmacy_inventory"/>
+</odoo>

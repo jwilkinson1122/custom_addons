@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="menu_sale_order_inherit"
+              name="Booking Order"
+              parent="sale.sale_order_menu"
+              sequence="6"
+              action="action_booking_order"/>
+
+    <menuitem id="menu_history_sale_order_inherit"
+              name="History Booking Order"
+              parent="sale.sale_order_menu"
+              sequence="10"
+              action="action_history_booking_order"/>
+
+        <!--    configuration-->
+    <menuitem id="sale_order_booking_config_menu"
+            name="Booking Configuration"
+            parent="sale.menu_sale_config"
+            sequence="10"
+        />
+    <menuitem id="sale_order_booking_submenu_config"
+            name="Booking Configuration"
+            parent="sale_order_booking_config_menu"
+            action="booking_order_config_action"
+            sequence="20"
+        />
+
+</odoo>
