@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--   repair team tree view-->
+    <record id="repair_team_view_tree" model="ir.ui.view">
+        <field name="name">repair.team.view.tree</field>
+        <field name="model">repair.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="team_head_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    repair team form view-->
+    <record id="repair_team_view_form" model="ir.ui.view">
+        <field name="name">repair.team.view.form</field>
+        <field name="model">repair.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="team_head_id"/>
+                    </group>
+                    <notebook>
+                        <page>
+                            <field name="member_ids">
+                                <kanban>
+                                    <field name="name"/>
+                                    <field name="mobile"/>
+                                    <field name="image_1920"/>
+                                    <template>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_global_click">
+                                                <div class="oe_kanban_image">
+                                                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                                                </div>
+                                                <div class="oe_kanban_details ml8">
+                                                    <div class="oe_kanban_record_heading">
+                                                        <strong>
+                                                            <field name="name"/>
+                                                            <br/>
+                                                            <field name="mobile"/>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </template>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Repair Team menu action-->
+    <record id="repair_team_action" model="ir.actions.act_window">
+        <field name="name">Repair Team</field>
+        <field name="res_model">repair.team</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+    <!--Menu Repair-->
+    <menuitem id="prescription_config_menu_repair" name="Repair" parent="prescription_config_menu" sequence="186"/>
+    <!--Menu Repair Team-->
+    <menuitem id="repair_team_menu" name="Repair Team" parent="prescription_config_menu_repair" action="repair_team_action"/>
+</odoo>

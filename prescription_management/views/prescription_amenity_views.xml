@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--        fasillitas prescription tree view-->
+        <record id="prescription_amenity_view_tree" model="ir.ui.view">
+            <field name="name">prescription.amenity.view.tree</field>
+            <field name="model">prescription.amenity</field>
+            <field name="arch" type="html">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="prescription_amenity_view_form" model="ir.ui.view">
+            <field name="name">prescription.amenity.view.form</field>
+            <field name="model">prescription.amenity</field>
+            <field name="arch" type="xml">
+                <form string="Amenity">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="description"/>
+                            </group>
+                            <group>
+                                <field name="icon" widget="image" class="oe_avatar" string=""/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!--        amenity menu action-->
+        <record id="prescription_amenity_action" model="ir.actions.act_window">
+            <field name="name">Amenity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">prescription.amenity</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_detailed_type': 'service'}</field>
+        </record>
+
+        <!--        fasilitas Menu-->
+        <menuitem id="prescription_amenity_menu" name="Amenity" action="prescription_amenity_action" parent="prescription_config_menu" sequence="30"/>
+    </data>
+</odoo>

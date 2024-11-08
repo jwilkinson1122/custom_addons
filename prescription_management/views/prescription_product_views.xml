@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--    product menu action-->
+    <record id="prescription_product_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">prescription.product</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!--    vendor menu action-->
+    <record id="prescription_supplier_action" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">prescription.supplier</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!--    product menu-->
+    <menuitem id="prescription_product_menu" name="Product" action="prescription_product_action" parent="orthotic_menu" sequence="10"/>
+
+    <!--    vendor menu-->
+    <menuitem id="prescription_supplier_menu" name="Vendors" action="prescription_supplier_action" parent="orthotic_menu" sequence="20"/>
+</odoo>
