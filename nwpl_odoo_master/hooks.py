@@ -1,6 +1,48 @@
 import logging
+from odoo.tools.sql import column_exists
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
+
+
+def pre_init_hook(env):
+    """Pre-init hook to add columns for computed fields on ir_attachment."""
+    try:
+        if column_exists(env.cr, "ir_attachment", "file_storage_id"):
+            return
+
+        _logger.info("Adding columns for computed fields on ir_attachment")
+
+        env.cr.execute(
+            """
+            ALTER TABLE ir_attachment
+            ADD COLUMN IF NOT EXISTS file_storage_id INTEGER;
+        """
+        )
+        env.cr.execute(
+            """
+            ALTER TABLE ir_attachment
+            ADD CONSTRAINT IF NOT EXISTS fk_ir_attachment_file_storage
+            FOREIGN KEY (file_storage_id) REFERENCES file_storage(id);
+        """
+        )
+        env.cr.execute(
+            """
+            ALTER TABLE ir_attachment
+            ADD COLUMN IF NOT EXISTS file_url VARCHAR;
+        """
+        )
+        env.cr.execute(
+            """
+            ALTER TABLE ir_attachment
+            ADD COLUMN IF NOT EXISTS file_storage_code VARCHAR;
+        """
+        )
+
+        _logger.info("Columns successfully added on ir_attachment")
+        env.cr.commit()
+    except Exception as e:
+        env.cr.rollback()
+        _logger.error(f"Error in pre_init_hook: {str(e)}")
 
 
 def post_init_hook(env):
@@ -8,6 +50,7 @@ def post_init_hook(env):
     since now the weight field is computed
     """
     env.cr.execute("UPDATE product_product SET weight_dummy = weight")
+
 
 def set_sale_price_on_variant(env, template_id=None):
     sql = """

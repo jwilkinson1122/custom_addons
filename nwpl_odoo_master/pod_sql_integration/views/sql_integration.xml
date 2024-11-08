@@ -145,6 +145,6 @@ For e.g. [("name","=", data[1])] or [("name","=", data[2])]</li>
             </field>
         </record>
 
-        <menuitem id="menu_sql_integration" name="SQL Integration" parent="base.menu_administration" action="action_sql_integration" sequence="10"/>
+        <menuitem id="menu_sql_integration" name="Integrations" parent="base.menu_administration" action="action_sql_integration" sequence="10"/>
     </data>
 </odoo>

@@ -14,6 +14,7 @@
         "base",
         "base_automation",
         "base_setup",
+        "base_sparse_field",
         "barcodes",
         "contacts",
         "mail",
@@ -39,6 +40,18 @@
         "views/group.xml",
         "wizards/create_from_user.xml",
         "wizards/wizard_groups_into_role.xml",
+        # Server Environment
+        # C:\odoo17\server\odoo\custom_addons\nwpl_odoo_master\server_environment\security\ir.model.access.csv
+        "server_environment/security/ir.model.access.csv",
+        "server_environment/security/res_groups.xml",
+        "server_environment/serv_config.xml",
+        # "server_environment_ir_config_parameter/views/view_ir_config_parameter.xml",
+        "pod_file_storage/views/file_storage_view.xml",
+        "pod_file_storage/security/ir.model.access.csv",
+        "pod_file_storage/wizards/file_test_connection.xml",
+        "pod_file_attachment/security/file_gc.xml",
+        "pod_file_attachment/views/file_storage.xml",
+        # SQL Integration
         "pod_sql_integration/security/ir.model.access.csv",
         "pod_sql_integration/views/sql_integration.xml",
         "data/pod_contacts/data/ir_sequence_data.xml",
@@ -113,6 +126,7 @@
     "demo": [
         "demo/mail_demo.xml",
         "demo/res_partner.xml",
+        "pod_file_storage/demo/file_storage.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -133,6 +147,8 @@
         "point_of_sale._assets_pos": [],
     },
     "images": ["static/description/icon.png"],
+    "external_dependencies": {"python": ["fsspec", "python_slugify"]},
+    "pre_init_hook": "pre_init_hook",
     "post_init_hook": "post_init_hook",
     "application": True,
     "auto_install": False,

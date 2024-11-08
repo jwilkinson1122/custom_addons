@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_file_storage_edit,file_storage edit,model_file_storage,base.group_system,1,1,1,1
+access_file_test_connection,file.test.connection.access,model_file_test_connection,base.group_system,1,1,1,1

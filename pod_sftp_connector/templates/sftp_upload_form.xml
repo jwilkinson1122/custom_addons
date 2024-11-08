@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="sftp_upload_form" name="SFTP Upload Form">
+        <form method="post" enctype="multipart/form-data" class="oe_sftp_upload_form">
+            <input type="file" name="file" class="oe_sftp_file_input"/>
+            <button type="submit" class="oe_sftp_upload_button">Upload</button>
+        </form>
+    </template>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="sftp_progress" name="SFTP Progress Indicator">
+        <div class="oe_sftp_progress_bar">
+            <div class="oe_sftp_progress_fill" style="width: 0%;"></div>
+        </div>
+        <div class="oe_sftp_progress_text">0%</div>
+    </template>
+</odoo>
+

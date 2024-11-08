@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_customer_sftp_form" model="ir.ui.view">
+        <field name="name">customer.sftp.form</field>
+        <field name="model">res.partner</field>  
+        <field name="inherit_id" ref="base.view_partner_form"/> 
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after"> 
+                <field name="sftp_folder_path" readonly="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="SFTP Files">
+                    <div class="oe_sftp_file_list">
+                        </div>
+                    <button name="download_file" type="object" string="Download" class="oe_highlight"/>
+                    <button name="upload_file" type="object" string="Upload"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+<page string="SFTP Files">
+    <div class="oe_sftp_file_list">
+        </div>
+    <t t-call="pod_sftp_connector.sftp_upload_form"/> 
+    <t t-call="pod_sftp_connector.sftp_progress"/> 
+    <button name="download_file" type="object" string="Download" class="oe_highlight"/>
+</page>
