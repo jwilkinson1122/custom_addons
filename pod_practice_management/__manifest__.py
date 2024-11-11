@@ -3,7 +3,7 @@
     "version": "17.0.1.6.2",
     "category": "Services/Medical",
     "license": "OPL-1",
-    "depends": ["portal", "contacts", "mail"],
+    "depends": ["portal", "contacts", "mail", "mail_mobile"],
     "data": [
         "security/podiatry_practice_groups.xml",
         "security/ir.model.access.csv",

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- tree view(s) -->
+        <record id="membership_view_list" model="ir.ui.view">
+            <field name="name">membership list</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="member_id"/>
+                    <field name="email" optional="hide"/>
+                    <field name="period_id" required="1"/>
+                    <field name="category_id"/>
+                    <field name="state"/>
+                    <field name="price_due" sum="Total"/>
+                    <field name="price_paid" sum="Total"/>
+                    <field name="price_remaining" sum="Total"/>
+                    <field name="member_tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- form view(s) -->
+        <record id="membership_view_form" model="ir.ui.view">
+            <field name="name">membership form</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="price_remaining" invisible="1"/>
+                    <field name="period_category_id" invisible="1"/>
+                    <field name="paid" invisible="1"/>
+                    <field name="user_state" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <header>
+                        <button name="validate_membership_payment" type="object" string="Payment Receipt" class="btn-primary" invisible="paid"/>
+                        <button name="prevalidate_membership_affiliation" type="object" string="Prevalidate" class="btn-primary" invisible="state not in ['unknown', 'old_member']"/>
+                        <button name="validate_membership_affiliation" type="object" string="Validate" invisible="state not in ['unknown', 'old_member'] or state != 'requested' or paid == True"/>
+                        <!-- attrs="{'invisible': [('state', 'not in', ('unknown', 'old_member')), '|', ('state', '!=', 'requested'), ('paid', '=', True)]}" -->
+                        <button name="validate_membership_affiliation" type="object" string="Validate" class="btn-primary" invisible="state != 'requested' or paid == False"/>
+                        <button name="reject_membership_affiliation" type="object" string="Reject" invisible="state == 'rejected'"/>
+
+                        <button name="send_email_invitation" type="object" string="Send Invitation" class="btn-primary" invisible="invitation_mail_sent or state in ['requested', 'member', 'rejected']" context="{'see_records_view': False}" help="Sends an email to the user to invite him to validate his membership."/>
+                        <button name="send_email_confirmation" type="object" string="Send Confirmation Email" invisible="state != 'member' or confirmation_mail_sent == True" class="btn-primary" help="Sends an email to the user to let him know that his membership has been validated."/>
+                        <button name="send_email_payment_due" type="object" string="Send payment due email" invisible="state not in ('requested', 'member') or paid == True" class="btn-primary" help="Sends an email to the player to let him know that a payment is due for his membership."/>
+                        <!-- Commented out as for now, players are not necessery linked to a user
+                    <button string="Send Connection Invitation Email" class="btn-primary" type="object" name="action_reset_password" context="{'create_user': 1}" attrs="{'invisible': [('user_state', '!=', 'new')]}" confirm="Do you want to send an email to the user to let him sign up to the application?" help="Sends an email to the user to let him sign up to the application. Once the invitation accepted, he will be prompted to enter a new password."/>
+                    -->
+                        <field name="state" widget="statusbar" statusbar_visible="unknown,old_member,requested,member"/>
+                    </header>
+                    <sheet>
+                        <h1 class="oe_title">
+                            <field name="member_id"/>
+                        </h1>
+                        <field name="member_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Member Tags..."/>
+                        <group>
+                            <group>
+                                <field name="period_id" class="o_task_user_field" required="1"/>
+                                <field name="category_id"/>
+                                <field name="contact_person_id"/>
+                                <field name="email"/>
+                            </group>
+                            <group>
+                                <field name="price_paid"/>
+                                <field name="price_due"/>
+                            </group>
+                        </group>
+                        <!-- Move "groups" attribute to "details" page once a 2nd will be added -->
+                        <notebook>
+                            <page name="details" string="Details">
+                                <group>
+                                    <group>
+                                        <field name="token"/>
+                                        <field name="token_validity"/>
+                                        <field name="token_is_valid"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id"/>
+                                        <field name="invitation_mail_sent"/>
+                                        <field name="confirmation_mail_sent"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- graph view(s) -->
+        <!-- Prices per member with period details -->
+        <record id="membership_view_graph_members" model="ir.ui.view">
+            <field name="name">membership graph users</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <graph string="Prices per Member" type="bar" stacked="1">
+                    <field name="member_id" type="row"/>
+                    <field name="period_id" type="row"/>
+                    <field name="price_remaining" type="measure"/>
+                    <field name="price_paid" type="measure"/>
+                    <field name="price_due" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <!-- Prices per period with user subdivision -->
+        <record id="membership_view_graph_periods" model="ir.ui.view">
+            <field name="name">membership graph periods</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <graph string="Prices per Period" type="bar" stacked="1">
+                    <field name="period_id" type="row"/>
+                    <field name="member_id" type="row"/>
+                    <field name="price_remaining" type="measure"/>
+                    <field name="price_paid" type="measure"/>
+                    <field name="price_due" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- pivot view(s) -->
+        <record id="membership_view_pivot" model="ir.ui.view">
+            <field name="name">membership pivot</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="period_id" type="row"/>
+                    <field name="member_id" type="row"/>
+                    <field name="state" type="col"/>
+                    <field name="price_paid" type="measure"/>
+                    <field name="price_due" type="measure"/>
+                    <field name="price_remaining" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- kanban view(s) -->
+        <record id="membership_view_kanban" model="ir.ui.view">
+            <field name="name">membership kanban</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="color"/>
+                    <field name="member_parent_id"/>
+                    <field name="currency_id" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}} o_kanban_record_has_image_fill o_res_partner_kanban oe_kanban_global_click
+                            oe_semantic_html_override oe_kanban_card {{record.group_fancy==1
+                            ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.member_id.raw_value)}')">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.member_parent_id.raw_value" t-att-alt="record.member_parent_id.value" t-att-src="kanban_image('res.partner', 'image_128', record.member_parent_id.raw_value)"/>
+                                </div>
+                                <div class="o_kanban_image rounded-circle d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.member_id.raw_value)}')">
+                                    <img class="o_kanban_image_inner_pic" t-if="record.member_parent_id.raw_value" t-att-alt="record.member_parent_id.value" t-att-src="kanban_image('res.partner', 'image_128', record.member_parent_id.raw_value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title oe_partner_heading">
+                                                <field name="member_id"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_tags_section oe_kanban_partner_categories">
+                                        <span class="oe_kanban_list_many2many">
+                                            <field name="member_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        </span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <span>Paid </span>
+                                            <span t-attf-class="o_text_bold">
+                                                <field name="price_paid" widget="monetary"/>
+                                            </span>
+                                            <span> on </span>
+                                            <span t-attf-class="o_text_bold">
+                                                <field name="price_due" widget="monetary"/>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="o_kanban_record_bottom">
+                                                <span t-if="record.category_id.raw_value" class="o_kanban_record_subtitle o_text_bold oe_kanban_bottom_left">
+                                                    <field name="category_id"/>
+                                                </span>
+                                                <span t-if="record.period_id.raw_value" class="o_kanban_record_subtitle o_text_bold oe_kanban_bottom_right">
+                                                    <field name="period_id"/>
+                                                </span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- search view(s) -->
+        <record id="membership_search" model="ir.ui.view">
+            <field name="name">membership.search</field>
+            <field name="model">membership</field>
+            <field name="arch" type="xml">
+                <search string="Periods">
+                    <field name="member_id" string="Member"/>
+                    <field name="period_id" string="Period" filter_domain="[('period_id', 'ilike', self)]"/>
+                    <field name="category_id" string="Category" filter_domain="[('category_id', 'ilike', self)]"/>
+                    <field name="member_tag_ids" string="Tag" filter_domain="[('member_tag_ids', 'child_of', self)]"/>
+                    <filter string="Current Period" name="current_period_search" domain="[('period_id.current', '=', True)]" help="Memberships of current period."/>
+                    <filter string="Upcoming Period" name="upcoming_period_search" domain="[('period_id.upcoming', '=', True)]" help="Memberships of upcoming period."/>
+                    <separator/>
+                    <filter string="Payment Due" name="payment_due_search" domain="[('paid', '=', False)]" help="Memberships with a payment due."/>
+                    <separator/>
+                    <filter string="Unknown Status" name="state_unknown_search" domain="[('state', '=', 'unknown')]" help="Memberships with an unknown status."/>
+                    <filter string="Old Members" name="state_old_member_search" domain="[('state', '=', 'old_member')]" help="Members for the previous season."/>
+                    <filter string="Prevalidated" name="state_requested_search" domain="[('state', '=', 'requested')]" help="Memberships with a prevalidated status."/>
+                    <filter string="Members" name="state_member_search" domain="[('state', '=', 'member')]" help="Members only."/>
+                    <filter string="Rejected" name="state_rejected_search" domain="[('state', '=', 'rejected')]" help="Memberships with a rejected status."/>
+                    <separator/>
+                    <filter string="Active Period(s)" name="active_period_search" domain="[('period_id.active', '=', True)]" help="Memberships of active period(s)."/>
+                    <filter string="Archived Period(s)" name="inactive_period_search" domain="[('period_id.active', '=', False)]" help="Memberships of archived period(s)."/>
+                    <group string="Group By">
+                        <filter name="state_groupby" context="{'group_by' : 'state'}"/>
+                        <filter name="period_id_groupby" context="{'group_by' : 'period_id'}"/>
+                        <filter name="category_id_groupby" context="{'group_by' : 'category_id'}"/>
+                        <filter name="member_id_groupby" context="{'group_by' : 'member_id'}"/>
+                        <filter name="paid_groupby" context="{'group_by' : 'paid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

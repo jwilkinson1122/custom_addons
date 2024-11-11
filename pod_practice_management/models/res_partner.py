@@ -6,6 +6,18 @@ from odoo.exceptions import ValidationError
 class Partner(models.Model):
     _inherit = "res.partner"
 
+    # parent_id = fields.Many2one("res.partner", string="Related Company", index=True)
+    # parent_name = fields.Char(
+    #     related="parent_id.name", readonly=True, string="Parent name"
+    # )
+    # child_ids = fields.One2many(
+    #     "res.partner", "parent_id", string="Contact", domain=[("active", "=", True)]
+    # )
+
+    parent_practice_id = fields.Many2one(
+        "podiatry.practice", string="Related Practice", index=True
+    )
+
     owned_practice_ids = fields.One2many(
         comodel_name="podiatry.practice", inverse_name="parent_id"
     )
@@ -27,12 +39,21 @@ class Partner(models.Model):
         comodel_name="podiatry.patient", inverse_name="partner_id"
     )
 
-    is_manager = fields.Boolean(compute="_compute_is_manager", store=True)
-    is_primary_physician = fields.Boolean(
-        compute="_compute_is_primary_physician", store=True
-    )
+    # is_manager = fields.Boolean(compute="_compute_is_manager", store=True)
+    # is_physician = fields.Boolean(compute="_compute_is_physician", store=True)
 
-    is_manager = fields.Boolean(compute="_compute_is_manager", store=True)
+    is_physician = fields.Boolean(compute="_compute_is_physician", store=True)
+
+    @api.depends("user_ids.groups_id")
+    def _compute_is_physician(self):
+        for rec in self:
+            rec.is_physician = bool(
+                rec.user_ids.filtered(
+                    lambda user: user.has_group(
+                        "pod_practice_management.group_podiatry_practice_physician"
+                    )
+                )
+            )
 
     def write(self, vals):
         if (

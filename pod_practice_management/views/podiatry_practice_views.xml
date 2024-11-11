@@ -6,12 +6,12 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <field name="parent_id" string="Parent Organization"/>
+                <field name="parent_id" string="Parent Account"/>
                 <field name="manager_id"/>
-                <field name="primary_physician_id"/>
+                <field name="physician_id"/>
                 <filter context="{'group_by': 'parent_id'}" name="groupby_parent_id"/>
                 <filter context="{'group_by': 'manager_id'}" name="groupby_manager_id"/>
-                <filter context="{'group_by': 'primary_physician_id'}" name="groupby_primary_physician_id"/>
+                <filter context="{'group_by': 'physician_id'}" name="groupby_physician_id"/>
             </search>
         </field>
     </record>
@@ -23,7 +23,7 @@
                 <field name="name"/>
                 <field name="parent_id"/>
                 <field name="manager_name"/>
-                <field name="primary_physician_name"/>
+                <field name="physician_name"/>
                 <field name="patient_count"/>
                 <!-- <field name="inactive_count"/>
                 <field name="active_count"/> -->
@@ -51,7 +51,7 @@
                             <div>
                                 <span>
                                     Primary Physician:
-                                    <field name="primary_physician_name"/>
+                                    <field name="physician_name"/>
                                 </span>
                             </div>
                             <div class="o_kanban_record_bottom">
@@ -88,7 +88,7 @@
                 <field name="name"/>
                 <field name="parent_id"/>
                 <field name="manager_id"/>
-                <field name="primary_physician_id"/>
+                <field name="physician_id"/>
                 <field name="patient_count"/>
                 <!-- <field name="inactive_count"/> -->
             </tree>
@@ -121,6 +121,10 @@
                     </group>
                     <br></br>
                     <notebook>
+                        <page name="contacts" string="Contacts">
+                            <field name="contact_ids" nolabel="1"></field>
+
+                        </page>
                         <page name="staff" string="Staff Information">
                             <field name="staff_ids" nolabel="1">
                                 <tree>

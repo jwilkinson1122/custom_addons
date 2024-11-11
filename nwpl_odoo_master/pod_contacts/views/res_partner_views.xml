@@ -98,17 +98,14 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <div class="oe_button_box" position="inside">
+            <!-- <div class="oe_button_box" position="inside">
                 <button class="oe_stat_button" type="action" name="%(act_res_partner_child)d" icon="fa-sitemap" invisible="is_practitioner or child_count == 0 or child_count == ''">
                     <field string="Contacts" name="child_count" widget="statinfo"/>
                 </button>
                 <button class="oe_stat_button" type="action" name="%(action_patients_window)d" icon="fa-users" invisible="not is_practitioner">
                     <field string="Patients" name="patient_records" widget="statinfo"/>
                 </button>
-                <!-- <button class="oe_stat_button" type="action" name="%(action_patients_window)d" icon="fa-users" invisible="not is_practitioner">
-                    <field string="Patients" name="patient_records" widget="statinfo"/>
-                </button> -->
-            </div>
+            </div> -->
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_parent_account" invisible="1" />
                 <field name="is_company" invisible="1" />

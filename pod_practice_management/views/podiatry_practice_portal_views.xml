@@ -21,8 +21,8 @@
                 <t t-call="portal.portal_table">
                     <thead>
                         <tr>
+                            <th>Parent Account</th>
                             <th>Practice Name</th>
-                            <th>Parent Organization</th>
                             <th>Total Patients</th>
                             <!-- <th>Not Active</th> -->
                         </tr>

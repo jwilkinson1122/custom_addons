@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- tree view(s) -->
+        <record id="category_view_list" model="ir.ui.view">
+            <field name="name">category list</field>
+            <field name="model">category</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="count_members" sum="Total"/>
+                    <field name="total_price_due" sum="Total"/>
+                    <field name="total_price_paid" sum="Total"/>
+                    <field name="total_remaining_price_due" sum="Total"/>
+                    <field name="active" optional="hide"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- form view(s) -->
+        <record id="category_view_form" model="ir.ui.view">
+            <field name="name">category form</field>
+            <field name="model">category</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <field name="period_ids" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                        <group>
+                            <h1>
+                                <field name="name" placeholder="Name..."/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="need_responsible"/>
+                            <field name="description"/>
+                        </group>
+                        <notebook>
+                            <page string="Periods">
+                                <field name="period_category_ids">
+                                    <tree editable="bottom">
+                                        <field name="period_id" domain="[('id', 'not in', parent.period_ids)]"/>
+                                        <field name="price_due" widget="monetary"/>
+                                        <field name="count_members" sum="Total"/>
+                                        <field name="total_price_due" sum="Total"/>
+                                        <field name="total_price_paid" sum="Total"/>
+                                        <field name="total_remaining_price_due" sum="Total"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Members">
+                                <field name="member_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Memberships">
+                                <field name="membership_ids">
+                                    <tree editable="bottom">
+                                        <field name="member_id"/>
+                                        <field name="period_id"/>
+                                        <field name="state"/>
+                                        <field name="paid"/>
+                                        <field name="price_due" sum="Total"/>
+                                        <field name="price_paid" sum="Total"/>
+                                        <field name="price_remaining" sum="Total"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- search view(s) -->
+        <record id="category_search" model="ir.ui.view">
+            <field name="name">category.inactive.search</field>
+            <field name="model">category</field>
+            <field name="arch" type="xml">
+                <search string="Categories">
+                    <field name="name" string="Category Name" filter_domain="[('name', 'ilike', self)]"/>
+                    <separator/>
+                    <filter name="active_search" string="Active" domain="[('active', '=',  True)]" help="Only active categories."/>
+                    <filter name="inactive_search" string="Archived" domain="[('active', '=', False)]" help="Only inactive categories."/>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

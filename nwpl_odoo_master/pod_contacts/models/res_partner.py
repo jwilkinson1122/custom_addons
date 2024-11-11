@@ -170,35 +170,6 @@ class Partner(models.Model):
         for partner in self:
             partner.child_count = len(partner.child_ids)
 
-    # @api.depends(
-    #     "is_supplier", "is_partner", "is_parent_account", "is_company", "is_location", "is_practitioner", "is_patient"
-    # )
-    # def _compute_entity_type(self):
-    #     """
-    #     Custom method to manage display or functionality based on entity types.
-    #     """
-    #     for partner in self:
-    #         if partner.is_supplier:
-    #             partner.entity_type = "Supplier"
-    #         elif partner.is_partner:
-    #             partner.entity_type = "Order"
-    #         elif partner.is_parent_account:
-    #             partner.entity_type = "Location"
-    #         elif partner.is_company:
-    #             partner.entity_type = "Company"
-    #         elif partner.is_location:
-    #             partner.entity_type = "Location"
-    #         elif partner.is_practitioner:
-    #             partner.entity_type = "Practitioner"
-    #         elif partner.is_patient:
-    #             partner.entity_type = "Patient"
-    #         else:
-    #             partner.entity_type = "Other"
-
-    # entity_type = fields.Char(
-    #     string="Entity Type", compute="_compute_entity_type", store=True
-    # )
-
     @api.depends(
         "parent_id", "is_parent_account", "is_company", "is_location", "active"
     )

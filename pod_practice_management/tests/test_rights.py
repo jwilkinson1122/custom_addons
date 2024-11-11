@@ -37,7 +37,7 @@ class TestRights(TransactionCase):
                 "groups_id": [
                     Command.set(
                         cls.env.ref(
-                            "pod_practice_management.group_podiatry_practice_internal_user"
+                            "pod_practice_management.group_podiatry_practice_physician"
                         ).ids,
                     ),
                 ],
@@ -48,7 +48,7 @@ class TestRights(TransactionCase):
         #     f"{cls.internal_user_user.groups_id.mapped('name')}"
         # )
 
-    def test_treatment_pro_has_access_only_to_staffed_practices(self):
+    def test_physician_has_access_only_to_staffed_practices(self):
         """A treatment professional should only have access to practices and,
         by extension, patients for which they are a practice staff member."""
         practice, patients = self._generate_practice_with_patient(self.admin_user)
@@ -65,13 +65,13 @@ class TestRights(TransactionCase):
                 .browse(patients[0].id)
             )
 
-    def test_treatment_pro_can_remove_patient_from_practice(self):
+    def test_physician_can_remove_patient_from_practice(self):
         practice, patients = self._generate_practice_with_patient(self.admin_user)
         self.env["podiatry.practice.staff"].with_user(self.admin_user).create(
             {
                 "practice_id": practice.id,
                 "partner_id": self.internal_user_user.partner_id.id,
-                "role": "primary_physician",
+                "role": "physician",
             }
         )
         # Test removing the patient since we are practice staff

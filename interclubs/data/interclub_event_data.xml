@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="cron_interclub_event_states_update" model="ir.cron">
+        <field name="name">Update Interclub Events State</field>
+        <field name="model_id" ref="model_interclub_event"/>
+        <field name="state">code</field>
+        <field name="code">model.update_states(auto_mail=True)</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 01:30:00')"/>
+    </record>
+
+    <record id="mt_interclub_event_communication" model="mail.message.subtype">
+        <field name="name">Interclub Event Communication</field>
+        <field name="sequence">10</field>
+        <field name="res_model">interclub.event</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="False"/>
+    </record>
+
+    <!-- Email template for interclub event opening -->
+    <!-- the body_payload is inspired by `calendar.calendar_template_meeting_invitation` -->
+    <record id="email_template_interclub_event_opening" model="mail.template">
+        <field name="name">Interclub Event Opening</field>
+        <field name="model_id" ref="calendar.model_calendar_attendee"/>
+        <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+        <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
+        <field name="subject">Registrations opening of the interclub event {{ object.event_id.name }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="kind">interclub</field>
+        <field name="body_html" type="html">
+<t t-call="club.email_default_layout">
+    <t t-set="_o" t-value="object.env['interclub.event'].search([('event_id', '=', object.event_id.id)], limit=1) or False"/>
+    <t t-set="sender" t-value="object.event_id.user_id"/>
+    <t t-set="company" t-value="_o.company_id if _o else sender.company_id"/>
+    <t t-set="title_1" t-value="'Interclub'"/>
+    <t t-set="_no_record_found_msg" t-value="('No interclub event found for %s' % object.event_id.name) if not _o else ''"/>
+    <t t-set="title_2" t-value="_o.name if _o else _no_record_found_msg"/>
+    <t t-set="body_payload">
+        <div>
+            <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
+            <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
+            <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
+            <t t-set="target_customer" t-value="object.partner_id == customer"/>
+            <p>
+                Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
+                <t t-if="not target_responsible">
+                    <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> invited you for the <strong t-out="object.event_id.name or ''">xxx</strong> interclub event.
+                </t>
+                <t t-else="">
+                    The interclub event <strong t-out="object.event_id.name or ''">xxx</strong> has been opened.
+                </t>
+
+            </p>
+            <div style="text-align: center; padding: 16px 0px 16px 0px;">
+                <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+                    style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                    Accept</a>
+                <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+                    style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                    Decline</a>
+                <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+                    style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"
+                    >View</a>
+            </div>
+            <table border="0" cellpadding="0" cellspacing="0"><tr>
+                <td width="130px;">
+                    <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
+                        <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
+                    </div>
+                    <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
+                        <t t-out="str(object.event_id.start.day) or ''">3</t>
+                    </div>
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
+                        <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2022</t>
+                    </div>
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        <t t-if="not object.event_id.allday">
+                            <div>
+                                <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">08:00 PM</t>
+                            </div>
+                            <t t-if="object.mail_tz">
+                                <div style="font-size: 10px; font-weight: normal">
+                                    (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </td>
+                <td width="20px;"/>
+                <td style="padding-top: 5px;">
+                    <p><strong>Details of the event</strong></p>
+                    <ul>
+                        <t t-if="object.event_id.location">
+                            <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
+                                (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">View Map</a>)
+                            </li>
+                        </t>
+                        <li>Attendees
+                        <ul>
+                            <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
+                                <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
+                                <t t-if="attendee.common_name != object.common_name">
+                                    <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+                                </t>
+                                <t t-else="">
+                                    <span style="margin-left:5px">You</span>
+                                </t>
+                            </li>
+                        </ul></li>
+                        <t t-if="not is_html_empty(object.event_id.description)">
+                            <li>Description of the event:
+                            <t t-out="object.event_id.description">Description of the interclub event.</t></li>
+                        </t>
+                    </ul>
+                </td>
+            </tr></table>
+            <br/>
+            Thank you,
+        </div>
+    </t>
+</t>
+        </field>
+    </record>
+
+<!-- TODO
+ - envoyer le message en mode mass mail
+ - le titre via object.name_get()[0][1] et object.event_id.name est différent!!!
+ - essayer le custom layout:  'email_layout_xmlid': 'mail.mail_notification_paynow', -->
+    <record id="email_template_interclub_event_viewer" model="mail.template">
+        <field name="name">Interclub Event Viewer</field>
+        <field name="model_id" ref="model_interclub_event"/>
+        <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+        <!-- <field name="partner_to">{{ object.partner_id.id }}</field> -->
+        <field name="subject">Interclub event {{ object.name_get()[0][1] + (' has been %s' % ctx['new_state'] if 'new_state' in ctx else '') }}</field>
+        <!-- <field name="subject">Info about the interclub event {{ object.name_get()[0][1] }}</field> -->
+        <field name="lang">{{ object.lang }}</field>
+        <field name="kind">interclub</field>
+        <field name="body_html" type="html">
+<t t-call="club.email_default_layout">
+    <t t-set="_o" t-value="object.env['interclub.event'].search([('event_id', '=', object.event_id.id)], limit=1) or False"/>
+    <t t-set="sender" t-value="object.event_id.user_id"/>
+    <t t-set="company" t-value="_o.company_id if _o else sender.company_id"/>
+    <t t-set="title_1" t-value="'Interclub'"/>
+    <t t-set="_no_record_found_msg" t-value="('No interclub event found for %s' % object.event_id.name) if not _o else ''"/>
+    <t t-set="title_2" t-value="_o.name if _o else _no_record_found_msg"/>
+    <t t-set="_new_state" t-value="ctx.get('new_state')"/>
+    <t t-set="body_payload">
+        <div>
+            <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
+            <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
+            <t t-set="target_customer" t-value="object.partner_id == customer"/>
+            <t t-set="tz" t-value="object.company_id.partner_id.tz"/>
+            <p>
+                Hello,<br/><br/>
+                <t t-if="_new_state">
+                    The interclub event <strong t-out="object.event_id.name or ''">xxx</strong> has been <strong><t t-out="_new_state"/></strong>.
+                </t>
+            </p>
+            <table border="0" cellpadding="0" cellspacing="0"><tr>
+                <td width="130px;">
+                    <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
+                        <t t-out="format_datetime(dt=object.event_id.start, tz=tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
+                    </div>
+                    <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
+                        <t t-out="str(object.event_id.start.day) or ''">3</t>
+                    </div>
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
+                        <t t-out="format_datetime(dt=object.event_id.start, tz=tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2022</t>
+                    </div>
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        <t t-if="not object.event_id.allday">
+                            <div>
+                                <t t-out="format_time(time=object.event_id.start, tz=tz, time_format='short', lang_code=object.env.lang) or ''">08:00 PM</t>
+                            </div>
+                            <t t-if="tz">
+                                <div style="font-size: 10px; font-weight: normal">
+                                    (<t t-out="tz or ''">Europe/Brussels</t>)
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </td>
+                <td width="20px;"/>
+                <td style="padding-top: 5px;">
+                    <p><strong>Details of the event</strong></p>
+                    <ul>
+                        <t t-if="object.event_id.location">
+                            <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
+                                (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">View Map</a>)
+                            </li>
+                        </t>
+                        <li>Attendees
+                        <ul>
+                            <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
+                                <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
+                                <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+                            </li>
+                        </ul></li>
+                        <t t-if="not is_html_empty(object.event_id.description)">
+                            <li>Description of the event:
+                            <t t-out="object.event_id.description">Description of the interclub event.</t></li>
+                        </t>
+                    </ul>
+                </td>
+            </tr></table>
+            <br/>
+            Thank you,
+        </div>
+    </t>
+</t>
+        </field>
+    </record>
+</data>
+</odoo>

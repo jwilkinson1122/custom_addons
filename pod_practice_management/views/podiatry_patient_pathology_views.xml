@@ -30,7 +30,7 @@
                         <group>
                             <field name="internal_notes" widget="html"/>
                             <field name="external_notes" widget="html"/>
-                            <field name="treatment_professional_ids" widget="many2many_tags_avatar"/>
+                            <field name="physician_ids" widget="many2many_tags_avatar"/>
                         </group>
                     </group>
                 </sheet>
@@ -51,7 +51,7 @@
                 <field name="pathology_date" widget="date"/>
                 <field name="diagnosis"/>
                 <field name="resolution_date" widget="date"/>
-                <field name="treatment_professional_ids" widget="many2many_avatar_user"/>
+                <field name="physician_ids" widget="many2many_avatar_user"/>
                 <field name="activity_ids" widget="list_activity"/>
                 <button name="action_view_pathology_form" type="object" title="Details" string="Details" context="{'default_patient_id': patient_id}"/>
             </tree>

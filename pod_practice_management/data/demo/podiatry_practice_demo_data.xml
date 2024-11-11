@@ -39,16 +39,16 @@
 
 
         <!-- Practice Primary Physician 1 -->
-        <record id="practice_primary_physician_1" model="res.partner">
+        <record id="practice_physician_1" model="res.partner">
             <field name="name">Doogie Howser</field>
             <field name="email">doogie_howser@fab-foot-clinic.com</field>
             <field name="parent_id" ref="partner_company_1"/>
             <field name="is_company" eval="False"/>
         </record>
-        <record id="practice_primary_physician_rel_1" model="podiatry.practice.staff">
-            <field name="partner_id" ref="practice_primary_physician_1"/>
+        <record id="practice_physician_rel_1" model="podiatry.practice.staff">
+            <field name="partner_id" ref="practice_physician_1"/>
             <field name="practice_id" ref="podiatry_practice_1"/>
-            <field name="role">primary_physician</field>
+            <field name="role">physician</field>
         </record>
 
         <!-- Practice Physician 1 (Non-Primary) -->
@@ -92,16 +92,16 @@
 
         <!-- Practice Physician 2 -->
         <!-- Practice Primary Physician 2 -->
-        <record id="practice_primary_physician_2" model="res.partner">
+        <record id="practice_physician_2" model="res.partner">
             <field name="name">Sam Davis</field>
             <field name="email">sam_davis@fab-foot-clinic.com</field>
             <field name="parent_id" ref="partner_company_1"/>
             <field name="is_company" eval="False"/>
         </record>
-        <record id="practice_primary_physician_rel_1" model="podiatry.practice.staff">
-            <field name="partner_id" ref="practice_primary_physician_1"/>
+        <record id="practice_physician_rel_1" model="podiatry.practice.staff">
+            <field name="partner_id" ref="practice_physician_1"/>
             <field name="practice_id" ref="podiatry_practice_1"/>
-            <field name="role">primary_physician</field>
+            <field name="role">physician</field>
         </record>
 
         <!-- Practice Physician 1 (Non-Primary) -->
@@ -255,25 +255,25 @@
             <field name="pathology_date">2024-05-17</field>
             <field name="diagnosis">Rheumatoid arthritis</field>
             <field name="patient_id" ref="patient_1"/>
-            <field name="treatment_professional_ids" eval="[Command.set([ref('partner_physician_1')])]"/>
+            <field name="physician_ids" eval="[Command.set([ref('partner_physician_1')])]"/>
         </record>
         <record id="pathology_2" model="podiatry.patient.pathology">
             <field name="pathology_date">2024-03-17</field>
             <field name="diagnosis">Shin splints</field>
             <field name="patient_id" ref="patient_2"/>
-            <field name="treatment_professional_ids" eval="[Command.set([ref('partner_physician_2')])]"/>
+            <field name="physician_ids" eval="[Command.set([ref('partner_physician_2')])]"/>
         </record>
         <record id="pathology_3" model="podiatry.patient.pathology">
             <field name="pathology_date">2024-10-15</field>
             <field name="diagnosis">Plantar fasciitis</field>
             <field name="patient_id" ref="patient_3"/>
-            <field name="treatment_professional_ids" eval="[Command.set([ref('partner_physician_1'), ref('partner_physician_3')])]"/>
+            <field name="physician_ids" eval="[Command.set([ref('partner_physician_1'), ref('partner_physician_3')])]"/>
         </record>
         <record id="pathology_4" model="podiatry.patient.pathology">
             <field name="pathology_date">2024-10-25</field>
             <field name="diagnosis">Diabetes</field>
             <field name="patient_id" ref="patient_3"/>
-            <field name="treatment_professional_ids" eval="[Command.set([ref('partner_physician_1')])]"/>
+            <field name="physician_ids" eval="[Command.set([ref('partner_physician_1')])]"/>
         </record>
 
     </data>

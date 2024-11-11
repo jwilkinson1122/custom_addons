@@ -32,13 +32,23 @@ class PatientPathology(models.Model):
     internal_notes = fields.Html(tracking=True)
     external_notes = fields.Html(tracking=True)
 
-    treatment_professional_ids = fields.Many2many(
+    # physician_ids = fields.Many2many(
+    #     comodel_name="res.partner",
+    #     relation="patient_pathology_treatment_partner_rel",
+    #     column1="patient_pathology_id",
+    #     column2="partner_id",
+    #     string="Treatment Professionals",
+    #     domain=[("role", "in", ["physician", "physician", "therapist"])],
+    #     tracking=True,
+    # )
+
+    physician_ids = fields.Many2many(
         comodel_name="res.partner",
         relation="patient_pathology_treatment_partner_rel",
         column1="patient_pathology_id",
         column2="partner_id",
         string="Treatment Professionals",
-        domain=[("role", "in", ["physician", "primary_physician", "therapist"])],
+        domain=[("is_physician", "=", True)],
         tracking=True,
     )
 

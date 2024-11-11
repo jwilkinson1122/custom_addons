@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+        <record id="action_view_organization" model="ir.actions.act_window">
+            <field name="name">Accounts</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('is_company', '=', True), ('id', '!=', 1)]</field>
+            <field name="context">{'default_is_company': True, 'default_company_type':'company'}</field>
+        </record>
+
+
         <record id="action_view_practice" model="ir.actions.act_window">
-            <field name="name">Podiatry Practices</field>
+            <field name="name">Practices</field>
             <field name="res_model">podiatry.practice</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="practices_view_search"/>
@@ -25,21 +34,71 @@
             <field name="act_window_id" ref="action_view_practice"/>
             <field name="view_id" ref="podiatry_practice_view_form"/>
         </record>
-        <record id="action_view_organization" model="ir.actions.act_window">
-            <field name="name">Organizations</field>
+
+        <!-- <record id="contact_practitioner_action" model="ir.actions.act_window">
+            <field name="name">Practitioners</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('is_company', '=', True)]</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[('is_practitioner', '=', True)]</field>
+            <field name="context">{
+            'default_company_type':'person',
+            'default_is_company':False,
+            'default_is_practitioner': True,
+            'default_is_partner': True,
+            'prevent_recursion': True,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+            Add a new account podiatry practitioner
+                </p>
+                <p>Practitioner covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+            </field>
+        </record> -->
+
+        <record id="action_view_contact" model="ir.actions.act_window">
+            <field name="name">Contacts</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[('is_company', '=', False), ('id', '!=', 1)]</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="context">{'default_is_company': False, 'default_company_type':'person'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+                </p>
+                <p>
+            Odoo helps you track all activities related to your contacts.
+                </p>
+            </field>
         </record>
+
         <record id="action_view_patient" model="ir.actions.act_window">
             <field name="name">Patients</field>
             <field name="res_model">podiatry.patient</field>
             <field name="view_mode">tree,kanban,form</field>
         </record>
-        <menuitem id="podiatry_practice_root" web_icon="pod_practice_management,static/description/icon.png" name="Podiatry Practice" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_practice">
-            <menuitem id="podiatry_practice_organizations" name="Organizations" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_organization"/>
+
+        <!-- <menuitem id="podiatry_practice_root" web_icon="pod_practice_management,static/description/icon.png" name="Podiatry Practice" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_organization">
+            <menuitem id="podiatry_practice_organizations" name="Accounts" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_organization"/>
             <menuitem id="podiatry_practice_practices" name="Practices" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_practice"/>
             <menuitem id="podiatry_practice_patients" name="Patients" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_patient"/>
-        </menuitem>
+        </menuitem> -->
+
+        <menuitem id="podiatry_practice_organizations" name="Accounts" parent="contacts.menu_contacts" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_organization" sequence="1" />
+
+        <menuitem id="podiatry_practice_practices" name="Practices" parent="contacts.menu_contacts" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_practice" sequence="2"/>
+
+
+        <!-- <menuitem id="res_partner_menu_contacts" name="Contacts" action="action_contacts" parent="menu_contacts" sequence="2"/> -->
+
+
+        <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_contact" sequence="3"/>
+
+        <menuitem id="podiatry_practice_patients" name="Patients" parent="contacts.menu_contacts" groups="pod_practice_management.group_podiatry_practice_user" action="action_view_patient" sequence="4"/>
+
+        <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
+
+
     </data>
 </odoo>

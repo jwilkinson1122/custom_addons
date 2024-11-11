@@ -5,7 +5,11 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <page name="contact_addresses" position="after">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="parent_practice_id" placeholder="Practice Name..."/>
+
+            </xpath>
+            <page name="contact_addresses" position="before">
                 <page name="Locations">
                     <field invisible="is_company == False" name="owned_practice_ids" string="Practices"/>
                     <field invisible="is_company == True" name="practices_served_ids" string="Practices Served">
@@ -13,7 +17,7 @@
                             <field name="name"/>
                             <field name="parent_id"/>
                             <field name="manager_id"/>
-                            <field name="primary_physician_id"/>
+                            <field name="physician_id"/>
                             <field name="patient_count"/>
                         </tree>
                     </field>

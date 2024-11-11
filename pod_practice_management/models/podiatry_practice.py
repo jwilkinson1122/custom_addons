@@ -21,10 +21,21 @@ class PodiatryPractice(models.Model):
     active_count = fields.Integer(compute="_compute_patient_counts")
     parent_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Parent Organization",
+        string="Parent Account",
         ondelete="restrict",
         tracking=True,
     )
+    # contact_ids = fields.One2many(
+    #     domain=[("active", "=", True), ("is_company", "=", False)]
+    # )
+
+    contact_ids = fields.One2many(
+        comodel_name="res.partner",
+        inverse_name="parent_id",
+        domain=[("is_company", "=", False)],
+        tracking=True,
+    )
+
     staff_ids = fields.One2many(
         comodel_name="podiatry.practice.staff",
         inverse_name="practice_id",
@@ -39,14 +50,14 @@ class PodiatryPractice(models.Model):
         related="manager_id.name",
         string="Practice Manager Name",
     )
-    primary_physician_id = fields.Many2one(
+    physician_id = fields.Many2one(
         comodel_name="res.partner",
-        compute="_compute_primary_physician",
+        compute="_compute_physician",
         store=True,
         string="Primary Physician",
     )
-    primary_physician_name = fields.Char(
-        related="primary_physician_id.name",
+    physician_name = fields.Char(
+        related="physician_id.name",
         string="Primary Physician Name",
     )
     website = fields.Char()
@@ -92,10 +103,10 @@ class PodiatryPractice(models.Model):
             rec.manager_id = staff.partner_id if staff else False
 
     @api.depends("staff_ids.role")
-    def _compute_primary_physician(self):
+    def _compute_physician(self):
         for rec in self:
-            staff = rec.staff_ids.filtered(lambda r: r.role == "primary_physician")
-            rec.primary_physician_id = staff.partner_id if staff else False
+            staff = rec.staff_ids.filtered(lambda r: r.role == "physician")
+            rec.physician_id = staff.partner_id if staff else False
 
     def _compute_allowed_user_ids(self):
         for rec in self:
@@ -145,7 +156,7 @@ class PracticeStaff(models.Model):
     role = fields.Selection(
         selection=[
             ("manager", "Practice Manager"),  # Only One
-            ("primary_physician", "Primary Physician"),  # One or more
+            ("physician", "Primary Physician"),  # One or more
             ("assistant", "Assistant"),  # One or more
             ("physician", "Physician"),  # One or more
             ("orthotist", "Orthotist"),  # One or more
@@ -163,7 +174,7 @@ class PracticeStaff(models.Model):
     parent_id = fields.Many2one(
         related="partner_id.parent_id",
         readonly=False,
-        string="Organization",
+        string="Account",
         domain=[("is_company", "=", True)],
     )
     email = fields.Char(related="partner_id.email", readonly=False)
@@ -193,7 +204,7 @@ class PracticeStaff(models.Model):
     #             )
     #         if (
     #             len(
-    #                 practice.staff_ids.filtered(lambda r: r.role == "primary_physician")
+    #                 practice.staff_ids.filtered(lambda r: r.role == "physician")
     #             )
     #             > 1
     #         ):
@@ -206,7 +217,7 @@ class PracticeStaff(models.Model):
         # Define roles that should only have one instance per practice
         unique_roles = {
             "manager": "Practice Manager",
-            # "primary_physician": "Primary Physician"
+            # "physician": "Primary Physician"
         }
 
         practices = self.mapped("practice_id")

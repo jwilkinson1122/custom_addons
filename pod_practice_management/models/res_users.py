@@ -16,7 +16,7 @@ class User(models.Model):
     def _compute_is_internal_user(self):
         for rec in self:
             rec.is_internal_user = rec.has_group(
-                "pod_practice_management.group_podiatry_practice_internal_user"
+                "pod_practice_management.group_podiatry_practice_physician"
             )
 
     def _compute_accessible_practice_ids(self):
