@@ -106,6 +106,11 @@
                     <field string="Patients" name="patient_records" widget="statinfo"/>
                 </button>
             </div> -->
+            <!-- <xpath expr="//field[@name='parent_id']/.." position="before">
+                <div class="o_row">
+                    <field name="association_id" placeholder="Association Name..." invisible="is_company"/>
+                </div>
+            </xpath> -->
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_parent_account" invisible="1" />
                 <field name="is_company" invisible="1" />
@@ -128,11 +133,14 @@
                     <field name="is_supplier" invisible="1" />
                     <field name="is_practitioner" invisible="1" />
                     <field name="is_patient" invisible="1" />
+                    <field name="is_commercial_partner" />
+
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
+                        <field name="association_id" placeholder="Association Name..." invisible="is_company"/>
                         <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location" class="fw-bold" />
                         <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_practitioner" class="fw-bold" />
                         <field name="active" invisible="1"/>
@@ -348,6 +356,20 @@
         </field>
     </record>
 
+    <record id="contact_name" model="ir.ui.view">
+        <field name="name">partner.contact.association.contact.name</field>
+        <field name="inherit_id" ref="base.contact_name" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-if='object.name']" position="before">
+                <t t-if="object.association_id">
+                    <span itemprop="addressAssocation" t-esc="object.association_id.name" />
+                    <br />
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+
     <record id="res_partner_child_ids_kanban_view_custom" model="ir.ui.view">
         <field name="name">res.partner.child.ids.kanban.custom</field>
         <field name="model">res.partner</field>
@@ -416,10 +438,16 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <data>
+
+                <!-- <field name="name" position="attributes">
+                    <attribute name="filter_domain">['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]</attribute>
+                </field> -->
                 <xpath expr="//search" position="inside">
-                    <field name="name" filter_domain="['|','|','|',('display_name','ilike',self),('ref','=',self), ('email','ilike',self), ('internal_code','=',self)]" string="Account"/>
+                    <field name="name" filter_domain="['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('internal_code', '=', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]"/>
+                    <field name="association_name" filter_domain="[('association_name', 'ilike', self)]" />
                     <field name="ref" filter_domain="[('ref','ilike',self)]" />
                     <field name="internal_code" filter_domain="[('internal_code','ilike',self)]" />
+
                     <separator />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
@@ -438,6 +466,20 @@
             </data>
         </field>
     </record>
+
+    <!-- <record id="contact_name" model="ir.ui.view">
+        <field name="name">partner.contact.association.contact.name</field>
+        <field name="inherit_id" ref="base.contact_name" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-if='object.name']" position="before">
+                <t t-if="object.association_id">
+                    <span itemprop="addressAssocation" t-esc="object.association_id.name" />
+                    <br />
+                </t>
+            </xpath>
+        </field>
+    </record> -->
+
 
     <record id="contact_account_action" model="ir.actions.act_window">
         <field name="name">Accounts</field>

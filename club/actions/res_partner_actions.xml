@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
-    <record id="action_member" model="ir.actions.act_window">
-        <field name="name">Members</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">tree,form,kanban</field>
-    </record>
+    <data>
+        <record id="action_member" model="ir.actions.act_window">
+            <field name="name">Members</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
 
-    <!-- Isn't it redundant with "action_member"? -->
-    <record id="action_contact" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <!-- TODO Do I really want to exclude clubs? If yes, create a dedicated view for clubs!
+        <!-- Isn't it redundant with "action_member"? -->
+        <record id="action_contact" model="ir.actions.act_window">
+            <field name="name">Contacts</field>
+            <field name="res_model">res.partner</field>
+            <!-- TODO Do I really want to exclude clubs? If yes, create a dedicated view for clubs!
         <field name="domain">[('is_company', '=', False),]</field> -->
-        <field name="view_mode">tree,form,kanban</field>
-        <!-- TODO Do I really want to exclude clubs? If yes, create a dedicated view for clubs!
+            <field name="view_mode">kanban,tree,form</field>
+            <!-- TODO Do I really want to exclude clubs? If yes, create a dedicated view for clubs!
             <field name="context">{'default_is_company': False}</field> -->
-        <field name="view_ids" eval="[
+            <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {
                 'view_mode': 'tree',
@@ -27,16 +27,16 @@
                 'view_id': ref('base.view_partner_simple_form'),
                 }),
             ]"/>
-    </record>
+        </record>
 
-    <record id="action_location" model="ir.actions.act_window">
-        <field name="name">Locations</field>
-        <field name="res_model">res.partner</field>
-        <field name="domain">[('is_company', '=', True),]</field>
-        <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'default_is_company': True}</field>
-        <!-- List of the views linked to this action window -->
-        <field name="view_ids" eval="[
+        <record id="action_location" model="ir.actions.act_window">
+            <field name="name">Locations</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_company', '=', True),]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'default_is_company': True}</field>
+            <!-- List of the views linked to this action window -->
+            <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {
                 'view_mode': 'tree',
@@ -47,6 +47,6 @@
                 'view_id': ref('base.view_partner_simple_form'),
                 }),
             ]"/>
-    </record>
-</data>
+        </record>
+    </data>
 </odoo>

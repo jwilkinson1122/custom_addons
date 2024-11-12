@@ -166,12 +166,14 @@ class Membership(models.Model):
         copy=False,
         help="Membership status for user's response.",
     )
+
     # partner_id = fields.Many2one(
     #     comodel_name='res.partner',
     #     related='user_id.partner_id',
     #     store=False,
     #     readonly=True,
     # )
+
     category_id = fields.Many2one(
         comodel_name="category",
         related="period_category_id.category_id",

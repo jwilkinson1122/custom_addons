@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import barcode_action
 from . import base_partner_merge
+from . import association
 from . import contact_abstract
 from . import contact_patient
 from . import contact_role

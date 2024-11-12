@@ -10,10 +10,10 @@
               <div class="col-lg-3 pb24">
                 <ul class="pl-3 mb-0">
                   <li>
-                    <a href="/">Accueil</a>
+                    <a href="/">Welcome</a>
                   </li>
                   <li>
-                    <a href="/contactus">Contactez-nous</a>
+                    <a href="/contactus">Contact Us</a>
                   </li>
                 </ul>
               </div>
@@ -28,20 +28,23 @@
                   <li>
                     <i class="fa fa-envelope fa-fw mr-2"/>
                     <span>
-                      <a href="mailto:bcsaintleger@gmail.com" data-original-title="" title="" aria-describedby="tooltip280020">bcsaintleger@gmail.com</a>
+                      <a href="mailto:info@nwpodiatric.com" data-original-title="" title="" aria-describedby="tooltip280020">info@nwpodiatric.com</a>
                     </span>
                   </li>
                   <li>
-                    <i class="fa fa-euro fa-fw mr-2"/>
+                    <i class="fa fa-usd fa-fw mr-2"/>
                     <span>
-                      BE68 0682 2806 7134
+                      Customer Care, Shipping & General Inquiries: 800-443-7260
+                    </span>
+                    <span>
+                      Accounts Receivable & Marketing: 800-675-1766
                     </span>
                   </li>
                 </ul>
               </div>
               <div class="col-lg-3 pb24 o_colored_level">
                 <div class="s_share text-right" data-name="Social Media">
-                  <h5 class="s_share_title d-none">Partager</h5>
+                  <h5 class="s_share_title d-none">Share</h5>
                   <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
                     <i class="fa fa-1x fa-facebook rounded-circle shadow-sm"/>
                   </a>

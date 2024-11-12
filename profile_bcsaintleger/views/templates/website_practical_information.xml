@@ -10,7 +10,7 @@
               <div class="s_table_of_content_main oe_structure oe_empty o_colored_level undefined bg-black-75 col-lg-9 rounded" data-name="Content" data-editor-message="DRAG BUILDING BLOCKS HERE" style="border-radius: 10px !important;">
                 <section class="pb16 o_colored_level undefined" style="">
                   <h1 class="text-secondary" data-anchor="true" id="table_of_content_heading_1601684331561_236">
-                    <font style="" class="text-o-color-5">Complexe sportif</font>
+                    <font style="" class="text-o-color-5">Sports complex</font>
                     <br/>
                   </h1>
                   <p class="text-center">
@@ -18,17 +18,17 @@
                     <br/>
                   </p>
                   <p class="o_default_snippet_text text-center">
-                    Lien vers le <a href="https://www.saint-leger.be/loisirs/sports/complexe-sportif" class="btn btn-outline-primary btn-sm" target="_blank" data-original-title="" title="" aria-describedby="tooltip275159">site du complexe sportif</a>
+                    Lien vers le <a href="https://www.saint-leger.be/loisirs/sports/complexe-sportif" class="btn btn-outline-primary btn-sm" target="_blank" data-original-title="" title="" aria-describedby="tooltip275159">sports complex site</a>
                   </p>
                   <div class="o_colored_level pb16 text-center mx-auto undefined">
                     <div class="container">
                       <div class="d-inline-flex align-items-baseline">
                         <i class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
-                        <span class="w-100 o_force_ltr d-block o_default_snippet_text" itemprop="streetAddress">Rue du Stade, 1<br/>6747 Saint-Léger<br/>Belgium</span>
+                        <span class="w-100 o_force_ltr d-block o_default_snippet_text" itemprop="streetAddress">1091 Fir Avenue<br/>Blaine, WA<br/>98230</span>
                       </div>
                       <div>
                         <i class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"/>
-                        <span class="o_force_ltr o_default_snippet_text" itemprop="telephone">0032 (0)63 21 89 70</span>
+                        <span class="o_force_ltr o_default_snippet_text" itemprop="telephone">800-443-7260</span>
                       </div>
                     </div>
                   </div>
@@ -52,11 +52,9 @@
                           <div class="row content">
                             <div class="carousel-content col-lg-12 text-center o_colored_level undefined" style="">
                               <div class="pb8">
-                                <h2 data-anchor="true">Localisation</h2>
-                                Calcul d'itinéraire via <a href="https://www.google.fr/maps/dir//complexe+sportive+de+Saint-leger,+Rue+du+Vieux+Moulin,+6747+Saint-L%C3%A9ger/@49.6485848,5.6578323,11.5z/data=!4m8!4m7!1m0!1m5!1m1!1s0x47eabec2a74188ad:0xfa324b09d65a0c26!2m2!1d5.6514657!2d49.6052181" class="btn btn-outline-primary btn-sm" target="_blank">Google Maps</a>
+                                <h2 data-anchor="true">Location</h2>
+                                via<a href="https://www.google.fr/maps/place/Northwest+Podiatric+Laboratory/@48.9896885,-122.7399485,16z/data=!3m1!4b1!4m6!3m5!1s0x5485c6ad0197d5e7:0x96766aef2a3ea286!8m2!3d48.989685!4d-122.7373736!16s%2Fg%2F1tgz5522?entry=ttu&g_ep=EgoyMDI0MTExMC4wIKXMDSoASAFQAw%3D%3D" class="btn btn-outline-primary btn-sm" target="_blank">Google Maps</a>
                               </div>
-
-                              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1569.973636255107!2d5.651363358796059!3d49.60614100215705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47eabec2a74188ad%3A0xfa324b09d65a0c26!2scomplexe%20sportive%20de%20Saint-leger!5e1!3m2!1sfr!2sbe!4v1585562815554!5m2!1sfr!2sbe" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0" width="100%" height="400" frameborder="0"/>
                             </div>
                           </div>
                         </div>
@@ -68,7 +66,7 @@
                               <h2 data-anchor="true" style="text-align: center;">
                                 Terrains
                               </h2>
-                              <p class="lead" style="text-align: center;">La salle dispose de 5 terrains de double.</p>
+                              <p class="lead" style="text-align: center;">The room has 5 doubles courts.</p>
                             </div>
                           </div>
                         </div>
@@ -78,7 +76,7 @@
                           <div class="row content">
                             <div class="carousel-content o_colored_level pb0 pt0 undefined bg-black-25 offset-lg-3 col-lg-6" style="">
                               <h2 data-anchor="true" style="text-align: center;">
-                                <font style="background-color: rgba(0, 0, 0, 0);" class="text-white">Cafétéria</font>
+                                <font style="background-color: rgba(0, 0, 0, 0);" class="text-white">Cafeteria</font>
                               </h2>
                             </div>
                           </div>
@@ -97,65 +95,65 @@
                 </section>
                 <section class="pb16 o_colored_level undefined">
                   <h1 class="text-secondary" data-anchor="true" id="table_of_content_heading_1601684331561_240">
-                    <font style="" class="text-o-color-5">Horaires</font>
+                    <font style="" class="text-o-color-5">Schedules</font>
                   </h1>
                   <p>
                         </p>
                   <table class="table table-bordered table-dark table-striped text-center table-hover" style="table-layout: fixed;">
                     <thead style="display: table-row-group">
                       <tr>
-                        <th style="width: 15%" scope="col">Jour</th>
-                        <th style="width: 25%" scope="col">Heure</th>
-                        <th style="width: 50%" scope="col">Type</th>
-                        <th style="width: 10%" scope="col">Terrains</th>
+                        <th style="width: 15%" scope="col">TH</th>
+                        <th style="width: 25%" scope="col">TH</th>
+                        <th style="width: 50%" scope="col">TH</th>
+                        <th style="width: 10%" scope="col">TH</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td class="align-middle">Lundi</td>
-                        <td class="align-middle">20h00 - 22h30</td>
-                        <td class="align-middle">Entraînement dirigé (débutants)<br/>àpd. 21h15: jeu libre</td>
+                        <td class="align-middle">TH</td>
+                        <td class="align-middle">TH</td>
+                        <td class="align-middle">TH<br/>TH</td>
                         <td class="align-middle">5</td>
                       </tr>
                       <tr>
-                        <td>Mardi</td>
-                        <td>20h00 - 23h00</td>
-                        <td>Jeu libre</td>
+                        <td>TH</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5</td>
                       </tr>
                       <tr>
-                        <td>Jeudi</td>
-                        <td>20h00 - 22h00</td>
-                        <td>Jeu libre</td>
+                        <td>TH</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5 *</td>
                       </tr>
                       <tr>
-                        <td rowspan="4" class="align-middle">Samedi</td>
-                        <td>03h00 - 10h00</td>
-                        <td>Entraînement jeunes (niveau 1)</td>
+                        <td rowspan="4" class="align-middle">TH</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5</td>
                       </tr>
                       <tr>
-                        <td>10h00 - 11h00</td>
-                        <td>Entraînement jeunes (niveau 2)</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5</td>
                       </tr>
                       <tr>
-                        <td>11h00 - 12h00</td>
-                        <td>Entraînement jeunes (niveau 3)</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5</td>
                       </tr>
                       <tr>
-                        <td>12h00 - 13h00</td>
-                        <td>Entraînement jeunes (niveau 4)</td>
+                        <td>TH</td>
+                        <td>TH</td>
                         <td>5</td>
                       </tr>
                     </tbody>
                   </table>
                   <p/>
                   <p>
-                    * Il faut compter deux terrains en moins en cas d'interclub (environ sept fois sur la saison).<br/>
-                    A ces dates cependant, la salle est ouverte jusque 23h00.
+                    * Two fewer fields are required in the event of an interclub (around seven times during the season).<br/>
+                    On these dates however, the room is open until 11:00 p.m..
                   </p>
                 </section>
                 <section class="pb16 o_colored_level" style="">
@@ -170,40 +168,41 @@
                         <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="card-header collapsed" data-parent="#myCollapse" data-target="#myCollapseTab1601645987592" data-original-title="" title="" aria-describedby="tooltip33846">Quand la salle est-elle ouverte?</a>
                         <div class="collapse" role="tabpanel" id="myCollapseTab1601645987592" style="">
                           <div class="card-body">
-                            <p class="card-text">La salle est ouverte de septembre à juin et ce, plusieurs jours par semaine (voir <a href="/infos-pratiques#table_of_content_heading_1601684331561_240" data-original-title="" title="" aria-describedby="tooltip447551">section horaires</a> ci-dessus).</p>
-                            <p class="card-text">Pour avoir une vue complète des locations du complexe sportif et des jours de fermeture (congés scolaires), vous pouvez consulter le <a href="https://www.saint-leger.be/loisirs/sports/complexe-sportif/documents-divers/saison-2020-2021-1.pdf" target="_blank" data-original-title="" title="" aria-describedby="tooltip402091">planning des réservations des salles de sport - 2020-2021</a>.<br/></p>
+                            <p class="card-text">The room is open from September to June, several days a week (see <a href="/infos-pratiques#table_of_content_heading_1601684331561_240" data-original-title="" title="" aria-describedby="tooltip447551">section horaires</a> above).</p>
+                            <p class="card-text">To have a complete view of the sports complex rentals and closing days (school holidays), you can consult the <a href="https://www.saint-leger.be/loisirs/sports/complexe-sportif/documents-divers/saison-2020-2021-1.pdf" target="_blank" data-original-title="" title="" aria-describedby="tooltip402091">
+sports hall reservation schedule - 2020-2021</a>.<br/></p>
                           </div>
                         </div>
                       </div>
                       <div class="card bg-white" data-name="Item">
-                        <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="card-header collapsed" data-parent="#myCollapse" data-original-title="" title="" aria-describedby="tooltip33846" data-target="#myCollapseTab1602706162689">Y a-t-il moyen d'acheter des volants via le club?</a>
+                        <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="card-header collapsed" data-parent="#myCollapse" data-original-title="" title="" aria-describedby="tooltip33846" data-target="#myCollapseTab1602706162689">Is there a way to purchase shuttlecocks through the club?</a>
                         <div class="collapse" role="tabpanel" style="" id="myCollapseTab1602706162689">
                           <div class="card-body">
-                            <p class="card-text">Oui, le club propose à ses membres d'acheter des volants à prix réduit:</p>
+                            <p class="card-text">Yes, the club offers its members the opportunity to purchase shuttlecocks at a reduced price:</p>
                             <ul>
                               <li>
-                                <p class="card-text">Aéroclub TR: 12 €</p>
+                                <p class="card-text">Test: 1</p>
                               </li>
                               <li>
-                                <p class="card-text">Wilson: 16 €</p>
+                                <p class="card-text">Test: 1</p>
                               </li>
                               <li>
-                                <p class="card-text">Yonex AS-10: 16 €</p>
+                                <p class="card-text">Test: 1</p>
                               </li>
                               <li>
-                                <p class="card-text">Yonex AS-20: 20 €</p>
+                                <p class="card-text">Test: 1</p>
                               </li>
                             </ul>
-                            <p>Attention, les volants ne seront fournis qu'une fois le paiement effectué (en main propre).<br/></p>
+                            <p>Please note, the steering wheels will only be provided once payment has been made (by hand).<br/></p>
                           </div>
                         </div>
                       </div>
                       <div class="card bg-white" data-name="Item">
-                        <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="card-header collapsed" data-parent="#myCollapse" data-original-title="" title="" aria-describedby="tooltip884622" data-target="#myCollapseTab1602533595615">Sur quel numéro de compte faut-il effectuer les virements?</a>
+                        <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="card-header collapsed" data-parent="#myCollapse" data-original-title="" title="" aria-describedby="tooltip884622" data-target="#myCollapseTab1602533595615">To which account number should transfers be made?</a>
                         <div class="collapse" role="tabpanel" style="" id="myCollapseTab1602533595615">
                           <div class="card-body">
-                            <p class="card-text">Pour tout paiement nécessitant un virement (principalement les affiliations), un seul numéro de compte:</p>
-                            <p class="card-text"><b>BE68 0682 2806 7134</b> (BIC: GKCCBEBB)</p>
+                            <p class="card-text">For any payment requiring a transfer (mainly affiliations), a single account number:</p>
+                            <p class="card-text"><b>1234 5678 9123 7134</b> (BIC: GKCCBEBB)</p>
                           </div>
                         </div>
                       </div>
@@ -224,10 +223,10 @@
                             <a class="nav-link active" id="nav_tabs_link_1601750546646_37" data-toggle="tab" href="#nav_tabs_content_1601750546646_37" role="tab" aria-controls="nav_tabs_content_1601750546646_37" aria-selected="true" data-original-title="" title="" aria-describedby="tooltip244787">Affiliation</a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link" id="nav_tabs_link_1601750546646_38" data-toggle="tab" href="#nav_tabs_content_1601750546646_38" role="tab" aria-controls="nav_tabs_content_1601750546646_38" aria-selected="false" data-original-title="" title="" aria-describedby="tooltip915194">Interclubs</a>
+                            <a class="nav-link" id="nav_tabs_link_1601750546646_38" data-toggle="tab" href="#nav_tabs_content_1601750546646_38" role="tab" aria-controls="nav_tabs_content_1601750546646_38" aria-selected="false" data-original-title="" title="" aria-describedby="tooltip915194">Affiliation</a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link" id="nav_tabs_link_1601750546646_39" data-toggle="tab" href="#nav_tabs_content_1601750546646_39" role="tab" aria-controls="nav_tabs_content_1601750546646_39" aria-selected="false" data-original-title="" title="" aria-describedby="tooltip359338">Divers</a>
+                            <a class="nav-link" id="nav_tabs_link_1601750546646_39" data-toggle="tab" href="#nav_tabs_content_1601750546646_39" role="tab" aria-controls="nav_tabs_content_1601750546646_39" aria-selected="false" data-original-title="" title="" aria-describedby="tooltip359338">Affiliation</a>
                           </li>
                         </ul>
                       </div>

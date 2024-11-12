@@ -61,6 +61,7 @@
         "pod_contacts/views/contact_role_views.xml",
         "pod_contacts/views/contact_diagnosis_views.xml",
         "pod_contacts/views/res_partner_views.xml",
+        "pod_contacts/views/association_views.xml",
         "pod_contacts/views/contact_practice_type_views.xml",
         "pod_contacts/views/contact_patient_views.xml",
         "pod_contacts/views/contact_flag_views.xml",

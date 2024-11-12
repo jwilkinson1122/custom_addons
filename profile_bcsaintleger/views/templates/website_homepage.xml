@@ -7,7 +7,7 @@
         <div class="o_we_shape o_web_editor_Origins_14" style="background-color: rgba(255, 0, 0, 0) !important; background-image: url(&quot;/web_editor/shape/web_editor/Origins/14.svg?c4=%23046380&quot;);"/>
         <div class="container">
           <h2 style="text-align: center;">
-            <font style="font-size: 62px;" class="text-900">Bienvenue</font>
+            <font style="font-size: 62px;" class="text-900">Welcome</font>
           </h2>
           <div class="row s_nb_column_fixed">
             <div class="col-lg-10 offset-lg-1 o_colored_level pt0 pb0" style="text-align: center;">
@@ -35,8 +35,8 @@
               <div class="card bg-white h-100" style="">
                 <img class="card-img-top" src="/profile_bcsaintleger/static/img/news.jpg" alt="" loading="lazy" title="" aria-describedby="tooltip502702"/>
                 <div class="card-body">
-                  <h4 class="card-title" style="text-align: center;">Actualités</h4>
-                  <p class="card-text" style="text-align: center;">Quelles sont les dernières nouvelles du club?<br/></p>
+                  <h4 class="card-title" style="text-align: center;">News</h4>
+                  <p class="card-text" style="text-align: center;">What is the latest news from the club?<br/></p>
                   <p class="card-text" style="text-align: center;">
                     <a href="/blog" class="btn btn-secondary btn-sm">Go!</a>
                     <br/>
@@ -49,7 +49,7 @@
                 <img class="card-img-top" src="/profile_bcsaintleger/static/img/welcome.jpg" alt="" loading="lazy" title="" aria-describedby="tooltip873201"/>
                 <div class="card-body">
                   <h4 class="card-title" style="text-align: center;">Affiliations</h4>
-                  <p class="card-text" style="text-align: center;">Prix des cotisations et infos liées aux affiliations.</p>
+                  <p class="card-text" style="text-align: center;">Prices of contributions and information related to affiliations.</p>
                   <p class="card-text" style="text-align: center;">
                     <a href="/affiliation" class="btn btn-secondary btn-sm">Go!</a>
                     <br/>
@@ -61,8 +61,8 @@
               <div class="card bg-white h-100" style="">
                 <img class="card-img-top" src="/profile_bcsaintleger/static/img/infos.jpg" alt="blue and white 2 signage" loading="lazy" title="" aria-describedby="tooltip335938"/>
                 <div class="card-body">
-                  <h4 class="card-title" style="text-align: center;">Infos pratiques<br/></h4>
-                  <p class="card-text" style="text-align: center;">Pour tout savoir sur la vie quotidienne du club!<br/></p>
+                  <h4 class="card-title" style="text-align: center;">Practical information<br/></h4>
+                  <p class="card-text" style="text-align: center;">To find out everything about daily life at the club!<br/></p>
                   <p class="card-text" style="text-align: center;">
                     <a href="/infos-pratiques" class="btn btn-secondary btn-sm" data-original-title="" title="" aria-describedby="tooltip198688">Go!</a>
                     <br/>
@@ -74,8 +74,8 @@
               <div class="card bg-white h-100" style="">
                 <img class="card-img-top" src="/profile_bcsaintleger/static/img/interclub_men_team.jpg" alt="" loading="lazy" title="" aria-describedby="tooltip335938"/>
                 <div class="card-body">
-                  <h4 class="card-title" style="text-align: center;">Interclubs<br/></h4>
-                  <p class="card-text" style="text-align: center;">Suivez l'actualité de notre équipe messieurs.<br/></p>
+                  <h4 class="card-title" style="text-align: center;">Affiliates<br/></h4>
+                  <p class="card-text" style="text-align: center;">Follow the latest news from our team.<br/></p>
                   <div class="s_progress_bar" data-display="inline" data-snippet="s_progress_bar" data-name="Progress Bar">
                     <div class="progress">
                       <div class="progress-bar progress-bar-striped bg-o-color-2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%; min-width: 3%;">

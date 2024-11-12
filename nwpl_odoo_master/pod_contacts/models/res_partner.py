@@ -15,12 +15,34 @@ _logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     _inherit = "res.partner"
+    _rec_names_search = [
+        "display_name",
+        "email",
+        "ref",
+        "vat",
+        "company_registry",
+        "association_name",
+    ]
 
     is_supplier = fields.Boolean(string="Vendor")
     is_partner = fields.Boolean(string="Order", default=False)
     is_parent_account = fields.Boolean(string="Location", default=False)
     is_company = fields.Boolean(string="Company", default=False)
     is_location = fields.Boolean(string="Location", default=False)
+    is_commercial_partner = fields.Boolean(
+        compute="_compute_is_commercial_partner",
+        store=True,
+        readonly=False,
+        help="Set this to True if this contact should be treated as its own trading company, "
+        "even if it has a parent company.",
+    )
+    # New field to manually set a contact as its own trading company
+    # is_trading_company = fields.Boolean(
+    #     string="Is Trading Company",
+    #     help="Set this to True if this contact should be treated as its own trading company, "
+    #     "even if it has a parent company.",
+    # )
+
     is_practitioner = fields.Boolean(string="Practitioner", default=False)
     is_role_required = fields.Boolean(
         compute="_compute_is_role_required",
@@ -29,10 +51,16 @@ class Partner(models.Model):
         store=False,
     )
     is_patient = fields.Boolean(string="Patient", default=False)
+
     ref = fields.Char(string="Customer Number", index=True)
     internal_code = fields.Char(
         "Internal Code", readonly=True, default=lambda self: _("New")
     )
+    association_id = fields.Many2one("res.association")
+    association_name = fields.Char(
+        related="association_id.name", string="Association Name", store=True
+    )
+
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
@@ -43,6 +71,7 @@ class Partner(models.Model):
     parent_name = fields.Char(
         related="parent_id.name", readonly=True, string="Parent name"
     )
+
     location_ids = fields.One2many(
         "res.partner", compute="_compute_locations", string="Locations", readonly=True
     )
@@ -63,10 +92,12 @@ class Partner(models.Model):
         string="Practice Type",
         default="clinic",
     )
+
     fax_number = fields.Char(string="Fax")
     partner_relation_label = fields.Char(
         "Partner relation label", translate=True, default="Attached To:", readonly=True
     )
+
     child_ids = fields.One2many(
         "res.partner",
         compute="_compute_practitioners",
@@ -80,6 +111,7 @@ class Partner(models.Model):
         string="Practitioner Count", compute="_compute_location_and_practitioner_counts"
     )
     practitioner_text = fields.Char(compute="_compute_practitioner_text")
+
     patient_ids = fields.One2many("contact.patient", inverse_name="partner_id")
     patient_count = fields.Integer(
         string="Patient Count", compute="_compute_patient_counts"
@@ -88,6 +120,31 @@ class Partner(models.Model):
         "contact.patient", compute="_compute_patient_records", string="Patients"
     )
     patient_text = fields.Char(compute="_compute_patient_text")
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for rec in self:
+            if rec.association_id:
+                rec.display_name = "{} ({})".format(rec.name, rec.association_id.name)
+
+    # @api.depends("is_company", "parent_id", "write_uid")
+    # def _compute_is_commercial_partner(self):
+    #     for partner in self:
+    #         if partner.is_company or not partner.parent_id:
+    #             partner.is_commercial_partner = True
+    #         elif not partner.write_uid:
+    #             partner.is_commercial_partner = False
+
+    @api.depends("is_commercial_partner", "parent_id")
+    def _compute_commercial_partner(self):
+        """
+        Override the computation of commercial_partner_id to allow a contact to be its own trading company.
+        """
+        for partner in self:
+            if partner.is_commercial_partner or not partner.parent_id:
+                partner.commercial_partner_id = partner
+            else:
+                partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
     def _compute_avatar(self, avatar_field, image_field):
         partners_with_internal_user = self.filtered(
