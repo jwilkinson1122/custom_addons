@@ -38,7 +38,7 @@ TODO
         # 'controllers/templates.xml',
         # data
         "data/res_users_data.xml",
-        "data/interclub_event_data.xml",
+        # "data/interclub_event_data.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -51,7 +51,7 @@ TODO
     "demo": [
         "data/demo/addreses_demo.xml",
         "data/demo/interclub_demo.xml",
-        "data/demo/interclub_event_demo.xml",
+        # "data/demo/interclub_event_demo.xml",
     ],
     # 'images': ['static/description/icon.png'],
     "installable": True,
