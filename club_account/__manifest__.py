@@ -38,7 +38,6 @@ Following features are included in this module:
     "demo": [],
     "installable": True,
     "application": False,
-    # "auto_install": True,
     "auto_install": False,
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
