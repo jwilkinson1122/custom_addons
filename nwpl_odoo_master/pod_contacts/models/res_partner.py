@@ -29,19 +29,12 @@ class Partner(models.Model):
     is_parent_account = fields.Boolean(string="Location", default=False)
     is_company = fields.Boolean(string="Company", default=False)
     is_location = fields.Boolean(string="Location", default=False)
+
     is_commercial_partner = fields.Boolean(
-        compute="_compute_is_commercial_partner",
-        store=True,
-        readonly=False,
+        string="Trading Company",
         help="Set this to True if this contact should be treated as its own trading company, "
         "even if it has a parent company.",
     )
-    # New field to manually set a contact as its own trading company
-    # is_trading_company = fields.Boolean(
-    #     string="Is Trading Company",
-    #     help="Set this to True if this contact should be treated as its own trading company, "
-    #     "even if it has a parent company.",
-    # )
 
     is_practitioner = fields.Boolean(string="Practitioner", default=False)
     is_role_required = fields.Boolean(
@@ -93,7 +86,36 @@ class Partner(models.Model):
         default="clinic",
     )
 
+    # type = fields.Selection(
+    #     [
+    #         ("contact", "Contact"),
+    #         ("invoice", "Invoice Address"),
+    #         ("delivery", "Delivery Address"),
+    #         ("other", "Other Address"),
+    #     ],
+    #     string="Address Type",
+    #     default="contact",
+    #     help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+    #     "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+    #     "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+    #     "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+    #     "- Other: Other address for the company (e.g. subsidiary, ...)",
+    # )
+
+    # type = fields.Selection(
+    #     selection_add=[
+    #         ("membership", "Membership Contact Address"),
+    #         ("order", "Order Address"),
+    #     ],
+    #     ondelete={"membership": "set default", "contact": "set default"},
+    # )
+
+    type = fields.Selection(
+        selection_add=[("order", "Order Address")], ondelete={"contact": "set default"}
+    )
+
     fax_number = fields.Char(string="Fax")
+
     partner_relation_label = fields.Char(
         "Partner relation label", translate=True, default="Attached To:", readonly=True
     )
@@ -127,14 +149,6 @@ class Partner(models.Model):
             if rec.association_id:
                 rec.display_name = "{} ({})".format(rec.name, rec.association_id.name)
 
-    # @api.depends("is_company", "parent_id", "write_uid")
-    # def _compute_is_commercial_partner(self):
-    #     for partner in self:
-    #         if partner.is_company or not partner.parent_id:
-    #             partner.is_commercial_partner = True
-    #         elif not partner.write_uid:
-    #             partner.is_commercial_partner = False
-
     @api.depends("is_commercial_partner", "parent_id")
     def _compute_commercial_partner(self):
         """
@@ -167,20 +181,34 @@ class Partner(models.Model):
         for partner in self - partners_with_internal_user - partners_without_image:
             partner[avatar_field] = partner[image_field]
 
+    #    is_supplier
+    #     is_partner
+    #     is_parent_account
+    #     is_company
+    #     is_location
+
+    #     is_commercial_partner
+    #     is_practitioner
+    #     is_patient
+
     def _avatar_get_placeholder_path(self):
         if self.type == "delivery":
-            return "base/static/img/truck.png"
+            return "pod_contacts/static/src/img/truck.png"
         elif self.type == "invoice":
-            return "base/static/img/money.png"
+            return "pod_contacts/static/src/img/money.png"
+        elif self.type == "order":
+            return "pod_contacts/static/src/img/order.jpg"
+        # elif self.type == "membership":
+        #     return "pod_contacts/static/src/img/membership.png"
         elif (
             self.is_parent_account
             or self.is_company
             or self.is_location
             or self.is_supplier
         ):
-            return "base/static/img/company_image.png"
+            return "pod_contacts/static/src/img/company_image.png"
         # elif self.is_practitioner:
-        #     return ""
+        #     return "pod_contacts/static/src/img/company_image.png"
         else:
             return super()._avatar_get_placeholder_path()
 
@@ -533,6 +561,18 @@ class Partner(models.Model):
     def _check_contact_practitioner(self):
         return self.env.user.has_group("nwpl_odoo_master.group_contacts_configurator")
 
+    # def get_address_default_type(self):
+    #     """Add new order type."""
+    #     res = super().get_address_default_type()
+    #     res.add("membership")
+    #     return res
+
+    def get_address_default_type(self):
+        """Add new order type."""
+        res = super().get_address_default_type()
+        res.add("order")
+        return res
+
     @api.model
     def default_get(self, fields_list):
         """We want to avoid passing the fields on the practitioners of the partner"""
@@ -542,41 +582,101 @@ class Partner(models.Model):
                 result[field] = False
         return result
 
+    # def _get_name(self):
+    #     partner = self
+    #     name = super(Partner, self)._get_name()
+    #     if partner.company_name or partner.parent_id:
+    #         if not partner.name and partner.type in ["membership"]:
+    #             name += (
+    #                 " "
+    #                 + dict(self.fields_get(["type"])["type"]["selection"])[partner.type]
+    #             )
+    #     return name
+
     def _get_name(self):
-        """Utility method to allow name_get to be overrided without re-browse the partner"""
+        """
+        Utility method to generate the display name for a partner, incorporating
+        contextual options like address formatting, email, VAT, and partner ID.
+        """
         partner = self
         name = partner.name or ""
 
+        # Append type description if no name and partner type is relevant
         if partner.company_name or partner.parent_id:
-            if not name and partner.type in ["invoice", "delivery", "other"]:
-                name = dict(self.fields_get(["type"])["type"]["selection"])[
-                    partner.type
-                ]
+            if not name and partner.type == "order":
+                type_dict = self.fields_get(["type"])["type"]["selection"]
+                name = type_dict.get(partner.type, name)
             if not partner.is_company:
                 name = self._get_contact_name(partner, name)
+
+        # Append address if specified in context
         if self._context.get("show_address_only"):
             name = partner._display_address(without_company=True)
-        if self._context.get("show_address"):
-            name = name + "\n" + partner._display_address(without_company=True)
+        elif self._context.get("show_address"):
+            name = f"{name}\n{partner._display_address(without_company=True)}".strip()
+
+        # Remove extra new lines for clean formatting
         name = name.replace("\n\n", "\n")
-        name = name.replace("\n\n", "\n")
+
+        # Inline address format if specified in context
         if self._context.get("address_inline"):
-            splitted_names = name.split("\n")
-            name = ", ".join([n for n in splitted_names if n.strip()])
+            name = ", ".join(filter(None, name.split("\n")))
+
+        # Append email if requested in context
         if self._context.get("show_email") and partner.email:
-            name = "%s <%s>" % (name, partner.email)
+            name = f"{name} <{partner.email}>"
+
+        # Format as HTML if specified
         if self._context.get("html_format"):
             name = name.replace("\n", "<br/>")
-        if self._context.get("show_vat") and partner.vat:
-            name = "%s ‒ %s" % (name, partner.vat)
 
-        if (
-            not self._context.get("show_address_only")
-            and not self._context.get("show_address")
-            and not self._context.get("address_inline")
+        # Append VAT if requested
+        if self._context.get("show_vat") and partner.vat:
+            name = f"{name} ‒ {partner.vat}"
+
+        # Append partner ID for unique identification if no specific context format is requested
+        if not any(
+            self._context.get(key)
+            for key in ["show_address_only", "show_address", "address_inline"]
         ):
-            name = "%s ‒ %s" % (name, partner.id)
+            name = f"{name} ‒ {partner.id}"
+
         return name
+
+    # def _get_name(self):
+    #     """Utility method to allow name_get to be overridden without re-browse the partner"""
+    #     partner = self
+    #     name = partner.name or ""
+    #     if partner.company_name or partner.parent_id:
+    #         if not name and partner.type in ["invoice", "delivery", "other"]:
+    #             name = dict(self.fields_get(["type"])["type"]["selection"])[
+    #                 partner.type
+    #             ]
+    #         if not partner.is_company:
+    #             name = self._get_contact_name(partner, name)
+    #     if self._context.get("show_address_only"):
+    #         name = partner._display_address(without_company=True)
+    #     if self._context.get("show_address"):
+    #         name = name + "\n" + partner._display_address(without_company=True)
+    #     name = name.replace("\n\n", "\n")
+    #     name = name.replace("\n\n", "\n")
+    #     if self._context.get("address_inline"):
+    #         splitted_names = name.split("\n")
+    #         name = ", ".join([n for n in splitted_names if n.strip()])
+    #     if self._context.get("show_email") and partner.email:
+    #         name = "%s <%s>" % (name, partner.email)
+    #     if self._context.get("html_format"):
+    #         name = name.replace("\n", "<br/>")
+    #     if self._context.get("show_vat") and partner.vat:
+    #         name = "%s ‒ %s" % (name, partner.vat)
+
+    #     if (
+    #         not self._context.get("show_address_only")
+    #         and not self._context.get("show_address")
+    #         and not self._context.get("address_inline")
+    #     ):
+    #         name = "%s ‒ %s" % (name, partner.id)
+    #     return name
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner

@@ -9,6 +9,7 @@ from . import contact_diagnosis
 from . import contact_flag
 from . import contact_flag_category
 from . import contact_practice_type
+from . import customer_credit
 from . import res_partner
 from . import res_users
 from . import ir_actions
