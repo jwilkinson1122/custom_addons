@@ -2,8 +2,9 @@
 from . import controllers, models, wizards
 from . import base_user_role
 from . import base_user_role_company
-from . import server_environment
-from . import server_environment_ir_config_parameter
+
+# from . import server_environment
+# from . import server_environment_ir_config_parameter
 from . import pod_file_storage
 from . import pod_file_attachment
 from . import pod_sql_integration

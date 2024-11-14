@@ -41,13 +41,11 @@
         "wizards/create_from_user.xml",
         "wizards/wizard_groups_into_role.xml",
         # Server Environment
-        # C:\odoo17\server\odoo\custom_addons\nwpl_odoo_master\server_environment\security\ir.model.access.csv
-        "server_environment/security/ir.model.access.csv",
-        "server_environment/security/res_groups.xml",
-        "server_environment/serv_config.xml",
-        # "server_environment_ir_config_parameter/views/view_ir_config_parameter.xml",
-        "pod_file_storage/views/file_storage_view.xml",
         "pod_file_storage/security/ir.model.access.csv",
+        "pod_file_storage/security/res_groups.xml",
+        "pod_file_storage/serv_config.xml",
+        "pod_file_storage/views/view_ir_config_parameter.xml",
+        "pod_file_storage/views/file_storage_view.xml",
         "pod_file_storage/wizards/file_test_connection.xml",
         "pod_file_attachment/security/file_gc.xml",
         "pod_file_attachment/views/file_storage.xml",
