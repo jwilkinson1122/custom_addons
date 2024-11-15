@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
-    <menuitem id="menu_product_configurable" name="Configurator" web_icon="product_configurator,static/description/icon.png" sequence="20" groups="nwpl_odoo_master.group_product_configurator_manager" />
+    <menuitem id="menu_product_configurable" name="Configurator" web_icon="nwpl_odoo_master,pod_product_configurator/static/description/icon.png" sequence="4" groups="nwpl_odoo_master.group_product_configurator_manager" />
     <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="menu_product_configurable" sequence="10" />
     <menuitem id="menu_product_configurable_settings" name="Configuration" parent="menu_product_configurable" sequence="20" />
 

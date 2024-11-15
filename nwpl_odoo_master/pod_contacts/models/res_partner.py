@@ -125,6 +125,7 @@ class Partner(models.Model):
         compute="_compute_practitioners",
         string="Practitioners",
         readonly=True,
+        index=True,
     )
     practitioner_role_ids = fields.Many2many(
         string="Roles", comodel_name="contact.role"
@@ -139,7 +140,10 @@ class Partner(models.Model):
         string="Patient Count", compute="_compute_patient_counts"
     )
     patient_records = fields.One2many(
-        "contact.patient", compute="_compute_patient_records", string="Patients"
+        "contact.patient",
+        compute="_compute_patient_records",
+        string="Patients",
+        index=True,
     )
     patient_text = fields.Char(compute="_compute_patient_text")
 
@@ -180,24 +184,15 @@ class Partner(models.Model):
 
         for partner in self - partners_with_internal_user - partners_without_image:
             partner[avatar_field] = partner[image_field]
-
-    #    is_supplier
-    #     is_partner
-    #     is_parent_account
-    #     is_company
-    #     is_location
-
-    #     is_commercial_partner
-    #     is_practitioner
-    #     is_patient
+            return "base/static/img/truck.png"
 
     def _avatar_get_placeholder_path(self):
         if self.type == "delivery":
-            return "pod_contacts/static/src/img/truck.png"
+            return "base/static/img/truck.png"
         elif self.type == "invoice":
-            return "pod_contacts/static/src/img/money.png"
+            return "base/static/img/money.png"
         elif self.type == "order":
-            return "pod_contacts/static/src/img/order.jpg"
+            return "base/static/img/money.png"
         # elif self.type == "membership":
         #     return "pod_contacts/static/src/img/membership.png"
         elif (
@@ -206,7 +201,7 @@ class Partner(models.Model):
             or self.is_location
             or self.is_supplier
         ):
-            return "pod_contacts/static/src/img/company_image.png"
+            return "base/static/img/company_image.png"
         # elif self.is_practitioner:
         #     return "pod_contacts/static/src/img/company_image.png"
         else:

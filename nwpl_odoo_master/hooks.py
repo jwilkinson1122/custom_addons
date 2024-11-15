@@ -71,3 +71,21 @@ def set_sale_price_on_variant(env, template_id=None):
         env.cr.execute(sql, (template_id,))
     else:
         env.cr.execute(sql)
+
+
+def uninstall_hook(env):
+    """
+    Deletes System Parameters
+    """
+    env["ir.config_parameter"].sudo().search(
+        [("key", "=", "nwpl_odoo_master.amazon_access_key")]
+    ).unlink()
+    env["ir.config_parameter"].sudo().search(
+        [("key", "=", "nwpl_odoo_master.amazon_secret_key")]
+    ).unlink()
+    env["ir.config_parameter"].sudo().search(
+        [("key", "=", "nwpl_odoo_master.amazon_bucket_name")]
+    ).unlink()
+    env["ir.config_parameter"].sudo().search(
+        [("key", "=", "nwpl_odoo_master.amazon_connector")]
+    ).unlink()
