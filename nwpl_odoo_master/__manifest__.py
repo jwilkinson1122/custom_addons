@@ -15,6 +15,8 @@
         "base_setup",
         "base_sparse_field",
         "barcodes",
+        "crm",
+        "crm_helpdesk",
         "contacts",
         "helpdesk",
         "helpdesk_repair",
@@ -67,7 +69,7 @@
         "pod_contacts/views/contact_role_views.xml",
         "pod_contacts/views/contact_diagnosis_views.xml",
         "pod_contacts/views/res_partner_views.xml",
-        "pod_contacts/views/association_views.xml",
+        # "pod_contacts/views/association_views.xml",
         "pod_contacts/views/contact_practice_type_views.xml",
         "pod_contacts/views/contact_patient_views.xml",
         "pod_contacts/views/contact_flag_views.xml",
@@ -78,6 +80,8 @@
         "amazon_s3_connector/views/amazon_dashboard_views.xml",
         "amazon_s3_connector/views/res_config_settings_views.xml",
         "amazon_s3_connector/wizard/amazon_upload_file_views.xml",
+        # reorder
+        "pod_sale_reorder/views/res_partner.xml"
         # product configurator
         "pod_product_configurator/security/configurator_security.xml",
         "pod_product_configurator/security/ir.model.access.csv",
@@ -146,18 +150,6 @@
         "pod_flexible_bom/views/mrp_bom.xml",
         "pod_flexible_bom/views/product.xml",
         "pod_flexible_bom/wizards/create_bom.xml",
-        # repairs
-        # "pod_repair/security/ir.model.access.csv",
-        # "pod_repair/security/repair_security.xml",
-        # "pod_repair/wizard/repair_make_invoice_views.xml",
-        # "pod_repair/wizard/stock_warn_insufficient_qty_views.xml",
-        # "pod_repair/views/stock_move_views.xml",
-        # "pod_repair/views/repair_views.xml",
-        # "pod_repair/views/stock_production_lot_views.xml",
-        # "pod_repair/report/repair_reports.xml",
-        # "pod_repair/report/repair_templates_repair_order.xml",
-        # "pod_repair/data/ir_sequence_data.xml",
-        # "pod_repair/data/mail_template_data.xml",
         # customer statement
         "pod_customer_statement/security/security.xml",
         "pod_customer_statement/security/ir.model.access.csv",
@@ -181,7 +173,6 @@
         "demo/res_partner.xml",
         "pod_file_storage/demo/file_storage.xml",
         # "data/product_options_demo.xml",
-        # "pod_repair/demo/repair_demo.xml",
     ],
     "assets": {
         "web.assets_frontend": [

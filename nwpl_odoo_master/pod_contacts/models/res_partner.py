@@ -15,14 +15,14 @@ _logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     _inherit = "res.partner"
-    _rec_names_search = [
-        "display_name",
-        "email",
-        "ref",
-        "vat",
-        "company_registry",
-        "association_name",
-    ]
+    # _rec_names_search = [
+    #     "display_name",
+    #     "email",
+    #     "ref",
+    #     "vat",
+    #     "company_registry",
+    #     "association_name",
+    # ]
 
     is_supplier = fields.Boolean(string="Vendor")
     is_partner = fields.Boolean(string="Order", default=False)
@@ -49,10 +49,10 @@ class Partner(models.Model):
     internal_code = fields.Char(
         "Internal Code", readonly=True, default=lambda self: _("New")
     )
-    association_id = fields.Many2one("res.association")
-    association_name = fields.Char(
-        related="association_id.name", string="Association Name", store=True
-    )
+    # association_id = fields.Many2one("res.association")
+    # association_name = fields.Char(
+    #     related="association_id.name", string="Association Name", store=True
+    # )
 
     parent_id = fields.Many2one(
         "res.partner",
@@ -147,11 +147,11 @@ class Partner(models.Model):
     )
     patient_text = fields.Char(compute="_compute_patient_text")
 
-    def _compute_display_name(self):
-        super()._compute_display_name()
-        for rec in self:
-            if rec.association_id:
-                rec.display_name = "{} ({})".format(rec.name, rec.association_id.name)
+    # def _compute_display_name(self):
+    #     super()._compute_display_name()
+    #     for rec in self:
+    #         if rec.association_id:
+    #             rec.display_name = "{} ({})".format(rec.name, rec.association_id.name)
 
     @api.depends("is_commercial_partner", "parent_id")
     def _compute_commercial_partner(self):

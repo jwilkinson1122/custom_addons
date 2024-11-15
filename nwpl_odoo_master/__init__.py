@@ -18,11 +18,11 @@ from . import pod_product_configurator_sale
 from . import pod_prescription_order
 from . import pod_product_configurator_prescription_order
 from . import pod_product_configurator_mrp
+from . import pod_sale_reorder
 
 # from . import pod_sale_delivery_address
 from . import pod_sale_attached_product
 
-# from . import pod_repair
 from . import pod_customer_statement
 
 from .hooks import pre_init_hook

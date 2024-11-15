@@ -142,7 +142,7 @@
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="association_id" placeholder="Association Name..." invisible="is_company"/>
+                        <!-- <field name="association_id" placeholder="Association Name..." invisible="is_company"/> -->
                         <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location" class="fw-bold" />
                         <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_practitioner" class="fw-bold" />
                         <!-- <field name="active" invisible="1"/> -->
@@ -383,7 +383,7 @@
         </field>
     </record>
 
-    <record id="contact_name" model="ir.ui.view">
+    <!-- <record id="contact_name" model="ir.ui.view">
         <field name="name">partner.contact.association.contact.name</field>
         <field name="inherit_id" ref="base.contact_name" />
         <field name="arch" type="xml">
@@ -395,7 +395,7 @@
             </xpath>
         </field>
     </record>
-
+ -->
 
     <record id="res_partner_child_ids_kanban_view_custom" model="ir.ui.view">
         <field name="name">res.partner.child.ids.kanban.custom</field>
@@ -470,8 +470,8 @@
                     <attribute name="filter_domain">['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]</attribute>
                 </field> -->
                 <xpath expr="//search" position="inside">
-                    <field name="name" filter_domain="['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('internal_code', '=', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]"/>
-                    <field name="association_name" filter_domain="[('association_name', 'ilike', self)]" />
+                    <field name="name" filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('internal_code', '=', self), ('company_registry', 'ilike', self)]"/>
+                    <!-- <field name="association_name" filter_domain="[('association_name', 'ilike', self)]" /> -->
                     <field name="ref" filter_domain="[('ref','ilike',self)]" />
                     <field name="internal_code" filter_domain="[('internal_code','ilike',self)]" />
 

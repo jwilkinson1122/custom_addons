@@ -3,7 +3,7 @@
 
     <!-- Define root menu for contacts -->
 
-    <menuitem id="contact_associations_menu" name="Associations" parent="contacts.menu_contacts" action="contact_association_action" sequence="0"/>
+    <!-- <menuitem id="contact_associations_menu" name="Associations" parent="contacts.menu_contacts" action="contact_association_action" sequence="0"/> -->
 
     <menuitem id="contact_accounts_menu" name="Accounts" parent="contacts.menu_contacts" action="contact_account_action" sequence="1" />
 
