@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+
+        <record id="allergy_action" model="ir.actions.act_window">
+            <field name="name">Allergies</field>
+            <field name="res_model">animal.allergy</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

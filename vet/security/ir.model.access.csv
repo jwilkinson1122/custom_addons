@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_animal,animal,model_animal,base.group_user,1,1,1,1
+access_animal_allergy,animal.allergy,model_animal_allergy,base.group_user,1,1,1,1
+access_animal_disease,animal.disease,model_animal_disease,base.group_user,1,1,1,1
+access_animal_insurance,animal.insurance,model_animal_insurance,base.group_user,1,1,1,1
+access_animal_medicine,animal.medicine,model_animal_medicine,base.group_user,1,1,1,1
+access_animal_specie,animal.specie,model_animal_specie,base.group_user,1,1,1,1
+access_animal_tag,animal.tag,model_animal_tag,base.group_user,1,1,1,1
+access_animal_surgery,animal.surgery,model_animal_surgery,base.group_user,1,1,1,1
+access_animal_vaccine,animal.vaccine,model_animal_vaccine,base.group_user,1,1,1,1
+access_animal_visit,animal.visit,model_animal_visit,base.group_user,1,1,1,1
+access_animal_breed,animal.breed,model_animal_breed,base.group_user,1,1,1,1
+
+
+
+

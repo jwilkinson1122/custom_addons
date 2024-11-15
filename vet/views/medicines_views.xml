@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+
+        <record id="medicine_action" model="ir.actions.act_window">
+            <field name="name">Medicines</field>
+            <field name="res_model">animal.medicine</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
