@@ -128,8 +128,8 @@
         # sale attached product
         "pod_sale_attached_product/views/product_template_views.xml",
         # sale delivery address
-        "pod_sale_delivery_address/views/sale_order_views.xml",
-        "pod_sale_delivery_address/views/sale_order_templates.xml",
+        # "pod_sale_delivery_address/views/sale_order_views.xml",
+        # "pod_sale_delivery_address/views/sale_order_templates.xml",
         # prescription order configurator
         "pod_product_configurator_prescription_order/security/ir.model.access.csv",
         "pod_product_configurator_prescription_order/views/prescription_order_view.xml",

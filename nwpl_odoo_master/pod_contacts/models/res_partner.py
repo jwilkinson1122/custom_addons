@@ -164,48 +164,44 @@ class Partner(models.Model):
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
-    def _compute_avatar(self, avatar_field, image_field):
-        partners_with_internal_user = self.filtered(
-            lambda partner: partner.user_ids - partner.user_ids.filtered("share")
-        )
-        super(Partner, partners_with_internal_user)._compute_avatar(
-            avatar_field, image_field
-        )
-        partners_without_image = (self - partners_with_internal_user).filtered(
-            lambda p: not p[image_field]
-        )
-        for _, group in tools.groupby(
-            partners_without_image, key=lambda p: p._avatar_get_placeholder_path()
-        ):
-            group_partners = self.env["res.partner"].concat(*group)
-            group_partners[avatar_field] = base64.b64encode(
-                group_partners[0]._avatar_get_placeholder()
-            )
+    # def _compute_avatar(self, avatar_field, image_field):
+    #     partners_with_internal_user = self.filtered(
+    #         lambda partner: partner.user_ids - partner.user_ids.filtered("share")
+    #     )
+    #     super(Partner, partners_with_internal_user)._compute_avatar(
+    #         avatar_field, image_field
+    #     )
+    #     partners_without_image = (self - partners_with_internal_user).filtered(
+    #         lambda p: not p[image_field]
+    #     )
+    #     for _, group in tools.groupby(
+    #         partners_without_image, key=lambda p: p._avatar_get_placeholder_path()
+    #     ):
+    #         group_partners = self.env["res.partner"].concat(*group)
+    #         group_partners[avatar_field] = base64.b64encode(
+    #             group_partners[0]._avatar_get_placeholder()
+    #         )
 
-        for partner in self - partners_with_internal_user - partners_without_image:
-            partner[avatar_field] = partner[image_field]
-            return "base/static/img/truck.png"
+    #     for partner in self - partners_with_internal_user - partners_without_image:
+    #         partner[avatar_field] = partner[image_field]
+    #         return "base/static/img/truck.png"
 
-    def _avatar_get_placeholder_path(self):
-        if self.type == "delivery":
-            return "base/static/img/truck.png"
-        elif self.type == "invoice":
-            return "base/static/img/money.png"
-        elif self.type == "order":
-            return "base/static/img/money.png"
-        # elif self.type == "membership":
-        #     return "pod_contacts/static/src/img/membership.png"
-        elif (
-            self.is_parent_account
-            or self.is_company
-            or self.is_location
-            or self.is_supplier
-        ):
-            return "base/static/img/company_image.png"
-        # elif self.is_practitioner:
-        #     return "pod_contacts/static/src/img/company_image.png"
-        else:
-            return super()._avatar_get_placeholder_path()
+    # def _avatar_get_placeholder_path(self):
+    #     if self.type == "delivery":
+    #         return "base/static/img/truck.png"
+    #     elif self.type == "invoice":
+    #         return "base/static/img/money.png"
+    #     elif self.type == "order":
+    #         return "base/static/img/money.png"
+    #     elif (
+    #         self.is_parent_account
+    #         or self.is_company
+    #         or self.is_location
+    #         or self.is_supplier
+    #     ):
+    #         return "base/static/img/company_image.png"
+    #     else:
+    #         return super()._avatar_get_placeholder_path()
 
     def find_res_partner_by_ref_using_barcode(self, barcode):
         partner = self.search([("ref", "=", barcode)], limit=1)
