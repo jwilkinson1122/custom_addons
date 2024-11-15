@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_diagnosis" name="Show Diagnosis" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Diagnosis</t>
+                <t t-set="url" t-value="'/my/diagnosis'" />
+                <t t-set="placeholder_count" t-value="'diagnosis_count'" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_diagnosis" name="Portal layout : pathology menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'diagnosis' or sh_patho_request_line and sh_patho_request_line.state_type in ('draft', 'sample_received','processing','done')" t-attf-class="breadcrumb-item #{'active ' if not sh_patho_request_line else ''}">
+                <a t-if="sh_patho_request_line" t-attf-href="/my/diagnosis?{{ keep_query() }}">Diagnosis</a>
+                <t t-else="">Diagnosis</t>
+            </li>
+
+            <li t-if="sh_patho_request_line" class="breadcrumb-item active">
+                <t t-esc="sh_patho_request_line.name" />
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_diagnosis" name="My Diagnosis">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Diagnosis</t>
+            </t>
+            <t t-if="not entry">
+                <div class="alert alert-warning mt8 pb-1 pt-3" role="alert">
+                    <p>There are currently no diagnosis for your account</p>
+                </div>
+            </t>
+            <t t-if="entry" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Diagnosis #</th>
+                        <th>Appointment</th>
+                        <th>Product</th>
+                        <th>Patient</th>
+                        <th>Laboratory Center</th>
+                        <th>Collection Center</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="entry" t-as="record">
+                    <tr>
+                        <td>
+                            <a t-att-href="record.get_portal_url()">
+                                <span t-field="record.name" />
+                            </a>
+                        </td>
+                        <td>
+                            <span t-field="record.appointment_date" />
+                        </td>
+                        <td>
+                            <span t-field="record.product_id" />
+                        </td>
+                        <td>
+                            <span t-field="record.patient_details_id" />
+                        </td>
+                        <td>
+                            <span t-field="record.laboratory_center_id" />
+                        </td>
+                        <td>
+                            <span t-field="record.collection_center_id" />
+                        </td>
+                        <td>
+                            <span t-field="record.price_total" />
+                        </td>
+                        <td t-if="record.state_type=='draft'">
+                            <span class="badge bg-dark">Draft</span>
+                        </td>
+                        <td t-elif="record.state_type=='sample_received'">
+                            <span class="badge bg-primary">Sample Received</span>
+                        </td>
+                        <td t-elif="record.state_type=='processing'">
+                            <span class="badge bg-info">Processing</span>
+                        </td>
+                        <td t-else="record.state_type=='done'">
+                            <span class="badge bg-success">Done</span>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="diagnosis_entry_portal_template" name="Diagnosis Entry  Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+                <!-- <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sh_transport_entry.name, sh_transport_entry.id, action.id)" />
+                </t> -->
+            </t>
+
+            <div class="row mt16 o_portal_sale_sidebar">
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'" />
+
+                    <t t-set="title">
+                        <h2 class="mb-0">
+                            <b t-field="sh_patho_request_line.price_total" data-id="price_total" />
+                        </h2>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                        <a class="m-1 btn btn-secondary btn-block o_download_btn" t-att-href="sh_patho_request_line.get_portal_url(report_type='pdf', download=True)" title="Download">
+                                            <i class="fa fa-download" />
+                                            Download
+                                        </a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="m-1 btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="sh_patho_request_line.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank">
+                                            <i class="fa fa-print" />
+                                            Print
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li t-if="sh_patho_request_line.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1">
+                                    <strong class="text-muted">Responsible</strong>
+                                </div>
+                                <div class="row flex-nowrap">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sh_patho_request_line.user_id.image_1024" t-att-src="image_data_uri(sh_patho_request_line.user_id.image_1024)" alt="Contact" />
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sh_patho_request_line.user_id.image_1024" src="/web/static/src/img/placeholder.png" alt="Contact" />
+                                    </div>
+                                    <div class="col pl-0" style="min-width: 150px;">
+                                        <span t-field="sh_patho_request_line.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}' />
+                                        <a href="#discussion" class="small">
+                                            <i class="fa fa-comment"></i>
+                                            Send message
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+
+                <div id="quote_content" class="col-12 col-lg justify-content-end">
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_transport_entry_content">
+                        <div t-call="sh_pathology_management.diagnosis_entry_portal_content" />
+                    </div>
+                    <div id="diagnosis_entry_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="sh_patho_request_line" />
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="diagnosis_entry_portal_content" name="Diagnosis Entry Portal Content">
+        <div class="p-3">
+            <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 t-field="sh_patho_request_line.name" class="ml-4 text-left"></h3>
+                    </div>
+
+                    <div class="col-6 d-flex justify-content-end">
+                        <h3 t-if="sh_patho_request_line.state_type=='draft'">
+                            <span class="badge bg-dark float-right mr-3">Draft</span>
+                        </h3>
+                        <h3 t-if="sh_patho_request_line.state_type=='sample_received'">
+                            <span class="badge bg-primary float-right mr-3">Sample Received</span>
+                        </h3>
+                        <h3 t-if="sh_patho_request_line.state_type=='processing'">
+                            <span class="badge bg-info text-right float-right mr-3">Processing</span>
+                        </h3>
+                        <h3 t-if="sh_patho_request_line.state_type=='done'">
+                            <span class="badge bg-success text-right float-right mr-3">Done</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-0 mb-1" />
+
+            <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+                <table t-att-data-order-id="sh_patho_request_line.id" class="table table-sm table-borderless o_main_table ml-4" style="width: 800px;">
+                    <tr>
+                        <th>Product</th>
+                        <th>Patient</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span t-field="sh_patho_request_line.product_id" />
+                        </td>
+                        <td>
+                            <span t-field="sh_patho_request_line.patient_details_id" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Collection Center</th>
+                        <th>Laboratory Center</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span t-field="sh_patho_request_line.collection_center_id" />
+                        </td>
+                        <td>
+                            <span t-field="sh_patho_request_line.laboratory_center_id" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Appointment</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span t-field="sh_patho_request_line.appointment_date" />
+                        </td>
+                    </tr>
+                </table>
+
+                <table t-att-data-order-id="sh_patho_request_line.id" class="table table-sm table-borderless o_main_table ml-4" style="width: 800px;">
+                    <tr>
+                        <th>Test Description</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span t-out="sh_patho_request_line.desc" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 class="ml-4 mb-1">Parameter Details</h3>
+
+            <div>
+                <table class="table table-sm o_main_table ml-4 mt-3" style="width: 100%;">
+                    <thead class="bg-100">
+                        <tr>
+                            <th>Test</th>
+                            <th>Unit</th>
+                            <th>Range</th>
+                            <th>Normal</th>
+                            <th>Obtained</th>
+                        </tr>
+                    </thead>
+
+                    <t t-foreach="sh_patho_request_line.test_parameters_line" t-as="x">
+
+                        <tr>
+                            <td>
+                                <span t-field="x.name" />
+                            </td>
+
+                            <td>
+                                <span t-field="x.unit_id.name" />
+                            </td>
+
+                            <td>
+                                <span t-field="x.min_value"></span> -
+                                <span t-field="x.max_value"></span>
+                            </td>
+
+                            <td>
+                                <span t-field="x.normal_value" />
+                            </td>
+                            <t t-if="sh_patho_request_line.state_type == 'done'">
+                                <t t-if="x.patient_value >= x.min_value and x.max_value >= x.patient_value">
+                                    <td t-esc="x.patient_value" style="color: green;"></td>
+                                </t>
+
+                                <t t-else="">
+                                    <td t-esc="x.patient_value" style="color: red;"></td>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <td>Test Is In Progress</td>
+                            </t>
+                        </tr>
+
+                    </t>
+                </table>
+            </div>
+        </div>
+    </template>
+</odoo>

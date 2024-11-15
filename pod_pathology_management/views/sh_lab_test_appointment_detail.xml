@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_request_detail_form" model="ir.ui.view">
+        <field name="name">sh.request.detail.form</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button class="btn btn-primary" type="object" name="set_new" string="Set To New" attrs="{'invisible':[('state_type','not in',['cancel'])]}" />
+                    <button class="btn btn-primary" type="object" name="set_done" string="Done" attrs="{'invisible': [('state_type', 'in', ['cancel','done'])]}" />
+                    <button class="btn btn-primary" type="object" name="set_cancel" string="Cancel" attrs="{'invisible':[('state_type','in',['cancel'])]}" />
+                    <button class="btn btn-primary" type="object" name="action_send_email" string="Send by Email" />
+                    <button class="btn btn-primary" type="object" name="action_send_whatsapp_msg" string="Send by WhatsApp" />
+                    <field name="state_type" widget="statusbar" statusbar_visible="new,done,cancel" />
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-user-md" type="object" name="def_open_diagnosis">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="total_diagnosis" />
+                                </span>
+                                <span class="o_stat_text">Diagnosis</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <!-- <field name="real_time" invisible="1"/> -->
+                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                            <field name="report_token" invisible="1" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="patient_id" required="1" domain="[('sh_patho_is_patient','=',True)]" context="{'default_sh_patho_is_patient': True}" />
+                            <field name="appointment_date" />
+                            <field name="technician_id" domain="[('sh_patho_is_technician','=',True)]" context="{'default_sh_patho_is_technician': True}" />
+                        </group>
+
+                        <group>
+                            <field name="lab_center_id" options="{'no_create': True, 'no_create_edit':True}" widget="selection" />
+                            <field name="collection_center_id" options="{'no_create': True, 'no_create_edit':True}" widget="selection" />
+                        </group>
+                    </group>
+
+                    <field name="request_line" context="{'default_technician_id':technician_id}" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="product_id" context="{'default_sh_patho_is_lab_test_product': True}" required="1" domain="[('sh_patho_is_lab_test_product','=',True)]" optional="show" />
+                            <field name="desc" optional="show" />
+                            <field name="technician_id" domain="[('sh_patho_is_technician','=',True)]" optional="show" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="price" />
+                            <field name="tax_ids" widget="many2many_tags" optional="show" />
+                            <field name="price_total" invisible="1" />
+                            <field name="price_tax" invisible="1" />
+                            <field name="subtotal" optional="show" />
+                            <field name="state_type" optional="show" decoration-success="state_type == 'done'" decoration-info="state_type == 'sample_received'" decoration-primary="state_type == 'processing'" widget="badge"/>
+                            <field name="patho_request_id" invisible="1" />
+                        </tree>
+                    </field>
+
+                    <group name="note_group" col="6" class="mt-2 mt-md-0">
+                        <group colspan="4">
+                            <div class=""></div>
+                            <field name="note" nolabel="1" placeholder="Terms and conditions..." />
+                        </group>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                            <field name="amount_untaxed" widget="monetary" />
+                            <field name="amount_tax" widget="monetary" />
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="amount_total" />
+                            </div>
+                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" />
+                        </group>
+                        <div class="oe_clear" />
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_tree" model="ir.ui.view">
+        <field name="name">sh.request.detail.tree</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" optional="show" />
+                <field name="currency_id" invisible="1" />
+                <field name="patient_id" optional="show" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="appointment_date" optional="show" />
+                <field name="activity_ids" widget="list_activity" optional="show" />
+                <field name="lab_center_id" optional="show" />
+                <field name="collection_center_id" optional="show" />
+                <field name="technician_id" optional="show" />
+                <field name="amount_total" widget="monetary" optional="show" />
+                <field name="state_type" decoration-success="state_type == 'done'" decoration-danger="state_type == 'cancel'" widget="badge" optional="show" />
+                <field name="amount_untaxed" widget="monetary" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_calendar" model="ir.ui.view">
+        <field name="name">Request Calender</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <calendar date_start="appointment_date" color="patient_id" mode="month" quick_add="False" event_open_popup="True">
+                <field name="name" />
+                <field name="lab_center_id" />
+                <field name="collection_center_id" />
+                <field name="amount_total" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_appointment_kanban" model="ir.ui.view">
+        <field name="name">Kanban View</field>
+        <field name="model">sh.patho.request</field>
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" default_group_by="state_type">
+                <field name="name" />
+                <field name="state_type" />
+                <field name="patient_id" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title">
+                                        <b>
+                                            <span>
+                                                <field name="name" />
+                                            </span>
+                                        </b>
+                                    </strong>
+                                </div>
+                                <field name="state_type" decoration-success="state_type == 'done'" decoration-danger="state_type == 'cancel'" decoration-primary="state_type == 'new'" widget="badge" />
+                            </div>
+                            <div class="my-2">
+                                <span class="fa fa-user">
+                                    <span class="px-2" t-esc="record.patient_id.value"></span>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="amount_total" widget="monetary" />
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="appointment_date" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_pivot" model="ir.ui.view">
+        <field name="name">Request Pivot</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <pivot string="" sample="1">
+                <field name="appointment_date" type="row" />
+                <field name="amount_total" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_graph" model="ir.ui.view">
+        <field name="name">Request Graph</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <graph string="" sample="1">
+                <field name="patient_id" />
+                <field name="amount_total" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_activity" model="ir.ui.view">
+        <field name="name">Request Activity</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <activity string="">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" display="full" />
+                            <field name="patient_id" muted="1" display="full" />
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="sh_request_detail_filter" model="ir.ui.view">
+        <field name="name">Filter View</field>
+        <field name="model">sh.patho.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="appointment_date" />
+                <field name="state_type" />
+                <!-- <filter string="Today's Appointment" name="filter" domain="[('appointment_date', '=',time.strftime('%%Y-%%m-%%d'))]" /> -->
+                <filter string="Appointment Date" name="filter" date="appointment_date" />
+                <filter string="Done Appointment" name="filter" domain="[('state_type', '=', 'done')]" />
+                <filter string="Cancel Appointment" name="filter" domain="[('state_type', '=', 'cancel')]" />
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_by_filter" string="Patient" domain="[]" context="{'group_by' : 'patient_id'}" />
+                    <filter name="group_by_filter" string="Technicican" domain="[]" context="{'group_by' : 'technician_id'}" />
+                    <filter name="group_by_filter" string="State" domain="[]" context="{'group_by' : 'state_type'}" />
+                    <filter name="group_by_filter" string="Appointment Date" domain="[]" context="{'group_by' : 'appointment_date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sh_request_action" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="res_model">sh.patho.request</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">calendar,tree,form,kanban,pivot,graph,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create A New Appointment</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_patient">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-foreach="doc.request_line" t-as="y">
+                    <div class="page">
+                        <p style="page-break-after: always;"></p>
+                    </div>
+
+                    <t t-call="web.external_layout">
+                        <div class="container row">
+                            <div class="col-6" style="text-align: left;">
+                                <table class="table table-borderless table-sm">
+                                    <br />
+                                    <tr>
+                                        <th>Name:</th>
+                                        <td><span t-field="doc.patient_id"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Age:</th>
+                                        <td><span t-field="doc.patient_id.sh_patho_age"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gender:</th>
+                                        <td><span t-field="doc.patient_id.sh_patho_gender_type"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Mobile:</th>
+                                        <td><span t-field="doc.patient_id.mobile"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email:</th>
+                                        <td><span t-field="doc.patient_id.email"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="col-6" style="text-align: right;">
+                                <table class="table table-borderless table-sm">
+                                    <br />
+                                    <tr>
+                                        <th>Technician:</th>
+                                        <td><span t-field="doc.technician_id.name" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Collection Center:</th>
+                                        <td><span t-field="doc.collection_center_id.name" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Lab Center:</th>
+                                        <td><span t-field="doc.lab_center_id.name" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+
+                        <!-- <t t-foreach="doc.request_line" t-as="y" > -->
+                        <div class="container">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th t-field="y.product_id.name"></th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Test</th>
+                                        <th scope="col">Unit</th>
+                                        <th scope="col">Range</th>
+                                        <th scope="col">Normal</th>
+                                        <th scope="col">Obtained</th>
+                                    </tr>
+                                </thead>
+
+                                <t t-foreach="y.test_parameters_line" t-as="x">
+                                    <tbody>
+                                        <tr>
+                                            <t t-if="x.name">
+                                                <td scope="row" t-esc="x.name"></td>
+                                            </t>
+
+                                            <t t-else="">
+                                                <td></td>
+                                            </t>
+
+                                            <t t-if="x.unit_id.name">
+                                                <td t-esc="x.unit_id.name"></td>
+                                            </t>
+
+                                            <t t-else="">
+                                                <td></td>
+                                            </t>
+
+                                            <t t-if="x.min_value or x.max_value">
+                                                <td>
+                                                    <span t-esc="x.min_value"></span> -
+                                                    <span t-esc="x.max_value"></span>
+                                                </td>
+                                            </t>
+
+                                            <t t-else="">
+                                                <td></td>
+                                            </t>
+
+                                            <t t-if="x.normal_value">
+                                                <td t-esc="x.normal_value"></td>
+                                            </t>
+
+                                            <t t-else="">
+                                                <td></td>
+                                            </t>
+
+                                            <t t-if="x.patient_value >= x.min_value and x.max_value >= x.patient_value">
+                                                <td t-esc="x.patient_value" style="color: green;"></td>
+                                            </t>
+
+                                            <t t-else="">
+                                                <td t-esc="x.patient_value" style="color: red;"></td>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </t>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_patient" model="ir.actions.report">
+        <field name="name">Diagnosis Report</field>
+        <field name="model">sh.patho.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sh_pathology_management.report_patient</field>
+        <field name="report_file">sh_pathology_management.report_patient</field>
+        <field name="print_report_name">'Appointment - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sh_patho_request" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

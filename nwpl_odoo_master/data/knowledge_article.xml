@@ -11,6 +11,83 @@
         <field name="body">
             <![CDATA[
                 <h1>Northwest Podiatric Laboratory</h1>
+                <p>This set-up is for NWPL custom orthotic manufacturing.</p>
+                <p>Customizations: List customizations here! </p>
+                <p>Odoo modules: List Odoo modules here!</p>
+                
+                <h2>Custom Orthotics Manufacturing</h2>
+                <div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_toc" data-oe-protected="true">
+                    <div class="o_knowledge_toc_content">
+                        <a href="#" data-oe-nodeid="0" class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link o_knowledge_toc_link_depth_0">Configuration</a>
+                        <a href="#" data-oe-nodeid="1" class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link o_knowledge_toc_link_depth_1">Business Flows</a>
+                        <a href="#" data-oe-nodeid="2" class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link o_knowledge_toc_link_depth_2">Flow 1: Purchase</a>
+                        <a href="#" data-oe-nodeid="3" class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link o_knowledge_toc_link_depth_2">Flow 2: B2B Customer</a>
+                        <a href="#" data-oe-nodeid="4" class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link o_knowledge_toc_link_depth_2">Flow 3: B2C Customer</a>
+                    </div>
+                </div>
+                
+                <h2>Configuration</h2>
+                <p><strong>EAN/UPC Code:</strong> Rename the barcode field label. This ensures every product has a unique global identifier.</p>
+                <p><strong>Item No:</strong> A new field for the part manufacturer, useful for identifying original parts used in device manufacturing.</p>
+                <p><strong>Brands:</strong> A new field specifying which brands a product supports, providing clarity for compatibility.</p>
+
+                <h2>Business Flows</h2>
+                <h3>Flow 1: Purchase</h3>
+                <ol>
+                    <li>Create an RFQ for the vendor and select the products, then send the RFQ via email.</li>
+                    <li>Negotiate prices via email, update the RFQ, and confirm it to generate a purchase order (PO).</li>
+                    <li>Upon PO confirmation, receive products, add quantities to "Done quantities," and validate receipts with lot and serial numbers if applicable.</li>
+                </ol>
+
+                <h3>Flow 2: B2B Customer</h3>
+                <ol>
+                    <li>Use the standard sales process: create a quotation, select products, and send the quotation via email. Confirm it to generate a sales order (SO) after negotiation.</li>
+                    <li>Enable warranty management by activating "Lot & Serial No." on the product form and setting an expiration date. The expiration date will auto-update upon delivery.</li>
+                </ol>
+
+                <h3>Flow 3: B2C Customer</h3>
+                <ol>
+                    <li>Use the Sales Management module to add products customers wish to purchase.</li>
+                    <li>Manage warranties similarly to B2B by enabling "Lot & Serial No." and expiration dates on product forms.</li>
+                </ol>
+
+                <h2>File Attachment Object Store</h2>
+                <p><strong>Overview:</strong> This mechanism enables attachment storage in external systems like S3 or NFS, ideal for multi-server architectures ensuring redundancy and scalability.</p>
+                
+                <h3>Features:</h3>
+                <ul>
+                    <li>Filename retains meaning: Stored as <code>&lt;name&gt;-&lt;attachment-id&gt;-&lt;version&gt;.&lt;extension&gt;</code>.</li>
+                    <li>Provides <strong>Internal URL</strong> and <strong>Filesystem URL</strong> for file access.</li>
+                    <li>Supports streaming content between external filesystems and Odoo clients for efficiency.</li>
+                </ul>
+                
+                <h3>Configuration:</h3>
+                <ol>
+                    <li>Navigate to <code>Settings > Technical > File Storage</code> to create a new storage.</li>
+                    <li>Set options like <strong>Optimized Directory Path</strong>, <strong>Autovacuum GC</strong>, and <strong>Default for Attachments</strong>.</li>
+                    <li>Define storage rules for models/fields via `file.storage` or server environment files.</li>
+                </ol>
+
+                <h3>Advanced Options:</h3>
+                <ul>
+                    <li><strong>Base URL:</strong> For accessing attachments via external storage URLs.</li>
+                    <li><strong>X-Sendfile Support:</strong> For serving files efficiently via a proxy (e.g., Nginx).</li>
+                    <li><strong>Filename Obfuscation:</strong> Useful for enhanced privacy and SEO-sensitive setups.</li>
+                </ul>
+            ]]>
+        </field>
+    </record>
+    <!-- <record id="knowledge_article_2" model="knowledge.article">
+        <field name="name">Northwest Podiatric Laboratory</field>
+        <field name="category">private</field>
+        <field name="is_locked" eval="True"/>
+        <field name="icon">🦶🦶</field>
+        <field name="cover_image_id" ref="knowledge_cover_5"/>
+        <field name="internal_permission">write</field>
+        <field name="is_article_visible_by_everyone" eval="True"/>
+        <field name="body">
+            <![CDATA[
+                <h1>Northwest Podiatric Laboratory</h1>
                 <p><br /></p>
                 <p>
                     This set-up is for NWPL custom orthotic manufacturing.
@@ -69,6 +146,6 @@
                     <br />
                 </p>
         ]]>
-        </field>
-    </record>
+</field>
+</record> -->
 </odoo>

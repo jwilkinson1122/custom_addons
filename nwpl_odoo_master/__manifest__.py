@@ -16,10 +16,14 @@
         "base_sparse_field",
         "barcodes",
         "contacts",
+        "helpdesk",
+        "helpdesk_repair",
         "mail",
         "mrp",
+        "mrp_repair",
         "knowledge",
         "product",
+        "repair",
         "sale",
         "sale_management",
         # "sale_product_matrix",
@@ -30,7 +34,6 @@
         "web_studio",
     ],
     "data": [
-        # C:\odoo17\server\odoo\custom_addons\nwpl_odoo_master\data\ir_attachment.xml
         "data/ir_attachment.xml",
         "data/knowledge_cover.xml",
         "data/knowledge_article.xml",
@@ -104,9 +107,9 @@
         "data/pod_product_configurator_mrp/data/menu_product.xml",
         "pod_product_configurator_mrp/views/mrp_view.xml",
         # product brand
-        "pod_brand/security/res_brand.xml",
-        "pod_brand/views/res_config_settings.xml",
-        "pod_brand/views/res_brand.xml",
+        # "pod_brand/security/res_brand.xml",
+        # "pod_brand/views/res_config_settings.xml",
+        # "pod_brand/views/res_brand.xml",
         "pod_product_brand/views/product_brand_view.xml",
         "pod_product_brand/reports/sale_report_view.xml",
         "pod_product_brand/reports/account_invoice_report_view.xml",
@@ -122,15 +125,40 @@
         "pod_prescription_order/views/sale_order_views.xml",
         "pod_prescription_order/report/templates.xml",
         "pod_prescription_order/report/report.xml",
+        # sale attached product
+        "pod_sale_attached_product/views/product_template_views.xml",
+        # sale delivery address
+        "pod_sale_delivery_address/views/sale_order_views.xml",
+        "pod_sale_delivery_address/views/sale_order_templates.xml",
         # prescription order configurator
         "pod_product_configurator_prescription_order/security/ir.model.access.csv",
         "pod_product_configurator_prescription_order/views/prescription_order_view.xml",
+        # product options
+        "pod_product_options/security/ir.model.access.csv",
+        # "data/product_options_data.xml",
+        "pod_product_options/views/product_options_views.xml",
+        "pod_product_options/views/product_template_views.xml",
+        "pod_product_options/views/sale_views.xml",
+        "pod_product_options/wizard/option_selection_wizard_views.xml",
         # bom
         "pod_flexible_bom/security/ir.model.access.csv",
         "pod_flexible_bom/views/sale_order_line.xml",
         "pod_flexible_bom/views/mrp_bom.xml",
         "pod_flexible_bom/views/product.xml",
         "pod_flexible_bom/wizards/create_bom.xml",
+        # repairs
+        # "pod_repair/security/ir.model.access.csv",
+        # "pod_repair/security/repair_security.xml",
+        # "pod_repair/wizard/repair_make_invoice_views.xml",
+        # "pod_repair/wizard/stock_warn_insufficient_qty_views.xml",
+        # "pod_repair/views/stock_move_views.xml",
+        # "pod_repair/views/repair_views.xml",
+        # "pod_repair/views/stock_production_lot_views.xml",
+        # "pod_repair/report/repair_reports.xml",
+        # "pod_repair/report/repair_templates_repair_order.xml",
+        # "pod_repair/data/ir_sequence_data.xml",
+        # "pod_repair/data/mail_template_data.xml",
+        # customer statement
         "pod_customer_statement/security/security.xml",
         "pod_customer_statement/security/ir.model.access.csv",
         "pod_customer_statement/views/user.xml",
@@ -152,6 +180,8 @@
         # "demo/mail_demo.xml",
         "demo/res_partner.xml",
         "pod_file_storage/demo/file_storage.xml",
+        # "data/product_options_demo.xml",
+        # "pod_repair/demo/repair_demo.xml",
     ],
     "assets": {
         "web.assets_frontend": [
