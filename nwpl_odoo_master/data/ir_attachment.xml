@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="0">
+    <record id="ir_attachment_313" model="ir.attachment">
+        <field name="name">cover.jpg</field>
+        <field name="datas" type="base64" file="nwpl_odoo_master/static/ir_attachment/otc_orthotics.webp"/>
+    </record>
+</odoo>

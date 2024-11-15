@@ -30,6 +30,12 @@
         "web_studio",
     ],
     "data": [
+        # C:\odoo17\server\odoo\custom_addons\nwpl_odoo_master\data\ir_attachment.xml
+        "data/ir_attachment.xml",
+        "data/knowledge_cover.xml",
+        "data/knowledge_article.xml",
+        "data/knowledge_article_favorite.xml",
+        "data/mail_message.xml",
         "security/pod_security.xml",
         "security/ir.model.access.csv",
         "data/base_user_role/data/ir_cron.xml",
