@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import http
+from odoo import http, _
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request, content_disposition
 import re

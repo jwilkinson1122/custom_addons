@@ -50,7 +50,6 @@
         "views/group.xml",
         "wizards/create_from_user.xml",
         "wizards/wizard_groups_into_role.xml",
-        # Server Environment
         "pod_file_storage/security/ir.model.access.csv",
         "pod_file_storage/security/res_groups.xml",
         "pod_file_storage/serv_config.xml",
@@ -59,7 +58,6 @@
         "pod_file_storage/wizards/file_test_connection.xml",
         "pod_file_attachment/security/file_gc.xml",
         "pod_file_attachment/views/file_storage.xml",
-        # SQL Integration
         "pod_sql_integration/security/ir.model.access.csv",
         "pod_sql_integration/views/sql_integration.xml",
         "data/pod_contacts/data/ir_sequence_data.xml",
@@ -69,18 +67,15 @@
         "pod_contacts/views/contact_role_views.xml",
         "pod_contacts/views/contact_diagnosis_views.xml",
         "pod_contacts/views/res_partner_views.xml",
-        # "pod_contacts/views/association_views.xml",
         "pod_contacts/views/contact_practice_type_views.xml",
         "pod_contacts/views/contact_patient_views.xml",
         "pod_contacts/views/contact_flag_views.xml",
         "pod_contacts/views/contact_flag_category_views.xml",
         "pod_contacts/views/contact_menu.xml",
-        # Amazon S3 Connector
         "amazon_s3_connector/security/ir.model.access.csv",
         "amazon_s3_connector/views/amazon_dashboard_views.xml",
         "amazon_s3_connector/views/res_config_settings_views.xml",
         "amazon_s3_connector/wizard/amazon_upload_file_views.xml",
-        # reorder
         "pod_sale_reorder/views/res_partner.xml",
         # product configurator
         "pod_product_configurator/security/configurator_security.xml",
@@ -101,23 +96,16 @@
         "pod_product_configurator/views/product_attribute_view.xml",
         "pod_product_configurator/views/product_config_view.xml",
         "pod_product_configurator/wizard/product_configurator_view.xml",
-        # product configurator sale
         "pod_product_configurator_sale/security/ir.model.access.csv",
         "data/pod_product_configurator_sale/data/menu_product.xml",
         "pod_product_configurator_sale/views/sale_view.xml",
-        # product configurator mrp
         "pod_product_configurator_mrp/security/configurator_security.xml",
         "pod_product_configurator_mrp/security/ir.model.access.csv",
         "data/pod_product_configurator_mrp/data/menu_product.xml",
         "pod_product_configurator_mrp/views/mrp_view.xml",
-        # product brand
-        # "pod_brand/security/res_brand.xml",
-        # "pod_brand/views/res_config_settings.xml",
-        # "pod_brand/views/res_brand.xml",
         "pod_product_brand/views/product_brand_view.xml",
         "pod_product_brand/reports/sale_report_view.xml",
         "pod_product_brand/reports/account_invoice_report_view.xml",
-        # prescription order
         "pod_prescription_order/security/security.xml",
         "pod_prescription_order/security/ir.model.access.csv",
         "pod_prescription_order/data/ir_sequence_data.xml",
@@ -129,32 +117,26 @@
         "pod_prescription_order/views/sale_order_views.xml",
         "pod_prescription_order/report/templates.xml",
         "pod_prescription_order/report/report.xml",
-        # sale attached product
         "pod_sale_attached_product/views/product_template_views.xml",
-        # sale delivery address
-        # "pod_sale_delivery_address/views/sale_order_views.xml",
-        # "pod_sale_delivery_address/views/sale_order_templates.xml",
-        # prescription order configurator
         "pod_product_configurator_prescription_order/security/ir.model.access.csv",
         "pod_product_configurator_prescription_order/views/prescription_order_view.xml",
-        # product options
         "pod_product_options/security/ir.model.access.csv",
         # "data/product_options_data.xml",
         "pod_product_options/views/product_options_views.xml",
         "pod_product_options/views/product_template_views.xml",
         "pod_product_options/views/sale_views.xml",
         "pod_product_options/wizard/option_selection_wizard_views.xml",
-        # sale order helpdesk
+        "pod_automated_sale_order/security/ir.model.access.csv",
+        "pod_automated_sale_order/views/view_main.xml",
+        "pod_automated_sale_order/views/website_auto_sale_view.xml",
         "pod_sale_order_helpdesk_ticket/views/sale_order_view.xml",
         "pod_sale_order_helpdesk_ticket/views/product_product_view.xml",
         "pod_sale_order_helpdesk_ticket/views/product_template_view.xml",
-        # bom
         "pod_flexible_bom/security/ir.model.access.csv",
         "pod_flexible_bom/views/sale_order_line.xml",
         "pod_flexible_bom/views/mrp_bom.xml",
         "pod_flexible_bom/views/product.xml",
         "pod_flexible_bom/wizards/create_bom.xml",
-        # customer statement
         "pod_customer_statement/security/security.xml",
         "pod_customer_statement/security/ir.model.access.csv",
         "pod_customer_statement/views/user.xml",
