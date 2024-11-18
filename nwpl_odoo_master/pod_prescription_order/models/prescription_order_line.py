@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 from odoo.tools.misc import format_date
 
+
 class PrescriptionOrderLine(models.Model):
     _name = "prescription.order.line"
     _description = "Prescription Order Line"
@@ -104,6 +105,8 @@ class PrescriptionOrderLine(models.Model):
         comodel_name="product.pricelist.item", compute="_compute_pricelist_item_id"
     )
 
+    helpdesk_discription_id = fields.Many2one("helpdesk.ticket", string="Helpdesk")
+
     # custom_value_ids = fields.One2many(
     #     comodel_name="product.config.session.custom.value",
     #     inverse_name="cfg_session_id",
@@ -151,7 +154,6 @@ class PrescriptionOrderLine(models.Model):
     #                 continue
     #             name = self.product_id.get_product_multiline_description_sale()
     #         line.name = name
-
 
     @api.depends(
         "order_id.name", "date_schedule", "remaining_uom_qty", "product_uom.name"

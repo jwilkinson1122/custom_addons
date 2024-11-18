@@ -10,6 +10,13 @@ class PrescriptionOrder(models.Model):
     _description = "Prescription Order"
     _check_company_auto = True
 
+    helpdesk_tickets_ids = fields.Many2many(
+        "helpdesk.ticket", string="Helpdesk Tickets"
+    )
+    helpdesk_tickets_count = fields.Integer(
+        string="# of Delivery Order", compute="_get_helpdesk_tickets_count"
+    )
+
     @api.model
     def _default_note(self):
         return (
@@ -41,25 +48,25 @@ class PrescriptionOrder(models.Model):
         string="Partner",
     )
     practitioner_id = fields.Many2one(
-        string='Practitioner',
-        comodel_name='res.partner',
+        string="Practitioner",
+        comodel_name="res.partner",
         domain="[('is_practitioner', '=', True)]",
         required=True,
-        track_visibility='onchange'
+        track_visibility="onchange",
     )
     patient_id = fields.Many2one(
-        string='Patient',
-        comodel_name='res.partner',
+        string="Patient",
+        comodel_name="res.partner",
         domain="[('is_patient', '=', True)]",
         required=True,
-        track_visibility='onchange'
+        track_visibility="onchange",
     )
     location_id = fields.Many2one(
-        string='Location',
-        comodel_name='res.partner',
+        string="Location",
+        comodel_name="res.partner",
         domain="[('is_location', '=', True)]",
         required=True,
-        track_visibility='onchange'
+        track_visibility="onchange",
     )
     user_id = fields.Many2one(
         "res.users",
@@ -78,8 +85,8 @@ class PrescriptionOrder(models.Model):
         default=lambda self: self.env.company,
     )
 
-    pos_order_uid = fields.Char(help="Related Pos order", string='Related Pos order')
-    client_order_ref = fields.Char(string="Customer Reference",copy=False)
+    pos_order_uid = fields.Char(help="Related Pos order", string="Related Pos order")
+    client_order_ref = fields.Char(string="Customer Reference", copy=False)
     line_ids = fields.One2many(
         "prescription.order.line", "order_id", string="Order lines", copy=True
     )
@@ -122,15 +129,31 @@ class PrescriptionOrder(models.Model):
         store=True,
         copy=False,
     )
-    book_in_date = fields.Datetime(string='Book In')
-    book_out_date = fields.Datetime(string='Book Out')
-    draft_date = fields.Datetime(string='Draft/Quote Date', help="Draft/Quotation created date", readonly=True, index=True, default=fields.Datetime.now)
-    order_date = fields.Date(string='Order Date', help="Order created date", readonly=True, index=True, default=fields.Date.today())
-    delivered_date = fields.Datetime(string='Delivered Date', readonly=True, help="Delivering date of the order")
+    book_in_date = fields.Datetime(string="Book In")
+    book_out_date = fields.Datetime(string="Book Out")
+    draft_date = fields.Datetime(
+        string="Draft/Quote Date",
+        help="Draft/Quotation created date",
+        readonly=True,
+        index=True,
+        default=fields.Datetime.now,
+    )
+    order_date = fields.Date(
+        string="Order Date",
+        help="Order created date",
+        readonly=True,
+        index=True,
+        default=fields.Date.today(),
+    )
+    delivered_date = fields.Datetime(
+        string="Delivered Date", readonly=True, help="Delivering date of the order"
+    )
     validity_date = fields.Date()
     note = fields.Text(default=_default_note)
     sale_count = fields.Integer(compute="_compute_sale_count")
-    fiscal_position_id = fields.Many2one("account.fiscal.position", string="Fiscal Position")
+    fiscal_position_id = fields.Many2one(
+        "account.fiscal.position", string="Fiscal Position"
+    )
     amount_untaxed = fields.Monetary(
         string="Untaxed Amount",
         store=True,
@@ -269,64 +292,90 @@ class PrescriptionOrder(models.Model):
     #     )
     #     return configurator_obj.with_context(**ctx).get_wizard_action()
 
-
     @api.model
     def create(self, vals):
         """Inherited create function to generate sequence number for prescription orders."""
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('prescription.order') or '/'
-        if not vals.get('team_id'):
-            raise ValidationError("The Team field must be set when creating a prescription order.")
+        if vals.get("name", "/") == "/":
+            vals["name"] = (
+                self.env["ir.sequence"].next_by_code("prescription.order") or "/"
+            )
+        if not vals.get("team_id"):
+            raise ValidationError(
+                "The Team field must be set when creating a prescription order."
+            )
         return super(PrescriptionOrder, self).create(vals)
 
     @api.model
-    def create_prescription_order(self, partner, phone, address, date, price_list, product, note, delivered_date, pos_order, team_id):
+    def create_prescription_order(
+        self,
+        partner,
+        phone,
+        address,
+        date,
+        price_list,
+        product,
+        note,
+        delivered_date,
+        pos_order,
+        team_id,
+    ):
         """Creates a prescription order based on the values in the prescription popup in PoS UI."""
-        order = self.create({
-            'partner_id': partner,
-            'phone': phone,
-            'delivery_address': address,
-            'pricelist_id': price_list if price_list else False,
-            'draft_date': fields.Date.today(),
-            'pos_order_uid': pos_order,
-            'team': team_id,
-            'prescription_line_ids': [Command.create({
-                'product_id': product['product_id'][i],
-                'qty': product['qty'][i],
-                'price_unit': product['price'][i],
-            }) for i in range(len(product['product_id']))],
-            'note': note,
-        })
+        order = self.create(
+            {
+                "partner_id": partner,
+                "phone": phone,
+                "delivery_address": address,
+                "pricelist_id": price_list if price_list else False,
+                "draft_date": fields.Date.today(),
+                "pos_order_uid": pos_order,
+                "team": team_id,
+                "prescription_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": product["product_id"][i],
+                            "qty": product["qty"][i],
+                            "price_unit": product["price"][i],
+                        }
+                    )
+                    for i in range(len(product["product_id"]))
+                ],
+                "note": note,
+            }
+        )
 
         if delivered_date:
-            order.write({'delivered_date': delivered_date + ' 00:00:00'})
+            order.write({"delivered_date": delivered_date + " 00:00:00"})
         return order.name
 
     @api.model
     def all_orders(self):
         """Fetches all draft stage orders to PoS Prescription orders screen."""
         values = []
-        for rec in self.search([('state', '=', 'draft')]):
+        for rec in self.search([("state", "=", "draft")]):
             products = []
             for line in rec.prescription_line_ids:
-                products.append({
-                    'id': line.product_id.id,
-                    'qty': line.qty,
-                    'price': line.price_unit
-                })
-            values.append({
-                'id': rec.id,
-                'name': rec.name,
-                'partner_id': rec.partner_id.id,
-                'partner_name': rec.partner_id.name,
-                'address': rec.delivery_address,
-                'note': rec.note,
-                'phone': rec.phone,
-                'date': rec.draft_date,
-                'deliver': rec.delivered_date,
-                'products': products,
-                'total': rec.amount_total
-            })
+                products.append(
+                    {
+                        "id": line.product_id.id,
+                        "qty": line.qty,
+                        "price": line.price_unit,
+                    }
+                )
+            values.append(
+                {
+                    "id": rec.id,
+                    "name": rec.name,
+                    "partner_id": rec.partner_id.id,
+                    "partner_name": rec.partner_id.name,
+                    "address": rec.delivery_address,
+                    "note": rec.note,
+                    "phone": rec.phone,
+                    "date": rec.draft_date,
+                    "deliver": rec.delivered_date,
+                    "products": products,
+                    "total": rec.amount_total,
+                }
+            )
         return values
 
     def unlink(self):
@@ -360,6 +409,24 @@ class PrescriptionOrder(models.Model):
             order.write({"state": "draft", "confirmed": False})
         return True
 
+    @api.depends("helpdesk_tickets_ids")
+    def _get_helpdesk_tickets_count(self):
+        for rec in self:
+            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+
+    def helpdesk_ticket(self):
+        action = self.env.ref("helpdesk.helpdesk_ticket_action_main_tree").read()[0]
+
+        tickets = self.order_line.mapped("helpdesk_discription_id")
+        if len(tickets) > 1:
+            action["domain"] = [("id", "in", tickets.ids)]
+        elif tickets:
+            action["views"] = [
+                (self.env.ref("helpdesk.helpdesk_ticket_view_form").id, "form")
+            ]
+            action["res_id"] = tickets.id
+        return action
+
     def action_confirm(self):
         self._validate()
         for order in self:
@@ -368,7 +435,41 @@ class PrescriptionOrder(models.Model):
                 sequence_obj = sequence_obj.with_company(order.company_id.id)
             name = sequence_obj.next_by_code("prescription.order")
             order.write({"confirmed": True, "name": name})
+
+        helpdesk_ticket_list = []
+        for line in self.mapped("order_line"):
+            if line.product_id.is_helpdesk:
+                helpdesk_ticket_dict = {
+                    "name": line.product_id.name,
+                    "team_id": line.product_id.helpdesk_team.id,
+                    "user_id": line.product_id.helpdesk_assigned_to.id,
+                    "partner_id": self.partner_id.id,
+                    "partner_name": self.partner_id.name,
+                    "partner_email": self.partner_id.email,
+                    "description": line.name,
+                }
+                helpdesk_ticket_id = self.env["helpdesk.ticket"].create(
+                    helpdesk_ticket_dict
+                )
+                if helpdesk_ticket_id:
+                    line.helpdesk_discription_id = helpdesk_ticket_id.id
+                    helpdesk_ticket_list.append(helpdesk_ticket_id.id)
+
+        # Assign created Helpdesk tickets to the order
+        if helpdesk_ticket_list:
+            self.helpdesk_tickets_ids = helpdesk_ticket_list
+
         return True
+
+    # def action_confirm(self):
+    #     self._validate()
+    #     for order in self:
+    #         sequence_obj = self.env["ir.sequence"]
+    #         if order.company_id:
+    #             sequence_obj = sequence_obj.with_company(order.company_id.id)
+    #         name = sequence_obj.next_by_code("prescription.order")
+    #         order.write({"confirmed": True, "name": name})
+    #     return True
 
     def _check_active_orders(self):
         for order in self.filtered("sale_count"):
@@ -462,4 +563,3 @@ class PrescriptionOrder(models.Model):
         order_ids = rx_lines.mapped("order_id")
         res.append(("id", "in", order_ids.ids))
         return res
-

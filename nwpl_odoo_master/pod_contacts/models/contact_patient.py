@@ -1,11 +1,22 @@
+from odoo import models, fields, _, api, Command
+from odoo.exceptions import ValidationError, UserError
+from datetime import date
+from dateutil.relativedelta import relativedelta
+from odoo.addons.phone_validation.tools import phone_validation
 import logging
 
-from dateutil.relativedelta import relativedelta
-from odoo import _, models, fields, api
-from odoo.exceptions import UserError
-
-
 _logger = logging.getLogger(__name__)
+
+external_tracking_fields = {
+    "last_consultation_date",
+    "patient_status",
+}
+
+internal_tracking_fields = {
+    "practice_info_notes",
+    "age",
+    "date_of_birth",
+}
 
 
 class ContactPatient(models.Model):

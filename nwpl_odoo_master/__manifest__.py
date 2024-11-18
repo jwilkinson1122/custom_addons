@@ -81,7 +81,7 @@
         "amazon_s3_connector/views/res_config_settings_views.xml",
         "amazon_s3_connector/wizard/amazon_upload_file_views.xml",
         # reorder
-        "pod_sale_reorder/views/res_partner.xml"
+        "pod_sale_reorder/views/res_partner.xml",
         # product configurator
         "pod_product_configurator/security/configurator_security.xml",
         "pod_product_configurator/security/ir.model.access.csv",
@@ -144,6 +144,10 @@
         "pod_product_options/views/product_template_views.xml",
         "pod_product_options/views/sale_views.xml",
         "pod_product_options/wizard/option_selection_wizard_views.xml",
+        # sale order helpdesk
+        "pod_sale_order_helpdesk_ticket/views/sale_order_view.xml",
+        "pod_sale_order_helpdesk_ticket/views/product_product_view.xml",
+        "pod_sale_order_helpdesk_ticket/views/product_template_view.xml",
         # bom
         "pod_flexible_bom/security/ir.model.access.csv",
         "pod_flexible_bom/views/sale_order_line.xml",

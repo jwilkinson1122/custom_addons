@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- form view -->
+  <record id="product_public_category_form_view" model="ir.ui.view">
+    <field name="name">product.public.category.form</field>
+    <field name="model">product.public.category</field>
+    <field name="arch" type="xml">
+      <form string="Website Public Categories">
+        <sheet>
+          <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}" />
+          <div class="oe_left">
+            <group>
+              <field name="name" />
+              <field name="parent_id" invisible="1"/>
+              <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website" />
+              <field name="sequence" groups="base.group_no_one" />
+            </group>
+          </div>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <!-- tree view -->
+  <record id="product_public_category_tree_view" model="ir.ui.view">
+    <field name="name">product.public.category.tree</field>
+    <field name="model">product.public.category</field>
+    <field name="arch" type="xml">
+      <tree string="Product Body Parts">
+        <field name="sequence" widget="handle"/>
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="product_public_category_action_view" model="ir.actions.act_window">
+    <field name="name">Product Body Parts</field>
+    <field name="res_model">product.public.category</field>
+    <field name="view_mode">kanban,tree,form</field>
+  </record>
+</odoo>

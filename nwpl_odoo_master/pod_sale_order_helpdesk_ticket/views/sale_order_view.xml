@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="inherit_sale_view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button name="helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket">
+                    <field name="helpdesk_tickets_count" widget="statinfo" string="Tickets"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="helpdesk_discription_id"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page name='helpdesk_ticket' string='Helpdesk Tickets'>
+                    <field name='helpdesk_tickets_ids' context="{'form_view_ref': 'helpdesk.helpdesk_ticket_action_main_tree'}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
