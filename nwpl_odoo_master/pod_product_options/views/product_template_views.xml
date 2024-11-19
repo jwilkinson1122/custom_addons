@@ -22,7 +22,7 @@
                 </page>
 
                 <page name="pre_configured_product" string="Pre-Configured Items" invisible="not is_pre_configured">
-                    <field name="combo_product_id">
+                    <field name="preconfigured_product_id">
                         <tree editable="bottom">
                             <field name="product_id" options="{'no_create': True}" />
                             <field name="product_quantity" />
