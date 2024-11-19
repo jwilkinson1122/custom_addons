@@ -87,6 +87,7 @@ class PrescriptionOrder(models.Model):
 
     pos_order_uid = fields.Char(help="Related Pos order", string="Related Pos order")
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
+
     line_ids = fields.One2many(
         "prescription.order.line", "order_id", string="Order lines", copy=True
     )
@@ -460,16 +461,6 @@ class PrescriptionOrder(models.Model):
             self.helpdesk_tickets_ids = helpdesk_ticket_list
 
         return True
-
-    # def action_confirm(self):
-    #     self._validate()
-    #     for order in self:
-    #         sequence_obj = self.env["ir.sequence"]
-    #         if order.company_id:
-    #             sequence_obj = sequence_obj.with_company(order.company_id.id)
-    #         name = sequence_obj.next_by_code("prescription.order")
-    #         order.write({"confirmed": True, "name": name})
-    #     return True
 
     def _check_active_orders(self):
         for order in self.filtered("sale_count"):

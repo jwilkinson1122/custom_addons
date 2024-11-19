@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
+
+    is_pre_configured = fields.Boolean("Pre-Configured Product", default=False)
+    preconfigured_product_id = fields.One2many(
+        "product.preconfigured", "product_template_id", "Pre-Configured Item"
+    )
 
     product_option_ids = fields.One2many(
         "product.options", "prod_tmpl_id", string="Product Options"

@@ -5,6 +5,22 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
+class PreconfiguredProduct(models.Model):
+    _name = "product.preconfigured"
+    _description = "Pre-Configured Product"
+
+    @api.onchange("product_id")
+    def product_id_onchange(self):
+        return {"domain": {"product_id": [("is_pre_configured", "=", False)]}}
+
+    name = fields.Char("name")
+    product_template_id = fields.Many2one("product.template", "Item")
+    product_quantity = fields.Float("Quantity", default="1", required=True)
+    product_id = fields.Many2one("product.product", "Product", required=True)
+    uom_id = fields.Many2one("uom.uom", related="product_id.uom_id")
+    price = fields.Float("Product_price")
+
+
 class ProductOptions(models.Model):
     _name = "product.options"
     _description = "Product Options"
