@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_tree_practice" model="ir.ui.view">
+            <field name="name">res.partner.tree.practice</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="phone" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="user_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="category_id" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="company_id" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="email" position="before">
+                    <field name="mobile" optional="show"/>
+                </field>
+                <field name="email" position="after">
+                    <field name="responsible_id" optional="show"/>
+                    <field name="practice_id" optional="show"/>
+                    <field name="gender" optional="hide"/>
+                    <field name="birthdate" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_partner_form_practice" model="ir.ui.view">
+            <field name="name">res.partner.form.practice</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']/button" position="before">
+                    <button name="action_view_memberships" type="object" class="oe_stat_button" icon="fa-id-card" context="{'member_id': active_id}">
+                        <field name="membership_count"/>
+                        <span invisible="membership_count &gt; 1">Membership</span>
+                        <span invisible="membership_count &gt;= 1">Memberships</span>
+                    </button>
+                </xpath>
+                <xpath expr="//span[@name='address_name']" position="before">
+                    <field name="responsible_id" invisible="is_company"/>
+                </xpath>
+                <field name="function" position="before">
+                    <field name="practice_id" invisible="is_company"/>
+                </field>
+                <field name="type" position="after">
+                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only" title="By saving this change, the responsible/dependents address will also be updated." invisible="not responsible_id and dependent_ids == []"/>
+                </field>
+                <!-- rendering of `phone` and `mobile` fields is OK only if `sms` module is installed (see commit message for more details) -->
+                <field name="phone" position="after">
+                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only" title="By saving this change, the responsible/dependents phone will also be updated." invisible="not responsible_id and dependent_ids == []"/>
+                </field>
+                <field name="mobile" position="after">
+                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only" title="By saving this change, the responsible/dependents mobile will also be updated." invisible="not responsible_id and dependent_ids == []"/>
+                </field>
+                <!-- rendering of `email` field is OK only if `email` module is installed (see commit message for more details) -->
+                <field name="email" position="after">
+                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only" title="By saving this change, the responsible/dependents email will also be updated." invisible="not responsible_id and dependent_ids == []"/>
+                </field>
+                <field name="vat" position="before">
+                    <field name="gender" widget="radio" options="{'horizontal': true}" invisible="is_company or type != 'contact'"/>
+                    <field name="birthdate" invisible="is_company or type != 'contact'"/>
+                </field>
+                <field name="vat" position="attributes">
+                    <attribute name="invisible">not is_company</attribute>
+                </field>
+                <xpath expr="//page[@name='contact_addresses']" position="before">
+                    <page string="Players" name="player_addresses" invisible="not is_company" autofocus="autofocus">
+                        <!-- FIXME default_lang does not work (may be != lang) -->
+                        <field name="player_ids" mode="tree,kanban" context="{'default_practice_id': active_id, 'default_type': 'contact'}">
+                            <tree string="Players" delete="false">
+                                <field name="display_name"/>
+                                <field name="responsible_id" optional="show"/>
+                                <field name="parent_id" optional="hide"/>
+                                <field name="email" optional="show"/>
+                                <field name="phone" optional="hide"/>
+                                <field name="mobile" optional="show"/>
+                                <field name="street" optional="hide"/>
+                                <field name="street2" optional="hide"/>
+                                <field name="zip" optional="hide"/>
+                                <field name="city" optional="hide"/>
+                            </tree>
+                            <kanban class="o_kanban_mobile" delete="false">
+                                <field name="id"/>
+                                <field name="color"/>
+                                <field name="type"/>
+                                <field name="email"/>
+                                <field name="responsible_id"/>
+                                <field name="phone"/>
+                                <field name="mobile"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                        <div t-att-class="color + ' oe_kanban_global_click'">
+                                            <div class="o_kanban_image">
+                                                <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                            </div>
+                                            <div class="oe_kanban_details">
+                                                <field name="display_name"/>
+                                                <div t-if="record.responsible_id.raw_value">Responsible: <field name="responsible_id"/>
+                                                </div>
+                                                <div t-if="record.email.raw_value">
+                                                    <field name="email" widget="email"/>
+                                                </div>
+                                                <div t-if="record.type.raw_value != 'contact'">
+                                                    <div>
+                                                        <field name="zip"/>
+                                                        <field name="city"/>
+                                                    </div>
+                                                    <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                    <field name="country_id"/>
+                                                </div>
+                                                <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/>
+                                                </div>
+                                                <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//page[@name='contact_addresses']" position="before">
+                    <page string="Dependents" name="dependent_addresses" invisible="is_company" autofocus="autofocus">
+                        <!-- FIXME default_lang does not work (may be != lang) -->
+                        <field name="dependent_ids" mode="kanban" context="{'default_responsible_id': active_id, 'default_type': 'contact'}">
+                            <kanban delete="false">
+                                <field name="id"/>
+                                <field name="color"/>
+                                <field name="type"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="mobile"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                        <div t-att-class="color + ' oe_kanban_global_click'">
+                                            <div class="o_kanban_image">
+                                                <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                            </div>
+                                            <div class="oe_kanban_details">
+                                                <field name="display_name"/>
+                                                <div t-if="record.email.raw_value">
+                                                    <field name="email" widget="email"/>
+                                                </div>
+                                                <div t-if="record.type.raw_value != 'contact'">
+                                                    <div>
+                                                        <field name="zip"/>
+                                                        <field name="city"/>
+                                                    </div>
+                                                    <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                    <field name="country_id"/>
+                                                </div>
+                                                <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/>
+                                                </div>
+                                                <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_kanban_practice" model="ir.ui.view">
+            <field name="name">res.partner.kanban.practice</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="practice_id"/>
+                </field>
+                <xpath expr="//t[@t-name='kanban-box']//div[hasclass('o_kanban_image_fill_left')]/img[hasclass('o_kanban_image_inner_pic')]" position="after">
+                    <img class="o_kanban_image_inner_pic_left" t-if="record.practice_id.raw_value" t-att-alt="record.practice_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.practice_id.raw_value)"/>
+                </xpath>
+                <xpath expr="//t[@t-name='kanban-box']//div[hasclass('o_kanban_image')]/img[hasclass('o_kanban_image_inner_pic')]" position="after">
+                    <img class="o_kanban_image_inner_pic_left" t-if="record.practice_id.raw_value" t-att-alt="record.practice_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.practice_id.raw_value)"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_partner_filter_practice" model="ir.ui.view">
+            <field name="name">res.partner.select.practice</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="practice_id" filter_domain="[('practice_id', 'ilike', self)]" domain="[('is_company', '=', True)]"/>
+                </field>
+                <xpath expr="//filter[@name='salesperson']" position="before">
+                    <filter name="practice_id_search" context="{'group_by' : 'practice_id'}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

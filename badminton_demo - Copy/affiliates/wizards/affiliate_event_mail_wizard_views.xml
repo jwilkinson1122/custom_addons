@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="affiliate_event_mail_wizard_form_view" model="ir.ui.view">
+            <field name="name">affiliate.event.mail.wizard.form</field>
+            <field name="model">affiliate.event.mail.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email for Affiliate Event">
+                    <field name="default_attendee_ids" invisible="1"/>
+                    <field name="affiliate_event_id" invisible="1"/>
+                    <group invisible="not context.get('show_mail_to_players', False)">
+                        <group class="oe_title">
+                            <field name="send_to_players"/>
+                        </group>
+                        <group invisible="not send_to_players" colspan="4">
+                            <field name="composer_id" invisible="1"/>
+                            <field name="attendee_ids" widget="many2many_tags" placeholder="Add contacts to notify..." options="{'no_create': True}" colspan="4"/>
+                            <field name="template_id"/>
+                            <field name="subject" string="Subject"/>
+                            <field name="body" string="Body"/>
+                        </group>
+                    </group>
+                    <group invisible="not context.get('show_mail_to_others', False)">
+                        <group class="oe_title">
+                            <field name="others_send_to_partners" string="Send Mail" invisible="context.get('show_mail_to_players', True)"/>
+                            <field name="others_send_to_partners" invisible="not context.get('show_mail_to_players', True)"/>
+                        </group>
+                        <group invisible="not others_send_to_partners" colspan="4">
+                            <field name="others_composer_id" invisible="1"/>
+                            <group col="12" colspan="4">
+                                <group colspan="8">
+                                    <field name="others_partner_ids" widget="many2many_tags"/>
+                                </group>
+                                <group colspan="4">
+                                    <field name="others_include_players"/>
+                                    <field name="others_include_followers"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="others_template_id" string="Mail Template"/>
+                                <field name="others_subject" string="Subject"/>
+                                <field name="others_body" string="Body"/>
+                            </group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="change_event_state" string="Open Event" type="object" class="btn-primary" invisible="context.get('role') != 'to_open'"/>
+                        <button name="change_event_state" string="Confirm Event" type="object" class="btn-primary" invisible="context.get('role') != 'to_confirm'"/>
+                        <button name="change_event_state" string="Cancel Event" type="object" class="btn-primary" invisible="context.get('role') != 'to_cancel'"/>
+                        <button name="change_event_state" string="Send" type="object" class="btn-primary" invisible="not context.get('role') is None"/>
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

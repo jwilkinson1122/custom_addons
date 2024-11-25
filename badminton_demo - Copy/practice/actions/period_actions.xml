@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="action_settings_period" model="ir.actions.act_window">
+        <field name="name">Periods</field>
+        <field name="res_model">period</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_update_active_periods" model="ir.actions.server">
+        <field name="name">Recalculate Active Period(s)</field>
+        <field name="model_id" ref="model_period"/>
+        <field name="binding_model_id" ref="model_period" />
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records._update_periods()
+        </field>
+    </record>
+</data>
+</odoo>

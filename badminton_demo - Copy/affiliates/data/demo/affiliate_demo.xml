@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="affiliate_demo_1" model="affiliate">
+            <field name="name" model="affiliate" eval="'Affiliate Men (%s)' % obj().env.ref('practice.period_current').name"/>
+            <field name="kind">men</field>
+            <field name="season_id" ref="practice.period_current"/>
+            <field name="player_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_2'),
+            ref('practice.partner_demo_member_3'),
+            ref('practice.partner_demo_member_4'),
+            ref('practice.partner_demo_young_member_2'),
+            ref('base.res_partner_address_7'),
+            ref('base.res_partner_address_34'),
+        ])]"/>
+            <field name="responsible_id" ref="practice.partner_demo_member_3"/>
+            <field name="location_id" ref="sports_complex_1"></field>
+            <field name="referee_ids" eval="[(6, 0, [
+            ref('base.res_partner_main1'),
+            ref('base.partner_admin'),
+        ])]"/>
+            <field name="event_items_color">#67D5FF</field>
+        </record>
+        <record id="affiliate_demo_2" model="affiliate">
+            <field name="name" model="affiliate" eval="'Mixed IC - %s' % obj().env.ref('practice.period_current').name"/>
+            <field name="kind">mixed</field>
+            <field name="season_id" ref="practice.period_current"/>
+            <field name="player_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_1'),
+            ref('practice.partner_demo_young_member_1'),
+            ref('practice.partner_demo_member_2'),
+            ref('practice.partner_demo_member_4'),
+            ref('base.res_partner_address_7'),
+        ])]"/>
+            <field name="responsible_id" ref="practice.partner_demo_member_3"/>
+            <field name="location_id" ref="sports_complex_2"></field>
+            <field name="referee_ids" eval="[(6, 0, [
+            ref('base.res_partner_main1'),
+            ref('base.res_partner_main2'),
+            ref('base.partner_admin'),
+        ])]"/>
+            <field name="event_items_color">#FDFF32</field>
+        </record>
+        <record id="affiliate_demo_3" model="affiliate">
+            <field name="name" model="affiliate" eval="'Women - %s' % obj().env.ref('practice.period_current').name"/>
+            <field name="kind">women</field>
+            <field name="season_id" ref="practice.period_current"/>
+            <field name="player_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_1'),
+            ref('base.res_partner_address_14'),
+            ref('base.res_partner_address_33'),
+            ref('base.res_partner_address_13'),
+            ref('base.res_partner_address_32'),
+        ])]"/>
+            <field name="responsible_id" ref="practice.partner_demo_member_4"/>
+            <field name="location_id" ref="sports_complex_1"></field>
+            <field name="referee_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_4'),
+            ref('base.res_partner_main2'),
+        ])]"/>
+            <field name="event_items_color">#FFB4B4</field>
+        </record>
+        <record id="affiliate_demo_4" model="affiliate">
+            <field name="name" model="affiliate" eval="'Men IC (%s)' % obj().env.ref('practice.period_upcoming').name"/>
+            <field name="kind">men</field>
+            <field name="season_id" ref="practice.period_upcoming"/>
+            <field name="player_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_4'),
+            ref('base.partner_admin'),
+            ref('base.res_partner_address_7'),
+            ref('base.res_partner_address_34'),
+        ])]"/>
+            <field name="responsible_id" ref="base.partner_admin"/>
+            <field name="location_id" ref="sports_complex_2"></field>
+            <field name="referee_ids" eval="[(6, 0, [
+            ref('base.res_partner_main1'),
+            ref('base.res_partner_main2'),
+        ])]"/>
+            <field name="event_items_color">#9432FF</field>
+        </record>
+        <record id="affiliate_demo_5" model="affiliate">
+            <field name="name" model="affiliate" eval="'Men IC (%s)' % obj().env.ref('practice.period_past_1').name"/>
+            <field name="kind">men</field>
+            <field name="season_id" ref="practice.period_past_1"/>
+            <field name="player_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_2'),
+            ref('practice.partner_demo_member_3'),
+            ref('base.res_partner_address_7'),
+            ref('base.res_partner_address_24'),
+        ])]"/>
+            <field name="responsible_id" ref="practice.partner_demo_member_4"/>
+            <field name="location_id" ref="sports_complex_1"></field>
+            <field name="referee_ids" eval="[(6, 0, [
+            ref('practice.partner_demo_member_1'),
+        ])]"/>
+            <field name="event_items_color">#37FF61</field>
+        </record>
+    </data>
+</odoo>
