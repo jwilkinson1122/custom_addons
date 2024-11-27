@@ -6,9 +6,45 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+
+            <div name="button_box" position="inside">
+                <button name="action_view_company_group_members" type="object" string="Company Groups" class="oe_stat_button" icon="fa-users">
+                    <field name="company_group_member_ids" widget="statinfo" />
+                </button>
+                <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" context="{'default_is_contact': True}"/>
+
+                <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" /> -->
+                <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" context="{'default_is_contact': True}"/> -->
+
+
+            </div>
+            <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="readonly">not is_company and parent_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="tz" />
+            </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="is_company_parent" invisible="1" />
                 <field name="highest_parent_id" invisible="1" />
+            </xpath>
+            <!-- <field name="city" position="before">
+                <field name="zip_id" options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}" placeholder="Location completion" readonly="type == 'contact' and parent_id != False" />
+            </field> -->
+            <xpath expr="//field[@name='city']" position="before">
+                <field name="zip_id" options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}" placeholder="Location completion" readonly="type == 'contact' and parent_id != False" />
+            </xpath>
+            <xpath expr="//field[@name='function']" position="before">
+                <field name="job_position_id" invisible="is_company == True" options='{"no_open": True}'/>
+                <field name="role_ids" widget="many2many_tags" invisible="is_company" />
+
+            </xpath>
+            <xpath expr="//field[@name='function']" position="after">
+                <field name="fax" placeholder="Fax..." widget="phone" />
+                <!-- <field name="role_ids" widget="many2many_tags" invisible="is_company" /> -->
+            </xpath>
+            <xpath expr="//div[hasclass('o_address_format')]" position="after">
+                <field name="company_group_id" widget="res_partner_many2one" invisible="not is_company" />
             </xpath>
             <xpath expr="//field[@name='child_ids']" position="before">
                 <group>
@@ -17,6 +53,69 @@
                     </group>
                 </group>
                 <newline/>
+                <group>
+                    <group>
+                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" />
+                        <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" />
+                    </group>
+                    <group>
+                        <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" options="{'no_open': True, 'no_create': True}" />
+                    </group>
+                </group>
+                <newline/>
+
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='mobile']" position="after">
+                <field name="fax" placeholder="Fax..." widget="phone" />
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='city']" position="before">
+                <field name="zip_id" options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}" placeholder="City completion" />
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='function']" position="before">
+                <field name="is_company" invisible="True" />
+                <field name="job_position_id" invisible="is_company == True" options='{"no_open": True}'/>
+            </xpath>
+            <xpath expr="/form/sheet/group/group/div/field[@name='street2']" position="after">
+                <field name="street3" placeholder="Street 3..." class="o_address_street" readonly="type == 'contact' and parent_id != False" />
+            </xpath>
+            <xpath expr="//field[@name='child_ids']//form//group" position="after">
+                <group string="Force addresses" invisible="type != 'contact'">
+                    <group colspan="4">
+                        <field name="commercial_partner_id" invisible="1" />
+                        <div class="oe_grey" colspan="4">
+                            <p
+                            >You can force contact, delivery and invoice address for this contact.
+                            If you keep these fields empty, Odoo's default behavior will apply.</p>
+                        </div>
+                    </group>
+                    <group colspan="4">
+                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'delivery')]" />
+                    </group>
+                    <group colspan="4">
+                        <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'invoice')]" />
+                    </group>
+                    <group colspan="4">
+                        <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="/form//field[@name='child_ids']/form//field[@name='street2']" position="after">
+                <field name="street3" placeholder="Street 3..." class="o_address_street" />
+            </xpath>
+            <xpath expr="/form//field[@name='child_ids']/kanban/field[@name='street2']" position="after">
+                <field name="street3" />
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="personal_information_page" string="Personal Information" invisible="is_company">
+                    <group name="personal_information_group">
+                        <!-- <field name='gender' />
+                        <field name='birthdate_date' />
+                        <field name="age" invisible="not birthdate_date"/> -->
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//group[@name='sale']" position="inside">
+                <field name="picking_policy" />
             </xpath>
         </field>
     </record>
@@ -145,6 +244,9 @@
             <field name="parent_id" position="attributes">
                 <attribute name="readonly">id != False</attribute>
             </field>
+            <field name="function" position="after">
+                <field name="fax" placeholder="Fax..." />
+            </field>
         </field>
     </record>
 
@@ -159,14 +261,49 @@
             <field name="parent_id" position="attributes">
                 <attribute name="readonly">id != False</attribute>
             </field>
+            <field name="street2" position="after">
+                <field name="street3" placeholder="Street 3..." class="o_address_street" />
+            </field>
         </field>
     </record>
+
+    <record id="res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">add street 3 in kanban</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <field name="street2" position="after">
+                <field name="street3" />
+            </field>
+        </field>
+    </record>
+
+    <record id="res_partner_view_form_private" model="ir.ui.view">
+        <field name="name">add street 3 in res.partner.form.private</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_view_form_private" />
+        <field name="arch" type="xml">
+            <field name="street2" position="after">
+                <field name="street3" placeholder="Street 3..." class="o_address_street" />
+            </field>
+        </field>
+    </record>
+
 
     <record id="view_partner_search" model="ir.ui.view">
         <field name="name">Is a Company Parent Partner Search</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="company_group_id" />
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="job_position_id" />
+            </xpath>
+            <xpath expr="//filter[@name='group_company']" position="before">
+                <filter name="group_company_group" string="Company Group" context="{'group_by': 'company_group_id'}" />
+            </xpath>
             <xpath expr="//filter[@name='type_company']" position="after">
                 <filter string="Parent Company" name="is_company_parent" domain="[('is_company_parent','=',True)]"/>
                 <separator/>
@@ -174,7 +311,20 @@
             <xpath expr="//filter[@name='group_country']" position="after">
                 <filter name="group_parent_company" string="Parent Company" context="{'group_by': 'highest_parent_id'}"/>
             </xpath>
+            <xpath expr="//filter[@name='salesperson']" position="after">
+                <filter string="Job position" name="job_position_filter" domain="[('is_company','!=', True)]" context="{'group_by': 'job_position_id'}" />
+            </xpath>
         </field>
+    </record>
+
+    <record id="action_open_group_members" model="ir.actions.act_window">
+        <field name="name">Company group members</field>
+        <field name="res_model">res.partner</field>
+        <field name="binding_model_id" ref="model_res_partner" />
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+        <field name="context">{'create': False}</field>
+        <field name="domain">[('company_group_id', 'in', context.get('active_ids'))]</field>
     </record>
 
 </odoo>
