@@ -5,7 +5,12 @@ from . import res_city_zip
 from . import res_city
 from . import res_country
 from . import res_contact
+from . import res_partner_role
+from . import res_partner_position
 from . import res_partner
+
+# from . import res_partner_role
+# from . import res_partner_position
 
 # from . import res_contact
 from . import res_company

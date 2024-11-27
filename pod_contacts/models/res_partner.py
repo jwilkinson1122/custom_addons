@@ -77,6 +77,24 @@ class ResPartner(models.Model):
         domain=[("active", "=", True), ("is_company", "=", True)],
     )
 
+    contact_id = fields.Many2one(
+        "res.contact",
+        string="Related Contact",
+        help="Link to the related contact.",
+    )
+
+    contact_role_ids = fields.Many2many(
+        string="Contact Roles",
+        comodel_name="res.partner.role",
+        help="Refers to a general function or responsibilities within a company.",
+    )
+
+    contact_position_id = fields.Many2one(
+        "res.partner.position",
+        "Contact Position",
+        help="Refers to a specific function or responsibilities within a company.",
+    )
+
     partner_delivery_id = fields.Many2one(
         comodel_name="res.partner",
         string="Shipping address",
@@ -123,15 +141,6 @@ class ResPartner(models.Model):
     state_id = fields.Many2one(compute="_compute_state_id", readonly=False, store=True)
 
     street3 = fields.Char("Street 3")
-
-    role_ids = fields.Many2many(
-        string="Roles",
-        comodel_name="res.partner.role",
-    )
-
-    job_position_id = fields.Many2one(
-        "res.partner.job_position", "Categorized job position"
-    )
 
     fax = fields.Char()
 
@@ -627,12 +636,6 @@ class ResPartner(models.Model):
     #         "selection"
     #     ]
 
-    contact_id = fields.Many2one(
-        "res.contact",
-        string="Related Contact",
-        help="Link to the related contact.",
-    )
-
     create_users_button = fields.Boolean(
         related="contact_id.create_users_button",
         store=False,
@@ -660,17 +663,17 @@ class ResPartner(models.Model):
 
 class ResPartnerRole(models.Model):
     _name = "res.partner.role"
-    _description = "Partner Role"
+    _description = "Contact Roles"
 
-    name = fields.Char()
-    active = fields.Boolean(
-        default=True,
-        help="By unchecking the active field, you may hide a role you will not use.",
-    )
+    name = fields.Char(required=True)
+    description = fields.Char(required=True)
+    active = fields.Boolean(default=True)
 
 
-class ResPartnerJobPosition(models.Model):
-    _name = "res.partner.job_position"
-    _description = "Job position"
+class ResPartnerPosition(models.Model):
+    _name = "res.partner.position"
+    _description = "Contact Positions"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True)
+    description = fields.Char(required=True)
+    active = fields.Boolean(default=True)

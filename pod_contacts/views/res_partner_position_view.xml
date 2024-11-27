@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_partner_position_tree_view" model="ir.ui.view">
+        <field name="name">res.partner.position.tree</field>
+        <field name="model">res.partner.position</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+    <record id="res_partner_position_form_view" model="ir.ui.view">
+        <field name="name">res.partner.position.form</field>
+        <field name="model">res.partner.position</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                        <field name="active" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="res_partner_position_action" model="ir.actions.act_window">
+        <field name="name">Contact Positions</field>
+        <field name="res_model">res.partner.position</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- <menuitem id="res_partner_position_menu" action="res_partner_position_action" parent="contacts.res_partner_menu_config" sequence="0" /> -->
+
+    <!-- <xpath expr="//menuitem[@id='res_partner_menu_config']" position="after">
+        <menuitem id="menu_partner_category_form" action="base.action_partner_category_form" name="Contact Tags" sequence="1" parent="res_partner_menu_config"/>
+        <menuitem id="menu_partner_title_contact" action="base.action_partner_title_contact" name="Contact Titles" parent="res_partner_menu_config" sequence="3"/>
+        <menuitem id="res_partner_industry_menu" name="Industries" action="base.res_partner_industry_action" parent="res_partner_menu_config" sequence="4"/>
+        <menuitem id="menu_localisation" name="Localization" parent="res_partner_menu_config" sequence="5"/>
+        <menuitem id="menu_config_bank_accounts" name="Bank Accounts" parent="res_partner_menu_config" sequence="6"/>
+    </xpath> -->
+
+    <!-- <xpath expr="//menuitem[@id='menu_partner_title_contact']" position="attributes">
+        <attribute name="sequence"></attribute>
+    </xpath> -->
+</odoo>

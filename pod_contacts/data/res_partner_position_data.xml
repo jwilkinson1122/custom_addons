@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Predefined Contact Positions -->
+    <record id="position_manager" model="res.partner.position">
+        <field name="name">Manager</field>
+        <field name="description">Manages a team or department within the company.</field>
+    </record>
+    <record id="position_assistant" model="res.partner.position">
+        <field name="name">Assistant</field>
+        <field name="description">Assists in daily operations and administrative tasks.</field>
+    </record>
+    <record id="position_sales_rep" model="res.partner.position">
+        <field name="name">Sales</field>
+        <field name="description">Handles sales and customer relationships.</field>
+    </record>
+    <record id="position_consultant" model="res.partner.position">
+        <field name="name">Consultant</field>
+        <field name="description">Provides expert advice and services.</field>
+    </record>
+</odoo>

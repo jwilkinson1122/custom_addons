@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record model="ir.ui.view" id="res_partner_role_form_view">
+    <record id="res_partner_role_tree_view" model="ir.ui.view">
+        <field name="name">res.partner.role.tree</field>
+        <field name="model">res.partner.role</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_role_form_view" model="ir.ui.view">
         <field name="name">res.partner.role.form</field>
         <field name="model">res.partner.role</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group name="main">
+                    <group>
                         <field name="name" />
+                        <field name="description" />
                         <field name="active" />
                     </group>
                 </sheet>
@@ -16,19 +28,11 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="res_partner_role_act_window">
-        <field name="name">Partner Role</field>
+    <record id="res_partner_role_action" model="ir.actions.act_window">
+        <field name="name">Contact Roles</field>
         <field name="res_model">res.partner.role</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.menu" id="res_partner_role_menu">
-        <field name="name">Partner Roles</field>
-        <field name="parent_id" ref="contacts.res_partner_menu_config" />
-        <field name="action" ref="res_partner_role_act_window" />
-        <field name="sequence" eval="16" />
-    </record>
-
+    <!-- <menuitem id="res_partner_role_menu" action="res_partner_role_action" parent="contacts.res_partner_menu_config" sequence="1" /> -->
 </odoo>
