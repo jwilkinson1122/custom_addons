@@ -106,13 +106,8 @@ class ResPartner(models.Model):
     partner_contact_id = fields.Many2one(
         comodel_name="res.partner",
         string="Default contact",
+        domain=[("is_company", "=", False)],
     )
-
-    # contact_id = fields.Many2one(
-    #     "res.contact",
-    #     string="Related Contact",
-    #     help="Link to the related contact.",
-    # )
 
     zip_id = fields.Many2one(
         comodel_name="res.city.zip",
@@ -478,13 +473,6 @@ class ResPartner(models.Model):
             node.attrib["domain"] = self._zip_id_domain()
         return etree.tostring(doc, encoding="unicode")
 
-    # @api.model
-    # def _address_fields(self):
-    #     """Add to the list of address fields the new ZIP one, but also the city that is
-    #     not added by `base_address_extended`.
-    #     """
-    #     return super()._address_fields() + ["zip_id"]
-
     @api.model
     def _address_fields(self):
         res = super()._address_fields() + ["zip_id"]
@@ -630,35 +618,37 @@ class ResPartner(models.Model):
             "selection"
         ]
 
-    # @api.model
-    # def _get_picking_policy_selection(self):
-    #     return self.env["sale.order"].fields_get(["picking_policy"])["picking_policy"][
-    #         "selection"
-    #     ]
-
     create_users_button = fields.Boolean(
         related="contact_id.create_users_button",
         store=False,
     )
 
-    # create_users_button = fields.Boolean(
-    #     compute="_compute_create_users_button",
-    #     store=False,
-    # )
-
-    # @api.depends("user_ids")
-    # def _compute_create_users_button(self):
-    #     """Compute visibility of the 'Create User' button."""
-    #     for record in self:
-    #         record.create_users_button = not bool(record.user_ids)
-
     def create_contacts(self):
-        """Bridge method to create a user for the partner."""
-        if not self.user_ids:
-            self.ensure_one()
-            self.env["res.contact"].create_contacts(self)
-        else:
+        """Create a portal user for the partner."""
+        self.ensure_one()
+        if self.user_ids:
             raise UserError(_("A user for this partner already exists."))
+
+        # Add groups
+        # internal_user_group = self.env.ref("base.group_user")
+        # group_ids = [internal_user_group.id]
+
+        # Add Portal User Group
+        portal_user_group = self.env.ref("base.group_portal")
+        group_ids = [portal_user_group.id]
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create Login"),
+            "view_mode": "form",
+            "view_id": self.env.ref("pod_contacts.view_create_user_wizard_form").id,
+            "target": "new",
+            "res_model": "res.users",
+            "context": {
+                "default_partner_id": self.id,
+                "default_groups_id": [(6, 0, group_ids)],
+            },
+        }
 
 
 class ResPartnerRole(models.Model):

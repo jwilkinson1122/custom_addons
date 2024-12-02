@@ -11,7 +11,7 @@
                 <button name="action_view_company_group_members" type="object" string="Company Groups" class="oe_stat_button" icon="fa-users">
                     <field name="company_group_member_ids" widget="statinfo" />
                 </button>
-                <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" context="{'default_is_contact': True}"/>
+                <button name="create_contacts" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="is_company"/>
 
                 <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" /> -->
                 <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" context="{'default_is_contact': True}"/> -->
@@ -64,6 +64,13 @@
                     <group>
                         <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" options="{'no_open': True, 'no_create': True}" />
                     </group>
+                    <!-- <group>
+                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" />
+                        <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" />
+                    </group>
+                    <group>
+                        <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" options="{'no_open': True, 'no_create': True}" />
+                    </group> -->
                 </group>
                 <newline/>
             </xpath>

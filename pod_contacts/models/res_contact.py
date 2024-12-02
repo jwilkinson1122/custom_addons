@@ -27,54 +27,6 @@ class ResContact(models.Model):
 
     @api.depends("partner_id.user_ids")
     def _compute_create_users_button(self):
-        """Compute the visibility of the 'Create User' button."""
+        """Compute the visibility of the 'Create Portal User' button."""
         for record in self:
             record.create_users_button = not bool(record.partner_id.user_ids)
-
-    def create_contacts(self):
-        """Create user for res.contact."""
-        self.ensure_one()
-        if self.partner_id.user_ids:
-            raise UserError(_("A user for this contact already exists."))
-
-        # Add groups
-        contact_group = self.env.ref("base.group_contact_user")
-        internal_user_group = self.env.ref("base.group_user")
-        group_ids = [contact_group.id, internal_user_group.id]
-
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Create Login"),
-            "view_mode": "form",
-            "view_id": self.env.ref("pod_contacts.view_create_user_wizard_form").id,
-            "target": "new",
-            "res_model": "res.users",
-            "context": {
-                "default_partner_id": self.partner_id.id,
-                "default_groups_id": [(6, 0, group_ids)],
-            },
-        }
-
-    # def create_contacts(self):
-    #     """Action to create a user for the contact."""
-    #     self.ensure_one()
-
-    #     if self.partner_id.user_ids:
-    #         raise UserError(_("A user for this contact already exists."))
-
-    #     contact_group = self.env.ref("base.group_contact_user")
-    #     internal_user_group = self.env.ref("base.group_user")
-    #     group_ids = [contact_group.id, internal_user_group.id]
-
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "name": _("Create Login"),
-    #         "view_mode": "form",
-    #         "view_id": self.env.ref("pod_contacts.view_create_user_wizard_form").id,
-    #         "target": "new",
-    #         "res_model": "res.users",
-    #         "context": {
-    #             "default_partner_id": self.partner_id.id,
-    #             "default_groups_id": [(6, 0, group_ids)],
-    #         },
-    #     }
