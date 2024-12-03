@@ -12,3 +12,4 @@ from . import test_base_partner_company_group
 from . import test_partner_contact_gender
 from . import test_sale_partner_company_group
 from . import test_partner_shipping_policy
+from . import test_partner_contact_company_propagation

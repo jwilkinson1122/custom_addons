@@ -54,7 +54,7 @@ class ResPartner(models.Model):
         compute="_compute_is_company_parent",
         inverse="_set_is_company_parent",
         store=True,
-        default=False,
+        default=True,
         help="Indicates if the partner is a parent company.",
     )
 
@@ -184,10 +184,6 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.patient_id:
                 partner.patient_id.is_patient = partner.is_patient
-
-    # type = fields.Selection(
-    #     selection_add=[("patient", "Order ")], ondelete={"contact": "set default"}
-    # )
 
     zip_id = fields.Many2one(
         comodel_name="res.city.zip",
@@ -584,9 +580,36 @@ class ResPartner(models.Model):
             res = res.replace("\n\n", "\n")
         return res
 
+    type = fields.Selection(
+        [
+            ("contact", "Contact Address"),
+            ("private", "Private Address"),
+            ("patient", "Patient Address"),
+            ("invoice", "Invoice Address"),
+            ("delivery", "Delivery Address"),
+            ("other", "Other Address"),
+        ],
+        string="Address Type",
+        default="",
+        help="- Contact Address: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+        "- Patient Address: Use this to organize the contact details of patients of a given company (e.g. patient's home address, ...).\n"
+        "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+        "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+        "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+        "- Other: Other address for the company (e.g. subsidiary, ...)",
+    )
+
+    # type = fields.Selection(
+    #     selection_add=[("patient", "Order")], ondelete={"contact": "set default"}
+    # )
+
+    # def get_address_default_type(self):
+    #     """This will be the extension method for other contact types"""
+    #     return ["delivery", "invoice", "contact"]
+
     def get_address_default_type(self):
         """This will be the extension method for other contact types"""
-        return ["delivery", "invoice", "contact"]
+        return ["delivery", "invoice", "contact", "patient"]
 
     def address_get(self, adr_pref=None):
         """Get specific addresses based on preferences.

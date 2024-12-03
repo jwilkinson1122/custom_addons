@@ -94,7 +94,8 @@ class Affiliate(models.Model):
     event_items_color = fields.Char(
         "Event Items Color",
         help="Color of the affiliate event items in the calendar view",
-    )  # TODO Rename with events_color?
+    )
+
     events_count = fields.Integer(
         compute="_compute_events_count", string="Events Count"
     )
@@ -135,9 +136,6 @@ class Affiliate(models.Model):
         return super(Affiliate, self).write(vals)
 
     def unlink(self):
-        # even if "ondelete='cascade'" has been activated on field <affiliate.event>.affiliate_id,
-        # we need to explicitly call the "ondelete" method on the event_ids,
-        # so that their calendar_events will also be deleted
         self.event_ids.unlink()
         return super(Affiliate, self).unlink()
 
