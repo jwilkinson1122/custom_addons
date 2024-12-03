@@ -11,12 +11,8 @@
                 <button name="action_view_company_group_members" type="object" string="Company Groups" class="oe_stat_button" icon="fa-users">
                     <field name="company_group_member_ids" widget="statinfo" />
                 </button>
-                <button name="create_contacts" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="is_company"/>
-
-                <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" /> -->
-                <!-- <button name="create_contacts" type="object" string="Create User" class="oe_highlight" icon="fa-address-book-o" invisible="not create_users_button" context="{'default_is_contact': True}"/> -->
-
-
+                <button name="create_contacts" type="object" string="Create Portal Contact" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
+                <button name="create_contacts" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
             </div>
             <xpath expr="//field[@name='ref']" position="attributes">
                 <attribute name="readonly">not is_company and parent_id</attribute>
@@ -25,7 +21,11 @@
                 <field name="tz" />
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="is_company_parent" invisible="1" />
+                <field name="is_company_parent"/>
+                <field name="is_company"/>
+                <field name="is_contact"/>
+                <field name="is_patient"/>
+
                 <field name="highest_parent_id" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='city']" position="before">
@@ -49,6 +49,26 @@
             </xpath>
 
             <!-- Contacts & Addresses -->
+            <!-- Modify the contact_addresses page attributes -->
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="autofocus"></attribute>
+                <attribute name="string">Contacts</attribute>
+                <attribute name="invisible">not is_company</attribute>
+            </xpath>
+            <!-- Modify the child_ids field context -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="attributes">
+                <attribute name="context">{'default_parent_id': active_id, 'default_is_company':
+                    False, 'default_type':'contact', 'search_default_parent_id': active_id}</attribute>
+                <attribute name="options">{'kanban_view': {'create': True}}</attribute>
+            </xpath>
+            <!-- Add an alert to the contact_addresses page -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
+                <separator name="contacts" string="Contacts List" />
+                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids">
+                    No Contacts Available
+                </div>
+            </xpath>
+
             <xpath expr="//field[@name='child_ids']" position="before">
                 <group>
                     <group>
@@ -64,18 +84,12 @@
                     <group>
                         <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" options="{'no_open': True, 'no_create': True}" />
                     </group>
-                    <!-- <group>
-                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" />
-                        <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" />
-                    </group>
-                    <group>
-                        <field name="partner_contact_id" domain="[('id', 'child_of', commercial_partner_id), ('type', '=', 'contact')]" options="{'no_open': True, 'no_create': True}" />
-                    </group> -->
                 </group>
                 <newline/>
             </xpath>
 
             <!-- Contacts & Addresses Modal Popup View -->
+
             <xpath expr="//field[@name='child_ids']/form//field[@name='name']" position="before">
                 <field name="is_company" invisible="True" />
             </xpath>
@@ -146,9 +160,16 @@
             <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr='//page[@name="internal_notes"]' position="before">
-                <page string="Affiliates" invisible="not is_company">
-                    <field name="affiliate_ids" context="{'default_parent_id': id, 'default_is_company': True, 'default_type':'other'}" mode="kanban">
+            <!-- Child Companies -->
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <page string="Affiliates" invisible="not is_company" autofocus="autofocus">
+                    <separator name="affiliates" string="Affiliates List" />
+                    <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
+                        No Affiliates Available
+                    </div>
+                    <!-- <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True}" mode="kanban"> -->
+
+                    <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
                         <kanban on_create="base.view_partner_form">
                             <field name="id" />
                             <field name="color" />
@@ -351,33 +372,120 @@
     </record>
 
 
-    <!-- <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="contact_practitioner_action" sequence="3"/> -->
+    <!-- Actions -->
 
-    <menuitem id="res_partner_role_menu" name="Contact Roles" action="res_partner_role_action" parent="contacts.res_partner_menu_config" sequence="1" />
-    <menuitem id="res_partner_position_menu" name="Contact Positions" action="res_partner_position_action" parent="contacts.res_partner_menu_config" sequence="2" />
+    <record id="res_partner_companies_action" model="ir.actions.act_window">
+        <field name="name">Companies</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', True), ('id', '!=', 1)]</field>
+        <field name="context">
+        {
+            'default_company_type': 'company',
+            'default_is_company': True,
+            'default_is_company_parent': True, 
+            'default_type': '',
+        }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new customer company
+            </p>
+            <p>
+                An company is the parent entity of affiliates and establishes the hierarchical relationship.
+            </p>
+        </field>
+    </record>
 
-    <menuitem id="contacts.menu_partner_title_contact" name="Contact Titles" action="base.action_partner_title_contact" parent="contacts.res_partner_menu_config" sequence="3"/>
+    <record id="res_partner_affiliates_action" model="ir.actions.act_window">
+        <field name="name">Affiliates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <!-- <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', False), ('id', '!=', 1)]</field> -->
+        <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', False), ('parent_id', '!=', False), ('id', '!=', 1)]</field>
 
-    <menuitem id="contacts.menu_partner_category_form" name="Contact Tags" action="base.action_partner_category_form" parent="contacts.res_partner_menu_config" sequence="4"/>
+        <field name="context">{'default_company_type': 'company', 'default_is_company': True, 'default_is_company_parent':False, 'default_type': ''}
+        </field>
 
-    <menuitem id="contacts.res_partner_industry_menu" name="Industries" action="base.res_partner_industry_action" parent="contacts.res_partner_menu_config" sequence="5"/>
-    <menuitem id="contacts.menu_localisation" name="Localization" parent="contacts.res_partner_menu_config" sequence="6"/>
+        <!-- <field name="context">
+        {
+            'default_is_company': True,
+            'default_is_company_parent': False,
+            'default_parent_id': active_id,
+            'default_type': 'contact'
+        }
+        </field> -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new company affiliate
+            </p>
+            <p>
+            An affiliate is a child entity of companies and is a physical place where services are provided and resources and participants may be stored, found, contained or accommodated.
+            </p>
+        </field>
+    </record>
 
-    <menuitem id="contacts.menu_config_bank_accounts" name="Bank Accounts" parent="contacts.res_partner_menu_config" sequence="7"/>
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="domain">[('is_contact', '=', True)]</field>
+        <field name="context">{'default_is_contact': True, 'default_company_type':'person', 'default_type':'contact'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+            </p>
+            <p>Contacts covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+        </field>
+    </record>
+
+    <record id="res_partner_patients_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="context">{'default_is_patient': True, 'default_company_type':'person', 'default_type':'contact'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new patient
+            </p>
+            <p>
+                A Patient is a person receiving or registered to receive medical treatment.
+            </p>
+        </field>
+    </record>
 
 
-    <!-- <menuitem id="res_partner_menu_config" name="Configuration" parent="menu_contacts" groups="base.group_system" sequence="2"/>
+    <!-- Main Contacts Navbar Menu -->
+    <menuitem name="Customers" id="contacts.menu_contacts" sequence="20" web_icon="contacts,static/description/icon.png" groups="base.group_user,base.group_partner_manager"/>
 
-<menuitem id="menu_partner_category_form" action="base.action_partner_category_form" name="Contact Tags" sequence="1" parent="res_partner_menu_config"/>
+    <!-- Root Menu Items -->
+    <menuitem id="company_accounts_menu" name="Companies" parent="contacts.menu_contacts" action="res_partner_companies_action" sequence="1"/>
+    <menuitem id="company_affiliates_menu" name="Affiliates" parent="contacts.menu_contacts" action="res_partner_affiliates_action" sequence="2"/>
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="contacts.action_contacts" sequence="3"/>
+    <menuitem id="company_patients_menu" name="Patients" parent="contacts.menu_contacts" action="res_partner_patients_action" sequence="4"/>
+    <!-- <menuitem id="contact_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="res_partner_suppliers_action" sequence="5"/> -->
 
-<menuitem id="menu_partner_title_contact" action="base.action_partner_title_contact" name="Contact Titles" parent="res_partner_menu_config" sequence="3"/>
+    <!-- Configuration Menu -->
+    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" sequence="5" groups="base.group_system"/>
 
-<menuitem id="res_partner_industry_menu" name="Industries" action="base.res_partner_industry_action" parent="res_partner_menu_config" sequence="4"/>
+    <!-- Configuration: Accounts -->
+    <menuitem id="res_partner_accounts_menu_config" name="Companies" parent="contacts.res_partner_menu_config" sequence="1"/>
+    <menuitem id="contacts.res_partner_industry_menu" name="Industries" action="base.res_partner_industry_action" parent="contacts.res_partner_menu_config" sequence="2"/>
 
-<menuitem id="menu_localisation" name="Localization" parent="res_partner_menu_config" sequence="5"/>
+    <!-- Configuration: Contacts -->
+    <menuitem id="res_partner_contacts_menu_config" name="Contacts" parent="contacts.res_partner_menu_config" sequence="10"/>
+    <menuitem id="res_partner_role_menu" name="Roles" action="res_partner_role_action" parent="res_partner_contacts_menu_config" sequence="10"/>
+    <menuitem id="res_partner_position_menu" name="Positions" action="res_partner_position_action" parent="res_partner_contacts_menu_config" sequence="20"/>
+    <menuitem id="contacts.menu_partner_title_contact" name="Titles" action="base.action_partner_title_contact" parent="res_partner_contacts_menu_config" sequence="30"/>
+    <menuitem id="contacts.menu_partner_category_form" name="Tags" action="base.action_partner_category_form" parent="res_partner_contacts_menu_config" sequence="40"/>
 
-<menuitem id="menu_config_bank_accounts" name="Bank Accounts" parent="res_partner_menu_config" sequence="6"/> -->
-
-
+    <!-- Configuration: Localization -->
+    <menuitem id="contacts.menu_localisation" name="Localization" parent="contacts.res_partner_menu_config" sequence="20"/>
+    <menuitem id="contacts.menu_config_bank_accounts" name="Bank Accounts" parent="contacts.res_partner_menu_config" sequence="30"/>
 
 </odoo>

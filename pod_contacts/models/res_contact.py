@@ -7,6 +7,7 @@ class ResContact(models.Model):
     _inherits = {"res.partner": "partner_id"}
 
     is_contact = fields.Boolean(default=False)
+    is_patient = fields.Boolean(default=False)
     create_users_button = fields.Boolean(
         compute="_compute_create_users_button",
         store=False,

@@ -16,7 +16,9 @@
         # "currency_rate_live",
     ],
     "data": [
+        "security/groups.xml",
         "security/ir.model.access.csv",
+        "security/security.xml",
         "wizards/res_partner_change_parent.xml",
         "data/ir_cron.xml",
         "data/partner_sequence.xml",

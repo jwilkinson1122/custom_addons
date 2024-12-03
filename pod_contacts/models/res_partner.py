@@ -43,16 +43,29 @@ class ResPartner(models.Model):
         string="Highest parent",
     )
 
+    # is_company_parent = fields.Boolean(
+    #     string="Is a Parent Company",
+    #     default=True,
+    #     help="A parent company is a 'Company' type contact for which at least one 'Affiliate' is defined and for which no related company is defined",
+    # )
+
     is_company_parent = fields.Boolean(
-        compute="_get_is_company_parent",
-        store="True",
         string="Is a Parent Company",
-        help="A parent company is a “Company” type contact for which at least "
-        "one “Affiliate” is defined and for which no related"
-        " company is defined",
+        compute="_compute_is_company_parent",
+        inverse="_set_is_company_parent",
+        store=True,
+        default=False,
+        help="Indicates if the partner is a parent company.",
     )
 
-    # is_company_contact = fields.Boolean(string="Contact", default=False)
+    # is_company_parent = fields.Boolean(
+    #     compute="_get_is_company_parent",
+    #     store="True",
+    #     string="Is a Parent Company",
+    #     help="A parent company is a “Company” type contact for which at least "
+    #     "one “Affiliate” is defined and for which no related"
+    #     " company is defined",
+    # )
 
     company_group_id = fields.Many2one(
         "res.partner",
@@ -66,10 +79,7 @@ class ResPartner(models.Model):
         string="Company group members",
     )
 
-    child_ids = fields.One2many(
-        domain=[("active", "=", True), ("is_company", "=", False)]
-    )
-
+    # Child Companies
     affiliate_ids = fields.One2many(
         "res.partner",
         "parent_id",
@@ -77,9 +87,23 @@ class ResPartner(models.Model):
         domain=[("active", "=", True), ("is_company", "=", True)],
     )
 
+    # Contacts
+    is_contact = fields.Boolean(
+        string="Is a Contact",
+        compute="_compute_is_contact",
+        inverse="_inverse_is_contact",
+        store=True,
+        help="Indicates if the partner is a contact.",
+    )
+
+    child_ids = fields.One2many(
+        domain=[("active", "=", True), ("is_company", "=", False)]
+    )
+
     contact_id = fields.Many2one(
         "res.contact",
         string="Related Contact",
+        domain=[("is_contact", "=", True)],
         help="Link to the related contact.",
     )
 
@@ -99,15 +123,71 @@ class ResPartner(models.Model):
         comodel_name="res.partner",
         string="Shipping address",
     )
+
     partner_invoice_id = fields.Many2one(
         comodel_name="res.partner",
         string="Invoice address",
     )
+
     partner_contact_id = fields.Many2one(
         comodel_name="res.partner",
         string="Default contact",
         domain=[("is_company", "=", False)],
     )
+
+    @api.depends("contact_id")
+    def _compute_is_contact(self):
+        """Synchronize `is_contact` from `res.contact`."""
+        for partner in self:
+            partner.is_contact = (
+                partner.contact_id.is_contact if partner.contact_id else False
+            )
+
+    def _inverse_is_contact(self):
+        """Update `is_contact` in `res.contact`."""
+        for partner in self:
+            if partner.contact_id:
+                partner.contact_id.is_contact = partner.is_contact
+
+    # Patients
+    is_patient = fields.Boolean(
+        string="Is a Patient",
+        compute="_compute_is_patient",
+        inverse="_inverse_is_patient",
+        store=True,
+        help="Indicates if the partner is a patient.",
+    )
+
+    patient_id = fields.Many2one(
+        "res.contact",
+        string="Related Contact",
+        domain=[("is_patient", "=", True)],
+        help="Link to the related patient.",
+    )
+
+    patient_ids = fields.Many2many(
+        string="Patients",
+        comodel_name="res.contact",
+        domain=[("is_patient", "=", True)],
+    )
+
+    @api.depends("patient_id")
+    def _compute_is_patient(self):
+        """Synchronize `is_patient` from `res.contact`."""
+        for partner in self:
+            partner.is_patient = (
+                partner.patient_id.is_patient if partner.patient_id else False
+            )
+
+    def _inverse_is_patient(self):
+        """Update `is_patient` in `res.contact`."""
+        for partner in self:
+            if partner.patient_id:
+                partner.patient_id.is_patient = partner.is_patient
+
+    # type = fields.Selection(
+    #     selection_add=[("patient", "Order ")], ondelete={"contact": "set default"}
+    # )
 
     zip_id = fields.Many2one(
         comodel_name="res.city.zip",
@@ -117,40 +197,47 @@ class ResPartner(models.Model):
         readonly=False,
         store=True,
     )
-
     city_id = fields.Many2one(
-        index=True,  # add index for performance
+        index=True,
         compute="_compute_city_id",
         readonly=False,
         store=True,
     )
-
     city = fields.Char(compute="_compute_city", readonly=False, store=True)
-
     zip = fields.Char(compute="_compute_zip", readonly=False, store=True)
-
     country_id = fields.Many2one(
         compute="_compute_country_id", readonly=False, store=True
     )
-
     state_id = fields.Many2one(compute="_compute_state_id", readonly=False, store=True)
-
     street3 = fields.Char("Street 3")
-
     fax = fields.Char()
 
+    # @api.depends("company_type", "affiliate_ids", "parent_id")
+    # def _get_is_company_parent(self):
+    #     """compute if contact is a parent company or not"""
+    #     for rec in self:
+    #         is_company_parent = False
+    #         if (
+    #             rec.company_type == "company"
+    #             and rec.affiliate_ids
+    #             and not rec.parent_id
+    #         ):
+    #             is_company_parent = True
+    #         rec.is_company_parent = is_company_parent
+
     @api.depends("company_type", "affiliate_ids", "parent_id")
-    def _get_is_company_parent(self):
-        """compute if contact is a parent company or not"""
+    def _compute_is_company_parent(self):
+        """Compute if the contact is a parent company."""
         for rec in self:
-            is_company_parent = False
-            if (
+            rec.is_company_parent = (
                 rec.company_type == "company"
-                and rec.affiliate_ids
+                and bool(rec.affiliate_ids)
                 and not rec.parent_id
-            ):
-                is_company_parent = True
-            rec.is_company_parent = is_company_parent
+            )
+
+    def _set_is_company_parent(self):
+        """Allow manual override."""
+        pass
 
     def compute_partner_parent_ids(self, rec=False, res=[]):
         if rec.parent_id:
@@ -202,9 +289,20 @@ class ResPartner(models.Model):
     def _get_next_ref(self, vals=None):
         return self.env["ir.sequence"].next_by_code("res.partner")
 
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get("ref") and self._needs_ref(vals=vals):
+    #             vals["ref"] = self._get_next_ref(vals=vals)
+    #     return super().create(vals_list)
+
     @api.model_create_multi
     def create(self, vals_list):
+        """Ensure `is_company_parent` defaults to `True` for new companies."""
         for vals in vals_list:
+            if vals.get("is_company", False) and not vals.get("parent_id"):
+                vals["is_company_parent"] = True
+
             if not vals.get("ref") and self._needs_ref(vals=vals):
                 vals["ref"] = self._get_next_ref(vals=vals)
         return super().create(vals_list)
@@ -633,9 +731,10 @@ class ResPartner(models.Model):
         # internal_user_group = self.env.ref("base.group_user")
         # group_ids = [internal_user_group.id]
 
-        # Add Portal User Group
+        # Add Portal Groups
         portal_user_group = self.env.ref("base.group_portal")
-        group_ids = [portal_user_group.id]
+        portal_patient_group = self.env.ref("group_portal_patient")
+        group_ids = [portal_user_group.id, portal_patient_group.id]
 
         return {
             "type": "ir.actions.act_window",
