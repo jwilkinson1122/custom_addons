@@ -267,14 +267,17 @@ class ResPartner(models.Model):
         self._format_args(args)
         return super(ResPartner, self).name_search(name, args, operator, limit)
 
+    # @api.model
+    # def _search(self, args, offset=0, limit=None, order=None, count=False):
+    #     args += [("id", "!=", 1)]
+    #     return super(ResPartner, self)._search(
+    #         args, offset=offset, limit=limit, order=order, count=count
+    #     )
+
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False):
-        """
-        Custom search method that formats the args before passing to the parent method.
-        """
-        # Ensure args are correctly formatted
+        # args += [("id", "!=", 1)]
         self._format_args(args)
-        # Call the parent method with the corrected arguments
         return super(ResPartner, self)._search(args, offset, limit, order, count)
 
     def _get_display_name_context(self):

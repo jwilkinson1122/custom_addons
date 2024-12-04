@@ -43,29 +43,11 @@ class ResPartner(models.Model):
         string="Highest parent",
     )
 
-    # is_company_parent = fields.Boolean(
-    #     string="Is a Parent Company",
-    #     default=True,
-    #     help="A parent company is a 'Company' type contact for which at least one 'Affiliate' is defined and for which no related company is defined",
-    # )
-
     is_company_parent = fields.Boolean(
         string="Is a Parent Company",
-        compute="_compute_is_company_parent",
-        inverse="_set_is_company_parent",
         store=True,
-        default=True,
         help="Indicates if the partner is a parent company.",
     )
-
-    # is_company_parent = fields.Boolean(
-    #     compute="_get_is_company_parent",
-    #     store="True",
-    #     string="Is a Parent Company",
-    #     help="A parent company is a “Company” type contact for which at least "
-    #     "one “Affiliate” is defined and for which no related"
-    #     " company is defined",
-    # )
 
     company_group_id = fields.Many2one(
         "res.partner",
@@ -208,18 +190,12 @@ class ResPartner(models.Model):
     street3 = fields.Char("Street 3")
     fax = fields.Char()
 
-    # @api.depends("company_type", "affiliate_ids", "parent_id")
-    # def _get_is_company_parent(self):
-    #     """compute if contact is a parent company or not"""
-    #     for rec in self:
-    #         is_company_parent = False
-    #         if (
-    #             rec.company_type == "company"
-    #             and rec.affiliate_ids
-    #             and not rec.parent_id
-    #         ):
-    #             is_company_parent = True
-    #         rec.is_company_parent = is_company_parent
+    @api.onchange("is_company")
+    def _onchange_is_company(self):
+        if self.is_company and not self.parent_id:
+            self.is_company_parent = True
+        else:
+            self.is_company_parent = False
 
     @api.depends("company_type", "affiliate_ids", "parent_id")
     def _compute_is_company_parent(self):
@@ -284,13 +260,6 @@ class ResPartner(models.Model):
 
     def _get_next_ref(self, vals=None):
         return self.env["ir.sequence"].next_by_code("res.partner")
-
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if not vals.get("ref") and self._needs_ref(vals=vals):
-    #             vals["ref"] = self._get_next_ref(vals=vals)
-    #     return super().create(vals_list)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -375,7 +344,7 @@ class ResPartner(models.Model):
         Extend the commercial fields propagated to the partner's contacts.
         Adds 'ref' and 'company_group_id'.
         """
-        return super()._commercial_fields() + ["ref", "company_group_id"]
+        return super()._commercial_fields() + ["ref", "company_group_id", "company_id"]
 
     def action_view_company_group_members(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
@@ -599,14 +568,6 @@ class ResPartner(models.Model):
         "- Other: Other address for the company (e.g. subsidiary, ...)",
     )
 
-    # type = fields.Selection(
-    #     selection_add=[("patient", "Order")], ondelete={"contact": "set default"}
-    # )
-
-    # def get_address_default_type(self):
-    #     """This will be the extension method for other contact types"""
-    #     return ["delivery", "invoice", "contact"]
-
     def get_address_default_type(self):
         """This will be the extension method for other contact types"""
         return ["delivery", "invoice", "contact", "patient"]
@@ -744,17 +705,24 @@ class ResPartner(models.Model):
         store=False,
     )
 
+    # def act_create_user_portal(self):
+    # 	Users = self.env['res.users']
+    # 	portal_group = self.env.ref('base.group_portal').id
+    # 	for rec in self:
+    # 		if rec.user_ids:
+    # 			rec.user_ids.write({'groups_id': [(4, portal_group)]})
+    # 			continue
+    # 		if not rec.email:
+    # 			continue
+    # 		user = Users.create({'partner_id': rec.id, 'name': rec.name, 'login': rec.email, 'groups_id': [(4, portal_group)]})
+    # 		user.action_reset_password()
+
     def create_contacts(self):
         """Create a portal user for the partner."""
         self.ensure_one()
         if self.user_ids:
             raise UserError(_("A user for this partner already exists."))
 
-        # Add groups
-        # internal_user_group = self.env.ref("base.group_user")
-        # group_ids = [internal_user_group.id]
-
-        # Add Portal Groups
         portal_user_group = self.env.ref("base.group_portal")
         portal_patient_group = self.env.ref("group_portal_patient")
         group_ids = [portal_user_group.id, portal_patient_group.id]

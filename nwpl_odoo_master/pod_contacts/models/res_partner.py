@@ -25,8 +25,8 @@ class Partner(models.Model):
     # ]
 
     is_supplier = fields.Boolean(string="Vendor")
-    is_partner = fields.Boolean(string="Order", default=False)
-    is_parent_account = fields.Boolean(string="Location", default=False)
+    is_partner = fields.Boolean(string="Partner", default=False)
+    is_parent_account = fields.Boolean(string="Parent Company", default=False)
     is_company = fields.Boolean(string="Company", default=False)
     is_location = fields.Boolean(string="Location", default=False)
 

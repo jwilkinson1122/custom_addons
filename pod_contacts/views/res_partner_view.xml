@@ -347,10 +347,10 @@
             <xpath expr="//filter[@name='group_company']" position="before">
                 <filter name="group_company_group" string="Company Group" context="{'group_by': 'company_group_id'}" />
             </xpath>
-            <xpath expr="//filter[@name='type_company']" position="after">
-                <filter string="Parent Company" name="is_company_parent" domain="[('is_company_parent','=',True)]"/>
+            <!-- <xpath expr="//filter[@name='type_company']" position="after">
+                <filter name="is_company_parent" string="Parent Company" domain="[('is_company_parent','=',True)]"/>
                 <separator/>
-            </xpath>
+            </xpath> -->
             <xpath expr="//filter[@name='group_country']" position="after">
                 <filter name="group_parent_company" string="Parent Company" context="{'group_by': 'highest_parent_id'}"/>
             </xpath>
@@ -374,17 +374,27 @@
 
     <!-- Actions -->
 
+    <!-- <record id="action_create_user_portal" model="ir.actions.server">
+        <field name="name">Create User Portal</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="code">records.act_create_user_portal()
+        </field>
+    </record> -->
+
     <record id="res_partner_companies_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', True), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company_parent', '=', True), ('is_company', '=', True), ('id', '!=', 1)]</field>
         <field name="context">
         {
             'default_company_type': 'company',
-            'default_is_company': True,
             'default_is_company_parent': True, 
+            'default_is_company': True,
             'default_type': '',
         }
         </field>
