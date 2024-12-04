@@ -15,54 +15,88 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    parent_id = fields.Many2one(ondelete="restrict")
+    # parent_id = fields.Many2one(ondelete="restrict")
+    # parent_id = fields.Many2one(
+    #     "res.partner",
+    #     ondelete="restrict",
+    #     domain="[('is_company', '=', True), ('partner_type_id', 'in', parent_type_ids)]",
+    #     string="Parent Company",
+    # )
+
+    # parent_id = fields.Many2one(
+    #     "res.partner",
+    #     ondelete="restrict",
+    #     domain="[('is_company', '=', True), ('partner_type_id', 'in', parent_type_ids)]",
+    #     string="Parent Company",
+    # )
+
+    parent_id = fields.Many2one(
+        "res.partner",
+        index=True,
+        domain=[("is_company", "=", True), ("is_account", "=", True)],
+        string="Account",
+        groups="base.group_no_one",
+    )
+
     type = fields.Selection(default=False)
-    partner_type_id = fields.Many2one("res.partner.type", "Partner Type")
+    # partner_type_id = fields.Many2one("res.partner.type", "Partner Type")
+    partner_type_id = fields.Many2one(
+        "res.partner.type",
+        "Partner Type",
+        domain="[('company_type', '=', company_type)]",
+    )
     can_have_parent = fields.Boolean(compute="_compute_partner_type_infos")
     parent_is_required = fields.Boolean(compute="_compute_partner_type_infos")
+
     parent_type_ids = fields.Many2many(
         "res.partner.type",
         string="Company types authorized for parent",
         compute="_compute_parent_types",
     )
+
     contact_ids = fields.One2many(
         "res.partner",
         "parent_id",
-        "Contacts & Addresses",
+        "Contacts",
         domain=[("is_company", "=", False)],
     )
-    subcompanies_count = fields.Integer(
-        "Number of sub-companies", compute="_compute_subcompanies_count"
+
+    affiliates_count = fields.Integer(
+        "Number of affiliate companies", compute="_compute_affiliates_count"
     )
-    subcompanies_label = fields.Char(
-        related="partner_type_id.subcompanies_label", readonly=True
+
+    affiliates_label = fields.Char(
+        related="partner_type_id.affiliates_label", readonly=True
     )
+
     parent_relation_label = fields.Char(
         related="partner_type_id.parent_relation_label", readonly=True
     )
-    customer = fields.Boolean(
-        string="Is a Customer",
+
+    is_account = fields.Boolean(
+        string="Account",
         default=True,
-        help="Check this box if this contact is a customer. It can be selected in sales orders.",
-    )
-    supplier = fields.Boolean(
-        string="Is a Vendor",
-        help="Check this box if this contact is a vendor. It can be selected in purchase orders.",
+        help="Check this box if this contact is a customer account (parent account). It can be selected in sales orders.",
     )
 
-    # partner_display_name = fields.Char(
-    #     default="partner.name or 'Unnamed'",
-    #     help="The variable 'partner' represents the partner for which the display name is computed",
-    # )
+    is_affiliate = fields.Boolean(
+        string="Affiliate",
+        help="Check this box if this contact is an account affiliate (child account). It can be selected in sales orders.",
+    )
+
+    is_supplier = fields.Boolean(
+        string="Vendor",
+        help="Check this box if this contact is a vendor. It can be selected in purchase orders.",
+    )
 
     @api.depends("partner_type_id")
     def _compute_parent_types(self):
         self.parent_type_ids = self.partner_type_id.parent_type_ids
 
     @api.depends("child_ids")
-    def _compute_subcompanies_count(self):
-        subcompanies = self.mapped("child_ids").filtered(lambda child: child.is_company)
-        self.subcompanies_count = len(subcompanies)
+    def _compute_affiliates_count(self):
+        affiliates = self.mapped("child_ids").filtered(lambda child: child.is_company)
+        self.affiliates_count = len(affiliates)
 
     @api.depends("partner_type_id")
     def _compute_partner_type_infos(self):
@@ -73,11 +107,22 @@ class ResPartner(models.Model):
             if self.partner_type_id.can_have_parent:
                 self.parent_is_required = self.partner_type_id.parent_is_required
 
+    # @api.onchange("company_type")
+    # def _onchange_company_type(self):
+    #     self.partner_type_id = False
+    #     if self.company_type == "company":
+    #         self.parent_id = False
+
     @api.onchange("company_type")
     def _onchange_company_type(self):
-        code = "CONTACT"
         if self.company_type == "company":
-            code = "SUPPLIER" if self.supplier else "CLIENT"
+            code = (
+                "ACCOUNT"
+                if self.is_account
+                else "AFFILIATE" if self.is_affiliate else "SUPPLIER"
+            )
+        else:
+            code = "CONTACT"
         self.partner_type_id = self.partner_type_id.search(
             [("code", "=", code)], limit=1
         )
@@ -152,12 +197,12 @@ class ResPartner(models.Model):
                         _("Parent partner type is not allowed for this partner type.")
                     )
 
-    def view_subcompanies(self):
+    def view_affiliates(self):
         return {
-            "name": _("Sub-companies"),
+            "name": _("Affiliate companies"),
             "type": "ir.actions.act_window",
             "res_model": self._name,
-            "view_mode": "tree,form",
+            "view_mode": "kanban,tree,form",
             "view_id": False,
             "domain": [("parent_id", "in", self.ids), ("is_company", "=", True)],
             "target": "current",
@@ -171,7 +216,13 @@ class ResPartner(models.Model):
                 node.set("name", "contact_ids")
                 node.set(
                     "modifiers",
-                    json.dumps({"default_customer": False, "default_supplier": False}),
+                    json.dumps(
+                        {
+                            "default_is_account": False,
+                            "default_is_affiliate": False,
+                            "default_is_supplier": False,
+                        }
+                    ),
                 )
                 result["fields"]["contact_ids"] = result["fields"]["child_ids"]
                 result["fields"]["contact_ids"].update(
@@ -209,23 +260,6 @@ class ResPartner(models.Model):
                             elif item[0] == 6:  # Replace list with list of IDs
                                 cond[2] = item[2]
                                 break
-
-    # @api.model
-    # def _format_args(self, args):
-    #     """
-    #     Format args for custom search.
-    #     """
-    #     if not args:
-    #         return
-    #     for cond in args:
-    #         if isinstance(cond, list) and len(cond) == 3 and isinstance(cond[2], list):
-    #             if isinstance(cond[2][0], list):
-    #                 for index, item in enumerate(cond[2]):
-    #                     if item[0] == 1:
-    #                         cond[2][index] = item[1]
-    #                     elif item[0] == 6:
-    #                         cond[2] = item[2]
-    #                         break
 
     @api.model
     def name_search(self, name, args=None, operator="ilike", limit=100):
@@ -282,13 +316,3 @@ class ResPartner(models.Model):
 
             # Assign the computed display name
             record.display_name = display_name
-
-    # @api.depends("partner_type_id.partner_display_name")
-    # def _compute_display_name(self):
-    #     contexts = self._get_display_name_context()
-    #     for record in self:
-    #         rule = record.partner_type_id.partner_display_name
-    #         if rule:
-    #             record.display_name = safe_eval(rule, contexts.get(record.id))
-    #         else:
-    #             super(ResPartner, record)._compute_display_name()

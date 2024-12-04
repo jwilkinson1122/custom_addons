@@ -6,7 +6,12 @@ from odoo import fields, models
 class ResPartnerType(models.Model):
     _name = "res.partner.type"
     _description = "Contact Type"
-    _company_inherit_fields = ["company_type", "customer", "supplier"]
+    _company_inherit_fields = [
+        "company_type",
+        "is_account",
+        "is_affiliate",
+        "is_supplier",
+    ]
     _person_inherit_fields = ["company_type", "type"]
 
     id = fields.Integer(readonly=True)
@@ -26,10 +31,13 @@ class ResPartnerType(models.Model):
         column2="parent_type_id",
     )
     parent_relation_label = fields.Char(
-        "Parent relation label", translate=True, required=True, default="attached to"
+        "Parent relation label", translate=True, required=True, default="Attached To:"
     )
-    subcompanies_label = fields.Char(
-        "Sub-companies label", translate=True, required=True, default="Sub-companies"
+    affiliates_label = fields.Char(
+        "Affiliate companies label",
+        translate=True,
+        required=True,
+        default="Affiliate companies",
     )
 
     # Inherited fields for partners of this type
@@ -42,26 +50,40 @@ class ResPartnerType(models.Model):
         required=True,
         default="company",
     )
-    customer = fields.Boolean(
-        string="Is a Customer",
+
+    # is_account
+    # is_affiliate
+    # is_supplier
+
+    is_account = fields.Boolean(
+        string="Account",
         default=True,
-        help="Check this box if this contact is a customer.",
+        help="Check this box if this contact is a customer account (parent account).",
     )
-    supplier = fields.Boolean(
-        string="Is a Vendor",
+
+    is_affiliate = fields.Boolean(
+        string="Affiliate",
+        help="Check this box if this contact is an account affiliate (child account).",
+    )
+
+    is_supplier = fields.Boolean(
+        string="Vendor",
         help="Check this box if this contact is a vendor. "
         "If it's not checked, purchase people will not see it "
         "when encoding a purchase order.",
     )
+
     type = fields.Selection(
         [
-            ("contact", "Contact"),
+            ("contact", "Contact address"),
+            ("patient", "Patient address"),
             ("invoice", "Invoice address"),
             ("delivery", "Shipping address"),
             ("other", "Other address"),
         ],
         "Address Type",
-        default="contact",
+        default="",
+        # default="contact",
         help="Used to select automatically the right address "
         "according to the context in sales and purchases documents.",
     )
@@ -81,14 +103,3 @@ class ResPartnerType(models.Model):
         default="partner.name_get()[0][1] if partner.name_get() else 'Unnamed'",
         help="The variable 'partner' represents the partner for which we compute the display name",
     )
-
-    # partner_display_name = fields.Char(
-    #     default="partner.name or 'Unnamed'",
-    #     help="The variable 'partner' represents the partner for which the display name is computed",
-    # )
-
-    # partner_display_name = fields.Char(
-    #     default="partner.name_get()[0][1]",
-    #     help="The variable 'partner' represents the partner "
-    #     "for which we compute the display name",
-    # )
