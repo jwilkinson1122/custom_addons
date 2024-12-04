@@ -192,10 +192,24 @@ class ResPartner(models.Model):
 
     @api.onchange("is_company")
     def _onchange_is_company(self):
-        if self.is_company and not self.parent_id:
-            self.is_company_parent = True
+        # Check the context for default_is_company_parent
+        default_is_company_parent = self.env.context.get("default_is_company_parent")
+        if default_is_company_parent is not None:
+            # Respect the context value if provided
+            self.is_company_parent = default_is_company_parent
         else:
-            self.is_company_parent = False
+            # Default logic if no context value is provided
+            if self.is_company and not self.parent_id:
+                self.is_company_parent = True
+            else:
+                self.is_company_parent = False
+
+    # @api.onchange("is_company")
+    # def _onchange_is_company(self):
+    #     if self.is_company and not self.parent_id:
+    #         self.is_company_parent = True
+    #     else:
+    #         self.is_company_parent = False
 
     @api.depends("company_type", "affiliate_ids", "parent_id")
     def _compute_is_company_parent(self):
@@ -263,14 +277,36 @@ class ResPartner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """Ensure `is_company_parent` defaults to `True` for new companies."""
         for vals in vals_list:
-            if vals.get("is_company", False) and not vals.get("parent_id"):
-                vals["is_company_parent"] = True
-
+            # Generate a reference if needed
             if not vals.get("ref") and self._needs_ref(vals=vals):
                 vals["ref"] = self._get_next_ref(vals=vals)
+
+            # Check context for default_is_company_parent
+            default_is_company_parent = self.env.context.get(
+                "default_is_company_parent"
+            )
+            if default_is_company_parent is not None:
+                # Respect context value for is_company_parent
+                vals["is_company_parent"] = default_is_company_parent
+            else:
+                # Default logic for is_company_parent
+                if vals.get("is_company", False) and not vals.get("parent_id"):
+                    vals["is_company_parent"] = True
+
+        # Call superclass create method
         return super().create(vals_list)
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     """Ensure `is_company_parent` defaults to `True` for new companies."""
+    #     for vals in vals_list:
+    #         if vals.get("is_company", False) and not vals.get("parent_id"):
+    #             vals["is_company_parent"] = True
+
+    #         if not vals.get("ref") and self._needs_ref(vals=vals):
+    #             vals["ref"] = self._get_next_ref(vals=vals)
+    #     return super().create(vals_list)
 
     def copy(self, default=None):
         default = default or {}

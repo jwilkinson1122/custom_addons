@@ -6,7 +6,6 @@ class ResContact(models.Model):
     _name = "res.contact"
     _inherits = {"res.partner": "partner_id"}
 
-    is_company_parent = fields.Boolean(default=False)
     is_contact = fields.Boolean(default=False)
     is_patient = fields.Boolean(default=False)
 

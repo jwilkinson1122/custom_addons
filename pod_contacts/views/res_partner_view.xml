@@ -14,6 +14,13 @@
                 <button name="create_contacts" type="object" string="Create Portal Contact" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
                 <button name="create_contacts" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
             </div>
+            <!-- <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location" class="fw-bold" />
+            <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_practitioner" class="fw-bold" /> -->
+
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">is_company_parent</attribute>
+                <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
+            </xpath>
             <xpath expr="//field[@name='ref']" position="attributes">
                 <attribute name="readonly">not is_company and parent_id</attribute>
             </xpath>
@@ -351,6 +358,10 @@
                 <filter name="is_company_parent" string="Parent Company" domain="[('is_company_parent','=',True)]"/>
                 <separator/>
             </xpath> -->
+            <xpath expr="//filter[@name='type_company']" position="after">
+                <filter name="is_company_parent" string="Parent Company" domain="[('is_company_parent','=',True)]"/>
+                <separator/>
+            </xpath>
             <xpath expr="//filter[@name='group_country']" position="after">
                 <filter name="group_parent_company" string="Parent Company" context="{'group_by': 'highest_parent_id'}"/>
             </xpath>
@@ -413,20 +424,9 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <!-- <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', False), ('id', '!=', 1)]</field> -->
         <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', False), ('parent_id', '!=', False), ('id', '!=', 1)]</field>
-
         <field name="context">{'default_company_type': 'company', 'default_is_company': True, 'default_is_company_parent':False, 'default_type': ''}
         </field>
-
-        <!-- <field name="context">
-        {
-            'default_is_company': True,
-            'default_is_company_parent': False,
-            'default_parent_id': active_id,
-            'default_type': 'contact'
-        }
-        </field> -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Add a new company affiliate
