@@ -30,8 +30,6 @@ def split_char(char, output_number, size):
 
 
 class ResPartner(models.Model):
-    """Add relation affiliate_ids."""
-
     _inherit = "res.partner"
 
     use_parent_invoice_address = fields.Boolean()
@@ -64,80 +62,6 @@ class ResPartner(models.Model):
         string="Company group members",
     )
 
-    is_company_parent = fields.Boolean(
-        string="Is a Parent Company",
-        store=True,
-        help="Indicates if the partner is a parent company.",
-    )
-
-    highest_parent_id = fields.Many2one(
-        "res.partner",
-        compute="_get_highest_parent_id",
-        store="True",
-        string="Highest parent",
-    )
-
-    # Child Companies
-    affiliate_ids = fields.One2many(
-        "res.partner",
-        "parent_id",
-        string="Affiliates",
-        domain=[("active", "=", True), ("is_company", "=", True)],
-    )
-
-    is_contact = fields.Boolean(
-        string="Is a Contact",
-        compute="_compute_is_contact",
-        inverse="_inverse_is_contact",
-        store=True,
-        help="Indicates if the partner is a contact.",
-    )
-
-    # Contacts
-    child_ids = fields.One2many(
-        domain=[("active", "=", True), ("is_company", "=", False)]
-    )
-
-    contact_id = fields.Many2one(
-        "res.contact",
-        string="Related Contact",
-        domain=[("is_contact", "=", True)],
-        help="Link to the related contact.",
-    )
-
-    contact_role_ids = fields.Many2many(
-        string="Contact Roles",
-        comodel_name="res.partner.role",
-        help="Refers to a general function or responsibilities within a company.",
-    )
-
-    contact_position_id = fields.Many2one(
-        "res.partner.position",
-        "Contact Position",
-        help="Refers to a specific function or responsibilities within a company.",
-    )
-
-    is_patient = fields.Boolean(
-        string="Is a Patient",
-        compute="_compute_is_patient",
-        inverse="_inverse_is_patient",
-        store=True,
-        help="Indicates if the partner is a patient.",
-    )
-
-    patient_id = fields.Many2one(
-        "res.contact",
-        string="Related Contact",
-        domain=[("is_patient", "=", True)],
-        help="Link to the related patient.",
-    )
-
-    patient_ids = fields.Many2many(
-        string="Patients",
-        comodel_name="res.contact",
-        domain=[("is_patient", "=", True)],
-    )
-
     zip_id = fields.Many2one(
         comodel_name="res.city.zip",
         string="ZIP Location",
@@ -168,61 +92,94 @@ class ResPartner(models.Model):
 
     fax = fields.Char()
 
-    @api.depends("contact_id")
-    def _compute_is_contact(self):
-        """Synchronize `is_contact` from `res.contact`."""
-        for partner in self:
-            partner.is_contact = (
-                partner.contact_id.is_contact if partner.contact_id else False
-            )
+    # Boolean Fields
+    is_company_parent = fields.Boolean(
+        string="Is a Parent Company",
+        compute="_compute_is_company_parent",
+        store=True,
+        help="Indicates if the partner is a parent company.",
+    )
 
-    def _inverse_is_contact(self):
-        """Update `is_contact` in `res.contact`."""
-        for partner in self:
-            if partner.contact_id:
-                partner.contact_id.is_contact = partner.is_contact
+    is_contact = fields.Boolean(
+        string="Is a Contact",
+        compute="_compute_is_contact",
+        inverse="_inverse_is_contact",
+        store=True,
+        help="Indicates if the partner is a contact.",
+    )
 
-    @api.depends("patient_id")
-    def _compute_is_patient(self):
-        """Synchronize `is_patient` from `res.contact`."""
-        for partner in self:
-            partner.is_patient = (
-                partner.patient_id.is_patient if partner.patient_id else False
-            )
+    is_patient = fields.Boolean(
+        string="Is a Patient",
+        compute="_compute_is_patient",
+        inverse="_inverse_is_patient",
+        store=True,
+        help="Indicates if the partner is a patient.",
+    )
 
-    def _inverse_is_patient(self):
-        """Update `is_patient` in `res.contact`."""
-        for partner in self:
-            if partner.patient_id:
-                partner.patient_id.is_patient = partner.is_patient
+    # Companies (Parent)
+    parent_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Parent Company",
+        index=True,
+        domain=[("is_company_parent", "=", True), ("is_company", "=", True)],
+    )
 
-    @api.depends("company_type", "affiliate_ids", "parent_id")
+    parent_name = fields.Char(
+        related="parent_id.name", readonly=True, string="Parent Name"
+    )
+
+    highest_parent_id = fields.Many2one(
+        "res.partner",
+        compute="_compute_highest_parent_id",
+        store=True,
+        string="Highest Parent",
+    )
+
+    @api.depends("parent_id", "affiliate_ids")
     def _compute_is_company_parent(self):
-        """Compute if the contact is a parent company."""
         for rec in self:
+            _logger.info(
+                f"Computing is_company_parent for {rec.id}: "
+                f"parent_id={rec.parent_id}, affiliate_ids={rec.affiliate_ids.ids}"
+            )
+            if rec.is_company_parent:  # Preserve existing value
+                continue
             rec.is_company_parent = (
                 rec.company_type == "company"
                 and bool(rec.affiliate_ids)
                 and not rec.parent_id
             )
 
-    def _set_is_company_parent(self):
-        """Allow manual override."""
-        pass
+    # @api.depends("parent_id", "affiliate_ids")
+    # def _compute_is_company_parent(self):
+    #     """Determine if the partner is a parent company."""
+    #     for rec in self:
+    #         rec.is_company_parent = (
+    #             rec.company_type == "company"
+    #             and bool(rec.affiliate_ids)
+    #             and not rec.parent_id
+    #         )
 
-    def compute_partner_parent_ids(self, rec=False, res=[]):
-        if rec.parent_id:
-            res.append(rec.parent_id.id)
-            self.compute_partner_parent_ids(rec=rec.parent_id, res=res)
-        return res
-
-    @api.depends("parent_id", "child_ids")
-    def _get_highest_parent_id(self):
+    @api.depends("parent_id")
+    def _compute_highest_parent_id(self):
+        """Compute the highest parent company."""
         for rec in self:
-            if rec.parent_id:
-                res = rec.compute_partner_parent_ids(rec=rec)
-                if res:
-                    rec.highest_parent_id = res[-1]
+            res = []
+            partner = rec
+            while partner.parent_id:
+                res.append(partner.parent_id.id)
+                partner = partner.parent_id
+            rec.highest_parent_id = res[-1] if res else None
+
+    # @api.model
+    # def compute_all_top_parent_id(self):
+    #     partner_ids = self.search(
+    #         [("is_company_parent", "=", False), ("parent_id", "!=", False)]
+    #     )
+    #     for partner in partner_ids:
+    #         res = partner.compute_partner_parent_ids(rec=partner)
+    #         if res:
+    #             partner.highest_parent_id = res[-1]
 
     @api.model
     def compute_all_top_parent_id(self):
@@ -230,9 +187,227 @@ class ResPartner(models.Model):
             [("is_company_parent", "=", False), ("parent_id", "!=", False)]
         )
         for partner in partner_ids:
+            original_is_company_parent = partner.is_company_parent
             res = partner.compute_partner_parent_ids(rec=partner)
             if res:
                 partner.highest_parent_id = res[-1]
+            # Preserve original value
+            partner.is_company_parent = original_is_company_parent
+
+    # Affiliates (Child)
+    # affiliate_ids = fields.One2many(
+    #     "res.partner",
+    #     "parent_id",
+    #     string="Affiliates",
+    #     domain=[("active", "=", True), ("is_company", "=", True)],
+    # )
+
+    affiliate_ids = fields.One2many(
+        comodel_name="res.partner",
+        inverse_name="parent_id",
+        string="Affiliates",
+        compute="_compute_affiliate_ids",
+        store=False,  # Make it dynamic to reflect changes immediately
+    )
+
+    affiliate_count = fields.Integer(
+        string="Affiliate Count", compute="_compute_affiliate_and_contact_counts"
+    )
+
+    affiliate_text = fields.Char(compute="_compute_affiliate_text")
+
+    @api.depends("affiliate_count")
+    def _compute_affiliate_text(self):
+        """Generate affiliate count text."""
+        for record in self:
+            record.affiliate_text = _("%s Affiliates" % record.affiliate_count)
+
+    # @api.depends("affiliate_ids")
+    # def _compute_affiliate_and_contact_counts(self):
+    #     """Compute affiliate and contact counts."""
+    #     for record in self:
+    #         affiliates = record.affiliate_ids.filtered(lambda p: p.is_company)
+    #         record.affiliate_count = len(affiliates)
+    #         contacts = record.child_ids.filtered(lambda p: not p.is_company)
+    #         record.contact_count = len(contacts)
+
+    @api.depends("affiliate_ids")
+    def _compute_affiliate_and_contact_counts(self):
+        """Compute affiliate and contact counts, including hierarchical affiliates."""
+        for record in self:
+            # Affiliates that are not parent companies and can themselves have affiliates
+            affiliates = record.affiliate_ids.filtered(
+                lambda p: not p.is_company_parent or p.affiliate_ids
+            )
+            record.affiliate_count = len(affiliates)
+
+            # Contacts directly linked to the current partner
+            contacts = record.child_ids.filtered(lambda p: p.is_contact)
+            record.contact_count = len(contacts)
+
+    @api.depends("parent_id", "affiliate_ids")
+    def _compute_affiliate_ids(self):
+        """
+        Compute method to include all descendant companies as affiliates.
+        """
+        for partner in self:
+            all_descendants = self.env["res.partner"].search(
+                [
+                    ("id", "child_of", partner.id),
+                    ("id", "!=", partner.id),
+                    ("is_company", "=", True),
+                ]
+            )
+            partner.affiliate_ids = all_descendants
+
+    # Contacts
+    child_ids = fields.One2many(
+        domain=[("active", "=", True), ("is_company", "=", False)]
+    )
+
+    contact_id = fields.Many2one(
+        "res.contact",
+        string="Related Contact",
+        domain=[("is_contact", "=", True)],
+        help="Link to the related contact.",
+    )
+
+    contact_role_ids = fields.Many2many(
+        string="Contact Roles",
+        comodel_name="res.partner.role",
+        help="Refers to a general function or responsibilities within a company.",
+    )
+
+    contact_role_id = fields.Many2one(
+        "res.partner.role",
+        string="Contact Role",
+        help="Refers to general responsibilities within a company.",
+    )
+
+    contact_position_id = fields.Many2one(
+        "res.partner.position",
+        "Contact Position",
+        help="Refers to a specific function or responsibilities within a company.",
+    )
+
+    contact_count = fields.Integer(
+        string="Contact Count", compute="_compute_affiliate_and_contact_counts"
+    )
+
+    contact_text = fields.Char(compute="_compute_contact_text")
+
+    @api.depends("contact_id")
+    def _compute_is_contact(self):
+        """Determine if the partner is a contact."""
+        for partner in self:
+            partner.is_contact = (
+                partner.contact_id.is_contact if partner.contact_id else False
+            )
+
+    def _inverse_is_contact(self):
+        """Update contact status."""
+        for partner in self:
+            if partner.contact_id:
+                partner.contact_id.is_contact = partner.is_contact
+
+    @api.depends("contact_count")
+    def _compute_contact_text(self):
+        """Generate contact count text."""
+        for record in self:
+            record.contact_text = _("%s Contacts" % record.contact_count)
+
+    # Patients
+    patient_id = fields.Many2one(
+        "res.contact",
+        string="Related Contact",
+        domain=[("is_patient", "=", True)],
+        help="Link to the related patient.",
+    )
+
+    patient_ids = fields.Many2many(
+        string="Patients",
+        comodel_name="res.contact",
+        domain=[("is_patient", "=", True)],
+    )
+
+    patient_records = fields.One2many(
+        "res.contact",
+        compute="_compute_patient_records",
+        string="Patients",
+    )
+
+    patient_count = fields.Integer(
+        string="Patient Count", compute="_compute_patient_counts"
+    )
+
+    # Patients Computations
+    @api.depends("patient_id")
+    def _compute_is_patient(self):
+        """Determine if the partner is a patient."""
+        for partner in self:
+            partner.is_patient = (
+                partner.patient_id.is_patient if partner.patient_id else False
+            )
+
+    def _inverse_is_patient(self):
+        """Update patient status."""
+        for partner in self:
+            if partner.patient_id:
+                partner.patient_id.is_patient = partner.is_patient
+
+    @api.depends("child_ids.patient_ids")
+    def _compute_patient_counts(self):
+        """Compute the patient count."""
+        for record in self:
+            record.patient_count = len(record.patient_ids)
+
+    @api.depends("child_ids.patient_ids")
+    def _compute_patient_records(self):
+        """Compute the related patient records."""
+        for record in self:
+            record.patient_records = record.child_ids.mapped("patient_ids")
+
+    # Computations
+
+    # @api.depends("parent_id", "affiliate_ids")
+    # def _compute_is_company_parent(self):
+    #     """Determine if the partner is a parent company."""
+    #     for rec in self:
+    #         rec.is_company_parent = (
+    #             rec.company_type == "company"
+    #             and bool(rec.affiliate_ids)
+    #             and not rec.parent_id
+    #         )
+
+    # @api.depends("parent_id")
+    # def _compute_highest_parent_id(self):
+    #     """Compute the highest parent company."""
+    #     for rec in self:
+    #         res = []
+    #         partner = rec
+    #         while partner.parent_id:
+    #             res.append(partner.parent_id.id)
+    #             partner = partner.parent_id
+    #         rec.highest_parent_id = res[-1] if res else None
+
+    # @api.model
+    # def compute_all_top_parent_id(self):
+    #     partner_ids = self.search(
+    #         [("is_company_parent", "=", False), ("parent_id", "!=", False)]
+    #     )
+    #     for partner in partner_ids:
+    #         res = partner.compute_partner_parent_ids(rec=partner)
+    #         if res:
+    #             partner.highest_parent_id = res[-1]
+
+    # @api.depends("affiliate_ids")
+    # def _compute_affiliate_and_contact_counts(self):
+    #     """Compute affiliate and contact counts."""
+    #     for record in self:
+    #         affiliates = record.affiliate_ids.filtered(lambda p: p.is_company)
+    #         record.affiliate_count = len(affiliates)
+    #         contacts = record.child_ids.filtered(lambda p: not p.is_company)
+    #         record.contact_count = len(contacts)
 
     @api.constrains("ref", "is_company", "company_id")
     def _check_ref(self):
@@ -263,24 +438,32 @@ class ResPartner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Generate a reference if needed
             if not vals.get("ref") and self._needs_ref(vals=vals):
                 vals["ref"] = self._get_next_ref(vals=vals)
-
-            # Check context for default_is_company_parent
-            default_is_company_parent = self.env.context.get(
-                "default_is_company_parent"
-            )
-            if default_is_company_parent is not None:
-                # Respect context value for is_company_parent
-                vals["is_company_parent"] = default_is_company_parent
-            else:
-                # Default logic for is_company_parent
+            # If explicitly provided in vals, do not override
+            if "is_company_parent" not in vals:
                 if vals.get("is_company", False) and not vals.get("parent_id"):
                     vals["is_company_parent"] = True
-
-        # Call superclass create method
+                else:
+                    vals["is_company_parent"] = False
         return super().create(vals_list)
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get("ref") and self._needs_ref(vals=vals):
+    #             vals["ref"] = self._get_next_ref(vals=vals)
+
+    #         default_is_company_parent = self.env.context.get(
+    #             "default_is_company_parent"
+    #         )
+    #         if default_is_company_parent is not None:
+    #             vals["is_company_parent"] = default_is_company_parent
+    #         else:
+    #             if vals.get("is_company", False) and not vals.get("parent_id"):
+    #                 vals["is_company_parent"] = True
+
+    #     return super(ResPartner, self).create(vals_list)
 
     def copy(self, default=None):
         default = default or {}
@@ -289,12 +472,50 @@ class ResPartner(models.Model):
         return super().copy(default=default)
 
     def write(self, vals):
-        """Custom write method to handle reference generation, parent hierarchy computation,
-        and ensure archived contacts are not set as default addresses."""
+        for partner in self:
+            original_is_company_parent = partner.is_company_parent
+
+            # Write logic
+            super(ResPartner, partner).write(vals)
+
+            # Restore `is_company_parent` if it was set by the user
+            if "is_company_parent" in vals:
+                partner.is_company_parent = vals["is_company_parent"]
+            else:
+                partner.is_company_parent = original_is_company_parent
+
+        return True
+
+    # def write(self, vals):
+    #     for partner in self:
+    #         if "is_company_parent" in vals:
+    #             pass
+    #         else:
+    #             if vals.get("parent_id") or partner.parent_id:
+    #                 vals["is_company_parent"] = False
+    #             elif vals.get("is_company", partner.is_company) and not vals.get("parent_id"):
+    #                 vals["is_company_parent"] = True
+    #     return super().write(vals)
+
+    def write(self, vals):
+        """
+        Custom write method to handle:
+        - Reference generation
+        - Parent hierarchy computation
+        - Prevent archived contacts from being default addresses
+        - Recursion prevention for specific operations
+        """
+        # Check for recursion prevention flag in context
+        if self.env.context.get("prevent_recursion"):
+            return super().write(vals)
+
+        # Initialize recursion prevention context
+        context = dict(self.env.context, prevent_recursion=True)
+
         for partner in self:
             partner_vals = vals.copy()
 
-            # Handle reference generation if needed
+            # Generate a reference if needed
             if (
                 not partner_vals.get("ref")
                 and partner._needs_ref(vals=partner_vals)
@@ -302,10 +523,10 @@ class ResPartner(models.Model):
             ):
                 partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
 
-            # Write values
-            super(ResPartner, partner).write(partner_vals)
+            # Perform the write operation
+            super(ResPartner, partner).with_context(context).write(partner_vals)
 
-            # Prevent archived contacts as default addresses
+            # Prevent archived contacts from being default addresses
             if partner_vals.get("active") is False:
                 self.search([("partner_delivery_id", "in", self.ids)]).write(
                     {"partner_delivery_id": False}
@@ -317,11 +538,20 @@ class ResPartner(models.Model):
                     {"partner_contact_id": False}
                 )
 
-            # Compute parent hierarchy if parent_id is updated
-            if "parent_id" in vals:
+            # Update parent hierarchy if parent_id is modified
+            if "parent_id" in partner_vals:
                 partner.compute_all_top_parent_id()
 
         return True
+
+    def unlink(self):
+        """Prevent deletion of records with patients."""
+        for partner in self:
+            if partner.sudo().patient_ids:
+                raise ValidationError(
+                    _("Cannot delete a partner with linked patients.")
+                )
+        return super().unlink()
 
     def _needs_ref(self, vals=None):
         """
@@ -729,18 +959,6 @@ class ResPartner(models.Model):
         related="contact_id.create_users_button",
         store=False,
     )
-
-    # def act_create_user_portal(self):
-    # 	Users = self.env['res.users']
-    # 	portal_group = self.env.ref('base.group_portal').id
-    # 	for rec in self:
-    # 		if rec.user_ids:
-    # 			rec.user_ids.write({'groups_id': [(4, portal_group)]})
-    # 			continue
-    # 		if not rec.email:
-    # 			continue
-    # 		user = Users.create({'partner_id': rec.id, 'name': rec.name, 'login': rec.email, 'groups_id': [(4, portal_group)]})
-    # 		user.action_reset_password()
 
     def create_contacts(self):
         """Create a portal user for the partner."""
