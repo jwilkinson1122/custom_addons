@@ -248,17 +248,35 @@ class ResPartner(models.Model):
     @api.depends("parent_id", "affiliate_ids")
     def _compute_affiliate_ids(self):
         """
-        Compute method to include all descendant companies as affiliates.
+        Compute all descendant companies as affiliates.
         """
         for partner in self:
-            all_descendants = self.env["res.partner"].search(
-                [
-                    ("id", "child_of", partner.id),
-                    ("id", "!=", partner.id),
-                    ("is_company", "=", True),
-                ]
-            )
-            partner.affiliate_ids = all_descendants
+            if isinstance(partner.id, models.NewId):  # Handle records not yet saved
+                partner.affiliate_ids = self.env["res.partner"].browse()
+            else:
+                all_descendants = self.env["res.partner"].search(
+                    [
+                        ("id", "child_of", partner.id),
+                        ("id", "!=", partner.id),
+                        ("is_company", "=", True),
+                    ]
+                )
+                partner.affiliate_ids = all_descendants
+
+    # @api.depends("parent_id", "affiliate_ids")
+    # def _compute_affiliate_ids(self):
+    #     """
+    #     Compute method to include all descendant companies as affiliates.
+    #     """
+    #     for partner in self:
+    #         all_descendants = self.env["res.partner"].search(
+    #             [
+    #                 ("id", "child_of", partner.id),
+    #                 ("id", "!=", partner.id),
+    #                 ("is_company", "=", True),
+    #             ]
+    #         )
+    #         partner.affiliate_ids = all_descendants
 
     # Contacts
     child_ids = fields.One2many(
@@ -471,31 +489,18 @@ class ResPartner(models.Model):
             default["ref"] = self._get_next_ref()
         return super().copy(default=default)
 
-    def write(self, vals):
-        for partner in self:
-            original_is_company_parent = partner.is_company_parent
-
-            # Write logic
-            super(ResPartner, partner).write(vals)
-
-            # Restore `is_company_parent` if it was set by the user
-            if "is_company_parent" in vals:
-                partner.is_company_parent = vals["is_company_parent"]
-            else:
-                partner.is_company_parent = original_is_company_parent
-
-        return True
-
     # def write(self, vals):
     #     for partner in self:
+    #         original_is_company_parent = partner.is_company_parent
+
+    #         super(ResPartner, partner).write(vals)
+
     #         if "is_company_parent" in vals:
-    #             pass
+    #             partner.is_company_parent = vals["is_company_parent"]
     #         else:
-    #             if vals.get("parent_id") or partner.parent_id:
-    #                 vals["is_company_parent"] = False
-    #             elif vals.get("is_company", partner.is_company) and not vals.get("parent_id"):
-    #                 vals["is_company_parent"] = True
-    #     return super().write(vals)
+    #             partner.is_company_parent = original_is_company_parent
+
+    #     return True
 
     def write(self, vals):
         """
@@ -503,19 +508,18 @@ class ResPartner(models.Model):
         - Reference generation
         - Parent hierarchy computation
         - Prevent archived contacts from being default addresses
-        - Recursion prevention for specific operations
+        - Preserve user-defined `is_company_parent` values
         """
-        # Check for recursion prevention flag in context
         if self.env.context.get("prevent_recursion"):
             return super().write(vals)
 
-        # Initialize recursion prevention context
+        # Recursion prevention context
         context = dict(self.env.context, prevent_recursion=True)
 
         for partner in self:
             partner_vals = vals.copy()
 
-            # Generate a reference if needed
+            # Handle reference generation
             if (
                 not partner_vals.get("ref")
                 and partner._needs_ref(vals=partner_vals)
@@ -523,10 +527,19 @@ class ResPartner(models.Model):
             ):
                 partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
 
-            # Perform the write operation
+            # Preserve original `is_company_parent`
+            original_is_company_parent = partner.is_company_parent
+
+            # Write operation
             super(ResPartner, partner).with_context(context).write(partner_vals)
 
-            # Prevent archived contacts from being default addresses
+            # Restore user-defined `is_company_parent`
+            if "is_company_parent" in partner_vals:
+                partner.is_company_parent = partner_vals["is_company_parent"]
+            else:
+                partner.is_company_parent = original_is_company_parent
+
+            # Prevent archived contacts as default addresses
             if partner_vals.get("active") is False:
                 self.search([("partner_delivery_id", "in", self.ids)]).write(
                     {"partner_delivery_id": False}
@@ -538,11 +551,45 @@ class ResPartner(models.Model):
                     {"partner_contact_id": False}
                 )
 
-            # Update parent hierarchy if parent_id is modified
+            # Update parent hierarchy if `parent_id` was modified
             if "parent_id" in partner_vals:
                 partner.compute_all_top_parent_id()
 
         return True
+
+    # def write(self, vals):
+    #     if self.env.context.get("prevent_recursion"):
+    #         return super().write(vals)
+
+    #     context = dict(self.env.context, prevent_recursion=True)
+
+    #     for partner in self:
+    #         partner_vals = vals.copy()
+
+    #         if (
+    #             not partner_vals.get("ref")
+    #             and partner._needs_ref(vals=partner_vals)
+    #             and not partner.ref
+    #         ):
+    #             partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
+
+    #         super(ResPartner, partner).with_context(context).write(partner_vals)
+
+    #         if partner_vals.get("active") is False:
+    #             self.search([("partner_delivery_id", "in", self.ids)]).write(
+    #                 {"partner_delivery_id": False}
+    #             )
+    #             self.search([("partner_invoice_id", "in", self.ids)]).write(
+    #                 {"partner_invoice_id": False}
+    #             )
+    #             self.search([("partner_contact_id", "in", self.ids)]).write(
+    #                 {"partner_contact_id": False}
+    #             )
+
+    #         if "parent_id" in partner_vals:
+    #             partner.compute_all_top_parent_id()
+
+    #     return True
 
     def unlink(self):
         """Prevent deletion of records with patients."""
