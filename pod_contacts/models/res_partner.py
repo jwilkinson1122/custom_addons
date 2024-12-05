@@ -36,17 +36,20 @@ class ResPartner(models.Model):
 
     use_parent_invoice_address = fields.Boolean()
 
-    highest_parent_id = fields.Many2one(
-        "res.partner",
-        compute="_get_highest_parent_id",
-        store="True",
-        string="Highest parent",
+    partner_delivery_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Shipping address",
     )
 
-    is_company_parent = fields.Boolean(
-        string="Is a Parent Company",
-        store=True,
-        help="Indicates if the partner is a parent company.",
+    partner_invoice_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Invoice address",
+    )
+
+    partner_contact_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Default contact",
+        domain=[("is_company", "=", False)],
     )
 
     company_group_id = fields.Many2one(
@@ -61,6 +64,19 @@ class ResPartner(models.Model):
         string="Company group members",
     )
 
+    is_company_parent = fields.Boolean(
+        string="Is a Parent Company",
+        store=True,
+        help="Indicates if the partner is a parent company.",
+    )
+
+    highest_parent_id = fields.Many2one(
+        "res.partner",
+        compute="_get_highest_parent_id",
+        store="True",
+        string="Highest parent",
+    )
+
     # Child Companies
     affiliate_ids = fields.One2many(
         "res.partner",
@@ -69,7 +85,6 @@ class ResPartner(models.Model):
         domain=[("active", "=", True), ("is_company", "=", True)],
     )
 
-    # Contacts
     is_contact = fields.Boolean(
         string="Is a Contact",
         compute="_compute_is_contact",
@@ -78,6 +93,7 @@ class ResPartner(models.Model):
         help="Indicates if the partner is a contact.",
     )
 
+    # Contacts
     child_ids = fields.One2many(
         domain=[("active", "=", True), ("is_company", "=", False)]
     )
@@ -101,37 +117,6 @@ class ResPartner(models.Model):
         help="Refers to a specific function or responsibilities within a company.",
     )
 
-    partner_delivery_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Shipping address",
-    )
-
-    partner_invoice_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Invoice address",
-    )
-
-    partner_contact_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Default contact",
-        domain=[("is_company", "=", False)],
-    )
-
-    @api.depends("contact_id")
-    def _compute_is_contact(self):
-        """Synchronize `is_contact` from `res.contact`."""
-        for partner in self:
-            partner.is_contact = (
-                partner.contact_id.is_contact if partner.contact_id else False
-            )
-
-    def _inverse_is_contact(self):
-        """Update `is_contact` in `res.contact`."""
-        for partner in self:
-            if partner.contact_id:
-                partner.contact_id.is_contact = partner.is_contact
-
-    # Patients
     is_patient = fields.Boolean(
         string="Is a Patient",
         compute="_compute_is_patient",
@@ -153,6 +138,50 @@ class ResPartner(models.Model):
         domain=[("is_patient", "=", True)],
     )
 
+    zip_id = fields.Many2one(
+        comodel_name="res.city.zip",
+        string="ZIP Location",
+        index=True,
+        compute="_compute_zip_id",
+        readonly=False,
+        store=True,
+    )
+
+    city_id = fields.Many2one(
+        index=True,
+        compute="_compute_city_id",
+        readonly=False,
+        store=True,
+    )
+
+    city = fields.Char(compute="_compute_city", readonly=False, store=True)
+
+    zip = fields.Char(compute="_compute_zip", readonly=False, store=True)
+
+    country_id = fields.Many2one(
+        compute="_compute_country_id", readonly=False, store=True
+    )
+
+    state_id = fields.Many2one(compute="_compute_state_id", readonly=False, store=True)
+
+    street3 = fields.Char("Street 3")
+
+    fax = fields.Char()
+
+    @api.depends("contact_id")
+    def _compute_is_contact(self):
+        """Synchronize `is_contact` from `res.contact`."""
+        for partner in self:
+            partner.is_contact = (
+                partner.contact_id.is_contact if partner.contact_id else False
+            )
+
+    def _inverse_is_contact(self):
+        """Update `is_contact` in `res.contact`."""
+        for partner in self:
+            if partner.contact_id:
+                partner.contact_id.is_contact = partner.is_contact
+
     @api.depends("patient_id")
     def _compute_is_patient(self):
         """Synchronize `is_patient` from `res.contact`."""
@@ -166,50 +195,6 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.patient_id:
                 partner.patient_id.is_patient = partner.is_patient
-
-    zip_id = fields.Many2one(
-        comodel_name="res.city.zip",
-        string="ZIP Location",
-        index=True,
-        compute="_compute_zip_id",
-        readonly=False,
-        store=True,
-    )
-    city_id = fields.Many2one(
-        index=True,
-        compute="_compute_city_id",
-        readonly=False,
-        store=True,
-    )
-    city = fields.Char(compute="_compute_city", readonly=False, store=True)
-    zip = fields.Char(compute="_compute_zip", readonly=False, store=True)
-    country_id = fields.Many2one(
-        compute="_compute_country_id", readonly=False, store=True
-    )
-    state_id = fields.Many2one(compute="_compute_state_id", readonly=False, store=True)
-    street3 = fields.Char("Street 3")
-    fax = fields.Char()
-
-    @api.onchange("is_company")
-    def _onchange_is_company(self):
-        # Check the context for default_is_company_parent
-        default_is_company_parent = self.env.context.get("default_is_company_parent")
-        if default_is_company_parent is not None:
-            # Respect the context value if provided
-            self.is_company_parent = default_is_company_parent
-        else:
-            # Default logic if no context value is provided
-            if self.is_company and not self.parent_id:
-                self.is_company_parent = True
-            else:
-                self.is_company_parent = False
-
-    # @api.onchange("is_company")
-    # def _onchange_is_company(self):
-    #     if self.is_company and not self.parent_id:
-    #         self.is_company_parent = True
-    #     else:
-    #         self.is_company_parent = False
 
     @api.depends("company_type", "affiliate_ids", "parent_id")
     def _compute_is_company_parent(self):
@@ -297,17 +282,6 @@ class ResPartner(models.Model):
         # Call superclass create method
         return super().create(vals_list)
 
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     """Ensure `is_company_parent` defaults to `True` for new companies."""
-    #     for vals in vals_list:
-    #         if vals.get("is_company", False) and not vals.get("parent_id"):
-    #             vals["is_company_parent"] = True
-
-    #         if not vals.get("ref") and self._needs_ref(vals=vals):
-    #             vals["ref"] = self._get_next_ref(vals=vals)
-    #     return super().create(vals_list)
-
     def copy(self, default=None):
         default = default or {}
         if self._needs_ref():
@@ -391,6 +365,21 @@ class ResPartner(models.Model):
         )
         action["domain"] = [("company_group_id", "in", all_child.ids)]
         return action
+
+    # onchange methods
+    @api.onchange("is_company")
+    def _onchange_is_company(self):
+        # Check the context for default_is_company_parent
+        default_is_company_parent = self.env.context.get("default_is_company_parent")
+        if default_is_company_parent is not None:
+            # Respect the context value if provided
+            self.is_company_parent = default_is_company_parent
+        else:
+            # Default logic if no context value is provided
+            if self.is_company and not self.parent_id:
+                self.is_company_parent = True
+            else:
+                self.is_company_parent = False
 
     @api.onchange("company_group_id")
     def _onchange_company_group_id(self):
@@ -686,7 +675,7 @@ class ResPartner(models.Model):
         "_two_lines_partner_address",
         "_keep_partner_address_type",
     )
-    def _compute_display_name(self):  # pylint: disable=W8110
+    def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get("_two_lines_partner_address"):
             for partner in self:
@@ -775,6 +764,22 @@ class ResPartner(models.Model):
                 "default_groups_id": [(6, 0, group_ids)],
             },
         }
+
+    current_sale_order_ids = fields.One2many(
+        "sale.order",
+        compute="_compute_current_sale_order_ids",
+        store=False,
+    )
+
+    def _compute_current_sale_order_ids(self):
+        """
+        Compute method to populate the 'current_sale_order_ids' field.
+        Filters to show sales orders that are current by removing completed and cancelled sales orders
+        """
+        for partner in self:
+            partner.current_sale_order_ids = partner.sale_order_ids.filtered(
+                lambda order: order.state not in ("done", "cancel")
+            )
 
 
 class ResPartnerRole(models.Model):

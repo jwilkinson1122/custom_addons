@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="vat" position="after">
+                    <field name="is_multiple_branch" invisible="1"/>
+                    <field name="branch_id" options="{'no_create': True}" readonly="not parent_id" force_save="1"/>
+                    <field name="affiliate_branch_ids"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- <record id="view_users_form_inherit" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='access_rights']//group" position="after">
+                    <group string="Multi Branches">
+                        <field name="branch_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="branch_id" options="{'no_create': True}" required="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

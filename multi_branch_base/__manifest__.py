@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+
+{
+    "name": "Multi Branch Operations",
+    "version": "1.0",
+    "category": "Tools",
+    "depends": [
+        "account",
+        "base",
+        "contacts",
+        "product",
+        "sale_management",
+        # "sale_stock",
+        # "purchase_stock",
+        # "stock_account",
+    ],
+    "data": [
+        "security/branch_security.xml",
+        "security/ir.model.access.csv",
+        "views/res_branch_views.xml",
+        # "views/branch_product_template_views.xml",
+        "views/branch_res_partner_views.xml",
+        # "views/branch_sale_order_views.xml",
+        # "views/branch_purchase_order_views.xml",
+        "views/branch_res_users_views.xml",
+        # "views/branch_stock_picking_views.xml",
+        # "views/branch_account_move_views.xml",
+        # "views/branch_account_payment_views.xml",
+        # "views/branch_account_journal.xml",
+        # "views/branch_account_views.xml",
+        # "views/branch_stock_warehouse_views.xml",
+        # "views/branch_report_template.xml",
+    ],
+    "license": "AGPL-3",
+    "installable": True,
+    "application": False,
+}

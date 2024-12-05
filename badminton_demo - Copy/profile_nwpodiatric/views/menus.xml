@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <menuitem id="practice.menu_root" name="Podiatry" web_icon="profile_nwpodiatric,static/description/icon.png"/>
-</odoo>

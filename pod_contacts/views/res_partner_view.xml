@@ -6,7 +6,6 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-
             <div name="button_box" position="inside">
                 <button name="action_view_company_group_members" type="object" string="Company Groups" class="oe_stat_button" icon="fa-users">
                     <field name="company_group_member_ids" widget="statinfo" />
@@ -14,9 +13,6 @@
                 <button name="create_contacts" type="object" string="Create Portal Contact" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
                 <button name="create_contacts" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
             </div>
-            <!-- <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location" class="fw-bold" />
-            <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_practitioner" class="fw-bold" /> -->
-
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="invisible">is_company_parent</attribute>
                 <attribute name="domain">[('is_company', '=', True), ('id', '!=', 1)]</attribute>
@@ -28,11 +24,10 @@
                 <field name="tz" />
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="is_company_parent"/>
-                <field name="is_company"/>
-                <field name="is_contact"/>
-                <field name="is_patient"/>
-
+                <field name="is_company_parent" invisible="1"/>
+                <field name="is_company" invisible="1"/>
+                <field name="is_contact" invisible="1"/>
+                <field name="is_patient" invisible="1"/>
                 <field name="highest_parent_id" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='city']" position="before">
@@ -53,6 +48,22 @@
             </xpath>
             <xpath expr="//field[@name='mobile']" position="after">
                 <field name="fax" placeholder="Fax..." widget="phone" />
+            </xpath>
+            <!-- Current Sales Orders -->
+            <xpath expr="//group[1]" position="after">
+                <group string="Current Orders">
+                    <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
+                        <tree editable="bottom">
+                            <field name="name" string="Order"/>
+                            <field name="date_order" widget="date" string="Date"/>
+                            <field name="partner_id" string="Customer"/>
+                            <field name="state" string="Status"/>
+                            <field name="invoice_status"/>
+                            <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
+                            <field name="amount_total"/>
+                        </tree>
+                    </field>
+                </group>
             </xpath>
 
             <!-- Contacts & Addresses -->
@@ -75,7 +86,6 @@
                     No Contacts Available
                 </div>
             </xpath>
-
             <xpath expr="//field[@name='child_ids']" position="before">
                 <group>
                     <group>
@@ -96,7 +106,6 @@
             </xpath>
 
             <!-- Contacts & Addresses Modal Popup View -->
-
             <xpath expr="//field[@name='child_ids']/form//field[@name='name']" position="before">
                 <field name="is_company" invisible="True" />
             </xpath>
@@ -170,12 +179,10 @@
             <!-- Child Companies -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
                 <page string="Affiliates" invisible="not is_company" autofocus="autofocus">
-                    <separator name="affiliates" string="Affiliates List" />
+                    <separator name="affiliates" string="Affiliate Companies" />
                     <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
-                        No Affiliates Available
+                        No Affiliate Companies Available
                     </div>
-                    <!-- <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True}" mode="kanban"> -->
-
                     <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
                         <kanban on_create="base.view_partner_form">
                             <field name="id" />
@@ -354,10 +361,6 @@
             <xpath expr="//filter[@name='group_company']" position="before">
                 <filter name="group_company_group" string="Company Group" context="{'group_by': 'company_group_id'}" />
             </xpath>
-            <!-- <xpath expr="//filter[@name='type_company']" position="after">
-                <filter name="is_company_parent" string="Parent Company" domain="[('is_company_parent','=',True)]"/>
-                <separator/>
-            </xpath> -->
             <xpath expr="//filter[@name='type_company']" position="after">
                 <filter name="is_company_parent" string="Parent Company" domain="[('is_company_parent','=',True)]"/>
                 <separator/>
@@ -384,16 +387,6 @@
 
 
     <!-- Actions -->
-
-    <!-- <record id="action_create_user_portal" model="ir.actions.server">
-        <field name="name">Create User Portal</field>
-        <field name="type">ir.actions.server</field>
-        <field name="state">code</field>
-        <field name="model_id" ref="base.model_res_partner"/>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
-        <field name="code">records.act_create_user_portal()
-        </field>
-    </record> -->
 
     <record id="res_partner_companies_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
