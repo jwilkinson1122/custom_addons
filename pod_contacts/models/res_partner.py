@@ -100,6 +100,8 @@ class ResPartner(models.Model):
         help="Indicates if the partner is a parent company.",
     )
 
+    is_supplier = fields.Boolean(string="Is a Supplier", default=False)
+
     is_contact = fields.Boolean(
         string="Is a Contact",
         compute="_compute_is_contact",
@@ -150,16 +152,6 @@ class ResPartner(models.Model):
                 and not rec.parent_id
             )
 
-    # @api.depends("parent_id", "affiliate_ids")
-    # def _compute_is_company_parent(self):
-    #     """Determine if the partner is a parent company."""
-    #     for rec in self:
-    #         rec.is_company_parent = (
-    #             rec.company_type == "company"
-    #             and bool(rec.affiliate_ids)
-    #             and not rec.parent_id
-    #         )
-
     @api.depends("parent_id")
     def _compute_highest_parent_id(self):
         """Compute the highest parent company."""
@@ -170,16 +162,6 @@ class ResPartner(models.Model):
                 res.append(partner.parent_id.id)
                 partner = partner.parent_id
             rec.highest_parent_id = res[-1] if res else None
-
-    # @api.model
-    # def compute_all_top_parent_id(self):
-    #     partner_ids = self.search(
-    #         [("is_company_parent", "=", False), ("parent_id", "!=", False)]
-    #     )
-    #     for partner in partner_ids:
-    #         res = partner.compute_partner_parent_ids(rec=partner)
-    #         if res:
-    #             partner.highest_parent_id = res[-1]
 
     @api.model
     def compute_all_top_parent_id(self):
@@ -195,13 +177,6 @@ class ResPartner(models.Model):
             partner.is_company_parent = original_is_company_parent
 
     # Affiliates (Child)
-    # affiliate_ids = fields.One2many(
-    #     "res.partner",
-    #     "parent_id",
-    #     string="Affiliates",
-    #     domain=[("active", "=", True), ("is_company", "=", True)],
-    # )
-
     affiliate_ids = fields.One2many(
         comodel_name="res.partner",
         inverse_name="parent_id",
@@ -221,15 +196,6 @@ class ResPartner(models.Model):
         """Generate affiliate count text."""
         for record in self:
             record.affiliate_text = _("%s Affiliates" % record.affiliate_count)
-
-    # @api.depends("affiliate_ids")
-    # def _compute_affiliate_and_contact_counts(self):
-    #     """Compute affiliate and contact counts."""
-    #     for record in self:
-    #         affiliates = record.affiliate_ids.filtered(lambda p: p.is_company)
-    #         record.affiliate_count = len(affiliates)
-    #         contacts = record.child_ids.filtered(lambda p: not p.is_company)
-    #         record.contact_count = len(contacts)
 
     @api.depends("affiliate_ids")
     def _compute_affiliate_and_contact_counts(self):
@@ -262,21 +228,6 @@ class ResPartner(models.Model):
                     ]
                 )
                 partner.affiliate_ids = all_descendants
-
-    # @api.depends("parent_id", "affiliate_ids")
-    # def _compute_affiliate_ids(self):
-    #     """
-    #     Compute method to include all descendant companies as affiliates.
-    #     """
-    #     for partner in self:
-    #         all_descendants = self.env["res.partner"].search(
-    #             [
-    #                 ("id", "child_of", partner.id),
-    #                 ("id", "!=", partner.id),
-    #                 ("is_company", "=", True),
-    #             ]
-    #         )
-    #         partner.affiliate_ids = all_descendants
 
     # Contacts
     child_ids = fields.One2many(

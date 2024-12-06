@@ -20,21 +20,19 @@
             <xpath expr="//field[@name='ref']" position="attributes">
                 <attribute name="readonly">not is_company and parent_id</attribute>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
             <xpath expr="//field[@name='vat']" position="before">
                 <field name="tz" />
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="is_company_parent"/>
-                <field name="is_company"/>
-                <field name="is_contact"/>
-                <field name="is_patient"/>
-                <field name="highest_parent_id"/>
-
-                <!-- <field name="is_company_parent" invisible="1"/>
+                <field name="is_company_parent" invisible="1"/>
                 <field name="is_company" invisible="1"/>
+                <field name="is_supplier" invisible="1" />
                 <field name="is_contact" invisible="1"/>
                 <field name="is_patient" invisible="1"/>
-                <field name="highest_parent_id" invisible="1" /> -->
+                <field name="highest_parent_id" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='city']" position="before">
                 <field name="zip_id" options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}" placeholder="Location completion" readonly="type == 'contact' and parent_id != False" />
@@ -45,19 +43,23 @@
             <xpath expr="//div[hasclass('o_address_format')]" position="after">
                 <field name="company_group_id" widget="res_partner_many2one" invisible="not is_company" />
             </xpath>
+            <!-- invisible="is_patient or is_supplier" -->
             <xpath expr="//field[@name='function']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//field[@name='function']" position="before">
-                <field name="contact_role_ids" widget="many2many_tags" invisible="is_company" />
-                <field name="contact_position_id" invisible="is_company" options='{"no_open": True}'/>
+                <field name="contact_role_ids" widget="many2many_tags" invisible="not is_contact" />
+                <field name="contact_position_id" invisible="not is_contact" options='{"no_open": True}'/>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="after">
                 <field name="fax" placeholder="Fax..." widget="phone" />
             </xpath>
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
             <!-- Current Sales Orders -->
             <xpath expr="//group[1]" position="after">
-                <group string="Current Orders">
+                <group string="Current Orders" invisible="is_patient or is_supplier">
                     <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
                         <tree editable="bottom">
                             <field name="name" string="Order"/>
@@ -94,7 +96,7 @@
             </xpath>
             <!-- Page for patients list -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
-                <page name="patients_list" string="Patients" invisible="is_patient">
+                <page name="patients_list" string="Patients" invisible="is_patient or is_supplier">
                     <separator name="patients" string="Patients List" />
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_records or patient_records == ''">
                         No Patients Available
@@ -417,31 +419,6 @@
 
 
     <!-- Actions -->
-    <!-- <record id="res_partner_companies_action" model="ir.actions.act_window">
-        <field name="name">Companies</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company_parent', '=', True), ('is_company', '=', True), ('id', '!=', 1)]</field>
-        <field name="context">
-        {
-            'default_company_type': 'company',
-            'default_is_company_parent': True, 
-            'default_is_company': True,
-            'default_type': '',
-            'prevent_recursion': True,
-        }
-        </field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new customer company
-            </p>
-            <p>
-                An company is the parent entity of affiliates and establishes the hierarchical relationship.
-            </p>
-        </field>
-    </record> -->
-
     <record id="res_partner_companies_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
@@ -466,24 +443,6 @@
         </field>
     </record>
 
-    <!-- <record id="res_partner_affiliates_action" model="ir.actions.act_window">
-        <field name="name">Affiliates</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_company_parent', '=', False), ('parent_id', '!=', False), ('id', '!=', 1)]</field>
-        <field name="context">{'default_company_type': 'company', 'default_is_company': True, 'default_is_company_parent':False, 'default_type': ''}
-        </field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Add a new company affiliate
-            </p>
-            <p>
-            An affiliate is a child entity of companies and is a physical place where services are provided and resources and participants may be stored, found, contained or accommodated.
-            </p>
-        </field>
-    </record> -->
-
     <record id="res_partner_affiliates_action" model="ir.actions.act_window">
         <field name="name">Affiliates</field>
         <field name="type">ir.actions.act_window</field>
@@ -504,21 +463,6 @@
             <p>An Affiliate gives information for a physical place where services are provided and resources and participants may be stored, found, contained or accommodated.</p>
         </field>
     </record>
-
-    <!-- <record id="contacts.action_contacts" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="search_view_id" ref="base.view_res_partner_filter"/>
-        <field name="domain">[('is_contact', '=', True)]</field>
-        <field name="context">{'default_is_contact': True, 'default_company_type':'person', 'default_type':'contact'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a Contact in your address book
-            </p>
-            <p>Contacts covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
-        </field>
-    </record> -->
 
     <record id="contacts.action_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
@@ -541,7 +485,7 @@
         </field>
     </record>
 
-    <!-- <record id="contact_supplier_action" model="ir.actions.act_window">
+    <record id="res_partner_suppliers_action" model="ir.actions.act_window">
         <field name="name">Suppliers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -551,7 +495,6 @@
             'default_company_type':'company',
             'default_is_company':True,
             'default_is_supplier': True,
-            'default_is_partner': True,
             'default_type': '',
             'prevent_recursion': True,
             }</field>
@@ -562,24 +505,7 @@
             <p>Supplier covers all individuals or companies who sells goods or services
             </p>
         </field>
-    </record> -->
-
-    <!-- <record id="res_partner_patients_action" model="ir.actions.act_window">
-        <field name="name">Patients</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_patient', '=', True)]</field>
-        <field name="context">{'default_is_patient': True, 'default_company_type':'person', 'default_type':'contact'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new patient
-            </p>
-            <p>
-                A Patient is a person receiving or registered to receive medical treatment.
-            </p>
-        </field>
-    </record> -->
+    </record>
 
     <record id="res_partner_patients_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
@@ -611,9 +537,10 @@
     <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="contacts.action_contacts" sequence="3"/>
     <menuitem id="company_patients_menu" name="Patients" parent="contacts.menu_contacts" action="res_partner_patients_action" sequence="4"/>
     <!-- <menuitem id="contact_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="res_partner_suppliers_action" sequence="5"/> -->
+    <menuitem id="company_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="res_partner_suppliers_action" sequence="5"/>
 
     <!-- Configuration Menu -->
-    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" sequence="5" groups="base.group_system"/>
+    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" sequence="10" groups="base.group_system"/>
 
     <!-- Configuration: Accounts -->
     <menuitem id="res_partner_accounts_menu_config" name="Companies" parent="contacts.res_partner_menu_config" sequence="1"/>

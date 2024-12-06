@@ -29,7 +29,7 @@
           'security/ir.model.access.csv',
           'view/action.xml'],
 'external_dependencies': {},
-'auto_install': True,
+'auto_install': False,
 'odoo-apps': True,
 'assets': {'web.assets_backend': ['oi_login_as/static/src/login_as/*.js',
                                    'oi_login_as/static/src/login_as/*.xml']},
