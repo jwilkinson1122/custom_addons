@@ -32,6 +32,8 @@ def split_char(char, output_number, size):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    ref = fields.Char("Customer Number", readonly=True, default=lambda self: _("New"))
+
     use_parent_invoice_address = fields.Boolean()
 
     partner_delivery_id = fields.Many2one(
@@ -79,17 +81,15 @@ class ResPartner(models.Model):
     )
 
     city = fields.Char(compute="_compute_city", readonly=False, store=True)
-
     zip = fields.Char(compute="_compute_zip", readonly=False, store=True)
-
     country_id = fields.Many2one(
         compute="_compute_country_id", readonly=False, store=True
     )
 
     state_id = fields.Many2one(compute="_compute_state_id", readonly=False, store=True)
-
     street3 = fields.Char("Street 3")
-
+    extra_phone = fields.Char()
+    secondary_email = fields.Char(string="Secondary Email")
     fax = fields.Char()
 
     # Boolean Fields
@@ -144,7 +144,7 @@ class ResPartner(models.Model):
                 f"Computing is_company_parent for {rec.id}: "
                 f"parent_id={rec.parent_id}, affiliate_ids={rec.affiliate_ids.ids}"
             )
-            if rec.is_company_parent:  # Preserve existing value
+            if rec.is_company_parent:
                 continue
             rec.is_company_parent = (
                 rec.company_type == "company"
@@ -173,7 +173,6 @@ class ResPartner(models.Model):
             res = partner.compute_partner_parent_ids(rec=partner)
             if res:
                 partner.highest_parent_id = res[-1]
-            # Preserve original value
             partner.is_company_parent = original_is_company_parent
 
     # Affiliates (Child)
@@ -309,7 +308,6 @@ class ResPartner(models.Model):
         string="Patient Count", compute="_compute_patient_counts"
     )
 
-    # Patients Computations
     @api.depends("patient_id")
     def _compute_is_patient(self):
         """Determine if the partner is a patient."""
@@ -336,103 +334,121 @@ class ResPartner(models.Model):
         for record in self:
             record.patient_records = record.child_ids.mapped("patient_ids")
 
-    # Computations
-
-    # @api.depends("parent_id", "affiliate_ids")
-    # def _compute_is_company_parent(self):
-    #     """Determine if the partner is a parent company."""
-    #     for rec in self:
-    #         rec.is_company_parent = (
-    #             rec.company_type == "company"
-    #             and bool(rec.affiliate_ids)
-    #             and not rec.parent_id
-    #         )
-
-    # @api.depends("parent_id")
-    # def _compute_highest_parent_id(self):
-    #     """Compute the highest parent company."""
-    #     for rec in self:
-    #         res = []
-    #         partner = rec
-    #         while partner.parent_id:
-    #             res.append(partner.parent_id.id)
-    #             partner = partner.parent_id
-    #         rec.highest_parent_id = res[-1] if res else None
-
-    # @api.model
-    # def compute_all_top_parent_id(self):
-    #     partner_ids = self.search(
-    #         [("is_company_parent", "=", False), ("parent_id", "!=", False)]
-    #     )
-    #     for partner in partner_ids:
-    #         res = partner.compute_partner_parent_ids(rec=partner)
-    #         if res:
-    #             partner.highest_parent_id = res[-1]
-
-    # @api.depends("affiliate_ids")
-    # def _compute_affiliate_and_contact_counts(self):
-    #     """Compute affiliate and contact counts."""
-    #     for record in self:
-    #         affiliates = record.affiliate_ids.filtered(lambda p: p.is_company)
-    #         record.affiliate_count = len(affiliates)
-    #         contacts = record.child_ids.filtered(lambda p: not p.is_company)
-    #         record.contact_count = len(contacts)
-
-    @api.constrains("ref", "is_company", "company_id")
+    @api.constrains("ref", "is_company", "company_type")
     def _check_ref(self):
         for partner in self.filtered("ref"):
-            # If the company is not defined in the partner, take current user company
-            company = partner.company_id or self.env.company
-            mode = company.partner_ref_unique
-            # Don't raise when coming from contact merge wizard or no duplicates
-            if not self.env.context.get("partner_ref_unique_merging") and (
-                mode == "all" or (mode == "companies" and partner.is_company)
-            ):
-                domain = [
-                    ("id", "!=", partner.id),
-                    ("ref", "=", partner.ref),
-                ]
-                if mode == "companies":
-                    domain.append(("is_company", "=", True))
-                other = self.search(domain)
-                if other:
-                    raise ValidationError(
-                        _("This reference is equal to partner '%s'")
-                        % other[0].display_name
-                    )
+            domain = [
+                ("id", "!=", partner.id),
+                ("ref", "=", partner.ref),
+            ]
+            # Check based on partner type to ensure that IDs do not overlap within the same type
+            if partner.is_company:
+                domain.append(("is_company", "=", True))
+            elif partner.is_contact:
+                domain.append(("is_contact", "=", True))
+            elif partner.is_patient:
+                domain.append(("is_patient", "=", True))
+            elif partner.parent_id:
+                # If it has a parent_id, it's a child or affiliate company
+                domain.append(("parent_id", "!=", False))
 
-    def _get_next_ref(self, vals=None):
-        return self.env["ir.sequence"].next_by_code("res.partner")
+            other = self.search(domain)
+            if other:
+                raise ValidationError(
+                    _("This reference is equal to partner '%s'") % other[0].display_name
+                )
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get("ref") and self._needs_ref(vals=vals):
-                vals["ref"] = self._get_next_ref(vals=vals)
-            # If explicitly provided in vals, do not override
-            if "is_company_parent" not in vals:
-                if vals.get("is_company", False) and not vals.get("parent_id"):
-                    vals["is_company_parent"] = True
-                else:
-                    vals["is_company_parent"] = False
-        return super().create(vals_list)
+    # @api.constrains("ref", "is_company", "parent_id")
+    # def _check_ref(self):
+    #     for partner in self.filtered("ref"):
+    #         domain = [
+    #             ("id", "!=", partner.id),
+    #             ("ref", "=", partner.ref),
+    #         ]
+    #         if partner.is_company:
+    #             domain.append(("is_company", "=", True))
+    #         other = self.search(domain)
+    #         if other:
+    #             raise ValidationError(
+    #                 _("This reference is equal to partner '%s'") % other[0].display_name
+    #             )
+
+    # @api.constrains("ref", "is_company", "company_id")
+    # def _check_ref(self):
+    #     for partner in self.filtered("ref"):
+    #         domain = [
+    #             ("id", "!=", partner.id),
+    #             ("ref", "=", partner.ref),
+    #         ]
+    #         if partner.is_company:
+    #             domain.append(("is_company", "=", True))
+    #         other = self.search(domain)
+    #         if other:
+    #             raise ValidationError(
+    #                 _("This reference is equal to partner '%s'") % other[0].display_name
+    #             )
 
     # @api.model_create_multi
     # def create(self, vals_list):
+    #     """Custom create method to handle partner references."""
     #     for vals in vals_list:
-    #         if not vals.get("ref") and self._needs_ref(vals=vals):
-    #             vals["ref"] = self._get_next_ref(vals=vals)
+    #         if not vals.get("ref") and not vals.get("parent_id"):
+    #             vals["ref"] = self.env["ir.sequence"].next_by_code("res.partner")
 
-    #         default_is_company_parent = self.env.context.get(
-    #             "default_is_company_parent"
-    #         )
-    #         if default_is_company_parent is not None:
-    #             vals["is_company_parent"] = default_is_company_parent
-    #         else:
-    #             if vals.get("is_company", False) and not vals.get("parent_id"):
-    #                 vals["is_company_parent"] = True
+    #         elif vals.get("parent_id"):
+    #             parent = self.browse(vals["parent_id"])
+    #             if not parent.ref:
+    #                 raise ValidationError(
+    #                     _(
+    #                         "Parent company must have a reference before creating affiliates."
+    #                     )
+    #                 )
+    #             sibling_refs = self.search([("parent_id", "=", parent.id)]).mapped(
+    #                 "ref"
+    #             )
+    #             next_ref = self._get_next_ref(sibling_refs)
+    #             vals["ref"] = f"{parent.ref}/{next_ref}"
 
-    #     return super(ResPartner, self).create(vals_list)
+    #     return super().create(vals_list)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Custom create method to handle partner references."""
+        for vals in vals_list:
+            if vals.get("parent_id"):
+                # For affiliate companies, append to parent company ref
+                parent = self.browse(vals["parent_id"])
+                if not parent.ref:
+                    raise ValidationError(
+                        _(
+                            "Parent company must have a reference before creating affiliates."
+                        )
+                    )
+                sibling_refs = self.search([("parent_id", "=", parent.id)]).mapped(
+                    "ref"
+                )
+                next_ref = self._get_next_ref(sibling_refs)
+                vals["ref"] = f"{parent.ref}/{next_ref}"
+            else:
+                # Generate ref for parent companies, contacts, or patients
+                if vals.get("is_company"):
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(
+                        "res.partner.company"
+                    )
+                elif vals.get("is_contact"):
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(
+                        "res.partner.contact"
+                    )
+                elif vals.get("is_patient"):
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(
+                        "res.partner.patient"
+                    )
+                else:
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(
+                        "res.partner.affiliate"
+                    )
+
+        return super().create(vals_list)
 
     def copy(self, default=None):
         default = default or {}
@@ -440,27 +456,9 @@ class ResPartner(models.Model):
             default["ref"] = self._get_next_ref()
         return super().copy(default=default)
 
-    # def write(self, vals):
-    #     for partner in self:
-    #         original_is_company_parent = partner.is_company_parent
-
-    #         super(ResPartner, partner).write(vals)
-
-    #         if "is_company_parent" in vals:
-    #             partner.is_company_parent = vals["is_company_parent"]
-    #         else:
-    #             partner.is_company_parent = original_is_company_parent
-
-    #     return True
-
     def write(self, vals):
-        """
-        Custom write method to handle:
-        - Reference generation
-        - Parent hierarchy computation
-        - Prevent archived contacts from being default addresses
-        - Preserve user-defined `is_company_parent` values
-        """
+        """Custom write method to handle references and preserve user settings."""
+        # Prevent recursion
         if self.env.context.get("prevent_recursion"):
             return super().write(vals)
 
@@ -470,27 +468,27 @@ class ResPartner(models.Model):
         for partner in self:
             partner_vals = vals.copy()
 
-            # Handle reference generation
-            if (
-                not partner_vals.get("ref")
-                and partner._needs_ref(vals=partner_vals)
-                and not partner.ref
-            ):
-                partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
+            # Handle reference updates or generation
+            if "ref" in partner_vals or partner_vals.get("ref"):
+                partner_vals["ref"] = partner_vals.get(
+                    "ref", partner._get_next_ref(vals=partner_vals)
+                )
+                if partner.child_ids:
+                    partner._update_child_references()
 
-            # Preserve original `is_company_parent`
+            # Preserve original `is_company_parent` value
             original_is_company_parent = partner.is_company_parent
 
-            # Write operation
+            # Perform the write operation
             super(ResPartner, partner).with_context(context).write(partner_vals)
 
-            # Restore user-defined `is_company_parent`
+            # Restore or update `is_company_parent`
             if "is_company_parent" in partner_vals:
                 partner.is_company_parent = partner_vals["is_company_parent"]
             else:
                 partner.is_company_parent = original_is_company_parent
 
-            # Prevent archived contacts as default addresses
+            # Handle archived partners and their default addresses
             if partner_vals.get("active") is False:
                 self.search([("partner_delivery_id", "in", self.ids)]).write(
                     {"partner_delivery_id": False}
@@ -502,79 +500,46 @@ class ResPartner(models.Model):
                     {"partner_contact_id": False}
                 )
 
-            # Update parent hierarchy if `parent_id` was modified
+            # Recompute parent hierarchy if `parent_id` is modified
             if "parent_id" in partner_vals:
                 partner.compute_all_top_parent_id()
 
         return True
 
-    # def write(self, vals):
-    #     if self.env.context.get("prevent_recursion"):
-    #         return super().write(vals)
+    def _update_child_references(self):
+        """Update references for child companies."""
+        for child in self.child_ids:
+            sibling_refs = self.search(
+                [("parent_id", "=", self.id), ("id", "!=", child.id)]
+            ).mapped("ref")
+            next_ref = self._get_next_ref(sibling_refs)
+            new_ref = f"{self.ref}/{next_ref}"
+            child.write({"ref": new_ref})
+            # Recursively update grandchildren
+            child._update_child_references()
 
-    #     context = dict(self.env.context, prevent_recursion=True)
+    def _get_next_ref(self, sibling_refs):
+        """Determine the next available numeric reference for child references."""
+        references = [
+            int(re.search(r"/(\d+)$", ref).group(1))
+            for ref in sibling_refs
+            if re.search(r"/(\d+)$", ref)
+        ]
+        return max(references, default=0) + 1
 
-    #     for partner in self:
-    #         partner_vals = vals.copy()
-
-    #         if (
-    #             not partner_vals.get("ref")
-    #             and partner._needs_ref(vals=partner_vals)
-    #             and not partner.ref
-    #         ):
-    #             partner_vals["ref"] = partner._get_next_ref(vals=partner_vals)
-
-    #         super(ResPartner, partner).with_context(context).write(partner_vals)
-
-    #         if partner_vals.get("active") is False:
-    #             self.search([("partner_delivery_id", "in", self.ids)]).write(
-    #                 {"partner_delivery_id": False}
-    #             )
-    #             self.search([("partner_invoice_id", "in", self.ids)]).write(
-    #                 {"partner_invoice_id": False}
-    #             )
-    #             self.search([("partner_contact_id", "in", self.ids)]).write(
-    #                 {"partner_contact_id": False}
-    #             )
-
-    #         if "parent_id" in partner_vals:
-    #             partner.compute_all_top_parent_id()
-
-    #     return True
+    @api.model
+    def _needs_ref(self, vals=None):
+        """Check if a sequence value should be assigned to a partner's ref."""
+        return vals.get("is_company") or not vals.get("parent_id")
 
     def unlink(self):
-        """Prevent deletion of records with patients."""
+        """Prevent deletion of partners with children."""
         for partner in self:
-            if partner.sudo().patient_ids:
+            if partner.child_ids or partner.sudo().patient_ids:
                 raise ValidationError(
-                    _("Cannot delete a partner with linked patients.")
+                    _("Cannot delete a partner with linked affiliates or patients.")
                 )
         return super().unlink()
-
-    def _needs_ref(self, vals=None):
-        """
-        Checks whether a sequence value should be assigned to a partner's 'ref'
-
-        :param vals: known field values of the partner object
-        :return: true iff a sequence value should be assigned to the\
-                      partner's 'ref'
-        """
-        if not vals and not self:  # pragma: no cover
-            raise exceptions.UserError(
-                _("Either field values or an id must be provided.")
-            )
-        # only assign a 'ref' to commercial partners
-        fields_for_check = ["is_company", "parent_id"]
-        # Copy original vals to prevent modifying them
-        if vals:
-            vals_for_check = vals.copy()
-        else:
-            vals_for_check = {}
-        if self:
-            for field in fields_for_check:
-                if field not in vals_for_check:
-                    vals_for_check[field] = self[field]
-        return vals_for_check.get("is_company") or not vals_for_check.get("parent_id")
 
     @api.model
     def _commercial_fields(self):
