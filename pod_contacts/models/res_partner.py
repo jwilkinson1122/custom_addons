@@ -32,7 +32,9 @@ def split_char(char, output_number, size):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    ref = fields.Char("Customer Number", readonly=True, default=lambda self: _("New"))
+    ref = fields.Char("Reference ID", readonly=True, default=lambda self: _("New"))
+
+    # ref = fields.Char("Customer Number", readonly=True, default=lambda self: _("New"))
 
     use_parent_invoice_address = fields.Boolean()
 
@@ -100,6 +102,14 @@ class ResPartner(models.Model):
         help="Indicates if the partner is a parent company.",
     )
 
+    is_affiliate = fields.Boolean(
+        string="Is an Affiliate",
+        compute="_compute_is_affiliate",
+        store=True,
+        help="Indicates if the partner is an affiliate company.",
+    )
+
+
     is_supplier = fields.Boolean(string="Is a Supplier", default=False)
 
     is_contact = fields.Boolean(
@@ -119,11 +129,19 @@ class ResPartner(models.Model):
     )
 
     # Companies (Parent)
+    # parent_id = fields.Many2one(
+    #     comodel_name="res.partner",
+    #     string="Parent Company",
+    #     index=True,
+    #     domain=[("is_company_parent", "=", True), ("is_company", "=", True)],
+    # )
+
     parent_id = fields.Many2one(
         comodel_name="res.partner",
         string="Parent Company",
         index=True,
-        domain=[("is_company_parent", "=", True), ("is_company", "=", True)],
+        domain=[("is_company", "=", True)],
+        help="The parent company of this partner.",
     )
 
     parent_name = fields.Char(
@@ -137,20 +155,38 @@ class ResPartner(models.Model):
         string="Highest Parent",
     )
 
-    @api.depends("parent_id", "affiliate_ids")
+    affiliate_ids = fields.One2many(
+        comodel_name="res.partner",
+        inverse_name="parent_id",
+        string="Affiliates",
+    )
+
+
+    # @api.depends("parent_id", "affiliate_ids")
+    # def _compute_is_company_parent(self):
+    #     for rec in self:
+    #         _logger.info(
+    #             f"Computing is_company_parent for {rec.id}: "
+    #             f"parent_id={rec.parent_id}, affiliate_ids={rec.affiliate_ids.ids}"
+    #         )
+    #         if rec.is_company_parent:
+    #             continue
+    #         rec.is_company_parent = (
+    #             rec.company_type == "company"
+    #             and bool(rec.affiliate_ids)
+    #             and not rec.parent_id
+    #         )
+
+    @api.depends("parent_id")
     def _compute_is_company_parent(self):
         for rec in self:
-            _logger.info(
-                f"Computing is_company_parent for {rec.id}: "
-                f"parent_id={rec.parent_id}, affiliate_ids={rec.affiliate_ids.ids}"
-            )
-            if rec.is_company_parent:
-                continue
-            rec.is_company_parent = (
-                rec.company_type == "company"
-                and bool(rec.affiliate_ids)
-                and not rec.parent_id
-            )
+            rec.is_company_parent = rec.is_company and not rec.parent_id
+
+    @api.depends("parent_id")
+    def _compute_is_affiliate(self):
+        for rec in self:
+            rec.is_affiliate = rec.parent_id and rec.is_company
+
 
     @api.depends("parent_id")
     def _compute_highest_parent_id(self):
@@ -176,13 +212,13 @@ class ResPartner(models.Model):
             partner.is_company_parent = original_is_company_parent
 
     # Affiliates (Child)
-    affiliate_ids = fields.One2many(
-        comodel_name="res.partner",
-        inverse_name="parent_id",
-        string="Affiliates",
-        compute="_compute_affiliate_ids",
-        store=False,  # Make it dynamic to reflect changes immediately
-    )
+    # affiliate_ids = fields.One2many(
+    #     comodel_name="res.partner",
+    #     inverse_name="parent_id",
+    #     string="Affiliates",
+    #     compute="_compute_affiliate_ids",
+    #     store=False,  
+    # )
 
     affiliate_count = fields.Integer(
         string="Affiliate Count", compute="_compute_affiliate_and_contact_counts"
@@ -334,31 +370,19 @@ class ResPartner(models.Model):
         for record in self:
             record.patient_records = record.child_ids.mapped("patient_ids")
 
-    @api.constrains("ref", "is_company", "company_type")
-    def _check_ref(self):
-        for partner in self.filtered("ref"):
-            domain = [
-                ("id", "!=", partner.id),
-                ("ref", "=", partner.ref),
-            ]
-            # Check based on partner type to ensure that IDs do not overlap within the same type
-            if partner.is_company:
-                domain.append(("is_company", "=", True))
-            elif partner.is_contact:
-                domain.append(("is_contact", "=", True))
-            elif partner.is_patient:
-                domain.append(("is_patient", "=", True))
-            elif partner.parent_id:
-                # If it has a parent_id, it's a child or affiliate company
-                domain.append(("parent_id", "!=", False))
 
-            other = self.search(domain)
-            if other:
-                raise ValidationError(
-                    _("This reference is equal to partner '%s'") % other[0].display_name
-                )
+    # @api.depends("parent_id")
+    # def _compute_is_company_parent(self):
+    #     for rec in self:
+    #         rec.is_company_parent = rec.is_company and not rec.parent_id
 
-    # @api.constrains("ref", "is_company", "parent_id")
+    # @api.depends("parent_id")
+    # def _compute_is_affiliate(self):
+    #     for rec in self:
+    #         rec.is_affiliate = rec.parent_id and rec.is_company
+
+
+    # @api.constrains("ref", "is_company", "company_type")
     # def _check_ref(self):
     #     for partner in self.filtered("ref"):
     #         domain = [
@@ -367,35 +391,39 @@ class ResPartner(models.Model):
     #         ]
     #         if partner.is_company:
     #             domain.append(("is_company", "=", True))
+    #         elif partner.is_contact:
+    #             domain.append(("is_contact", "=", True))
+    #         elif partner.is_patient:
+    #             domain.append(("is_patient", "=", True))
+    #         elif partner.parent_id:
+    #             domain.append(("parent_id", "!=", False))
+
     #         other = self.search(domain)
     #         if other:
     #             raise ValidationError(
     #                 _("This reference is equal to partner '%s'") % other[0].display_name
     #             )
 
-    # @api.constrains("ref", "is_company", "company_id")
-    # def _check_ref(self):
-    #     for partner in self.filtered("ref"):
-    #         domain = [
-    #             ("id", "!=", partner.id),
-    #             ("ref", "=", partner.ref),
-    #         ]
-    #         if partner.is_company:
-    #             domain.append(("is_company", "=", True))
-    #         other = self.search(domain)
-    #         if other:
-    #             raise ValidationError(
-    #                 _("This reference is equal to partner '%s'") % other[0].display_name
-    #             )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("ref", "New") == "New":
+                if vals.get("is_company", False):
+                    sequence_code = "res.partner.company"
+                    if vals.get("parent_id"):
+                        sequence_code = "res.partner.affiliate"
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(sequence_code)
+                else:
+                    vals["ref"] = self.env["ir.sequence"].next_by_code("res.partner.contact")
+        return super().create(vals_list)
 
     # @api.model_create_multi
     # def create(self, vals_list):
     #     """Custom create method to handle partner references."""
     #     for vals in vals_list:
-    #         if not vals.get("ref") and not vals.get("parent_id"):
-    #             vals["ref"] = self.env["ir.sequence"].next_by_code("res.partner")
-
-    #         elif vals.get("parent_id"):
+    #         if vals.get("parent_id"):
+    #             # For affiliate companies, append to parent company ref
     #             parent = self.browse(vals["parent_id"])
     #             if not parent.ref:
     #                 raise ValidationError(
@@ -408,47 +436,42 @@ class ResPartner(models.Model):
     #             )
     #             next_ref = self._get_next_ref(sibling_refs)
     #             vals["ref"] = f"{parent.ref}/{next_ref}"
+    #         else:
+    #             if vals.get("is_company"):
+    #                 vals["ref"] = self.env["ir.sequence"].next_by_code(
+    #                     "res.partner.company"
+    #                 )
+    #             elif vals.get("is_contact"):
+    #                 vals["ref"] = self.env["ir.sequence"].next_by_code(
+    #                     "res.partner.contact"
+    #                 )
+    #             elif vals.get("is_patient"):
+    #                 vals["ref"] = self.env["ir.sequence"].next_by_code(
+    #                     "res.partner.patient"
+    #                 )
+    #             else:
+    #                 vals["ref"] = self.env["ir.sequence"].next_by_code(
+    #                     "res.partner.affiliate"
+    #                 )
 
     #     return super().create(vals_list)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """Custom create method to handle partner references."""
-        for vals in vals_list:
-            if vals.get("parent_id"):
-                # For affiliate companies, append to parent company ref
-                parent = self.browse(vals["parent_id"])
-                if not parent.ref:
-                    raise ValidationError(
-                        _(
-                            "Parent company must have a reference before creating affiliates."
-                        )
-                    )
-                sibling_refs = self.search([("parent_id", "=", parent.id)]).mapped(
-                    "ref"
-                )
-                next_ref = self._get_next_ref(sibling_refs)
-                vals["ref"] = f"{parent.ref}/{next_ref}"
-            else:
-                # Generate ref for parent companies, contacts, or patients
-                if vals.get("is_company"):
-                    vals["ref"] = self.env["ir.sequence"].next_by_code(
-                        "res.partner.company"
-                    )
-                elif vals.get("is_contact"):
-                    vals["ref"] = self.env["ir.sequence"].next_by_code(
-                        "res.partner.contact"
-                    )
-                elif vals.get("is_patient"):
-                    vals["ref"] = self.env["ir.sequence"].next_by_code(
-                        "res.partner.patient"
-                    )
-                else:
-                    vals["ref"] = self.env["ir.sequence"].next_by_code(
-                        "res.partner.affiliate"
-                    )
+    @api.constrains("ref")
+    def _check_unique_ref(self):
+        for rec in self:
+            if rec.ref and self.search_count([("ref", "=", rec.ref), ("id", "!=", rec.id)]) > 0:
+                raise ValidationError(_("The Reference ID must be unique."))
 
-        return super().create(vals_list)
+    # Dynamic Hierarchical Display
+    def get_hierarchy_display(self):
+        def recursive_hierarchy(partner):
+            if partner.parent_id:
+                return f"{recursive_hierarchy(partner.parent_id)} > {partner.name}"
+            return partner.name
+
+        return recursive_hierarchy(self)
+
+
 
     def copy(self, default=None):
         default = default or {}

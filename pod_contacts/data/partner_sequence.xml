@@ -1,77 +1,23 @@
 <?xml version="1.0" ?>
 <odoo noupdate="1">
-    <record id="seq_res_partner" model="ir.sequence">
-        <field name="name">Reference ID</field>
-        <field name="code">res.partner</field>
-        <field name="prefix">ID/</field>
-        <field name="padding">5</field>
-    </record>
     <record id="seq_res_partner_company" model="ir.sequence">
         <field name="name">Company ID</field>
         <field name="code">res.partner.company</field>
         <field name="prefix">CO/</field>
         <field name="padding">5</field>
     </record>
+
     <record id="seq_res_partner_affiliate" model="ir.sequence">
         <field name="name">Affiliate ID</field>
         <field name="code">res.partner.affiliate</field>
         <field name="prefix">AF/</field>
         <field name="padding">5</field>
     </record>
+
     <record id="seq_res_partner_contact" model="ir.sequence">
         <field name="name">Contact ID</field>
         <field name="code">res.partner.contact</field>
         <field name="prefix">CT/</field>
         <field name="padding">5</field>
     </record>
-    <record id="seq_res_partner_patient" model="ir.sequence">
-        <field name="name">Patient ID</field>
-        <field name="code">res.partner.patient</field>
-        <field name="prefix">PT/</field>
-        <field name="padding">5</field>
-    </record>
-    <!-- <record id="seq_res_partner_company" model="ir.sequence">
-        <field name="name">Company ID</field>
-        <field name="code">res.partner.company</field>
-        <field name="prefix">COMP</field>
-        <field name="padding">5</field>
-    </record>
-    <record id="seq_res_partner_affiliate" model="ir.sequence">
-        <field name="name">Affiliate ID</field>
-        <field name="code">res.partner.affiliate</field>
-        <field name="prefix">AFF</field>
-        <field name="padding">5</field>
-    </record>
-    <record id="seq_res_partner_contact" model="ir.sequence">
-        <field name="name">Contact ID</field>
-        <field name="code">res.partner.contact</field>
-        <field name="prefix">CONT</field>
-        <field name="padding">4</field>
-    </record>
-    <record id="seq_res_partner_patient" model="ir.sequence">
-        <field name="name">Patient ID</field>
-        <field name="code">res.partner.patient</field>
-        <field name="prefix">PAT</field>
-        <field name="padding">4</field>
-    </record> -->
-
-    <!-- <record id="seq_res_partner" model="ir.sequence">
-        <field name="name">Partner ID</field>
-        <field name="code">res.partner</field>
-        <field name="prefix"></field>
-        <field name="padding">5</field>
-    </record>
-    <record id="seq_res_partner_contact" model="ir.sequence">
-        <field name="name">Contact ID</field>
-        <field name="code">res.partner.contact</field>
-        <field name="prefix"></field>
-        <field name="padding">4</field>
-    </record>
-    <record id="seq_res_partner_patient" model="ir.sequence">
-        <field name="name">Patient ID</field>
-        <field name="code">res.partner.patient</field>
-        <field name="prefix"></field>
-        <field name="padding">4</field>
-    </record> -->
-
 </odoo>

@@ -210,9 +210,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
                 <field name="ref"/>
-                <!-- <field name="partner_code"/> -->
-                <field name="parent_id" column_invisible="context.get('default_is_parent_account', False)"/>
+                <field name="is_affiliate" widget="boolean_toggle" options="{'color': 'green'}"/>
             </xpath>
+            <!-- <xpath expr="//field[@name='display_name']" position="before">
+                <field name="ref"/>
+                <field name="parent_id" column_invisible="context.get('default_is_parent_account', False)"/>
+            </xpath> -->
             <!-- <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
